@@ -3,7 +3,7 @@
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-49%20Passing-brightgreen.svg)](tests/)
-[![DAW Plugin](https://img.shields.io/badge/DAW-VST2%20%2F%20CLAP-blueviolet.svg)](#daw-plugins-vst--clap--libretro-mame-host)
+[![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
@@ -219,16 +219,17 @@ Users must provide their own legally acquired system disk:
 
 ---
 
-## DAW Plugins (VST & CLAP) & Libretro MAME Host
+## DAW Plugins (VST3, VST2 & CLAP) & Libretro MAME Host
 
-The project includes a self-contained, zero-dependency C++17 core (`libs760_core`), dynamic Libretro host wrapper, and native DAW instrument plugins (**VST2** and **CLAP**):
+The project includes a self-contained, zero-dependency C++17 core (`libs760_core`), dynamic Libretro host wrapper, and native DAW instrument plugins (**VST3**, **VST2**, and **CLAP**):
 
 ```mermaid
 flowchart LR
-    DAW["DAW Track (Ableton, Cubase, FL Studio, Reaper, Bitwig)"]
+    DAW["DAW Track (Ableton, Cubase, Studio One, FL Studio, Reaper, Bitwig)"]
     
     subgraph Plugins ["DAW Instrument Plugins"]
-        VST["Roland_S760.dll (VST2 / libretro_vst)"]
+        VST3["Roland_S760.vst3 (VST3 / IComponent)"]
+        VST2["Roland_S760.dll (VST2 / libretro_vst)"]
         CLAP["Roland_S760.clap (CLAP)"]
     end
 
@@ -244,15 +245,16 @@ flowchart LR
 
     DAW -->|"MIDI Notes / CC"| Plugins --> CoreLoader
     CoreLoader --> AudioRing -->|"Stereo Float Out"| DAW
-    DAW <-->|"Session Recall (effGetChunk)"| Plugins <--> CoreLoader
+    DAW <-->|"Session Recall (IBStream / effGetChunk / state)"| Plugins <--> CoreLoader
     CoreLoader <--> Drives
 ```
 
 ### Features:
-- **`Roland_S760.dll` (VST2 / `libretro_vst` compatible)**: Drop into your standard VST plugin directory.
+- **`Roland_S760.vst3` (Steinberg VST3)**: Native modern 64-bit VST3 plugin implementing `IComponent`, `IAudioProcessor`, and `IBStream` state streaming.
+- **`Roland_S760.dll` (VST2 / `libretro_vst` compatible)**: Drop into your standard legacy VST plugin directory.
 - **`Roland_S760.clap` (CLAP)**: Universal open-standard plugin format.
 - **Hardware-Accurate Folder Persistence**: Mounts `.img`, `.hda`, and `.iso` files directly from disk folders. OS writes (Save System, Save Patch, Save Volume) flush straight back to the file on disk, making images 100% swappable with physical Gotek USB sticks and ZuluSCSI SD cards on real Roland S-760 hardware.
-- **Full DAW Project Recall**: Project state serialization (`effGetChunk` / `effSetChunk` / `clap_plugin_state`) saves and restores emulator Wave RAM and mounted drive configurations instantly.
+- **Full DAW Project Recall**: Project state serialization (`IBStream` / `effGetChunk` / `effSetChunk` / `clap_plugin_state`) saves and restores emulator Wave RAM and mounted drive configurations instantly.
 - **Python Extension (`s760_cpp`)**: High-performance `pybind11` C++ bindings for batch conversion and automated testing.
 
 ---
@@ -270,7 +272,7 @@ flowchart LR
 # Configure CMake project
 cmake -B build -S core -G "Visual Studio 17 2022" -A x64
 
-# Build Release binaries (s760_core.lib, Roland_S760.dll, Roland_S760.clap, s760_cpp.pyd)
+# Build Release binaries (s760_core.lib, Roland_S760.vst3, Roland_S760.dll, Roland_S760.clap, s760_cpp.pyd)
 cmake --build build --config Release
 
 # Run Core and Plugin test suites
@@ -347,9 +349,11 @@ d:/S-760/
 │   │   ├── s760_dsp.hpp                    # Offline DSP engine (crossfade, SOLA, bi-quad filter)
 │   │   ├── s760_drive_manager.hpp          # Folder-backed ZuluSCSI / Gotek drive manager
 │   │   ├── s760_libretro_host.hpp          # Dynamic Libretro MAME host bridge
-│   │   ├── s760_vst_plugin.hpp             # VST2/VST3 instrument plugin
+│   │   ├── s760_vst3_plugin.hpp            # Steinberg VST3 instrument plugin
+│   │   ├── s760_vst_plugin.hpp             # VST2 / libretro_vst instrument plugin
 │   │   ├── s760_clap_plugin.hpp            # CLAP instrument plugin
-│   │   ├── vst_defs.h                      # VST C-ABI definitions
+│   │   ├── vst3_defs.h                     # VST3 C-ABI / COM interface definitions
+│   │   ├── vst_defs.h                      # VST2 C-ABI definitions
 │   │   ├── clap_defs.h                     # CLAP C-ABI definitions
 │   │   └── libretro.h                      # Libretro core specification header
 │   ├── src/                                # C++ source implementations
