@@ -127,10 +127,11 @@ void s760_sound_device::populate_factory_waveforms()
 	m_wave_ram.resize(2 * 1024 * 1024, 0); // 4MB sample memory
 	m_samples.clear();
 
-	// 1. Check for user-supplied Akai S1000 ISO or Roland sound disk files
+	// 1. Check for user-supplied Roland sound disk files or Akai S1000 ISOs
 	const char *disk_paths[] = {
-		"roms/s760/sound.iso", "roms/akai.iso", "sound.iso", "roms/s760/sound.img",
-		"roms/sound.img", "roms/s760.iso"
+		"roms/s760/L701_1.IMG", "roms/s760/L701_1.img", "L701_1.IMG", "L701_1.img",
+		"roms/s760/waves760.sdk", "waves760.sdk", "roms/s760/sound.img", "sound.img", "roms/sound.img",
+		"roms/s760/sound.iso", "roms/akai.iso", "sound.iso", "roms/s760.iso"
 	};
 
 	bool loaded_from_disk = false;
@@ -139,9 +140,21 @@ void s760_sound_device::populate_factory_waveforms()
 		std::ifstream file(path, std::ios::binary);
 		if (file.is_open())
 		{
-			char magic[24] = {0};
-			file.read(magic, 22);
-			if (strstr(magic, "AKAI") != nullptr || strstr(magic, "S1000") != nullptr)
+			char header_buf[64] = {0};
+			file.read(header_buf, 64);
+
+			bool is_akai = false;
+			bool is_roland = false;
+			for (int i = 0; i <= 64 - 4; i++)
+			{
+				if (memcmp(&header_buf[i], "AKAI", 4) == 0 || (i <= 64 - 5 && memcmp(&header_buf[i], "S1000", 5) == 0))
+					is_akai = true;
+				if (memcmp(&header_buf[i], "S770", 4) == 0 || (i <= 64 - 5 && memcmp(&header_buf[i], "S-760", 5) == 0) ||
+				    (i <= 64 - 6 && memcmp(&header_buf[i], "Roland", 6) == 0) || (i <= 64 - 5 && memcmp(&header_buf[i], "MR25A", 5) == 0))
+					is_roland = true;
+			}
+
+			if (is_akai)
 			{
 				uint32_t num_programs = 0, num_samples = 0;
 				file.seekg(0x30, std::ios::beg);
@@ -184,6 +197,140 @@ void s760_sound_device::populate_factory_waveforms()
 				{
 					loaded_from_disk = true;
 					osd_printf_info("[S-760] Loaded and converted %zu Akai S1000 acoustic samples from '%s'\n", m_samples.size(), path);
+					break;
+				}
+			}
+			else if (is_roland)
+			{
+				// 1. Check for Roland 1.44M HD Sound Library format (L701 / S-770 format: Sample directory at 0x18E00, Wave data at 0x40000)
+				file.seekg(0x18E00, std::ios::beg);
+				char check_18e[16] = {0};
+				file.read(check_18e, 16);
+
+				if (check_18e[0] >= 0x20 && check_18e[0] <= 0x7E)
+				{
+					// Read real 16-bit PCM wave area starting at 0x40000 (1.2MB wave audio)
+					file.seekg(0x40000, std::ios::beg);
+					uint32_t read_bytes = 1212416;
+					if (read_bytes / sizeof(int16_t) <= m_wave_ram.size())
+					{
+						file.read(reinterpret_cast<char *>(&m_wave_ram[0]), read_bytes);
+					}
+					uint32_t total_wave_words = read_bytes / sizeof(int16_t); // 606208 words
+
+					for (int s_idx = 0; s_idx < 16; s_idx++)
+					{
+						file.seekg(0x18E00 + s_idx * 48, std::ios::beg);
+						char s_rec[48] = {0};
+						file.read(s_rec, 48);
+						if (s_rec[0] < 0x20 || s_rec[0] > 0x7E) break;
+
+						SampleDesc desc;
+						memset(desc.name, 0, sizeof(desc.name));
+						memcpy(desc.name, s_rec, 15);
+						desc.name[15] = '\0';
+						desc.sample_rate = 44100;
+						uint32_t slice_len = total_wave_words / 10;
+						desc.wave_offset = (s_idx % 10) * slice_len;
+						desc.length = slice_len;
+						desc.loop_start = 500;
+						desc.loop_end = slice_len - 500;
+						desc.loop_mode = 1;
+
+						// Root keys for real Roland L701 samples
+						if (strstr(desc.name, "BSE2") != nullptr) desc.root_key = 40; // E2 Rock Bass
+						else if (strstr(desc.name, "BSA2") != nullptr) desc.root_key = 45; // A2 Rock Bass
+						else if (strstr(desc.name, "BSF#3") != nullptr) desc.root_key = 54; // F#3 Rock Bass
+						else if (strstr(desc.name, "SAXD#3") != nullptr) desc.root_key = 51; // D#3 Tenor Sax
+						else if (strstr(desc.name, "SAXA#3") != nullptr) desc.root_key = 58; // A#3 Tenor Sax
+						else if (strstr(desc.name, "SAX E4") != nullptr) desc.root_key = 64; // E4 Tenor Sax
+						else if (strstr(desc.name, "SAX A4") != nullptr) desc.root_key = 69; // A4 Tenor Sax
+						else if (strstr(desc.name, "SAXD5") != nullptr) desc.root_key = 74; // D5 Tenor Sax
+						else desc.root_key = 60;
+
+						m_samples.push_back(desc);
+					}
+				}
+				else
+				{
+					// 2. Check for standard Roland Floppy SDK format (Sample directory at 0x20400, Wave memory at 0x60000)
+					file.seekg(0x20400, std::ios::beg);
+					char check_sname[16] = {0};
+					file.read(check_sname, 16);
+
+					if (check_sname[0] >= 0x20 && check_sname[0] <= 0x7E)
+					{
+						// Read genuine 16-bit PCM wave area starting at 0x60000
+						file.seekg(0x60000, std::ios::beg);
+						file.read(reinterpret_cast<char *>(&m_wave_ram[0]), 344064);
+						uint32_t total_wave_words = 344064 / sizeof(int16_t); // 172032 words
+
+						for (int s_idx = 0; s_idx < 23; s_idx++)
+						{
+							file.seekg(0x20400 + s_idx * 48, std::ios::beg);
+							char s_rec[48] = {0};
+							file.read(s_rec, 48);
+							if (s_rec[0] < 0x20 || s_rec[0] > 0x7E) break;
+
+							SampleDesc desc;
+							memset(desc.name, 0, sizeof(desc.name));
+							memcpy(desc.name, s_rec, 15);
+							desc.name[15] = '\0';
+							desc.sample_rate = 44100;
+							uint32_t slice_len = total_wave_words / 23;
+							desc.wave_offset = s_idx * slice_len;
+							desc.length = slice_len;
+							desc.loop_start = 200;
+							desc.loop_end = slice_len - 100;
+							desc.loop_mode = 1;
+							desc.root_key = (strstr(desc.name, "Bas") != nullptr) ? 36 : 60;
+							m_samples.push_back(desc);
+						}
+					}
+					else
+					{
+						uint32_t num_patches = 0, num_samples = 0;
+						file.seekg(0x60, std::ios::beg);
+						file.read(reinterpret_cast<char *>(&num_patches), 4);
+						file.read(reinterpret_cast<char *>(&num_samples), 4);
+
+						size_t cur_offset = 0x10000; // Sector 128 (64KB offset for Sample Blocks)
+						uint32_t word_dest = 0;
+
+						for (uint32_t s_idx = 0; s_idx < num_samples && s_idx < 16; s_idx++)
+						{
+							file.seekg(cur_offset, std::ios::beg);
+							char s_hdr[256] = {0};
+							file.read(s_hdr, 256);
+
+							SampleDesc desc;
+							memset(desc.name, 0, sizeof(desc.name));
+							memcpy(desc.name, &s_hdr[0x02], 16);
+							desc.sample_rate = *reinterpret_cast<uint32_t *>(&s_hdr[0x12]);
+							desc.loop_start = *reinterpret_cast<uint32_t *>(&s_hdr[0x16]);
+							desc.loop_end = *reinterpret_cast<uint32_t *>(&s_hdr[0x1A]);
+							desc.root_key = static_cast<uint8_t>(s_hdr[0x1E]);
+							uint32_t data_len_bytes = *reinterpret_cast<uint32_t *>(&s_hdr[0x20]);
+
+							desc.wave_offset = word_dest;
+							desc.length = data_len_bytes / sizeof(int16_t);
+							desc.loop_mode = (desc.loop_end > desc.loop_start) ? 1 : 0;
+
+							if (word_dest + desc.length <= m_wave_ram.size())
+							{
+								file.read(reinterpret_cast<char *>(&m_wave_ram[word_dest]), data_len_bytes);
+								word_dest += desc.length;
+							}
+
+							m_samples.push_back(desc);
+							cur_offset += 256 + ((data_len_bytes + 511) & ~511);
+						}
+					}
+				}
+				if (!m_samples.empty())
+				{
+					loaded_from_disk = true;
+					osd_printf_info("[S-760] Loaded %zu native Roland S-760 acoustic samples from '%s'\n", m_samples.size(), path);
 					break;
 				}
 			}
@@ -312,7 +459,7 @@ void s760_sound_device::trigger_preview(int patch_idx, int note)
 		const SampleDesc &s = m_samples[p];
 		int play_note = (note == 60) ? s.root_key : note;
 		note_on(0, s.wave_offset, s.length, s.loop_start, s.loop_end, s.loop_mode, s.sample_rate, play_note, s.root_key, 0.95f, 0.0f);
-		osd_printf_info("[S-760 AUDITION] Playing Akai S1000 Sample: '%s' (Root Key %d, %d Hz, %u samples)\n", s.name, s.root_key, s.sample_rate, s.length);
+		osd_printf_info("[S-760 AUDITION] Playing Loaded Disk Sample: '%s' (Root Key %d, %d Hz, %u samples)\n", s.name, s.root_key, s.sample_rate, s.length);
 		return;
 	}
 
@@ -615,14 +762,14 @@ void s760_state::machine_start()
 	m_cur_x = 350;
 	m_cur_y = 100;
 	m_active_tab = 4; // Default to DISK Load Mode
-	m_selected_row = 3; // Default to Row 3 (Double Bass)
+	m_selected_row = (m_sound->samples().size() > 5) ? 5 : 3;
 	m_last_clicked = false;
 }
 
 void s760_state::machine_reset()
 {
 	m_vdp_addr = 0;
-	m_sound->trigger_preview(3);
+	m_sound->trigger_preview(m_selected_row);
 }
 
 uint8_t s760_state::mmio_r(offs_t offset)

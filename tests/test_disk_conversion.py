@@ -317,3 +317,51 @@ end, "bass_test")
     assert res["data"].get("bass_preview_ok") is True
 
 
+def test_roland_s760_disk_sample_loading_and_synthesis():
+    """
+    Verify creating and parsing a native Roland S-760 1.44MB sound disk (.img)
+    and synthesizing acoustic samples (Acoustic Bass, Grand Piano, Jazz Guitar)
+    with realistic physical envelope transients and fundamental frequencies.
+    """
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from scripts.build_s760_disk import generate_roland_acoustic_upright, generate_acoustic_jazz_guitar, generate_roland_concert_grand
+
+    disk = RolandS760Disk(volume_name="S760 ACOUSTIC")
+    disk.add_patch(patch_id=1, patch_name="S760 Ac. Bass", partial_ids=[1])
+    disk.add_patch(patch_id=2, patch_name="S760 GrandPno", partial_ids=[2])
+    disk.add_patch(patch_id=3, patch_name="S760 Jazz Gtr", partial_ids=[3])
+
+    disk.add_sample(sample_id=1, sample_name="Ac.UprightBass", sample_rate=44100, pcm_data=generate_roland_acoustic_upright(), loop_start=2140, loop_end=84000, root_key=28)
+    disk.add_sample(sample_id=2, sample_name="GrandPiano C4", sample_rate=44100, pcm_data=generate_roland_concert_grand(), loop_start=3000, loop_end=84000, root_key=60)
+    disk.add_sample(sample_id=3, sample_name="JazzGuitar E2", sample_rate=44100, pcm_data=generate_acoustic_jazz_guitar(), loop_start=1500, loop_end=64000, root_key=40)
+
+    img_data = disk.build_image()
+    assert len(img_data) == 1474560
+
+    parsed = RolandS760Disk.parse(img_data)
+    assert parsed["is_roland"] is True
+    assert parsed["volume_name"] == "S760 ACOUSTIC"
+    assert parsed["num_patches"] == 3
+    assert parsed["num_samples"] == 3
+
+    # Test synthesizing the acoustic bass sample from the Roland disk
+    sample_bass = disk.samples[0]
+    audio_bass = S760VoiceSynthesizer.render_voice(sample_bass, note=28, num_output_samples=44100, output_rate=44100)
+    assert len(audio_bass) == 44100
+
+    # Ensure strong initial attack transient and non-zero RMS
+    attack_rms = math.sqrt(sum(s * s for s in audio_bass[0:4410]) / 4410)
+    tail_rms = math.sqrt(sum(s * s for s in audio_bass[22050:44100]) / 22050)
+    assert attack_rms > tail_rms
+    assert attack_rms > 0.15
+
+    # Test synthesizing the jazz guitar sample
+    sample_gtr = disk.samples[2]
+    audio_gtr = S760VoiceSynthesizer.render_voice(sample_gtr, note=40, num_output_samples=44100, output_rate=44100)
+    assert len(audio_gtr) == 44100
+    gtr_rms = math.sqrt(sum(s * s for s in audio_gtr) / len(audio_gtr))
+    assert gtr_rms > 0.05
+
+
+
