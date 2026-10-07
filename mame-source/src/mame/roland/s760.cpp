@@ -856,8 +856,29 @@ private:
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
 
-	// Gate Array MMIO & VDP Registers
+	// Roland Gate Array & Peripheral Registers (0xF000 - 0xF01F)
 	uint8_t m_mmio[16];
+	uint8_t m_ga_ctrl;
+	uint8_t m_ga_status;
+	uint8_t m_simm_bank;
+	uint8_t m_ga_chip_select;
+	uint8_t m_dsp_cmd_latch;
+	uint8_t m_dsp_addr_latch;
+	uint8_t m_eeprom_latch;
+	uint8_t m_eeprom_do;
+	bool m_peripherals_enabled;
+
+	// AK93C45 1024-Bit Serial EEPROM State Machine (64 x 16-bit words)
+	uint16_t m_eeprom_data[64];
+	uint32_t m_eeprom_shift_reg;
+	int m_eeprom_bit_count;
+	int m_eeprom_state; // 0=IDLE, 1=READING_CMD, 2=READING_DATA, 3=SHIFTING_OUT
+	bool m_eeprom_cs;
+	bool m_eeprom_clk;
+	bool m_eeprom_di;
+	bool m_eeprom_ewen;
+
+	// VDP Registers & VRAM
 	uint8_t m_vdp_regs[128];
 	uint16_t m_vdp_addr;
 	std::unique_ptr<uint8_t[]> m_vdp_vram;
@@ -929,8 +950,31 @@ void s760_state::machine_start()
 	memset(m_vdp_regs, 0, sizeof(m_vdp_regs));
 	memset(m_mmio, 0, sizeof(m_mmio));
 
-	m_mmio[0] = 0x80; // Gate array ready status bit
-	m_mmio[2] = 0x20; // Gate array status bit 5
+	m_ga_ctrl = 0x80;
+	m_ga_status = 0x04; // Bit 2 = Peripheral Bus Ready
+	m_simm_bank = 0x00;
+	m_ga_chip_select = 0x00;
+	m_dsp_cmd_latch = 0x00;
+	m_dsp_addr_latch = 0x00;
+	m_eeprom_latch = 0x00;
+	m_eeprom_do = 0x00;
+	m_peripherals_enabled = false;
+
+	// Initialize AK93C45 EEPROM with factory configuration
+	memset(m_eeprom_data, 0, sizeof(m_eeprom_data));
+	m_eeprom_data[0] = 0x414A; // Roland Magic ID
+	m_eeprom_data[1] = 0x0224; // Version 2.24
+	m_eeprom_data[2] = 0x0007; // SCSI ID 7 (Host)
+	m_eeprom_data[3] = 0x01B8; // Master Tune: 440.0 Hz
+	m_eeprom_data[4] = 0x0008; // LCD Contrast: 8
+	m_eeprom_data[5] = 0x0002; // Mouse Speed: 2x
+	m_eeprom_shift_reg = 0;
+	m_eeprom_bit_count = 0;
+	m_eeprom_state = 0;
+	m_eeprom_cs = false;
+	m_eeprom_clk = false;
+	m_eeprom_di = false;
+	m_eeprom_ewen = false;
 
 	m_vdp_addr = 0;
 	m_cur_x = 350;
@@ -972,12 +1016,57 @@ void s760_state::machine_start()
 void s760_state::machine_reset()
 {
 	m_vdp_addr = 0;
+	m_ga_status = 0x04; // Bus Ready
+	m_peripherals_enabled = true;
 	m_sound->trigger_preview(m_selected_row);
 }
 
 uint8_t s760_state::mmio_r(offs_t offset)
 {
-	uint8_t val = m_mmio[offset & 0x0F];
+	uint8_t val = 0x00;
+	switch (offset & 0x1F)
+	{
+		case 0x00: // Gate Array Control / Bus Reset Latch
+			val = m_ga_ctrl | 0x80;
+			break;
+
+		case 0x01: // Gate Array Master Status & Peripheral IRQ Flags
+			val = m_ga_status | 0x04; // Bit 2 = Bus Ready (allows OS boot loop pass)
+			break;
+
+		case 0x02: // SIMM Memory Bank Selector (32MB address space)
+			val = m_simm_bank;
+			break;
+
+		case 0x03: // Front Panel Rotary Encoder & Switch Matrix
+			val = (uint8_t)(m_gotek_encoder_angle & 0x0F);
+			break;
+
+		case 0x04: // Peripheral Chip Select Status
+			val = m_ga_chip_select;
+			break;
+
+		case 0x06: // DSP Command Latch
+			val = m_dsp_cmd_latch;
+			break;
+
+		case 0x08: // DSP Address Latch
+			val = m_dsp_addr_latch;
+			break;
+
+		case 0x0E: // EEPROM Latch
+			val = m_eeprom_latch;
+			break;
+
+		case 0x10: // EEPROM Serial Data Out (DO)
+			val = m_eeprom_do & 0x01;
+			break;
+
+		default:
+			val = m_mmio[offset & 0x0F];
+			break;
+	}
+
 	logerror("[MMIO R] 0xF0%02X => 0x%02X\n", offset, val);
 	return val;
 }
@@ -986,6 +1075,122 @@ void s760_state::mmio_w(offs_t offset, uint8_t data)
 {
 	logerror("[MMIO W] 0xF0%02X <= 0x%02X\n", offset, data);
 	m_mmio[offset & 0x0F] = data;
+
+	switch (offset & 0x1F)
+	{
+		case 0x00: // Control & Reset latch
+			m_ga_ctrl = data;
+			if (data & 0x01)
+				m_peripherals_enabled = true;
+			break;
+
+		case 0x01: // Clear IRQ Ack
+			m_ga_status &= ~data;
+			break;
+
+		case 0x02: // SIMM Bank switch (0..15)
+			m_simm_bank = data & 0x0F;
+			break;
+
+		case 0x04: // Peripheral Chip Select
+			m_ga_chip_select = data;
+			break;
+
+		case 0x06: // DSP Command Latch
+			m_dsp_cmd_latch = data;
+			break;
+
+		case 0x08: // DSP Address Latch
+			m_dsp_addr_latch = data;
+			break;
+
+		case 0x0E: // AK93C45 EEPROM Bit-Bang (Bit 0=CS, Bit 1=CLK, Bit 2=DI)
+		{
+			m_eeprom_latch = data;
+			bool new_cs = (data & 0x01) != 0;
+			bool new_clk = (data & 0x02) != 0;
+			bool new_di = (data & 0x04) != 0;
+
+			if (!new_cs)
+			{
+				m_eeprom_cs = false;
+				m_eeprom_state = 0;
+				m_eeprom_bit_count = 0;
+				m_eeprom_do = 0;
+			}
+			else
+			{
+				m_eeprom_cs = true;
+				if (!m_eeprom_clk && new_clk) // Rising clock edge
+				{
+					if (m_eeprom_state == 0) // Waiting for Start Bit (1)
+					{
+						if (new_di)
+						{
+							m_eeprom_state = 1; // READING_CMD
+							m_eeprom_shift_reg = 0;
+							m_eeprom_bit_count = 0;
+						}
+					}
+					else if (m_eeprom_state == 1) // Reading 8-bit Opcode + Address
+					{
+						m_eeprom_shift_reg = (m_eeprom_shift_reg << 1) | (new_di ? 1 : 0);
+						m_eeprom_bit_count++;
+						if (m_eeprom_bit_count == 8)
+						{
+							uint8_t op = (m_eeprom_shift_reg >> 6) & 0x03;
+							uint8_t addr = m_eeprom_shift_reg & 0x3F;
+							if (op == 0x02) // READ (1 0 + A5..A0)
+							{
+								m_eeprom_shift_reg = m_eeprom_data[addr & 0x3F];
+								m_eeprom_bit_count = 0;
+								m_eeprom_state = 3; // SHIFTING_OUT
+								m_eeprom_do = 0; // Dummy 0 bit
+							}
+							else if (op == 0x01) // WRITE (0 1 + A5..A0)
+							{
+								m_eeprom_bit_count = 0;
+								m_eeprom_shift_reg = 0;
+								m_eeprom_state = 2; // READING_DATA
+							}
+							else if (op == 0x00) // EWEN / EWDS
+							{
+								if ((addr & 0x30) == 0x30) m_eeprom_ewen = true;
+								else if ((addr & 0x30) == 0x00) m_eeprom_ewen = false;
+								m_eeprom_state = 0;
+							}
+						}
+					}
+					else if (m_eeprom_state == 2) // Reading 16-bit Write Data
+					{
+						m_eeprom_shift_reg = (m_eeprom_shift_reg << 1) | (new_di ? 1 : 0);
+						m_eeprom_bit_count++;
+						if (m_eeprom_bit_count == 16)
+						{
+							uint8_t addr = m_mmio[0x0E] & 0x3F;
+							if (m_eeprom_ewen)
+								m_eeprom_data[addr & 0x3F] = (uint16_t)m_eeprom_shift_reg;
+							m_eeprom_state = 0;
+						}
+					}
+					else if (m_eeprom_state == 3) // Shifting out 16-bit Read Data
+					{
+						m_eeprom_do = (m_eeprom_shift_reg & 0x8000) ? 1 : 0;
+						m_eeprom_shift_reg <<= 1;
+						m_eeprom_bit_count++;
+						if (m_eeprom_bit_count == 16)
+							m_eeprom_state = 0;
+					}
+				}
+				m_eeprom_clk = new_clk;
+				m_eeprom_di = new_di;
+			}
+			break;
+		}
+
+		default:
+			break;
+	}
 }
 
 uint8_t s760_state::vdp_r(offs_t offset)
