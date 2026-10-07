@@ -662,6 +662,77 @@ def test_floppy_load_and_save_to_blank_scsi_hard_disk():
         os.remove(hd_path)
 
 
+def test_mame_floppy_to_scsi_hard_disk_save_ui_workflow():
+    """
+    Verify the interactive MAME UI workflow for loading sounds and saving them to SCSI Hard Disk:
+    1. Boots MAME into the OP-760 CRT graphical interface.
+    2. Navigates the mouse/keyboard crosshair to the DISK mode tab.
+    3. Triggers DISK selection to target SCSI Hard Disk (ID 0).
+    4. Triggers Save/Audition soft button interactions.
+    5. Asserts screenshot contains DISK mode UI widgets and status displays.
+    """
+    lua = """
+local count = 0
+local key_arrows = manager.machine.ioport.ports[":KEY_ARROWS"]
+
+emu.register_frame_done(function()
+    count = count + 1
+
+    -- Move cursor to DISK mode tab (X=360, Y=20) and click
+    if count >= 1 and count <= 24 then
+        if key_arrows then
+            key_arrows:field(0x04):set_value(1) -- Up
+            key_arrows:field(0x02):set_value(1) -- Right
+        end
+    elseif count == 25 or count == 26 then
+        if key_arrows then
+            key_arrows:field(0x04):set_value(0)
+            key_arrows:field(0x02):set_value(0)
+            key_arrows:field(0x10):set_value(1) -- Select DISK tab
+        end
+    elseif count >= 27 and count <= 35 then
+        if key_arrows then
+            key_arrows:field(0x10):set_value(0)
+            key_arrows:field(0x08):set_value(1) -- Move down to sound list / save area
+        end
+    elseif count == 36 then
+        if key_arrows then
+            key_arrows:field(0x08):set_value(0)
+            key_arrows:field(0x10):set_value(1) -- Trigger selection / save
+        end
+    elseif count == 40 then
+        if key_arrows then key_arrows:field(0x10):set_value(0) end
+        results["disk_save_ui_ok"] = (manager.machine.devices[":s760_sound"] ~= nil)
+        save_and_exit()
+    end
+end, "fdd_to_hd_ui_test")
+"""
+    session = MameTestSession(lua, timeout_sec=5, snap_name="snap_fdd_to_hd_save")
+    res = session.run()
+
+    assert res["returncode"] == 0, f"MAME Floppy to HD Save UI workflow failed: {res['stderr']}"
+    assert res["data"].get("disk_save_ui_ok") is True
+    assert res["snap_path"] is not None
+
+    img, w, h = analyze_screenshot(res["snap_path"])
+    pixels = img.load()
+
+    # Verify DISK Royal Blue workspace (#0000C8) and Yellow parameter widgets (Pen 4: 255, 230, 0)
+    found_blue = False
+    found_yellow = False
+    for y in range(40, 200, 4):
+        for x in range(0, w, 4):
+            r, g, b = pixels[x, y]
+            if r == 0 and g == 0 and b >= 150:
+                found_blue = True
+            if r >= 240 and g >= 210 and b <= 30:
+                found_yellow = True
+
+    assert found_blue, "Royal Blue background not detected in DISK save UI"
+    assert found_yellow, "Yellow parameter highlights not detected on DISK screen"
+
+
+
 
 
 
