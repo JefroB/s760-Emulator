@@ -2,6 +2,8 @@
 #include "s760/s760_clap_plugin.hpp"
 #include "s760/vst_defs.h"
 #include "s760/s760_vst_plugin.hpp"
+#include "s760/vst3_defs.h"
+#include "s760/s760_vst3_plugin.hpp"
 #include "s760/s760_disk.hpp"
 
 #include <iostream>
@@ -12,7 +14,9 @@
 
 namespace fs = std::filesystem;
 
-// Minimal Memory Stream for State Testing
+// -----------------------------------------------------------------------------
+// CLAP Memory Stream
+// -----------------------------------------------------------------------------
 struct MemoryStream {
     std::vector<uint8_t> buffer;
     size_t read_pos = 0;
@@ -35,7 +39,7 @@ static int64_t mem_read(const struct clap_istream *stream, void *buf, uint64_t s
     return static_cast<int64_t>(to_read);
 }
 
-// Minimal Host Event List
+// Minimal Host Event List for CLAP
 struct EventList {
     std::vector<clap_event_header_t*> events;
 };
@@ -50,7 +54,7 @@ static const clap_event_header_t* event_list_get(const struct clap_input_events 
     return (index < el->events.size()) ? el->events[index] : nullptr;
 }
 
-void test_plugin_lifecycle_and_audio() {
+void test_clap_plugin_lifecycle_and_audio() {
     std::cout << "[TEST] CLAP Plugin Instantiation & Audio Processing..." << std::endl;
 
     clap_host_t host_ctx;
@@ -127,7 +131,7 @@ void test_plugin_lifecycle_and_audio() {
     std::cout << "  -> CLAP Plugin Audio & Event Processing Tests PASSED!" << std::endl;
 }
 
-void test_plugin_state_serialization() {
+void test_clap_plugin_state_serialization() {
     std::cout << "[TEST] CLAP Plugin State Serialization & Project Recall..." << std::endl;
 
     fs::create_directories("test_plugin_disks");
@@ -178,10 +182,13 @@ void test_plugin_state_serialization() {
     std::cout << "  -> CLAP Plugin State Serialization Tests PASSED!" << std::endl;
 }
 
+// -----------------------------------------------------------------------------
+// VST2 Test
+// -----------------------------------------------------------------------------
 extern "C" AEffect* VSTPluginMain(audioMasterCallback audioMaster);
 
 void test_vst_plugin_lifecycle_and_audio() {
-    std::cout << "[TEST] VST2/VST3 Plugin Instantiation & Audio Processing..." << std::endl;
+    std::cout << "[TEST] VST2 Plugin Instantiation & Audio Processing..." << std::endl;
 
     auto* effect = VSTPluginMain(nullptr);
     assert(effect != nullptr);
@@ -211,23 +218,144 @@ void test_vst_plugin_lifecycle_and_audio() {
     // Close effect
     assert(effect->dispatcher(effect, effClose, 0, 0, nullptr, 0.0f) == 1);
 
-    std::cout << "  -> VST2/VST3 Plugin Tests PASSED!" << std::endl;
+    std::cout << "  -> VST2 Plugin Tests PASSED!" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+// VST3 Test
+// -----------------------------------------------------------------------------
+class Vst3MemoryStream : public Steinberg::IBStream {
+public:
+    std::vector<uint8_t> buffer;
+    int64_t pos = 0;
+
+    tresult queryInterface(const TUID _iid, void** obj) override {
+        (void)_iid;
+        *obj = this;
+        return kResultOk;
+    }
+    uint32_t addRef() override { return 1; }
+    uint32_t release() override { return 1; }
+
+    tresult read(void* buf, int32_t numBytes, int32_t* numBytesRead) override {
+        if (pos >= static_cast<int64_t>(buffer.size())) {
+            if (numBytesRead) *numBytesRead = 0;
+            return kResultOk;
+        }
+        size_t avail = buffer.size() - static_cast<size_t>(pos);
+        size_t to_read = std::min<size_t>(avail, static_cast<size_t>(numBytes));
+        std::memcpy(buf, buffer.data() + pos, to_read);
+        pos += to_read;
+        if (numBytesRead) *numBytesRead = static_cast<int32_t>(to_read);
+        return kResultOk;
+    }
+
+    tresult write(void* buf, int32_t numBytes, int32_t* numBytesWritten) override {
+        const uint8_t* ptr = static_cast<const uint8_t*>(buf);
+        buffer.insert(buffer.end(), ptr, ptr + numBytes);
+        pos += numBytes;
+        if (numBytesWritten) *numBytesWritten = numBytes;
+        return kResultOk;
+    }
+
+    tresult seek(int64_t mode, int32_t mode_from, int64_t* result) override {
+        if (mode_from == 0) pos = mode; // beg
+        else if (mode_from == 1) pos += mode; // cur
+        else if (mode_from == 2) pos = static_cast<int64_t>(buffer.size()) + mode; // end
+        if (result) *result = pos;
+        return kResultOk;
+    }
+
+    tresult tell(int64_t* result) override {
+        if (result) *result = pos;
+        return kResultOk;
+    }
+};
+
+extern "C" Steinberg::IPluginFactory* GetPluginFactory();
+
+void test_vst3_plugin_lifecycle_and_audio() {
+    std::cout << "[TEST] VST3 Factory, Processor & State Persistence..." << std::endl;
+
+    std::cout << "  [VST3 Debug] Factory queried..." << std::endl;
+    auto* factory = GetPluginFactory();
+    assert(factory != nullptr);
+    assert(factory->countClasses() == 1);
+
+    Steinberg::PClassInfo info;
+    assert(factory->getClassInfo(0, &info) == kResultOk);
+    assert(std::string(info.name).find("S-760") != std::string::npos);
+
+    std::cout << "  [VST3 Debug] Creating instance..." << std::endl;
+    void* plugin_obj = nullptr;
+    assert(factory->createInstance(nullptr, nullptr, &plugin_obj) == kResultOk);
+    assert(plugin_obj != nullptr);
+
+    auto* plugin = static_cast<s760::S760Vst3Plugin*>(plugin_obj);
+    auto* comp = static_cast<Steinberg::IComponent*>(plugin);
+    auto* proc = static_cast<Steinberg::IAudioProcessor*>(plugin);
+
+    std::cout << "  [VST3 Debug] Initializing & setupProcessing..." << std::endl;
+    assert(comp->initialize(nullptr) == kResultOk);
+    Steinberg::ProcessSetup setup;
+    setup.sampleRate = 44100.0;
+    setup.maxSamplesPerBlock = 512;
+    setup.processMode = 0;
+    setup.symbolicSampleSize = 0;
+    assert(proc->setupProcessing(setup) == kResultOk);
+    assert(comp->setActive(true) == kResultOk);
+    assert(proc->setProcessing(true) == kResultOk);
+
+    std::cout << "  [VST3 Debug] Processing audio block..." << std::endl;
+    std::vector<float> out_l(512, 0.0f);
+    std::vector<float> out_r(512, 0.0f);
+    float* channel_ptrs[2] = {out_l.data(), out_r.data()};
+
+    AudioBusBuffers out_bus;
+    out_bus.numChannels = 2;
+    out_bus.silenceFlags = 0;
+    out_bus.channelBuffers32 = channel_ptrs;
+
+    Steinberg::ProcessData pdata;
+    std::memset(&pdata, 0, sizeof(pdata));
+    pdata.numSamples = 512;
+    pdata.numOutputs = 1;
+    pdata.outputs = &out_bus;
+
+    assert(proc->process(pdata) == kResultOk);
+
+    std::cout << "  [VST3 Debug] State saving & restoring..." << std::endl;
+    Vst3MemoryStream stream;
+    assert(comp->getState(&stream) == kResultOk);
+    assert(!stream.buffer.empty());
+
+    stream.seek(0, 0, nullptr);
+    assert(comp->setState(&stream) == kResultOk);
+
+    std::cout << "  [VST3 Debug] Terminating..." << std::endl;
+    assert(proc->setProcessing(false) == kResultOk);
+    assert(comp->setActive(false) == kResultOk);
+    assert(comp->terminate() == kResultOk);
+    delete plugin;
+
+    std::cout << "  -> VST3 Plugin Tests PASSED!" << std::endl;
 }
 
 int main() {
     std::cout << "==========================================" << std::endl;
-    std::cout << "  Roland S-760 VST & CLAP DAW Test Suite  " << std::endl;
+    std::cout << "  Roland S-760 VST3, VST2 & CLAP DAW Suite" << std::endl;
     std::cout << "==========================================" << std::endl;
 
     try {
-        test_plugin_lifecycle_and_audio();
-        test_plugin_state_serialization();
+        test_clap_plugin_lifecycle_and_audio();
+        test_clap_plugin_state_serialization();
         test_vst_plugin_lifecycle_and_audio();
+        test_vst3_plugin_lifecycle_and_audio();
     } catch (const std::exception& e) {
         std::cerr << "[FATAL TEST ERROR] " << e.what() << std::endl;
         return 1;
     }
 
-    std::cout << "\n>>> ALL VST & CLAP PLUGIN TESTS PASSED SUCCESSFULLY! <<<" << std::endl;
+    std::cout << "\n>>> ALL VST3, VST2 & CLAP PLUGIN TESTS PASSED SUCCESSFULLY! <<<" << std::endl;
     return 0;
 }
