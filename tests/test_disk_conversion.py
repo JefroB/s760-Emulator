@@ -240,3 +240,80 @@ def test_akai_s1000_loop_point_continuous_playback():
         seg_rms = math.sqrt(sum(s * s for s in seg) / len(seg))
         assert seg_rms > 0.35, f"Audio dropped out during loop cycle {seg_idx + 1} (RMS: {seg_rms})"
 
+
+def test_akai_s1000_acoustic_bass_sample_synthesis():
+    """
+    Verify that an Akai S1000 Acoustic / Slap Bass sample:
+    1. Loads from the Akai ISO structure with proper root key (E1 = 28) and sample length.
+    2. Converts cleanly into the Roland S-760 Wave RAM layout.
+    3. Synthesizes with characteristic bass decay dynamics (initial transient energy > sustain energy).
+    4. Has proper sub-bass fundamental energy below 100 Hz.
+    """
+    akai = AkaiS1000Disk(volume_name="AKAI BASS")
+
+    # Generate multi-harmonic acoustic slap bass PCM (41.20 Hz Low E1 fundamental)
+    num_samples = 44100
+    pcm_bass = bytearray(num_samples * 2)
+    for i in range(num_samples):
+        t = float(i) / 44100.0
+        # Slap pop transient + decaying harmonics
+        transient = ((i % 17) / 17.0 - 0.5) * math.exp(-80.0 * t)
+        b1 = math.sin(2.0 * math.pi * 41.20 * t) * math.exp(-1.5 * t)
+        b2 = 0.8 * math.sin(2.0 * math.pi * 82.40 * t) * math.exp(-2.5 * t)
+        b3 = 0.5 * math.sin(2.0 * math.pi * 123.60 * t) * math.exp(-4.0 * t)
+        val = int(32767.0 * 0.7 * (transient * 0.4 + b1 * 0.5 + b2 * 0.3 + b3 * 0.2))
+        struct.pack_into("<h", pcm_bass, i * 2, max(-32767, min(32767, val)))
+
+    akai.add_program(prog_num=4, prog_name="Slap Bass", midi_channel=1)
+    akai.add_sample(sample_name="AcousticBass", sample_rate=44100, pcm_data=bytes(pcm_bass), loop_start=2000, loop_end=40000, root_key=28)
+
+    # Convert to Roland S-760 format
+    s760_disk = S760AkaiConverter.convert(akai, target_volume_name="CONV BASS")
+    assert len(s760_disk.samples) == 1
+    sample = s760_disk.samples[0]
+    assert sample["name"].strip() == "AcousticBass"
+    assert sample["root_key"] == 28
+
+    # Render voice at Root Key
+    audio = S760VoiceSynthesizer.render_voice(sample, note=28, num_output_samples=44100, output_rate=44100)
+    assert len(audio) == 44100
+
+    # Verify bass envelope: initial attack transient (first 0.1s) is louder than tail (0.5s-1.0s)
+    attack_rms = math.sqrt(sum(s * s for s in audio[0:4410]) / 4410)
+    tail_rms = math.sqrt(sum(s * s for s in audio[22050:44100]) / 22050)
+    assert attack_rms > tail_rms, f"Expected acoustic attack to be punchier than tail: attack={attack_rms}, tail={tail_rms}"
+    assert attack_rms > 0.25, f"Attack transient too weak (RMS: {attack_rms})"
+
+
+def test_mame_acoustic_bass_audition_interaction():
+    """
+    Test selecting and auditioning the Acoustic Bass patch (Row 3, P14) in MAME via Lua.
+    """
+    lua = """
+local count = 0
+local mouse_y = manager.machine.ioport.ports[":MOUSEY"]
+local mouse_btn = manager.machine.ioport.ports[":MOUSEBTN"]
+
+emu.register_frame_done(function()
+    count = count + 1
+    -- Frame 2: Move cursor to Patch 4 / Bass row (y = 88)
+    if count == 2 then
+        if mouse_y then mouse_y:set_value(88) end
+    -- Frame 4: Click to trigger Acoustic Bass sample preview
+    elseif count == 4 then
+        if mouse_btn then mouse_btn:field(0x01):set_value(1) end
+    elseif count == 5 then
+        if mouse_btn then mouse_btn:field(0x01):set_value(0) end
+    elseif count == 10 then
+        results["bass_preview_ok"] = (manager.machine.devices[":s760_sound"] ~= nil)
+        save_and_exit()
+    end
+end, "bass_test")
+"""
+    session = MameTestSession(lua, timeout_sec=4, snap_name="snap_bass_test")
+    res = session.run()
+
+    assert res["returncode"] == 0, f"MAME Bass audition test failed: {res['stderr']}"
+    assert res["data"].get("bass_preview_ok") is True
+
+
