@@ -2,6 +2,7 @@
 
 #include "s760/libretro.h"
 #include "s760/s760_drive_manager.hpp"
+#include "s760/s760_recorder.hpp"
 
 #include <string>
 #include <vector>
@@ -45,8 +46,13 @@ public:
 
     // Audio Processing for DAW Audio Thread
     size_t read_audio_frames(float* left_out, float* right_out, size_t num_frames);
+    void feed_audio_input(const float* left_in, const float* right_in, size_t num_frames);
     AudioBufferStats get_audio_stats() const;
     void set_target_sample_rate(double rate) { m_target_sample_rate = rate; }
+
+    // Sample Recorder (Live Sampling Ingestion & Triggers)
+    S760SampleRecorder& get_recorder() { return m_recorder; }
+    const S760SampleRecorder& get_recorder() const { return m_recorder; }
 
     // Video CRT Frame for DAW UI
     VideoFrame get_latest_video_frame() const;
@@ -123,6 +129,9 @@ private:
 
     // Hardware Drive Manager
     S760DriveManager m_drive_manager;
+
+    // Live Sample Recorder
+    S760SampleRecorder m_recorder;
 
     static S760LibretroHost* s_active_instance;
 };

@@ -171,6 +171,26 @@ typedef struct clap_plugin_state {
     bool (*load)(const clap_plugin_t *plugin, const clap_istream_t *stream);
 } clap_plugin_state_t;
 
+// Audio Ports Extension
+#define CLAP_EXT_AUDIO_PORTS "clap.audio-ports"
+
+typedef struct clap_audio_port_info {
+    clap_id id;
+    char name[256];
+    uint32_t flags;
+    uint32_t channel_count;
+    const char *port_type;
+    clap_id in_place_pair;
+} clap_audio_port_info_t;
+
+#define CLAP_AUDIO_PORT_IS_MAIN (1 << 0)
+#define CLAP_PORT_STEREO "stereo"
+
+typedef struct clap_plugin_audio_ports {
+    uint32_t (*count)(const clap_plugin_t *plugin, bool is_input);
+    bool (*get)(const clap_plugin_t *plugin, uint32_t index, bool is_input, clap_audio_port_info_t *info);
+} clap_plugin_audio_ports_t;
+
 // Factory
 typedef struct clap_plugin_factory {
     uint32_t (*get_plugin_count)(const struct clap_plugin_factory *factory);

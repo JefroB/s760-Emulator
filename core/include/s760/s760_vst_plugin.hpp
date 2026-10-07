@@ -10,7 +10,7 @@ namespace s760 {
 
 class S760VstPlugin {
 public:
-    explicit S760VstPlugin(audioMasterCallback audioMaster);
+    explicit S760VstPlugin(audioMasterCallback audioMaster, bool is_fx = false);
     ~S760VstPlugin();
 
     AEffect* get_aeffect() { return &m_effect; }
@@ -26,6 +26,7 @@ private:
     AEffect m_effect;
     audioMasterCallback m_audio_master = nullptr;
     S760LibretroHost m_host;
+    bool m_is_fx = false;
 
     double m_sample_rate = 44100.0;
     int32_t m_block_size = 512;

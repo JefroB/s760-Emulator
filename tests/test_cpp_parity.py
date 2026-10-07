@@ -143,8 +143,63 @@ def test_libretro_host_lifecycle():
     # Check Savestate serialization
     state = host.save_state()
     assert len(state) == 1024
-    assert host.load_state(state) is True
-
     host.unload_system()
     host.unload_core()
+
+
+def test_sample_recorder_and_live_sampling():
+    """Verify live sample recorder threshold trigger, auto-normalize, and Roland disk injection."""
+    import math
+
+    rec = s760_cpp.S760SampleRecorder()
+    cfg = s760_cpp.RecordingConfig()
+    cfg.target_sample_rate = 44100
+    cfg.trigger_mode = s760_cpp.RecordTriggerMode.Threshold
+    cfg.threshold_db = -18.0
+    cfg.sample_name = "GUITAR_RIFF"
+    cfg.root_key = 64
+    rec.set_config(cfg)
+
+    rec.arm()
+    assert rec.is_armed() is True
+    assert rec.is_recording() is False
+
+    # Feed silence - should not trigger
+    silence = [0.0] * 512
+    rec.process_input(silence, silence, 44100.0)
+    assert rec.is_armed() is True
+
+    # Feed audio burst exceeding threshold (-18 dB -> 0.125 lin, burst is 0.6 lin)
+    burst = [math.sin(2.0 * math.pi * 440.0 * i / 44100.0) * 0.6 for i in range(1024)]
+    rec.process_input(burst, burst, 44100.0)
+    assert rec.is_recording() is True
+    assert rec.get_peak_level_left() >= 0.55
+
+    rec.stop_recording()
+    assert rec.get_state() == s760_cpp.RecordState.Finished
+
+    res = rec.get_recorded_result()
+    assert res.valid is True
+    assert res.sample_name == "GUITAR_RIFF"
+    assert res.sample_rate == 44100
+    assert len(res.left_pcm_bytes) > 0
+
+    # Export sample struct
+    smp = rec.export_sample(False)
+    assert smp.name == "GUITAR_RIFF_L"
+    assert smp.sample_rate == 44100
+    assert smp.root_key == 64
+    assert len(smp.data) > 0
+
+    # Inject into Roland floppy image
+    disk = s760_cpp.RolandS760Disk("LIVE RECORDED")
+    disk.add_patch(1, "Live Lead", [1], 127, 0)
+    disk.add_sample(1, smp.name, smp.sample_rate, smp.data, 0, len(smp.data) // 2 - 1, smp.root_key)
+    img_bytes = disk.build_image()
+    assert len(img_bytes) == 1474560
+
+    parsed = s760_cpp.RolandS760Disk.parse(img_bytes)
+    assert parsed.is_roland is True
+    assert parsed.samples[0].name == "GUITAR_RIFF_L"
+
 

@@ -262,6 +262,10 @@ size_t S760LibretroHost::read_audio_frames(float* left_out, float* right_out, si
     return to_read;
 }
 
+void S760LibretroHost::feed_audio_input(const float* left_in, const float* right_in, size_t num_frames) {
+    m_recorder.process_input(left_in, right_in, num_frames, m_target_sample_rate);
+}
+
 AudioBufferStats S760LibretroHost::get_audio_stats() const {
     std::lock_guard<std::mutex> lock(m_audio_mutex);
     AudioBufferStats s;
@@ -283,6 +287,12 @@ void S760LibretroHost::send_midi_byte(uint8_t byte) {
 
 void S760LibretroHost::send_midi_message(const uint8_t* msg, size_t len) {
     if (!msg || len == 0) return;
+
+    // Check MIDI Note On for sample recording trigger
+    if (len >= 3 && (msg[0] & 0xF0) == 0x90 && msg[2] > 0) {
+        m_recorder.on_midi_note_on(msg[1], msg[2]);
+    }
+
     std::lock_guard<std::mutex> lock(m_midi_mutex);
     for (size_t i = 0; i < len; ++i) {
         m_midi_in_queue.push(msg[i]);

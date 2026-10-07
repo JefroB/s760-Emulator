@@ -2,12 +2,12 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-49%20Passing-brightgreen.svg)](tests/)
-[![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
+[![Tests](https://img.shields.io/badge/Tests-50%20Passing-brightgreen.svg)](tests/)
+[![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP%20(Instrument%20%26%20FX)-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
-An open-source hardware emulation driver and DAW instrument plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
+An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
 
 ---
 
@@ -219,22 +219,24 @@ Users must provide their own legally acquired system disk:
 
 ---
 
-## DAW Plugins (VST3, VST2 & CLAP) & Libretro MAME Host
+## DAW Plugins (VST3, VST2 & CLAP — Instrument & FX) & Libretro MAME Host
 
-The project includes a self-contained, zero-dependency C++17 core (`libs760_core`), dynamic Libretro host wrapper, and native DAW instrument plugins (**VST3**, **VST2**, and **CLAP**):
+The project includes a self-contained, zero-dependency C++17 core (`libs760_core`), dynamic Libretro host wrapper, and native DAW instrument and audio effect plugins (**VST3**, **VST2**, and **CLAP**):
 
 ```mermaid
 flowchart LR
-    DAW["DAW Track (Ableton, Cubase, Studio One, FL Studio, Reaper, Bitwig)"]
+    DAW["DAW Track / Bus (Ableton, Cubase, Studio One, FL Studio, Reaper, Bitwig)"]
     
-    subgraph Plugins ["DAW Instrument Plugins"]
-        VST3["Roland_S760.vst3 (VST3 / IComponent)"]
-        VST2["Roland_S760.dll (VST2 / libretro_vst)"]
-        CLAP["Roland_S760.clap (CLAP)"]
+    subgraph Plugins ["DAW Instrument & Audio Effect Plugins"]
+        VST3["Roland_S760.vst3 (VST3 Instrument & FX / IComponent)"]
+        VST2_Inst["Roland_S760.dll (VST2 Instrument)"]
+        VST2_FX["Roland_S760_FX.dll (VST2 Live Sampler FX)"]
+        CLAP["Roland_S760.clap (CLAP Instrument & FX)"]
     end
 
-    subgraph Host ["Libretro Host Engine"]
+    subgraph Host ["Libretro Host & Live Audio Sampling Engine"]
         CoreLoader["S760LibretroHost (Dynamic Core Loader)"]
+        Recorder["S760SampleRecorder (Live Track Audio Capture)"]
         AudioRing["Stereo Audio Ring Buffer"]
     end
 
@@ -243,19 +245,25 @@ flowchart LR
         SCSI["ZuluSCSI / SCSI2SD (IDs 0..6) .hda / .iso"]
     end
 
+    DAW -->|"Stereo Audio In (Live Track Feed)"| Plugins --> Recorder
     DAW -->|"MIDI Notes / CC"| Plugins --> CoreLoader
-    CoreLoader --> AudioRing -->|"Stereo Float Out"| DAW
+    Recorder -->|"Recorded Samples / Wave RAM"| CoreLoader
+    CoreLoader --> AudioRing -->|"Stereo Float Out / Monitor"| DAW
     DAW <-->|"Session Recall (IBStream / effGetChunk / state)"| Plugins <--> CoreLoader
     CoreLoader <--> Drives
 ```
 
 ### Features:
-- **`Roland_S760.vst3` (Steinberg VST3)**: Native modern 64-bit VST3 plugin implementing `IComponent`, `IAudioProcessor`, and `IBStream` state streaming.
-- **`Roland_S760.dll` (VST2 / `libretro_vst` compatible)**: Drop into your standard legacy VST plugin directory.
-- **`Roland_S760.clap` (CLAP)**: Universal open-standard plugin format.
+- **`Roland_S760.vst3` (Steinberg VST3)**: Native modern 64-bit VST3 plugin with dual factory registration for both **Instrument** (`Instrument|Synth`) and **Audio Effect** (`Fx|Sampler`), stereo audio input bus, and `IBStream` state streaming.
+- **`Roland_S760.dll` & `Roland_S760_FX.dll` (VST2 / `libretro_vst`)**: Dedicated VST2 instrument and live sampler effect binaries.
+- **`Roland_S760.clap` (CLAP)**: Universal open-standard plugin exporting both Instrument and FX descriptors with the `clap.audio-ports` stereo routing extension.
+- **Live Audio Sampling into Sampler**: Feed audio directly from any DAW track, mic, synthesizer, or bus into the S-760 sampler. Supports:
+  - **Threshold Auto-Trigger**: Automatically begins recording when input amplitude crosses a dB threshold (e.g. -36 dB), with pre-trigger transient buffer capture.
+  - **MIDI Note-On Trigger**: Automatically synchronizes sample recording start with incoming MIDI note triggers.
+  - **Real-Time Resampling & Normalization**: Immediate sample rate conversion (48k, 44.1k, 32k, 22.05k), peak normalization, and silence auto-truncation.
 - **Hardware-Accurate Folder Persistence**: Mounts `.img`, `.hda`, and `.iso` files directly from disk folders. OS writes (Save System, Save Patch, Save Volume) flush straight back to the file on disk, making images 100% swappable with physical Gotek USB sticks and ZuluSCSI SD cards on real Roland S-760 hardware.
 - **Full DAW Project Recall**: Project state serialization (`IBStream` / `effGetChunk` / `effSetChunk` / `clap_plugin_state`) saves and restores emulator Wave RAM and mounted drive configurations instantly.
-- **Python Extension (`s760_cpp`)**: High-performance `pybind11` C++ bindings for batch conversion and automated testing.
+- **Python Extension (`s760_cpp`)**: High-performance `pybind11` C++ bindings for batch conversion, live audio streaming, and automated testing.
 
 ---
 
@@ -267,12 +275,12 @@ flowchart LR
 - **Python**: Python 3.10+ (used by test suites and Python bindings).
 - **Dependencies**: `pip install pytest pybind11 Pillow`
 
-### 1. Compiling C++ Core, VST Plugin, CLAP Plugin & Python Bindings (CMake)
+### 1. Compiling C++ Core, VST Plugins (Instrument + FX), CLAP Plugin & Python Bindings (CMake)
 ```powershell
 # Configure CMake project
 cmake -B build -S core -G "Visual Studio 17 2022" -A x64
 
-# Build Release binaries (s760_core.lib, Roland_S760.vst3, Roland_S760.dll, Roland_S760.clap, s760_cpp.pyd)
+# Build Release binaries (s760_core.lib, Roland_S760.vst3, Roland_S760.dll, Roland_S760_FX.dll, Roland_S760.clap, s760_cpp.pyd)
 cmake --build build --config Release
 
 # Run Core and Plugin test suites
@@ -347,11 +355,12 @@ d:/S-760/
 │   │   ├── s760_disk.hpp                   # Roland S-760 1.44M & SCSI disk generator/parser
 │   │   ├── akai_disk.hpp                   # Akai S1000 ISO parser & Roland converter
 │   │   ├── s760_dsp.hpp                    # Offline DSP engine (crossfade, SOLA, bi-quad filter)
+│   │   ├── s760_recorder.hpp               # Live audio sampling recorder (threshold/MIDI trigger)
 │   │   ├── s760_drive_manager.hpp          # Folder-backed ZuluSCSI / Gotek drive manager
 │   │   ├── s760_libretro_host.hpp          # Dynamic Libretro MAME host bridge
-│   │   ├── s760_vst3_plugin.hpp            # Steinberg VST3 instrument plugin
-│   │   ├── s760_vst_plugin.hpp             # VST2 / libretro_vst instrument plugin
-│   │   ├── s760_clap_plugin.hpp            # CLAP instrument plugin
+│   │   ├── s760_vst3_plugin.hpp            # Steinberg VST3 instrument & FX plugin
+│   │   ├── s760_vst_plugin.hpp             # VST2 / libretro_vst instrument & FX plugin
+│   │   ├── s760_clap_plugin.hpp            # CLAP instrument & FX plugin
 │   │   ├── vst3_defs.h                     # VST3 C-ABI / COM interface definitions
 │   │   ├── vst_defs.h                      # VST2 C-ABI definitions
 │   │   ├── clap_defs.h                     # CLAP C-ABI definitions

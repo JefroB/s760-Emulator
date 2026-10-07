@@ -11,7 +11,7 @@ namespace s760 {
 
 class S760ClapPlugin {
 public:
-    explicit S760ClapPlugin(const clap_host_t* host);
+    explicit S760ClapPlugin(const clap_host_t* host, bool is_fx = false);
     ~S760ClapPlugin();
 
     const clap_plugin_t* get_clap_plugin() const { return &m_plugin; }
@@ -31,18 +31,21 @@ public:
     bool state_load(const clap_istream_t* stream);
 
     S760LibretroHost& get_host() { return m_host; }
+    bool is_fx() const { return m_is_fx; }
 
-    static const clap_plugin_descriptor_t* get_descriptor();
+    static const clap_plugin_descriptor_t* get_descriptor(bool is_fx = false);
 
 private:
     const clap_host_t* m_clap_host = nullptr;
     clap_plugin_t m_plugin;
     clap_plugin_state_t m_state_ext;
+    clap_plugin_audio_ports_t m_audio_ports_ext;
 
     S760LibretroHost m_host;
     double m_sample_rate = 44100.0;
     bool m_is_active = false;
     bool m_is_processing = false;
+    bool m_is_fx = false;
 
     // Temporary processing buffers
     std::vector<float> m_scratch_left;

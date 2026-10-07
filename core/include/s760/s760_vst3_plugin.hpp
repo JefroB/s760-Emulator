@@ -11,7 +11,7 @@ namespace s760 {
 
 class S760Vst3Plugin : public Steinberg::IComponent, public Steinberg::IAudioProcessor {
 public:
-    S760Vst3Plugin();
+    explicit S760Vst3Plugin(bool is_fx = false);
     virtual ~S760Vst3Plugin();
 
     // FUnknown
@@ -54,6 +54,7 @@ private:
     int32_t m_max_block_size = 512;
     bool m_is_active = false;
     bool m_is_processing = false;
+    bool m_is_fx = false;
 
     std::vector<float> m_scratch_left;
     std::vector<float> m_scratch_right;

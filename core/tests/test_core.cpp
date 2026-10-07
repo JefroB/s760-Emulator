@@ -286,6 +286,67 @@ void test_libretro_host() {
     std::cout << "  -> Libretro Host & DAW Audio Bridge Tests PASSED!" << std::endl;
 }
 
+void test_sample_recorder() {
+    std::cout << "[TEST] S-760 Sample Recorder (Live Audio Sampling, Triggers & Metering)..." << std::endl;
+
+    s760::S760SampleRecorder recorder;
+    s760::RecordingConfig cfg;
+    cfg.target_sample_rate = 44100;
+    cfg.trigger_mode = s760::RecordTriggerMode::Threshold;
+    cfg.threshold_db = -20.0;
+    cfg.pre_trigger_samples = 512;
+    cfg.sample_name = "LIVE_SAMP";
+    cfg.root_key = 60;
+    recorder.set_config(cfg);
+
+    recorder.arm();
+    assert(recorder.is_armed());
+    assert(!recorder.is_recording());
+
+    // 1. Feed silence - should remain armed and not trigger
+    std::vector<float> silence(256, 0.0f);
+    recorder.process_input(silence.data(), silence.data(), silence.size(), 44100.0);
+    assert(recorder.is_armed());
+
+    // 2. Feed audio burst exceeding -20dB (e.g. 0.5f = ~ -6dB) -> should auto-trigger threshold!
+    std::vector<float> burst(1024);
+    for (size_t i = 0; i < burst.size(); ++i) {
+        burst[i] = static_cast<float>(std::sin(2.0 * 3.14159265 * 440.0 * i / 44100.0) * 0.5);
+    }
+    recorder.process_input(burst.data(), burst.data(), burst.size(), 44100.0);
+    assert(recorder.is_recording());
+    assert(recorder.get_peak_level_left() > 0.4f);
+
+    // Stop recording and retrieve sample
+    recorder.stop_recording();
+    assert(recorder.get_state() == s760::RecordState::Finished);
+
+    auto res = recorder.get_recorded_result();
+    assert(res.valid);
+    assert(res.sample_name == "LIVE_SAMP");
+    assert(res.sample_rate == 44100);
+    assert(!res.left_pcm_bytes.empty());
+
+    // Export as Roland Sample block
+    auto sample_l = recorder.export_sample(false);
+    assert(sample_l.name == "LIVE_SAMP_L");
+    assert(sample_l.sample_rate == 44100);
+    assert(sample_l.root_key == 60);
+    assert(!sample_l.pcm_data.empty());
+
+    // 3. Test MIDI Note-On Trigger
+    cfg.trigger_mode = s760::RecordTriggerMode::MIDINote;
+    recorder.set_config(cfg);
+    recorder.arm();
+    assert(recorder.is_armed());
+
+    recorder.on_midi_note_on(60, 100);
+    assert(recorder.is_recording());
+    recorder.stop_recording();
+
+    std::cout << "  -> S-760 Sample Recorder & Live Sampling Tests PASSED!" << std::endl;
+}
+
 int main() {
     std::cout << "========================================" << std::endl;
     std::cout << "  Roland S-760 C++ Core Test Suite      " << std::endl;
@@ -297,6 +358,7 @@ int main() {
         test_dsp_tools();
         test_drive_manager();
         test_libretro_host();
+        test_sample_recorder();
     } catch (const std::exception& e) {
         std::cerr << "[FATAL TEST ERROR] " << e.what() << std::endl;
         return 1;
