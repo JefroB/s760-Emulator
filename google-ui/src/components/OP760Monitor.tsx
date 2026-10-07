@@ -521,12 +521,9 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       <div className="relative flex flex-col items-center bg-gradient-to-b from-[#2b2e35] via-[#202227] to-[#17191d] p-3.5 sm:p-5 rounded-2xl border-2 border-[#3d424c] shadow-[0_20px_50px_rgba(0,0,0,0.95),inset_0_1px_2px_rgba(255,255,255,0.15)]">
         {/* Top Monitor Bevel with Heat Vents */}
         <div className="w-full flex items-center justify-between px-3 pb-2.5">
-          {/* Roland Color Monitor Badge */}
+          {/* Color Monitor Badge */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black italic tracking-tighter text-neutral-200 font-sans drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
-              Roland
-            </span>
-            <span className="text-[9px] font-mono font-bold tracking-widest text-neutral-400 uppercase bg-[#14161a] px-1.5 py-0.5 rounded border border-neutral-700">
+            <span className="text-[9px] font-mono font-bold tracking-widest text-neutral-300 uppercase bg-[#14161a] px-2 py-0.5 rounded border border-neutral-700">
               OP-760 COLOR DISPLAY
             </span>
           </div>

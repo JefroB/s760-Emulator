@@ -394,7 +394,7 @@ export default function App() {
       <header className="flex items-center justify-between px-6 py-2.5 border-b border-neutral-800 bg-[#101216] shrink-0">
         <div className="flex items-center gap-3">
           <span className="text-sm font-black tracking-wider text-neutral-100 uppercase font-mono">
-            Roland S-760 Studio Suite
+            S-760 Studio Suite
           </span>
           <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/70 px-2 py-0.5 rounded border border-cyan-800/60">
             FlashFloppy Gotek OLED Mod
