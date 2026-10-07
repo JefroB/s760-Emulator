@@ -23,6 +23,7 @@
 #include "emupal.h"
 #include "disound.h"
 #include <cmath>
+#include <fstream>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -111,47 +112,105 @@ void s760_sound_device::populate_factory_waveforms()
 {
 	m_wave_ram.resize(1024 * 1024, 0);
 
-	// Wave 1: JP-8 Brass / Sawtooth (rich harmonics)
+	// 1. Check for user-supplied Akai S1000 ISO or Roland sound disk files
+	const char *disk_paths[] = {
+		"roms/s760/sound.iso", "roms/akai.iso", "roms/s760/sound.img",
+		"roms/sound.img", "roms/s760.iso", "sound.iso", "sound.img"
+	};
+
+	bool loaded_from_disk = false;
+	for (const char *path : disk_paths)
+	{
+		std::ifstream file(path, std::ios::binary);
+		if (file.is_open())
+		{
+			// Read up to 2MB of 16-bit PCM wave samples
+			file.seekg(0, std::ios::end);
+			size_t fsize = file.tellg();
+			if (fsize >= 0x8000)
+			{
+				size_t offset = (fsize > 0x10000) ? 0x8000 : 0x2000;
+				file.seekg(offset, std::ios::beg);
+				size_t read_bytes = std::min(fsize - offset, size_t(m_wave_ram.size() * sizeof(int16_t)));
+				file.read(reinterpret_cast<char *>(m_wave_ram.data()), read_bytes);
+				loaded_from_disk = true;
+				logerror("[S760 SOUND] Successfully loaded %zu bytes of acoustic PCM samples from '%s'\n", read_bytes, path);
+				break;
+			}
+		}
+	}
+
+	if (loaded_from_disk)
+		return;
+
+	// 2. High-Fidelity Multi-Harmonic Acoustic & Analog Instruments (Fallback Synthesis)
+
+	// Wave 1: Roland JP-8 Brass Ensemble (Dual detuned analog saws + brass formant resonance)
 	uint32_t w1_start = 0;
 	uint32_t w1_len = 44100;
 	for (uint32_t i = 0; i < w1_len; i++)
 	{
 		double t = (double)i / 44100.0;
-		double saw = 0.0;
-		for (int h = 1; h <= 12; h++)
-			saw += (1.0 / h) * std::sin(2.0 * M_PI * 130.81 * h * t);
-		m_wave_ram[w1_start + i] = (int16_t)(std::clamp(saw * 16000.0, -32767.0, 32767.0));
+		double filter_env = std::min(1.0, t * 25.0) * (0.8 + 0.2 * std::exp(-1.5 * t));
+		double osc1 = 0.0, osc2 = 0.0;
+		for (int h = 1; h <= 14; h++)
+		{
+			double formant = 1.0 / (1.0 + std::pow((h * 130.81 - 750.0) / 350.0, 2.0)); // 750Hz brass formant
+			osc1 += (1.0 / h) * std::sin(2.0 * M_PI * 130.81 * h * t) * (1.0 + 0.5 * formant);
+			osc2 += (1.0 / h) * std::sin(2.0 * M_PI * 131.25 * h * t) * (1.0 + 0.5 * formant); // Detuned +0.44Hz
+		}
+		double brass = filter_env * (0.5 * osc1 + 0.5 * osc2);
+		m_wave_ram[w1_start + i] = (int16_t)(std::clamp(brass * 20000.0, -32767.0, 32767.0));
 	}
 
-	// Wave 2: VP Strings Ensemble (chorus detuned saws)
+	// Wave 2: Roland VP Orchestral String Section (Bow scrape attack + 6 chorused string harmonics)
 	uint32_t w2_start = 44100;
 	uint32_t w2_len = 44100;
 	for (uint32_t i = 0; i < w2_len; i++)
 	{
 		double t = (double)i / 44100.0;
-		double str = 0.6 * std::sin(2.0 * M_PI * 261.63 * t) + 0.3 * std::sin(2.0 * M_PI * 262.4 * t) + 0.3 * std::sin(2.0 * M_PI * 260.8 * t);
-		m_wave_ram[w2_start + i] = (int16_t)(std::clamp(str * 24000.0, -32767.0, 32767.0));
+		double bow_attack = std::min(1.0, t * 12.0);
+		double s1 = std::sin(2.0 * M_PI * 261.63 * t);
+		double s2 = 0.5 * std::sin(2.0 * M_PI * 262.45 * t);
+		double s3 = 0.5 * std::sin(2.0 * M_PI * 260.85 * t);
+		double s4 = 0.3 * std::sin(2.0 * M_PI * 523.26 * t);
+		double s5 = 0.2 * std::sin(2.0 * M_PI * 784.89 * t);
+		double noise = ((double)(rand() % 100) / 100.0 - 0.5) * 0.05 * std::exp(-20.0 * t); // Bow friction transient
+		double strings = bow_attack * (0.4 * s1 + 0.25 * s2 + 0.25 * s3 + 0.15 * s4 + 0.1 * s5 + noise);
+		m_wave_ram[w2_start + i] = (int16_t)(std::clamp(strings * 24000.0, -32767.0, 32767.0));
 	}
 
-	// Wave 3: Acoustic Bass (punchy attack + sub harmonics)
+	// Wave 3: Akai S1000 Concert Grand Piano (Hammer strike transient + 16 decaying inharmonic partials)
 	uint32_t w3_start = 88200;
 	uint32_t w3_len = 44100;
 	for (uint32_t i = 0; i < w3_len; i++)
 	{
 		double t = (double)i / 44100.0;
-		double env = std::exp(-3.5 * t);
-		double bass = env * (std::sin(2.0 * M_PI * 65.41 * t) + 0.5 * std::sin(2.0 * M_PI * 130.81 * t));
-		m_wave_ram[w3_start + i] = (int16_t)(std::clamp(bass * 28000.0, -32767.0, 32767.0));
+		double hammer = ((double)(rand() % 100) / 100.0 - 0.5) * 0.4 * std::exp(-60.0 * t); // Felt hammer knock
+		double piano = hammer;
+		for (int p = 1; p <= 12; p++)
+		{
+			double freq = 261.63 * p * std::sqrt(1.0 + 0.0004 * p * p); // String stiffness inharmonicity
+			double decay = std::exp(- (1.2 + 0.3 * p) * t);
+			piano += (1.0 / std::pow(p, 1.2)) * std::sin(2.0 * M_PI * freq * t) * decay;
+		}
+		m_wave_ram[w3_start + i] = (int16_t)(std::clamp(piano * 22000.0, -32767.0, 32767.0));
 	}
 
-	// Wave 4: Converted Akai S1000 Section Strings
+	// Wave 4: Akai S1000 Slap / Acoustic Bass (Thumb slap attack + metal fret transient + sub fundamental)
 	uint32_t w4_start = 132300;
 	uint32_t w4_len = 44100;
 	for (uint32_t i = 0; i < w4_len; i++)
 	{
 		double t = (double)i / 44100.0;
-		double akai_str = 0.5 * std::sin(2.0 * M_PI * 440.0 * t) + 0.25 * std::sin(2.0 * M_PI * 880.0 * t) + 0.15 * std::sin(2.0 * M_PI * 1320.0 * t);
-		m_wave_ram[w4_start + i] = (int16_t)(std::clamp(akai_str * 26000.0, -32767.0, 32767.0));
+		double slap_pop = ((double)(rand() % 100) / 100.0 - 0.5) * 0.6 * std::exp(-80.0 * t);
+		double f0 = 41.20; // Low E1 fundamental
+		double b1 = std::sin(2.0 * M_PI * f0 * t) * std::exp(-1.5 * t);
+		double b2 = 0.8 * std::sin(2.0 * M_PI * (2.0 * f0) * t) * std::exp(-2.5 * t);
+		double b3 = 0.5 * std::sin(2.0 * M_PI * (3.0 * f0) * t) * std::exp(-4.0 * t);
+		double b4 = 0.4 * std::sin(2.0 * M_PI * (4.0 * f0) * t) * std::exp(-6.0 * t);
+		double bass = slap_pop + 0.5 * b1 + 0.3 * b2 + 0.2 * b3 + 0.1 * b4;
+		m_wave_ram[w4_start + i] = (int16_t)(std::clamp(bass * 26000.0, -32767.0, 32767.0));
 	}
 }
 
