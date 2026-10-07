@@ -197,20 +197,27 @@ void s760_sound_device::populate_factory_waveforms()
 		m_wave_ram[w3_start + i] = (int16_t)(std::clamp(piano * 22000.0, -32767.0, 32767.0));
 	}
 
-	// Wave 4: Akai S1000 Slap / Acoustic Bass (Thumb slap attack + metal fret transient + sub fundamental)
+	// Wave 4: Akai S1000 Plucked Acoustic Upright Double Bass (Karplus-Strong physical string + wooden body cavity resonance)
 	uint32_t w4_start = 132300;
 	uint32_t w4_len = 44100;
+	std::vector<double> delay_line(700, 0.0);
+	for (size_t d = 0; d < delay_line.size(); d++)
+		delay_line[d] = ((double)(rand() % 1000) / 500.0 - 1.0) * std::exp(- (double)d / 120.0); // Pluck excitation
+
+	double last_val = 0.0;
+	size_t ptr = 0;
 	for (uint32_t i = 0; i < w4_len; i++)
 	{
 		double t = (double)i / 44100.0;
-		double slap_pop = ((double)(rand() % 100) / 100.0 - 0.5) * 0.6 * std::exp(-80.0 * t);
-		double f0 = 41.20; // Low E1 fundamental
-		double b1 = std::sin(2.0 * M_PI * f0 * t) * std::exp(-1.5 * t);
-		double b2 = 0.8 * std::sin(2.0 * M_PI * (2.0 * f0) * t) * std::exp(-2.5 * t);
-		double b3 = 0.5 * std::sin(2.0 * M_PI * (3.0 * f0) * t) * std::exp(-4.0 * t);
-		double b4 = 0.4 * std::sin(2.0 * M_PI * (4.0 * f0) * t) * std::exp(-6.0 * t);
-		double bass = slap_pop + 0.5 * b1 + 0.3 * b2 + 0.2 * b3 + 0.1 * b4;
-		m_wave_ram[w4_start + i] = (int16_t)(std::clamp(bass * 26000.0, -32767.0, 32767.0));
+		double next_val = delay_line[ptr];
+		double filtered = 0.5 * (next_val + last_val) * 0.994; // Acoustic string damping
+		last_val = next_val;
+		delay_line[ptr] = filtered;
+		ptr = (ptr + 1) % delay_line.size();
+
+		// Add wooden soundboard resonance (cavity formant at 110Hz and 55Hz)
+		double body = 0.6 * filtered + 0.3 * std::sin(2.0 * M_PI * 110.0 * t) * std::exp(-2.0 * t) + 0.2 * std::sin(2.0 * M_PI * 55.0 * t) * std::exp(-1.5 * t);
+		m_wave_ram[w4_start + i] = (int16_t)(std::clamp(body * 28000.0, -32767.0, 32767.0));
 	}
 }
 
@@ -250,8 +257,15 @@ void s760_sound_device::note_off(int v)
 void s760_sound_device::trigger_preview(int patch_idx, int note)
 {
 	uint32_t wave_addrs[4] = { 0, 44100, 88200, 132300 };
-	uint32_t addr = wave_addrs[patch_idx % 4];
-	note_on(0, addr, 44100, 1000, 43000, 1, 44100.0, note, 60, 0.85f, 0.0f);
+	int root_keys[4] = { 48, 60, 60, 28 }; // Brass=C3, Strings=C4, Piano=C4, Bass=E1 (deep acoustic bass)
+	int default_notes[4] = { 48, 60, 60, 28 };
+
+	int p = patch_idx % 4;
+	uint32_t addr = wave_addrs[p];
+	int root = root_keys[p];
+	int play_n = (note == 60) ? default_notes[p] : note;
+
+	note_on(0, addr, 44100, 1000, 43000, 1, 44100.0, play_n, root, 0.90f, 0.0f);
 }
 
 void s760_sound_device::sound_stream_update(sound_stream &stream)
