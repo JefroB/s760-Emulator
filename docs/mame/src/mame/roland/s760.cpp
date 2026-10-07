@@ -58,6 +58,8 @@ public:
 	void note_off(int voice_idx);
 	void trigger_preview(int patch_idx, int note = 60);
 	const std::vector<SampleDesc>& samples() const { return m_samples; }
+	const std::string& media_source() const { return m_media_source; }
+	const std::string& scsi_device_info(int id) const { return m_scsi_device_info[id & 7]; }
 
 protected:
 	virtual void device_start() override;
@@ -90,6 +92,8 @@ private:
 	Voice m_voices[32];
 	std::vector<int16_t> m_wave_ram;
 	std::vector<SampleDesc> m_samples;
+	std::string m_media_source;
+	std::string m_scsi_device_info[8];
 
 	void populate_factory_waveforms();
 };
@@ -126,6 +130,31 @@ void s760_sound_device::populate_factory_waveforms()
 {
 	m_wave_ram.resize(2 * 1024 * 1024, 0); // 4MB sample memory
 	m_samples.clear();
+
+	m_media_source = "[FDD: -FloppyDisk-]";
+	for (int id = 0; id < 7; id++)
+		m_scsi_device_info[id] = "---: No Device";
+	m_scsi_device_info[7] = "Host: S-760 Sampler (ID: 7)";
+
+	auto check_file_exists = [](const char *p) {
+		std::ifstream f(p, std::ios::binary);
+		return f.is_open();
+	};
+
+	if (check_file_exists("roms/SCSI/HD00_512.img") || check_file_exists("roms/s760/SCSI/HD00_512.img") || check_file_exists("roms/SCSI/HD0.img") || check_file_exists("roms/s760/SCSI/HD0.img") || check_file_exists("roms/SCSI/HD0.hda"))
+		m_scsi_device_info[0] = "HD-0: Hard Disk (BlueSCSI/Zulu)";
+	if (check_file_exists("roms/SCSI/CD1.iso") || check_file_exists("roms/s760/SCSI/CD1.iso") || check_file_exists("roms/SCSI/CD10_2048.iso") || check_file_exists("roms/SCSI/akai.iso") || check_file_exists("roms/s760/SCSI/akai.iso") || check_file_exists("roms/SCSI/sound.iso") || check_file_exists("roms/s760/sound.iso"))
+		m_scsi_device_info[1] = "CD-1: CD-ROM (Akai S1000)";
+	if (check_file_exists("roms/SCSI/HD20_512.img") || check_file_exists("roms/SCSI/HD2.img"))
+		m_scsi_device_info[2] = "HD-2: Hard Disk (BlueSCSI/Zulu)";
+	if (check_file_exists("roms/SCSI/CD30_2048.iso") || check_file_exists("roms/SCSI/CD3.iso"))
+		m_scsi_device_info[3] = "CD-3: CD-ROM Drive";
+	if (check_file_exists("roms/SCSI/MO40_512.img") || check_file_exists("roms/SCSI/RM40_512.img") || check_file_exists("roms/SCSI/HD40_512.img"))
+		m_scsi_device_info[4] = "MO-4: Magneto-Optical (512B)";
+	if (check_file_exists("roms/SCSI/HD50_512.img") || check_file_exists("roms/SCSI/HD5.img"))
+		m_scsi_device_info[5] = "HD-5: Hard Disk";
+	if (check_file_exists("roms/SCSI/CD60_2048.iso") || check_file_exists("roms/SCSI/CD6.iso"))
+		m_scsi_device_info[6] = "CD-6: CD-ROM Drive";
 
 	// 1. Check for user-supplied SCSI CD-ROM/HDD images (BlueSCSI/ZuluSCSI) and Floppy disk images
 	const char *disk_paths[] = {
@@ -1059,7 +1088,9 @@ void s760_state::render_sample_mode(bitmap_ind16 &bitmap)
 void s760_state::render_disk_mode(bitmap_ind16 &bitmap)
 {
 	draw_string(bitmap, 8, 30, "Convert LD[S]        |  Muted  |  Mark  |  Jump  |  Com", 0, 6);
-	draw_string(bitmap, 16, 44, "[GE Pach]   Art  1]    CD[FDD: -FloppyDisk-]", 1, 2);
+	char dev_buf[64];
+	snprintf(dev_buf, sizeof(dev_buf), "[GE Pach]   Art  1]    CD%s", m_sound->media_source().c_str());
+	draw_string(bitmap, 16, 44, dev_buf, 1, 2);
 
 	for (int x = 16; x < 624; x++)
 		bitmap.pix(54, x) = 1;
@@ -1109,13 +1140,21 @@ void s760_state::render_system_mode(bitmap_ind16 &bitmap)
 	for (int x = 16; x < 624; x++)
 		bitmap.pix(54, x) = 1;
 
-	draw_string(bitmap, 20, 64,  "1. Self SCSI ID:     [ 7 ] (Host Controller ID)", 1, 2);
-	draw_string(bitmap, 20, 80,  "2. Boot Drive:       [ Floppy / SCSI Default ]", 1, 2);
-	draw_string(bitmap, 20, 96,  "3. Controller:       [ RC-100 + Color CRT ]", 4, 2);
-	draw_string(bitmap, 20, 112, "4. Master Tune:      [ 440.0 Hz ]", 1, 2);
-	draw_string(bitmap, 20, 128, "5. Output Level:     [ +4 dBu Balanced ]", 1, 2);
-	draw_string(bitmap, 20, 144, "6. Wave Memory:      [ 32 MBytes OK (2x 16MB SIMM) ]", 1, 2);
-	draw_string(bitmap, 20, 160, "7. Option Board:     [ OP-760-2 Video Board Installed ]", 1, 2);
+	draw_string(bitmap, 20, 58,  "1. Host SCSI ID:     [ 7 ] (S-760 Initiator ID)", 1, 2);
+	draw_string(bitmap, 20, 70,  "2. Boot Device:      [ SCSI / Floppy Auto-Detect ]", 1, 2);
+	draw_string(bitmap, 20, 82,  "3. SCSI Bus Scan:    (BlueSCSI / ZuluSCSI Targets 0-6):", 4, 2);
+
+	for (int id = 0; id < 7; id++)
+	{
+		char scsi_line[80];
+		snprintf(scsi_line, sizeof(scsi_line), "   ID %d: %-36s", id, m_sound->scsi_device_info(id).c_str());
+		uint16_t fg = (m_sound->scsi_device_info(id).find("---") == std::string::npos) ? 3 : 1;
+		draw_string(bitmap, 20, 94 + id * 11, scsi_line, fg, 2);
+	}
+
+	draw_string(bitmap, 20, 174, "4. Master Tune:      [ 440.0 Hz ]  Output Level: [ +4 dBu ]", 1, 2);
+	draw_string(bitmap, 20, 186, "5. Wave Memory:      [ 32 MBytes OK (2x 16MB SIMM) ]", 1, 2);
+	draw_string(bitmap, 20, 198, "6. Option Board:     [ OP-760-2 Video Board Installed ]", 1, 2);
 }
 
 // 2. OP-760-1 / OP-760-2 CRT Monitor Output (RFSC16A VDP: Authentic Roland S-760 GUI)

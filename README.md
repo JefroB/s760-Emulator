@@ -2,7 +2,7 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-29%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-30%20Passing-brightgreen.svg)](tests/)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
@@ -37,23 +37,25 @@ To keep disk images cleanly segregated without moving files, the emulator uses a
 
 ```
 roms/
-├── System/         # Dedicated folder for boot OS images (s760.rom / S760224.IMG)
+├── System/         # Dedicated folder for boot OS images (S760224.IMG)
 ├── FDD/            # Roland floppy sound disk images (.img, .sdk - e.g. L701_1.IMG, waves760.sdk)
 └── SCSI/           # SCSI hard disk images and CD-ROM ISOs (BlueSCSI & ZuluSCSI format)
 ```
 
 ### Folder Roles & Formats:
 1. **`roms/System/`**:
-   - Contains the OS system disk image used to boot the emulator (`s760.rom` or `S760224.IMG`).
+   - Contains the OS system disk image used to boot the emulator (**`S760224.IMG`**).
    - Keeps the core boot payload dedicated and isolated from sample libraries.
 2. **`roms/FDD/`**:
    - Stores Roland 1.44M HD (`SYS-772`) and 720K DD floppy sound disks (`.img`, `.sdk`, `.dsk`).
-   - Automatically extracted into voice memory and playable from the `DISK` menu.
+   - Automatically extracted into voice memory and displayed on the `DISK` screen as `CD[FDD: -FloppyDisk-]`.
 3. **`roms/SCSI/`**:
-   - Supports BlueSCSI and ZuluSCSI naming conventions:
-     - CD-ROM ISOs: `CD1.iso`, `CD2.iso`, `CD01_2048.iso`, `akai.iso`, `sound.iso`
-     - Hard Disk Images: `HD0.img`, `HD1.img`, `HD00_512.img`, `HD10_512.img`, `HD0.hda`
+   - Implements authentic **BlueSCSI & ZuluSCSI file naming conventions**:
+     - **CD-ROM Drives (SCSI ID 1-6)**: `CD1.iso`, `CD10_2048.iso`, `CD20_2048_RolandVol.iso`, `akai.iso`, `sound.iso` (Rendered on `DISK` screen as `CD[SCSI: 1 CD-ROM  ]`)
+     - **Hard Disk Drives (SCSI ID 0-6)**: `HD0.img`, `HD00_512.img`, `HD10_512.img`, `HD20_512.img`, `HD0.hda` (Rendered on `DISK` screen as `CD[SCSI: 0 HardDisk ]`)
+     - **Magneto-Optical / Removable (SCSI ID 3-4)**: `MO40_512.img`, `RM40_512.img`
    - Real Akai S1000 / S1100 CD-ROM volumes placed here are automatically decoded and converted.
+   - Connected SCSI targets are dynamically populated in the `SYSTEM -> SCSI` bus scan table.
 
 > To download a test Akai S1000 CD-ROM image directly to `roms/SCSI/`:
 > ```powershell
@@ -133,11 +135,11 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 
 | Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
 | :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 6.1** | **Volume Load / Save / Delete / Rename** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | Volume file management, disk scanning (`[FDD: -FloppyDisk-]`), and multi-disk sets. |
+| **OM Sec. 6.1** | **Volume Load / Save / Delete / Rename** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | Volume file management, disk scanning, and multi-disk sets. |
 | **OM Sec. 6.2** | **Partial & Sample Selective Load** | ✅ Tested / Working | Pytest `test_disk_conversion.py` | Granular loading of individual partials, patches, or samples without loading full volumes. |
 | **OM Sec. 6.3** | **Quick-Load (Q-Load) Preset Assignment** | 🟡 Emulated (HLE) | Firmware UI string catalog (`0x0959C2`) | Fast loading of predefined instrument slots upon boot. |
-| **OM Sec. 6.4** | **Roland S-770 / S-750 Sound Disk Load** | ✅ Tested / Working | Auditioned `roms/FDD/L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. |
-| **OM Sec. 6.5** | **Akai S1000 CD-ROM ISO Conversion** | ✅ Tested / Working | Auditioned `roms/SCSI/akai.iso` (Invision 40 Oz S1000) in MAME | Real Akai S1000 root directory parser (Sector 12 / `0x6000`), custom 6-bit char decoder, and cluster converter. |
+| **OM Sec. 6.4** | **Roland S-770 / S-750 Sound Disk Load** | ✅ Tested / Working | Auditioned `roms/FDD/L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. Rendered as `CD[FDD: -FloppyDisk-]`. |
+| **OM Sec. 6.5** | **Akai S1000 CD-ROM ISO Conversion** | ✅ Tested / Working | Auditioned `roms/SCSI/CD1.iso` / `akai.iso` in MAME | Real Akai S1000 root directory parser (Sector 12 / `0x6000`), custom 6-bit char decoder, and cluster converter. Rendered as `CD[SCSI: 1 CD-ROM  ]`. |
 | **OM Sec. 6.6** | **Disk Optimization / Defragmentation** | ⚪ Untested / Unknown | Firmware UI string table (`0x0C1C66`) | Reallocates scattered sectors on SCSI hard disks and floppies for contiguous access. |
 | **OM Sec. 6.7** | **Floppy Disk Formatting (Roland S-Series)**| 🟡 Emulated (HLE) | Firmware disk routine disassembly | Low-level sector formatting for 3.5" 2HD (1.44MB) and 2DD (720KB) media. |
 | **OM Sec. 6.8** | **MS-DOS Floppy Formatting & Exchange** | ⚪ Untested / Unknown | Embedded MS-DOS FAT12 boot code at `0x887A0` | PC-compatible floppy format engine embedded in firmware for sample exchange. |
@@ -152,7 +154,7 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 | **OM Sec. 7.1** | **Master Tuning (430.0 Hz - 450.0 Hz)** | ✅ Tested / Working | Global pitch scaling in audio engine | System-wide reference pitch tuning centered at 440.0 Hz. |
 | **OM Sec. 7.1** | **Output Level Calibration (+4 dBu / -10 dBV)**| ✅ Tested / Working | DAC master level scaling verification | Switchable output stage gain matching professional (+4 dBu) and consumer (-10 dBV) gear. |
 | **OM Sec. 7.1** | **Boot Drive Priority Selection** | ✅ Tested / Working | UI system parameters page assertion | Boot order configuration: Floppy FDD, SCSI ID 0-7, or Default. |
-| **OM Sec. 7.2** | **SCSI Bus Setup & Host ID (0-7)** | 🟡 Emulated (HLE) | SCSI menu UI parameter focus tests | Host controller ID setting (default ID 7), target ID scan, and active bus termination. |
+| **OM Sec. 7.2** | **SCSI Bus Setup & Host ID (0-7)** | ✅ Tested / Working | Pytest `test_bluescsi_zuluscsi_naming_and_scsi_menu_detection` | Host initiator ID setting (ID 7), target ID 0-6 bus scan, and BlueSCSI/ZuluSCSI device query. |
 | **OM Sec. 7.3** | **MIDI System Setup & Device ID** | 🟡 Emulated (HLE) | MIDI setup menu assertion | System Device ID (1-32), Control Channel (1-16), Omni On/Off, and Program Change mapping. |
 | **OM Sec. 7.4** | **MIDI Sample Dump Standard (SDS Tx/Rx)** | ⚪ Untested / Unknown | Firmware UI string table (`0x08B31C`) | SysEx sample dump reception and transmission over standard 5-pin DIN MIDI. |
 | **OM Sec. 7.5** | **Save / Load System Parameters** | 🟡 Emulated (HLE) | EEPROM / Disk parameter persistence | Non-volatile storage of user defaults and interface preferences. |
@@ -166,14 +168,14 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 | :--- | :--- | :---: | :--- | :--- |
 | **Main CPU** | Intel S80C196KB (16 MHz) | 🟡 Emulated (MAME / HLE) | Disassembly at reset vector `0x2080` | 16-bit little-endian MCS-96 microcontroller, internal 256B register file/SFRs, work RAM stack (`0x1120`). |
 | **System Gate Array**| Fujitsu 15239118 QFP | 🟡 Emulated | MMIO handler (`0xF000-0xF00A`) | Memory bank windowing, reset strobe pulses (`0xF000`), peripheral chip selects. |
-| **Video Expansion** | OP-760-1 (RFSC16A VDP + VRAM) | ✅ Tested / Working | 29 automated tests (RGB screenshot assertions)| 640x240 RGB CRT output, 128KB TC511664 VRAM, 10-pen RGB DAC palette, 60Hz raster. |
+| **Video Expansion** | OP-760-1 (RFSC16A VDP + VRAM) | ✅ Tested / Working | 30 automated tests (RGB screenshot assertions)| 640x240 RGB CRT output, 128KB TC511664 VRAM, 10-pen RGB DAC palette, 60Hz raster. |
 | **Front Panel Display**| Epson SED1335F0B LCD Controller| 🟡 Emulated (MAME LCD) | Dual-screen MAME registration (`lcd_screen`) | 160×64 monochrome graphics LCD buffer for rack operation without external monitor. |
 | **Sample Memory** | SIMM72-16 Wave RAM (Up to 32MB)| ✅ Tested / Working | Memory bounds tests & sample allocation | Linear wave RAM addressing up to 16M words of 16-bit acoustic audio. |
 | **Audio DAC Engine** | Dual AKM AK4328VS 18-bit DACs | ✅ Tested / Working | WASAPI stereo output (`lspeaker`, `rspeaker`) | 24-voice polyphony, linear pitch interpolation, multi-rate playback (44.1k/48k/32k). |
 | **Mouse Controller** | Roland MU-1 (Bus Mouse) | ✅ Tested / Working | Pytest mouse injection & crosshair tests | Delta coordinate tracking, left/right click selection, active cursor rendering. |
 | **Remote Controller** | Roland RC-100 (10-Key Pad) | 🟡 Emulated (HLE) | Active-low key matrix mappings | Remote keypad navigation, function keys (F1-F8), and direct numerical entry. |
 | **Floppy Controller** | NEC uPD72068GF FDC | 🟡 Emulated (HLE / Direct) | Floppy image loading (`.IMG` / `.SDK`) | Sector streaming from 3.5" HD/DD Roland floppy images directly into RAM. |
-| **SCSI Controller** | Fujitsu MB89352A SPC | 🟡 Emulated (HLE / ISO) | ISO CD-ROM parsing (`akai.iso`, `sound.iso`) | External DB25 SCSI protocol controller handling block transfers from CD-ROM/HD images. |
+| **SCSI Controller** | Fujitsu MB89352A SPC | ✅ Tested / Working | SCSI bus scan & ISO converter | External DB25 SCSI protocol controller handling block transfers from CD-ROM/HD images (BlueSCSI/ZuluSCSI). |
 | **Digital Audio I/O** | Optical / Coaxial S/PDIF In/Out| ⚪ Untested / Unknown | Hardware schematic reference | External digital audio clock synchronization and 44.1/48kHz S/PDIF digital stream. |
 
 ---
@@ -206,7 +208,7 @@ The driver includes accurate layout rendering and interactive switching for all 
 > It **DOES NOT** distribute any proprietary Roland operating system disks (`S760224.IMG`), copyrighted firmware ROMs, or commercial factory sample sound libraries.
 
 Users must provide their own legally acquired system disk:
-1. Place your system disk image at `roms/System/s760.rom` (or inside `roms/s760/System/s760.rom`).
+1. Place your system disk image at `roms/System/S760224.IMG` (or inside `roms/s760/System/S760224.IMG`).
 
 ---
 
@@ -260,8 +262,8 @@ The project includes an automated test harness (`tests/mame_harness.py`) that dr
 pytest tests -v
 ```
 
-### Test Suite Summary (29 / 29 Passing)
-- `tests/test_disk_conversion.py`: Verifies `roms/System/`, `roms/FDD/`, and `roms/SCSI/` folder structure, Roland S-760 `.IMG` disk reading, and Akai S1000 ISO conversion.
+### Test Suite Summary (30 / 30 Passing)
+- `tests/test_disk_conversion.py`: Verifies `roms/System/`, `roms/FDD/`, and `roms/SCSI/` folder structure, BlueSCSI & ZuluSCSI file naming conventions, Roland S-760 `.IMG` disk reading, and Akai S1000 ISO conversion.
 - `tests/test_image_invariants.py`: Verifies Roland OS palette bounds, resolution constraints, and text layout invariants.
 - `tests/test_interactive_ui.py`: Automates the complete Roland Owner's Manual multi-mode workflow (`DISK` → `PERFORM` → `SAMPLE` → `SYSTEM`), asserting active tab boxes and parameter highlights.
 - `tests/test_mame_invariants.py`: Verifies C++ driver registration, device maps, and compilation consistency.
@@ -277,7 +279,7 @@ d:/S-760/
 ├── .gitignore                              # Git exclusion rules (ROMs, binaries, snaps, disk images)
 ├── run_s760_mame.bat                       # Interactive launch script
 ├── roms/                                   # Dedicated ROM & Media directories (.gitkeep tracked)
-│   ├── System/                             # System OS boot disk images (s760.rom / S760224.IMG)
+│   ├── System/                             # System OS boot disk images (S760224.IMG)
 │   ├── FDD/                                # Roland floppy sound disk images (.img, .sdk)
 │   └── SCSI/                               # BlueSCSI/ZuluSCSI HDD images & ISOs (akai.iso, CD1.iso)
 ├── scripts/                                # Utility and helper scripts
@@ -292,7 +294,7 @@ d:/S-760/
 │   └── reference/                          # S-760 service manual & schematic notes
 └── tests/                                  # Automated Python & Lua test suite
     ├── mame_harness.py                     # Headless MAME runner & screenshot analyzer
-    ├── test_disk_conversion.py             # Roland & Akai disk conversion + folder tests
+    ├── test_disk_conversion.py             # Roland & Akai disk conversion + BlueSCSI tests
     ├── test_interactive_ui.py              # Interactive UI & manual workflow tests
     ├── test_image_invariants.py            # Color palette & layout invariant tests
     └── test_mame_invariants.py             # MAME driver registration tests
@@ -302,7 +304,7 @@ d:/S-760/
 
 ## Trademark & Non-Affiliation Disclaimer
 
-*Roland*, *S-760*, *OP-760*, and *RC-100* are registered trademarks of **Roland Corporation**. *Akai* and *S1000* are registered trademarks of **Akai Professional / inMusic Brands**.
+*Roland*, *S-760*, *OP-760*, and *RC-100* are registered trademarks of **Roland Corporation**. *Akai* and *S1000* are registered trademarks of **Akai Professional / inMusic Brands**. *BlueSCSI* and *ZuluSCSI* are open hardware / SCSI emulation projects.
 
 This project is an independent, non-commercial open-source hardware emulation and research endeavor. It is **not** affiliated with, endorsed by, sponsored by, or associated with Roland Corporation or Akai Professional.
 

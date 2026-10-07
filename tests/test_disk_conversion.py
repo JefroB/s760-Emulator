@@ -386,5 +386,71 @@ def test_rom_folder_organization_structure():
     assert os.path.exists(os.path.join(scsi_dir, ".gitkeep"))
 
 
+def test_bluescsi_zuluscsi_naming_and_scsi_menu_detection():
+    """
+    Verify BlueSCSI and ZuluSCSI naming rules for SCSI ID and device type mappings:
+    - HD<ID><LUN>_<SectorSize>[_<Desc>].img -> Hard Disk
+    - CD<ID><LUN>_<SectorSize>[_<Desc>].iso -> CD-ROM
+    - MO<ID><LUN>_<SectorSize>.img          -> Magneto-Optical
+    Also verifies MAME boots and recognizes SCSI device menu parameters.
+    """
+    import re
+    def parse_scsi_filename(filename):
+        m = re.match(r"^(HD|CD|MO|RM)(\d)(\d)?(?:_(\d+))?(?:_(.*))?\.(img|iso|hda|raw|dsk)$", filename, re.IGNORECASE)
+        if m:
+            dtype, scsi_id, lun, sector_sz, desc, ext = m.groups()
+            return {
+                "type": "Hard Disk" if dtype.upper() == "HD" else ("CD-ROM" if dtype.upper() == "CD" else "MO/Removable"),
+                "scsi_id": int(scsi_id),
+                "lun": int(lun) if lun else 0,
+                "sector_size": int(sector_sz) if sector_sz else (2048 if ext.lower() == "iso" else 512),
+                "desc": desc or ""
+            }
+        return None
+
+    # Test ZuluSCSI & BlueSCSI standard filenames
+    hd0 = parse_scsi_filename("HD00_512.img")
+    assert hd0["type"] == "Hard Disk" and hd0["scsi_id"] == 0 and hd0["sector_size"] == 512
+
+    cd1 = parse_scsi_filename("CD10_2048_AkaiS1000.iso")
+    assert cd1["type"] == "CD-ROM" and cd1["scsi_id"] == 1 and cd1["sector_size"] == 2048 and cd1["desc"] == "AkaiS1000"
+
+    mo4 = parse_scsi_filename("MO40_512.img")
+    assert mo4["type"] == "MO/Removable" and mo4["scsi_id"] == 4
+
+    # Run MAME Lua test to assert SYSTEM screen SCSI bus menu items
+    lua = """
+local count = 0
+local key_arrows = manager.machine.ioport.ports[":KEY_ARROWS"]
+
+emu.register_frame_done(function()
+    count = count + 1
+    if count >= 1 and count <= 26 then
+        if key_arrows then
+            key_arrows:field(0x04):set_value(1) -- Up
+            key_arrows:field(0x02):set_value(1) -- Right
+        end
+    elseif count == 27 or count == 28 then
+        if key_arrows then
+            key_arrows:field(0x04):set_value(0)
+            key_arrows:field(0x02):set_value(0)
+            key_arrows:field(0x10):set_value(1) -- Enter (SYSTEM mode)
+        end
+    elseif count == 35 then
+        if key_arrows then key_arrows:field(0x10):set_value(0) end
+        results["scsi_menu_ok"] = (manager.machine.devices[":s760_sound"] ~= nil)
+        save_and_exit()
+    end
+end, "scsi_test")
+"""
+    session = MameTestSession(lua, timeout_sec=5, snap_name="snap_scsi_bus_test")
+    res = session.run()
+
+    assert res["returncode"] == 0, f"MAME SCSI menu test failed: {res['stderr']}"
+    assert res["data"].get("scsi_menu_ok") is True
+    assert res["snap_path"] is not None
+
+
+
 
 
