@@ -263,10 +263,14 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
           const itemIdx = Math.floor((y - 65) / 13);
           if (itemIdx >= 0 && itemIdx < 10) {
             // Jump to selected screen
-            if (itemIdx === 0) onSetMode('PERF');
-            else if (itemIdx === 1) onSetMode('DISK');
+            if (itemIdx === 0) { onSetMode('PERF'); setSubPage(0); }
+            else if (itemIdx === 1) { onSetMode('DISK'); setSubPage(0); }
+            else if (itemIdx === 2) { onSetMode('DISK'); setSubPage(0); }
+            else if (itemIdx === 3) { onSetMode('SYSTEM'); setSubPage(3); }
             else if (itemIdx === 4) { onSetMode('PATCH'); setSubPage(1); }
             else if (itemIdx === 5) { onSetMode('PART'); setSubPage(3); }
+            else if (itemIdx === 7) { onSetMode('SAMPLE'); setSubPage(1); }
+            else if (itemIdx === 8) { onSetMode('SAMPLE'); setSubPage(2); }
             else if (itemIdx === 9) { onSetMode('PATCH'); setSubPage(3); }
             setActiveModal('NONE');
             onEventEmit('CRT_MODAL_SELECT', { modal: activeModal, index: itemIdx });
@@ -321,6 +325,8 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       if (x >= 16 && x <= 170) {
         if (state.mode === 'PATCH') setSubPage((subPage + 1) % 4);
         else if (state.mode === 'PART') setSubPage((subPage + 1) % 6);
+        else if (state.mode === 'SAMPLE') setSubPage((subPage + 1) % 14);
+        else if (state.mode === 'SYSTEM') setSubPage((subPage + 1) % 5);
         return;
       }
       // Mark Click
@@ -418,6 +424,10 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       topHelp = subPage === 1 ? "--/MIDISel" : "Dec/Inc";
     } else if (state.mode === 'PART') {
       topHelp = "Dec/Inc";
+    } else if (state.mode === 'SAMPLE') {
+      topHelp = (subPage === 0 || subPage === 2 || subPage >= 6) ? "---/---" : "Dec/Inc";
+    } else if (state.mode === 'SYSTEM') {
+      topHelp = "---/---";
     }
 
     drawBitmapString(ctx, 8, 3, "Volume[ - :              ] ID:01", cBlack, cGreen);
@@ -488,13 +498,36 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       subTitle = partSubPages[subPage] || "Partial Common";
       badgeText = "Part1";
     } else if (state.mode === 'SAMPLE') {
-      subTitle = subPage === 0 ? "Sample Info" : "Sample Loop";
+      const sampleSubPages = [
+        "Sampling",
+        "Loop&Smoothing",
+        "Auto Trun/Norm",
+        "Time Stretch",
+        "D.Filter",
+        "Comp/Expand",
+        "Rate Convert",
+        "Bit Convert",
+        "Truncate",
+        "Cut & Splice",
+        "Area Erase",
+        "Insert",
+        "Mixing",
+        "Combine"
+      ];
+      subTitle = sampleSubPages[subPage] || "Sampling";
       badgeText = "Samp1";
     } else if (state.mode === 'DISK') {
       subTitle = "Disk Load";
       badgeText = "Disk";
     } else if (state.mode === 'SYSTEM') {
-      subTitle = "System SCSI";
+      const systemSubPages = [
+        "System Parameter1",
+        "System SCSI",
+        "System MIDI",
+        "System Volume ID",
+        "LD/SV System PRM"
+      ];
+      subTitle = systemSubPages[subPage] || "System Parameter1";
       badgeText = "Systm";
     }
 
@@ -1004,48 +1037,587 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       drawBitmapString(ctx, 532, 116, "0", cCyan, cBlue);
 
     } else if (state.mode === 'SAMPLE') {
-      // -------------------------------------------------------------
-      // SAMPLE INFO / LOOP
-      // -------------------------------------------------------------
-      drawBitmapString(ctx, 16, 44, "Sample: W01 JP-8_BRASS_44K.WAV (44.1kHz 16-Bit)", cWhite, cBlue);
-      ctx.fillStyle = cYellow;
-      ctx.fillRect(12, 56, 612, 10);
-      drawBitmapString(ctx, 16, 57, "Wave Parameter Information & Loop Settings", cBlack, cYellow);
+      if (subPage === 0) {
+        // --- SAMPLING (sample-1.jpeg) ---
+        drawBitmapString(ctx, 16, 44, "□[ 1]PNO:MP-1.", cWhite, cBlue);
+        drawBitmapString(ctx, 320, 44, "Remaining 341.0sec/ 342.2sec", cWhite, cBlue);
 
-      drawBitmapString(ctx, 16, 70,  "Orig Key:    C4           Sample Rate: 44.1 kHz", cWhite, cBlue);
-      drawBitmapString(ctx, 16, 84,  "Wave Length: 2.95 s       Remaining:   363.8 s", cWhite, cBlue);
-      drawBitmapString(ctx, 16, 98,  "Start Point: 0000,000     End Point:   0130,560", cWhite, cBlue);
-      drawBitmapString(ctx, 16, 112, "Loop Start:  0048,200     Loop End:    0128,400", cYellow, cBlue);
-      drawBitmapString(ctx, 16, 126, "Loop Mode:   Forward      Fine Tune:   +0 cent", cWhite, cBlue);
+        // Parameters on left
+        const sampParams = [
+          { label: "Mode", val: "Stereo" },
+          { label: "Orig Key", val: "C_4" },
+          { label: "Freq", val: "44.1KHz" },
+          { label: "Time", val: ".6" },
+          { label: "Pre-Trig", val: "---" },
+          { label: "Normalize", val: "Off" },
+          { label: "Input", val: "Analog" },
+          { label: "Type", val: "OneWay" },
+          { label: "Trigger", val: "Level" },
+          { label: "Threshold", val: "0" },
+          { label: "Digital ATT", val: "0" },
+        ];
+        sampParams.forEach((param, idx) => {
+          const py = 58 + idx * 13;
+          drawBitmapString(ctx, 16, py, `${param.label.padEnd(16, ' ')} ${param.val.padStart(8, ' ')}`, cWhite, cBlue);
+        });
 
-      // Waveform display graph in Black Box
-      ctx.fillStyle = cBlack;
-      ctx.fillRect(12, 142, 612, 74);
-      for (let x = 14; x < 620; x++) {
-        const mid = 179;
-        const amp = Math.floor(18.0 * Math.sin((x - 14) * 0.15) * Math.cos((x - 14) * 0.04));
+        // EQ section on right
+        ctx.fillStyle = cWhite;
+        ctx.fillRect(320, 58, 64, 12);
+        drawBitmapString(ctx, 324, 60, "[EQ ON ]", cBlack, cWhite);
+
         ctx.fillStyle = cYellow;
-        ctx.fillRect(x, mid + amp, 1, 1);
+        ctx.fillRect(320, 74, 300, 10);
+        drawBitmapString(ctx, 420, 75, "[H.F] [H.G] [L.F] [L.G]", cBlack, cYellow);
+
+        drawBitmapString(ctx, 320, 88,  "Input-Left   --    --    --    --", cWhite, cBlue);
+        drawBitmapString(ctx, 320, 102, "Input-Right  --    --    --    --", cWhite, cBlue);
+
+        // Cyan VU meter box
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(320, 126, 300, 78);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(320, 126, 300, 78);
+
+        drawBitmapString(ctx, 330, 142, "LEFT", cWhite, cBlack);
         ctx.fillStyle = cCyan;
-        ctx.fillRect(x, mid - amp, 1, 1);
+        ctx.fillRect(375, 140, 8, 10);
+        for (let seg = 0; seg < 10; seg++) {
+          ctx.fillStyle = seg < 6 ? cGreen : seg < 8 ? cYellow : cRed;
+          ctx.fillRect(395 + seg * 20, 142, 12, 6);
+        }
+
+        drawBitmapString(ctx, 330, 172, "RIGHT", cWhite, cBlack);
+        ctx.fillStyle = cCyan;
+        ctx.fillRect(375, 170, 8, 10);
+        for (let seg = 0; seg < 10; seg++) {
+          ctx.fillStyle = seg < 5 ? cGreen : seg < 7 ? cYellow : cRed;
+          ctx.fillRect(395 + seg * 20, 172, 12, 6);
+        }
+
+      } else if (subPage === 1) {
+        // --- LOOP & SMOOTHING (sample-2.jpeg) ---
+        drawBitmapString(ctx, 16, 44, "Length: 0.6sec/ 341.6sec", cWhite, cBlue);
+        drawBitmapString(ctx, 320, 44, "Rate: 48KHz", cWhite, cBlue);
+
+        const loopParams = [
+          "* Start            0",
+          "*-> Loop       17888",
+          "*-> End        23125",
+          "*-> R-Loop     27618",
+          "*-> End        27622",
+          "Mode          Forward",
+          "Tune/Fine           0",
+          "Loop-Smoothing Length 1"
+        ];
+        loopParams.forEach((lp, idx) => {
+          const ly = 58 + idx * 13;
+          drawBitmapString(ctx, 16, ly, lp, cWhite, cBlue);
+        });
+
+        // Timeline Progress Bar
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(230, 56, 310, 8);
+        ctx.fillStyle = cCyan;
+        ctx.fillRect(230, 56, 120, 8);
+        ctx.fillStyle = cRed;
+        ctx.fillRect(290, 56, 4, 8);
+
+        // Waveform Overview Box
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(230, 68, 310, 64);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(230, 68, 310, 64);
+
+        // Yellow wave trace
+        for (let wx = 232; wx < 538; wx++) {
+          const wy = 100 + Math.floor(16 * Math.sin((wx - 232) * 0.12) * Math.cos((wx - 232) * 0.03));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+        // Cyan loop box indicator
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(360, 72, 80, 56);
+
+        // Loop Point Zoom Box
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(230, 136, 310, 70);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(230, 136, 310, 70);
+
+        // Zoomed waveform zero-crossing splice line
+        for (let zx = 232; zx < 538; zx++) {
+          const zy = 171 + Math.floor(24 * Math.sin((zx - 232) * 0.06));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(zx, zy, 1, 1);
+        }
+        // Red loop splice vertical marker
+        ctx.fillStyle = cRed;
+        ctx.fillRect(385, 138, 1, 66);
+
+        // Right tool strip
+        const tools = ["[ --- ]", "[ Fast]", "[X:---]", "[Y:---]", "[L:---]", "[W.Graph]"];
+        tools.forEach((tl, tidx) => {
+          const ty = 56 + tidx * 24;
+          ctx.fillStyle = cWhite;
+          ctx.fillRect(550, ty, 74, 16);
+          drawBitmapString(ctx, 554, ty + 4, tl, cBlack, cWhite);
+        });
+
+      } else if (subPage === 2) {
+        // --- AUTO TRUN/NORM (sample-3.jpeg) ---
+        // Yellow header
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 44, 340, 10);
+        drawBitmapString(ctx, 16, 45, "No. Name                 Time", cBlack, cYellow);
+
+        const smpRows = [
+          { num: " 1:", name: "PNO:MP-1.", time: " 0.6" },
+          { num: " 2:", name: "", time: " 0.0" },
+          { num: " 3:", name: "", time: " 0.0" },
+          { num: " 4:", name: "", time: " 0.0" },
+          { num: " 5:", name: "", time: " 0.0" },
+          { num: " 6:", name: "", time: " 0.0" },
+          { num: " 7:", name: "", time: " 0.0" },
+          { num: " 8:", name: "", time: " 0.0" },
+          { num: " 9:", name: "", time: " 0.0" },
+          { num: "10:", name: "", time: " 0.0" },
+          { num: "11:", name: "", time: " 0.0" },
+          { num: "12:", name: "", time: " 0.0" },
+          { num: "13:", name: "", time: " 0.0" },
+          { num: "14:", name: "", time: " 0.0" },
+          { num: "15:", name: "", time: " 0.0" },
+          { num: "16:", name: "", time: " 0.0" },
+        ];
+        smpRows.forEach((row, idx) => {
+          const ry = 58 + idx * 9.5;
+          const isSelected = idx === 0;
+          drawBitmapString(ctx, 16, Math.floor(ry), `${row.num} ${row.name.padEnd(20, ' ')} ${row.time}`, isSelected ? cCyan : cWhite, cBlue);
+        });
+
+        // Right Parameters
+        const trunParams = [
+          { label: "Mode", val: "Auto Truncate" },
+          { label: "Level", val: "0" },
+          { label: "Margin", val: "0" },
+          { label: "Auto Normalize", val: "Off" },
+          { label: "Target Level", val: "100%" },
+        ];
+        trunParams.forEach((param, idx) => {
+          const py = 60 + idx * 18;
+          drawBitmapString(ctx, 370, py, `${param.label.padEnd(16, ' ')} ${param.val.padStart(14, ' ')}`, cWhite, cBlue);
+        });
+
+      } else if (subPage === 3) {
+        // --- TIME STRETCH (sample-4.jpeg) ---
+        drawBitmapString(ctx, 16, 50,  "->From         0[ST ]", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 68,  "->To       23125[End]", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 92,  "Ratio               100%", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 110, "Fade                  20", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 128, "Mode              Manual", cWhite, cBlue);
+
+        // Waveform preview box
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(280, 50, 340, 155);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(280, 50, 340, 155);
+
+        for (let wx = 282; wx < 618; wx++) {
+          const wy = 127 + Math.floor(32 * Math.sin((wx - 282) * 0.08) * Math.cos((wx - 282) * 0.02));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else if (subPage === 4) {
+        // --- D.FILTER (sample-5.jpeg) ---
+        drawBitmapString(ctx, 16, 50,  "Filter Mode          LPF", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 70,  "CutOff Freq         10.0", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 90,  "Resonance              0", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 110, "Level                127", cWhite, cBlue);
+
+        // Filter Response Spectrum Box
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(280, 50, 340, 155);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(280, 50, 340, 155);
+
+        ctx.strokeStyle = cGreen;
+        ctx.beginPath();
+        ctx.moveTo(290, 80);
+        ctx.lineTo(440, 80);
+        ctx.lineTo(520, 180);
+        ctx.lineTo(600, 185);
+        ctx.stroke();
+
+        drawBitmapString(ctx, 430, 68, "Cutoff: 10.0kHz", cCyan, cBlack);
+
+      } else if (subPage === 5) {
+        // --- COMP/EXPAND (sample-6.jpeg) ---
+        drawBitmapString(ctx, 16, 50,  "Threshold            50%", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 70,  "Ratio               100%", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 90,  "Level               100%", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 110, "Attack                 0", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 130, "Release                0", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 150, "Normalize            Off", cWhite, cBlue);
+
+        // Transfer curve graph box
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(300, 50, 320, 155);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(300, 50, 320, 155);
+
+        // Grid lines
+        for (let g = 1; g <= 3; g++) {
+          ctx.strokeStyle = '#182030';
+          ctx.beginPath();
+          ctx.moveTo(300 + g * 80, 50);
+          ctx.lineTo(300 + g * 80, 205);
+          ctx.moveTo(300, 50 + g * 38);
+          ctx.lineTo(620, 50 + g * 38);
+          ctx.stroke();
+        }
+
+        // Response curve
+        ctx.strokeStyle = cGreen;
+        ctx.beginPath();
+        ctx.moveTo(320, 185);
+        ctx.lineTo(460, 120);
+        ctx.lineTo(590, 80);
+        ctx.stroke();
+
+        // Cyan knee node
+        ctx.fillStyle = cCyan;
+        ctx.fillRect(458, 118, 5, 5);
+        drawBitmapString(ctx, 440, 104, "50%", cCyan, cBlack);
+
+      } else if (subPage === 6) {
+        // --- RATE CONVERT (sample-7.jpeg) ---
+        drawBitmapString(ctx, 32, 60, "Sampling Rate  48KHz -> 15KHz", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 84, "Length         .6sec ->  .2sec", cWhite, cBlue);
+
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(32, 110, 576, 95);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(32, 110, 576, 95);
+
+        for (let wx = 34; wx < 606; wx++) {
+          const wy = 157 + Math.floor(24 * Math.sin((wx - 34) * 0.10) * Math.cos((wx - 34) * 0.02));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else if (subPage === 7) {
+        // --- BIT CONVERT (sample-8.jpeg) ---
+        drawBitmapString(ctx, 16, 50,  "->From         0 [Start]", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 70,  "->To       23125 [ End ]", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 98,  "Bit                  Off", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 118, "Skip Address        Off", cWhite, cBlue);
+
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(280, 50, 340, 155);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(280, 50, 340, 155);
+
+        for (let wx = 282; wx < 618; wx++) {
+          const wy = 127 + Math.floor(28 * Math.sin((wx - 282) * 0.08));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else if (subPage === 8) {
+        // --- TRUNCATE (sample-9.jpeg) ---
+        drawBitmapString(ctx, 16, 50, "->From         0 [Start]   -Fade  0", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 70, "->To       23125 [ End ]   -Fade  0", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 94, "[New Length:  0.6sec]", cCyan, cBlue);
+
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(16, 116, 608, 90);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(16, 116, 608, 90);
+
+        for (let wx = 18; wx < 622; wx++) {
+          const wy = 161 + Math.floor(24 * Math.sin((wx - 18) * 0.09));
+          ctx.fillStyle = (wx >= 120 && wx <= 520) ? cYellow : cRed;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else if (subPage === 9) {
+        // --- CUT & SPLICE (sample-10.jpeg) ---
+        drawBitmapString(ctx, 16, 50, "->From         0 [Start]", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 70, "->To       23125 [ End ]", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 90, "Fade                 0", cWhite, cBlue);
+
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(16, 116, 608, 90);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(16, 116, 608, 90);
+
+        for (let wx = 18; wx < 622; wx++) {
+          const wy = 161 + Math.floor(24 * Math.sin((wx - 18) * 0.09));
+          ctx.fillStyle = (wx >= 200 && wx <= 440) ? '#ff00ff' : cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else if (subPage === 10) {
+        // --- AREA ERASE (sample-11.jpeg) ---
+        drawBitmapString(ctx, 16, 50, "->From         0 [Start]   -Fade  0", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 70, "->To       23125 [ End ]   -Fade  0", cWhite, cBlue);
+
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(16, 100, 608, 105);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(16, 100, 608, 105);
+
+        for (let wx = 18; wx < 622; wx++) {
+          let wy = 152 + Math.floor(24 * Math.sin((wx - 18) * 0.09));
+          if (wx >= 240 && wx <= 400) wy = 152;
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else if (subPage === 11) {
+        // --- INSERT (sample-12.jpeg) ---
+        drawBitmapString(ctx, 16, 46, "Destin    □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 60, "Source1   □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 74, "->From      0[ST ]  -Fade 0", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 88, "->To    23125[End]  -Fade 0", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 102, "Level             127", cWhite, cBlue);
+
+        drawBitmapString(ctx, 16, 120, "Source2   □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 134, "->From      0[ST ]", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 148, "->To    23125[End]", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 162, "Level             127", cWhite, cBlue);
+
+        // Dual waveform overview boxes
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(320, 50, 300, 70);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(320, 50, 300, 70);
+        for (let wx = 322; wx < 618; wx++) {
+          const wy = 85 + Math.floor(16 * Math.sin((wx - 322) * 0.12));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(320, 130, 300, 75);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(320, 130, 300, 75);
+        for (let wx = 322; wx < 618; wx++) {
+          const wy = 167 + Math.floor(16 * Math.sin((wx - 322) * 0.15));
+          ctx.fillStyle = cGreen;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else if (subPage === 12) {
+        // --- MIXING (sample-13.jpeg) ---
+        drawBitmapString(ctx, 16, 46, "Destin    □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 60, "Source1   □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 74, "->From      0[ST ]", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 88, "->To    23125[End]", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 102, "Level             127", cWhite, cBlue);
+
+        drawBitmapString(ctx, 16, 120, "Source2   □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 134, "->From      0[ST ]", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 148, "->To    23125[End]", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 162, "Level             127", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 176, "Delay               0", cWhite, cBlue);
+
+        // Dual waveform preview
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(320, 50, 300, 70);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(320, 50, 300, 70);
+        for (let wx = 322; wx < 618; wx++) {
+          const wy = 85 + Math.floor(16 * Math.sin((wx - 322) * 0.12));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(320, 130, 300, 75);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(320, 130, 300, 75);
+        for (let wx = 322; wx < 618; wx++) {
+          const wy = 167 + Math.floor(16 * Math.sin((wx - 322) * 0.15));
+          ctx.fillStyle = cCyan;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+
+      } else {
+        // --- COMBINE (sample-14.jpeg, sample-15.jpeg) ---
+        drawBitmapString(ctx, 16, 46, "Destin    □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 60, "Source1   □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 74, "->From      0[ST ]  -Fade 0", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 88, "->To    23125[End]  -Fade 0", cWhite, cBlue);
+
+        drawBitmapString(ctx, 16, 108, "Source2   □[ 1]PNO:MP-1. (Left )", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 122, "->From      0[ST ]  -Fade 0", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 136, "->To    23125[End]  -Fade 0", cWhite, cBlue);
+
+        drawBitmapString(ctx, 320, 46, "[ To ]: 23125  D: 1892", cCyan, cBlue);
+
+        // Zoom waveform match zero crossing
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(320, 60, 220, 145);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(320, 60, 220, 145);
+
+        for (let wx = 322; wx < 538; wx++) {
+          const wy = 132 + Math.floor(28 * Math.sin((wx - 322) * 0.08));
+          ctx.fillStyle = cYellow;
+          ctx.fillRect(wx, wy, 1, 1);
+        }
+        ctx.fillStyle = cRed;
+        ctx.fillRect(430, 62, 1, 141);
+
+        // Right tools column
+        const tools = ["[ Fast]", "[X:---]", "[Y:---]", "[L:---]", "[W.Graph]"];
+        tools.forEach((tl, tidx) => {
+          const ty = 60 + tidx * 28;
+          ctx.fillStyle = cWhite;
+          ctx.fillRect(550, ty, 74, 18);
+          drawBitmapString(ctx, 554, ty + 5, tl, cBlack, cWhite);
+        });
       }
 
     } else {
       // -------------------------------------------------------------
-      // SYSTEM SCSI / CONFIG
+      // SYSTEM SUBPAGES (system-1.jpeg to system-5.jpeg)
       // -------------------------------------------------------------
-      drawBitmapString(ctx, 16, 44, "S-760 ROM Version 2.24           Ram:32MB OK", cWhite, cBlue);
-      ctx.fillStyle = cYellow;
-      ctx.fillRect(12, 56, 612, 10);
-      drawBitmapString(ctx, 16, 57, "SCSI Bus Targets Configuration (ID 0-6)", cBlack, cYellow);
+      if (subPage === 0) {
+        // --- SYSTEM PARAMETER1 (system-1.jpeg) ---
+        // Header Boxes
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(12, 44, 310, 14);
+        drawBitmapString(ctx, 16, 47, "Wave Memory [Total: 32Mbyte, 363.8sec]", cWhite, cBlue);
 
-      drawBitmapString(ctx, 16, 72,  "S-760 Self SCSI ID:  [ 7 ]", cWhite, cBlue);
-      drawBitmapString(ctx, 16, 86,  "Initial Drive:       [ SCSI 0 ]", cWhite, cBlue);
-      drawBitmapString(ctx, 16, 100, "Boot Drive:          [ SCSI / Floppy Auto ]", cWhite, cBlue);
-      drawBitmapString(ctx, 16, 114, "CDP Driver Type:     [ Apple / Toshiba / Sony ]", cWhite, cBlue);
-      drawBitmapString(ctx, 16, 130, "  ID 0: APPLE CD-ROM 300+ (Optical Drive)", cGreen, cBlue);
-      drawBitmapString(ctx, 16, 144, "  ID 1: QUANTUM FIREBALL 1080S (1.08 GB HDD)", cGreen, cBlue);
-      drawBitmapString(ctx, 16, 158, "  ID 2..6: --- No Device ---", cLtGray, cBlue);
+        ctx.strokeRect(330, 44, 294, 14);
+        drawBitmapString(ctx, 334, 47, "Information [ 44.1KHz, 48KHz, 32KHz]", cWhite, cBlue);
+
+        // Left parameters
+        const leftPrms = [
+          "Master -Frequency 44.1KHz",
+          "       -Tune        0cent",
+          "       -Level         127",
+          "LCD Contrast            0",
+          "Output -Mode          4st",
+          "       -Assign C/D -> C/D"
+        ];
+        leftPrms.forEach((lp, idx) => {
+          const py = 68 + idx * 16;
+          drawBitmapString(ctx, 16, py, lp, cWhite, cBlue);
+        });
+
+        // Right parameters
+        const rightPrms = [
+          "Digital Booster        -6",
+          "Time Display           On",
+          "Recover Function       On",
+          "Continuous Pan        Off",
+          "Analog Input Monitor  Off"
+        ];
+        rightPrms.forEach((rp, idx) => {
+          const py = 68 + idx * 16;
+          drawBitmapString(ctx, 334, py, rp, cWhite, cBlue);
+        });
+
+        // Page box
+        ctx.strokeRect(530, 168, 90, 24);
+        drawBitmapString(ctx, 540, 174, "Page( 1)", cCyan, cBlue);
+
+      } else if (subPage === 1) {
+        // --- SYSTEM SCSI (system-2.jpeg) ---
+        const scsiPrms = [
+          "S-760 Self SCSI ID    7",
+          "Initial Drive    SCSI:6",
+          "Initial Volume       65",
+          "Boot Drive      Default",
+          "Fast Delete Mode    Off",
+          "Overwrite Switch    Off",
+          "CDP Driver Type     Off"
+        ];
+        scsiPrms.forEach((sp, idx) => {
+          const py = 60 + idx * 18;
+          drawBitmapString(ctx, 16, py, sp, cWhite, cBlue);
+        });
+
+        // Right SCSI targets box
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(310, 48, 310, 160);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(310, 48, 310, 160);
+
+        const scsiTargets = [
+          "--0: - No Drive",
+          "--1: - No Drive",
+          "--2: - No Drive",
+          "--3: - No Drive",
+          "--4: - No Drive",
+          "--5: - No Drive",
+          "--6: - No Drive",
+          "ME7: S-760 Self",
+          "*FDD:-FloppyDisk-"
+        ];
+        scsiTargets.forEach((target, tidx) => {
+          const ty = 54 + tidx * 16;
+          const isHighlight = tidx >= 7;
+          drawBitmapString(ctx, 320, ty, target, isHighlight ? cCyan : cLtGray, cBlack);
+        });
+
+      } else if (subPage === 2) {
+        // --- SYSTEM MIDI (system-3.jpeg) ---
+        const midiPrms = [
+          "Control Channel     Off",
+          "Control Mode   Perf/Vol",
+          "MIDI Out/Thru       Out",
+          "Device ID             1",
+          "Exclusive RX        Off",
+          "Interval (Kbyte)    All",
+          "Sample Dump Source",
+          "  D[ 1]PNO:MP-1."
+        ];
+        midiPrms.forEach((mp, idx) => {
+          const py = 54 + idx * 17;
+          drawBitmapString(ctx, 16, py, mp, cWhite, cBlue);
+        });
+
+        // Right EQ Table
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(320, 48, 304, 10);
+        drawBitmapString(ctx, 324, 49, "Part [H.F] [H.G] [L.F] [L.G]", cBlack, cYellow);
+
+        for (let p = 1; p <= 8; p++) {
+          const py = 66 + (p - 1) * 16;
+          drawBitmapString(ctx, 324, py, `[${p}]    --    --    --    --`, cWhite, cBlue);
+        }
+
+      } else if (subPage === 3) {
+        // --- SYSTEM VOLUME ID (system-4.jpeg) ---
+        drawBitmapString(ctx, 32, 60, "Volume Name [ - :              ]", cWhite, cBlue);
+        drawBitmapString(ctx, 32, 84, "Volume ID   [---] for:", cWhite, cBlue);
+
+        const idTypes = ["Volume", "Performance", "Patch", "Partial", "Sample"];
+        idTypes.forEach((t, idx) => {
+          const ty = 104 + idx * 18;
+          ctx.fillStyle = cWhite;
+          ctx.fillRect(60, ty, 8, 8);
+          drawBitmapString(ctx, 76, ty, t, cWhite, cBlue);
+        });
+
+      } else {
+        // --- LD/SV SYSTEM PRM (system-5.jpeg) ---
+        ctx.fillStyle = '#0a1020';
+        ctx.fillRect(140, 75, 360, 80);
+        ctx.strokeStyle = cCyan;
+        ctx.strokeRect(140, 75, 360, 80);
+
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(140, 75, 360, 14);
+        drawBitmapString(ctx, 220, 78, "S-760 System Parameter", cBlack, cYellow);
+
+        drawBitmapString(ctx, 180, 115, "[ ------------------ ]", cWhite, '#0a1020');
+      }
     }
 
     // 6. Bottom Context Function Keys Ribbon (y = 222..240)
@@ -1116,19 +1688,46 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
         drawBitmapString(ctx, bx + 10, 225, btnTxt, cBlack, cWhite);
       });
 
-    } else {
-      // Default bottom ribbon
-      ctx.fillStyle = cWhite;
-      ctx.fillRect(0, 222, W, 18);
-      let softBtns = ['Info', 'Loop', 'Trun', 'Norm', 'VolInfo'];
-      if (state.mode === 'SYSTEM') {
-        softBtns = ['SCSI', 'PRM', 'MIDI', 'VolID', 'VolInfo'];
+    } else if (state.mode === 'SAMPLE') {
+      let sampleBtns = ["---", "[ ]KeyStr", "---", "Recover", "Exec"];
+      if (subPage === 0) {
+        sampleBtns = ["New", "[ ] MonOn", "Ready", "---", "---"];
+      } else if (subPage === 1) {
+        sampleBtns = ["Mono", "[ ] KeyStr", "[ ] L.Unlk", "Recover", "Exec"];
+      } else if (subPage === 2) {
+        sampleBtns = ["[ ] AllOn", "---", "---", "---", "Exec"];
+      } else if (subPage === 3) {
+        sampleBtns = ["Search", "[ ]KeyStr", "---", "Recover", "Exec"];
+      } else if (subPage === 4 || subPage === 5) {
+        sampleBtns = ["---", "---", "---", "Recover", "Exec"];
+      } else if (subPage === 6) {
+        sampleBtns = ["Correct", "---", "---", "Recover", "Exec"];
       }
+
       const colW = Math.floor(W / 5);
-      softBtns.forEach((btnTxt, idx) => {
-        const bx = idx * colW + 16;
-        drawBitmapString(ctx, bx, 226, btnTxt, cBlack, cWhite);
-        if (idx < 4) drawBitmapString(ctx, (idx + 1) * colW - 6, 226, "|", cBlack, cWhite);
+      sampleBtns.forEach((btnTxt, idx) => {
+        const bx = idx * colW + 12;
+        ctx.fillStyle = cWhite;
+        ctx.fillRect(bx, 222, colW - 8, 14);
+        drawBitmapString(ctx, bx + 10, 225, btnTxt, cBlack, cWhite);
+      });
+
+    } else if (state.mode === 'SYSTEM') {
+      let sysBtns = ["---", "---", "---", "---", "VolInfo"];
+      if (subPage === 2) {
+        sysBtns = ["---", "SmpDump", "SysDump", "VolDump", "VolInfo"];
+      } else if (subPage === 3) {
+        sysBtns = ["[ ] AllOn", "---", "Exec", "---", "VolInfo"];
+      } else if (subPage === 4) {
+        sysBtns = ["LoadPRM", "---", "SavePRM", "---", "VolInfo"];
+      }
+
+      const colW = Math.floor(W / 5);
+      sysBtns.forEach((btnTxt, idx) => {
+        const bx = idx * colW + 12;
+        ctx.fillStyle = cWhite;
+        ctx.fillRect(bx, 222, colW - 8, 14);
+        drawBitmapString(ctx, bx + 10, 225, btnTxt, cBlack, cWhite);
       });
     }
 

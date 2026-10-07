@@ -1271,7 +1271,7 @@ void s760_state::render_partial_mode(bitmap_ind16 &bitmap)
 
 void s760_state::render_sample_mode(bitmap_ind16 &bitmap)
 {
-	draw_string(bitmap, 16, 30, "Sample Info", 0, 6);
+	draw_string(bitmap, 16, 30, "Sampling", 0, 6);
 	for (int y = 29; y < 39; y++)
 		for (int x = 200; x < 244; x++)
 			bitmap.pix(y, x) = 5;
@@ -1286,28 +1286,65 @@ void s760_state::render_sample_mode(bitmap_ind16 &bitmap)
 	draw_string(bitmap, 437, 30, "Jump", 0, 6);
 	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	draw_string(bitmap, 16, 44, "Sample: W01 JP-8_BRASS_44K.WAV (44.1kHz 16-Bit)", 1, 2);
-	for (int y = 56; y < 66; y++)
-		for (int x = 12; x < 624; x++)
+	draw_string(bitmap, 16, 44, "[ 1]PNO:MP-1.", 1, 2);
+	draw_string(bitmap, 320, 44, "Remaining 341.0sec/ 342.2sec", 1, 2);
+
+	const char *samp_params[] = {
+		"Mode            Stereo",
+		"Orig Key            C_4",
+		"Freq           44.1KHz",
+		"Time                .6",
+		"Pre-Trig           ---",
+		"Normalize          Off",
+		"Input           Analog",
+		"Type            OneWay",
+		"Trigger          Level",
+		"Threshold            0",
+		"Digital ATT          0"
+	};
+	for (int i = 0; i < 11; i++)
+		draw_string(bitmap, 16, 58 + i * 13, samp_params[i], 1, 2);
+
+	for (int y = 58; y < 70; y++)
+		for (int x = 320; x < 384; x++)
+			bitmap.pix(y, x) = 1;
+	draw_string(bitmap, 324, 60, "[EQ ON ]", 0, 1);
+
+	for (int y = 74; y < 84; y++)
+		for (int x = 320; x < 620; x++)
 			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 16, 57, "Wave Parameter Information & Loop Settings", 0, 4);
+	draw_string(bitmap, 420, 75, "[H.F] [H.G] [L.F] [L.G]", 0, 4);
 
-	draw_string(bitmap, 16, 70,  "Orig Key:    C4           Sample Rate: 44.1 kHz", 1, 2);
-	draw_string(bitmap, 16, 84,  "Wave Length: 2.95 s       Remaining:   363.8 s", 1, 2);
-	draw_string(bitmap, 16, 98,  "Start Point: 0000,000     End Point:   0130,560", 1, 2);
-	draw_string(bitmap, 16, 112, "Loop Start:  0048,200     Loop End:    0128,400", 4, 2);
-	draw_string(bitmap, 16, 126, "Loop Mode:   Forward      Fine Tune:   +0 cent", 1, 2);
+	draw_string(bitmap, 320, 88,  "Input-Left   --    --    --    --", 1, 2);
+	draw_string(bitmap, 320, 102, "Input-Right  --    --    --    --", 1, 2);
 
-	for (int y = 142; y < 216; y++)
-		for (int x = 12; x < 624; x++)
+	// VU Meters Box
+	for (int y = 126; y < 204; y++)
+		for (int x = 320; x < 620; x++)
 			bitmap.pix(y, x) = 0;
+	for (int x = 320; x < 620; x++) {
+		bitmap.pix(126, x) = 8;
+		bitmap.pix(203, x) = 8;
+	}
+	for (int y = 126; y < 204; y++) {
+		bitmap.pix(y, 320) = 8;
+		bitmap.pix(y, 619) = 8;
+	}
 
-	for (int x = 14; x < 620; x++)
-	{
-		int mid = 179;
-		int amp = (int)(18.0 * sin((x - 14) * 0.15) * cos((x - 14) * 0.04));
-		bitmap.pix(mid + amp, x) = 4;
-		bitmap.pix(mid - amp, x) = 8;
+	draw_string(bitmap, 330, 142, "LEFT", 1, 0);
+	for (int seg = 0; seg < 10; seg++) {
+		uint16_t col = (seg < 6) ? 3 : (seg < 8) ? 4 : 5;
+		for (int dy = 0; dy < 6; dy++)
+			for (int dx = 0; dx < 12; dx++)
+				bitmap.pix(142 + dy, 395 + seg * 20 + dx) = col;
+	}
+
+	draw_string(bitmap, 330, 172, "RIGHT", 1, 0);
+	for (int seg = 0; seg < 10; seg++) {
+		uint16_t col = (seg < 5) ? 3 : (seg < 7) ? 4 : 5;
+		for (int dy = 0; dy < 6; dy++)
+			for (int dx = 0; dx < 12; dx++)
+				bitmap.pix(172 + dy, 395 + seg * 20 + dx) = col;
 	}
 }
 
@@ -1418,22 +1455,47 @@ void s760_state::render_system_mode(bitmap_ind16 &bitmap)
 	draw_string(bitmap, 437, 30, "Jump", 0, 6);
 	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	draw_string(bitmap, 16, 44, "S-760 ROM Version 2.24           Ram:32MB OK", 1, 2);
-	for (int y = 56; y < 66; y++)
-		for (int x = 12; x < 624; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 16, 57, "SCSI Bus Targets Configuration (ID 0-6)", 0, 4);
+	const char *scsi_prms[] = {
+		"S-760 Self SCSI ID    7",
+		"Initial Drive    SCSI:6",
+		"Initial Volume       65",
+		"Boot Drive      Default",
+		"Fast Delete Mode    Off",
+		"Overwrite Switch    Off",
+		"CDP Driver Type     Off"
+	};
+	for (int i = 0; i < 7; i++)
+		draw_string(bitmap, 16, 60 + i * 18, scsi_prms[i], 1, 2);
 
-	draw_string(bitmap, 16, 72,  "S-760 Self SCSI ID:  [ 7 ]", 1, 2);
-	draw_string(bitmap, 16, 86,  "Initial Drive:       [ SCSI 0 ]", 1, 2);
-	draw_string(bitmap, 16, 100, "Boot Drive:          [ SCSI / Floppy Auto ]", 1, 2);
-	draw_string(bitmap, 16, 114, "CDP Driver Type:     [ Apple / Toshiba / Sony ]", 1, 2);
-	draw_string(bitmap, 16, 130, "  ID 0: APPLE CD-ROM 300+ (Optical Drive)", 3, 2);
-	draw_string(bitmap, 16, 144, "  ID 1: QUANTUM FIREBALL 1080S (1.08 GB HDD)", 3, 2);
-	draw_string(bitmap, 16, 158, "  ID 2..6: --- No Device ---", 6, 2);
+	// SCSI Targets Box
+	for (int y = 48; y < 208; y++)
+		for (int x = 310; x < 620; x++)
+			bitmap.pix(y, x) = 0;
+	for (int x = 310; x < 620; x++) {
+		bitmap.pix(48, x) = 8;
+		bitmap.pix(207, x) = 8;
+	}
+	for (int y = 48; y < 208; y++) {
+		bitmap.pix(y, 310) = 8;
+		bitmap.pix(y, 619) = 8;
+	}
+
+	const char *targets[] = {
+		"--0: - No Drive",
+		"--1: - No Drive",
+		"--2: - No Drive",
+		"--3: - No Drive",
+		"--4: - No Drive",
+		"--5: - No Drive",
+		"--6: - No Drive",
+		"ME7: S-760 Self",
+		"*FDD:-FloppyDisk-"
+	};
+	for (int t = 0; t < 9; t++)
+		draw_string(bitmap, 320, 54 + t * 16, targets[t], (t >= 7) ? 8 : 6, 0);
 }
 
-// 2. 1U Roland S-760 Rack Front Panel with Embedded 160x64 LCD & Gotek Floppy Emulator
+// 2. 1U Rack Front Panel with Embedded 160x64 LCD & Gotek Floppy Emulator
 void s760_state::render_rack_panel(bitmap_ind16 &bitmap)
 {
 	// 1. Fill 1U Rack Chassis Area (y = 240..359) with Dark Charcoal (Pen 10)
@@ -1477,11 +1539,10 @@ void s760_state::render_rack_panel(bitmap_ind16 &bitmap)
 	draw_rack_screw(633, 256);
 	draw_rack_screw(633, 344);
 
-	// 4. Left Silkscreen Branding & Power Switch
-	draw_string(bitmap, 18, 248, "Roland", 1);
-	draw_string(bitmap, 18, 260, "S-760", 8);
-	draw_string(bitmap, 18, 272, "DIGITAL", 6);
-	draw_string(bitmap, 18, 282, "SAMPLER", 6);
+	// 4. Left Silkscreen Panel Text & Power Switch (Unbranded Chassis)
+	draw_string(bitmap, 18, 256, "S-760", 8);
+	draw_string(bitmap, 18, 270, "DIGITAL", 6);
+	draw_string(bitmap, 18, 280, "SAMPLER", 6);
 
 	// Power Switch at (18..36, 298..336)
 	draw_string(bitmap, 18, 296, "POWER", 6);
@@ -1545,7 +1606,7 @@ void s760_state::render_rack_panel(bitmap_ind16 &bitmap)
 	else
 	{
 		const char *mode_names[] = { "PERFORM MODE", "PATCH EDIT", "PARTIAL EDIT", "SAMPLE EDIT", "DISK LOAD", "SYSTEM CONFIG" };
-		draw_string(bitmap, 64, 254, "ROLAND  S-760", 13, 12);
+		draw_string(bitmap, 60, 254, "S-760 SAMPLER", 13, 12);
 		draw_string(bitmap, 56, 268, mode_names[m_active_tab], 13, 12);
 		draw_string(bitmap, 56, 282, "SYSTEM v2.24  OK", 13, 12);
 		draw_string(bitmap, 64, 296, "RAM: 32MB READY", 13, 12);
