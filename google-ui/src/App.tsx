@@ -23,7 +23,7 @@ export default function App() {
     volume: 85,
     volumeAngle: 45, // roughly 85%
     alphaDialAngle: 0,
-    mode: 'PERF',
+    mode: 'DISK',
     subMode: 'PLAY',
     activeCursorField: 0,
     cursorRow: 0,
