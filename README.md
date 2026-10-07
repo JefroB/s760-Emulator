@@ -2,8 +2,9 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-23%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-25%20Passing-brightgreen.svg)](tests/)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
+
 
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 

@@ -6,7 +6,7 @@ import math
 import struct
 import pytest
 from conftest import ROOT, IMAGE
-from disk_formats import RolandS760Disk, AkaiS1000Disk, S760AkaiConverter
+from disk_formats import RolandS760Disk, AkaiS1000Disk, S760AkaiConverter, S760VoiceSynthesizer
 from mame_harness import MameTestSession, analyze_screenshot
 
 
@@ -171,3 +171,72 @@ end, "disk_convert_test")
             break
 
     assert found_yellow_params, "Yellow parameter buttons not rendered on DISK screen"
+
+
+def test_akai_s1000_sample_audio_playback_and_pitch_accuracy():
+    """
+    Verify that audio samples converted from an Akai S1000 ISO load and synthesize
+    with exact pitch accuracy, non-zero energy, and proper transposition ratios.
+    """
+    # 1. Create Akai S1000 ISO with 440 Hz Concert Pitch Sample
+    akai = AkaiS1000Disk(volume_name="PITCH TEST")
+    pcm_440 = generate_test_tone(freq=440.0, rate=44100, num_samples=22050)
+    akai.add_program(prog_num=1, prog_name="Sine 440", midi_channel=1)
+    akai.add_sample(sample_name="A4 440Hz", sample_rate=44100, pcm_data=pcm_440, loop_start=1000, loop_end=20000, root_key=60)
+
+    # 2. Convert to Roland S-760 format
+    s760_disk = S760AkaiConverter.convert(akai)
+    assert len(s760_disk.samples) == 1
+    sample = s760_disk.samples[0]
+
+    # Helper function to compute fundamental frequency via zero-crossings
+    def measure_freq_and_rms(note):
+        audio = S760VoiceSynthesizer.render_voice(sample, note=note, num_output_samples=44100, output_rate=44100)
+        rms = math.sqrt(sum(s * s for s in audio) / len(audio))
+        crossings = sum(1 for i in range(len(audio) - 1) if audio[i] <= 0 and audio[i + 1] > 0)
+        freq = float(crossings) * (44100.0 / len(audio))
+        return freq, rms
+
+    # Test 1: Playback at Root Key (Note 60 = 440 Hz)
+    f60, rms60 = measure_freq_and_rms(note=60)
+    assert rms60 > 0.35, f"Audio signal too quiet (RMS: {rms60})"
+    assert abs(f60 - 440.0) < 2.0, f"Frequency mismatch at note 60: expected 440 Hz, measured {f60:.1f} Hz"
+
+    # Test 2: Transposition +1 Octave (Note 72 = 880 Hz)
+    f72, rms72 = measure_freq_and_rms(note=72)
+    assert rms72 > 0.35
+    assert abs(f72 - 880.0) < 3.0, f"Frequency mismatch at note 72: expected 880 Hz, measured {f72:.1f} Hz"
+
+    # Test 3: Transposition -1 Octave (Note 48 = 220 Hz)
+    f48, rms48 = measure_freq_and_rms(note=48)
+    assert rms48 > 0.35
+    assert abs(f48 - 220.0) < 2.0, f"Frequency mismatch at note 48: expected 220 Hz, measured {f48:.1f} Hz"
+
+
+def test_akai_s1000_loop_point_continuous_playback():
+    """
+    Verify that converted Akai S1000 samples maintain continuous audio playback
+    through multiple loop iterations without dropout, clicks, or NaN anomalies.
+    """
+    akai = AkaiS1000Disk(volume_name="LOOP TEST")
+    # Short 0.1s tone looped repeatedly across 2.0s playback
+    pcm_loop = generate_test_tone(freq=330.0, rate=44100, num_samples=4410)
+    akai.add_program(prog_num=2, prog_name="E4 Loop", midi_channel=1)
+    akai.add_sample(sample_name="E4 Wave", sample_rate=44100, pcm_data=pcm_loop, loop_start=500, loop_end=4000, root_key=64)
+
+    s760_disk = S760AkaiConverter.convert(akai)
+    sample = s760_disk.samples[0]
+
+    # Render 2 seconds (88200 samples) of continuous playback
+    audio = S760VoiceSynthesizer.render_voice(sample, note=64, num_output_samples=88200, output_rate=44100)
+    assert len(audio) == 88200
+
+    # Ensure no NaN or infinite values
+    assert all(not math.isnan(s) and not math.isinf(s) for s in audio)
+
+    # Measure segment RMS across 4 consecutive half-second intervals
+    for seg_idx in range(4):
+        seg = audio[seg_idx * 22050 : (seg_idx + 1) * 22050]
+        seg_rms = math.sqrt(sum(s * s for s in seg) / len(seg))
+        assert seg_rms > 0.35, f"Audio dropped out during loop cycle {seg_idx + 1} (RMS: {seg_rms})"
+

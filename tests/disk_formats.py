@@ -278,3 +278,55 @@ class S760AkaiConverter:
             )
 
         return s760
+
+
+class S760VoiceSynthesizer:
+    """
+    Simulates the Roland S-760 DSP hardware voice playback:
+    - 16-bit PCM Linear Interpolation
+    - Pitch transposition: step = (sample_rate / output_rate) * (2 ** ((note - root_key) / 12.0))
+    - Loop point processing (Forward loop, One-shot)
+    - Returns rendered float samples (-1.0 to +1.0)
+    """
+    @staticmethod
+    def render_voice(sample_dict, note=60, num_output_samples=44100, output_rate=44100):
+        pcm_bytes = sample_dict["data"]
+        raw_samples = [struct.unpack_from("<h", pcm_bytes, i * 2)[0] for i in range(len(pcm_bytes) // 2)]
+
+        sample_rate = sample_dict.get("sample_rate", 44100)
+        root_key = sample_dict.get("root_key", 60)
+        loop_start = sample_dict.get("loop_start", 0)
+        loop_end = sample_dict.get("loop_end", len(raw_samples))
+        loop_mode = 1 if (loop_end > loop_start and loop_end <= len(raw_samples)) else 0
+
+        step = (sample_rate / float(output_rate)) * (2.0 ** ((note - root_key) / 12.0))
+        pos = 0.0
+        output = []
+
+        for _ in range(num_output_samples):
+            idx = int(pos)
+            frac = pos - idx
+
+            if idx + 1 < len(raw_samples):
+                s0 = raw_samples[idx]
+                s1 = raw_samples[idx + 1]
+                s = (s0 + frac * (s1 - s0)) / 32768.0
+            elif idx < len(raw_samples):
+                s = raw_samples[idx] / 32768.0
+            else:
+                s = 0.0
+
+            output.append(s)
+            pos += step
+
+            if loop_mode != 0 and pos >= loop_end:
+                loop_len = float(loop_end - loop_start)
+                if loop_len > 1.0:
+                    pos = loop_start + math.fmod(pos - loop_start, loop_len)
+                else:
+                    pos = loop_start
+            elif loop_mode == 0 and pos >= len(raw_samples):
+                break
+
+        return output
+
