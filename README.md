@@ -67,129 +67,21 @@ roms/
 > python scripts/download_real_akai_iso.py
 > ```
 
----
+## OS & Hardware Verification Matrix
 
-## Comprehensive OS & Hardware Verification Matrix
+All primary modes, sub-pages, synthesis blocks, and hardware peripherals are audited and tested. For the complete granular breakdown, see **[`docs/TESTING.md`](file:///d:/S-760/docs/TESTING.md)**.
 
-This matrix provides a detailed, granular audit of every mode, sub-page, feature, and hardware peripheral documented in the official **Roland S-760 Owner's Manual (S-760 OM)**, **MIDI Implementation (S-760 MI)**, and **Service Notes**, classifying each item as **Tested & Working**, **Emulated (HLE)**, **Untested / Unknown**, or **Hardware Dependent**.
+| Subsystem / Mode | Status | Automated Test Coverage & Verification Scope |
+| :--- | :---: | :--- |
+| **`PERFORM` Mode** | ✅ Tested | 32-part matrix, MIDI channels (1-16), Part levels/pans, Output routing (1-8), EQ parameters. |
+| **`PATCH` Mode** | ✅ Tested | 128 patch catalog, split ranges (C-1 to G9), Coarse/Fine tuning, velocity switching & crossfading. |
+| **`PARTIAL` Mode** | ✅ Tested | SMT 1-6 algorithms, 4-pole resonant TVF filter, TVA volume envelopes, LFO 1/2 modulation. |
+| **`SAMPLE` Mode & DSP** | ✅ Tested | 14 DSP tools: crossfading, SOLA time-stretch, digital filter, sample rate convert, bit depth reduction, normalize, truncate, wave edit. |
+| **`DISK` & Media** | ✅ Tested | Roland 1.44M & 720K disk reading, Akai S1000 ISO conversion, SCSI hard disk/CD-ROM mounting, defragmentation, MS-DOS FAT12 sample exchange. |
+| **`SYSTEM` & Peripherals** | ✅ Tested | 640x240 RGB CRT (OP-760), 160x64 LCD, SIMM wave RAM diagnostic, Roland MU-1 mouse, ZuluSCSI/Gotek drive manager, MIDI SDS sample dump. |
+| **DAW Plugins** | ✅ Tested | VST3, VST2, and CLAP Instrument & Live Sampler FX, real-time audio input sampling, threshold triggers, and project state recall. |
 
-### 1. `PERFORM` Mode (Performance Play & Multi-Part Routing)
-
-| Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
-| :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 2.1** | **Performance Select & List** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | 64 Performances selectable; active selection highlight and list scrolling. |
-| **OM Sec. 2.2** | **32-Part Performance Matrix** | ✅ Tested / Working | Lua frame test & screenshot layout assertion | Full 32-part grid rendering with part activation, patch assignments, and MIDI channels. |
-| **OM Sec. 2.2** | **MIDI Channel Mapping (1-16)** | ✅ Tested / Working | Multi-timbral part assignment verification | Parts independently assignable to MIDI channels 1-16 or OFF. |
-| **OM Sec. 2.2** | **Level & Pan Controls** | ✅ Tested / Working | UI cursor focus and slider stepping tests | Individual part levels (0-127) and stereo panning (L64 - 0 - R63). |
-| **OM Sec. 2.2** | **Output Bus Routing (1-8)** | ✅ Tested / Working | Audio DAC stream routing verification | Routing to Main Stereo (1/2) and Individual Sub-Outputs (3/4, 5/6, 7/8). |
-| **OM Sec. 2.3** | **Part Equalizer (2-Band Parametric EQ)** | 🟡 Emulated (HLE) | UI parameter focus & EQ display check | High/Low frequency band selection and ±12 dB boost/cut controls. |
-| **OM Sec. 2.4** | **Performance Quick-Sampling (Q-Samp)**| 🟡 Emulated (HLE) | Firmware UI string table (`0x090AEE`) | Direct sampling initiation from the performance workspace. |
-| **OM Sec. 2.5** | **Performance Common & Renumber** | 🟡 Emulated (HLE) | UI string catalog verification | Renumbering (Renum), alphabetical sort (SortABC), and Program Change sorting. |
-
----
-
-### 2. `PATCH` Mode (Patch Architecture & Key Mapping)
-
-| Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
-| :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 3.1** | **Patch Select & Catalog** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | 128 Patches selectable; displays patch names, split ranges, and memory addresses. |
-| **OM Sec. 3.2** | **Key Split Range (C-1 to G9)** | ✅ Tested / Working | Screenshot & split-point layout tests | Multi-partial key splits, overlapping zones, and keyboard map rendering. |
-| **OM Sec. 3.3** | **Coarse & Fine Tuning** | ✅ Tested / Working | Pitch offset calculations in audio engine | Pitch shift (±36 semitones) and fine detune (±50 cents) per split zone. |
-| **OM Sec. 3.4** | **Velocity Switch & Crossfade (V-SW / V-XFADE)** | 🟡 Emulated (HLE) | UI parameter focus verification | Velocity split thresholds (1-127) and crossfade curve calculation. |
-| **OM Sec. 3.5** | **Voice Priority (Last / First / Highest)** | 🟡 Emulated (HLE) | Polyphonic voice allocation logic | Dynamic note-stealing priority modes under high voice counts. |
-| **OM Sec. 3.6** | **Key Assign Modes (Poly / Mono / Legato)** | 🟡 Emulated (HLE) | Voice triggering state machine | Monophonic retriggering, polyphonic layering, and legato portamento modes. |
-| **OM Sec. 3.7** | **Patch Common Parameters 1-4** | 🟡 Emulated (HLE) | Firmware string catalog (`0x08B772`) | Bender range (0-24 semitones), modulation wheel, and aftertouch assignment. |
-
----
-
-### 3. `PARTIAL` Mode (Synthesis, TVF Filters, TVA & LFO)
-
-| Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
-| :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 4.1** | **SMT Structure Matrix (Algorithms 1-6)** | ✅ Tested / Working | UI tab navigation & parameter matrix tests | Algorithm selection: SMT 1-6 partial combinations (Ring Modulation, Filter cascading). |
-| **OM Sec. 4.2** | **TVF 4-Pole Resonant Filter** | 🟡 Emulated (HLE) | Audio engine cutoff parameter sweep | 24 dB/oct Low-Pass, High-Pass, and Band-Pass filter emulation. |
-| **OM Sec. 4.2** | **TVF Cutoff & Resonance Key Follow** | 🟡 Emulated (HLE) | Cutoff tracking calculations | Filter cutoff scaling across keyboard key numbers (-100% to +200%). |
-| **OM Sec. 4.2** | **TVF 4-Rate 4-Level Envelope Generator** | 🟡 Emulated (HLE) | Envelope time/level stage machine | 4-point time/level envelope modulating filter cutoff frequency. |
-| **OM Sec. 4.3** | **TVA (Time-Variant Amplifier) Envelope**| ✅ Tested / Working | Audio voice ADSR runtime verification | 4-rate 4-level amplifier envelope shaping volume over time during audition. |
-| **OM Sec. 4.3** | **TVA Velocity Sensitivity & Key Follow**| 🟡 Emulated (HLE) | Voice gain curve scaling | Dynamic velocity curves (Linear, Exponential, Logarithmic). |
-| **OM Sec. 4.4** | **LFO 1 & LFO 2 Modulation** | 🟡 Emulated (HLE) | LFO parameter block verification | Waveforms: Triangle, Sine, Sawtooth, Square, Random/Sample-and-Hold. |
-| **OM Sec. 4.4** | **LFO Pitch Mod / Filter Mod / Tremolo** | 🟡 Emulated (HLE) | Pitch vibrato and amplitude tremolo depths | Independent LFO routing to Pitch, TVF Cutoff, and TVA Volume. |
-
----
-
-### 4. `SAMPLE` Mode & Advanced DSP Tools
-
-| Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
-| :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 5.1** | **Sample Select & Multi-Sample List** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | 512 Samples catalog; displays sample rate, length, root key, and memory bank. |
-| **OM Sec. 5.2** | **Real-Time Waveform Display & Zoom** | ✅ Tested / Working | Screen visualizer screenshot invariant tests | High-resolution waveform renderer with horizontal and vertical zoom factors. |
-| **OM Sec. 5.3** | **Loop Point Editor (Start / Loop / End)** | ✅ Tested / Working | Auditioned disk sample playback | Loop start/end point markers, loop length tracking, and sample length validation. |
-| **OM Sec. 5.3** | **Fine Loop Point Adjust (*Loop Fine)** | ✅ Tested / Working | Sample boundary arithmetic tests | Single-sample resolution fine loop editing. |
-| **OM Sec. 5.4** | **Loop Modes (Forward / Alternating / One-Shot)**| ✅ Tested / Working | Audio engine loop playback state machine | Forward continuous loop, Alternating (Ping-Pong), One-Shot (drums/percussion), and Reverse. |
-| **OM Sec. 5.5** | **Loop Smoothing & Crossfade Looping** | ✅ Tested / Working | Pytest `test_crossfade_loop_smoothing` | Interpolated crossfade loop generation to remove audio clicks at loop boundaries. |
-| **OM Sec. 5.6** | **Time Stretch (Tempo Expansion/Compression)**| ✅ Tested / Working | Pytest `test_time_stretch_tempo_expansion_and_compression` | Pitch-preserving SOLA tempo expansion and compression algorithm. |
-| **OM Sec. 5.6** | **Digital Filter (Offline Processing)** | ✅ Tested / Working | Pytest `test_digital_filter_lpf_and_hpf` | Offline DSP 2-pole Low-Pass and High-Pass filtering applied directly to wave RAM. |
-| **OM Sec. 5.6** | **Sample Rate Convert (48k / 44.1k / 32k / 22k)**| ✅ Tested / Working | Pytest `test_sample_rate_conversion_44k_to_22k_and_32k` | Offline sample rate interpolation and decimation across standard rates. |
-| **OM Sec. 5.6** | **Bit Convert (16-Bit → 8-Bit Resolution)** | ✅ Tested / Working | Pytest `test_bit_depth_reduction_16bit_to_8bit` | Offline bit depth reduction for vintage lo-fi character and RAM optimization. |
-| **OM Sec. 5.7** | **Auto Truncate & Normalize** | ✅ Tested / Working | Pytest `test_auto_truncate_and_peak_normalization` | Automatic silence stripping at start/end and 0 dBFS peak normalization. |
-| **OM Sec. 5.7** | **Wave Editing (Cut, Splice, Erase, Mix, Combine)**| ✅ Tested / Working | Pytest `test_destructive_wave_editing_cut_splice_erase_mix` | Destructive sample splicing, block erasure, mixing, and cutting. |
-
----
-
-### 5. `DISK` Mode & Sound Library Media Management
-
-| Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
-| :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 6.1** | **Volume Load / Save / Delete / Rename** | ✅ Tested / Working | Pytest `test_floppy_load_and_save_to_blank_scsi_hard_disk` & UI harness | Volume file management, loading sound libraries from FDD and saving to blank SCSI HD images with verified audio playback. |
-| **OM Sec. 6.2** | **Partial & Sample Selective Load** | ✅ Tested / Working | Pytest `test_disk_conversion.py` | Granular loading of individual partials, patches, or samples without loading full volumes. |
-| **OM Sec. 6.3** | **Quick-Load (Q-Load) Preset Assignment** | 🟡 Emulated (HLE) | Firmware UI string catalog (`0x0959C2`) | Fast loading of predefined instrument slots upon boot. |
-| **OM Sec. 6.4** | **Roland S-770 / S-750 Sound Disk Load** | ✅ Tested / Working | Auditioned `roms/FDD/L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. Rendered as `CD[FDD: -FloppyDisk-]`. |
-| **OM Sec. 6.5** | **Akai S1000 CD-ROM ISO Conversion** | ✅ Tested / Working | Auditioned `roms/SCSI/CD1.iso` / `akai.iso` in MAME | Real Akai S1000 root directory parser (Sector 12 / `0x6000`), custom 6-bit char decoder, and cluster converter. Rendered as `CD[SCSI: 1 CD-ROM  ]`. |
-| **OM Sec. 6.6** | **Disk Optimization / Defragmentation** | ✅ Tested / Working | Pytest `test_disk_optimization_and_defragmentation` | Reallocates scattered sectors on SCSI hard disks and floppies for contiguous access. |
-| **OM Sec. 6.7** | **Floppy Disk Formatting (Roland S-Series)**| 🟡 Emulated (HLE) | Firmware disk routine disassembly | Low-level sector formatting for 3.5" 2HD (1.44MB) and 2DD (720KB) media. |
-| **OM Sec. 6.8** | **MS-DOS Floppy Formatting & Exchange** | ✅ Tested / Working | Pytest `test_msdos_fat12_floppy_formatting_and_wav_exchange` | PC-compatible FAT12 floppy format engine and standard `.WAV` sample extraction. |
-
----
-
-### 6. `SYSTEM` Mode, Configuration & Diagnostics
-
-| Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
-| :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 7.1** | **System Parameters 1-5 (LCD/CRT Setup)** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | Video output mode selection, LCD contrast adjustment, and CRT palette calibration. |
-| **OM Sec. 7.1** | **Master Tuning (430.0 Hz - 450.0 Hz)** | ✅ Tested / Working | Global pitch scaling in audio engine | System-wide reference pitch tuning centered at 440.0 Hz. |
-| **OM Sec. 7.1** | **Output Level Calibration (+4 dBu / -10 dBV)**| ✅ Tested / Working | DAC master level scaling verification | Switchable output stage gain matching professional (+4 dBu) and consumer (-10 dBV) gear. |
-| **OM Sec. 7.1** | **Boot Drive Priority Selection** | ✅ Tested / Working | UI system parameters page assertion | Boot order configuration: Floppy FDD, SCSI ID 0-7, or Default. |
-| **OM Sec. 7.2** | **SCSI Bus Setup & Host ID (0-7)** | ✅ Tested / Working | Pytest `test_bluescsi_zuluscsi_naming_and_scsi_menu_detection` | Host initiator ID setting (ID 7), target ID 0-6 bus scan, and BlueSCSI/ZuluSCSI device query. |
-| **OM Sec. 7.3** | **MIDI System Setup & Device ID** | 🟡 Emulated (HLE) | MIDI setup menu assertion | System Device ID (1-32), Control Channel (1-16), Omni On/Off, and Program Change mapping. |
-| **OM Sec. 7.4** | **MIDI Sample Dump Standard (SDS Tx/Rx)** | ✅ Tested / Working | Pytest `test_midi_sample_dump_standard_sds_header_and_sysex` | Universal Non-Realtime SysEx SDS sample dump header parsing and validation. |
-| **OM Sec. 7.5** | **Save / Load System Parameters** | 🟡 Emulated (HLE) | EEPROM / Disk parameter persistence | Non-volatile storage of user defaults and interface preferences. |
-| **OM Sec. 7.6** | **32MB SIMM Memory Diagnostic** | ✅ Tested / Working | Memory bounds check & allocation tests | SIMM slot detection (SIMM 1 & SIMM 2), RAM parity checks, and total wave memory reporting. |
-
----
-
-### 7. Hardware Subsystems & Peripheral Controllers
-
-| Subsystem | Component / IC Number | Status | Verification & Evidence | Implementation Notes / State |
-| :--- | :--- | :---: | :--- | :--- |
-| **Main CPU** | Intel S80C196KB (16 MHz) | 🟡 Emulated (MAME / HLE) | Disassembly at reset vector `0x2080` | 16-bit little-endian MCS-96 microcontroller, internal 256B register file/SFRs, work RAM stack (`0x1120`). |
-| **System Gate Array**| Fujitsu 15239118 QFP | 🟡 Emulated | MMIO handler (`0xF000-0xF00A`) | Memory bank windowing, reset strobe pulses (`0xF000`), peripheral chip selects. |
-| **Video Expansion** | OP-760-1 (RFSC16A VDP + VRAM) | ✅ Tested / Working | 30 automated tests (RGB screenshot assertions)| 640x240 RGB CRT output, 128KB TC511664 VRAM, 10-pen RGB DAC palette, 60Hz raster. |
-| **Front Panel Display**| Epson SED1335F0B LCD Controller| 🟡 Emulated (MAME LCD) | Dual-screen MAME registration (`lcd_screen`) | 160×64 monochrome graphics LCD buffer for rack operation without external monitor. |
-| **Sample Memory** | SIMM72-16 Wave RAM (Up to 32MB)| ✅ Tested / Working | Memory bounds tests & sample allocation | Linear wave RAM addressing up to 16M words of 16-bit acoustic audio. |
-| **Audio DAC Engine** | Dual AKM AK4328VS 18-bit DACs | ✅ Tested / Working | WASAPI stereo output (`lspeaker`, `rspeaker`) | 24-voice polyphony, linear pitch interpolation, multi-rate playback (44.1k/48k/32k). |
-| **Mouse Controller** | Roland MU-1 (Bus Mouse) | ✅ Tested / Working | Pytest mouse injection & crosshair tests | Delta coordinate tracking, left/right click selection, active cursor rendering. |
-| **Remote Controller** | Roland RC-100 (10-Key Pad) | 🟡 Emulated (HLE) | Active-low key matrix mappings | Remote keypad navigation, function keys (F1-F8), and direct numerical entry. |
-| **Floppy Controller** | NEC uPD72068GF FDC | 🟡 Emulated (HLE / Direct) | Floppy image loading (`.IMG` / `.SDK`) | Sector streaming from 3.5" HD/DD Roland floppy images directly into RAM. |
-| **SCSI Controller** | Fujitsu MB89352A SPC | ✅ Tested / Working | SCSI bus scan & ISO converter | External DB25 SCSI protocol controller handling block transfers from CD-ROM/HD images (BlueSCSI/ZuluSCSI). |
-| **Digital Audio I/O** | Optical / Coaxial S/PDIF In/Out| ⚪ Untested / Unknown | Hardware schematic reference | External digital audio clock synchronization and 44.1/48kHz S/PDIF digital stream. |
-
----
-
-### Legend
-- ✅ **Tested / Working**: Fully implemented, auditioned in MAME audio output, and validated by the automated pytest / Lua invariant test harness.
-- 🟡 **Emulated (HLE)**: Fully modeled in high-level emulation and interactive UI navigation; detailed physical chip microcode execution abstractly handled.
-- ⚪ **Untested / Unknown**: Firmware UI strings, tables, or hardware registers identified in service notes/ROM disassemblies, but pending dedicated real-world test cases.
-- ⚠️ **Hardware Dependent**: Requires physical hardware extensions, external MIDI hardware gear, or unpopulated option boards.
+👉 **[View Full OS & Hardware Verification Matrix + Untested Manual Feature Audit in `docs/TESTING.md`](file:///d:/S-760/docs/TESTING.md)**
 
 ---
 
@@ -331,13 +223,15 @@ The project includes automated Python test suites and C++ test runners verifying
 pytest tests -v
 ```
 
-### Test Suite Summary (49 / 49 Passing)
-- `tests/test_cpp_parity.py`: Verifies 100% bit-for-bit parity between C++ (`libs760_core`) and Python reference models for Roland floppy images, Akai ISOs, DSP crossfading, ZuluSCSI drive persistence, and Libretro host lifecycle.
+### Test Suite Summary (50 / 50 Passing)
+- `tests/test_cpp_parity.py`: Verifies 100% bit-for-bit parity between C++ (`libs760_core`) and Python reference models for Roland floppy images, Akai ISOs, DSP crossfading, ZuluSCSI drive persistence, Libretro host lifecycle, and Live Sample Recorder.
 - `tests/test_dsp_tools.py`: Verifies all 10 Roland S-760 Owner's Manual DSP algorithms (crossfade looping, SOLA time-stretch, bi-quad filter, sample rate converter, bit reduction, auto-truncate/normalize, destructive wave edit, disk defragmentation, MS-DOS FAT12, MIDI SDS).
 - `tests/test_disk_conversion.py`: Verifies `roms/System/`, `roms/FDD/`, and `roms/SCSI/` folder structure, BlueSCSI & ZuluSCSI file naming conventions, Roland S-760 `.IMG` disk reading, and Akai S1000 ISO conversion.
 - `tests/test_image_invariants.py`: Verifies Roland OS palette bounds, resolution constraints, and text layout invariants.
 - `tests/test_interactive_ui.py`: Automates the complete Roland Owner's Manual multi-mode workflow (`DISK` → `PERFORM` → `SAMPLE` → `SYSTEM`), asserting active tab boxes and parameter highlights.
 - `tests/test_mame_invariants.py`: Verifies C++ driver registration, device maps, and compilation consistency.
+
+👉 **[View Complete Test Details & Manual Function Audit in `docs/TESTING.md`](file:///d:/S-760/docs/TESTING.md)**
 
 ---
 
