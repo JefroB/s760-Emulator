@@ -48,8 +48,9 @@ class RolandS760Disk:
             "root_key": root_key
         })
 
-    def build_image(self) -> bytes:
-        img = bytearray(self.DISK_SIZE)
+    def build_image(self, size_mb=None, size_bytes=None) -> bytes:
+        total = size_bytes if size_bytes else (size_mb * 1024 * 1024 if size_mb else self.DISK_SIZE)
+        img = bytearray(total)
 
         # Sector 0: Volume Header
         header = bytearray(self.SECTOR_SIZE)

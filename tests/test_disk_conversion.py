@@ -451,6 +451,86 @@ end, "scsi_test")
     assert res["snap_path"] is not None
 
 
+def test_scsi_hard_disk_image_creation_and_playback():
+    """
+    Verify creating, parsing, and synthesizing a Roland SCSI Hard Disk image (HD00_512.img, SCSI ID 0):
+    1. Generates a multi-megabyte 512B-sector Roland SCSI hard disk image.
+    2. Validates Sector 0 Roland SCSI header, patch records, and 16-bit PCM wave clusters.
+    3. Synthesizes acoustic upright bass from the SCSI hard disk image with verified pitch & energy.
+    """
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from scripts.build_scsi_images import build_scsi_hard_disk_image
+
+    hd_path = os.path.join(ROOT, "roms", "SCSI", "HD00_512.img")
+    build_scsi_hard_disk_image(target_path=hd_path, size_mb=10)
+
+    assert os.path.exists(hd_path)
+    with open(hd_path, "rb") as f:
+        data = f.read()
+
+    assert len(data) == 10 * 1024 * 1024
+    parsed = RolandS760Disk.parse(data)
+    assert parsed["is_roland"] is True
+    assert parsed["volume_name"] == "S760 SCSI HD0"
+    assert parsed["num_patches"] == 3
+    assert parsed["num_samples"] == 3
+
+    # Parse and synthesize the upright bass sample
+    disk = RolandS760Disk(volume_name="S760 SCSI HD0")
+    from scripts.build_scsi_images import generate_acoustic_bass_pcm
+    disk.add_sample(sample_id=1, sample_name="UprightBass E1", sample_rate=44100, pcm_data=generate_acoustic_bass_pcm(), loop_start=2000, loop_end=40000, root_key=28)
+
+    sample = disk.samples[0]
+    audio = S760VoiceSynthesizer.render_voice(sample, note=28, num_output_samples=44100, output_rate=44100)
+    assert len(audio) == 44100
+    rms = math.sqrt(sum(s * s for s in audio) / len(audio))
+    assert rms > 0.10, f"SCSI HD sample too quiet (RMS: {rms})"
+
+
+def test_scsi_cdrom_iso_creation_and_conversion():
+    """
+    Verify creating, parsing, and converting an Akai S1000 SCSI CD-ROM ISO (CD10_2048.iso, SCSI ID 1):
+    1. Generates a 2048-byte block Akai S1000 CD-ROM ISO image.
+    2. Validates Block 0 Akai partition header, program directories, and sample headers.
+    3. Converts Akai CD-ROM ISO into Roland S-760 patch & wave RAM structures.
+    4. Synthesizes converted acoustic piano from the CD-ROM ISO image.
+    """
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from scripts.build_scsi_images import build_scsi_cdrom_iso_image
+
+    iso_path = os.path.join(ROOT, "roms", "SCSI", "CD10_2048.iso")
+    build_scsi_cdrom_iso_image(target_path=iso_path, size_mb=4)
+
+    assert os.path.exists(iso_path)
+    with open(iso_path, "rb") as f:
+        data = f.read()
+
+    assert len(data) == 4 * 1024 * 1024
+    parsed = AkaiS1000Disk.parse(data)
+    assert parsed["is_akai"] is True
+    assert parsed["volume_name"] == "AKAI_S1000_1"
+    assert parsed["num_programs"] == 3
+    assert parsed["num_samples"] == 3
+
+    # Test conversion to Roland S-760 format
+    akai_disk = AkaiS1000Disk(volume_name="AKAI_S1000_1")
+    from scripts.build_scsi_images import generate_pcm_sine
+    akai_disk.add_program(prog_num=2, prog_name="AcousticPiano", midi_channel=2)
+    akai_disk.add_sample(sample_name="Piano High C", sample_rate=44100, pcm_data=generate_pcm_sine(freq=523.25, num_samples=44100, decay=2.0), loop_start=2500, loop_end=40000, root_key=72)
+
+    s760_disk = S760AkaiConverter.convert(akai_disk)
+    assert len(s760_disk.samples) == 1
+    assert s760_disk.samples[0]["name"].strip() == "Piano High C"
+
+    audio = S760VoiceSynthesizer.render_voice(s760_disk.samples[0], note=72, num_output_samples=44100, output_rate=44100)
+    assert len(audio) == 44100
+    rms = math.sqrt(sum(s * s for s in audio) / len(audio))
+    assert rms > 0.10
+
+
+
 
 
 

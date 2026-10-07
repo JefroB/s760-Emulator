@@ -2,7 +2,7 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-30%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-32%20Passing-brightgreen.svg)](tests/)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
@@ -57,7 +57,11 @@ roms/
    - Real Akai S1000 / S1100 CD-ROM volumes placed here are automatically decoded and converted.
    - Connected SCSI targets are dynamically populated in the `SYSTEM -> SCSI` bus scan table.
 
-> To download a test Akai S1000 CD-ROM image directly to `roms/SCSI/`:
+> To generate test Roland SCSI Hard Disk (`HD00_512.img`) and Akai SCSI CD-ROM (`CD10_2048.iso`) images:
+> ```powershell
+> python scripts/build_scsi_images.py
+> ```
+> Or to download a real Akai S1000 CD-ROM image directly to `roms/SCSI/`:
 > ```powershell
 > python scripts/download_real_akai_iso.py
 > ```
