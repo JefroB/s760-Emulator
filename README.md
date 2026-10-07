@@ -2,10 +2,10 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-50%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-53%20Passing-brightgreen.svg)](tests/)
 [![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP%20(Instrument%20%26%20FX)-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
-[![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
+[![Video](https://img.shields.io/badge/Video-OP--760%20%2B%201U%20Rack%20(640x360)-red.svg)](#hardware-architecture)
 
 An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
 
@@ -15,7 +15,7 @@ An open-source hardware emulation driver and DAW instrument & effect plugin for 
 
 ![Roland S-760 MAME GUI Screen](Main.png)
 
-*Roland S-760 running in MAME with the OP-760 video expansion output (640x240 RGB color palette, Royal Blue `#0000C8` workspace, top Green status banner `#00C850`, yellow parameter highlights, and interactive mouse crosshair).*
+*Roland S-760 running in MAME with the OP-760 Color CRT monitor output (640x240 Royal Blue `#0000C8` workspace) on top, and the authentic brushed 1U Roland S-760 rack front panel with embedded 160×64 green backlit LCD display and interactive Gotek USB floppy drive emulator (FlashFloppy OLED, knurled rotary push-encoder, and dual navigation buttons) on the bottom.*
 
 ---
 
