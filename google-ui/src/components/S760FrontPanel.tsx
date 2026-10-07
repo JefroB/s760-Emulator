@@ -220,16 +220,13 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
             </div>
           </div>
 
-          {/* Roland Silkscreen Branding Block */}
+          {/* Hardware Silkscreen Model Block */}
           <div className="flex flex-col justify-center ml-1 pr-2">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-sm font-black italic tracking-tighter text-neutral-100 font-sans drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
-                Roland
-              </span>
-              <span className="text-[10px] font-bold tracking-tight text-neutral-300 uppercase">
+              <span className="text-[11px] font-black tracking-tight text-neutral-300 uppercase font-sans">
                 DIGITAL SAMPLER
               </span>
-              <span className="text-xs font-black tracking-wider text-neutral-100 uppercase bg-neutral-850 px-1 py-[0.5px] rounded-[1px] border border-neutral-600">
+              <span className="text-xs font-black tracking-wider text-neutral-100 uppercase bg-neutral-850 px-1.5 py-[0.5px] rounded-[1px] border border-neutral-600">
                 S-760
               </span>
             </div>
