@@ -10,8 +10,9 @@ interface OP760MonitorProps {
   onEventEmit: (type: string, payload: any) => void;
 }
 
-// Exact 8x8 Roland OP-760 ROM Bitmap Font Glyphs from S-760 VDP firmware
+// Complete 8x8 Roland OP-760 ROM Bitmap Font Table from S-760 VDP firmware
 const FONT_GLYPHS: Record<string, number[]> = {
+  // Uppercase
   A: [0x3c, 0x66, 0x66, 0x7e, 0x66, 0x66, 0x66, 0x00],
   B: [0x7c, 0x66, 0x66, 0x7c, 0x66, 0x66, 0x7c, 0x00],
   C: [0x3c, 0x66, 0x60, 0x60, 0x60, 0x66, 0x3c, 0x00],
@@ -38,6 +39,36 @@ const FONT_GLYPHS: Record<string, number[]> = {
   X: [0x66, 0x66, 0x3c, 0x18, 0x3c, 0x66, 0x66, 0x00],
   Y: [0x66, 0x66, 0x66, 0x3c, 0x18, 0x18, 0x18, 0x00],
   Z: [0x7e, 0x06, 0x0c, 0x18, 0x30, 0x60, 0x7e, 0x00],
+
+  // Lowercase
+  a: [0x00, 0x00, 0x3c, 0x06, 0x3e, 0x66, 0x3e, 0x00],
+  b: [0x60, 0x60, 0x7c, 0x66, 0x66, 0x66, 0x7c, 0x00],
+  c: [0x00, 0x00, 0x3c, 0x66, 0x60, 0x66, 0x3c, 0x00],
+  d: [0x06, 0x06, 0x3e, 0x66, 0x66, 0x66, 0x3e, 0x00],
+  e: [0x00, 0x00, 0x3c, 0x66, 0x7e, 0x60, 0x3c, 0x00],
+  f: [0x0e, 0x18, 0x3e, 0x18, 0x18, 0x18, 0x18, 0x00],
+  g: [0x00, 0x00, 0x3e, 0x66, 0x66, 0x3e, 0x06, 0x3c],
+  h: [0x60, 0x60, 0x7c, 0x66, 0x66, 0x66, 0x66, 0x00],
+  i: [0x18, 0x00, 0x38, 0x18, 0x18, 0x18, 0x3c, 0x00],
+  j: [0x06, 0x00, 0x0e, 0x06, 0x06, 0x66, 0x3c, 0x00],
+  k: [0x60, 0x60, 0x66, 0x6c, 0x78, 0x6c, 0x66, 0x00],
+  l: [0x38, 0x18, 0x18, 0x18, 0x18, 0x18, 0x3c, 0x00],
+  m: [0x00, 0x00, 0x66, 0x7f, 0x7f, 0x6b, 0x63, 0x00],
+  n: [0x00, 0x00, 0x7c, 0x66, 0x66, 0x66, 0x66, 0x00],
+  o: [0x00, 0x00, 0x3c, 0x66, 0x66, 0x66, 0x3c, 0x00],
+  p: [0x00, 0x00, 0x7c, 0x66, 0x66, 0x7c, 0x60, 0x60],
+  q: [0x00, 0x00, 0x3e, 0x66, 0x66, 0x3e, 0x06, 0x06],
+  r: [0x00, 0x00, 0x5c, 0x66, 0x60, 0x60, 0x60, 0x00],
+  s: [0x00, 0x00, 0x3e, 0x60, 0x3c, 0x06, 0x7c, 0x00],
+  t: [0x18, 0x18, 0x7e, 0x18, 0x18, 0x18, 0x0e, 0x00],
+  u: [0x00, 0x00, 0x66, 0x66, 0x66, 0x66, 0x3e, 0x00],
+  v: [0x00, 0x00, 0x66, 0x66, 0x66, 0x3c, 0x18, 0x00],
+  w: [0x00, 0x00, 0x63, 0x6b, 0x7f, 0x77, 0x63, 0x00],
+  x: [0x00, 0x00, 0x66, 0x3c, 0x18, 0x3c, 0x66, 0x00],
+  y: [0x00, 0x00, 0x66, 0x66, 0x66, 0x3e, 0x06, 0x3c],
+  z: [0x00, 0x00, 0x7e, 0x0c, 0x18, 0x30, 0x7e, 0x00],
+
+  // Digits
   '0': [0x3c, 0x66, 0x6e, 0x76, 0x66, 0x66, 0x3c, 0x00],
   '1': [0x18, 0x38, 0x18, 0x18, 0x18, 0x18, 0x7e, 0x00],
   '2': [0x3c, 0x66, 0x0c, 0x18, 0x30, 0x60, 0x7e, 0x00],
@@ -48,7 +79,8 @@ const FONT_GLYPHS: Record<string, number[]> = {
   '7': [0x7e, 0x06, 0x0c, 0x18, 0x30, 0x30, 0x30, 0x00],
   '8': [0x3c, 0x66, 0x66, 0x3c, 0x66, 0x66, 0x3c, 0x00],
   '9': [0x3c, 0x66, 0x66, 0x7e, 0x06, 0x66, 0x3c, 0x00],
-  v: [0x00, 0x00, 0x66, 0x66, 0x66, 0x3c, 0x18, 0x00],
+
+  // Symbols & Punctuation
   ' ': [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
   '-': [0x00, 0x00, 0x00, 0x7e, 0x00, 0x00, 0x00, 0x00],
   '.': [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x18, 0x18],
@@ -69,12 +101,12 @@ const FONT_GLYPHS: Record<string, number[]> = {
   '_': [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00],
   '!': [0x18, 0x18, 0x18, 0x18, 0x18, 0x00, 0x18, 0x00],
   '?': [0x3c, 0x66, 0x0c, 0x18, 0x18, 0x00, 0x18, 0x00],
+  '#': [0x24, 0x24, 0x7e, 0x24, 0x7e, 0x24, 0x24, 0x00],
+  '&': [0x38, 0x6c, 0x38, 0x76, 0xdc, 0xcc, 0x76, 0x00],
 };
 
 function getFontGlyph(char: string): number[] {
-  const upper = char.toUpperCase();
-  if (char === 'v') return FONT_GLYPHS.v;
-  return FONT_GLYPHS[upper] || FONT_GLYPHS[char] || FONT_GLYPHS[' '];
+  return FONT_GLYPHS[char] || FONT_GLYPHS[char.toUpperCase()] || FONT_GLYPHS[' '];
 }
 
 function drawBitmapString(
@@ -135,7 +167,7 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
     const x = Math.floor((e.clientX - rect.left) * scaleX);
     const y = Math.floor((e.clientY - rect.top) * scaleY);
 
-    // Top Menu Ribbon Click (y: 14 to 28)
+    // Top Mode Ribbon Click (y: 14 to 28)
     if (y >= 14 && y <= 28) {
       if (x >= 12 && x <= 84) onSetMode('PERF');
       else if (x >= 95 && x <= 160) onSetMode('PATCH');
@@ -159,8 +191,8 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
 
     // Bottom Soft Ribbon Click (y: 222 to 240)
     if (y >= 222 && y <= 240) {
-      const softIdx = Math.floor((x - 10) / 150);
-      if (softIdx >= 0 && softIdx < 4) {
+      const softIdx = Math.floor(x / (640 / 6));
+      if (softIdx >= 0 && softIdx < 6) {
         onSoftKey(softIdx);
         onEventEmit('CRT_SOFT_CLICK', { softIdx });
       }
@@ -188,19 +220,24 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
     const cWhite   = '#ffffff'; // Pen 1
     const cBlue    = '#0000c0'; // Pen 2: Authentic S-760 Royal Blue
     const cGreen   = '#00c850'; // Pen 3: Status Green
-    const cYellow  = '#ffe600'; // Pen 4: Parameter & Value Highlights
+    const cYellow  = '#ffe600'; // Pen 4: Parameter & Selection Highlights
     const cRed     = '#dc3c14'; // Pen 5: Tab Selection Highlight
-    const cLtGray  = '#bec3cd'; // Pen 6: Light Gray Header Ribbon
+    const cLtGray  = '#bec3cd'; // Pen 6: Subheader Ribbon
     const cCyan    = '#00dcdc'; // Pen 8: Cyan Waveform Graphics
 
-    // 1. Fill CRT workspace with authentic Roland Royal Blue (#0000C0)
+    // 1. Fill entire CRT workspace with authentic Roland Royal Blue (#0000C0)
     ctx.fillStyle = cBlue;
     ctx.fillRect(0, 0, W, H);
 
     // 2. Top Status Bar (Status Green y = 0..13)
     ctx.fillStyle = cGreen;
     ctx.fillRect(0, 0, W, 14);
-    drawBitmapString(ctx, 6, 3, "VOLUME[ - :      ]                 ID:04              ---/---", cBlack, cGreen);
+    
+    // Exact OS ROM format: Volume[xxx:xxxxxxxxxxxx] ID:xx  ---/---
+    const mountedName = (diskList[state.gotek.mountedImageIndex]?.name || 'L701_STRINGS.IMG').replace('.IMG', '').padEnd(12, ' ').substring(0, 12);
+    const volNum = (state.gotek.mountedImageIndex + 1).toString().padStart(3, '0');
+    const topStatusStr = `Volume[${volNum}:${mountedName}] ID:FD               ---/---`;
+    drawBitmapString(ctx, 6, 3, topStatusStr, cBlack, cGreen);
 
     // 3. Mode Ribbon (Pure White Background y = 14..27)
     ctx.fillStyle = cWhite;
@@ -216,19 +253,19 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
     };
     const activeTab = modeIdxMap[state.mode] ?? 4;
 
-    drawBitmapString(ctx, 16, 17, "PERFORM", activeTab === 0 ? cRed : cBlack, cWhite);
+    drawBitmapString(ctx, 16, 17, "Perform", activeTab === 0 ? cRed : cBlack, cWhite);
     drawBitmapString(ctx, 88, 17, "|", cBlack, cWhite);
-    drawBitmapString(ctx, 108, 17, "PATCH", activeTab === 1 ? cRed : cBlack, cWhite);
+    drawBitmapString(ctx, 108, 17, "Patch", activeTab === 1 ? cRed : cBlack, cWhite);
     drawBitmapString(ctx, 164, 17, "|", cBlack, cWhite);
-    drawBitmapString(ctx, 184, 17, "PARTIAL", activeTab === 2 ? cRed : cBlack, cWhite);
+    drawBitmapString(ctx, 184, 17, "Partial", activeTab === 2 ? cRed : cBlack, cWhite);
     drawBitmapString(ctx, 256, 17, "|", cBlack, cWhite);
-    drawBitmapString(ctx, 276, 17, "SAMPLE", activeTab === 3 ? cRed : cBlack, cWhite);
+    drawBitmapString(ctx, 276, 17, "Sample", activeTab === 3 ? cRed : cBlack, cWhite);
     drawBitmapString(ctx, 340, 17, "|", cBlack, cWhite);
-    drawBitmapString(ctx, 360, 17, "DISK", activeTab === 4 ? cRed : cBlack, cWhite);
+    drawBitmapString(ctx, 360, 17, "Disk", activeTab === 4 ? cRed : cBlack, cWhite);
     drawBitmapString(ctx, 412, 17, "|", cBlack, cWhite);
-    drawBitmapString(ctx, 432, 17, "SYSTEM", activeTab === 5 ? cRed : cBlack, cWhite);
+    drawBitmapString(ctx, 432, 17, "System", activeTab === 5 ? cRed : cBlack, cWhite);
 
-    // Draw active tab box with Red border (Pen 5)
+    // Draw active tab outline box with Red border (Pen 5)
     const tabBoxes = [
       [12, 84],
       [102, 156],
@@ -254,32 +291,33 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
     ctx.fillRect(0, 28, W, 12);
 
     if (state.mode === 'DISK') {
-      drawBitmapString(ctx, 8, 30, "CONVERT LD[S]        |  MUTED  |  MARK  |  JUMP  |  COM", cBlack, cLtGray);
+      drawBitmapString(ctx, 8, 30, "Disk Load           |  Muted  |  Mark   |  Jump   |  Com", cBlack, cLtGray);
     } else if (state.mode === 'PERF') {
-      drawBitmapString(ctx, 8, 30, "PLAY [PERFORM]       |  MIDI  |  PART  |  SPLIT |  MIX", cBlack, cLtGray);
+      drawBitmapString(ctx, 8, 30, "Perform Play 1      |  MIDI   |  Part   |  Split  |  Mix", cBlack, cLtGray);
     } else if (state.mode === 'PATCH') {
-      drawBitmapString(ctx, 8, 30, "EDIT [PATCH]         |  SPLIT |  LAYER |  V-SW  |  COMMON", cBlack, cLtGray);
+      drawBitmapString(ctx, 8, 30, "Patch Split         |  Common |  Layer  |  V-Sw   |  Com", cBlack, cLtGray);
     } else if (state.mode === 'SAMPLE') {
-      drawBitmapString(ctx, 8, 30, "EDIT [SAMPLE]        |  LOOP  |  PITCH |  NORM  |  CONVERT", cBlack, cLtGray);
+      drawBitmapString(ctx, 8, 30, "Sample Info         |  Loop   |  Pitch  |  Norm   |  Com", cBlack, cLtGray);
     } else if (state.mode === 'SYSTEM') {
-      drawBitmapString(ctx, 8, 30, "SETUP [SYSTEM]       |  MIDI   |  TEST  |  FORMAT|  SAVESYS", cBlack, cLtGray);
+      drawBitmapString(ctx, 8, 30, "System SCSI         |  PRM    |  MIDI   |  Vol ID |  Com", cBlack, cLtGray);
     } else {
-      drawBitmapString(ctx, 8, 30, "EDIT [PARTIAL]       |  TVF   |  TVA   |  ENV   |  LFO", cBlack, cLtGray);
+      drawBitmapString(ctx, 8, 30, "Partial TVF         |  TVA    |  LFO    |  SMT    |  Com", cBlack, cLtGray);
     }
 
     // 5. Main Screen Content Area (Blue Canvas y = 40..221)
     if (state.mode === 'DISK') {
-      drawBitmapString(ctx, 16, 44, "[LOAD:SOUND]  TARGET: FLOPPY DISK (FD)       CD[RAM: 32MB]", cWhite, cBlue);
+      // Exact Roland S-760 OS Screen Header: TG[Pach] ID[All] CD[FDD:-FloppyDisk-]
+      drawBitmapString(ctx, 16, 44, "Disk Load   TG[Pach] ID[All] CD[FDD:-FloppyDisk-]  Ram:32MB", cWhite, cBlue);
 
-      // White line under subheader
+      // White dividing line under subheader
       for (let x = 16; x < 624; x++) {
         ctx.fillStyle = cWhite;
         ctx.fillRect(x, 54, 1, 1);
       }
 
-      // Exact Roland Sound Disk Patch rows
+      // Authentic Roland Sound Disk Patch rows (16 rows)
       const diskPatches = [
-        'LJUA1A75-80A',
+        '75-80 STRINGS',
         '75CQNAAAAAAA',
         '75A1AAAAAAAA',
         '75A2AAAAAAAA',
@@ -300,12 +338,12 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       diskPatches.forEach((name, i) => {
         const rowY = 60 + i * 10;
         const numStr = (i + 1).toString().padStart(2, '0');
-        const rowTxt = `P${numStr}: ${name}`;
+        const rowTxt = `P${numStr}: ${name.padEnd(16, ' ')}`;
 
         if (i === (state.currentPatchIndex % 16)) {
-          // Highlight Selected Row in Yellow
+          // Highlight Selected Row in Yellow with Black text
           for (let py = rowY - 1; py < rowY + 9; py++) {
-            for (let px = 14; px < 174; px++) {
+            for (let px = 14; px < 210; px++) {
               ctx.fillStyle = cYellow;
               ctx.fillRect(px, py, 1, 1);
             }
@@ -316,7 +354,7 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
         }
       });
 
-      // Right Parameter Boxes (Yellow filled boxes with black text)
+      // Right Parameter Highlight Boxes (Exact OS ROM parameter blocks)
       const drawParamBox = (pbx: number, pby: number, pbw: number, pbh: number, txt: string) => {
         for (let py = pby; py < pby + pbh; py++) {
           for (let px = pbx; px < pbx + pbw; px++) {
@@ -327,28 +365,35 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
         drawBitmapString(ctx, pbx + 6, pby + 2, txt, cBlack, cYellow);
       };
 
-      drawParamBox(500, 58, 120, 12, "   INT.");
-      drawParamBox(500, 74, 120, 12, " 2954SEC");
-      drawParamBox(500, 90, 120, 12, "  MARKED");
-      drawParamBox(500, 106, 120, 12, "    0");
-      drawParamBox(500, 122, 120, 12, "   +/-");
+      drawParamBox(480, 58, 140, 12, "   INT.");
+      drawParamBox(480, 74, 140, 12, " 2954SEC");
+      drawParamBox(480, 90, 140, 12, "  MARKED");
+      drawParamBox(480, 106, 140, 12, "    0");
+      drawParamBox(480, 122, 140, 12, "   +/-");
+
+      // Disk information block
+      drawBitmapString(ctx, 480, 146, "Drive: Floppy", cWhite, cBlue);
+      drawBitmapString(ctx, 480, 158, "Type:  SoundDisk", cWhite, cBlue);
+      drawBitmapString(ctx, 480, 170, "Total: 16 Patches", cWhite, cBlue);
+      drawBitmapString(ctx, 480, 182, "Size:  1440 KB", cWhite, cBlue);
+      drawBitmapString(ctx, 480, 194, "Ver:   2.24 OK", cGreen, cBlue);
 
     } else if (state.mode === 'PERF') {
-      drawBitmapString(ctx, 16, 44, "[PERFORM PLAY]  PRM: 01 JP-8 MULTI SET       CD[RAM: 32MB]", cWhite, cBlue);
+      drawBitmapString(ctx, 16, 44, "Perform Play 1   PRM: 01 JP-8 MULTI SET            Ram:32MB", cWhite, cBlue);
       for (let x = 16; x < 624; x++) {
         ctx.fillStyle = cWhite;
         ctx.fillRect(x, 54, 1, 1);
       }
 
       const parts = [
-        "PART 1: CH 01 | P11: JP-8 BRASS 1   | VOL: 127 | PAN: <0> | OUT: 1-2",
-        "PART 2: CH 02 | P12: JP-8 STRGS 1   | VOL: 110 | PAN: L15 | OUT: 1-2",
-        "PART 3: CH 03 | P13: VP STRINGS 1   | VOL: 105 | PAN: R15 | OUT: 1-2",
-        "PART 4: CH 04 | P14: VP CHOIR 1     | VOL: 090 | PAN: <0> | OUT: 3-4",
-        "PART 5: CH 05 | P15: SYNTH 1        | VOL: 100 | PAN: <0> | OUT: 1-2",
-        "PART 6: CH 06 | P16: SYNTH 2        | VOL: 100 | PAN: <0> | OUT: 1-2",
-        "PART 7: CH 07 | P17: SYNTH 3        | VOL: 100 | PAN: <0> | OUT: 1-2",
-        "PART 8: CH 08 | P18: SYNTH 4        | VOL: 100 | PAN: <0> | OUT: 1-2",
+        "Part 1: CH 01 | P11: JP-8 BRASS 1   | Vol: 127 | Pan: <0> | Out: 1-2",
+        "Part 2: CH 02 | P12: JP-8 STRGS 1   | Vol: 110 | Pan: L15 | Out: 1-2",
+        "Part 3: CH 03 | P13: VP STRINGS 1   | Vol: 105 | Pan: R15 | Out: 1-2",
+        "Part 4: CH 04 | P14: VP CHOIR 1     | Vol: 090 | Pan: <0> | Out: 3-4",
+        "Part 5: CH 05 | P15: SYNTH 1        | Vol: 100 | Pan: <0> | Out: 1-2",
+        "Part 6: CH 06 | P16: SYNTH 2        | Vol: 100 | Pan: <0> | Out: 1-2",
+        "Part 7: CH 07 | P17: SYNTH 3        | Vol: 100 | Pan: <0> | Out: 1-2",
+        "Part 8: CH 08 | P18: SYNTH 4        | Vol: 100 | Pan: <0> | Out: 1-2",
       ];
 
       parts.forEach((p, i) => {
@@ -366,57 +411,99 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
         }
       });
     } else if (state.mode === 'SAMPLE') {
-      drawBitmapString(ctx, 16, 44, "[SAMPLE WAVE]  W01: JP-8_BRASS_44K.WAV   (16-BIT MONO 44.1KHZ)", cWhite, cBlue);
+      drawBitmapString(ctx, 16, 44, "Sample Info   Sample: W01 JP-8_BRASS_44K.WAV (44.1kHz 16-Bit Mono)", cWhite, cBlue);
       for (let x = 16; x < 624; x++) {
         ctx.fillStyle = cWhite;
         ctx.fillRect(x, 54, 1, 1);
       }
 
-      drawBitmapString(ctx, 20, 64,  "SAMPLE LENGTH: 130,560 WORDS (2.95 SEC)  ORIGINAL KEY: C4", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 78,  "LOOP MODE:     FORWARD                   FINE TUNE:    +0", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 92,  "START POINT:   0000,000                  END POINT:    0130,560", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 106, "LOOP START:    0048,200                  LOOP END:     0128,400", cYellow, cBlue);
+      drawBitmapString(ctx, 20, 64,  "Orig Key:    C4           Sample Rate: 44.1 kHz", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 78,  "Wave Length: 2.95 s       Remaining:   2954.0 s", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 92,  "Start Point: 0000,000     End Point:   0130,560", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 106, "Loop Start:  0048,200     Loop End:    0128,400", cYellow, cBlue);
+      drawBitmapString(ctx, 20, 120, "Loop Mode:   Forward      Fine Tune:   +0 cent", cWhite, cBlue);
 
-      // Waveform display graph
-      for (let x = 20; x < 480; x++) {
-        const mid = 150;
-        const amp = Math.floor(15.0 * Math.sin((x - 20) * 0.15) * Math.cos((x - 20) * 0.04));
+      // Waveform display graph in Cyan & Yellow
+      for (let x = 20; x < 500; x++) {
+        const mid = 165;
+        const amp = Math.floor(18.0 * Math.sin((x - 20) * 0.15) * Math.cos((x - 20) * 0.04));
         ctx.fillStyle = cYellow;
         ctx.fillRect(x, mid + amp, 1, 1);
         ctx.fillStyle = cCyan;
         ctx.fillRect(x, mid - amp, 1, 1);
       }
-    } else {
-      drawBitmapString(ctx, 16, 44, "[SYSTEM SETUP]  ROLAND S-760 SYSTEM VERSION 2.24", cWhite, cBlue);
+    } else if (state.mode === 'PATCH') {
+      drawBitmapString(ctx, 16, 44, "Patch Split   Patch: 01 JP-8 BRASS 1           Level:127  Pan:<0>", cWhite, cBlue);
       for (let x = 16; x < 624; x++) {
         ctx.fillStyle = cWhite;
         ctx.fillRect(x, 54, 1, 1);
       }
 
-      drawBitmapString(ctx, 20, 58,  "1. HOST SCSI ID:     [ 7 ] (S-760 INITIATOR ID)", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 70,  "2. BOOT DEVICE:      [ SCSI / FLOPPY AUTO-DETECT ]", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 82,  "3. SCSI BUS SCAN:    (BLUESCSI / ZULUSCSI TARGETS 0-6):", cYellow, cBlue);
-      drawBitmapString(ctx, 20, 94,  "   ID 0: APPLE CD-ROM 300+ (OPTICAL DRIVE)", cGreen, cBlue);
-      drawBitmapString(ctx, 20, 105, "   ID 1: QUANTUM FIREBALL 1080S (1.08 GB HDD)", cGreen, cBlue);
-      drawBitmapString(ctx, 20, 116, "   ID 2: --- NO DEVICE ---", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 127, "   ID 3: --- NO DEVICE ---", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 138, "   ID 4: --- NO DEVICE ---", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 149, "   ID 5: --- NO DEVICE ---", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 160, "   ID 6: --- NO DEVICE ---", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 174, "4. MASTER TUNE:      [ 440.0 HZ ]  OUTPUT LEVEL: [ +4 DBU ]", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 186, "5. WAVE MEMORY:      [ 32 MBYTES OK (2X 16MB SIMM) ]", cWhite, cBlue);
-      drawBitmapString(ctx, 20, 198, "6. OPTION BOARD:     [ OP-760-2 VIDEO BOARD INSTALLED ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 62, "Partial Name    L.P  U.P  Type   Output   Level   Pan", cYellow, cBlue);
+      drawBitmapString(ctx, 20, 76, "1: JP-8 BRASS L C-1  B3   1-SMT  1-2      127     L15", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 90, "2: JP-8 BRASS R C-1  B3   1-SMT  1-2      127     R15", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 104,"3: JP-8 BRASS H C4   G9   1-SMT  1-2      120     <0>", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 118,"4: --- OFF ---  ---  ---  -----  ---      ---     ---", cLtGray, cBlue);
+
+    } else if (state.mode === 'PART') {
+      drawBitmapString(ctx, 16, 44, "Partial TVF   Partial: 01 JP-8 BRASS L         Sample: W01 JP-8_B1", cWhite, cBlue);
+      for (let x = 16; x < 624; x++) {
+        ctx.fillStyle = cWhite;
+        ctx.fillRect(x, 54, 1, 1);
+      }
+
+      drawBitmapString(ctx, 20, 64,  "Filter Mode: [ LPF ]      Cutoff Freq: [  84 ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 78,  "Resonance:   [  32 ]      Cutoff KF:   [ +1.0 ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 92,  "Vel-Curve:   [ 1:/ ]      -Curve Sens: [ +45 ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 106, "TVF Depth:   [ +64 ]      Key Follow:  [ +1.0 ]", cYellow, cBlue);
+
+    } else {
+      drawBitmapString(ctx, 16, 44, "System SCSI   S-760 ROM Version 2.24           Ram:32MB OK", cWhite, cBlue);
+      for (let x = 16; x < 624; x++) {
+        ctx.fillStyle = cWhite;
+        ctx.fillRect(x, 54, 1, 1);
+      }
+
+      drawBitmapString(ctx, 20, 60,  "S-760 Self SCSI ID:  [ 7 ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 72,  "Initial Drive:       [ SCSI 0 ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 84,  "Boot Drive:          [ SCSI / Floppy Auto ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 96,  "CDP Driver Type:     [ Apple / Toshiba / Sony ]", cWhite, cBlue);
+      drawBitmapString(ctx, 20, 110, "SCSI Bus Targets (0-6):", cYellow, cBlue);
+      drawBitmapString(ctx, 20, 122, "  ID 0: APPLE CD-ROM 300+ (Optical Drive)", cGreen, cBlue);
+      drawBitmapString(ctx, 20, 134, "  ID 1: QUANTUM FIREBALL 1080S (1.08 GB HDD)", cGreen, cBlue);
+      drawBitmapString(ctx, 20, 146, "  ID 2..6: --- No Device ---", cLtGray, cBlue);
     }
 
-    // 6. Bottom Context Ribbon (White Background y = 222..239)
+    // 6. Bottom Context Function Keys Ribbon (White Background y = 222..239)
     ctx.fillStyle = cWhite;
     ctx.fillRect(0, 222, W, 18);
-    drawBitmapString(ctx, 20, 226, "ALLON", cBlack, cWhite);
-    drawBitmapString(ctx, 170, 226, "CONVLD", cBlack, cWhite);
-    drawBitmapString(ctx, 330, 226, "ON OFF", cBlack, cWhite);
-    drawBitmapString(ctx, 470, 226, "VOLINFO", cBlack, cWhite);
 
-    // 7. Draw Authentic Roland Crosshair Cursor (+) at mousePos
+    // Exact Soft Button definitions from OS ROM per mode
+    let softBtns: string[] = ['On', '---', 'Load', 'OW On', 'VolInfo', '---'];
+    if (state.mode === 'DISK') {
+      softBtns = ['On', '---', 'Load', 'OW On', 'VolInfo', '---'];
+    } else if (state.mode === 'PERF') {
+      softBtns = ['Play', 'MIDI', 'Solo', 'Mute', 'VolInfo', 'Exit'];
+    } else if (state.mode === 'PATCH') {
+      softBtns = ['Split', 'Common', 'Layer', 'V-Sw', 'VolInfo', 'Exit'];
+    } else if (state.mode === 'PART') {
+      softBtns = ['TVF', 'TVA', 'LFO', 'SMT', 'VolInfo', 'Exit'];
+    } else if (state.mode === 'SAMPLE') {
+      softBtns = ['Info', 'Loop', 'Trun', 'Norm', 'W.Graph', 'Exit'];
+    } else if (state.mode === 'SYSTEM') {
+      softBtns = ['SCSI', 'PRM', 'MIDI', 'VolID', 'VolInfo', 'Exit'];
+    }
+
+    const colW = Math.floor(W / 6);
+    softBtns.forEach((btnTxt, idx) => {
+      const bx = idx * colW + 12;
+      drawBitmapString(ctx, bx, 226, btnTxt, cBlack, cWhite);
+      if (idx < 5) {
+        drawBitmapString(ctx, (idx + 1) * colW - 6, 226, "|", cBlack, cWhite);
+      }
+    });
+
+    // 7. Draw Authentic Roland Crosshair Mouse Cursor (+) at mousePos
     const { x, y } = mousePos;
     ctx.fillStyle = cWhite;
     for (let dx = -4; dx <= 4; dx++) {
@@ -426,7 +513,7 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       ctx.fillRect(x, y + dy, 1, 1);
     }
 
-  }, [state, mousePos]);
+  }, [state, diskList, mousePos]);
 
   return (
     <div className="relative flex flex-col items-center select-none">
