@@ -1329,7 +1329,7 @@ void s760_state::s760(machine_config &config)
 
 ROM_START( s760 )
 	ROM_REGION16_LE( 0x168000, "maincpu", 0 )
-	ROM_LOAD( "s760.rom", 0x000000, 0x168000, CRC(b14b0257) SHA1(e5ab4abc96654965f23d1930b1e93c9211784873) )
+	ROM_LOAD( "s760224.img", 0x000000, 0x168000, CRC(b14b0257) SHA1(e5ab4abc96654965f23d1930b1e93c9211784873) )
 ROM_END
 
 } // anonymous namespace
