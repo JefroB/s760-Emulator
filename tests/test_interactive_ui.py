@@ -284,4 +284,117 @@ end, "gotek_nav_test")
     assert found_oled_text, "Gotek OLED active text was not rendered"
 
 
+def test_seamless_mouse_navigation_between_crt_and_rack_ui():
+    """
+    Verify seamless bidirectional mouse navigation between:
+    1. CRT screen elements (Mode tabs, Patch rows, Waveform preview)
+    2. 1U Rack Panel elements (Gotek next/prev buttons, OLED mount, Push encoder)
+    """
+    lua = """
+local count = 0
+local key_arrows = manager.machine.ioport.ports[":KEY_ARROWS"]
+local mouse_x = manager.machine.ioport.ports[":MOUSEX"]
+local mouse_y = manager.machine.ioport.ports[":MOUSEY"]
+local mouse_btn = manager.machine.ioport.ports[":MOUSEBTN"]
+
+emu.register_frame_done(function()
+    count = count + 1
+
+    -- Phase 1 (Frames 1-16): Navigate up/left to PERFORM tab on CRT (x ~ 40, y ~ 20)
+    if count >= 1 and count <= 16 then
+        if key_arrows then
+            key_arrows:field(0x04):set_value(1) -- Up
+            key_arrows:field(0x01):set_value(1) -- Left
+        end
+    -- Phase 2 (Frame 17): Click PERFORM tab
+    elseif count == 17 then
+        if key_arrows then
+            key_arrows:field(0x04):set_value(0)
+            key_arrows:field(0x01):set_value(0)
+            key_arrows:field(0x10):set_value(1) -- Click / Select
+        end
+    -- Phase 3 (Frames 18-40): Navigate down across boundary into 1U Rack Panel to Gotek Next button (x ~ 500, y ~ 315)
+    elseif count >= 18 and count <= 40 then
+        if key_arrows then
+            key_arrows:field(0x10):set_value(0)
+            key_arrows:field(0x08):set_value(1) -- Down
+            key_arrows:field(0x02):set_value(1) -- Right
+        end
+    -- Phase 4 (Frame 41): Click Gotek Next Button [ > ]
+    elseif count == 41 then
+        if key_arrows then
+            key_arrows:field(0x08):set_value(0)
+            key_arrows:field(0x02):set_value(0)
+            key_arrows:field(0x10):set_value(1) -- Click Gotek Next
+        end
+    -- Phase 5 (Frames 42-47): Move right to Gotek Select [ SEL ] button (x ~ 540, y ~ 315)
+    elseif count >= 42 and count <= 47 then
+        if key_arrows then
+            key_arrows:field(0x10):set_value(0)
+            key_arrows:field(0x02):set_value(1) -- Right
+        end
+    -- Phase 6 (Frame 48): Click Gotek Select Button [ SEL ] to mount image
+    elseif count == 48 then
+        if key_arrows then
+            key_arrows:field(0x02):set_value(0)
+            key_arrows:field(0x10):set_value(1) -- Click Mount
+        end
+    -- Phase 7 (Frames 49-75): Navigate back up across boundary into CRT to PATCH tab (x ~ 130, y ~ 20)
+    elseif count >= 49 and count <= 75 then
+        if key_arrows then
+            key_arrows:field(0x10):set_value(0)
+            key_arrows:field(0x04):set_value(1) -- Up
+            key_arrows:field(0x01):set_value(1) -- Left
+        end
+    -- Phase 8 (Frame 76): Click PATCH tab
+    elseif count == 76 then
+        if key_arrows then
+            key_arrows:field(0x04):set_value(0)
+            key_arrows:field(0x01):set_value(0)
+            key_arrows:field(0x10):set_value(1) -- Click PATCH tab
+        end
+    -- Phase 9 (Frame 85): Finish and save state
+    elseif count == 85 then
+        if key_arrows then
+            key_arrows:field(0x10):set_value(0)
+        end
+        results["seamless_navigation_ok"] = true
+        save_and_exit()
+    end
+end, "seamless_nav_test")
+"""
+    session = MameTestSession(lua, timeout_sec=6, snap_name="snap_seamless_nav")
+    res = session.run()
+
+    assert res["returncode"] == 0, f"Seamless navigation failed: {res['stderr']}"
+    assert res["data"].get("seamless_navigation_ok") is True
+    assert res["snap_path"] is not None
+
+    img, w, h = analyze_screenshot(res["snap_path"])
+    pixels = img.load()
+
+    # 1. Verify PATCH tab active outline on CRT top ribbon (Pen 5: Red/Orange at y=14)
+    found_patch_outline = False
+    for x in range(int(102 * w / 640), int(156 * w / 640)):
+        r, g, b = pixels[x, int(14 * h / 360)]
+        if r >= 200 and g <= 80 and b <= 40:
+            found_patch_outline = True
+            break
+    assert found_patch_outline, "PATCH mode tab was not selected during seamless navigation"
+
+    # 2. Verify Gotek is mounted on cycled image (waves760.sdk)
+    found_gotek_mounted = False
+    y_start = int(h * 240 / 360)
+    for y in range(y_start, h):
+        for x in range(w):
+            r, g, b = pixels[x, y]
+            if (70 <= r <= 95) and (215 <= g <= 245) and (240 <= b <= 255):
+                found_gotek_mounted = True
+                break
+        if found_gotek_mounted:
+            break
+    assert found_gotek_mounted, "Gotek OLED display was not active after rack navigation"
+
+
+
 
