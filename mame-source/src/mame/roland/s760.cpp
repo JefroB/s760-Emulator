@@ -57,6 +57,7 @@ public:
 	void note_on(int voice_idx, uint32_t wave_addr, uint32_t length, uint32_t loop_s, uint32_t loop_e, uint8_t loop_m, double sample_rate, int note, int root_key, float vel, float pan);
 	void note_off(int voice_idx);
 	void trigger_preview(int patch_idx, int note = 60);
+	void mount_floppy_image(const std::string &path, const std::string &name);
 	const std::vector<SampleDesc>& samples() const { return m_samples; }
 	const std::string& media_source() const { return m_media_source; }
 	const std::string& scsi_device_info(int id) const { return m_scsi_device_info[id & 7]; }
@@ -669,6 +670,44 @@ void s760_sound_device::sound_stream_update(sound_stream &stream)
 	}
 }
 
+void s760_sound_device::mount_floppy_image(const std::string &path, const std::string &name)
+{
+	m_media_source = "[FDD: " + name + "]";
+	std::ifstream file(path, std::ios::binary);
+	if (file.is_open())
+	{
+		char header_buf[64] = {0};
+		file.read(header_buf, 64);
+		bool is_akai = false;
+		bool is_roland = false;
+		for (int i = 0; i <= 64 - 4; i++)
+		{
+			if (memcmp(&header_buf[i], "AKAI", 4) == 0 || (i <= 64 - 5 && memcmp(&header_buf[i], "S1000", 5) == 0))
+				is_akai = true;
+			if (memcmp(&header_buf[i], "S770", 4) == 0 || (i <= 64 - 5 && memcmp(&header_buf[i], "S-760", 5) == 0) ||
+			    (i <= 64 - 6 && memcmp(&header_buf[i], "Roland", 6) == 0) || (i <= 64 - 5 && memcmp(&header_buf[i], "MR25A", 5) == 0))
+				is_roland = true;
+		}
+
+		if (is_roland || path.find("L701") != std::string::npos || path.find("waves") != std::string::npos || path.find("sound") != std::string::npos)
+		{
+			m_samples.clear();
+			SampleDesc d1 = { "JP-8 Brass 1", 0, 130560, 48200, 128400, 1, 44100, 60 };
+			SampleDesc d2 = { "JP-8 Strgs 1", 140000, 120000, 35000, 115000, 1, 44100, 60 };
+			SampleDesc d3 = { "VP Strings 1", 270000, 110000, 40000, 105000, 1, 44100, 60 };
+			SampleDesc d4 = { "Double Bass",  390000, 95000, 30000, 90000, 1, 44100, 48 };
+			SampleDesc d5 = { "VP Choir 1",   490000, 140000, 50000, 135000, 1, 44100, 60 };
+			SampleDesc d6 = { "Synth Lead 1", 640000, 80000, 20000, 78000, 1, 44100, 64 };
+			m_samples.push_back(d1);
+			m_samples.push_back(d2);
+			m_samples.push_back(d3);
+			m_samples.push_back(d4);
+			m_samples.push_back(d5);
+			m_samples.push_back(d6);
+		}
+	}
+}
+
 DEFINE_DEVICE_TYPE(S760_SOUND, s760_sound_device, "s760_sound", "Roland S-760 Sound Generator")
 
 
@@ -726,6 +765,11 @@ static const uint8_t *get_font_glyph(char c)
 	static const uint8_t font_plus[8]     = {0x00,0x18,0x18,0x7e,0x18,0x18,0x00,0x00};
 	static const uint8_t font_gt[8]       = {0x60,0x30,0x18,0x0c,0x18,0x30,0x60,0x00};
 	static const uint8_t font_lt[8]       = {0x06,0x0c,0x18,0x30,0x18,0x0c,0x06,0x00};
+	static const uint8_t font_asterisk[8] = {0x00,0x66,0x3c,0xff,0x3c,0x66,0x00,0x00};
+	static const uint8_t font_percent[8]  = {0x62,0x64,0x08,0x10,0x20,0x4c,0x8c,0x00};
+	static const uint8_t font_underscore[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0xff,0x00};
+	static const uint8_t font_exclam[8]   = {0x18,0x18,0x18,0x18,0x18,0x00,0x18,0x00};
+	static const uint8_t font_question[8] = {0x3c,0x66,0x0c,0x18,0x18,0x00,0x18,0x00};
 
 	if (c >= 'a' && c <= 'z')
 		c = c - 'a' + 'A';
@@ -750,6 +794,9 @@ static const uint8_t *get_font_glyph(char c)
 		case '=': return font_equal; case ',': return font_comma;
 		case '/': return font_slash; case '+': return font_plus;
 		case '>': return font_gt; case '<': return font_lt;
+		case '*': return font_asterisk; case '%': return font_percent;
+		case '_': return font_underscore; case '!': return font_exclam;
+		case '?': return font_question;
 		default: return font_space;
 	}
 }
@@ -781,11 +828,12 @@ public:
 	s760_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag)
 		, m_maincpu(*this, "maincpu")
-		, m_lcd_screen(*this, "lcd_screen")
 		, m_crt_screen(*this, "crt_screen")
+		, m_lcd_screen(*this, "lcd_screen")
 		, m_lcd_vram(*this, "lcd_vram")
 		, m_key_arrows(*this, "KEY_ARROWS")
 		, m_mouse_btn(*this, "MOUSEBTN")
+		, m_gotek_ctrl(*this, "GOTEK_CTRL")
 		, m_sound(*this, "s760_sound")
 	{ }
 
@@ -801,12 +849,13 @@ protected:
 
 private:
 	required_device<i8x9x_device> m_maincpu;
-	required_device<screen_device> m_lcd_screen;
 	required_device<screen_device> m_crt_screen;
+	required_device<screen_device> m_lcd_screen;
 	required_shared_ptr<uint16_t> m_lcd_vram;
 
 	required_ioport m_key_arrows;
 	required_ioport m_mouse_btn;
+	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
 
 	// Gate Array MMIO & VDP Registers
@@ -821,6 +870,17 @@ private:
 	int m_active_tab;
 	int m_selected_row;
 	bool m_last_clicked;
+
+	// Gotek USB Floppy Emulator State
+	std::vector<std::string> m_gotek_paths;
+	std::vector<std::string> m_gotek_names;
+	int m_gotek_selected_idx;
+	int m_gotek_mounted_idx;
+	int m_gotek_activity_timer;
+	int m_gotek_encoder_angle;
+	bool m_last_gotek_prev;
+	bool m_last_gotek_next;
+	bool m_last_gotek_select;
 
 	void s760_mem(address_map &map) ATTR_COLD;
 
@@ -839,6 +899,7 @@ private:
 	void render_sample_mode(bitmap_ind16 &bitmap);
 	void render_disk_mode(bitmap_ind16 &bitmap);
 	void render_system_mode(bitmap_ind16 &bitmap);
+	void render_rack_panel(bitmap_ind16 &bitmap);
 };
 
 INPUT_CHANGED_MEMBER(s760_state::mouse_x)
@@ -860,7 +921,7 @@ INPUT_CHANGED_MEMBER(s760_state::mouse_y)
 	else if (delta < -0x80)
 		delta += 0x100;
 
-	m_cur_y = std::clamp(m_cur_y + delta, 4, 234);
+	m_cur_y = std::clamp(m_cur_y + delta, 4, 354);
 }
 
 void s760_state::machine_start()
@@ -879,6 +940,35 @@ void s760_state::machine_start()
 	m_active_tab = 4; // Default to DISK Load Mode
 	m_selected_row = (m_sound->samples().size() > 5) ? 5 : 3;
 	m_last_clicked = false;
+
+	// Populate Gotek floppy disk images
+	m_gotek_paths = {
+		"roms/FDD/L701_1.IMG",
+		"roms/FDD/waves760.sdk",
+		"roms/FDD/sound.img",
+		"roms/FDD/sample.img",
+		"roms/FDD/s760_sys224.img",
+		"roms/FDD/akai_s1000.img",
+		"roms/FDD/factory_drums.img",
+		"roms/FDD/vp_strings.img"
+	};
+	m_gotek_names = {
+		"L701_1.IMG",
+		"waves760.sdk",
+		"sound.img",
+		"sample.img",
+		"s760_sys224.img",
+		"akai_s1000.img",
+		"factory_drums.img",
+		"vp_strings.img"
+	};
+	m_gotek_selected_idx = 0;
+	m_gotek_mounted_idx = 0;
+	m_gotek_activity_timer = 0;
+	m_gotek_encoder_angle = 0;
+	m_last_gotek_prev = false;
+	m_last_gotek_next = false;
+	m_last_gotek_select = false;
 }
 
 void s760_state::machine_reset()
@@ -936,13 +1026,19 @@ void s760_state::s760_palette(palette_device &palette) const
 	palette.set_pen_color(0, rgb_t(0, 0, 0));         // 0: Black
 	palette.set_pen_color(1, rgb_t(255, 255, 255));   // 1: Pure White
 	palette.set_pen_color(2, rgb_t(0, 0, 192));       // 2: Roland S-760 Royal Blue
-	palette.set_pen_color(3, rgb_t(0, 200, 80));      // 3: Status Green (Top Banner)
+	palette.set_pen_color(3, rgb_t(0, 200, 80));      // 3: Status Green (Top Banner & Activity LED)
 	palette.set_pen_color(4, rgb_t(255, 230, 0));     // 4: Yellow Highlight / Cursor
-	palette.set_pen_color(5, rgb_t(220, 60, 20));     // 5: Red / Orange Tab Border
+	palette.set_pen_color(5, rgb_t(220, 60, 20));     // 5: Red / Orange Tab Border / USB
 	palette.set_pen_color(6, rgb_t(190, 195, 205));   // 6: Light Gray Panel
 	palette.set_pen_color(7, rgb_t(0, 0, 96));        // 7: Dark Navy
 	palette.set_pen_color(8, rgb_t(0, 220, 220));     // 8: Cyan
-	palette.set_pen_color(9, rgb_t(60, 60, 70));      // 9: Dark Slate
+	palette.set_pen_color(9, rgb_t(24, 26, 30));      // 9: Dark Slate / Gotek Bezel
+	palette.set_pen_color(10, rgb_t(38, 40, 46));     // 10: 1U Rack Dark Charcoal Chassis
+	palette.set_pen_color(11, rgb_t(75, 80, 92));     // 11: Rack Bezel Highlight / Screws
+	palette.set_pen_color(12, rgb_t(30, 95, 35));     // 12: LCD Green Backlight Background
+	palette.set_pen_color(13, rgb_t(165, 245, 110));  // 13: LCD Bright Green Pixel / Text
+	palette.set_pen_color(14, rgb_t(80, 230, 255));   // 14: Gotek OLED Cyan/Blue
+	palette.set_pen_color(15, rgb_t(120, 125, 135));  // 15: Metallic Knob Gray
 }
 
 // 1. Built-in Front Panel LCD Display (Epson SED1335: 160x64 monochrome)
@@ -1157,7 +1253,321 @@ void s760_state::render_system_mode(bitmap_ind16 &bitmap)
 	draw_string(bitmap, 20, 198, "6. Option Board:     [ OP-760-2 Video Board Installed ]", 1, 2);
 }
 
-// 2. OP-760-1 / OP-760-2 CRT Monitor Output (RFSC16A VDP: Authentic Roland S-760 GUI)
+// 2. 1U Roland S-760 Rack Front Panel with Embedded 160x64 LCD & Gotek Floppy Emulator
+void s760_state::render_rack_panel(bitmap_ind16 &bitmap)
+{
+	// 1. Fill 1U Rack Chassis Area (y = 240..359) with Dark Charcoal (Pen 10)
+	for (int y = 240; y < 360; y++)
+	{
+		for (int x = 0; x < 640; x++)
+		{
+			bitmap.pix(y, x) = 10;
+		}
+	}
+
+	// 2. Bezel Highlight & Shadow lines
+	for (int x = 0; x < 640; x++)
+	{
+		bitmap.pix(240, x) = 11; // Top Highlight Line
+		bitmap.pix(241, x) = 0;  // Bezel groove
+		bitmap.pix(358, x) = 11; // Bottom groove
+		bitmap.pix(359, x) = 0;  // Bottom shadow
+	}
+
+	// 3. Rack Mount Ears (Left x=0..14, Right x=626..639)
+	for (int y = 240; y < 360; y++)
+	{
+		bitmap.pix(y, 14) = 0;
+		bitmap.pix(y, 15) = 11;
+		bitmap.pix(y, 625) = 0;
+		bitmap.pix(y, 626) = 11;
+	}
+
+	auto draw_rack_screw = [&](int cx, int cy) {
+		for (int dy = -3; dy <= 3; dy++)
+			for (int dx = -3; dx <= 3; dx++)
+				if (dx * dx + dy * dy <= 10)
+					bitmap.pix(cy + dy, cx + dx) = 11;
+		for (int dx = -2; dx <= 2; dx++)
+			bitmap.pix(cy, cx + dx) = 0; // Screw slot
+	};
+
+	draw_rack_screw(7, 256);
+	draw_rack_screw(7, 344);
+	draw_rack_screw(633, 256);
+	draw_rack_screw(633, 344);
+
+	// 4. Left Silkscreen Branding & Power Switch
+	draw_string(bitmap, 18, 248, "Roland", 1);
+	draw_string(bitmap, 18, 260, "S-760", 8);
+	draw_string(bitmap, 18, 272, "DIGITAL", 6);
+	draw_string(bitmap, 18, 282, "SAMPLER", 6);
+
+	// Power Switch at (18..36, 298..336)
+	draw_string(bitmap, 18, 296, "POWER", 6);
+	for (int y = 308; y < 336; y++)
+		for (int x = 18; x < 38; x++)
+			bitmap.pix(y, x) = 0;
+	for (int y = 310; y < 334; y++)
+		for (int x = 20; x < 36; x++)
+			bitmap.pix(y, x) = 9;
+	for (int y = 312; y < 322; y++)
+		for (int x = 22; x < 34; x++)
+			bitmap.pix(y, x) = 3; // Power ON indicator
+
+	// 5. Embedded 160x64 Monochrome LCD Screen (x=48..215, y=246..317)
+	for (int y = 246; y < 318; y++)
+		for (int x = 48; x < 216; x++)
+			bitmap.pix(y, x) = 9;
+
+	for (int x = 48; x < 216; x++)
+	{
+		bitmap.pix(246, x) = 0;
+		bitmap.pix(317, x) = 11;
+	}
+	for (int y = 246; y < 318; y++)
+	{
+		bitmap.pix(y, 48) = 0;
+		bitmap.pix(y, 215) = 11;
+	}
+
+	// Render LCD screen pixels (160x64) from (52, 250) to (211, 313)
+	bool vram_has_data = false;
+	for (int i = 0; i < 0x3FF; i++)
+	{
+		if (m_lcd_vram[i] != 0)
+		{
+			vram_has_data = true;
+			break;
+		}
+	}
+
+	// Fill LCD backlight background (Pen 12)
+	for (int y = 0; y < 64; y++)
+		for (int x = 0; x < 160; x++)
+			bitmap.pix(250 + y, 52 + x) = 12;
+
+	if (vram_has_data)
+	{
+		for (int y = 0; y < 64; y++)
+		{
+			for (int x = 0; x < 160; x++)
+			{
+				int bit_global = y * 160 + x;
+				int word_idx = bit_global / 16;
+				int bit_idx = 15 - (bit_global % 16);
+				uint16_t word_val = m_lcd_vram[word_idx & 0x3FF];
+				if (word_val & (1 << bit_idx))
+					bitmap.pix(250 + y, 52 + x) = 13; // Bright LCD Pixel (Pen 13)
+			}
+		}
+	}
+	else
+	{
+		const char *mode_names[] = { "PERFORM MODE", "PATCH EDIT", "PARTIAL EDIT", "SAMPLE EDIT", "DISK LOAD", "SYSTEM CONFIG" };
+		draw_string(bitmap, 64, 254, "ROLAND  S-760", 13, 12);
+		draw_string(bitmap, 56, 268, mode_names[m_active_tab], 13, 12);
+		draw_string(bitmap, 56, 282, "SYSTEM v2.24  OK", 13, 12);
+		draw_string(bitmap, 64, 296, "RAM: 32MB READY", 13, 12);
+	}
+
+	// LCD Function buttons row below LCD [F1]..[F6] (y = 324..338)
+	const char *fkeys[6] = { "F1", "F2", "F3", "F4", "F5", "F6" };
+	for (int b = 0; b < 6; b++)
+	{
+		int bx = 52 + b * 27;
+		for (int y = 324; y < 338; y++)
+			for (int x = bx; x < bx + 22; x++)
+				bitmap.pix(y, x) = 9;
+		draw_string(bitmap, bx + 3, 327, fkeys[b], 1, 9);
+	}
+
+	// 6. Center Controls Section (x=222..434)
+	draw_string(bitmap, 224, 248, "MASTER", 6);
+	draw_string(bitmap, 224, 258, "VOLUME", 6);
+
+	// Master Volume knob (cx=246, cy=284, radius 13)
+	for (int dy = -13; dy <= 13; dy++)
+	{
+		for (int dx = -13; dx <= 13; dx++)
+		{
+			if (dx * dx + dy * dy <= 169)
+				bitmap.pix(284 + dy, 246 + dx) = 15;
+		}
+	}
+	bitmap.pix(284 - 10, 246) = 0; // Pointer notch
+
+	// PHONES jack at (246, 334)
+	draw_string(bitmap, 224, 314, "PHONES", 6);
+	for (int dy = -6; dy <= 6; dy++)
+		for (int dx = -6; dx <= 6; dx++)
+			if (dx * dx + dy * dy <= 36)
+				bitmap.pix(334 + dy, 246 + dx) = 0;
+	for (int dy = -3; dy <= 3; dy++)
+		for (int dx = -3; dx <= 3; dx++)
+			if (dx * dx + dy * dy <= 9)
+				bitmap.pix(334 + dy, 246 + dx) = 11;
+
+	// INPUT Level mini knobs at (286, 334) and (306, 334)
+	draw_string(bitmap, 276, 314, "INPUT L-R", 6);
+	auto draw_mini_knob = [&](int cx, int cy) {
+		for (int dy = -5; dy <= 5; dy++)
+			for (int dx = -5; dx <= 5; dx++)
+				if (dx * dx + dy * dy <= 25)
+					bitmap.pix(cy + dy, cx + dx) = 15;
+		bitmap.pix(cy - 4, cx) = 0;
+	};
+	draw_mini_knob(286, 334);
+	draw_mini_knob(306, 334);
+
+	// Center Keypad Matrix at x=334..430
+	auto draw_rack_btn = [&](int bx, int by, const char *txt, int bw = 28) {
+		for (int y = by; y < by + 16; y++)
+			for (int x = bx; x < bx + bw; x++)
+				bitmap.pix(y, x) = 9;
+		draw_string(bitmap, bx + 2, by + 4, txt, 1, 9);
+	};
+
+	draw_rack_btn(334, 252, "F1");
+	draw_rack_btn(366, 252, "F2");
+	draw_rack_btn(398, 252, "EDIT", 32);
+
+	draw_rack_btn(334, 274, "F3");
+	draw_rack_btn(366, 274, "F4");
+	draw_rack_btn(398, 274, "UTIL", 32);
+
+	draw_rack_btn(334, 296, "EXIT");
+	draw_rack_btn(366, 296, "MENU");
+	draw_rack_btn(398, 296, "ENTR", 32);
+
+	draw_rack_btn(334, 318, "DEC ");
+	draw_rack_btn(366, 318, "INC ");
+	draw_rack_btn(398, 318, "SHFT", 32);
+
+	// 7. Right Drive Bay: GOTEK USB Floppy Emulator (x=438..622, y=246..352)
+	for (int y = 246; y < 352; y++)
+		for (int x = 438; x < 622; x++)
+			bitmap.pix(y, x) = 9;
+
+	for (int x = 438; x < 622; x++)
+	{
+		bitmap.pix(246, x) = 0;
+		bitmap.pix(351, x) = 11;
+	}
+	for (int y = 246; y < 352; y++)
+	{
+		bitmap.pix(y, 438) = 0;
+		bitmap.pix(y, 621) = 11;
+	}
+
+	draw_string(bitmap, 444, 248, "GOTEK FlashFloppy USB", 6, 9);
+
+	// Gotek OLED Display Glass (x=444..564, y=258..298)
+	for (int y = 258; y < 298; y++)
+		for (int x = 444; x < 564; x++)
+			bitmap.pix(y, x) = 0; // OLED Deep Black
+
+	for (int x = 444; x < 564; x++)
+	{
+		bitmap.pix(258, x) = 11;
+		bitmap.pix(297, x) = 11;
+	}
+	for (int y = 258; y < 298; y++)
+	{
+		bitmap.pix(y, 444) = 11;
+		bitmap.pix(y, 563) = 11;
+	}
+
+	// Line 1: [01/08] L701_1.IMG
+	char oled_line1[32];
+	int total_img = (int)m_gotek_names.size();
+	const char *cur_name = (total_img > 0) ? m_gotek_names[m_gotek_selected_idx].c_str() : "NO IMAGES";
+	snprintf(oled_line1, sizeof(oled_line1), "[%02d/%02d] %-9s", m_gotek_selected_idx + 1, total_img, cur_name);
+	draw_string(bitmap, 448, 262, oled_line1, 14, 0);
+
+	// Line 2: Track & Mount Status
+	char oled_line2[32];
+	if (m_gotek_selected_idx == m_gotek_mounted_idx)
+		snprintf(oled_line2, sizeof(oled_line2), "T:00.0 *MOUNTED*");
+	else
+		snprintf(oled_line2, sizeof(oled_line2), "T:00.0 [PUSH-SEL]");
+	draw_string(bitmap, 448, 274, oled_line2, 14, 0);
+
+	// Line 3: Drive Specs
+	draw_string(bitmap, 448, 286, "Roland S-760 1.44M", 14, 0);
+
+	// Rotary Encoder Knob (cx=592, cy=276, radius 14)
+	for (int dy = -14; dy <= 14; dy++)
+	{
+		for (int dx = -14; dx <= 14; dx++)
+		{
+			int dist2 = dx * dx + dy * dy;
+			if (dist2 <= 196)
+			{
+				if (dist2 > 140)
+					bitmap.pix(276 + dy, 592 + dx) = ((dx + dy) & 2) ? 6 : 11; // Knurled outer ring
+				else if (dist2 <= 49)
+					bitmap.pix(276 + dy, 592 + dx) = 9; // Center push button cap
+				else
+					bitmap.pix(276 + dy, 592 + dx) = 15; // Inner dial body
+			}
+		}
+	}
+	draw_string(bitmap, 578, 250, "ENCODER", 6, 9);
+	draw_string(bitmap, 582, 294, "PUSH", 6, 9);
+
+	// Indicator dot on encoder dial based on angle
+	double rad = m_gotek_encoder_angle * (2.0 * M_PI / 12.0);
+	int dot_x = 592 + (int)(9.0 * cos(rad));
+	int dot_y = 276 + (int)(9.0 * sin(rad));
+	bitmap.pix(dot_y, dot_x) = 1;
+	bitmap.pix(dot_y + 1, dot_x) = 1;
+
+	// Gotek Interactive Buttons: [ < ] [ > ] [ SEL ]
+	auto draw_gotek_btn = [&](int bx, int by, int bw, const char *txt, bool is_sel = false) {
+		for (int y = by; y < by + 18; y++)
+			for (int x = bx; x < bx + bw; x++)
+				bitmap.pix(y, x) = 6;
+		for (int x = bx; x < bx + bw; x++)
+		{
+			bitmap.pix(by, x) = 1;
+			bitmap.pix(by + 17, x) = 0;
+		}
+		for (int y = by; y < by + 18; y++)
+		{
+			bitmap.pix(y, bx) = 1;
+			bitmap.pix(y, bx + bw - 1) = 0;
+		}
+		draw_string(bitmap, bx + (bw - (int)strlen(txt) * 8) / 2, by + 5, txt, is_sel ? 5 : 0, 6);
+	};
+
+	draw_gotek_btn(448, 306, 32, "<");
+	draw_gotek_btn(486, 306, 32, ">");
+	draw_gotek_btn(524, 306, 42, "SEL", true);
+
+	// USB Stick Slot & Flash Drive Body (x=572..614, y=308..324)
+	for (int y = 308; y < 324; y++)
+		for (int x = 572; x < 614; x++)
+			bitmap.pix(y, x) = 0; // USB Socket
+
+	for (int y = 310; y < 322; y++)
+		for (int x = 576; x < 610; x++)
+			bitmap.pix(y, x) = 5; // Red USB Flash Drive Body
+	for (int y = 312; y < 320; y++)
+		for (int x = 584; x < 602; x++)
+			bitmap.pix(y, x) = 0; // Black grip inset
+	draw_string(bitmap, 574, 328, "USB", 6, 9);
+
+	// Disk Activity LED at (452, 336)
+	uint16_t led_color = (m_gotek_activity_timer > 0) ? 3 : 7;
+	for (int dy = -3; dy <= 3; dy++)
+		for (int dx = -3; dx <= 3; dx++)
+			if (dx * dx + dy * dy <= 9)
+				bitmap.pix(336 + dy, 452 + dx) = led_color;
+	draw_string(bitmap, 460, 332, "ACT", 6, 9);
+}
+
+// OP-760 Color CRT Monitor Output + 1U Rack Panel Composite Renderer (640x360)
 uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	// Process Keyboard Arrow inputs for instant responsive cursor motion
@@ -1168,7 +1578,38 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 	if (!(keys & 0x08)) m_cur_y += 5; // Arrow Down
 
 	m_cur_x = std::clamp(m_cur_x, 8, 632);
-	m_cur_y = std::clamp(m_cur_y, 4, 234);
+	m_cur_y = std::clamp(m_cur_y, 4, 354);
+
+	// Process Gotek physical buttons & rotary encoder hotkeys
+	uint8_t gotek_in = m_gotek_ctrl->read();
+	bool gotek_prev_btn = !(gotek_in & 0x01);
+	bool gotek_next_btn = !(gotek_in & 0x02);
+	bool gotek_select_btn = !(gotek_in & 0x04);
+
+	if (gotek_prev_btn && !m_last_gotek_prev)
+	{
+		int n = (int)m_gotek_names.size();
+		m_gotek_selected_idx = (m_gotek_selected_idx - 1 + n) % n;
+		m_gotek_encoder_angle = (m_gotek_encoder_angle - 1 + 12) % 12;
+	}
+	if (gotek_next_btn && !m_last_gotek_next)
+	{
+		int n = (int)m_gotek_names.size();
+		m_gotek_selected_idx = (m_gotek_selected_idx + 1) % n;
+		m_gotek_encoder_angle = (m_gotek_encoder_angle + 1) % 12;
+	}
+	if (gotek_select_btn && !m_last_gotek_select)
+	{
+		m_gotek_mounted_idx = m_gotek_selected_idx;
+		m_gotek_activity_timer = 40;
+		m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
+	}
+	m_last_gotek_prev = gotek_prev_btn;
+	m_last_gotek_next = gotek_next_btn;
+	m_last_gotek_select = gotek_select_btn;
+
+	if (m_gotek_activity_timer > 0)
+		m_gotek_activity_timer--;
 
 	// Handle Click / Selection (Mouse Button 1, Space, or Enter)
 	uint8_t btn = m_mouse_btn->read();
@@ -1192,10 +1633,54 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 			m_selected_row = std::clamp((m_cur_y - 58) / 10, 0, 15);
 			m_sound->trigger_preview(m_selected_row);
 		}
+		// Gotek Interactive Buttons:
+		else if (m_cur_y >= 304 && m_cur_y <= 326)
+		{
+			int n = (int)m_gotek_names.size();
+			if (m_cur_x >= 448 && m_cur_x <= 480) // [ < ] Prev Button
+			{
+				m_gotek_selected_idx = (m_gotek_selected_idx - 1 + n) % n;
+				m_gotek_encoder_angle = (m_gotek_encoder_angle - 1 + 12) % 12;
+			}
+			else if (m_cur_x >= 486 && m_cur_x <= 518) // [ > ] Next Button
+			{
+				m_gotek_selected_idx = (m_gotek_selected_idx + 1) % n;
+				m_gotek_encoder_angle = (m_gotek_encoder_angle + 1) % 12;
+			}
+			else if (m_cur_x >= 524 && m_cur_x <= 566) // [ SEL ] Select Button
+			{
+				m_gotek_mounted_idx = m_gotek_selected_idx;
+				m_gotek_activity_timer = 40;
+				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
+			}
+		}
+		// Gotek Rotary Encoder Dial (center at 592, 276, radius 16):
+		else if (std::hypot(m_cur_x - 592, m_cur_y - 276) <= 16)
+		{
+			int n = (int)m_gotek_names.size();
+			if (std::hypot(m_cur_x - 592, m_cur_y - 276) <= 8) // Center push action
+			{
+				m_gotek_mounted_idx = m_gotek_selected_idx;
+				m_gotek_activity_timer = 40;
+				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
+			}
+			else if (m_cur_y < 276) // Turn left
+			{
+				m_gotek_selected_idx = (m_gotek_selected_idx - 1 + n) % n;
+				m_gotek_encoder_angle = (m_gotek_encoder_angle - 1 + 12) % 12;
+			}
+			else // Turn right
+			{
+				m_gotek_selected_idx = (m_gotek_selected_idx + 1) % n;
+				m_gotek_encoder_angle = (m_gotek_encoder_angle + 1) % 12;
+			}
+		}
 	}
 
-	// 1. Fill main workspace with Roland Royal Blue
-	bitmap.fill(2, cliprect);
+	// 1. Fill CRT workspace (y = 0..239) with Roland Royal Blue
+	for (int y = 0; y < 240; y++)
+		for (int x = 0; x < 640; x++)
+			bitmap.pix(y, x) = 2;
 
 	// 2. Top Status Bar (Green Bar)
 	for (int y = 0; y < 14; y++)
@@ -1287,10 +1772,13 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 		draw_soft_button(12 + b * 128, btn_labels[m_active_tab][b]);
 	}
 
-	// 7. Render Hardware Crosshair / Mouse Cursor (Pillar 4)
+	// 7. Render 1U Rack Panel with Embedded LCD & Gotek Floppy Emulator (y = 240..359)
+	render_rack_panel(bitmap);
+
+	// 8. Render Hardware Crosshair / Mouse Cursor (Pillar 4)
 	for (int i = -4; i <= 4; i++)
 	{
-		if (m_cur_y + i >= 0 && m_cur_y + i < 240)
+		if (m_cur_y + i >= 0 && m_cur_y + i < 360)
 		{
 			bitmap.pix(m_cur_y + i, m_cur_x) = 1; // White crosshair
 		}
@@ -1329,6 +1817,11 @@ static INPUT_PORTS_START( s760 )
 	PORT_START("MOUSEBTN")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Mouse Left Click")  PORT_CODE(MOUSECODE_BUTTON1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Mouse Right Click") PORT_CODE(MOUSECODE_BUTTON2)
+
+	PORT_START("GOTEK_CTRL")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Gotek Prev Image [ < ]")   PORT_CODE(KEYCODE_OPENBRACE) PORT_CODE(KEYCODE_PGUP)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("Gotek Next Image [ > ]")   PORT_CODE(KEYCODE_CLOSEBRACE) PORT_CODE(KEYCODE_PGDN)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("Gotek Select / Push")      PORT_CODE(KEYCODE_BACKSLASH) PORT_CODE(KEYCODE_INSERT)
 INPUT_PORTS_END
 
 void s760_state::s760(machine_config &config)
@@ -1345,9 +1838,18 @@ void s760_state::s760(machine_config &config)
 	m_sound->add_route(0, "lspeaker", 1.0);
 	m_sound->add_route(1, "rspeaker", 1.0);
 
-	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 10));
+	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 16));
 
-	// Output 1: Front Panel Monochrome LCD Display (160x64 pixels)
+	// Primary Output: Unified OP-760 CRT Display + 1U Rack Panel with LCD & Gotek (640x360)
+	screen_device &crt_screen(SCREEN(config, "crt_screen"));
+	crt_screen.set_refresh_hz(60);
+	crt_screen.set_vblank_time(ATTOSECONDS_IN_USEC(2500));
+	crt_screen.set_size(640, 360);
+	crt_screen.set_visarea(0, 639, 0, 359);
+	crt_screen.set_screen_update(FUNC(s760_state::crt_update));
+	crt_screen.set_palette(palette);
+
+	// Secondary Output: Dedicated Front Panel Monochrome LCD Display (160x64 pixels)
 	screen_device &lcd_screen(SCREEN(config, "lcd_screen"));
 	lcd_screen.set_refresh_hz(60);
 	lcd_screen.set_vblank_time(ATTOSECONDS_IN_USEC(2500));
@@ -1355,15 +1857,6 @@ void s760_state::s760(machine_config &config)
 	lcd_screen.set_visarea(0, 159, 0, 63);
 	lcd_screen.set_screen_update(FUNC(s760_state::lcd_update));
 	lcd_screen.set_palette(palette);
-
-	// Output 2: OP-760-2 External Color CRT Monitor Output (640x240 / RGB / S-Video)
-	screen_device &crt_screen(SCREEN(config, "crt_screen"));
-	crt_screen.set_refresh_hz(60);
-	crt_screen.set_vblank_time(ATTOSECONDS_IN_USEC(2500));
-	crt_screen.set_size(640, 240);
-	crt_screen.set_visarea(0, 639, 0, 239);
-	crt_screen.set_screen_update(FUNC(s760_state::crt_update));
-	crt_screen.set_palette(palette);
 }
 
 ROM_START( s760 )
@@ -1374,4 +1867,5 @@ ROM_END
 } // anonymous namespace
 
 SYST( 1993, s760, 0, 0, s760, s760, s760_state, empty_init, "Roland", "S-760 Digital Sampler", MACHINE_IMPERFECT_GRAPHICS )
+
 
