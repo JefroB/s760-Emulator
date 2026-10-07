@@ -2,11 +2,12 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-44%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-49%20Passing-brightgreen.svg)](tests/)
+[![DAW Plugin](https://img.shields.io/badge/DAW-VST2%20%2F%20CLAP-blueviolet.svg)](#daw-plugins-vst--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
-An open-source hardware emulation driver for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME** emulation framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
+An open-source hardware emulation driver and DAW instrument plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
 
 ---
 
@@ -216,14 +217,68 @@ Users must provide their own legally acquired system disk:
 
 ---
 
+---
+
+## DAW Plugins (VST & CLAP) & Libretro MAME Host
+
+The project includes a self-contained, zero-dependency C++17 core (`libs760_core`), dynamic Libretro host wrapper, and native DAW instrument plugins (**VST2** and **CLAP**):
+
+```mermaid
+flowchart LR
+    DAW["DAW Track (Ableton, Cubase, FL Studio, Reaper, Bitwig)"]
+    
+    subgraph Plugins ["DAW Instrument Plugins"]
+        VST["Roland_S760.dll (VST2 / libretro_vst)"]
+        CLAP["Roland_S760.clap (CLAP)"]
+    end
+
+    subgraph Host ["Libretro Host Engine"]
+        CoreLoader["S760LibretroHost (Dynamic Core Loader)"]
+        AudioRing["Stereo Audio Ring Buffer"]
+    end
+
+    subgraph Drives ["Folder-Based Hardware Drive Manager"]
+        FDD["Gotek Floppy (FDD 0) .img"]
+        SCSI["ZuluSCSI / SCSI2SD (IDs 0..6) .hda / .iso"]
+    end
+
+    DAW -->|"MIDI Notes / CC"| Plugins --> CoreLoader
+    CoreLoader --> AudioRing -->|"Stereo Float Out"| DAW
+    DAW <-->|"Session Recall (effGetChunk)"| Plugins <--> CoreLoader
+    CoreLoader <--> Drives
+```
+
+### Features:
+- **`Roland_S760.dll` (VST2 / `libretro_vst` compatible)**: Drop into your standard VST plugin directory.
+- **`Roland_S760.clap` (CLAP)**: Universal open-standard plugin format.
+- **Hardware-Accurate Folder Persistence**: Mounts `.img`, `.hda`, and `.iso` files directly from disk folders. OS writes (Save System, Save Patch, Save Volume) flush straight back to the file on disk, making images 100% swappable with physical Gotek USB sticks and ZuluSCSI SD cards on real Roland S-760 hardware.
+- **Full DAW Project Recall**: Project state serialization (`effGetChunk` / `effSetChunk` / `clap_plugin_state`) saves and restores emulator Wave RAM and mounted drive configurations instantly.
+- **Python Extension (`s760_cpp`)**: High-performance `pybind11` C++ bindings for batch conversion and automated testing.
+
+---
+
 ## Building from Source
 
 ### Prerequisites
 - **Compiler**: Visual Studio 2022 (MSVC v143+ with C++ Desktop tools) or Clang/GCC on Windows/Linux.
-- **Python**: Python 3.10+ (used by MAME build scripts and the automated test harness).
-- **Dependencies**: `pip install pytest Pillow` (for running the automated test suite).
+- **CMake**: CMake 3.15+ (for building the C++ Core, Python bindings, and VST/CLAP plugins).
+- **Python**: Python 3.10+ (used by test suites and Python bindings).
+- **Dependencies**: `pip install pytest pybind11 Pillow`
 
-### Compiling on Windows (Visual Studio 2022 / MSBuild)
+### 1. Compiling C++ Core, VST Plugin, CLAP Plugin & Python Bindings (CMake)
+```powershell
+# Configure CMake project
+cmake -B build -S core -G "Visual Studio 17 2022" -A x64
+
+# Build Release binaries (s760_core.lib, Roland_S760.dll, Roland_S760.clap, s760_cpp.pyd)
+cmake --build build --config Release
+
+# Run Core and Plugin test suites
+.\build\Release\s760_core_tests.exe
+.\build\Release\s760_plugin_tests.exe
+```
+
+### 2. Compiling Standalone MAME Driver (Visual Studio 2022 / MSBuild)
 ```powershell
 # Build driver library
 & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" `
@@ -259,14 +314,16 @@ Or run directly via command line:
 
 ## Automated Test Harness
 
-The project includes an automated test harness (`tests/mame_harness.py`) that drives MAME headlessly using frame-accurate Lua autoboot hooks (`emu.register_frame_done`), injecting inputs and verifying invariant properties, memory bounds, and pixel colors from runtime screenshots.
+The project includes automated Python test suites and C++ test runners verifying invariant properties, byte-for-byte disk parity, offline DSP algorithms, and VST/CLAP plugin lifecycle.
 
 ### Running Tests
 ```powershell
 pytest tests -v
 ```
 
-### Test Suite Summary (30 / 30 Passing)
+### Test Suite Summary (49 / 49 Passing)
+- `tests/test_cpp_parity.py`: Verifies 100% bit-for-bit parity between C++ (`libs760_core`) and Python reference models for Roland floppy images, Akai ISOs, DSP crossfading, ZuluSCSI drive persistence, and Libretro host lifecycle.
+- `tests/test_dsp_tools.py`: Verifies all 10 Roland S-760 Owner's Manual DSP algorithms (crossfade looping, SOLA time-stretch, bi-quad filter, sample rate converter, bit reduction, auto-truncate/normalize, destructive wave edit, disk defragmentation, MS-DOS FAT12, MIDI SDS).
 - `tests/test_disk_conversion.py`: Verifies `roms/System/`, `roms/FDD/`, and `roms/SCSI/` folder structure, BlueSCSI & ZuluSCSI file naming conventions, Roland S-760 `.IMG` disk reading, and Akai S1000 ISO conversion.
 - `tests/test_image_invariants.py`: Verifies Roland OS palette bounds, resolution constraints, and text layout invariants.
 - `tests/test_interactive_ui.py`: Automates the complete Roland Owner's Manual multi-mode workflow (`DISK` → `PERFORM` → `SAMPLE` → `SYSTEM`), asserting active tab boxes and parameter highlights.
@@ -282,11 +339,27 @@ d:/S-760/
 ├── README.md                               # Project documentation & guide
 ├── .gitignore                              # Git exclusion rules (ROMs, binaries, snaps, disk images)
 ├── run_s760_mame.bat                       # Interactive launch script
+├── core/                                   # High-performance C++ Core & DAW Plugins
+│   ├── CMakeLists.txt                      # CMake build definition (MSVC / Clang)
+│   ├── include/s760/                       # Public C++ headers
+│   │   ├── s760_disk.hpp                   # Roland S-760 1.44M & SCSI disk generator/parser
+│   │   ├── akai_disk.hpp                   # Akai S1000 ISO parser & Roland converter
+│   │   ├── s760_dsp.hpp                    # Offline DSP engine (crossfade, SOLA, bi-quad filter)
+│   │   ├── s760_drive_manager.hpp          # Folder-backed ZuluSCSI / Gotek drive manager
+│   │   ├── s760_libretro_host.hpp          # Dynamic Libretro MAME host bridge
+│   │   ├── s760_vst_plugin.hpp             # VST2/VST3 instrument plugin
+│   │   ├── s760_clap_plugin.hpp            # CLAP instrument plugin
+│   │   ├── vst_defs.h                      # VST C-ABI definitions
+│   │   ├── clap_defs.h                     # CLAP C-ABI definitions
+│   │   └── libretro.h                      # Libretro core specification header
+│   ├── src/                                # C++ source implementations
+│   └── tests/                              # C++ unit test runners & mock libretro core
 ├── roms/                                   # Dedicated ROM & Media directories (.gitkeep tracked)
 │   ├── System/                             # System OS boot disk images (S760224.IMG)
 │   ├── FDD/                                # Roland floppy sound disk images (.img, .sdk)
 │   └── SCSI/                               # BlueSCSI/ZuluSCSI HDD images & ISOs (akai.iso, CD1.iso)
 ├── scripts/                                # Utility and helper scripts
+│   ├── build_s760_disk.py                  # Standalone sound disk generator
 │   └── download_real_akai_iso.py           # Akai S1000 CD-ROM test downloader
 ├── mame-source/                            # MAME source tree
 │   ├── src/mame/roland/s760.cpp            # S-760 MAME driver implementation
@@ -298,6 +371,8 @@ d:/S-760/
 │   └── reference/                          # S-760 service manual & schematic notes
 └── tests/                                  # Automated Python & Lua test suite
     ├── mame_harness.py                     # Headless MAME runner & screenshot analyzer
+    ├── test_cpp_parity.py                  # C++ vs Python 100% byte parity test suite
+    ├── test_dsp_tools.py                   # 10 DSP Owner's Manual algorithm tests
     ├── test_disk_conversion.py             # Roland & Akai disk conversion + BlueSCSI tests
     ├── test_interactive_ui.py              # Interactive UI & manual workflow tests
     ├── test_image_invariants.py            # Color palette & layout invariant tests
