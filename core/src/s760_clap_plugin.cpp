@@ -12,7 +12,7 @@
 
 namespace s760 {
 
-static const char* const s_plugin_features[] = {
+static const char* const s_plugin_features_inst[] = {
     "instrument",
     "sampler",
     "synthesizer",
@@ -20,21 +20,41 @@ static const char* const s_plugin_features[] = {
     nullptr
 };
 
-static const clap_plugin_descriptor_t s_descriptor = {
+static const char* const s_plugin_features_fx[] = {
+    "audio-effect",
+    "sampler",
+    "stereo",
+    nullptr
+};
+
+static const clap_plugin_descriptor_t s_descriptor_inst = {
     CLAP_VERSION,
     "com.roland.s760.emulator",
-    "Roland S-760 Digital Sampler",
+    "Roland S-760 Sampler",
     "Roland Emulation Team",
     "https://github.com/JefroB/s760-Emulator",
     "",
     "",
     "2.24.0",
     "Hardware-accurate Roland S-760 16-bit sampler instrument with SCSI & floppy folder image persistence",
-    s_plugin_features
+    s_plugin_features_inst
 };
 
-const clap_plugin_descriptor_t* S760ClapPlugin::get_descriptor() {
-    return &s_descriptor;
+static const clap_plugin_descriptor_t s_descriptor_fx = {
+    CLAP_VERSION,
+    "com.roland.s760.emulator.fx",
+    "Roland S-760 Live Sampler FX",
+    "Roland Emulation Team",
+    "https://github.com/JefroB/s760-Emulator",
+    "",
+    "",
+    "2.24.0",
+    "Roland S-760 Live Sampling FX processor for real-time track audio capture and sound shaping",
+    s_plugin_features_fx
+};
+
+const clap_plugin_descriptor_t* S760ClapPlugin::get_descriptor(bool is_fx) {
+    return is_fx ? &s_descriptor_fx : &s_descriptor_inst;
 }
 
 // -----------------------------------------------------------------------------
@@ -104,15 +124,32 @@ static bool clap_state_load_thunk(const clap_plugin_t *plugin, const clap_istrea
     return p ? p->state_load(stream) : false;
 }
 
+static uint32_t clap_audio_ports_count_thunk(const clap_plugin_t *plugin, bool is_input) {
+    (void)plugin; (void)is_input;
+    return 1; // 1 stereo in, 1 stereo out
+}
+
+static bool clap_audio_ports_get_thunk(const clap_plugin_t *plugin, uint32_t index, bool is_input, clap_audio_port_info_t *info) {
+    (void)plugin;
+    if (index != 0 || !info) return false;
+    info->id = is_input ? 0 : 1;
+    info->flags = CLAP_AUDIO_PORT_IS_MAIN;
+    info->channel_count = 2;
+    info->port_type = CLAP_PORT_STEREO;
+    info->in_place_pair = is_input ? 1 : 0;
+    std::strncpy(info->name, is_input ? "Stereo In" : "Stereo Out", sizeof(info->name) - 1);
+    return true;
+}
+
 } // extern "C"
 
 // -----------------------------------------------------------------------------
 // S760ClapPlugin Implementation
 // -----------------------------------------------------------------------------
 
-S760ClapPlugin::S760ClapPlugin(const clap_host_t* host)
-    : m_clap_host(host) {
-    m_plugin.desc = &s_descriptor;
+S760ClapPlugin::S760ClapPlugin(const clap_host_t* host, bool is_fx)
+    : m_clap_host(host), m_is_fx(is_fx) {
+    m_plugin.desc = is_fx ? &s_descriptor_fx : &s_descriptor_inst;
     m_plugin.plugin_data = this;
     m_plugin.init = clap_init_thunk;
     m_plugin.destroy = clap_destroy_thunk;
@@ -127,6 +164,9 @@ S760ClapPlugin::S760ClapPlugin(const clap_host_t* host)
 
     m_state_ext.save = clap_state_save_thunk;
     m_state_ext.load = clap_state_load_thunk;
+
+    m_audio_ports_ext.count = clap_audio_ports_count_thunk;
+    m_audio_ports_ext.get = clap_audio_ports_get_thunk;
 
     m_scratch_left.resize(2048, 0.0f);
     m_scratch_right.resize(2048, 0.0f);
@@ -214,13 +254,24 @@ clap_process_status S760ClapPlugin::process(const clap_process_t* process) {
     // 1. Process MIDI & Note In Events
     handle_events(process->in_events);
 
-    // 2. Ensure enough audio frames in host buffer
     uint32_t needed_frames = process->frames_count;
+
+    // 2. Feed Audio Inputs to Live Sampler Recorder
+    if (process->audio_inputs_count > 0 && process->audio_inputs) {
+        const auto& in_buf = process->audio_inputs[0];
+        if (in_buf.data32) {
+            const float* in_l = in_buf.data32[0];
+            const float* in_r = (in_buf.channel_count >= 2 && in_buf.data32[1]) ? in_buf.data32[1] : in_l;
+            m_host.feed_audio_input(in_l, in_r, needed_frames);
+        }
+    }
+
+    // 3. Ensure enough audio frames in host buffer
     while (m_host.is_system_running() && m_host.get_audio_stats().available_frames < needed_frames) {
         m_host.run_frame();
     }
 
-    // 3. Read audio from S760 host into scratch buffers
+    // 4. Read audio from S760 host into scratch buffers
     if (m_scratch_left.size() < needed_frames) {
         m_scratch_left.resize(needed_frames);
         m_scratch_right.resize(needed_frames);
@@ -228,7 +279,28 @@ clap_process_status S760ClapPlugin::process(const clap_process_t* process) {
 
     m_host.read_audio_frames(m_scratch_left.data(), m_scratch_right.data(), needed_frames);
 
-    // 4. Copy to DAW output buffers
+    // 5. Apply pass-through monitoring if FX or recording/armed
+    if (m_is_fx || m_host.get_recorder().is_recording() || m_host.get_recorder().is_armed()) {
+        if (process->audio_inputs_count > 0 && process->audio_inputs) {
+            const auto& in_buf = process->audio_inputs[0];
+            if (in_buf.data32) {
+                const float* in_l = in_buf.data32[0];
+                const float* in_r = (in_buf.channel_count >= 2 && in_buf.data32[1]) ? in_buf.data32[1] : in_l;
+                if (in_l) {
+                    for (uint32_t i = 0; i < needed_frames; ++i) {
+                        m_scratch_left[i] += in_l[i];
+                    }
+                }
+                if (in_r) {
+                    for (uint32_t i = 0; i < needed_frames; ++i) {
+                        m_scratch_right[i] += in_r[i];
+                    }
+                }
+            }
+        }
+    }
+
+    // 6. Copy to DAW output buffers
     if (process->audio_outputs_count > 0 && process->audio_outputs) {
         auto& out_buf = process->audio_outputs[0];
         if (out_buf.data32 && out_buf.channel_count >= 2) {
@@ -246,8 +318,12 @@ clap_process_status S760ClapPlugin::process(const clap_process_t* process) {
 }
 
 const void* S760ClapPlugin::get_extension(const char* id) {
-    if (id && std::strcmp(id, CLAP_EXT_STATE) == 0) {
+    if (!id) return nullptr;
+    if (std::strcmp(id, CLAP_EXT_STATE) == 0) {
         return &m_state_ext;
+    }
+    if (std::strcmp(id, CLAP_EXT_AUDIO_PORTS) == 0) {
+        return &m_audio_ports_ext;
     }
     return nullptr;
 }
@@ -337,20 +413,27 @@ extern "C" {
 
 static uint32_t clap_factory_get_plugin_count(const struct clap_plugin_factory *factory) {
     (void)factory;
-    return 1;
+    return 2;
 }
 
 static const clap_plugin_descriptor_t *clap_factory_get_plugin_descriptor(
     const struct clap_plugin_factory *factory, uint32_t index) {
     (void)factory;
-    return (index == 0) ? s760::S760ClapPlugin::get_descriptor() : nullptr;
+    if (index == 0) return s760::S760ClapPlugin::get_descriptor(false);
+    if (index == 1) return s760::S760ClapPlugin::get_descriptor(true);
+    return nullptr;
 }
 
 static const clap_plugin_t *clap_factory_create_plugin(
     const struct clap_plugin_factory *factory, const clap_host_t *host, const char *plugin_id) {
     (void)factory;
-    if (plugin_id && std::strcmp(plugin_id, s760::S760ClapPlugin::get_descriptor()->id) == 0) {
-        auto* plug = new s760::S760ClapPlugin(host);
+    if (!plugin_id) return nullptr;
+    if (std::strcmp(plugin_id, s760::S760ClapPlugin::get_descriptor(false)->id) == 0) {
+        auto* plug = new s760::S760ClapPlugin(host, false);
+        return plug->get_clap_plugin();
+    }
+    if (std::strcmp(plugin_id, s760::S760ClapPlugin::get_descriptor(true)->id) == 0) {
+        auto* plug = new s760::S760ClapPlugin(host, true);
         return plug->get_clap_plugin();
     }
     return nullptr;

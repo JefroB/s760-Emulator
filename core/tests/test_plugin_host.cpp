@@ -183,42 +183,67 @@ void test_clap_plugin_state_serialization() {
 }
 
 // -----------------------------------------------------------------------------
-// VST2 Test
+// VST2 Test (Instrument & Live Sampler FX)
 // -----------------------------------------------------------------------------
-extern "C" AEffect* VSTPluginMain(audioMasterCallback audioMaster);
+static intptr_t test_audio_master(AEffect* effect, int32_t opcode, int32_t index, intptr_t value, void* ptr, float opt) {
+    (void)effect; (void)opcode; (void)index; (void)value; (void)ptr; (void)opt;
+    return 0;
+}
 
 void test_vst_plugin_lifecycle_and_audio() {
-    std::cout << "[TEST] VST2 Plugin Instantiation & Audio Processing..." << std::endl;
+    std::cout << "[TEST] VST2 Plugin Instantiation & Audio Processing (Instrument + FX)..." << std::endl;
 
-    auto* effect = VSTPluginMain(nullptr);
+    // 1. Test VST2 Instrument Mode
+    auto* inst_plugin = new s760::S760VstPlugin(test_audio_master, false);
+    auto* effect = inst_plugin->get_aeffect();
     assert(effect != nullptr);
     assert(effect->magic == VST_MAGIC);
+    assert(effect->numInputs == 2);
     assert(effect->numOutputs == 2);
+    assert((effect->flags & effFlagsIsSynth) != 0);
 
-    // Dispatch effOpen, effSetSampleRate, effSetBlockSize
+    // Dispatch effOpen, effSetSampleRate, effSetBlockSize, effGetPlugCategory
     assert(effect->dispatcher(effect, effOpen, 0, 0, nullptr, 0.0f) == 1);
     assert(effect->dispatcher(effect, effSetSampleRate, 0, 0, nullptr, 44100.0f) == 1);
     assert(effect->dispatcher(effect, effSetBlockSize, 0, 512, nullptr, 0.0f) == 1);
+    assert(effect->dispatcher(effect, effGetPlugCategory, 0, 0, nullptr, 0.0f) == kPlugCategSynth);
+
+    // Prepare audio inputs (test feeding live audio for sampling)
+    std::vector<float> in_l(512, 0.25f);
+    std::vector<float> in_r(512, 0.25f);
+    float* in_channel_ptrs[2] = {in_l.data(), in_r.data()};
 
     // Audio Output Buffers
     std::vector<float> out_l(512, 0.0f);
     std::vector<float> out_r(512, 0.0f);
-    float* channel_ptrs[2] = {out_l.data(), out_r.data()};
+    float* out_channel_ptrs[2] = {out_l.data(), out_r.data()};
 
     // Process audio
-    effect->processReplacing(effect, nullptr, channel_ptrs, 512);
+    effect->processReplacing(effect, in_channel_ptrs, out_channel_ptrs, 512);
 
     // Test Chunk Save & Restore (DAW project state)
     void* chunk_ptr = nullptr;
     intptr_t chunk_sz = effect->dispatcher(effect, effGetChunk, 0, 0, &chunk_ptr, 0.0f);
     assert(chunk_sz > 0 && chunk_ptr != nullptr);
-
     assert(effect->dispatcher(effect, effSetChunk, 0, chunk_sz, chunk_ptr, 0.0f) == 1);
 
     // Close effect
     assert(effect->dispatcher(effect, effClose, 0, 0, nullptr, 0.0f) == 1);
 
-    std::cout << "  -> VST2 Plugin Tests PASSED!" << std::endl;
+    // 2. Test VST2 FX Mode
+    auto* fx_plugin = new s760::S760VstPlugin(test_audio_master, true);
+    auto* fx_effect = fx_plugin->get_aeffect();
+    assert(fx_effect != nullptr);
+    assert((fx_effect->flags & effFlagsIsSynth) == 0);
+    assert(fx_effect->dispatcher(fx_effect, effGetPlugCategory, 0, 0, nullptr, 0.0f) == kPlugCategEffect);
+
+    // Test live pass-through in FX mode
+    fx_effect->processReplacing(fx_effect, in_channel_ptrs, out_channel_ptrs, 512);
+    assert(out_l[0] >= 0.25f); // Passed through input signal
+
+    assert(fx_effect->dispatcher(fx_effect, effClose, 0, 0, nullptr, 0.0f) == 1);
+
+    std::cout << "  -> VST2 Instrument & FX Plugin Tests PASSED!" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -277,16 +302,18 @@ extern "C" Steinberg::IPluginFactory* GetPluginFactory();
 void test_vst3_plugin_lifecycle_and_audio() {
     std::cout << "[TEST] VST3 Factory, Processor & State Persistence..." << std::endl;
 
-    std::cout << "  [VST3 Debug] Factory queried..." << std::endl;
     auto* factory = GetPluginFactory();
     assert(factory != nullptr);
-    assert(factory->countClasses() == 1);
+    assert(factory->countClasses() == 2); // Instrument + Live Sampler FX
 
-    Steinberg::PClassInfo info;
-    assert(factory->getClassInfo(0, &info) == kResultOk);
-    assert(std::string(info.name).find("S-760") != std::string::npos);
+    Steinberg::PClassInfo info_inst;
+    assert(factory->getClassInfo(0, &info_inst) == kResultOk);
+    assert(std::string(info_inst.name).find("S-760") != std::string::npos);
 
-    std::cout << "  [VST3 Debug] Creating instance..." << std::endl;
+    Steinberg::PClassInfo info_fx;
+    assert(factory->getClassInfo(1, &info_fx) == kResultOk);
+    assert(std::string(info_fx.name).find("FX") != std::string::npos);
+
     void* plugin_obj = nullptr;
     assert(factory->createInstance(nullptr, nullptr, &plugin_obj) == kResultOk);
     assert(plugin_obj != nullptr);
@@ -295,8 +322,10 @@ void test_vst3_plugin_lifecycle_and_audio() {
     auto* comp = static_cast<Steinberg::IComponent*>(plugin);
     auto* proc = static_cast<Steinberg::IAudioProcessor*>(plugin);
 
-    std::cout << "  [VST3 Debug] Initializing & setupProcessing..." << std::endl;
     assert(comp->initialize(nullptr) == kResultOk);
+    assert(comp->getBusCount(kAudio, kInput) == 1);
+    assert(comp->getBusCount(kAudio, kOutput) == 1);
+
     Steinberg::ProcessSetup setup;
     setup.sampleRate = 44100.0;
     setup.maxSamplesPerBlock = 512;
@@ -306,25 +335,38 @@ void test_vst3_plugin_lifecycle_and_audio() {
     assert(comp->setActive(true) == kResultOk);
     assert(proc->setProcessing(true) == kResultOk);
 
-    std::cout << "  [VST3 Debug] Processing audio block..." << std::endl;
+    // Audio Input & Output Buffers
+    std::vector<float> in_l(512, 0.3f);
+    std::vector<float> in_r(512, 0.3f);
+    float* in_channel_ptrs[2] = {in_l.data(), in_r.data()};
+
+    AudioBusBuffers in_bus;
+    in_bus.numChannels = 2;
+    in_bus.silenceFlags = 0;
+    in_bus.channelBuffers32 = in_channel_ptrs;
+
     std::vector<float> out_l(512, 0.0f);
     std::vector<float> out_r(512, 0.0f);
-    float* channel_ptrs[2] = {out_l.data(), out_r.data()};
+    float* out_channel_ptrs[2] = {out_l.data(), out_r.data()};
 
     AudioBusBuffers out_bus;
     out_bus.numChannels = 2;
     out_bus.silenceFlags = 0;
-    out_bus.channelBuffers32 = channel_ptrs;
+    out_bus.channelBuffers32 = out_channel_ptrs;
 
     Steinberg::ProcessData pdata;
     std::memset(&pdata, 0, sizeof(pdata));
     pdata.numSamples = 512;
+    pdata.numInputs = 1;
+    pdata.inputs = &in_bus;
     pdata.numOutputs = 1;
     pdata.outputs = &out_bus;
 
     assert(proc->process(pdata) == kResultOk);
 
-    std::cout << "  [VST3 Debug] State saving & restoring..." << std::endl;
+    // Check that host recorder received live audio input
+    assert(plugin->get_host().get_recorder().get_peak_level_left() >= 0.3f);
+
     Vst3MemoryStream stream;
     assert(comp->getState(&stream) == kResultOk);
     assert(!stream.buffer.empty());
@@ -332,7 +374,6 @@ void test_vst3_plugin_lifecycle_and_audio() {
     stream.seek(0, 0, nullptr);
     assert(comp->setState(&stream) == kResultOk);
 
-    std::cout << "  [VST3 Debug] Terminating..." << std::endl;
     assert(proc->setProcessing(false) == kResultOk);
     assert(comp->setActive(false) == kResultOk);
     assert(comp->terminate() == kResultOk);

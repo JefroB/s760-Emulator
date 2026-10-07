@@ -31,6 +31,7 @@ enum {
     effSetChunk = 24,
     effProcessEvents = 25,
     effCanBeAutomated = 26,
+    effGetPlugCategory = 35,
     effGetEffectName = 45,
     effGetVendorString = 47,
     effGetProductString = 48,
@@ -38,6 +39,22 @@ enum {
     effVendorSpecific = 50,
     effCanDo = 51,
     effGetVstVersion = 58,
+};
+
+enum VstPlugCategory {
+    kPlugCategUnknown = 0,
+    kPlugCategEffect = 1,
+    kPlugCategSynth = 2,
+    kPlugCategAnalysis = 3,
+    kPlugCategMastering = 4,
+    kPlugCategSpacializer = 5,
+    kPlugCategRoomFx = 6,
+    kPlugSurroundFx = 7,
+    kPlugCategRestoration = 8,
+    kPlugCategOfflineProcess = 9,
+    kPlugCategShell = 10,
+    kPlugCategGenerator = 11,
+    kPlugCategMaxCount
 };
 
 // Effect Flags

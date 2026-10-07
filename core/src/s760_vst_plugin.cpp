@@ -47,8 +47,8 @@ static float vst_get_param_thunk(AEffect* effect, int32_t index) {
 // S760VstPlugin Implementation
 // -----------------------------------------------------------------------------
 
-S760VstPlugin::S760VstPlugin(audioMasterCallback audioMaster)
-    : m_audio_master(audioMaster) {
+S760VstPlugin::S760VstPlugin(audioMasterCallback audioMaster, bool is_fx)
+    : m_audio_master(audioMaster), m_is_fx(is_fx) {
     std::memset(&m_effect, 0, sizeof(m_effect));
 
     m_effect.magic = VST_MAGIC;
@@ -60,10 +60,10 @@ S760VstPlugin::S760VstPlugin(audioMasterCallback audioMaster)
 
     m_effect.numPrograms = 1;
     m_effect.numParams = 1; // Param 0: Master Gain
-    m_effect.numInputs = 0;  // Instrument (no audio in)
-    m_effect.numOutputs = 2; // Stereo audio out
-    m_effect.flags = effFlagsCanReplacing | effFlagsProgramChunks | effFlagsIsSynth;
-    m_effect.uniqueID = 0x53373630; // 'S760'
+    m_effect.numInputs = 2;  // Stereo Audio In (Live Sampling / FX)
+    m_effect.numOutputs = 2; // Stereo Audio Out
+    m_effect.flags = effFlagsCanReplacing | effFlagsProgramChunks | (is_fx ? 0 : effFlagsIsSynth);
+    m_effect.uniqueID = is_fx ? 0x53373646 : 0x53373630; // 'S76F' (FX) vs 'S760' (Synth)
     m_effect.version = 2240;
     m_effect.user = this;
 
@@ -104,10 +104,16 @@ void S760VstPlugin::handle_vst_events(const VstEvents* events) {
 }
 
 void S760VstPlugin::process_replacing(float** inputs, float** outputs, int32_t sample_frames) {
-    (void)inputs;
     if (!outputs || sample_frames <= 0) return;
 
     uint32_t needed = static_cast<uint32_t>(sample_frames);
+
+    // Feed audio inputs to live sample recorder
+    if (inputs && inputs[0]) {
+        const float* in_l = inputs[0];
+        const float* in_r = (inputs[1] != nullptr) ? inputs[1] : in_l;
+        m_host.feed_audio_input(in_l, in_r, needed);
+    }
 
     // Run emulator frames to maintain audio generation
     while (m_host.is_system_running() && m_host.get_audio_stats().available_frames < needed) {
@@ -120,6 +126,24 @@ void S760VstPlugin::process_replacing(float** inputs, float** outputs, int32_t s
     }
 
     m_host.read_audio_frames(m_scratch_left.data(), m_scratch_right.data(), needed);
+
+    // Apply live pass-through monitoring if active
+    if (m_is_fx || m_host.get_recorder().is_recording() || m_host.get_recorder().is_armed()) {
+        if (inputs && inputs[0]) {
+            const float* in_l = inputs[0];
+            const float* in_r = (inputs[1] != nullptr) ? inputs[1] : in_l;
+            if (in_l) {
+                for (uint32_t i = 0; i < needed; ++i) {
+                    m_scratch_left[i] += in_l[i];
+                }
+            }
+            if (in_r) {
+                for (uint32_t i = 0; i < needed; ++i) {
+                    m_scratch_right[i] += in_r[i];
+                }
+            }
+        }
+    }
 
     float* out_l = outputs[0];
     float* out_r = (outputs[1] != nullptr) ? outputs[1] : outputs[0];
@@ -252,9 +276,12 @@ intptr_t S760VstPlugin::dispatcher(int32_t opcode, int32_t index, intptr_t value
             }
             return 0;
 
+        case effGetPlugCategory:
+            return m_is_fx ? kPlugCategEffect : kPlugCategSynth;
+
         case effGetEffectName:
             if (ptr) {
-                std::strncpy(reinterpret_cast<char*>(ptr), "Roland S-760 Sampler", 31);
+                std::strncpy(reinterpret_cast<char*>(ptr), m_is_fx ? "Roland S-760 Live Sampler FX" : "Roland S-760 Sampler", 31);
                 return 1;
             }
             break;
@@ -268,7 +295,7 @@ intptr_t S760VstPlugin::dispatcher(int32_t opcode, int32_t index, intptr_t value
 
         case effGetProductString:
             if (ptr) {
-                std::strncpy(reinterpret_cast<char*>(ptr), "Roland S-760 VST", 31);
+                std::strncpy(reinterpret_cast<char*>(ptr), m_is_fx ? "Roland S-760 FX" : "Roland S-760 VST", 31);
                 return 1;
             }
             break;
@@ -298,15 +325,3 @@ intptr_t S760VstPlugin::dispatcher(int32_t opcode, int32_t index, intptr_t value
 }
 
 } // namespace s760
-
-// -----------------------------------------------------------------------------
-// VST Export Entry Points
-// -----------------------------------------------------------------------------
-extern "C" {
-
-VST_EXPORT AEffect* VSTPluginMain(audioMasterCallback audioMaster) {
-    auto* plugin = new s760::S760VstPlugin(audioMaster);
-    return plugin->get_aeffect();
-}
-
-} // extern "C"

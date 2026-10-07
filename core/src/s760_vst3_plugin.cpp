@@ -13,8 +13,10 @@
 namespace s760 {
 
 static const TUID S760ProcessorUID = INLINE_UID(0x53373630, 0x56535433, 0x50524F43, 0x30303031);
+static const TUID S760FXProcessorUID = INLINE_UID(0x53373630, 0x56535433, 0x46585052, 0x30303032);
 
-S760Vst3Plugin::S760Vst3Plugin() {
+S760Vst3Plugin::S760Vst3Plugin(bool is_fx)
+    : m_is_fx(is_fx) {
     m_scratch_left.resize(2048, 0.0f);
     m_scratch_right.resize(2048, 0.0f);
 }
@@ -66,7 +68,7 @@ tresult S760Vst3Plugin::setIoMode(int32_t mode) {
 
 tresult S760Vst3Plugin::getBusCount(int32_t type, int32_t dir) {
     if (type == kAudio) {
-        return (dir == kOutput) ? 1 : 0;
+        return 1; // 1 Stereo Input bus (for live sampling / recording) + 1 Stereo Output bus
     } else if (type == kEvent) {
         return (dir == kInput) ? 1 : 0;
     }
@@ -167,8 +169,15 @@ tresult S760Vst3Plugin::process(Steinberg::ProcessData& data) {
     // 1. Process MIDI Note Events
     process_events(data.inputEvents);
 
-    // 2. Generate emulator audio
+    // 2. Feed Audio Inputs to Live Sampler Recorder
     uint32_t needed = static_cast<uint32_t>(data.numSamples);
+    if (data.numInputs > 0 && data.inputs && data.inputs[0].channelBuffers32) {
+        const float* in_l = data.inputs[0].channelBuffers32[0];
+        const float* in_r = (data.inputs[0].numChannels >= 2) ? data.inputs[0].channelBuffers32[1] : in_l;
+        m_host.feed_audio_input(in_l, in_r, needed);
+    }
+
+    // 3. Generate emulator audio
     while (m_host.is_system_running() && m_host.get_audio_stats().available_frames < needed) {
         m_host.run_frame();
     }
@@ -180,7 +189,25 @@ tresult S760Vst3Plugin::process(Steinberg::ProcessData& data) {
 
     m_host.read_audio_frames(m_scratch_left.data(), m_scratch_right.data(), needed);
 
-    // 3. Write to VST3 Output Buffers
+    // 4. Apply input pass-through monitoring if active
+    if (m_is_fx || m_host.get_recorder().is_recording() || m_host.get_recorder().is_armed()) {
+        if (data.numInputs > 0 && data.inputs && data.inputs[0].channelBuffers32) {
+            const float* in_l = data.inputs[0].channelBuffers32[0];
+            const float* in_r = (data.inputs[0].numChannels >= 2) ? data.inputs[0].channelBuffers32[1] : in_l;
+            if (in_l) {
+                for (uint32_t i = 0; i < needed; ++i) {
+                    m_scratch_left[i] += in_l[i];
+                }
+            }
+            if (in_r) {
+                for (uint32_t i = 0; i < needed; ++i) {
+                    m_scratch_right[i] += in_r[i];
+                }
+            }
+        }
+    }
+
+    // 5. Write to VST3 Output Buffers
     if (data.numOutputs > 0 && data.outputs) {
         auto& out_bus = data.outputs[0];
         if (out_bus.channelBuffers32 && out_bus.numChannels >= 2) {
@@ -291,22 +318,36 @@ public:
     }
 
     int32_t countClasses() override {
-        return 1;
+        return 2; // Class 0: Instrument, Class 1: Live Sampler FX
     }
 
     tresult getClassInfo(int32_t index, Steinberg::PClassInfo* info) override {
-        if (index != 0 || !info) return kInvalidArgument;
-        std::memcpy(info->cid, S760ProcessorUID, 16);
-        info->cardinality = 0;
-        std::strncpy(info->category, "Audio Module", sizeof(info->category) - 1);
-        std::strncpy(info->name, "Roland S-760 Sampler VST3", sizeof(info->name) - 1);
-        return kResultOk;
+        if (!info) return kInvalidArgument;
+        if (index == 0) {
+            std::memcpy(info->cid, S760ProcessorUID, 16);
+            info->cardinality = 0;
+            std::strncpy(info->category, "Instrument|Synth", sizeof(info->category) - 1);
+            std::strncpy(info->name, "Roland S-760 Sampler", sizeof(info->name) - 1);
+            return kResultOk;
+        } else if (index == 1) {
+            std::memcpy(info->cid, S760FXProcessorUID, 16);
+            info->cardinality = 0;
+            std::strncpy(info->category, "Fx|Sampler", sizeof(info->category) - 1);
+            std::strncpy(info->name, "Roland S-760 Live Sampler FX", sizeof(info->name) - 1);
+            return kResultOk;
+        }
+        return kInvalidArgument;
     }
 
     tresult createInstance(FIDString cid, FIDString _iid, void** obj) override {
-        (void)cid; (void)_iid;
+        (void)_iid;
         if (!obj) return kInvalidArgument;
-        auto* plugin = new S760Vst3Plugin();
+        if (cid && std::memcmp(cid, S760FXProcessorUID, 16) == 0) {
+            auto* plugin = new S760Vst3Plugin(true);
+            *obj = static_cast<Steinberg::IComponent*>(plugin);
+            return kResultOk;
+        }
+        auto* plugin = new S760Vst3Plugin(false);
         *obj = static_cast<Steinberg::IComponent*>(plugin);
         return kResultOk;
     }

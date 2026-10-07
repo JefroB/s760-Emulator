@@ -12,6 +12,7 @@ add_library(s760_core STATIC
     src/s760_dsp.cpp
     src/akai_disk.cpp
     src/s760_drive_manager.cpp
+    src/s760_recorder.cpp
     src/s760_libretro_host.cpp
     src/s760_clap_plugin.cpp
     src/s760_vst_plugin.cpp
@@ -33,13 +34,23 @@ set_target_properties(s760_vst3 PROPERTIES
     SUFFIX ".vst3"
 )
 
-# VST2 Plugin Shared Library (.dll)
+# VST2 Instrument Shared Library (.dll)
 add_library(s760_vst MODULE
-    src/s760_vst_plugin.cpp
+    src/s760_vst_main.cpp
 )
 target_link_libraries(s760_vst PRIVATE s760_core)
 set_target_properties(s760_vst PROPERTIES
     OUTPUT_NAME "Roland_S760"
+    SUFFIX ".dll"
+)
+
+# VST2 Audio Effect / Live Sampler Shared Library (.dll)
+add_library(s760_vst_fx MODULE
+    src/s760_vst_fx_main.cpp
+)
+target_link_libraries(s760_vst_fx PRIVATE s760_core)
+set_target_properties(s760_vst_fx PROPERTIES
+    OUTPUT_NAME "Roland_S760_FX"
     SUFFIX ".dll"
 )
 

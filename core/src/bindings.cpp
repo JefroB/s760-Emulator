@@ -6,6 +6,7 @@
 #include "s760/s760_dsp.hpp"
 #include "s760/akai_disk.hpp"
 #include "s760/s760_drive_manager.hpp"
+#include "s760/s760_recorder.hpp"
 #include "s760/s760_libretro_host.hpp"
 
 namespace py = pybind11;
@@ -279,6 +280,78 @@ PYBIND11_MODULE(s760_cpp, m) {
         .def_static("scan_image_folder", &S760DriveManager::scan_image_folder, py::arg("directory_path"));
 
     // -------------------------------------------------------------------------
+    // Sample Recorder (Live Sampling Ingestion & FX)
+    // -------------------------------------------------------------------------
+    py::enum_<RecordTriggerMode>(m, "RecordTriggerMode")
+        .value("Manual", RecordTriggerMode::Manual)
+        .value("Threshold", RecordTriggerMode::Threshold)
+        .value("MIDINote", RecordTriggerMode::MIDINote);
+
+    py::enum_<RecordChannelMode>(m, "RecordChannelMode")
+        .value("Stereo", RecordChannelMode::Stereo)
+        .value("MonoLeft", RecordChannelMode::MonoLeft)
+        .value("MonoRight", RecordChannelMode::MonoRight)
+        .value("MonoMix", RecordChannelMode::MonoMix);
+
+    py::enum_<RecordState>(m, "RecordState")
+        .value("Idle", RecordState::Idle)
+        .value("Armed", RecordState::Armed)
+        .value("Recording", RecordState::Recording)
+        .value("Finished", RecordState::Finished);
+
+    py::class_<RecordingConfig>(m, "RecordingConfig")
+        .def(py::init<>())
+        .def_readwrite("target_sample_rate", &RecordingConfig::target_sample_rate)
+        .def_readwrite("trigger_mode", &RecordingConfig::trigger_mode)
+        .def_readwrite("channel_mode", &RecordingConfig::channel_mode)
+        .def_readwrite("threshold_db", &RecordingConfig::threshold_db)
+        .def_readwrite("pre_trigger_samples", &RecordingConfig::pre_trigger_samples)
+        .def_readwrite("max_samples", &RecordingConfig::max_samples)
+        .def_readwrite("auto_normalize", &RecordingConfig::auto_normalize)
+        .def_readwrite("auto_truncate", &RecordingConfig::auto_truncate)
+        .def_readwrite("monitor_input", &RecordingConfig::monitor_input)
+        .def_readwrite("monitor_gain", &RecordingConfig::monitor_gain)
+        .def_readwrite("sample_name", &RecordingConfig::sample_name)
+        .def_readwrite("root_key", &RecordingConfig::root_key);
+
+    py::class_<RecordedSampleResult>(m, "RecordedSampleResult")
+        .def_readwrite("valid", &RecordedSampleResult::valid)
+        .def_readwrite("sample_name", &RecordedSampleResult::sample_name)
+        .def_readwrite("sample_rate", &RecordedSampleResult::sample_rate)
+        .def_readwrite("sample_length_words", &RecordedSampleResult::sample_length_words)
+        .def_readwrite("is_stereo", &RecordedSampleResult::is_stereo)
+        .def_property_readonly("left_pcm_bytes", [](const RecordedSampleResult& r) {
+            return py::bytes(reinterpret_cast<const char*>(r.left_pcm_bytes.data()), r.left_pcm_bytes.size());
+        })
+        .def_property_readonly("right_pcm_bytes", [](const RecordedSampleResult& r) {
+            return py::bytes(reinterpret_cast<const char*>(r.right_pcm_bytes.data()), r.right_pcm_bytes.size());
+        });
+
+    py::class_<S760SampleRecorder>(m, "S760SampleRecorder")
+        .def(py::init<>())
+        .def("set_config", &S760SampleRecorder::set_config, py::arg("config"))
+        .def("get_config", &S760SampleRecorder::get_config)
+        .def("arm", &S760SampleRecorder::arm)
+        .def("start_recording", &S760SampleRecorder::start_recording)
+        .def("stop_recording", &S760SampleRecorder::stop_recording)
+        .def("cancel", &S760SampleRecorder::cancel)
+        .def("reset", &S760SampleRecorder::reset)
+        .def("get_state", &S760SampleRecorder::get_state)
+        .def("is_recording", &S760SampleRecorder::is_recording)
+        .def("is_armed", &S760SampleRecorder::is_armed)
+        .def("get_peak_level_left", &S760SampleRecorder::get_peak_level_left)
+        .def("get_peak_level_right", &S760SampleRecorder::get_peak_level_right)
+        .def("get_recorded_result", &S760SampleRecorder::get_recorded_result)
+        .def("export_sample", &S760SampleRecorder::export_sample, py::arg("right_channel") = false)
+        .def("process_input", [](S760SampleRecorder& rec,
+                                 const std::vector<float>& left,
+                                 const std::vector<float>& right,
+                                 double host_rate) {
+            rec.process_input(left.data(), right.empty() ? left.data() : right.data(), left.size(), host_rate);
+        }, py::arg("left_in"), py::arg("right_in"), py::arg("host_sample_rate") = 44100.0)
+        .def("on_midi_note_on", &S760SampleRecorder::on_midi_note_on, py::arg("note"), py::arg("velocity"));
+
+    // -------------------------------------------------------------------------
     // Libretro Host Bridge
     // -------------------------------------------------------------------------
     py::class_<AudioBufferStats>(m, "AudioBufferStats")
@@ -311,6 +384,12 @@ PYBIND11_MODULE(s760_cpp, m) {
             std::string s = msg;
             host.send_midi_message(reinterpret_cast<const uint8_t*>(s.data()), s.size());
         }, py::arg("msg"))
+        .def("feed_audio_input", [](S760LibretroHost& host,
+                                    const std::vector<float>& left,
+                                    const std::vector<float>& right) {
+            host.feed_audio_input(left.data(), right.empty() ? left.data() : right.data(), left.size());
+        }, py::arg("left_in"), py::arg("right_in"))
+        .def("get_recorder", py::overload_cast<>(&S760LibretroHost::get_recorder), py::return_value_policy::reference)
         .def("get_drive_manager", py::overload_cast<>(&S760LibretroHost::get_drive_manager), py::return_value_policy::reference)
         .def("get_state_size", &S760LibretroHost::get_state_size)
         .def("save_state", [](S760LibretroHost& host) {
