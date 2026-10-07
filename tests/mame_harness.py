@@ -8,7 +8,7 @@ import json
 from PIL import Image
 
 MAME_EXE = r"d:\S-760\mame-source\mames760.exe"
-ROMS_DIR = r"d:\S-760\roms"
+ROMS_DIR = r"d:\S-760\roms;d:\S-760\roms\System;d:\S-760\roms\s760;d:\S-760\roms\s760\System"
 SNAP_DIR = r"d:\S-760\mame-source\snap\s760"
 SCRATCH_DIR = r"d:\S-760\temp\test_harness"
 

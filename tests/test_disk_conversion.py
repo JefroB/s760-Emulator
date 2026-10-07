@@ -364,4 +364,27 @@ def test_roland_s760_disk_sample_loading_and_synthesis():
     assert gtr_rms > 0.05
 
 
+def test_rom_folder_organization_structure():
+    """
+    Verify the 3-folder organization structure in roms/:
+    1. roms/System/ : For boot OS disk image (s760.rom / S760224.IMG).
+    2. roms/FDD/    : For Roland floppy sample disk images (L701_1.IMG, waves760.sdk, sound.img).
+    3. roms/SCSI/   : For SCSI hard disk images and ISOs (BlueSCSI/ZuluSCSI format: akai.iso, sound.iso, HD0.img, CD1.iso).
+    """
+    roms_dir = os.path.join(ROOT, "roms")
+    system_dir = os.path.join(roms_dir, "System")
+    fdd_dir = os.path.join(roms_dir, "FDD")
+    scsi_dir = os.path.join(roms_dir, "SCSI")
+
+    assert os.path.isdir(system_dir), f"roms/System directory missing: {system_dir}"
+    assert os.path.isdir(fdd_dir), f"roms/FDD directory missing: {fdd_dir}"
+    assert os.path.isdir(scsi_dir), f"roms/SCSI directory missing: {scsi_dir}"
+
+    # Verify .gitkeep markers exist for repository tracking
+    assert os.path.exists(os.path.join(system_dir, ".gitkeep"))
+    assert os.path.exists(os.path.join(fdd_dir, ".gitkeep"))
+    assert os.path.exists(os.path.join(scsi_dir, ".gitkeep"))
+
+
+
 

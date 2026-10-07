@@ -12,7 +12,14 @@ import pytest
 
 # --- repo layout -------------------------------------------------------------
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-IMAGE = os.path.join(ROOT, "S760224.IMG")
+_CANDIDATE_IMAGES = [
+    os.path.join(ROOT, "roms", "System", "s760.rom"),
+    os.path.join(ROOT, "roms", "s760", "System", "s760.rom"),
+    os.path.join(ROOT, "roms", "System", "S760224.IMG"),
+    os.path.join(ROOT, "roms", "s760", "s760.rom"),
+    os.path.join(ROOT, "S760224.IMG"),
+]
+IMAGE = next((p for p in _CANDIDATE_IMAGES if os.path.exists(p)), os.path.join(ROOT, "S760224.IMG"))
 SCRIPTS = os.path.join(ROOT, ".kiro", "scripts")
 TEMP_WORK = os.path.join(ROOT, "temp", "work")
 

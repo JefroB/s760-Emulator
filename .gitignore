@@ -3,7 +3,13 @@
 # ====================================================================
 
 # Proprietary ROMs, BIOS dumps, and Floppy/Hard Disk images
-roms/
+roms/*
+!roms/System/
+!roms/System/.gitkeep
+!roms/FDD/
+!roms/FDD/.gitkeep
+!roms/SCSI/
+!roms/SCSI/.gitkeep
 *.rom
 *.ROM
 *.img
@@ -12,10 +18,16 @@ roms/
 *.BIN
 *.iso
 *.ISO
+*.hda
+*.HDA
+*.raw
+*.RAW
 *.hfe
 *.HFE
 *.dsk
 *.DSK
+*.sdk
+*.SDK
 *.chd
 *.CHD
 *.wav

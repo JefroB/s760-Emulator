@@ -2,7 +2,7 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-28%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-29%20Passing-brightgreen.svg)](tests/)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
@@ -31,19 +31,31 @@ An open-source hardware emulation driver for the legendary **Roland S-760 16-Bit
 
 ---
 
-## Sound Library & Disk Conversion Support
+## ROM & Media Organization (`System`, `FDD`, `SCSI`)
 
-The driver features integrated loaders that parse sound media placed in `roms/s760/`:
+To keep disk images cleanly segregated without moving files, the emulator uses a **3-folder layout** inside `roms/` matching real hardware setups (e.g. Gotek floppy emulators and BlueSCSI / ZuluSCSI devices):
 
-1. **Native Roland S-760 / S-770 Sound Disks** (`L701_1.IMG`, `waves760.sdk`):
-   - Automatically detects 1.44M HD (`SYS-772`) and 720K DD Roland disk structures.
-   - Extracts 48-byte sample descriptors (names, loop points, sample rates, root keys) and streams 16-bit linear PCM audio into wave RAM.
-2. **Akai S1000 CD-ROM ISOs** (`akai.iso`, `sound.iso`):
-   - Reads Akai S1000 CD-ROM root directory records at Sector 12 (`0x6000`).
-   - Decodes Akai custom 6-bit character encodings and tags (`0x70` Programs, `0x73` Samples).
-   - Converts Akai sample clusters directly into native Roland S-760 wave RAM memory layout.
+```
+roms/
+├── System/         # Dedicated folder for boot OS images (s760.rom / S760224.IMG)
+├── FDD/            # Roland floppy sound disk images (.img, .sdk - e.g. L701_1.IMG, waves760.sdk)
+└── SCSI/           # SCSI hard disk images and CD-ROM ISOs (BlueSCSI & ZuluSCSI format)
+```
 
-> To download a test Akai S1000 CD-ROM image from public archives:
+### Folder Roles & Formats:
+1. **`roms/System/`**:
+   - Contains the OS system disk image used to boot the emulator (`s760.rom` or `S760224.IMG`).
+   - Keeps the core boot payload dedicated and isolated from sample libraries.
+2. **`roms/FDD/`**:
+   - Stores Roland 1.44M HD (`SYS-772`) and 720K DD floppy sound disks (`.img`, `.sdk`, `.dsk`).
+   - Automatically extracted into voice memory and playable from the `DISK` menu.
+3. **`roms/SCSI/`**:
+   - Supports BlueSCSI and ZuluSCSI naming conventions:
+     - CD-ROM ISOs: `CD1.iso`, `CD2.iso`, `CD01_2048.iso`, `akai.iso`, `sound.iso`
+     - Hard Disk Images: `HD0.img`, `HD1.img`, `HD00_512.img`, `HD10_512.img`, `HD0.hda`
+   - Real Akai S1000 / S1100 CD-ROM volumes placed here are automatically decoded and converted.
+
+> To download a test Akai S1000 CD-ROM image directly to `roms/SCSI/`:
 > ```powershell
 > python scripts/download_real_akai_iso.py
 > ```
@@ -124,8 +136,8 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 | **OM Sec. 6.1** | **Volume Load / Save / Delete / Rename** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | Volume file management, disk scanning (`[FDD: -FloppyDisk-]`), and multi-disk sets. |
 | **OM Sec. 6.2** | **Partial & Sample Selective Load** | ✅ Tested / Working | Pytest `test_disk_conversion.py` | Granular loading of individual partials, patches, or samples without loading full volumes. |
 | **OM Sec. 6.3** | **Quick-Load (Q-Load) Preset Assignment** | 🟡 Emulated (HLE) | Firmware UI string catalog (`0x0959C2`) | Fast loading of predefined instrument slots upon boot. |
-| **OM Sec. 6.4** | **Roland S-770 / S-750 Sound Disk Load** | ✅ Tested / Working | Auditioned `L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. |
-| **OM Sec. 6.5** | **Akai S1000 CD-ROM ISO Conversion** | ✅ Tested / Working | Auditioned `akai.iso` (Invision 40 Oz S1000) in MAME | Real Akai S1000 root directory parser (Sector 12 / `0x6000`), custom 6-bit char decoder, and cluster converter. |
+| **OM Sec. 6.4** | **Roland S-770 / S-750 Sound Disk Load** | ✅ Tested / Working | Auditioned `roms/FDD/L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. |
+| **OM Sec. 6.5** | **Akai S1000 CD-ROM ISO Conversion** | ✅ Tested / Working | Auditioned `roms/SCSI/akai.iso` (Invision 40 Oz S1000) in MAME | Real Akai S1000 root directory parser (Sector 12 / `0x6000`), custom 6-bit char decoder, and cluster converter. |
 | **OM Sec. 6.6** | **Disk Optimization / Defragmentation** | ⚪ Untested / Unknown | Firmware UI string table (`0x0C1C66`) | Reallocates scattered sectors on SCSI hard disks and floppies for contiguous access. |
 | **OM Sec. 6.7** | **Floppy Disk Formatting (Roland S-Series)**| 🟡 Emulated (HLE) | Firmware disk routine disassembly | Low-level sector formatting for 3.5" 2HD (1.44MB) and 2DD (720KB) media. |
 | **OM Sec. 6.8** | **MS-DOS Floppy Formatting & Exchange** | ⚪ Untested / Unknown | Embedded MS-DOS FAT12 boot code at `0x887A0` | PC-compatible floppy format engine embedded in firmware for sample exchange. |
@@ -154,7 +166,7 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 | :--- | :--- | :---: | :--- | :--- |
 | **Main CPU** | Intel S80C196KB (16 MHz) | 🟡 Emulated (MAME / HLE) | Disassembly at reset vector `0x2080` | 16-bit little-endian MCS-96 microcontroller, internal 256B register file/SFRs, work RAM stack (`0x1120`). |
 | **System Gate Array**| Fujitsu 15239118 QFP | 🟡 Emulated | MMIO handler (`0xF000-0xF00A`) | Memory bank windowing, reset strobe pulses (`0xF000`), peripheral chip selects. |
-| **Video Expansion** | OP-760-1 (RFSC16A VDP + VRAM) | ✅ Tested / Working | 28 automated tests (RGB screenshot assertions)| 640x240 RGB CRT output, 128KB TC511664 VRAM, 10-pen RGB DAC palette, 60Hz raster. |
+| **Video Expansion** | OP-760-1 (RFSC16A VDP + VRAM) | ✅ Tested / Working | 29 automated tests (RGB screenshot assertions)| 640x240 RGB CRT output, 128KB TC511664 VRAM, 10-pen RGB DAC palette, 60Hz raster. |
 | **Front Panel Display**| Epson SED1335F0B LCD Controller| 🟡 Emulated (MAME LCD) | Dual-screen MAME registration (`lcd_screen`) | 160×64 monochrome graphics LCD buffer for rack operation without external monitor. |
 | **Sample Memory** | SIMM72-16 Wave RAM (Up to 32MB)| ✅ Tested / Working | Memory bounds tests & sample allocation | Linear wave RAM addressing up to 16M words of 16-bit acoustic audio. |
 | **Audio DAC Engine** | Dual AKM AK4328VS 18-bit DACs | ✅ Tested / Working | WASAPI stereo output (`lspeaker`, `rspeaker`) | 24-voice polyphony, linear pitch interpolation, multi-rate playback (44.1k/48k/32k). |
@@ -194,8 +206,7 @@ The driver includes accurate layout rendering and interactive switching for all 
 > It **DOES NOT** distribute any proprietary Roland operating system disks (`S760224.IMG`), copyrighted firmware ROMs, or commercial factory sample sound libraries.
 
 Users must provide their own legally acquired system disk:
-1. Create a `roms/` directory in the project root.
-2. Place your system disk image at `roms/s760.rom` (or inside `roms/s760.zip`).
+1. Place your system disk image at `roms/System/s760.rom` (or inside `roms/s760/System/s760.rom`).
 
 ---
 
@@ -228,7 +239,7 @@ Launch the interactive emulator using the provided batch script:
 
 Or run directly via command line:
 ```powershell
-.\mames760.exe s760 -rompath roms -window -nomaximize -resolution 1280x480
+.\mames760.exe s760 -rompath "roms;roms/System;roms/s760" -window -nomaximize -resolution 1280x480
 ```
 
 ### Controls & Navigation
@@ -249,8 +260,8 @@ The project includes an automated test harness (`tests/mame_harness.py`) that dr
 pytest tests -v
 ```
 
-### Test Suite Summary (28 / 28 Passing)
-- `tests/test_disk_conversion.py`: Verifies Roland S-760 `.IMG` disk reading and Akai S1000 ISO structure conversion.
+### Test Suite Summary (29 / 29 Passing)
+- `tests/test_disk_conversion.py`: Verifies `roms/System/`, `roms/FDD/`, and `roms/SCSI/` folder structure, Roland S-760 `.IMG` disk reading, and Akai S1000 ISO conversion.
 - `tests/test_image_invariants.py`: Verifies Roland OS palette bounds, resolution constraints, and text layout invariants.
 - `tests/test_interactive_ui.py`: Automates the complete Roland Owner's Manual multi-mode workflow (`DISK` → `PERFORM` → `SAMPLE` → `SYSTEM`), asserting active tab boxes and parameter highlights.
 - `tests/test_mame_invariants.py`: Verifies C++ driver registration, device maps, and compilation consistency.
@@ -265,6 +276,10 @@ d:/S-760/
 ├── README.md                               # Project documentation & guide
 ├── .gitignore                              # Git exclusion rules (ROMs, binaries, snaps, disk images)
 ├── run_s760_mame.bat                       # Interactive launch script
+├── roms/                                   # Dedicated ROM & Media directories (.gitkeep tracked)
+│   ├── System/                             # System OS boot disk images (s760.rom / S760224.IMG)
+│   ├── FDD/                                # Roland floppy sound disk images (.img, .sdk)
+│   └── SCSI/                               # BlueSCSI/ZuluSCSI HDD images & ISOs (akai.iso, CD1.iso)
 ├── scripts/                                # Utility and helper scripts
 │   └── download_real_akai_iso.py           # Akai S1000 CD-ROM test downloader
 ├── mame-source/                            # MAME source tree
@@ -277,7 +292,7 @@ d:/S-760/
 │   └── reference/                          # S-760 service manual & schematic notes
 └── tests/                                  # Automated Python & Lua test suite
     ├── mame_harness.py                     # Headless MAME runner & screenshot analyzer
-    ├── test_disk_conversion.py             # Roland & Akai disk conversion tests
+    ├── test_disk_conversion.py             # Roland & Akai disk conversion + folder tests
     ├── test_interactive_ui.py              # Interactive UI & manual workflow tests
     ├── test_image_invariants.py            # Color palette & layout invariant tests
     └── test_mame_invariants.py             # MAME driver registration tests

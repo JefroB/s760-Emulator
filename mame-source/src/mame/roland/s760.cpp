@@ -127,8 +127,23 @@ void s760_sound_device::populate_factory_waveforms()
 	m_wave_ram.resize(2 * 1024 * 1024, 0); // 4MB sample memory
 	m_samples.clear();
 
-	// 1. Check for user-supplied Akai S1000 ISOs or Roland sound disk files
+	// 1. Check for user-supplied SCSI CD-ROM/HDD images (BlueSCSI/ZuluSCSI) and Floppy disk images
 	const char *disk_paths[] = {
+		// SCSI Images / ISOs (BlueSCSI & ZuluSCSI formatted paths)
+		"roms/SCSI/akai.iso", "roms/s760/SCSI/akai.iso",
+		"roms/SCSI/sound.iso", "roms/s760/SCSI/sound.iso",
+		"roms/SCSI/CD1.iso", "roms/SCSI/CD2.iso", "roms/SCSI/CD3.iso", "roms/SCSI/CD4.iso", "roms/SCSI/CD5.iso", "roms/SCSI/CD6.iso",
+		"roms/SCSI/CD01_2048.iso", "roms/SCSI/CD02_2048.iso", "roms/SCSI/CD03_2048.iso",
+		"roms/SCSI/HD00_512.img", "roms/SCSI/HD10_512.img", "roms/SCSI/HD20_512.img", "roms/SCSI/HD30_512.img", "roms/SCSI/HD40_512.img", "roms/SCSI/HD50_512.img", "roms/SCSI/HD60_512.img",
+		"roms/SCSI/HD0.img", "roms/SCSI/HD1.img", "roms/SCSI/HD2.img", "roms/SCSI/HD3.img", "roms/SCSI/HD4.img", "roms/SCSI/HD5.img", "roms/SCSI/HD6.img",
+		"roms/SCSI/HD0.hda", "roms/SCSI/HD1.hda", "roms/SCSI/HD2.hda",
+		"roms/s760/SCSI/HD0.img", "roms/s760/SCSI/HD1.img", "roms/s760/SCSI/CD1.iso",
+		// FDD Images (Roland Sound Floppy Disks)
+		"roms/FDD/L701_1.IMG", "roms/FDD/L701_1.img", "roms/s760/FDD/L701_1.IMG", "roms/s760/FDD/L701_1.img",
+		"roms/FDD/waves760.sdk", "roms/s760/FDD/waves760.sdk",
+		"roms/FDD/sound.img", "roms/s760/FDD/sound.img",
+		"roms/FDD/sample.img", "roms/FDD/sample.sdk", "roms/s760/FDD/sample.img",
+		// Legacy / Flat paths
 		"roms/s760/akai.iso", "akai.iso", "roms/s760/sound.iso", "sound.iso",
 		"roms/s760/L701_1.IMG", "roms/s760/L701_1.img", "L701_1.IMG", "L701_1.img",
 		"roms/s760/waves760.sdk", "waves760.sdk", "roms/s760/sound.img", "sound.img", "roms/sound.img", "roms/s760.iso"

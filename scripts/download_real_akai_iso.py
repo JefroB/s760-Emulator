@@ -26,7 +26,7 @@ def decode_akai_name(raw_bytes):
         else: chars.append('?')
     return ''.join(chars).strip()
 
-def download_real_akai_iso(target_path="roms/s760/akai.iso", num_mb=8):
+def download_real_akai_iso(target_path="roms/SCSI/akai.iso", num_mb=8):
     os.makedirs(os.path.dirname(target_path), exist_ok=True)
     num_bytes = num_mb * 1024 * 1024
     print(f"Downloading {num_mb}MB of real Akai S1000 CD-ROM ISO from archive.org to {target_path}...")
@@ -51,5 +51,5 @@ def download_real_akai_iso(target_path="roms/s760/akai.iso", num_mb=8):
             print(f"  [{e//24:02d}] Tag={tag} Name='{name:<14}' Cluster={cluster}")
 
 if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else "roms/s760/akai.iso"
+    out = sys.argv[1] if len(sys.argv) > 1 else "roms/SCSI/akai.iso"
     download_real_akai_iso(out, num_mb=8)
