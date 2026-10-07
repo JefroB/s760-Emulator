@@ -530,6 +530,139 @@ def test_scsi_cdrom_iso_creation_and_conversion():
     assert rms > 0.10
 
 
+def test_floppy_load_and_save_to_blank_scsi_hard_disk():
+    """
+    Verify loading sounds from a Roland Floppy Disk image and saving them to a blank SCSI Hard Disk image:
+    1. Generates a source Roland 1.44M Floppy Sound Disk with Patches & Waveform samples.
+    2. Initializes a blank (zeroed) 10MB SCSI Hard Disk image file.
+    3. Simulates Roland S-760 OS DISK -> LOAD [FDD] into internal Patch & Wave RAM.
+    4. Simulates Roland S-760 OS DISK -> SAVE [SCSI HD] to write RAM structures to the blank SCSI HD image.
+    5. Parses the saved Hard Disk image, validating directory records, volume header, and sample data.
+    6. Synthesizes voice audio directly from the saved Hard Disk image to verify sound fidelity.
+    """
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from scripts.build_scsi_images import (
+        format_and_save_to_hd,
+        generate_pcm_sine,
+        generate_acoustic_bass_pcm
+    )
+
+    fdd_path = os.path.join(ROOT, "roms", "FDD", "fdd_source_test.img")
+    hd_path = os.path.join(ROOT, "roms", "SCSI", "HD00_512_test.img")
+
+    # 1. Create source Floppy Sound Disk
+    fdd_disk = RolandS760Disk(volume_name="FDD VINTAGE")
+    fdd_disk.add_patch(patch_id=1, patch_name="Moog Bass Lead", partial_ids=[1, 2], level=120, pan=-5)
+    fdd_disk.add_patch(patch_id=2, patch_name="Warm Brass Pad", partial_ids=[2], level=110, pan=10)
+
+    fdd_disk.add_sample(
+        sample_id=1,
+        sample_name="Moog Saw Sub",
+        sample_rate=44100,
+        pcm_data=generate_acoustic_bass_pcm(),
+        loop_start=2000,
+        loop_end=40000,
+        root_key=36
+    )
+    fdd_disk.add_sample(
+        sample_id=2,
+        sample_name="Warm Brass C4",
+        sample_rate=44100,
+        pcm_data=generate_pcm_sine(freq=261.63, rate=44100, num_samples=44100, decay=1.5),
+        loop_start=3000,
+        loop_end=42000,
+        root_key=60
+    )
+
+    fdd_bytes = fdd_disk.build_image()
+    assert len(fdd_bytes) == 1474560
+    with open(fdd_path, "wb") as f:
+        f.write(fdd_bytes)
+
+    # 2. Create blank 10MB SCSI Hard Disk image
+    blank_hd_size = 10 * 1024 * 1024
+    with open(hd_path, "wb") as f:
+        f.write(b"\x00" * blank_hd_size)
+
+    with open(hd_path, "rb") as f:
+        blank_data = f.read()
+    assert len(blank_data) == blank_hd_size
+    blank_parsed = RolandS760Disk.parse(blank_data)
+    assert blank_parsed["is_roland"] is False
+    assert blank_parsed["num_patches"] == 0
+    assert blank_parsed["num_samples"] == 0
+
+    # 3 & 4. Load sounds from Floppy and Save to Blank Hard Disk
+    format_and_save_to_hd(
+        source_floppy_path=fdd_path,
+        target_hd_path=hd_path,
+        volume_name="INTERNAL HD 01",
+        size_mb=10
+    )
+
+    # 5. Verify saved Hard Disk image
+    assert os.path.exists(hd_path)
+    with open(hd_path, "rb") as f:
+        saved_hd_data = f.read()
+
+    assert len(saved_hd_data) == blank_hd_size
+    hd_parsed = RolandS760Disk.parse(saved_hd_data)
+    assert hd_parsed["is_roland"] is True
+    assert hd_parsed["volume_name"] == "INTERNAL HD 01"
+    assert hd_parsed["num_patches"] == 2
+    assert hd_parsed["num_samples"] == 2
+
+    # Verify Patches
+    assert hd_parsed["patches"][0]["id"] == 1
+    assert hd_parsed["patches"][0]["name"] == "Moog Bass Lead"
+    assert hd_parsed["patches"][0]["level"] == 120
+    assert hd_parsed["patches"][0]["pan"] == -5
+    assert hd_parsed["patches"][1]["id"] == 2
+    assert hd_parsed["patches"][1]["name"] == "Warm Brass Pad"
+
+    # Verify Samples
+    assert hd_parsed["samples"][0]["id"] == 1
+    assert hd_parsed["samples"][0]["name"] == "Moog Saw Sub"
+    assert hd_parsed["samples"][0]["sample_rate"] == 44100
+    assert hd_parsed["samples"][0]["root_key"] == 36
+    assert len(hd_parsed["samples"][0]["data"]) > 0
+
+    assert hd_parsed["samples"][1]["id"] == 2
+    assert hd_parsed["samples"][1]["name"] == "Warm Brass C4"
+    assert hd_parsed["samples"][1]["sample_rate"] == 44100
+    assert hd_parsed["samples"][1]["root_key"] == 60
+    assert len(hd_parsed["samples"][1]["data"]) > 0
+
+    # 6. Synthesize audio directly from HD sample data
+    audio_bass = S760VoiceSynthesizer.render_voice(
+        hd_parsed["samples"][0],
+        note=36,
+        num_output_samples=44100,
+        output_rate=44100
+    )
+    assert len(audio_bass) == 44100
+    rms_bass = math.sqrt(sum(s * s for s in audio_bass) / len(audio_bass))
+    assert rms_bass > 0.10, f"Bass sample from HD too quiet: {rms_bass}"
+
+    audio_brass = S760VoiceSynthesizer.render_voice(
+        hd_parsed["samples"][1],
+        note=60,
+        num_output_samples=44100,
+        output_rate=44100
+    )
+    assert len(audio_brass) == 44100
+    rms_brass = math.sqrt(sum(s * s for s in audio_brass) / len(audio_brass))
+    assert rms_brass > 0.10, f"Brass sample from HD too quiet: {rms_brass}"
+
+    # Cleanup temporary test images
+    if os.path.exists(fdd_path):
+        os.remove(fdd_path)
+    if os.path.exists(hd_path):
+        os.remove(hd_path)
+
+
+
 
 
 

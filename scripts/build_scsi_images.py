@@ -82,6 +82,34 @@ def build_scsi_cdrom_iso_image(target_path="roms/SCSI/CD10_2048.iso", size_mb=4)
     return target_path
 
 
+def format_and_save_to_hd(source_floppy_path: str, target_hd_path: str, volume_name="S760 INTERNAL HD", size_mb=10):
+    """
+    Emulates the Roland S-760 DISK subsystem operations:
+    1. Reads & loads sound library (Patches, Partials, Wave PCM samples) from a source Floppy Disk image.
+    2. Initializes / Formats a blank SCSI Hard Disk image with the Roland disk architecture.
+    3. Saves all loaded RAM sound structures into the SCSI Hard Disk image file.
+    """
+    if not os.path.exists(source_floppy_path):
+        raise FileNotFoundError(f"Source floppy not found: {source_floppy_path}")
+
+    with open(source_floppy_path, "rb") as f:
+        floppy_data = f.read()
+
+    # Load from floppy into S-760 memory representation
+    ram_disk = RolandS760Disk.from_image(floppy_data)
+    ram_disk.volume_name = volume_name[:16].ljust(16)
+
+    # Build formatted hard disk image
+    hd_data = ram_disk.build_image(size_mb=size_mb)
+    os.makedirs(os.path.dirname(target_hd_path), exist_ok=True)
+    with open(target_hd_path, "wb") as f:
+        f.write(hd_data)
+
+    print(f"[SCSI HD] Saved {len(ram_disk.patches)} patches and {len(ram_disk.samples)} samples from '{source_floppy_path}' to '{target_hd_path}' ({len(hd_data):,} bytes).")
+    return target_hd_path
+
+
 if __name__ == "__main__":
     build_scsi_hard_disk_image("roms/SCSI/HD00_512.img", size_mb=10)
     build_scsi_cdrom_iso_image("roms/SCSI/CD10_2048.iso", size_mb=4)
+

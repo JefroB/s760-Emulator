@@ -106,8 +106,8 @@ class RolandS760Disk:
         banner = data[0:32]
         is_roland = (b"S770" in banner) or (b"S-760" in banner) or (b"Roland" in banner)
         vol_name = data[0x40:0x50].decode('ascii', errors='replace').strip()
-        num_patches = struct.unpack_from("<I", data, 0x60)[0]
-        num_samples = struct.unpack_from("<I", data, 0x64)[0]
+        num_patches = struct.unpack_from("<I", data, 0x60)[0] if len(data) >= 0x68 else 0
+        num_samples = struct.unpack_from("<I", data, 0x64)[0] if len(data) >= 0x68 else 0
 
         parsed_patches = []
         offset = 36 * cls.SECTOR_SIZE
@@ -115,16 +115,75 @@ class RolandS760Disk:
             if offset + 256 <= len(data):
                 pid = struct.unpack_from("<H", data, offset)[0]
                 pname = data[offset + 2:offset + 18].decode('ascii', errors='replace').strip()
-                parsed_patches.append({"id": pid, "name": pname})
+                lvl = data[offset + 0x12]
+                pan = struct.unpack_from("<b", data, offset + 0x13)[0]
+                partials = list(struct.unpack_from("<4H", data, offset + 0x20))
+                parsed_patches.append({
+                    "id": pid,
+                    "name": pname,
+                    "level": lvl,
+                    "pan": pan,
+                    "partials": partials
+                })
                 offset += 256
+
+        parsed_samples = []
+        offset = 0x10000
+        for _ in range(min(num_samples, 64)):
+            if offset + 256 <= len(data):
+                sid = struct.unpack_from("<H", data, offset)[0]
+                sname = data[offset + 2:offset + 18].decode('ascii', errors='replace').strip()
+                srate = struct.unpack_from("<I", data, offset + 0x12)[0]
+                lstart = struct.unpack_from("<I", data, offset + 0x16)[0]
+                lend = struct.unpack_from("<I", data, offset + 0x1A)[0]
+                root_k = data[offset + 0x1E]
+                slen = struct.unpack_from("<I", data, offset + 0x20)[0]
+                pcm = data[offset + 256:offset + 256 + slen] if offset + 256 + slen <= len(data) else b""
+                parsed_samples.append({
+                    "id": sid,
+                    "name": sname,
+                    "sample_rate": srate,
+                    "loop_start": lstart,
+                    "loop_end": lend,
+                    "root_key": root_k,
+                    "data": pcm,
+                    "length": slen
+                })
+                offset += 256 + ((slen + 511) & ~511)
 
         return {
             "is_roland": is_roland,
             "volume_name": vol_name,
             "num_patches": num_patches,
             "num_samples": num_samples,
-            "patches": parsed_patches
+            "patches": parsed_patches,
+            "samples": parsed_samples
         }
+
+    @classmethod
+    def from_image(cls, data: bytes):
+        """Constructs a RolandS760Disk instance populated with patches and samples from raw disk bytes."""
+        info = cls.parse(data)
+        disk = cls(volume_name=info["volume_name"])
+        for p in info["patches"]:
+            disk.add_patch(
+                patch_id=p["id"],
+                patch_name=p["name"],
+                partial_ids=p.get("partials", [1, 2]),
+                level=p.get("level", 127),
+                pan=p.get("pan", 0)
+            )
+        for s in info["samples"]:
+            disk.add_sample(
+                sample_id=s["id"],
+                sample_name=s["name"],
+                sample_rate=s["sample_rate"],
+                pcm_data=s["data"],
+                loop_start=s["loop_start"],
+                loop_end=s["loop_end"],
+                root_key=s["root_key"]
+            )
+        return disk
 
 
 class AkaiS1000Disk:

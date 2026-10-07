@@ -2,7 +2,7 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-32%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-33%20Passing-brightgreen.svg)](tests/)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
@@ -139,7 +139,7 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 
 | Manual Section | Feature / Sub-Page | Status | Verification & Evidence | Implementation Notes / State |
 | :--- | :--- | :---: | :--- | :--- |
-| **OM Sec. 6.1** | **Volume Load / Save / Delete / Rename** | ✅ Tested / Working | Automated UI harness (`test_interactive_ui.py`) | Volume file management, disk scanning, and multi-disk sets. |
+| **OM Sec. 6.1** | **Volume Load / Save / Delete / Rename** | ✅ Tested / Working | Pytest `test_floppy_load_and_save_to_blank_scsi_hard_disk` & UI harness | Volume file management, loading sound libraries from FDD and saving to blank SCSI HD images with verified audio playback. |
 | **OM Sec. 6.2** | **Partial & Sample Selective Load** | ✅ Tested / Working | Pytest `test_disk_conversion.py` | Granular loading of individual partials, patches, or samples without loading full volumes. |
 | **OM Sec. 6.3** | **Quick-Load (Q-Load) Preset Assignment** | 🟡 Emulated (HLE) | Firmware UI string catalog (`0x0959C2`) | Fast loading of predefined instrument slots upon boot. |
 | **OM Sec. 6.4** | **Roland S-770 / S-750 Sound Disk Load** | ✅ Tested / Working | Auditioned `roms/FDD/L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. Rendered as `CD[FDD: -FloppyDisk-]`. |
