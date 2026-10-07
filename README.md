@@ -11,7 +11,8 @@
 
 An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
 
-> 📚 **Test Coverage & Understanding Specifications:**
+> 📚 **Test Coverage & Architectural Documentation:**
+> - [**LLE Roadmap & Hardware Fidelity Assessment**](docs/LLE_ROADMAP_AND_FIDELITY_ASSESSMENT.md) — *Detailed fidelity matrix, HLE vs. LLE terminology standards, and the 4-step roadmap to native OS boot and DSP ASIC modeling.*
 > - [**Roland S-760 OS v2.24 Exhaustive Code & Routine Matrix**](docs/OS_EXHAUSTIVE_CODE_MATRIX.md) — *100% mapping of all 81 ROM routines, vector tables, DSP algorithms, SCSI/FDD drivers, and 14,158 string tokens.*
 > - [**Comprehensive UI Elements & Automated Test Coverage Matrix**](docs/UI_TEST_COVERAGE_MATRIX.md) — *Exhaustive mapping of all 122+ interactive UI components, 37 screen layouts, 88-key piano roll, knobs, meters, and modal dialogs.*
 > - [**Owner's Manual Function Breakdown & UI Test Matrix**](docs/MANUAL_FUNCTION_TEST_COVERAGE.md) — *100% mapping of all 70 user procedures across Chapters 1–8 of the official Owner's Manual (`S-760_OM.pdf`).*
@@ -23,20 +24,20 @@ An open-source hardware emulation driver and DAW instrument & effect plugin for 
 
 ![Roland S-760 MAME GUI Screen](Main.png)
 
-*S-760 Studio Suite with authentic 4:3 OP-760 Color CRT monitor display (640x480 RGB 15kHz tube with phosphor scanlines) on top, and 1U rack front panel unit with embedded 160×64 green backlit LCD display, hardware dials, and Gotek USB floppy emulator (FlashFloppy OLED, rotary push-encoder, dual navigation buttons, and USB flash drive) on the bottom.*
+*S-760 Studio Suite with pixel-accurate 4:3 OP-760 Color CRT monitor display (640x480 RGB 15kHz tube with phosphor scanlines) on top, and 1U rack front panel unit with embedded 160×64 green backlit LCD display, hardware dials, and Gotek USB floppy emulator (FlashFloppy OLED, rotary push-encoder, dual navigation buttons, and USB flash drive) on the bottom.*
 
 ---
 
-## Key Hardware Pillars Emulated
+## Architectural Pillars & Subsystem Implementation
 
-| Pillar | Subsystem | Description & Emulated Specifications |
+| Pillar | Subsystem | Description & Implementation Level |
 | :--- | :--- | :--- |
-| **Pillar 1** | **OP-760 Video Board** | Emulates the RFSC16A VDP, 128KB TC511664 VRAM, VDP registers (`0xD000-0xD0FF`), and 10-pen RGB DAC palette rendering at 60Hz. |
-| **Pillar 2** | **Front Panel LCD** | Emulates the built-in 160×64 monochrome LCD display (Epson SED1335 controller) with page and status views. |
-| **Pillar 3** | **MCS-96 CPU & MMIO** | Intel 80C196 / MCS-96 microcontroller core, gate array MMIO decoding, interrupt logic, and 32MB sample SIMM addressing. |
-| **Pillar 4** | **Mouse & Controllers** | Roland MU-1 mouse and RC-100 remote controller emulation with delta tracking and active-low keyboard navigation. |
-| **Audio** | **DSP & Output DACs** | Stereo 16-bit linear PCM audio engine (`lspeaker`, `rspeaker`) with pitch interpolation, multi-voice envelopes, and real disk sample auditioning. |
-| **Disk & Media** | **Roland & Akai Converter** | Built-in binary parser for native Roland S-760/S-770 sound disks (`.IMG`, `.SDK`) and automatic Akai S1000 ISO CD-ROM sample/program extraction. |
+| **Pillar 1** | **OP-760 Video Board** | **RFSC16A-compatible MMIO/VRAM model with HLE display rendering**, 128KB TC511664 VRAM port access, and 10-pen RGB DAC palette rendering. |
+| **Pillar 2** | **Front Panel LCD** | **Epson SED1335 160×64 monochrome LCD display model** with page summaries, status readouts, and contrast calibration. |
+| **Pillar 3** | **MCS-96 CPU & MMIO** | **Intel 80C196KB / MCS-96 microcontroller core**, Gate Array MMIO decoding, interrupt handling, and 32MB sample SIMM address space. |
+| **Pillar 4** | **Mouse & Controllers** | **Roland MU-1 serial mouse and RC-100 remote controller interface** with delta tracking and front-panel tactile button dispatch. |
+| **Audio** | **Sound Engine & Filters** | **32-voice S-760-compatible PCM playback and filter model** with 4-pole 24dB resonant TVF curves, 4-point envelopes, and multi-waveform LFO. |
+| **Disk & Media** | **Roland & Akai Converter** | **Binary parser for native Roland S-760/S-770 sound disks** (`.IMG`, `.SDK`), legacy S-550/W-30 translation, and automatic Akai S1000 CD-ROM ISO extraction. |
 
 ---
 
