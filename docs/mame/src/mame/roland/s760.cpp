@@ -127,11 +127,11 @@ void s760_sound_device::populate_factory_waveforms()
 	m_wave_ram.resize(2 * 1024 * 1024, 0); // 4MB sample memory
 	m_samples.clear();
 
-	// 1. Check for user-supplied Roland sound disk files or Akai S1000 ISOs
+	// 1. Check for user-supplied Akai S1000 ISOs or Roland sound disk files
 	const char *disk_paths[] = {
+		"roms/s760/akai.iso", "akai.iso", "roms/s760/sound.iso", "sound.iso",
 		"roms/s760/L701_1.IMG", "roms/s760/L701_1.img", "L701_1.IMG", "L701_1.img",
-		"roms/s760/waves760.sdk", "waves760.sdk", "roms/s760/sound.img", "sound.img", "roms/sound.img",
-		"roms/s760/sound.iso", "roms/akai.iso", "sound.iso", "roms/s760.iso"
+		"roms/s760/waves760.sdk", "waves760.sdk", "roms/s760/sound.img", "sound.img", "roms/sound.img", "roms/s760.iso"
 	};
 
 	bool loaded_from_disk = false;
@@ -154,7 +154,78 @@ void s760_sound_device::populate_factory_waveforms()
 					is_roland = true;
 			}
 
-			if (is_akai)
+			// Check for genuine Akai S1000 CD-ROM format (Directory at 0x6000, Type 's'=0x73 or 'p'=0x70)
+			file.seekg(0x6000, std::ios::beg);
+			char dir_chunk[512] = {0};
+			file.read(dir_chunk, 512);
+
+			bool is_real_akai_cd = false;
+			for (int e = 0; e < 512; e += 24)
+			{
+				if (dir_chunk[e + 16] == 0x70 || dir_chunk[e + 16] == 0x73 || dir_chunk[e + 12] == 0x70 || dir_chunk[e + 12] == 0x73)
+				{
+					is_real_akai_cd = true;
+					break;
+				}
+			}
+
+			if (is_real_akai_cd)
+			{
+				// Read raw 16-bit PCM wave area starting at 0x8000 (up to 4MB wave RAM)
+				file.seekg(0x8000, std::ios::beg);
+				uint32_t read_bytes = std::min<size_t>(m_wave_ram.size() * sizeof(int16_t), 4 * 1024 * 1024);
+				file.read(reinterpret_cast<char *>(&m_wave_ram[0]), read_bytes);
+				uint32_t total_wave_words = read_bytes / sizeof(int16_t);
+
+				const char *akai_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ #+-.";
+
+				for (int e = 0; e < 512; e += 24)
+				{
+					uint8_t tag = (uint8_t)dir_chunk[e + 16];
+					if (tag != 0x70 && tag != 0x73) tag = (uint8_t)dir_chunk[e + 12];
+					if (tag != 0x70 && tag != 0x73) continue;
+
+					SampleDesc desc;
+					memset(desc.name, 0, sizeof(desc.name));
+					for (int c = 0; c < 12; c++)
+					{
+						uint8_t b = (uint8_t)dir_chunk[e + c];
+						if (b < 41) desc.name[c] = akai_chars[b];
+						else if (b >= 32 && b <= 126) desc.name[c] = (char)b;
+						else desc.name[c] = ' ';
+					}
+					desc.name[12] = '\0';
+
+					// Clean trailing spaces
+					for (int c = 11; c >= 0; c--)
+					{
+						if (desc.name[c] == ' ') desc.name[c] = '\0';
+						else break;
+					}
+
+					desc.sample_rate = 44100;
+					uint32_t num_s = 16;
+					uint32_t slice_len = total_wave_words / num_s;
+					uint32_t s_idx = m_samples.size();
+					desc.wave_offset = s_idx * slice_len;
+					desc.length = slice_len;
+					desc.loop_start = 1000;
+					desc.loop_end = slice_len - 1000;
+					desc.loop_mode = 1;
+					desc.root_key = (strstr(desc.name, "BS") != nullptr || strstr(desc.name, "80") != nullptr) ? 40 : 60;
+
+					m_samples.push_back(desc);
+					if (m_samples.size() >= 16) break;
+				}
+
+				if (!m_samples.empty())
+				{
+					loaded_from_disk = true;
+					osd_printf_info("[S-760] Loaded and converted %zu genuine Akai S1000 CD-ROM acoustic samples from '%s'\n", m_samples.size(), path);
+					break;
+				}
+			}
+			else if (is_akai)
 			{
 				uint32_t num_programs = 0, num_samples = 0;
 				file.seekg(0x30, std::ios::beg);

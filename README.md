@@ -2,14 +2,11 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-27%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-28%20Passing-brightgreen.svg)](tests/)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
-
-
-
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
-An open-source hardware emulation driver for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME** emulation framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, and multi-mode sampling interface.
+An open-source hardware emulation driver for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME** emulation framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
 
 ---
 
@@ -29,7 +26,27 @@ An open-source hardware emulation driver for the legendary **Roland S-760 16-Bit
 | **Pillar 2** | **Front Panel LCD** | Emulates the built-in 160×64 monochrome LCD display (Epson SED1335 controller) with page and status views. |
 | **Pillar 3** | **MCS-96 CPU & MMIO** | Intel 80C196 / MCS-96 microcontroller core, gate array MMIO decoding, interrupt logic, and 32MB sample SIMM addressing. |
 | **Pillar 4** | **Mouse & Controllers** | Roland MU-1 mouse and RC-100 remote controller emulation with delta tracking and active-low keyboard navigation. |
-| **Audio** | **DSP & Output DACs** | Stereo audio output routing (`lspeaker`, `rspeaker`) with clean startup. |
+| **Audio** | **DSP & Output DACs** | Stereo 16-bit linear PCM audio engine (`lspeaker`, `rspeaker`) with pitch interpolation, multi-voice envelopes, and real disk sample auditioning. |
+| **Disk & Media** | **Roland & Akai Converter** | Built-in binary parser for native Roland S-760/S-770 sound disks (`.IMG`, `.SDK`) and automatic Akai S1000 ISO CD-ROM sample/program extraction. |
+
+---
+
+## Sound Library & Disk Conversion Support
+
+The driver features integrated loaders that parse sound media placed in `roms/s760/`:
+
+1. **Native Roland S-760 / S-770 Sound Disks** (`L701_1.IMG`, `waves760.sdk`):
+   - Automatically detects 1.44M HD (`SYS-772`) and 720K DD Roland disk structures.
+   - Extracts 48-byte sample descriptors (names, loop points, sample rates, root keys) and streams 16-bit linear PCM audio into wave RAM.
+2. **Akai S1000 CD-ROM ISOs** (`akai.iso`, `sound.iso`):
+   - Reads Akai S1000 CD-ROM root directory records at Sector 12 (`0x6000`).
+   - Decodes Akai custom 6-bit character encodings and tags (`0x70` Programs, `0x73` Samples).
+   - Converts Akai sample clusters directly into native Roland S-760 wave RAM memory layout.
+
+> To download a test Akai S1000 CD-ROM image from public archives:
+> ```powershell
+> python scripts/download_real_akai_iso.py
+> ```
 
 ---
 
@@ -50,7 +67,7 @@ The driver includes accurate layout rendering and interactive switching for all 
 
 > [!IMPORTANT]
 > **This repository contains strictly open-source driver source code.**
-> It **DOES NOT** distribute any proprietary Roland operating system disks (`S760224.IMG`), copyrighted firmware ROMs, or factory sample sound libraries.
+> It **DOES NOT** distribute any proprietary Roland operating system disks (`S760224.IMG`), copyrighted firmware ROMs, or commercial factory sample sound libraries.
 
 Users must provide their own legally acquired system disk:
 1. Create a `roms/` directory in the project root.
@@ -87,7 +104,7 @@ Launch the interactive emulator using the provided batch script:
 
 Or run directly via command line:
 ```powershell
-.\mame-source\mames760.exe s760 -rompath roms -window -nomaximize -resolution 1280x480
+.\mames760.exe s760 -rompath roms -window -nomaximize -resolution 1280x480
 ```
 
 ### Controls & Navigation
@@ -108,7 +125,8 @@ The project includes an automated test harness (`tests/mame_harness.py`) that dr
 pytest tests -v
 ```
 
-### Test Suite Summary (18 / 18 Passing)
+### Test Suite Summary (28 / 28 Passing)
+- `tests/test_disk_conversion.py`: Verifies Roland S-760 `.IMG` disk reading and Akai S1000 ISO structure conversion.
 - `tests/test_image_invariants.py`: Verifies Roland OS palette bounds, resolution constraints, and text layout invariants.
 - `tests/test_interactive_ui.py`: Automates the complete Roland Owner's Manual multi-mode workflow (`DISK` → `PERFORM` → `SAMPLE` → `SYSTEM`), asserting active tab boxes and parameter highlights.
 - `tests/test_mame_invariants.py`: Verifies C++ driver registration, device maps, and compilation consistency.
@@ -121,8 +139,10 @@ pytest tests -v
 d:/S-760/
 ├── Main.png                                # Main UI reference screenshot
 ├── README.md                               # Project documentation & guide
-├── .gitignore                              # Git exclusion rules (ROMs, binaries, snaps)
+├── .gitignore                              # Git exclusion rules (ROMs, binaries, snaps, disk images)
 ├── run_s760_mame.bat                       # Interactive launch script
+├── scripts/                                # Utility and helper scripts
+│   └── download_real_akai_iso.py           # Akai S1000 CD-ROM test downloader
 ├── mame-source/                            # MAME source tree
 │   ├── src/mame/roland/s760.cpp            # S-760 MAME driver implementation
 │   ├── scripts/target/mame/s760.lua        # Target driver build configuration
@@ -133,6 +153,7 @@ d:/S-760/
 │   └── reference/                          # S-760 service manual & schematic notes
 └── tests/                                  # Automated Python & Lua test suite
     ├── mame_harness.py                     # Headless MAME runner & screenshot analyzer
+    ├── test_disk_conversion.py             # Roland & Akai disk conversion tests
     ├── test_interactive_ui.py              # Interactive UI & manual workflow tests
     ├── test_image_invariants.py            # Color palette & layout invariant tests
     └── test_mame_invariants.py             # MAME driver registration tests
@@ -142,9 +163,9 @@ d:/S-760/
 
 ## Trademark & Non-Affiliation Disclaimer
 
-*Roland*, *S-760*, *OP-760*, and *RC-100* are registered trademarks of **Roland Corporation**.
+*Roland*, *S-760*, *OP-760*, and *RC-100* are registered trademarks of **Roland Corporation**. *Akai* and *S1000* are registered trademarks of **Akai Professional / inMusic Brands**.
 
-This project is an independent, non-commercial open-source hardware emulation and research endeavor. It is **not** affiliated with, endorsed by, sponsored by, or associated with Roland Corporation.
+This project is an independent, non-commercial open-source hardware emulation and research endeavor. It is **not** affiliated with, endorsed by, sponsored by, or associated with Roland Corporation or Akai Professional.
 
 ---
 
