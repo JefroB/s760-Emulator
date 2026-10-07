@@ -1,0 +1,757 @@
+// license:BSD-3-Clause
+// copyright-holders:Nicola Salmoria
+/***************************************************************************
+
+    Over Drive (GX789) (c) 1990 Konami
+
+    driver by Nicola Salmoria
+
+    Notes:
+    - CCU frame-counter and VBLANK edge timing need cycle-level verification.
+    - K053250 DMA timing, clipping and descriptor flags need hardware verification.
+    - K053249 commands are approximated without its internal program.
+    - K053246 DMA duration and sprite coordinate wrapping need hardware verification.
+    - Visible area and relative placement of sprites and tiles is most likely wrong.
+    - The "Continue?" sprites are not visible until you press start
+    - priorities
+
+***************************************************************************/
+
+#include "emu.h"
+
+#include "k053246_k053247_k055673.h"
+#include "k053250.h"
+#include "k053251.h"
+#include "konami_helper.h"
+
+#include "cpu/m68000/m68000.h"
+#include "cpu/m6809/m6809.h"
+#include "machine/adc0804.h"
+#include "machine/eepromser.h"
+#include "machine/k053252.h"
+#include "machine/rescap.h"
+#include "machine/timer.h"
+#include "sound/k053260.h"
+#include "sound/ymopm.h"
+#include "video/k051316.h"
+
+#include "emupal.h"
+#include "screen.h"
+#include "speaker.h"
+
+#include <algorithm>
+
+#include "overdriv.lh"
+
+namespace {
+
+class overdriv_state : public driver_device
+{
+public:
+	overdriv_state(const machine_config &mconfig, device_type type, const char *tag)
+		: driver_device(mconfig, type, tag)
+		, m_maincpu(*this, "maincpu")
+		, m_subcpu(*this, "sub")
+		, m_audiocpu(*this, "audiocpu")
+		, m_k051316(*this, "k051316_%u", 1)
+		, m_k053246(*this, "k053246")
+		, m_k053250(*this, "k053250_%u", 1)
+		, m_k053251(*this, "k053251")
+		, m_k053252(*this, "k053252")
+		, m_screen(*this, "screen")
+		, m_eeprom(*this, "eeprom")
+		, m_spriteram(*this, "spriteram")
+		, m_alu_ram(*this, "alu_ram")
+		, m_led(*this, "led0")
+	{ }
+
+	void overdriv(machine_config &config) ATTR_COLD;
+
+protected:
+	virtual void machine_start() override ATTR_COLD;
+	virtual void machine_reset() override ATTR_COLD;
+
+private:
+	void eeprom_w(offs_t offset, uint8_t data);
+	void cpuA_ctrl_w(offs_t offset, uint8_t data);
+	uint16_t cpuB_ctrl_r();
+	void cpuB_ctrl_w(offs_t offset, uint16_t data, uint16_t mem_mask = ~0);
+	void soundirq_w(uint16_t data);
+	void sound_ack_w(uint8_t data);
+	void sub_irq6_assert_w(uint16_t data);
+	void sub_irq5_assert_w(uint16_t data);
+	void objdma_w(uint8_t data);
+	void alu_w(uint8_t data);
+
+	uint32_t screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	TIMER_DEVICE_CALLBACK_MEMBER(cpuA_scanline);
+
+	K051316_CB_MEMBER(zoom_callback_1);
+	K051316_CB_MEMBER(zoom_callback_2);
+	K053246_CB_MEMBER(sprite_callback);
+	void main_map(address_map &map) ATTR_COLD;
+	void sound_map(address_map &map) ATTR_COLD;
+	void sub_map(address_map &map) ATTR_COLD;
+
+	/* video-related */
+	uint16_t  m_zoom_colorbase[2]{};
+	uint16_t  m_road_colorbase[2]{};
+	uint16_t  m_sprite_colorbase = 0;
+	bitmap_ind8 m_layer_priority;
+	bitmap_ind16 m_zoom_bitmap;
+	int m_sprite_priority_base = 0;
+
+	/* misc */
+	uint16_t  m_cpuB_ctrl = 0;
+	uint8_t   m_ccu_frame = 0;
+
+	/* devices */
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_subcpu;
+	required_device<cpu_device> m_audiocpu;
+	required_device_array<k051316_device, 2> m_k051316;
+	required_device<k053247_device> m_k053246;
+	required_device_array<k053250_device, 2> m_k053250;
+	required_device<k053251_device> m_k053251;
+	required_device<k053252_device> m_k053252;
+	required_device<screen_device> m_screen;
+	required_device<eeprom_serial_er5911_device> m_eeprom;
+	required_shared_ptr<uint16_t> m_spriteram;
+	required_shared_ptr<uint16_t> m_alu_ram;
+	output_finder<> m_led;
+};
+
+
+/***************************************************************************
+
+  EEPROM
+
+***************************************************************************/
+
+static const uint16_t overdriv_default_eeprom[64] =
+{
+	0x7758, 0xffff, 0x0078, 0x9000, 0x0078, 0x7000, 0x0078, 0x5000,
+	0x5441, 0x4b51, 0x3136, 0x4655, 0x4aff, 0x0300, 0x0270, 0x0250,
+	0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300,
+	0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4,
+	0x0300, 0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300, 0xb403,
+	0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300,
+	0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4,
+	0x0300, 0xb403, 0x00b4, 0x0300, 0xb403, 0x00b4, 0x0300, 0xb403
+};
+
+
+void overdriv_state::eeprom_w(offs_t offset, uint8_t data)
+{
+	//logerror("%s: write %04x to eeprom_w\n", machine().describe_context(), data);
+	// bit 0 is data
+	// bit 1 is clock (active high)
+	// bit 2 is cs (active low)
+	m_eeprom->di_write(BIT(data, 0));
+	m_eeprom->clk_write(BIT(data, 1));
+	m_eeprom->cs_write(BIT(data, 2));
+}
+
+TIMER_DEVICE_CALLBACK_MEMBER(overdriv_state::cpuA_scanline)
+{
+	// U407 latches VBLANK on IRQ5. U302 latches the CCU FCNT output on IRQ4.
+	// Both latches are cleared by the corresponding CPU interrupt acknowledge.
+	if (param == m_screen->visible_area().max_y + 1)
+		m_maincpu->set_input_line(5, HOLD_LINE);
+
+	// TODO: move FCNT generation into the CCU when its counters are implemented.
+	// Register 7 bit 1 enables the two-bit frame counter; bit 0 selects its output.
+	// Over Drive writes 3, selecting a rising edge every four frames.
+	const int vsync_start = m_screen->height() - ((m_k053252->read(0x0c) >> 4) + 1);
+	if (param == vsync_start)
+	{
+		// U302 latches VSYNC on the sub CPU's IRQ4, independently of FCNT.
+		m_subcpu->set_input_line(4, HOLD_LINE);
+
+		const uint8_t control = m_k053252->read(7);
+		if (BIT(control, 1))
+		{
+			const bool previous = BIT(m_ccu_frame, BIT(control, 0));
+			m_ccu_frame = (m_ccu_frame + 1) & 3;
+			if (!previous && BIT(m_ccu_frame, BIT(control, 0)))
+				m_maincpu->set_input_line(4, HOLD_LINE);
+		}
+	}
+}
+
+void overdriv_state::cpuA_ctrl_w(offs_t offset, uint8_t data)
+{
+	// bit 0 probably enables the second 68000
+	m_subcpu->set_input_line(INPUT_LINE_RESET, BIT(data, 0) ? CLEAR_LINE : ASSERT_LINE);
+
+	// bit 1 is clear during service mode - function unknown
+
+	m_led = BIT(data, 3);
+	machine().bookkeeping().coin_counter_w(0, BIT(data, 4));
+	machine().bookkeeping().coin_counter_w(1, BIT(data, 5));
+
+	//logerror("%s: write %04x to cpuA_ctrl_w\n", machine().describe_context(), data);
+}
+
+uint16_t overdriv_state::cpuB_ctrl_r()
+{
+	return m_cpuB_ctrl;
+}
+
+void overdriv_state::cpuB_ctrl_w(offs_t offset, uint16_t data, uint16_t mem_mask)
+{
+	COMBINE_DATA(&m_cpuB_ctrl);
+
+	if (ACCESSING_BITS_0_7)
+	{
+		// bit 0 = enable sprite ROM reading
+		m_k053246->k053246_set_objcha_line(BIT(data, 0) ? ASSERT_LINE : CLEAR_LINE);
+
+		// bit 1 used but unknown (IRQ enable?)
+
+		// other bits unused?
+	}
+}
+
+void overdriv_state::soundirq_w(uint16_t data)
+{
+	m_audiocpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+}
+
+
+
+
+void overdriv_state::sub_irq6_assert_w(uint16_t data)
+{
+	// HOSTINT1: the main CPU has prepared the next frame's shared data.
+	m_subcpu->set_input_line(6, HOLD_LINE);
+}
+
+void overdriv_state::sub_irq5_assert_w(uint16_t data)
+{
+	// tests GFX ROMs with this irq (indeed enabled only in test mode)
+	m_subcpu->set_input_line(5, HOLD_LINE);
+}
+
+
+/***************************************************************************
+
+  Callbacks for the K053247
+
+***************************************************************************/
+
+K053246_CB_MEMBER(overdriv_state::sprite_callback)
+{
+	const int pri = (color >> 5) & 0x3f;
+	const int masked = std::clamp(pri - m_sprite_priority_base, 0, 31);
+	priority_mask = util::make_bitmask<uint32_t>(masked);
+
+	color = m_sprite_colorbase + (color & 0x001f);
+}
+
+
+/***************************************************************************
+
+  Callbacks for the K051316
+
+***************************************************************************/
+
+K051316_CB_MEMBER(overdriv_state::zoom_callback_1)
+{
+	code |= ((color & 0x03) << 8);
+	color = m_zoom_colorbase[0] + ((color & 0x3c) >> 2);
+}
+
+K051316_CB_MEMBER(overdriv_state::zoom_callback_2)
+{
+	code |= ((color & 0x03) << 8);
+	color = m_zoom_colorbase[1] + ((color & 0x3c) >> 2);
+}
+
+
+/***************************************************************************
+
+  Display refresh
+
+***************************************************************************/
+
+uint32_t overdriv_state::screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
+{
+	m_sprite_colorbase  = m_k053251->get_palette_index(k053251_device::CI0);
+	m_road_colorbase[0] = m_k053251->get_palette_index(k053251_device::CI1);
+	m_road_colorbase[1] = m_k053251->get_palette_index(k053251_device::CI2);
+
+	for (int i = 0; i < 2; i++)
+	{
+		int prev_colorbase = m_zoom_colorbase[i];
+		m_zoom_colorbase[i] = m_k053251->get_palette_index(k053251_device::CI4 - i);
+
+		if (m_zoom_colorbase[i] != prev_colorbase)
+			m_k051316[i]->mark_tmap_dirty();
+	}
+
+	screen.priority().fill(0, cliprect);
+
+	m_k051316[0]->zoom_draw(screen, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	m_layer_priority.fill(m_k053251->get_priority(k053251_device::CI4), cliprect);
+	m_k051316[1]->zoom_draw(screen, m_zoom_bitmap, cliprect, 0, 1);
+	const uint8_t zoom_priority = m_k053251->get_priority(k053251_device::CI3);
+	for (int y = cliprect.top(); y <= cliprect.bottom(); y++)
+	{
+		auto const *const screen_pri = &screen.priority().pix(y);
+		auto *const layer_pri = &m_layer_priority.pix(y);
+		auto *const dst = &bitmap.pix(y);
+		for (int x = cliprect.left(); x <= cliprect.right(); x++)
+		{
+			if (screen_pri[x] && zoom_priority <= layer_pri[x])
+			{
+				dst[x] = m_zoom_bitmap.pix(y, x);
+				layer_pri[x] = zoom_priority;
+			}
+		}
+	}
+	m_k053250[1]->draw(bitmap, cliprect, m_road_colorbase[1], k053250_device::DRAW_FLAG_USE_PRIORITY, m_layer_priority, 0);
+	m_k053250[0]->draw(bitmap, cliprect, m_road_colorbase[0], k053250_device::DRAW_FLAG_USE_PRIORITY, m_layer_priority, 0);
+
+	// The mixer has six-bit priorities. pdrawgfx reserves value 31 for sprite
+	// occupancy, so render disjoint ranges of up to 31 background priorities.
+	// Each pass retains the sprite chip's independent front-to-back ordering.
+	for (m_sprite_priority_base = 0; m_sprite_priority_base < 64; m_sprite_priority_base += 31)
+	{
+		bool active = false;
+		for (int y = cliprect.top(); y <= cliprect.bottom(); y++)
+		{
+			auto *const screen_pri = &screen.priority().pix(y);
+			auto const *const layer_pri = &m_layer_priority.pix(y);
+			for (int x = cliprect.left(); x <= cliprect.right(); x++)
+			{
+				const int pri = layer_pri[x] - m_sprite_priority_base;
+				screen_pri[x] = (pri >= 0 && pri < 31) ? pri : 31;
+				active = active || (pri >= 0 && pri < 31);
+			}
+		}
+		if (active)
+			m_k053246->k053247_sprites_draw(bitmap, cliprect);
+	}
+	return 0;
+}
+
+
+void overdriv_state::main_map(address_map &map)
+{
+	map(0x000000, 0x03ffff).rom();
+	map(0x040000, 0x043fff).ram();                 /* work RAM */
+	map(0x080000, 0x080fff).ram().w("palette", FUNC(palette_device::write16)).share("palette");
+	map(0x0c0000, 0x0c0001).portr("INPUTS");
+	map(0x0c0002, 0x0c0003).portr("SYSTEM");
+	map(0x0e0000, 0x0e0001).nopw();            /* unknown (always 0x30) */
+	map(0x100000, 0x10001f).umask16(0x00ff).rw(m_k053252, FUNC(k053252_device::read), FUNC(k053252_device::write)); /* 053252? (LSB) */
+	map(0x140000, 0x140001).nopw(); //watchdog reset?
+	map(0x180001, 0x180001).rw("adc", FUNC(adc0804_device::read), FUNC(adc0804_device::write));
+	map(0x1c0000, 0x1c001f).umask16(0xff00).w(m_k051316[0], FUNC(k051316_device::ctrl_w));
+	map(0x1c8000, 0x1c801f).umask16(0xff00).w(m_k051316[1], FUNC(k051316_device::ctrl_w));
+	map(0x1d0000, 0x1d001f).umask16(0xff00).w(m_k053251, FUNC(k053251_device::write));
+	map(0x1d8000, 0x1d8003).umask16(0x00ff).rw("k053260_1", FUNC(k053260_device::main_read), FUNC(k053260_device::main_write));
+	map(0x1e0000, 0x1e0003).umask16(0x00ff).rw("k053260_2", FUNC(k053260_device::main_read), FUNC(k053260_device::main_write));
+	map(0x1e8000, 0x1e8001).w(FUNC(overdriv_state::soundirq_w));
+	map(0x1f0000, 0x1f0001).umask16(0x00ff).w(FUNC(overdriv_state::cpuA_ctrl_w));  /* halt cpu B, coin counter, start lamp, other? */
+	map(0x1f8000, 0x1f8001).umask16(0x00ff).w(FUNC(overdriv_state::eeprom_w));
+	map(0x200000, 0x203fff).ram().share("share1");
+	map(0x210000, 0x210fff).umask16(0xff00).rw(m_k051316[0], FUNC(k051316_device::read), FUNC(k051316_device::write));
+	map(0x218000, 0x218fff).umask16(0xff00).rw(m_k051316[1], FUNC(k051316_device::read), FUNC(k051316_device::write));
+	map(0x220000, 0x220fff).umask16(0xff00).r(m_k051316[0], FUNC(k051316_device::rom_r));
+	map(0x228000, 0x228fff).umask16(0xff00).r(m_k051316[1], FUNC(k051316_device::rom_r));
+	map(0x230000, 0x230001).w(FUNC(overdriv_state::sub_irq6_assert_w));
+	map(0x238000, 0x238001).w(FUNC(overdriv_state::sub_irq5_assert_w));
+}
+
+void overdriv_state::objdma_w(uint8_t data)
+{
+	if ((data & 0x10) && !(m_k053246->k053246_read_register(5) & 0x10))
+	{
+		// K053246 reads the external 2128 SRAM pair when OBJ DMA is requested.
+		// The next HOSTINT1 starts preparation of a new list; DMA does not raise IRQ6.
+		uint16_t *dst;
+		m_k053246->k053247_get_ram(&dst);
+		std::copy_n(&m_spriteram[0], 0x800, dst);
+	}
+
+	m_k053246->k053246_w(5, data);
+}
+
+void overdriv_state::alu_w(uint8_t data)
+{
+	// K053249 has the Konami CPU pinout, but its internal program is unavailable.
+	// These operations are inferred from the display CPU's callers and software
+	// geometry routines. Timing, exceptional arithmetic and other commands are unknown.
+	const auto read_word = [this] (unsigned address) { return m_alu_ram[(address & 0x3fff) >> 1]; };
+	const auto write_word = [this] (unsigned address, uint16_t value) { m_alu_ram[(address & 0x3fff) >> 1] = value; };
+	const auto read_long = [&read_word] (unsigned address) { return (uint32_t(read_word(address)) << 16) | read_word(address + 2); };
+	const auto write_long = [&write_word] (unsigned address, uint32_t value)
+	{
+		write_word(address, value >> 16);
+		write_word(address + 2, value);
+	};
+	// Zero is a placeholder for division by zero; the hardware result is unknown.
+	const auto divide = [] (int64_t numerator, int16_t denominator) -> uint32_t
+	{
+		return denominator ? (numerator / denominator) : 0;
+	};
+
+	switch (data)
+	{
+	case 0x18:
+		write_long(0xbfcc, divide(int64_t(int16_t(read_word(0xbfc8))) * 0x10000, read_word(0xbfca)));
+		break;
+
+	case 0x1b:
+		write_long(0xbfea, divide(int32_t(read_long(0xbfe4)), read_word(0xbfe8)));
+		break;
+
+	case 0x1d:
+	case 0x1e:
+	{
+		const uint16_t control = read_word(0xbf98);
+		const unsigned count = control & 0xff;
+		const unsigned stride = read_word(0xbffc) & 0xff;
+		unsigned address = read_word(0xbffe);
+		const auto cosine = [&read_word] (unsigned angle) -> int16_t
+		{
+			angle &= 0xff;
+			return read_word(0xbe80 + 2 * std::min(angle, 0x100 - angle));
+		};
+		const int32_t cos = cosine(control >> 8);
+		const int32_t sin = cosine((control >> 8) - 0x40);
+		const int32_t focal_length = read_long(0xbf94);
+		for (unsigned i = 0; i < count; i++, address += stride)
+		{
+			if (data == 0x1d)
+			{
+				const int32_t x = int16_t(read_word(address + 2));
+				const int32_t z = int16_t(read_word(address + 6));
+				// Q14 normalization is inferred; intermediate rounding needs hardware tests.
+				write_word(address + 0x0a, (int64_t(x) * cos + int64_t(z) * sin) >> 14);
+				write_word(address + 0x0c, (int64_t(z) * cos - int64_t(x) * sin) >> 14);
+			}
+			else
+			{
+				const int16_t z = read_word(address + 0x0c);
+				write_long(address + 0x0e, divide(int64_t(int16_t(read_word(address + 0x0a))) * focal_length, z));
+				write_long(address + 0x12, divide(int64_t(int16_t(read_word(address + 0x04))) * focal_length, z));
+			}
+		}
+		break;
+	}
+
+	default:
+		logerror("%s: unknown K053249 command %02x\n", machine().describe_context(), data);
+		break;
+	}
+}
+
+void overdriv_state::sub_map(address_map &map)
+{
+	map(0x000000, 0x03ffff).rom();
+	map(0x080000, 0x083fff).ram(); /* work RAM */
+	map(0x0c0000, 0x0c3fff).ram().share("roadram");
+	map(0x100000, 0x10000f).rw(m_k053250[0], FUNC(k053250_device::reg_r), FUNC(k053250_device::reg_w));
+	map(0x108000, 0x10800f).rw(m_k053250[1], FUNC(k053250_device::reg_r), FUNC(k053250_device::reg_w));
+	map(0x118000, 0x118fff).ram().share(m_spriteram);
+	map(0x120000, 0x120001).r(m_k053246, FUNC(k053247_device::k053246_r));
+	map(0x128000, 0x128001).rw(FUNC(overdriv_state::cpuB_ctrl_r), FUNC(overdriv_state::cpuB_ctrl_w)); /* enable K053247 ROM reading, plus something else */
+	map(0x130000, 0x130007).rw(m_k053246, FUNC(k053247_device::k053246_r), FUNC(k053247_device::k053246_w));
+	map(0x130005, 0x130005).w(FUNC(overdriv_state::objdma_w));
+	map(0x140001, 0x140001).w(FUNC(overdriv_state::alu_w));
+	map(0x200000, 0x203fff).ram().share("share1");
+	map(0x208000, 0x20bfff).ram().share(m_alu_ram);
+	map(0x218000, 0x219fff).r(m_k053250[0], FUNC(k053250_device::rom_r));
+	map(0x220000, 0x221fff).r(m_k053250[1], FUNC(k053250_device::rom_r));
+}
+
+void overdriv_state::sound_ack_w(uint8_t data)
+{
+	m_audiocpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
+}
+
+void overdriv_state::sound_map(address_map &map)
+{
+	map(0x0000, 0x0000).w(FUNC(overdriv_state::sound_ack_w));
+	// 0x012 read during explosions
+	// 0x180
+	map(0x0200, 0x0201).rw("ymsnd", FUNC(ym2151_device::read), FUNC(ym2151_device::write));
+	map(0x0400, 0x042f).rw("k053260_1", FUNC(k053260_device::read), FUNC(k053260_device::write));
+	map(0x0600, 0x062f).rw("k053260_2", FUNC(k053260_device::read), FUNC(k053260_device::write));
+	map(0x0800, 0x0fff).ram();
+	map(0x1000, 0xffff).rom();
+}
+
+/* Both IPT_START1 assignments are needed. The game will reset during */
+/* the "continue" sequence if the assignment on the first port        */
+/* is missing.                                                        */
+
+static INPUT_PORTS_START( overdriv )
+	PORT_START("INPUTS")
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_TOGGLE
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_er5911_device::do_read))
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", FUNC(eeprom_serial_er5911_device::ready_read))
+
+	PORT_START("SYSTEM")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )
+	PORT_SERVICE_NO_TOGGLE( 0x10, IP_ACTIVE_LOW )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_READ_LINE_DEVICE_MEMBER("adc", FUNC(adc0804_device::intr_r))
+
+	PORT_START("PADDLE")
+	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(100) PORT_KEYDELTA(50)
+	// POST checks if paddle is at center otherwise throws a "VOLUME ERROR"
+INPUT_PORTS_END
+
+
+void overdriv_state::machine_start()
+{
+	m_screen->register_screen_bitmap(m_layer_priority);
+	m_screen->register_screen_bitmap(m_zoom_bitmap);
+
+	save_item(NAME(m_cpuB_ctrl));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_zoom_colorbase));
+	save_item(NAME(m_road_colorbase));
+	save_item(NAME(m_ccu_frame));
+}
+
+void overdriv_state::machine_reset()
+{
+	m_cpuB_ctrl = 0;
+	m_sprite_colorbase = 0;
+	m_zoom_colorbase[0] = 0;
+	m_zoom_colorbase[1] = 0;
+	m_road_colorbase[0] = 0;
+	m_road_colorbase[1] = 0;
+	m_ccu_frame = 0;
+
+	// start with CPU B halted
+	m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+}
+
+
+void overdriv_state::overdriv(machine_config &config)
+{
+	M68000(config, m_maincpu, 24_MHz_XTAL / 2); /* 12 MHz */
+	m_maincpu->set_addrmap(AS_PROGRAM, &overdriv_state::main_map);
+	TIMER(config, "scantimer").configure_scanline(FUNC(overdriv_state::cpuA_scanline), "screen", 0, 1);
+
+	M68000(config, m_subcpu, 24_MHz_XTAL / 2);  /* 12 MHz */
+	m_subcpu->set_addrmap(AS_PROGRAM, &overdriv_state::sub_map);
+	// IRQ4 comes from VSYNC; IRQ5 and IRQ6 are generated by the main CPU.
+	// IRQ 5 is used only in test mode, to request the checksums of the gfx ROMs.
+
+	// 1.789 MHz?? This might be the right speed, but ROM testing
+	// takes a little too much (the counter wraps from 0000 to 9999).
+	// This might just mean that the video refresh rate is less than
+	// 60 fps, that's how I fixed it for now.
+	MC6809E(config, m_audiocpu, 3.579545_MHz_XTAL);
+	m_audiocpu->set_addrmap(AS_PROGRAM, &overdriv_state::sound_map);
+
+	config.set_maximum_quantum(attotime::from_hz(12000));
+
+	EEPROM_ER5911_16BIT(config, "eeprom").default_data(overdriv_default_eeprom, 128);
+
+	ADC0804(config, "adc", RES_K(10), CAP_P(150)).vin_callback().set_ioport("PADDLE");
+
+	// video hardware
+	screen_device &screen(SCREEN(config, "screen"));
+	screen.set_raw(24_MHz_XTAL / 4, 384, 0, 305, 264, 0, 224);
+	screen.set_screen_update(FUNC(overdriv_state::screen_update));
+	screen.set_palette("palette");
+
+	PALETTE(config, "palette").set_format(palette_device::xBGR_555, 2048).enable_shadows();
+
+	K053246(config, m_k053246, 24_MHz_XTAL);
+	m_k053246->set_sprite_callback(FUNC(overdriv_state::sprite_callback));
+	// OBJSET X scroll is -45: sprite X=0 must land at visible X=104.
+	m_k053246->set_config(NORMAL_PLANE_ORDER, 59, 22);
+	m_k053246->set_palette("palette");
+
+	K051316(config, m_k051316[0], 24_MHz_XTAL / 2);
+	m_k051316[0]->set_palette("palette");
+	m_k051316[0]->set_offsets(110, -1);
+	m_k051316[0]->set_wrap(1);
+	m_k051316[0]->set_zoom_callback(FUNC(overdriv_state::zoom_callback_1));
+
+	K051316(config, m_k051316[1], 24_MHz_XTAL / 2);
+	m_k051316[1]->set_palette("palette");
+	m_k051316[1]->set_offsets(111, 1);
+	m_k051316[1]->set_zoom_callback(FUNC(overdriv_state::zoom_callback_2));
+
+	K053251(config, m_k053251);
+
+	// U90 drives the common 6264 RAM pair; U98 observes the same data bus.
+	// Their SEL0 inputs are high (U90) and low (U98), respectively.
+	K053250(config, m_k053250[0], "palette", m_screen, 86, 16).set_ram("roadram", 1);
+
+	// Align road line 0xd0 with sprite X=0x70 at the projection origin.
+	// The programmed road/sprite X scrolls are 0x57 and -0x2d respectively.
+	K053250(config, m_k053250[1], "palette", m_screen, 95, 16).set_ram("roadram", 0);
+
+	// Road and sprite DMA latch the same scene in the display CPU's IRQ4.
+	// Display the completed road transfer without an additional DMA's delay.
+	m_k053250[0]->set_dma_delay(false);
+	m_k053250[1]->set_dma_delay(false);
+
+	K053252(config, m_k053252, 24_MHz_XTAL / 4);
+	m_k053252->set_offsets(13*8, 2*8);
+
+	SPEAKER(config, "speaker", 2).front();
+
+	ym2151_device &ymsnd(YM2151(config, "ymsnd", 3.579545_MHz_XTAL));
+	ymsnd.add_route(0, "speaker", 0.5, 0);
+	ymsnd.add_route(1, "speaker", 0.5, 1);
+
+	k053260_device &k053260_1(K053260(config, "k053260_1", 3.579545_MHz_XTAL));
+	k053260_1.set_device_rom_tag("k053260");
+	k053260_1.add_route(0, "speaker", 0.35, 0);
+	k053260_1.add_route(1, "speaker", 0.35, 1);
+
+	k053260_device &k053260_2(K053260(config, "k053260_2", 3.579545_MHz_XTAL));
+	k053260_2.set_device_rom_tag("k053260");
+	k053260_2.add_route(0, "speaker", 0.35, 0);
+	k053260_2.add_route(1, "speaker", 0.35, 1);
+}
+
+
+
+/***************************************************************************
+
+  Game driver(s)
+
+***************************************************************************/
+
+ROM_START( overdriv )
+	ROM_REGION( 0x40000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "789_n05.d17", 0x00000, 0x20000, CRC(f7885713) SHA1(8e84929dcc6ab889c3e11c450d22c56b183b0198) )
+	ROM_LOAD16_BYTE( "789_n04.b17", 0x00001, 0x20000, CRC(aefe87a6) SHA1(1bdf5a1f4c5e2b84d02b2981b3be91ed2406a1f8) )
+
+	ROM_REGION( 0x40000, "sub", 0 )
+	ROM_LOAD16_BYTE( "789_e09.l10", 0x00000, 0x20000, CRC(46fb7e88) SHA1(f706a76aff9bec64abe6da325cba0715d6e6ed0a) ) /* also found labeled as "4" as well as "7" */
+	ROM_LOAD16_BYTE( "789_e08.k10", 0x00001, 0x20000, CRC(24427195) SHA1(48f4f81729acc0e497b40fddbde11242c5c4c573) ) /* also found labeled as "3" as well as "6" */
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "789_e01.e4", 0x00000, 0x10000, CRC(1085f069) SHA1(27228cedb357ff2e130a4bd6d8aa01cf537e034f) ) /* also found labeled as "5" */
+
+	ROM_REGION( 0x400000, "k053246", 0 )   /* graphics (addressable by the CPU) */
+	ROM_LOAD64_WORD( "789e12.r1",  0x000000, 0x100000, CRC(14a10fb2) SHA1(03fb9c15514c5ecc2d9ae4a53961c4bbb49cec73) )    /* sprites */
+	ROM_LOAD64_WORD( "789e13.r4",  0x000002, 0x100000, CRC(6314a628) SHA1(f8a8918998c266109348c77427a7696b503daeb3) )
+	ROM_LOAD64_WORD( "789e14.r10", 0x000004, 0x100000, CRC(b5eca14b) SHA1(a1c5f5e9cd8bbcfc875e2acb33be024724da63aa) )
+	ROM_LOAD64_WORD( "789e15.r15", 0x000006, 0x100000, CRC(5d93e0c3) SHA1(d5cb7666c0c28fd465c860c7f9dbb18a7f739a93) )
+
+	ROM_REGION( 0x020000, "k051316_1", 0 )
+	ROM_LOAD( "789e06.a21", 0x000000, 0x020000, CRC(14a085e6) SHA1(86dad6f223e13ff8af7075c3d99bb0a83784c384) )    /* zoom/rotate */
+
+	ROM_REGION( 0x020000, "k051316_2", 0 )
+	ROM_LOAD( "789e07.c23", 0x000000, 0x020000, CRC(8a6ceab9) SHA1(1a52b7361f71a6126cd648a76af00223d5b25c7a) )    /* zoom/rotate */
+
+	ROM_REGION( 0x0c0000, "k053250_1", 0 )
+	ROM_LOAD( "789e18.p22", 0x000000, 0x040000, CRC(985a4a75) SHA1(b726166c295be6fbec38a9d11098cc4a4a5de456) )
+	ROM_LOAD( "789e19.r22", 0x040000, 0x040000, CRC(15c54ea2) SHA1(5b10bd28e48e51613359820ba8c75d4a91c2d322) )
+	ROM_LOAD( "789e20.s22", 0x080000, 0x040000, CRC(ea204acd) SHA1(52b8c30234eaefcba1074496028a4ac2bca48e95) )
+
+	ROM_REGION( 0x080000, "k053250_2", 0 )
+	ROM_LOAD( "789e17.p17", 0x000000, 0x040000, CRC(04c07248) SHA1(873445002cbf90c9fc5a35bf4a8f6c43193ee342) )
+	ROM_LOAD( "789e16.p12", 0x040000, 0x040000, CRC(9348dee1) SHA1(367193373e28962b5b0e54cc15d68ed88ab83f12) )
+
+	ROM_REGION( 0x200000, "k053260", 0 ) /* 053260 samples */
+	ROM_LOAD( "789e03.j1", 0x000000, 0x100000, CRC(51ebfebe) SHA1(17f0c23189258e801f48d5833fe934e7a48d071b) )
+	ROM_LOAD( "789e02.f1", 0x100000, 0x100000, CRC(bdd3b5c6) SHA1(412332d64052c0a3714f4002c944b0e7d32980a4) )
+ROM_END
+
+ROM_START( overdriva )
+	ROM_REGION( 0x40000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "2.d17", 0x00000, 0x20000, CRC(77f18f3f) SHA1(a8c91435573c7851a7864d07eeacfb2f142abbe2) )
+	ROM_LOAD16_BYTE( "1.b17", 0x00001, 0x20000, CRC(4f44e6ad) SHA1(9fa871f55e6b2ec353dd979ded568cd9da83f5d6) ) /* also found labeled as "3" */
+
+	ROM_REGION( 0x40000, "sub", 0 )
+	ROM_LOAD16_BYTE( "789_e09.l10", 0x00000, 0x20000, CRC(46fb7e88) SHA1(f706a76aff9bec64abe6da325cba0715d6e6ed0a) ) /* also found labeled as "4" as well as "7" */
+	ROM_LOAD16_BYTE( "789_e08.k10", 0x00001, 0x20000, CRC(24427195) SHA1(48f4f81729acc0e497b40fddbde11242c5c4c573) ) /* also found labeled as "3" as well as "6" */
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "789_e01.e4", 0x00000, 0x10000, CRC(1085f069) SHA1(27228cedb357ff2e130a4bd6d8aa01cf537e034f) ) /* also found labeled as "5" */
+
+	ROM_REGION( 0x400000, "k053246", 0 )   /* graphics (addressable by the CPU) */
+	ROM_LOAD64_WORD( "789e12.r1",  0x000000, 0x100000, CRC(14a10fb2) SHA1(03fb9c15514c5ecc2d9ae4a53961c4bbb49cec73) )    /* sprites */
+	ROM_LOAD64_WORD( "789e13.r4",  0x000002, 0x100000, CRC(6314a628) SHA1(f8a8918998c266109348c77427a7696b503daeb3) )
+	ROM_LOAD64_WORD( "789e14.r10", 0x000004, 0x100000, CRC(b5eca14b) SHA1(a1c5f5e9cd8bbcfc875e2acb33be024724da63aa) )
+	ROM_LOAD64_WORD( "789e15.r15", 0x000006, 0x100000, CRC(5d93e0c3) SHA1(d5cb7666c0c28fd465c860c7f9dbb18a7f739a93) )
+
+	ROM_REGION( 0x020000, "k051316_1", 0 )
+	ROM_LOAD( "789e06.a21", 0x000000, 0x020000, CRC(14a085e6) SHA1(86dad6f223e13ff8af7075c3d99bb0a83784c384) )    /* zoom/rotate */
+
+	ROM_REGION( 0x020000, "k051316_2", 0 )
+	ROM_LOAD( "789e07.c23", 0x000000, 0x020000, CRC(8a6ceab9) SHA1(1a52b7361f71a6126cd648a76af00223d5b25c7a) )    /* zoom/rotate */
+
+	ROM_REGION( 0x0c0000, "k053250_1", 0 )
+	ROM_LOAD( "789e18.p22", 0x000000, 0x040000, CRC(985a4a75) SHA1(b726166c295be6fbec38a9d11098cc4a4a5de456) )
+	ROM_LOAD( "789e19.r22", 0x040000, 0x040000, CRC(15c54ea2) SHA1(5b10bd28e48e51613359820ba8c75d4a91c2d322) )
+	ROM_LOAD( "789e20.s22", 0x080000, 0x040000, CRC(ea204acd) SHA1(52b8c30234eaefcba1074496028a4ac2bca48e95) )
+
+	ROM_REGION( 0x080000, "k053250_2", 0 )
+	ROM_LOAD( "789e17.p17", 0x000000, 0x040000, CRC(04c07248) SHA1(873445002cbf90c9fc5a35bf4a8f6c43193ee342) )
+	ROM_LOAD( "789e16.p12", 0x040000, 0x040000, CRC(9348dee1) SHA1(367193373e28962b5b0e54cc15d68ed88ab83f12) )
+
+	ROM_REGION( 0x200000, "k053260", 0 ) /* 053260 samples */
+	ROM_LOAD( "789e03.j1", 0x000000, 0x100000, CRC(51ebfebe) SHA1(17f0c23189258e801f48d5833fe934e7a48d071b) )
+	ROM_LOAD( "789e02.f1", 0x100000, 0x100000, CRC(bdd3b5c6) SHA1(412332d64052c0a3714f4002c944b0e7d32980a4) )
+ROM_END
+
+ROM_START( overdrivb )
+	ROM_REGION( 0x40000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "4.d17", 0x00000, 0x20000, CRC(93c8e892) SHA1(fb41bb13787b93f533b962c3119e6b9f61e2f3f3) )
+	ROM_LOAD16_BYTE( "3.b17", 0x00001, 0x20000, CRC(4f44e6ad) SHA1(9fa871f55e6b2ec353dd979ded568cd9da83f5d6) ) /* also found labeled as "1" */
+
+	ROM_REGION( 0x40000, "sub", 0 )
+	ROM_LOAD16_BYTE( "789_e09.l10", 0x00000, 0x20000, CRC(46fb7e88) SHA1(f706a76aff9bec64abe6da325cba0715d6e6ed0a) ) /* also found labeled as "4" as well as "7" */
+	ROM_LOAD16_BYTE( "789_e08.k10", 0x00001, 0x20000, CRC(24427195) SHA1(48f4f81729acc0e497b40fddbde11242c5c4c573) ) /* also found labeled as "3" as well as "6" */
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "789_e01.e4", 0x00000, 0x10000, CRC(1085f069) SHA1(27228cedb357ff2e130a4bd6d8aa01cf537e034f) ) /* also found labeled as "5" */
+
+	ROM_REGION( 0x400000, "k053246", 0 )   /* graphics (addressable by the CPU) */
+	ROM_LOAD64_WORD( "789e12.r1",  0x000000, 0x100000, CRC(14a10fb2) SHA1(03fb9c15514c5ecc2d9ae4a53961c4bbb49cec73) )    /* sprites */
+	ROM_LOAD64_WORD( "789e13.r4",  0x000002, 0x100000, CRC(6314a628) SHA1(f8a8918998c266109348c77427a7696b503daeb3) )
+	ROM_LOAD64_WORD( "789e14.r10", 0x000004, 0x100000, CRC(b5eca14b) SHA1(a1c5f5e9cd8bbcfc875e2acb33be024724da63aa) )
+	ROM_LOAD64_WORD( "789e15.r15", 0x000006, 0x100000, CRC(5d93e0c3) SHA1(d5cb7666c0c28fd465c860c7f9dbb18a7f739a93) )
+
+	ROM_REGION( 0x020000, "k051316_1", 0 )
+	ROM_LOAD( "789e06.a21", 0x000000, 0x020000, CRC(14a085e6) SHA1(86dad6f223e13ff8af7075c3d99bb0a83784c384) )    /* zoom/rotate */
+
+	ROM_REGION( 0x020000, "k051316_2", 0 )
+	ROM_LOAD( "789e07.c23", 0x000000, 0x020000, CRC(8a6ceab9) SHA1(1a52b7361f71a6126cd648a76af00223d5b25c7a) )    /* zoom/rotate */
+
+	ROM_REGION( 0x0c0000, "k053250_1", 0 )
+	ROM_LOAD( "789e18.p22", 0x000000, 0x040000, CRC(985a4a75) SHA1(b726166c295be6fbec38a9d11098cc4a4a5de456) )
+	ROM_LOAD( "789e19.r22", 0x040000, 0x040000, CRC(15c54ea2) SHA1(5b10bd28e48e51613359820ba8c75d4a91c2d322) )
+	ROM_LOAD( "789e20.s22", 0x080000, 0x040000, CRC(ea204acd) SHA1(52b8c30234eaefcba1074496028a4ac2bca48e95) )
+
+	ROM_REGION( 0x080000, "k053250_2", 0 )
+	ROM_LOAD( "789e17.p17", 0x000000, 0x040000, CRC(04c07248) SHA1(873445002cbf90c9fc5a35bf4a8f6c43193ee342) )
+	ROM_LOAD( "789e16.p12", 0x040000, 0x040000, CRC(9348dee1) SHA1(367193373e28962b5b0e54cc15d68ed88ab83f12) )
+
+	ROM_REGION( 0x200000, "k053260", 0 ) /* 053260 samples */
+	ROM_LOAD( "789e03.j1", 0x000000, 0x100000, CRC(51ebfebe) SHA1(17f0c23189258e801f48d5833fe934e7a48d071b) )
+	ROM_LOAD( "789e02.f1", 0x100000, 0x100000, CRC(bdd3b5c6) SHA1(412332d64052c0a3714f4002c944b0e7d32980a4) )
+ROM_END
+
+} // anonymous namespace
+
+
+GAMEL( 1990, overdriv,         0, overdriv, overdriv, overdriv_state, empty_init, ROT90, "Konami", "Over Drive (set 1)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_NOT_WORKING | MACHINE_SUPPORTS_SAVE, layout_overdriv ) // US version
+GAMEL( 1990, overdriva, overdriv, overdriv, overdriv, overdriv_state, empty_init, ROT90, "Konami", "Over Drive (set 2)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_NOT_WORKING | MACHINE_SUPPORTS_SAVE, layout_overdriv ) // Overseas?
+GAMEL( 1990, overdrivb, overdriv, overdriv, overdriv, overdriv_state, empty_init, ROT90, "Konami", "Over Drive (set 3)", MACHINE_IMPERFECT_GRAPHICS | MACHINE_NOT_WORKING | MACHINE_SUPPORTS_SAVE, layout_overdriv ) // Overseas?

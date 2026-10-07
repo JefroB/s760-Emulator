@@ -1,0 +1,140 @@
+// license:BSD-3-Clause
+// copyright-holders:Curt Coder
+/**********************************************************************
+
+    Commodore 1570/1571 Single Disk Drive emulation
+
+**********************************************************************/
+
+#ifndef MAME_BUS_CBMIEC_C1571_H
+#define MAME_BUS_CBMIEC_C1571_H
+
+#pragma once
+
+#include "cbmiec.h"
+#include "mos5710.h"
+#include "bus/c64/bn1541.h"
+#include "cpu/m6502/m6502.h"
+#include "machine/64h156.h"
+#include "machine/6522via.h"
+#include "machine/input_merger.h"
+#include "machine/mos6526.h"
+#include "machine/wd_fdc.h"
+
+
+
+//**************************************************************************
+//  MACROS / CONSTANTS
+//**************************************************************************
+
+#define C1571_TAG           "c1571"
+
+
+
+//**************************************************************************
+//  TYPE DEFINITIONS
+//**************************************************************************
+
+// ======================> c1571_device
+
+class c1571_device : public device_t, 
+					 public device_cbm_iec_interface
+{
+public:
+	// construction/destruction
+	c1571_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
+
+	uint8_t via0_pa_r();
+	void via0_pa_w(uint8_t data);
+	uint8_t via0_pb_r();
+	void via0_pb_w(uint8_t data);
+
+	uint8_t via0_r(offs_t offset);
+	uint8_t via1_r(offs_t offset);
+	void via1_w(offs_t offset, uint8_t data);
+	uint8_t via1_pb_r();
+	void via1_pb_w(uint8_t data);
+
+	void cia_cnt_w(int state);
+	void cia_sp_w(int state);
+
+	void byte_w(int state);
+
+	static void floppy_formats(format_registration &fr);
+
+	void wpt_callback(floppy_image_device *floppy, int state);
+
+	void c1571_mem(address_map &map) ATTR_COLD;
+
+protected:
+	c1571_device(const machine_config &mconfig, device_type type, const char *tag, device_t *owner, uint32_t clock);
+
+	// device-level overrides
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
+
+	// optional information overrides
+	virtual const tiny_rom_entry *device_rom_region() const override ATTR_COLD;
+	virtual void device_add_mconfig(machine_config &config) override ATTR_COLD;
+	virtual ioport_constructor device_input_ports() const override ATTR_COLD;
+
+	// device_cbm_iec_interface overrides
+	virtual void cbm_iec_srq(int state) override;
+	virtual void cbm_iec_atn(int state) override;
+	virtual void cbm_iec_data(int state) override;
+	virtual void cbm_iec_reset(int state) override;
+
+	void add_base_mconfig(machine_config &config);
+	void add_cia_mconfig(machine_config &config);
+
+	enum
+	{
+		LED_POWER = 0,
+		LED_ACT
+	};
+
+	virtual void update_iec();
+
+	required_device<cpu_device> m_maincpu;
+	required_device<via6522_device> m_via0;
+	required_device<via6522_device> m_via1;
+	optional_device<mos6526_device> m_cia;
+	optional_device<wd1770_device> m_fdc;
+	required_device<c64h156_device> m_ga;
+	required_device<floppy_image_device> m_floppy;
+	required_ioport m_address;
+	output_finder<2> m_leds;
+
+	// signals
+	bool m_1_2mhz;                           // clock speed
+
+	// IEC bus
+	bool m_data_out;                         // serial data out
+	bool m_ser_dir;                          // fast serial direction
+	bool m_sp_out;                           // fast serial data out
+	bool m_cnt_out;                          // fast serial clock out
+	bool m_iec_atn;
+	bool m_iec_clk;
+};
+
+
+// ======================> c1570_device
+
+class c1570_device :  public c1571_device
+{
+public:
+	// construction/destruction
+	c1570_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
+
+protected:
+	// optional information overrides
+	virtual const tiny_rom_entry *device_rom_region() const override ATTR_COLD;
+	virtual void device_add_mconfig(machine_config &config) override ATTR_COLD;
+};
+
+
+// device type definition
+DECLARE_DEVICE_TYPE(C1570, c1570_device)
+DECLARE_DEVICE_TYPE(C1571, c1571_device)
+
+#endif // MAME_BUS_CBMIEC_C1571_H

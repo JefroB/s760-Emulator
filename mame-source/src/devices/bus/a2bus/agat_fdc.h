@@ -1,0 +1,21 @@
+// license:BSD-3-Clause
+// copyright-holders:Sergey Svishchev
+/*********************************************************************
+
+    agat_fdc.h
+
+    Implementation of the Agat 840K floppy controller card
+
+*********************************************************************/
+
+#ifndef MAME_BUS_A2BUS_AGAT_FDC_H
+#define MAME_BUS_A2BUS_AGAT_FDC_H
+
+#pragma once
+
+#include "a2bus.h"
+
+
+DECLARE_DEVICE_TYPE(A2BUS_AGAT_FDC, device_a2bus_card_interface)
+
+#endif  // MAME_BUS_A2BUS_AGAT_FDC_H

@@ -1,0 +1,1010 @@
+// license:LGPL-2.1+
+// copyright-holders:Angelo Salese, R. Belmont, Juergen Buchmueller
+/**********************************************************************************************
+
+Acorn VIDC10 (VIDeo Controller) device chip
+
+based off legacy AA VIDC implementation by Angelo Salese, R. Belmont, Juergen Buchmueller
+
+TODO:
+- subclass screen_device, derive h/vsync signals out there;
+- improve timings for raster effects:
+  * caverns: has no main sprite;
+  * nebulus: 20 lines off with aa310;
+  * lotustc2: abuses color flipping;
+  * quazer: needs in-flight DMA;
+  * twinwrld: status bar;
+- complete VIDC20 emulation (RiscPC/ssfindo.cpp/belatra.cpp);
+- Are CRTC values correct? VGA modes have a +1 in display line;
+
+**********************************************************************************************/
+
+#include "emu.h"
+#include "acorn_vidc.h"
+#include "screen.h"
+
+#include <numbers>
+
+#define LOG_AUDIODMA (1U << 7) // log audio DMA setups
+#define LOG_STEREO   (1U << 8) // log stereo image setup, and sound control in VIDC20
+
+#define VERBOSE (LOG_GENERAL)
+//#define LOG_OUTPUT_FUNC osd_printf_info
+
+#include "logmacro.h"
+
+
+//**************************************************************************
+//  GLOBAL VARIABLES
+//**************************************************************************
+
+// device type definition
+DEFINE_DEVICE_TYPE(ACORN_VIDC1, acorn_vidc1_device, "acorn_vidc1", "Acorn VIDC1")
+DEFINE_DEVICE_TYPE(ACORN_VIDC1A, acorn_vidc1a_device, "acorn_vidc1a", "Acorn VIDC1a")
+DEFINE_DEVICE_TYPE(ARM_VIDC20, arm_vidc20_device, "arm_vidc20", "ARM VIDC20")
+
+
+//**************************************************************************
+//  LIVE DEVICE
+//**************************************************************************
+
+//-------------------------------------------------
+//  acorn_vidc10_device - constructor
+//-------------------------------------------------
+
+void acorn_vidc10_device::regs_map(address_map &map)
+{
+	map(0x00, 0x3f).w(FUNC(acorn_vidc10_device::pal_data_display_w));
+	map(0x40, 0x4f).w(FUNC(acorn_vidc10_device::pal_data_cursor_w));
+	map(0x60, 0x7f).w(FUNC(acorn_vidc10_device::stereo_image_w));
+	map(0x80, 0xbf).w(FUNC(acorn_vidc10_device::crtc_w));
+	map(0xc0, 0xc3).w(FUNC(acorn_vidc10_device::sound_frequency_w));
+	map(0xe0, 0xe3).w(FUNC(acorn_vidc10_device::control_w));
+}
+
+
+acorn_vidc10_device::acorn_vidc10_device(const machine_config &mconfig, device_type type, const char *tag, device_t *owner, u32 clock, int dac_type)
+	: device_t(mconfig, type, tag, owner, clock)
+	, device_memory_interface(mconfig, *this)
+	, device_palette_interface(mconfig, *this)
+	, device_video_interface(mconfig, *this)
+	, device_mixer_interface(mconfig, *this)
+	, m_bpp_mode(0)
+	, m_crtc_interlace(0)
+	, m_sound_frequency_latch(0)
+	, m_sound_mode(false)
+	, m_filter_rc(*this, "filter_rc%u", 0)
+	, m_filter(*this, "filter%u", 0)
+	, m_dac(*this, "dac%u", 0)
+	, m_dac_type(dac_type)
+	, m_sound_fifo_channel(0)
+	, m_vblank_cb(*this)
+	, m_sound_drq_cb(*this)
+	, m_pixel_clock(0)
+	, m_cursor_enable(false)
+	, m_sound_frequency_test_bit(false)
+{
+	std::fill(std::begin(m_crtc_regs), std::end(m_crtc_regs), 0);
+	std::fill(std::begin(m_stereo_image), std::end(m_stereo_image), 0);
+}
+
+acorn_vidc1_device::acorn_vidc1_device(const machine_config &mconfig, const char *tag, device_t *owner, u32 clock)
+	: acorn_vidc10_device(mconfig, ACORN_VIDC1, tag, owner, clock, 1)
+{
+	m_space_config = address_space_config("regs_space", ENDIANNESS_LITTLE, 32, 8, 0, address_map_constructor(FUNC(acorn_vidc1_device::regs_map), this));
+	m_pal_4bpp_base = 0x100;
+	m_pal_cursor_base = 0x10;
+	m_pal_border_base = 0x110;
+}
+
+acorn_vidc1a_device::acorn_vidc1a_device(const machine_config &mconfig, const char *tag, device_t *owner, u32 clock)
+	: acorn_vidc10_device(mconfig, ACORN_VIDC1A, tag, owner, clock, 2)
+{
+	m_space_config = address_space_config("regs_space", ENDIANNESS_LITTLE, 32, 8, 0, address_map_constructor(FUNC(acorn_vidc1a_device::regs_map), this));
+	m_pal_4bpp_base = 0x100;
+	m_pal_cursor_base = 0x10;
+	m_pal_border_base = 0x110;
+}
+
+device_memory_interface::space_config_vector acorn_vidc10_device::memory_space_config() const
+{
+	return space_config_vector {
+		std::make_pair(AS_IO, &m_space_config)
+	};
+}
+
+
+//-------------------------------------------------
+//  device_add_mconfig - device-specific machine
+//  configuration additions
+//-------------------------------------------------
+
+// TODO: bad, compose better
+void acorn_vidc10_device::device_add_mconfig_common(machine_config &config)
+{
+	// The actual filters here are two simple differentiator filters just
+	// after the VIDC itself (to combine the +L and -L, and +R and -R
+	// signals respectively), followed by two third-order Sallen-Key
+	// lowpass filters just after these.
+	// We're ignoring the first two filters, since these don't have that
+	// much effect on the output signal, but these could be added later
+	// if necessary.
+	// MAME's biquad filter emulation cannot directly do third order
+	// Sallen-Key filter calculations based on the component values,
+	// so instead here we're just using the cutoffs directly calculated
+	// using the online okawa-denshi 3rd order Sallen-Key calculator.
+	// Finally, each filter has a DC-blocking capacitors, so we can emulate
+	// this using a pair of stock CR highpass (Fc = 16hz "AC") filters.
+	// This has the added benefit of removing the DC startup offset.
+
+	FILTER_RC(config, m_filter_rc[0]).set_ac(); // CR highpass, left
+	m_filter_rc[0]->add_route(0, *this, 1.0, 0);
+
+	FILTER_RC(config, m_filter_rc[1]).set_ac(); // CR highpass, right
+	m_filter_rc[1]->add_route(0, *this, 1.0, 1);
+
+	FILTER_BIQUAD(config, m_filter[0]); // 2nd order left
+
+	FILTER_BIQUAD(config, m_filter[1]); // 2nd order right
+
+	FILTER_BIQUAD(config, m_filter[2]); // 1st order left
+
+	FILTER_BIQUAD(config, m_filter[3]); // 1st order right
+
+	// custom DAC
+	DAC_16BIT_R2R_TWOS_COMPLEMENT(config, m_dac[0], 0).add_route(0, m_filter[2], 1.0);
+	DAC_16BIT_R2R_TWOS_COMPLEMENT(config, m_dac[1], 0).add_route(0, m_filter[3], 1.0);
+}
+
+
+void acorn_vidc10_device::device_add_mconfig(machine_config &config)
+{
+	acorn_vidc10_device::device_add_mconfig_common(config);
+
+	// VIDC1x based systems:
+	// Fc = 2441.467, Fq = 1.0/0.385, Gain = 1.0
+
+	m_filter[0]->setup(filter_biquad_device::biquad_type::LOWPASS, 2441.467, 1.0/0.385, 1.0);
+	m_filter[0]->add_route(0, m_filter_rc[0], 1.0);
+
+	m_filter[1]->setup(filter_biquad_device::biquad_type::LOWPASS, 2441.467, 1.0/0.385, 1.0);
+	m_filter[1]->add_route(0, m_filter_rc[1], 1.0);
+
+	m_filter[2]->setup(filter_biquad_device::biquad_type::LOWPASS1P1Z, 2441.467, std::numbers::sqrt2 / 2.0, 1.0);
+	m_filter[2]->add_route(0, m_filter[0], 1.0);
+
+	m_filter[3]->setup(filter_biquad_device::biquad_type::LOWPASS1P1Z, 2441.467, std::numbers::sqrt2 / 2.0, 1.0);
+	m_filter[3]->add_route(0, m_filter[1], 1.0);
+}
+
+u32 acorn_vidc10_device::palette_entries() const noexcept
+{
+	return 0x100 + 0x10 + 4; // 8bpp + 1/2/4bpp + 2bpp for cursor
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void acorn_vidc10_device::device_config_complete()
+{
+	if (!has_screen())
+		return;
+
+	if (!screen().has_been_setup())
+		screen().set_raw(clock() * 2 / 3, 1024,0,735, 624/2,0,292); // RiscOS 3 default screen settings
+
+	if (!screen().has_screen_update())
+		screen().set_screen_update(*this, FUNC(acorn_vidc10_device::screen_update));
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void acorn_vidc10_device::device_start()
+{
+	for (int i = 0; i < entries(); i++)
+		set_pen_color(i, rgb_t::black());
+
+	save_item(NAME(m_bpp_mode));
+	save_item(NAME(m_crtc_interlace));
+	save_item(NAME(m_pixel_clock));
+	save_item(NAME(m_sound_frequency_latch));
+	save_item(NAME(m_sound_frequency_test_bit));
+	save_item(NAME(m_sound_fifo_channel));
+	save_item(NAME(m_cursor_enable));
+	save_pointer(NAME(m_crtc_regs), CRTC_VCER+1);
+	save_pointer(NAME(m_crtc_raw_horz), 2);
+	m_data_vram = make_unique_clear<u8[]>(m_data_vram_size);
+	m_cursor_vram = make_unique_clear<u8[]>(m_cursor_vram_size);
+	save_pointer(NAME(m_data_vram), m_data_vram_size);
+	save_pointer(NAME(m_cursor_vram), m_cursor_vram_size);
+	save_pointer(NAME(m_stereo_image), m_sound_max_channels);
+
+	m_video_timer = timer_alloc(FUNC(acorn_vidc10_device::vblank_timer), this);
+	m_sound_timer = timer_alloc(FUNC(acorn_vidc10_device::sound_sample_timer), this);
+
+	// generate u255 law lookup table
+	// cfr. page 48 of the VIDC20 manual, page 33 of the VIDC manual
+	for (int rawval = 0; rawval < 256; rawval++)
+	{
+		u8 chord, point;
+		bool sign;
+		if (m_dac_type == 1)
+		{
+			chord = (rawval & 0x70) >> 4;
+			point = rawval & 0x0f;
+			sign = rawval >> 7;
+		}
+		else
+		{
+			chord = rawval >> 5;
+			point = (rawval & 0x1e) >> 1;
+			sign = rawval & 1;
+		}
+		int16_t result = ((16+point)<<chord)-16;
+
+		if (sign)
+			result = -result;
+
+		m_ulaw_lookup[rawval] = result*8;
+	}
+
+	// saved for debugging purposes
+	save_pointer(NAME(m_ulaw_lookup), 256);
+}
+
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void acorn_vidc10_device::device_reset()
+{
+	m_cursor_enable = false;
+	m_sound_mode = false;
+	memset(m_stereo_image, 4, m_sound_max_channels);
+	for (int ch = 0; ch < m_sound_max_channels; ch++)
+		refresh_stereo_image(ch);
+	m_video_timer->adjust(attotime::never);
+	m_sound_timer->adjust(attotime::never);
+	m_sound_fifo.clear();
+	m_sound_fifo_channel = 0;
+}
+
+TIMER_CALLBACK_MEMBER(acorn_vidc10_device::vblank_timer)
+{
+	m_vblank_cb(ASSERT_LINE);
+	screen_vblank_line_update();
+}
+
+TIMER_CALLBACK_MEMBER(acorn_vidc10_device::sound_sample_timer)
+{
+	if (play_fifo_sample())
+	{
+		m_sound_fifo_channel = 0; // force a stereo channel resync (does the actual hardware do this?)
+		m_sound_drq_cb(ASSERT_LINE);
+	}
+}
+
+bool acorn_vidc10_device::play_fifo_sample()
+{
+	if (m_sound_fifo.empty()) return true;
+	write_dac(m_sound_fifo_channel & 7, m_sound_fifo.dequeue());
+	m_sound_fifo_channel ++;
+	m_sound_fifo_channel &= 7;
+	return m_sound_fifo.empty();
+}
+
+//**************************************************************************
+//  CRTC section
+//**************************************************************************
+
+inline void acorn_vidc10_device::screen_vblank_line_update()
+{
+	int vline = (m_crtc_regs[CRTC_VDER]) * (m_crtc_interlace + 1);
+	m_video_timer->adjust((vline > 2) ? screen().time_until_pos(vline) : attotime::never);
+}
+
+u32 acorn_vidc10_device::get_pixel_clock()
+{
+	const int32_t pixel_rate[4] = { 8000000, 12000000, 16000000, 24000000};
+	return pixel_rate[m_pixel_clock];
+}
+
+inline void acorn_vidc10_device::screen_dynamic_res_change()
+{
+	const u32 pixel_clock = get_pixel_clock();
+
+	// sanity checks
+	if (m_crtc_regs[CRTC_HCR] <= 1 || m_crtc_regs[CRTC_VCR] <= 1)
+		return;
+
+	if (m_crtc_regs[CRTC_HBER] <= 1 || m_crtc_regs[CRTC_VBER] <= 1)
+		return;
+
+	//  total cycles >= border end >= border start
+	if (m_crtc_regs[CRTC_HCR] < m_crtc_regs[CRTC_HBER])
+		return;
+
+	if (m_crtc_regs[CRTC_HBER] < m_crtc_regs[CRTC_HBSR])
+		return;
+
+	if (m_crtc_regs[CRTC_VBER] < m_crtc_regs[CRTC_VBSR])
+		return;
+
+	rectangle const visarea(
+			0, m_crtc_regs[CRTC_HBER] - m_crtc_regs[CRTC_HBSR] - 1,
+			0, (m_crtc_regs[CRTC_VBER] - m_crtc_regs[CRTC_VBSR]) * (m_crtc_interlace + 1));
+
+#if 0
+	// TODO: move to debugger custom command
+	const int m_vidc_vblank_time = m_crtc_regs[CRTC_VDER] * (m_crtc_interlace+1);
+	printf("Configuring: htotal %d vtotal %d border %d x %d display origin %d x %d vblank = %d\n",
+		m_crtc_regs[CRTC_HCR], m_crtc_regs[CRTC_VCR],
+		visarea.right(), visarea.bottom(),
+		m_crtc_regs[CRTC_HDER]-m_crtc_regs[CRTC_HDSR],m_crtc_regs[CRTC_VDER]-m_crtc_regs[CRTC_VDSR]+1,
+		m_vidc_vblank_time);
+#endif
+
+	attotime const refresh = attotime::from_ticks(m_crtc_regs[CRTC_HCR] * m_crtc_regs[CRTC_VCR], pixel_clock);
+
+	screen().configure(m_crtc_regs[CRTC_HCR], m_crtc_regs[CRTC_VCR] * (m_crtc_interlace+1), visarea, refresh);
+}
+
+//**************************************************************************
+//  READ/WRITE HANDLERS
+//**************************************************************************
+
+void acorn_vidc10_device::write(offs_t offset, u32 data, u32 mem_mask)
+{
+	// TODO: check against mem_mask not 32-bit wide
+	u8 reg = data >> 24;
+	u32 val = data & 0xffffff;
+
+	this->space(AS_IO).write_dword(reg, val);
+}
+
+inline void acorn_vidc10_device::update_4bpp_palette(u16 index, u32 paldata)
+{
+	// TODO: for TV Tuner we need to output this, also check if cursor mode actually sets this up for offset = 0
+//  i = (paldata & 0x1000) >> 12; //supremacy bit
+	int b = (paldata & 0x0f00) >> 8;
+	int g = (paldata & 0x00f0) >> 4;
+	int r = (paldata & 0x000f) >> 0;
+
+	set_pen_color(index, pal4bit(r), pal4bit(g), pal4bit(b) );
+	screen().update_partial(screen().vpos());
+}
+
+void acorn_vidc10_device::pal_data_display_w(offs_t offset, u32 data)
+{
+	update_4bpp_palette(offset + 0x100, data);
+	//printf("%02x: %01x %01x %01x [%d]\n",offset,r,g,b,screen().vpos());
+
+	// 8bpp
+	for (int idx = 0; idx < 0x100; idx += 0x10)
+	{
+		int b = ((data & 0x700) >> 8) | ((idx & 0x80) >> 4);
+		int g = ((data & 0x030) >> 4) | ((idx & 0x60) >> 3);
+		int r = ((data & 0x007) >> 0) | ((idx & 0x10) >> 1);
+
+		set_pen_color(offset + idx, pal4bit(r), pal4bit(g), pal4bit(b) );
+	}
+}
+
+void acorn_vidc10_device::pal_data_cursor_w(offs_t offset, u32 data)
+{
+	update_4bpp_palette(offset+0x110, data);
+}
+
+void acorn_vidc10_device::control_w(u32 data)
+{
+	// TODO: not sure what the commented out bits do
+	m_pixel_clock = (data & 0x03);
+	m_bpp_mode = ((data & 0x0c) >> 2);
+	//m_dma_request_mode = ((data & 0x30) >> 4);
+	m_crtc_interlace = ((data & 0x40) >> 6);
+	//m_composite_sync = BIT(data, 7);
+	//m_test_mode = (data & 0xc100) != 0xc100;
+
+	// TODO: vga/svga modes sets 0x1000?
+	m_crtc_regs[CRTC_HDSR] = convert_crtc_hdisplay(0);
+	m_crtc_regs[CRTC_HDER] = convert_crtc_hdisplay(1);
+	screen_vblank_line_update();
+	screen_dynamic_res_change();
+}
+
+inline u32 acorn_vidc10_device::convert_crtc_hdisplay(u8 index)
+{
+	const u8 x_step[4] = { 19, 11, 7, 5 };
+	return (m_crtc_raw_horz[index]*2)+x_step[m_bpp_mode];
+}
+
+void acorn_vidc10_device::crtc_w(offs_t offset, u32 data)
+{
+	switch(offset)
+	{
+		case CRTC_HCR:  m_crtc_regs[CRTC_HCR] =  ((data >> 14)<<1)+2;       break;
+//      case CRTC_HSWR: m_crtc_regs[CRTC_HSWR] = (data >> 14)+1;            break;
+		case CRTC_HBSR: m_crtc_regs[CRTC_HBSR] = ((data >> 14)<<1)+1;       break;
+		case CRTC_HDSR:
+			m_crtc_raw_horz[0] = (data >> 14);
+			m_crtc_regs[CRTC_HDSR] = convert_crtc_hdisplay(0);
+			break;
+		case CRTC_HDER:
+			m_crtc_raw_horz[1] = (data >> 14);
+			m_crtc_regs[CRTC_HDER] = convert_crtc_hdisplay(1);
+			break;
+		case CRTC_HBER: m_crtc_regs[CRTC_HBER] = ((data >> 14)<<1)+1;       break;
+		case CRTC_HCSR: m_crtc_regs[CRTC_HCSR] = ((data >> 13) & 0x7ff) + 6; return;
+//      case CRTC_HIR: // ...
+
+		case CRTC_VCR:  m_crtc_regs[CRTC_VCR] = (data >> 14)+1;             break;
+		case CRTC_VSWR: m_crtc_regs[CRTC_VSWR] = (data >> 14)+1;            break;
+		case CRTC_VBSR:
+			m_crtc_regs[CRTC_VBSR] = (data >> 14)+1;
+			break;
+		case CRTC_VDSR:
+			m_crtc_regs[CRTC_VDSR] = (data >> 14)+1;
+			break;
+		case CRTC_VDER:
+			m_crtc_regs[CRTC_VDER] = (data >> 14)+1;
+			screen_vblank_line_update();
+			break;
+		case CRTC_VBER:
+			m_crtc_regs[CRTC_VBER] = (data >> 14)+1;
+			break;
+		case CRTC_VCSR: m_crtc_regs[CRTC_VCSR] = ((data >> 14) & 0x3ff) + 1; return;
+		case CRTC_VCER: m_crtc_regs[CRTC_VCER] = ((data >> 14) & 0x3ff) + 1; return;
+	}
+
+	screen_dynamic_res_change();
+}
+
+inline void acorn_vidc10_device::refresh_stereo_image(u8 channel)
+{
+	/*
+	    -111 full right
+	    -110 83% right, 17% left
+	    -101 67% right, 33% left
+	    -100 center
+	    -011 67% left, 33% right
+	    -010 83% left, 17% right
+	    -001 full left
+	    -000 <undefined> TODO: verify what this actually does, assumed center
+	*/
+	const float l_gain_settings[8] = { 1.0f, 2.0f, 1.66f, 1.34f, 1.0f, 0.66f, 0.34f, 0.0f };
+	const float r_gain_settings[8] = { 1.0f, 0.0f, 0.34f, 0.66f, 1.0f, 1.34f, 1.66f, 2.0f };
+
+	const float l_gain = l_gain_settings[m_stereo_image[channel]] * m_sound_input_gain;
+	const float r_gain = r_gain_settings[m_stereo_image[channel]] * m_sound_input_gain;
+	LOGMASKED(LOG_STEREO, "%d: %02x -> L %f R %f\n", channel, m_stereo_image[channel], l_gain, r_gain);
+}
+
+
+void acorn_vidc10_device::stereo_image_w(offs_t offset, u32 data)
+{
+	u8 channel = (offset + 7) & 0x7;
+	m_stereo_image[channel] = data & 0x7;
+	refresh_stereo_image(channel);
+}
+
+void acorn_vidc10_device::sound_frequency_w(u32 data)
+{
+	m_sound_frequency_test_bit = BIT(data, 8);
+	m_sound_frequency_latch = data & 0xff;
+	if (m_sound_mode == true)
+		refresh_sound_frequency();
+}
+
+//**************************************************************************
+//  MEMC comms
+//**************************************************************************
+
+void acorn_vidc10_device::enqueue32_fifo(u32 data)
+{
+	// for each 32 bit dword sent to the VIDC, the sample order is the
+	// lowest byte first, packed. i.e. bytes 3,2,1,0 in that order,
+	// assuming byte 0 is the MSB of the dword.
+	for (int i = 0; i < 32; i += 8)
+		m_sound_fifo.enqueue((u8)((data >> i) & 0xff));
+}
+
+void acorn_vidc10_device::write_dac(u8 channel, u8 data)
+{
+	const float stereo_clocks_l[8] = { 9.0f, 18.0f, 15.0f, 12.0f, 9.0f, 6.0f, 3.0f, 0.0f };
+	const float res = (float)m_ulaw_lookup[data] / 32768.0f;
+	const u8 setting = m_stereo_image[channel];
+	const float percent_l = stereo_clocks_l[setting] / 18.0f;
+	const float percent_r = (18.0f - stereo_clocks_l[setting]) / 18.0f;
+	m_dac[0]->write((s16)(percent_l * res * 32768.0f));
+	m_dac[1]->write((s16)(percent_r * res * 32768.0f));
+}
+
+u32 acorn_vidc10_device::get_sound_clock()
+{
+	return clock() / 24;
+}
+
+void acorn_vidc10_device::refresh_sound_frequency()
+{
+	// TODO: check against test bit (reloads sound frequency if 0)
+	// TODO: does this test bit also clear the fifo?
+	// TODO: verify that value of 0 or 1 is invalid (ppcar POST setup)?
+	if (m_sound_mode == true && m_sound_frequency_latch)
+	{
+		// TODO: Range is between 3 and 256 usecs
+		double sndhz = get_sound_clock() / ((m_sound_frequency_latch & 0xff) + 2);
+		m_sound_timer->adjust(attotime::zero, 0, attotime::from_hz(sndhz));
+		LOGMASKED(LOG_AUDIODMA, "VIDC: audio DMA start %02x + 2 -> sndhz = %f\n", m_sound_frequency_latch, sndhz);
+	}
+	else
+		m_sound_timer->adjust(attotime::never);
+}
+
+//**************************************************************************
+//  Screen Update / VBlank / HBlank
+//**************************************************************************
+
+void acorn_vidc10_device::draw(bitmap_rgb32 &bitmap, const rectangle &cliprect, u8 *vram, u8 bpp, int xstart, int ystart, int xsize, int ysize, bool is_cursor)
+{
+	const u16 pen_base = (bpp == 3 ? 0 : m_pal_4bpp_base) + (is_cursor == true ? m_pal_cursor_base : 0);
+	const u16 pen_masks[4] = { 1, 3, 0xf, 0xff };
+	const u16 pen_mask = pen_masks[bpp];
+	const u16 xchar_size = 1 << (3 - bpp);
+	const u8 pen_byte_sizes[4] = { 1, 2, 4, 1 };
+	const u16 pen_byte_size = pen_byte_sizes[bpp];
+	const int raster_ystart = std::max(0, cliprect.min_y-ystart);
+	const int line_size = m_crtc_interlace + 1;
+
+	xsize >>= 3 - bpp;
+
+	//printf("%d %d %d %d\n",ystart, ysize, cliprect.min_y, cliprect.max_y);
+
+	for (int srcy = raster_ystart; srcy < ysize; srcy++)
+	{
+		int dsty = (srcy + ystart) << m_crtc_interlace;
+		for (int srcx = 0; srcx < xsize; srcx++)
+		{
+			u8 pen = vram[(srcx + srcy * xsize) & m_data_vram_mask];
+			int dstx = (srcx * xchar_size) + xstart;
+
+			for (int xi = 0; xi < xchar_size; xi++)
+			{
+				u16 dot = (pen >> (xi * pen_byte_size)) & pen_mask;
+				if (is_cursor == true && dot == 0)
+					continue;
+				dot += pen_base;
+
+				for (int line_i = 0; line_i < line_size; line_i++)
+				{
+					// guard against out of bounds clip rectangle
+					// - chuckrck sets (transitional) xstart = -16 & (in actual gameplay) ystart = -16
+					if (!cliprect.contains(dstx + xi, dsty + line_i))
+						continue;
+
+					bitmap.pix(dsty + line_i, dstx + xi) = this->pen(dot);
+				}
+			}
+		}
+	}
+}
+
+u32 acorn_vidc10_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
+{
+	/* border color */
+	bitmap.fill(pen(m_pal_border_base), cliprect);
+
+	/* define X display area through BPP mode register */
+	int calc_dxs = m_crtc_regs[CRTC_HDSR];
+	int calc_dxe = m_crtc_regs[CRTC_HDER];
+
+	/* now calculate display clip rectangle start/end areas */
+	int xstart = (calc_dxs)-m_crtc_regs[CRTC_HBSR];
+	int ystart = (m_crtc_regs[CRTC_VDSR]-m_crtc_regs[CRTC_VBSR]);
+	int xend = (calc_dxe)+xstart;
+	int yend = (m_crtc_regs[CRTC_VDER] * (m_crtc_interlace+1))+ystart;
+
+	/* disable the screen if display params are invalid */
+	if(xstart > xend || ystart > yend)
+		return 0;
+
+	int xsize = calc_dxe-calc_dxs;
+	int ysize = m_crtc_regs[CRTC_VDER]-m_crtc_regs[CRTC_VDSR];
+
+	if (xsize <= 0 || ysize <= 0)
+		return 0;
+
+	draw(bitmap, cliprect, m_data_vram.get(), m_bpp_mode, xstart, ystart, xsize, ysize, false);
+	if (m_cursor_enable == true)
+	{
+		xstart = m_crtc_regs[CRTC_HCSR] - m_crtc_regs[CRTC_HBSR];
+		ystart = m_crtc_regs[CRTC_VCSR] - m_crtc_regs[CRTC_VBSR];
+		xsize = 32;
+		ysize = m_crtc_regs[CRTC_VCER] - m_crtc_regs[CRTC_VCSR];
+		if (ysize > 0)
+			draw(bitmap, cliprect, m_cursor_vram.get(), 1, xstart, ystart, xsize, ysize, true);
+	}
+
+	return 0;
+}
+
+int acorn_vidc10_device::flyback_r()
+{
+	int vert_pos = screen().vpos();
+	if (vert_pos <= m_crtc_regs[CRTC_VDSR] * (m_crtc_interlace+1))
+		return true;
+
+	if (vert_pos >= m_crtc_regs[CRTC_VDER] * (m_crtc_interlace+1))
+		return true;
+
+	return false;
+}
+
+/*
+ *
+ * VIDC20 overrides
+ *
+ */
+
+void arm_vidc20_device::regs_map(address_map &map)
+{
+	map(0x00, 0x0f).w(FUNC(arm_vidc20_device::vidc20_pal_data_display_w));
+	map(0x10, 0x1f).w(FUNC(arm_vidc20_device::vidc20_pal_data_index_w));
+	map(0x40, 0x7f).w(FUNC(arm_vidc20_device::vidc20_pal_data_cursor_w));
+	map(0x80, 0x9f).w(FUNC(arm_vidc20_device::vidc20_crtc_w));
+	map(0xa0, 0xa7).w(FUNC(arm_vidc20_device::stereo_image_w));
+	map(0xb0, 0xb0).w(FUNC(arm_vidc20_device::vidc20_sound_frequency_w));
+	map(0xb1, 0xb1).w(FUNC(arm_vidc20_device::vidc20_sound_control_w));
+	map(0xc0, 0xcf).w(FUNC(arm_vidc20_device::ereg_w));
+	map(0xd0, 0xdf).w(FUNC(arm_vidc20_device::fsynreg_w));
+	map(0xe0, 0xef).w(FUNC(arm_vidc20_device::vidc20_control_w));
+	map(0xf0, 0xff).w(FUNC(arm_vidc20_device::dctl_w));
+}
+
+// defaults are irrelevant, needs to be set by client depending on what they use.
+arm_vidc20_device::arm_vidc20_device(const machine_config &mconfig, const char *tag, device_t *owner, u32 clock)
+	: acorn_vidc10_device(mconfig, ARM_VIDC20, tag, owner, clock, 2)
+	, m_pixel_source(2)
+	, m_pixel_rate(1)
+	, m_dac32(*this, "serial_dac_%u", 0)
+	, m_ext_vclk(XTAL(24'000'000))
+	, m_ext_sclk(XTAL(24'000'000))
+	, m_int_sclk(XTAL(24'000'000))
+{
+	m_space_config = address_space_config("regs_space", ENDIANNESS_LITTLE, 32, 8, -2, address_map_constructor(FUNC(arm_vidc20_device::regs_map), this));
+	m_pal_4bpp_base = 0x000;
+	m_pal_cursor_base = 0x100;
+	m_pal_border_base = 0x100;
+}
+
+
+void arm_vidc20_device::device_add_mconfig(machine_config &config)
+{
+	acorn_vidc10_device::device_add_mconfig_common(config);
+
+	// VIDC20 (RiscPC) systems:
+	// Fc = 5258.064, Fq = 1.0/0.464, Gain = 1.0
+
+	m_filter[0]->setup(filter_biquad_device::biquad_type::LOWPASS, 5258.064, 1.0/0.464, 1.0);
+	m_filter[0]->add_route(0, m_filter_rc[0], 1.0);
+
+	m_filter[1]->setup(filter_biquad_device::biquad_type::LOWPASS, 5258.064, 1.0/0.464, 1.0);
+	m_filter[1]->add_route(0, m_filter_rc[1], 1.0);
+
+	m_filter[2]->setup(filter_biquad_device::biquad_type::LOWPASS1P1Z, 5258.064, std::numbers::sqrt2 / 2.0, 1.0);
+	m_filter[2]->add_route(0, m_filter[0], 1.0);
+
+	m_filter[3]->setup(filter_biquad_device::biquad_type::LOWPASS1P1Z, 5258.064, std::numbers::sqrt2 / 2.0, 1.0);
+	m_filter[3]->add_route(0, m_filter[1], 1.0);
+
+	// For simplicity we separate DACs for 32-bit mode
+	// TODO: how stereo image copes with this if at all?
+	DAC_16BIT_R2R_TWOS_COMPLEMENT(config, m_dac32[0], 0).add_route(ALL_OUTPUTS, *this, 0.50, 0);
+	DAC_16BIT_R2R_TWOS_COMPLEMENT(config, m_dac32[1], 0).add_route(ALL_OUTPUTS, *this, 0.50, 1);
+}
+
+// TODO: move to clients
+void arm_vidc20_device::device_config_complete()
+{
+	if (!has_screen())
+		return;
+
+	if (!screen().has_been_setup())
+		screen().set_raw(clock() * 2 / 3, 1024,0,735, 624 / 2, 0, 292); // RiscOS 3 default screen settings
+
+	if (!screen().has_screen_update())
+		screen().set_screen_update(*this, FUNC(arm_vidc20_device::screen_update));
+}
+
+u32 arm_vidc20_device::palette_entries() const noexcept
+{
+	return 0x100+4; // 8bpp + 2bpp for cursor
+}
+
+void arm_vidc20_device::device_start()
+{
+	acorn_vidc10_device::device_start();
+
+	save_item(NAME(m_vco_r_modulo));
+	save_item(NAME(m_vco_v_modulo));
+	save_item(NAME(m_pal_data_index));
+	save_item(NAME(m_dac_serial_mode));
+	save_item(NAME(m_sdac));
+	save_item(NAME(m_pixel_source));
+	save_item(NAME(m_pixel_rate));
+}
+
+void arm_vidc20_device::device_reset()
+{
+	acorn_vidc10_device::device_reset();
+
+	// TODO: sensible defaults
+	m_vco_r_modulo = 1;
+	m_vco_v_modulo = 1;
+	m_pixel_rate = 1;
+
+	m_clksel = 1;
+
+	// make sure DACs don't output any undefined behaviour for now
+	// (will cause wild DC offset in ssfindo.cpp games)
+	for (int ch = 0; ch < 8; ch ++)
+		write_dac(ch, 0);
+
+	write_dac32(0, 0);
+	write_dac32(1, 0);
+}
+
+bool arm_vidc20_device::play_fifo_sample()
+{
+	if (m_sound_fifo.empty()) return true;
+	if (m_sdac)
+	{
+		write_dac(m_sound_fifo_channel & 7, m_sound_fifo.dequeue());
+		m_sound_fifo_channel ++;
+		m_sound_fifo_channel &= 7;
+	}
+	else if (m_dac_serial_mode)
+	{
+		s16 sample = m_sound_fifo.dequeue() & 0xff;
+		sample |= (u16)(m_sound_fifo.dequeue() << 8);
+		write_dac32((m_sound_fifo_channel & 1), sample);
+		m_sound_fifo_channel ^= 1;
+	}
+	return m_sound_fifo.empty();
+}
+
+inline void arm_vidc20_device::update_8bpp_palette(u16 index, u32 paldata)
+{
+	// TODO: ext hookup, supremacy plus other stuff according to the manual
+//  ext = (paldata & 0x0f000000) >> 24;
+	int b =   (paldata & 0x00ff0000) >> 16;
+	int g =   (paldata & 0x0000ff00) >> 8;
+	int r =   (paldata & 0x000000ff) >> 0;
+
+	set_pen_color(index, r, g, b );
+	screen().update_partial(screen().vpos());
+}
+
+void arm_vidc20_device::vidc20_pal_data_display_w(offs_t offset, u32 data)
+{
+	u8 ext_data = offset & 0xf;
+	update_8bpp_palette(m_pal_data_index, (ext_data<<24) | data);
+	m_pal_data_index ++;
+	m_pal_data_index &= 0xff;
+}
+
+void arm_vidc20_device::vidc20_pal_data_index_w(u32 data)
+{
+	m_pal_data_index = data & 0xff;
+}
+
+void arm_vidc20_device::vidc20_pal_data_cursor_w(offs_t offset, u32 data)
+{
+	u8 ext_data = offset & 0xf;
+	u8 cursor_pal_index = (offset >> 4) & 3;
+	update_8bpp_palette(m_pal_cursor_base + cursor_pal_index, (ext_data<<24) | data);
+}
+
+// Pixel sources:
+// ---- --00: VCLK (MonitorType 3 or 4 VGA/SVGA)
+// ---- --01: HCLK (?)
+// ---- --10: RCLK (MonitorType 0 TV, reference clock,
+//                  24 MHz for IOMD, CLK16 for 7500FE (i.e. divided by 2))
+// ---- --11: <undefined>, possibly same as RCLK
+// Assume that TV output is ~50 Hz while (S)VGA 56~75 Hz
+// All ssfindo.cpp games uses RCLK and output ~56.20 Hz (again unverified)
+u32 arm_vidc20_device::get_pixel_clock()
+{
+	const u32 pixel_freq = m_pixel_source & 2 ? this->clock() : m_ext_vclk.value();
+	if (m_pixel_source & 1)
+		popmessage("%s unemulated pixel source %d", this->tag(), m_pixel_source);
+
+	return ((pixel_freq * m_vco_v_modulo) / m_vco_r_modulo) / m_pixel_rate;
+}
+
+void arm_vidc20_device::vidc20_crtc_w(offs_t offset, u32 data)
+{
+	if (offset & 0x8)
+		popmessage("%s accessing CRTC test register [%02x] %02x", this->tag(), offset + 0x80, data);
+
+	const u8 crtc_offset = (offset & 0x7) | ((offset & 0x10) >> 1);
+
+	switch(crtc_offset)
+	{
+		case CRTC_HCR:  m_crtc_regs[CRTC_HCR] = (data&0x7ffc) + 8; break;
+		case CRTC_HSWR: m_crtc_regs[CRTC_HSWR] = (data&0x7ffe) + 8; break;
+		case CRTC_HBSR: m_crtc_regs[CRTC_HBSR] = (data&0x7ffe) + 12; break;
+		case CRTC_HDSR: m_crtc_regs[CRTC_HDSR] = (data&0x7ffe) + 18; break;
+		case CRTC_HDER: m_crtc_regs[CRTC_HDER] = (data&0x7ffe) + 18; break;
+		case CRTC_HBER: m_crtc_regs[CRTC_HBER] = (data&0x7ffe) + 12; break;
+		case CRTC_HCSR: m_crtc_regs[CRTC_HCSR] = (data&0x7fff) + 17; return;
+//      case CRTC_HIR:
+		case CRTC_VCR:  m_crtc_regs[CRTC_VCR] = (data&0x3fff) + 2; break;
+		case CRTC_VSWR: m_crtc_regs[CRTC_VSWR] = (data&0x3fff) + 1; break;
+		case CRTC_VBSR: m_crtc_regs[CRTC_VBSR] = (data&0x3fff) + 1; break;
+		case CRTC_VDSR: m_crtc_regs[CRTC_VDSR] = (data&0x3fff) + 1; break;
+		case CRTC_VDER:
+			m_crtc_regs[CRTC_VDER] = (data&0x3fff) + 1;
+			screen_vblank_line_update();
+			break;
+		case CRTC_VBER: m_crtc_regs[CRTC_VBER] = (data&0x3fff) + 1; break;
+		// TODO: bits 15-14 specific for duplex LCD mode
+		case CRTC_VCSR:
+			m_crtc_regs[CRTC_VCSR] = (data&0x3fff) + 1;
+			return;
+		case CRTC_VCER: m_crtc_regs[CRTC_VCER] = (data&0x3fff) + 1; return;
+	}
+
+	screen_dynamic_res_change();
+}
+
+void arm_vidc20_device::ereg_w(u32 data)
+{
+	LOG("ereg [0xc0]: %08x (EREG %02x)\n", data, data & 0xf3);
+	LOG("\tECK %d | PEDON %d | DACs %s | LCD grayscale %d | HiRes %d\n"
+		, BIT(data, 2)
+		, (data >> 8) & 7
+		, BIT(data, 12) ? "on" : "power-down"
+		, BIT(data, 13)
+		, BIT(data, 14)
+	);
+	LOG("\tsyn-HS %d syn-VS %d\n", (data >> 16) & 3, (data >> 18) & 3);
+}
+
+void arm_vidc20_device::fsynreg_w(u32 data)
+{
+	m_vco_r_modulo = (data & 0x3f) + 1;
+	m_vco_v_modulo = ((data >> 8) & 0x3f) + 1;
+	// bits 15-14 and 7-6 are test bits
+
+	LOG("fsynreg [0xd0]: %08x\n", data);
+	LOG("\tref clock %d VCO clock %d\n", m_vco_r_modulo, m_vco_v_modulo);
+
+	screen_dynamic_res_change();
+}
+
+void arm_vidc20_device::vidc20_control_w(u32 data)
+{
+	m_pixel_source = data & 3;
+	m_pixel_rate = ((data >> 2) & 7) + 1;
+	// (data & 0x700) >> 8 FIFO load
+	// BIT(data, 13) enables Duplex LCD mode
+	// BIT(data, 14) power down
+	const u8 test_mode = (data >> 16) & 0xf;
+	m_bpp_mode = (data & 0xe0) >> 5;
+	m_crtc_interlace = BIT(data, 12);
+
+	if (BIT(m_bpp_mode, 2))
+		popmessage("%s Unemulated High/True Color mode (%x)", this->tag(), m_bpp_mode);
+
+	LOG("conreg [0xe0]: %08x\n", data);
+	LOG("\tPixel Source %d | Pixel Rate %d | BPP %d | FIFO load %d\n"
+		, m_pixel_source, m_pixel_rate, m_bpp_mode
+		, ((data >> 8) & 7) * 4
+	);
+	LOG("\tINTerlace %d | DUP %d | Power Down %d | TEST %d\n"
+		, m_crtc_interlace
+		, BIT(data, 13)
+		, BIT(data, 14)
+		, test_mode
+	);
+
+	screen_vblank_line_update();
+	screen_dynamic_res_change();
+}
+
+void arm_vidc20_device::dctl_w(u32 data)
+{
+	LOG("dctl [0xf0]: %08x\n", data);
+	LOG("\tHDWR %02x | SnA %s | Hdis %d\n"
+		, data & 0x3ff
+		, BIT(data, 12) ? "Sync" : "Async"
+		, BIT(data, 13) ? "Disable" : "Enable"
+	);
+	LOG("\tBUS %d | VRAM %d\n"
+		// 00=N/S, 01= D[31:0], 10=D[63:32], 11=D[63:0]
+		, (data >> 16) & 3
+		// 00=disable 01=pixclk, 10=pixclk/2 11=pixclk/4
+		, (data >> 18) & 3
+	);
+
+}
+
+u32 arm_vidc20_device::get_sound_clock()
+{
+	// ppcar
+	if (!m_clksel)
+	{
+		return m_ext_sclk.value() / 24;
+	}
+
+	// 32-bit mode doubles clock rate
+	const u8 divider = 24 << get_dac_mode();
+
+	return (m_int_sclk.value() / divider);
+}
+
+
+/*
+ * ---- x--- sclr <should never be programmed high>
+ * ---- -x-- sdac (1) VIDC10 compatible sound
+ * ---- --x- serial sound
+ * ---- ---x clksel (1) 24 MHz clock (0) optional sound clock
+ */
+void arm_vidc20_device::vidc20_sound_control_w(u32 data)
+{
+	m_sdac = BIT(data, 2);
+	m_dac_serial_mode = BIT(data, 1);
+	m_clksel = BIT(data, 0);
+
+	LOGMASKED(LOG_STEREO, "vidc20_sound_control_w %02x: sclr %d sdac %d serial mode %d clksel %d\n",
+		data, BIT(data, 3), m_sdac, m_dac_serial_mode, m_clksel
+	);
+
+	m_dac32[0]->set_output_gain(0, m_dac_serial_mode ? 1.0 : 0.0);
+	m_dac32[1]->set_output_gain(0, m_dac_serial_mode ? 1.0 : 0.0);
+
+	if (m_sdac)
+	{
+		m_dac[0]->set_output_gain(0, 1.0);
+		m_dac[1]->set_output_gain(0, 1.0);
+		for (int ch = 0; ch < m_sound_max_channels; ch++)
+			refresh_stereo_image(ch);
+	}
+	else
+	{
+		m_dac[0]->set_output_gain(0, 0.0);
+		m_dac[1]->set_output_gain(0, 0.0);
+	}
+
+	if (m_sound_mode == true)
+		refresh_sound_frequency();
+}
+
+void arm_vidc20_device::vidc20_sound_frequency_w(u32 data)
+{
+	m_sound_frequency_latch = data & 0xff;
+	if (m_sound_mode == true)
+		refresh_sound_frequency();
+}
+
+void arm_vidc20_device::write_dac32(u8 channel, s16 data)
+{
+	m_dac32[channel & 1]->write(data);
+}
+
+bool arm_vidc20_device::get_dac_mode()
+{
+	return m_dac_serial_mode && !m_sdac;
+}
+
+u32 arm_vidc20_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
+{
+	// TODO: support for true color modes
+	return acorn_vidc10_device::screen_update(screen, bitmap, cliprect);
+}

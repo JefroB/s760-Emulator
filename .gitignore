@@ -1,0 +1,77 @@
+# ====================================================================
+# Roland S-760 / MAME Project .gitignore
+# ====================================================================
+
+# Proprietary ROMs, BIOS dumps, and Floppy/Hard Disk images
+roms/
+*.rom
+*.ROM
+*.img
+*.IMG
+*.bin
+*.BIN
+*.iso
+*.ISO
+*.hfe
+*.HFE
+*.dsk
+*.DSK
+*.chd
+*.CHD
+*.wav
+*.WAV
+*.aiff
+*.AIFF
+
+# MAME runtime data, saves, and screenshots
+snap/
+nvram/
+cfg/
+sta/
+diff/
+comments/
+memcard/
+inp/
+
+# Build artifacts and compiled binaries
+build/
+bin/
+obj/
+*.exe
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.obj
+*.o
+*.a
+*.res
+*.tlog
+*.lastbuildstate
+mames760.exe
+mames760.pdb
+mames760.lib
+mames760.exp
+
+# Visual Studio & IDE files
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+.vscode/
+.idea/
+
+# Python cache & test artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+temp/
+.piggie/
+
+# OS metadata
+.DS_Store
+Thumbs.db

@@ -1,0 +1,1371 @@
+﻿# S-760 Service Notes - OCR text dump
+# Source: manuals/ROLAND_S-760_SERVICE_NOTES.pdf (24 pages, scanned images)
+# OCR engine: easyocr (CPU). Quality is rough - diagrams/pin-tables are noisy.
+# Regenerate with:
+#   python .kiro\scripts\render_pages.py manuals\ROLAND_S-760_SERVICE_NOTES.pdf .piggie\svc_pages
+#   python .kiro\scripts\ocr_pages.py .piggie\svc_pages .piggie\svc_ocr
+# Best pages: 00 (TOC/specs), 03 (BLOCK DIAGRAM), 11-13 (IC DATA), 16-20 (MAIN BOARD).
+
+
+===== page_00 =====
+Dec, 1993
+S-760
+5-76O [SERVICE_NOTES] DIGITAL SAMPLER First Edition ERRATA & SUPPLEMNT_i s attached at the end of the page: OP-760-1 RYAIZERR&j11 3+Rh 6039, POWER SAM?LING EXFANSION TABLE OF CONTENTS Ax Page SPECIFICATIONS Itt LOCATION OF CONTROLS T43 JLACEM EXPLODED VIEW 5A+M BLOCK DIAGRAM JAv#E PARTS LIST (S-760) 11_9!J7 6 (S-760) 5 PARTS LIST (OP-780-1_ TP_!)z k (OP-760-1) 6 TEST MODE 5xkE-F 9 MEMORY EXPANDER XEV-I+ZMY# _ 10 HOW TO INSTALL THE OP-760-1 OP-760-10wftk?7 10 IC DATA (S-760/0P-760-1_ IC =_1 (S-760/OP-760-1 ) 11~13 OP-760-1 MAIN BOARD ASSY OP-760-1 MAIN BOARD ASS'Y 13_ 15 OP-760-1 VIDEO BOARD ASSY OP-760-1 VIDEO BOARD ASS'Y 13 , 14 S-760 ENCODER BOARD ASSY S-760 ENCODER BOARD ASSY 16~18 S-760 MAIN BOARD ASSY S-760 MAIN BOARD ASS'Y 16~20 S-760 PANEL BOARD ASS'Y S-760 PANEL BOARD ASSY 16 , 17_ 21 ADDING A HOUSING (SHORT PIN) TO NEW FDD FDD^0nm>>" (J3-REY) #Jk?i7 '21 CHANGE INFORMATION #ERI 21
+SPECIFICATIONS/ t# Maximum Polyphonic _ 'R*F89.% Sound source / =E Sampling frequencies/ +~7u>"BRE Data format / ='_m2+-7v Signal processing / {38h
+24 voices_ DI (Differential Interpolation) Jzt 48k, 44.1k,32k,24k, 22.05k, 16kHz 16 bit linear_ VET1GEv k 16 bitz Ev 6/AD 16 18 bit / Ev 6/DIA 18 Internal processing; 24 bit linear / PNABHLIQ _ 24Ev 6V=7
+Disk drive/ ='13nF5t5
+3.5 inch (2DD & 2HDY/ 3.51 > $ (2DDISHD#B)
+Interface/ K > 9-J1T3
+SCSI connector / SCSI3399-: 1
+Display/ =' 1 Xlt
+64 x 160 dots_ Fv (LCD with back light / 1(v 751 63#LCD)
+Effects/ IJI) 6
+2 band equalizer / r> F1351#_: 8
+Wave memory/ * I-7xE- Standard, 134 Expansion / 7 JLIBERB
+2 Mbytes/ 114 Up to 32Mbytes / 144 (Sim72-16 x 2)
+Internal Memory/ ~>#-tJlxeV-
+Volume  #vi-h:1 Performance / 11J+-7>7 : 64 Patch / 1v $ 128 Partial / n1=> + JL 255 Sample_ #>7il 512
+Connections_ 1e5}
+Headphones/ ^v Fty 1 set Stereo In/ 75Ltny: (L (MONO) and R) Stereo Out / x=Lt7v 6 2 (individuals_ T>?TE)it)tok : 4) MIDI Connector_ 'MIDIJZJ# - : 2 (IN, OUTITHRU/ 1-+75 6/x1l-+#n) SCSI Connector / SCSI337#-: AC Inlet / ACT>lv 6 :1
+Frequency response (AD-DIA) / Rmelnit
+Sampling frequency / #~fuvJamI 48 kHz 10 Hz-23.4 kHz (+0/-3 dB) 44.1 kHz 10 Hz-21.5 kHz (+0/-3 dB) 32 kHz 10 Hz-15.5 kHz (+0/-3 dB)
+Residual noise level / %8@ TXLAJL (AII Volume: Max-)
+STEREO OUT 1 (Individual Outs and 2) better than -100 dB xsltvmM1 (1-71Ev1717161,2) 4100 dBLLE STEREO OUT 2 (Individual Outs 3 and 4) better than -100 dB 371t7n62 (1-71E71717) 63,4) -100 dBLLE
+Input level / AhJLAJL (Rec Level Max )-
+-15 dB
+Maximum output level / RxiJLAL-
++15 dB
+Output impedance/ Hh)1>E-5>z
+1.6kQ
+Roland S-760 AuES
+VAUEIEU (ASd DXSJC" 34D CHTDT
+Fuote PITD PAfTAI
+Power source _ 81
+ACTOOV   (50 / 60Hz) ACIIZV AC230V AC24OV
+SLPUS
+SI5[
+RREVIE R
+Power consumption THREJ
+AC1OOV 17w (RAM 2M) '23W (wloptional  'MABA# SIM72-8+SIM72-16) ACIIZV AC230V AC240V 25w
+External dimensions/ #li+#
+482 (W / #5) X 362.3 (D/ Bi7) X 44.8 (H/3& mm 19 (W) X 14-5/16 (D) X 1-13/16 (H) inch/ ( > = (mounts on EIA 1U rack EIA 1U5vn70> 6n17)
+Weight / @#
+4.2kg/g Ibs 5 0z
+Accessory / #Bm
+Owner's Manual Set (Japanese) Owners Manual Set (English) Floppy Disk Set DIN PLUG Code (SP/2.Sm)
+PNo: 70122189 PNo. 70120245 PNo. 00123190 PNo. 23485135
+Option/ +7va>
+Power Sampling Expansion (OP-760-1)
+Roland
+17059731
+Printed in Japan (AFIO) (CR)
+
+===== page_01 =====
+S-760
+Dec, 1993
+LOCATION OF CONTROLS (The figure shows the rear panel with optional OP-760-1 installed )/ R JLECEE (OP-760-1 We7trEE)
+S-760 FRONT PANEL (00123490)
+MR-KNOB L BLK (22485307) EC11B1524 L=3Omm ENI on EB (00120845)
+FB-ESCT MDIH BLK (22135611) SPB-1SMVM LED RED & GREEN (00123745)
+S-760 DISPLAY COVER (00123690) DMF-50374NYU-LY LCD Unit (32Ox80) (00123945)
+FZ357 318F1DR (22405255)
+Roland S-76O DTAL SAMALEA PHIONES LVE_ ~6- VOL
+VALUE/MEW (PUSH)
+HIDIISCSI
+PEFFOA PATCH PAATIAL SNPLE DISX SYSTEH
+MODE
+COMMANO
+EXIT
+St/DEc
+S2/INC
+POWER
+F2
+F3
+MIN MAX PEVIE (PUSH)
+F4
+F5
+F6
+SHIFT
+HOE
+MAAK
+JP
+YKB21-5224 (00128178)
+F0-KNOB S BLK VOL (22485149) F 0-KNOB M BLK REC LEVEL (22485150) RK09724A4 1Okb (00239134)
+F S-KEYTOP MDIH BLK MODE, COMMAND, F1 F4, F2 F5, F3 F6, SHIFT (22495205) F S-KEYTOP SXIH BLK EXIT (22495206) F S-KEYTOP MX3H BLK SI/DEC S2/INC _ 1 4 (22495207) GL3CL8 LED RED & GREEN COMMAND (15039240) SLR-342MC3F LED GREEN F1 F4, F2 F5, F3 F6 (15039237) SLR-342VC3F LED RED MODE, SHIFT (15029347) EVQ21405 TACT SW (00126956)
+F S-BUTTON MX BLK (22495565) AC SW SDDLB1 250VITV5 AC SWITCH (13129139)
+S-760 TOP COVER (00124723)
+DBLC-JZSSAF-2OL9F (13429314)
+YKB21-5227 (00120434)
+DIAIN
+EXT CTRL
+S-VIDEO
+MIDI
+'STEFEQ OUT 2
+~STEREO OUT (oNO)
+PUT (Kovo)
+SCSI
+VIDEO
+D.IN
+OUITAU
+IN
+5-760
+INIVIDUAL
+RCA (PIN) 14*14RA 2L4P CIRCUITB (00121023)
+YKF51-5048 (13429676)
+S-760 CHASSIS
+TCS5040-18-4051 (00121001)
+With optional OP-760-1 installed OP-760-1#74@
+YKF51-5502 (00231223)
+DELC-JIPAF-1Lg (13429214) OP-760-1 EXP COVER (00124023) With socket mounting holes for OP-760-1. S-760 EXP COVER (00123223) Without socket mounting holes:
+AC INLET CM-11 18A/250V/3P 1OOVIIZV (13429718) AC INLET CCT 2102-0201 2.5A250V 2P 230v/240v (00128789) S-760 INLET HOLDER 230V/240V (00231434)
+2
+
+===== page_02 =====
+S-760
+Dec, 1993
+EXPLODED VIEWIS}AM
+[PARTS] No. PARTS No 22123568 00124723 00123690 22485149 22485150 22485307 22495565 00123490 22135611 22495207 22495206 22495205 70011301 00123945 00123645 22140219 22150404 22195999 70011290 00123956 00123967 22405255 00340901 22203141 22163567 23453170 22443588 22443589 22163138 ******8* 0*88888* 00123223 00128789 00231434 23503125 13429718 00123623 22350313 00017612 00121878 70122490 13129139 00017667 00123745 00017656 00233656 00232390 00233634 00232389
+PARTS NAME GM-7O RACK ANGLE 1U S-760 TOP COVER S-760 DISPLAY COVER FO-KNOB S BLK F O-KNOB M BLK M R-KNOB L BLK F S-BUTTON MX BLK S-760 FRONT PANEL F B-ESCT MDIH BLK F S-KEYTOP MX3H BLK F S-KEYTOP SXIH BLK F S-KEYTOP MDIH BLK PANEL BOARD (PCB 00126801) DMF-50374NYU-LY S-760 FRONT HOLDER DE-2O0 ARM DE-2O0 SLEEVE S-550 POWER SW HOLDER MAIN BOARD (PCB 00124478) S-760 JACK HOLDER S-760 PHONES HOLDER FZ357 318F1DR FDD UNIT S-760 PLATE S-330 DD HOLDER S-330 DD SPACER S-330 EARTH RUG MSA817  1OOVIIZV MSA818 230V/240V W-30 SHIELD SPACER SP-700 EMI GASKET SPACER PCP 3.2x5.0x4.01 S-760 EXP COVER AC INLET CCT 2102-0201 2.5A250V 2P S-760 INLET HOLDER 230V/240v SP-700 INLET EARTH WIRING AC INLET CM-11 18A/250V/3P S-760 CHASSIS AMDEK FOOT MKS S-760 WIRING FDD DATA S-760 WIRING PANEL ENCODER BOARD (PCB 00126812) AC SW SDDLB1 250VITVS AC SWITCH S-760 WIRING LED SPB-15MVM S-760 WIRING FDD PW S-760 WIRING REGULATOR B MSF79MOSL S-760 WIRING REGULATOR A MSF78MOSL
+<
+[SCREW] #******0
+M4x8mm S-Tight Bind Bc M3x6mm B-Tight Bind Bc M3x6mm Frat Cm M2x4mm B-Tight Bind Cm MBx6mm S-Tight Bind Cm M3x6mm W Cems Cm M3x8mm P-Tight Bind Bc BOSS NUT M3IM3 L3o BOSS NUT M2.6/M7.3 L5.2 M4x6mm Tapping B1 Bc M4x12mm Eba Tight Bc M9 Nut Thin Type Mg Spacer Inner Gear Type M7 Nut Thin Type M7 Spacer Inner Gear Type M3 Flange Nut Cm M4x6mm S-Tight Bind Cm M3x8mm B-Tight Bind Bc M4 Spring Nut Cm
+08*****#
+8****+**
+#*******
+#8******
+***+**** ******** 22150525 *******8
+********
+0*******
+#******8
+#*******
+#******0
+#8******
+********
+#8******
+#*******
+******00
+3
+J6GT
+
+===== page_03 =====
+S-760
+Dec,  1993
+2
+10
+11
+12
+13 14 15
+16 17
+18 19 20 21 22 23 24 25 26 27 28 29 30
+A BLOCK DIAGRAWJAv JB
+B S-760 MIDI ENCODER OUT /thAU IN SCSI FDD LCD UNIT BOARD 160X64 1 IC68, 691 IC15 IC25 IC24 IC72 IC73 IC2O ADRS D-RAM BOOT SPC FDC LCD S-RAM I/o ROM CONT GA ICI IC4 CPU GATE ARRAY S80C196KB for CPU IC2 EEP IC30 PCMCCONT ROM IC27 IC28 IC2g SPI SP2 TVF MEQ REC LEVEL A D IC58 R DATA A/d S  F IC41~44 IC87 Ic88 WAVE MEMORY 16M only 8Mor 16M 6 LEVEL N OPTION SIMM SOCKET IC91 D/A ICg2 D/A S-760 LMAIN BOARD R {
+OP-760-1 (OPTION) MOUSE DIGITAL CONECTER RGB VIDEO S-VIDEO
+BOAFS
+o8 NfSC
+? 8 6 1 E
+Icg D-RAM
+Op-760-1 VIQEQ_BQARD
+IC2 VDP
+ITcgzase)
+DIGITAL In
+DIGITAL OUT1
+IC6 TC9271F
+INPUT L
+DIGITAL OUT2
+INPUT R
+OP-760-1 MAIN BQARD
+HEADPHONE
+STEREO OUTIL
+STEREO OUTAR
+STEREO OUT2L
+STEREO  OUTZR
+
+===== page_04 =====
+S-760
+Dec,  1993
+00120856 15179789A0 00239345 00120367 15239118 15179457H0 00126534 15289123 15289107 00232389 00232390 15239109 5239 5239 15179298 5209131 15289125 15199284 15199812 15199944 15239162 00120834 15239131 15289105 00120945 00120912 00120689 00120956 00120667 00125467 00120678 00120690 15169508 15269805 15259704TO 15259708T0 15259720T0 15259725T0 15259731TO 15259738T0 15259740T0 15259743T0 15259778T0 15259706T0 15259884 15249121 15249111
+AK93C4SF-E FLAT EEP-ROM 1024 IC2 on MB AM27C256-15D EP-ROM 256k (BLANK) IC15 on MB AM27C256-15D EP-ROM 256K   (PROGRAM) IC15 on MB CS5339-K FLAT AJD Converter IC58 on MB HG62E33B08 FLAT Gate Array for CPU IC4 on MB HM5144002 ZIp D-RAM 1M IC41-IC44 on MB HY6264AL FLAT S-RAM 64k IC73 on MB M51953AFP TAPE FLAT Reset IC IC9 on MB M5218FP-6OOE TAPE FLAT Op-Amp IC22, IC65, IC77 on MB MSF78MOSL Regulator +SV MSF79MOSL Regulator -5V MB87422PF-G-LBND FLAT Wave Custom (SPI) IC27 on MB MB87423APF-G-LBND FLAT Wave Custom (SP2) IC28 on MB MB87424APF-G-LBND FLAT TVF IC29 on MB MB89352A-PF-G-BND FLAT SCSI Controller IC25 on MB MPD72O68GF-3B9 FLAT FDD Controller IC24 on MB PC41OT TAPE FLAT Photo Couppler IC3 on MB PQ3ORV1 Regulator IC26 on MB S8OC196KB 16M FLAT 16 Bit CPU IC1 on MB SED1335FOB FLAT LCD Controller IC72 on MB TC24SC22OAF-007 FLAT MEQ (Mixer) IC30 on MB TC514260BZ-70 ZIP D-RAM 4M IC68, IC69 on MB UPD65O12GF-473-3B9 FLAT IO Gate Array IC2O on MB uPC457OG-T2 TAPE Op-Amp. IC61-IC64,IC86 on MB SNZ4FOONS ELM-100O Quad 2-In NAND IC83 on MB SNZ4FOBNS ELM-100O Quad 2-In AND IC37 , IC84 on MB SN74FZINS ELM-1OOO Dual 4-In AND IC33, IC34, IC36,IC38 on MB 0 SN74F32NS ELM-1O00 Quad 2-In OR IC39, IC85, IC86 on MB SNZ4FZ4NS ELM-100O Dual D-FFs IC31 , IC32, IC43,IC79 on MB SNZ4FISZNS ELM-1000 2 to Data Sel: IC80-IC82 on MB SNZ4F245NS ELM-10O0 Oct.3-State Trans IC35 on MB SN74F5Z4NS ELM-1OO0 Oct.3-State D-FFs IC40 on MB DifT SN74S124N VCO IC78 on MB TCZAACI4AF (TP2) TAPE FLAT HEX Sch Inverter IC8 on MB TCZ4HCOAAF (TP2) TAPE HEX Inverter IC52 on MB TC74HCOBF-T2 TAPE Quad 2-In AND IC1O, IC21 on MB TC74HC74F-T2 TAPE Dual D-FFs IC7 , IC55,IC76 on MB TC74HC86F-T2 TAPE Quad 2-In XOR IC93 on MB TC74HC125F-T2 TAPE 3-State Quad Buffer IC5 on MB TC74HCI38AF (TP2) TAPE 1 3 to 8 Line Dec_ IC17 on MB TC74HC139AF (TP2) TAPE Dual to Line Dec. IC18,IC19 on MB TC74HCISIF-T2 TAPE 8 to Line Data Sel: IC51 on MB TC7AHC2ASF-T2 TAPE Oct .3-State Trans IC16 on MB TC74HCUOAAF (TP2) TAPE HEX Inverter IC6 on MB TCZSO8F (TE86L) TAPE Quad 2-In AND IC74 on MB TC7WOAF TE12L TAPE HEX Inverter IC75, IC9O on MB FUAT TCTWUOAF (TE12L) TAPE HEX Inverter IC70 on MB TRANSISTOR / 65>73n - 15309101 2SA1O37KR T-146 TAPE CHIP PNP Q9 on MB 15329507 DTAI1AEK T-146 TAPE CHIP PNP Digital Q5, Q6 on MB 00120734 DTA124TK T-146 TAPE CHIP PNP Digita Q1 on MB 15329516 DTCII4EK T-146 TAPE CHIP NPN Digital Q7 , Q8 on MB 15329505 DTC314TK T-146 TAPE CHIP NPN Digital Q10-Q15 on MB
+FUSE / Ea-X
+PARTS LISTIn_V!x F(S-760)
+^ 12559196 ^ 12559567 12199550
+FUSE 5X20 FGMA 1,5A/125V F1 on MB 1OOVI1IZV FUSE 5X20 CEE-1AT WICKMANN on MB 230V/240v H0446 on MB CONNECTOR / 7*25- 13429553 100-032-000 32P IC Socket 1342955 300-032-000 32P IC Socket Single 00123889 52030-2010 20P FFCIFPC Connector 0012086 52560-7220 SIMM Socket 13439539 53014-1510 1SP Post Zmm 1343937 5483-03AX 3P Post 2.Smm 13369568 B3B-PH-K-S 3P Post 2mm 13369595 B3B-XH-A 3P Post 2.Smm 13369515 BSB-PH-K-S SP Post 2mm 13369735 IL-G-3P-S3T2-E 3P Pin Hedder 13369877 PS-34PE-D4T1-B1 34P Pin Hedder 00120612 TX14-SOR-LT-MH 50P Card Edge Connector
+SAFETY PRECAUTIONS The parts markedA have safety-related characteristics: Use only listed parts for replacement: Z4EOAR ^_iutusBelt _ F2E 1aita$1872< Snfbnr
+CONSIDERATIONS ON PARTS ORDERING When ordering any parts listed the parts Iist, please specify the following items the order sheet QTY PART NUMBER DESCRIPTION MODEL NUMBER Ex 22575241 Sharp Key C-20/50 2247017300 Knob (orange) DAC-15D Failure completely fill the above items with correct number and description will result delayed or even undelivered replacement: Veak J380l1 t-4->-Hzit "yt2o4 FBIt1EWIEALFzllo (DSHaBR < ) eW Ft #EHEN ") 10 22575241 Sharp Key C-20/50 2247017300 Knob (orange DAC 15D bllEn 023+a3ta Ve88+ #8xeb'ot-4_ trt@noraizt V: 9 @ihrsml1L*te
+IC15 on MB RA18, RA19 on MB CN2, CN8 on PB on MB IC87 , IC88 on MB CN9 on MB CN12 on MB CN3 on MB CN6 on MB CN1O on MB CN13 on MB CNS on MB CNZ on MB
+Rroisit #Gz2nt-8BB# BLXSOR8l3#bol1j3i LT Tell
+MB
+CecteteSt MAIN BOARD
+PB
+PANEL BOARD
+EB
+ENCODER BOARD
+WIRING / 91+u>I 00121857 S-760 WIRING ENCODER 00017612 S-760 WIRING FDD DATA 00017656 S-760 WIRING FDD PW 00017667 S-760 WIRING LED 00017678 S-760 WIRING MAIN B PW 00121878 S-760 WIRING PANEL 00129712 S-760 WIRING POWER
+CNII on EB Between FDD and MB (CNS) Between FDD and MB (CNG) Between LED and MB (CN3) CNI on MB Between MB (CN2) and PB (CN8) Between power Sw: and AC inlet Between AC inlet and power supply unit Between power supply unit and power Sw:. Between 78MO5 and MB (CN12)  Between 79MO5 and MB (CN13) Between AC inlet and chassis  i17V only
+CASING / 5-X 00123690 00123223 00123490 00124723
+S-760 DISPLAY COVER S-760 EXP COVER S-760 FRONT PANEL S- 760 TOP COVER
+CHASSIS_ n*+-> 00123623 S-760 CHASSIS 00123645 S-760 FRONT HOLDER 00231434 S-760 INLET HOLDER 230v/240v 00123956 S-760 JACK HOLDER 00123967 S-760 PHONES HOLDER 22123568 GM-70 RACK ANGLE 1U 22203141 S-330 DD HOLDER 22195999 S-550 POWER SW HOLDER
+00233634 S-760 WIRING REGULATOR 00233656 S-760 WIRING REGULATOR B 23503125 SP-7O0 INLET EARTH WIRING AC CORD_ 467 A 13499210 AC CORD SET 1OOV DC-015-J13 VCTFZP 13499109 AC CORD SET 12OV UC-909-JO6 SJT3P18AWG6O A 13499221 AC CORD SET 230V EC-511-E07 HO3VVH2-F 2P ^ 13499223 AC CORD SET 240VE PHE8-Z-VCTFK-BS-CHE22 13499222 AC CORD SET 24OVA SC-078-J02 ES205-76HMA AC INLET / ACT>> 4 13429718 AC INLET CM-11 18A/250VI3P 1OOViti7v ^ 00128789 AC INLET CCT 2102-0201 2.5A/250V 2P 230v/240v SCREW / 370 22150525 BOSS NUT M3/M3 L3o M2x4mm B-Tight Bind Cm ***84300 M3x8mm B-Tight Bind Bc 7**8834 M3x6mm B-Tight Bind Bc M3x8mm Tight Bind Bc M3x6mm S-Tight Bind Cm M4x6mm S-Tight Bind Cm M4x8mm S-Tight Bind Bc M4x12mm Eba Tight Bc M3x6mm Frat Cm M4x6mm Tapping B1 Bc M3xbmm W Cems Cm 441 M3 Flange Nut Cm 880* M4 Spring Nut Cm 424+4 M7 Nut Thin Type M9 Nut Thin Type Eerae M7 Spacer Inner Gear Type *888*t* M9 Spacer Inner Gear Type
+KNOB, BUTTON/ *7 : #n> 22135611 F B-ESCT MDIH BLK 22495565 F S-BUTTON MX BLK 22485149 F O-KNOB S BLK 22485150 FO-KNOB M BLK 22485307 M R-KNOB BLK 22495205 F S-KEYTOP MDIH BLK 22495206 F S-KEYTOP SXIH BLK 22495207 F S-KEYTOP MX3H BLK
+MIDIISCSI POWER VOL REC LEVEL VALUEIMENU (PUSH) MODE COMMAND; F1 F4, F2 F5, F3 F6 , SHIFT EXIT S1/DEC S2/INC ,
+DISK DRIVE/=' +39F5+5 22405255 FZ357 318F1DR FDD UNIT NOTE Replacement DISK DRIVE UNIT should be made on unit bassis. No replacement available for individual parts. Replacement only by a unit # mAEHJDISK DRIVE UNITO*lkIt _ 137  mtottwo #Nmtt , 1=)|@fo
+DIODE/ #4 *- F 15039240 GLZCL8 LED RED & GREEN 15039237 SLR-342MC3F LED GREEN 15029347 SLR-342VC3F LED RED 00123745 SPB-15MVM LED RED & GREEN 00342789 MA715 CHIP Diode Array 15339103 MAIS3TAPE CHIP Diode 00128045 S2S6M-O1P12.5 Shottky Barrier Di.
+COMMAND F1 F4, F2 F5, F3 F6 MODE; SHIFT MIDISCS D9,D1O on MB D2O on MB D5 on MB
+036 on PB D25-D27 on PB D24, 023 on PB
+SWITCH / 3 + > $ 00126956 EVQ21405 A 13129139 AC SW SDDLBI 250VITVS JACK, SOCKET / >+7n.'hv 6 13429314 DBLC-J2SSAF-2OL9F 00128178 YKB21-5224 00120434 YKB21-5227 13429676 YKF51-5048
+TACT SW SW1-SW13 on PB AC SWITCH
+RESISTOR / ##t 00234501 CRHIOOX R-02 J 470 00234490 CRHIOOX R-02 330 5399926 MCR5O-1O1JTAPE 5399932 MNR34JSA101 TAPE 5399917 MNR34JSA103E TAPE 00128189 MNR35 J5 102 00120823 MNR35 J6 103 TAPE 13919283 RGHD 9X11IJ 13919140 RGLD 8X103J
+D-sub 25 Pin (SCSI) Phone Jack (PHONES) Phone Jack DIN 5 Pin (MIDI)
+JK2 on MB JKS on MB JK3, JK4, JK6-JK9 on MB JKI on MB
+1W
+R155 on MB R154 on MB R140 on MB RA22 RA23 on MB RA1O, RA16 on MB RA17 on MB RA4, RA6, RAI1, RA2I, RA24 on MB RA18, RA19 on MB RA2, RA3, RAS, RA, RA8, RA9, RA12, RA13 RA2O on MB
+MISCELLANEOUS_ rof 22350313 AMDEK FOOT MKS 22140219 DE-2O0 ARM 22150404 DE-200 SLEEVE 23453169 GM-70 CONTACT CHIP 345-169 22163567 S-330 DD SPACER 23453170 S-330 EARTH RUG SP-7O0 EMI GASKET 22163138 W-30 SHIELD SPACER 084*080+ SUBTIGHT T-18S 088444*+ SPACER PCP 3.2x5.Ox4.01
+1/2W R: Array 10Ox4 R. Array 1Okx4 R: Array Ikx8 R: Array 1Okx8 R: Array 110x9 R: Array 1Okx9
+DISPLAY UNIT RT1ZY 00123945 DMF-50374NYU-LY LCD Unit(14 60x64) NOTE Replacement LCD Unit should be made on a unit bassis: No replacement available for individual parts: Replacement only by a unit: # TAzHLCD Unito)zmit_ 1=7 |#mtmottaw' mNctlt 1=7 | #Mlo
+POTENTIOMETER / #V1-4 00239134 RK09724A4 1Okb VRI on MB CAPACITOR/ 3 =2+- 00126545 6SA47M+T TAPE 6.3V/47uF OS C114,C116,C118, C12O on MB 13629624S0 6SCIOM-T TAPE 6.3V/1OuF OS C128, C134, C240, C242 on MB 00232345 ECEAIAPZAZOB 1OV/47uF Electro C124,C126,C130,C132 on MB 00233201 ECEAIEPZZZIB 25V/220uF Electro C186, C198 on MB
+PACKING / TTv +> 00123189 S-780 PACKING CASE 22643289 S-330 PAD ACCESSORIES (Standard)_ #4neR 00123190 FROPPY S-760 DISK SET 23485135 SP DIN PLUG CODE 2.5m 70122189 Owner's Manual Set (Dom) 70120245 Owner's Manual Set (Exp) OPTIONS / %igcR #**440* SIM72-8 SIMM Module 8MBytex2 #******* SIM72- SIMM Module 16MBytex2 #*00#* MIDI Implementaion Notes ******** OP-760-1 Power Sampling Expansion
+DISk DRIVE UNIT /=+39F5t7 . 1296
+22443588 22443589
+MSA817 1OOVI17V MSA818 230v/240v
+NOTE Replacement Power Supply Unit unit should be made on a unit bassis. No replacement available for individual parts. Replacement only by a unit: # #IZMPower Supply Unito Zilt _ 1=7 |mmtmottw MNZt, 137 461o
+INDUCTOR, COIL; FILTER/ ( >m29-_ 7tJL . 7 1JL]- 12399501M1 BLOZRN2-R6z Ferrite Bead L5 on MB 12449298 ESD-R-25D Data Line Filter 12449381 SBT-0460TF TAPE EMI Filter FLI, FL2, FL3, FL4 on MB
+PCB ASSY  #+568 [J 70011290 MAIN BOARD (PCB 00124478) NOTE Replacement MAIN BOARD should be made on unit bassis: No replacement available for individual parts: Replacement only by a unit: Replacement MAIN BOARD includes the PCB. 7# MAIN BOARDOZlI+ _ 1= fpllgwing  th 27t#w'o m1ut 127 k#6o TNSHJMAIN BOARDII , F@ol1ra#*+
+CRYSTAL, RESONATOR/ 903#1 . @BF 12389784 CA-301 8MHz X4,X7 on MB 00124378 CA-301 12.288MHz X8 on MB 15299154 CA-301 16MHz X1 on MB 00124389 CA-301 16.9344MHz X5 on MB 00124390 CA-301 18.432MHz X6 on MB 15299120 CA-301 32MHz X3 on MB 12389738 CSB 4OOP CelaLock X2 on MB
+PANEL BOARD (PCB 00126801) ENCODER BOARD (PCB 00126812)
+ENCODER/ Ij3-#- 00120845 EC11B1524 L-3Omm ENI on EB
+IC _ 108
+00230634
+AK4328VS-E
+FLAT DIA Converter
+IC91, IC92 on MB
+5
+
+===== page_05 =====
+S-760
+Dec, 1993
+PARTS LISTIT_Y!Jx R (OP-760-1) MB MAIN BOARD VB VIDEO BOARD
+TEST MODEIS 7 6 . â‚¬-6 Editing S-760 intenal parameters
+S-760p0Ekr15X-#-0##m7
+SWITCH/ 7 4 7$ 13159187 SSS2-22-01 SLIDE SW SW1 on VB
+While pressing the MODE key; turn on power When the red LED flashes, release the key: Adjust visibility of the LCD using the S1 or S2 button or VALUE dial:. Edit parameters and then press EXIT button
+MODEOFFV 'LEDF ##+ 6 * ~MODE+-t#lt?sr {& Anv <t&w' LEDF##lt6s1, S2#+ItVALUEY / 7 ) TLCD& #Bptw #@kLttzw'o #)5X-9-rzEVLt <tzw'o EXIT & ##LtTZw EXIT F 3 < 2 â‚¬3 & hpBs x-y-h###zbh$+0 Digital Sampler
+JACK, SOCKET / > + 2 . )Ty 13429214 DELC-JIPAF-1L9 D-SUB 9P (EXT CTRL) JKI on MB 00121023 RCA (PIN) 14*14RA 2L4PCIRCUITB RCA PIN JACK (VIDEO) JK3 on MB 00121001 TCS5040-18-4051 DIN 8P (DIGITAL RGB) JK2 on MB 00231223 YKF51-5502 DIN 4P (S-VIDEO) JK4 on MB
+PCB ASSY / Et5z0 8 00233256 OP-760-1 PWB MAIN SHEET 70016834 MAIN BOARD (PCB 00233245)
+Roland S-760 SSeE k 1:Self SCSI ID SCSI:7 2 Boot Drive Default 3 : Controller Panel+LCD LCD Contrast "Pres [EXIT] for Booting
+NOTE Replacement MAIN BOARD should be made on unit bassis_ No replacement available for individual parts: Replacement only by a unit: Replacement MAIN BOARD includes the following PCB #A@E FMAIN BOARDOZilt 127 | mbtmottaw tmNmIt , 7 } #fzo mNHJMAIN BOARDI+ , Tao@tit 6h*+0
+VIDEO BOARD (PCB 00231201)
+IC/ #ED* 00230689 15209137 15279550 00121067 00121078 15249103 15249114T0 15259706T0 15259753T0 15259754T0 15259778T0
+CXATIASM-T6 (TAPE) FLAT RGB->Composit IC ICI on VB RFSC16A CRT Controller IC2 on MB TC511664BJ-10 (EL) D-RAM 1M IC9 on MB TC9245ELT Digital_IF_Receiver IC7 on MB TC9271ELT Digital_VF_Transmitter IC6 on MB TCASZOF TE8SL (TAPE) ] 8-In. NAND IC12 on MB TCZ4HCOOAF (TAPE) Quad 2-Input NAND IC2 on VB TCZ4HCUOAAF (TP2) (TAPE) HEX Inverter IC4 on MB TC7AHC164F-T2 (TAPE) Pala Out Shift Reg: IC1O, IC11 on MB TC74HCI6SF-T2 (TAPE) Pala Load Shift Reg: IC13,IC14 on MB TC7AHCZASF-T2 (TAPE) FLAT Oct.3-state Trans: IC8 on MB
+Fig: 1/ 11
+Identifying the version of S-760 boot ROM (IC15)
+S-7607 _ FROM (IC15) Or-73~mi
+While holding down the PREVIEW (PUSH) knob and F1 button, turn on power: The ROM version will be displayed on the LCD.
+LCDjmi KEROMO)Y->a >hszn&n6 $7 PREVIEW   (PUSH) EFI k ##lttsiEE Anvtzw'o LCDJIii â‚¬ROMO)->a > *TR: 3 = &+*H#* :
+TRANSISTOR / 65-739 - 15319101 2SC2412KR T-146 (TAPE)
+CHIP NPN Tr
+Q1,02 on VB
+Identifying the system version
+S-760>75hor->avmi
+RESISTOR / #t 00126490 MNR34J5AJ470 (TAPE) 15399931 MNR34J5A221 (TAPE) 00120823 MNR35J5J103 (TAPE) 15419717 RR12ZOP-273D (TAPE)
+Resistor Array 47x5 Resistor Array 220x5 Resistor Array 1Okx5 Metalized Resistor 27k
+RA7 RA8, RA9 on MB RAS RA6 on MB RAI on MB R13 on VB
+Turn on power and insert the system disk:
+Et Anv?zth=i3m â‚¬Ant<tw' LCDH@~> 7=40)-Ja > %Th@gh< &@Hx*to
+CAPACITOR/ 3-= #- 13649107M0 ECEAICNAZOSB (TAPE)
+Press the MODE button to select Disk (F5)_ Press the MENU (PUSH) knob to select Save System. The LCD will display the system version:
+MODE & #IJJ LDisk   (FS) * jU , MENU (PUSH) *#LT Save System & jh v < t <w`o LCDJI<v 7740)->a> &F@+ h< & ++**+o
+16V/47uF Bipola
+C32, C29, C26 on MB
+INDUCTOR, COIL FILTER/ 1Y5)# - JtJL , 7 <JLa- 12399501M1 BLOZRN2-R62 Ferrite Bead 00230712 ELB4LO68 Delay Line 00230701 H287BSJS-3108HWD EMI Filter 00230690 H287BSJS-4438HWD EMI Filter 00127012 ZJSC-R47-181-T (TAPE EMI Filter 13529159 ZJSC-2R2-101-T (TAPE) EMI Filter
+FL7, FL8 on MB L3 on VB L1 o VB L2 on VB FL1 on MB FL2-FL6, FL9, FLIO on MB
+S-760 test disk
+S-76057[5<77630'7
+Starting the test disk The hard disk to be checked must be formatted using 5-760 utility and assigned ID No_ 2 Hook up the MIDI IN and MIDI OUT sockes via an MIDI cable Turn on power and insert the test disk (PROTECT switch off) into the disk drive slot. LCD will display: Wave memory Optional board EEPROM test result.
+5365132o1m )= F7i3n OME*th#Alts-76077+-7v } & ntz) =67z3" #IRB2k Lttmlt<tzwo MIDI IN & MIDI OUT&MIDIJ - T)-ikmlt<t*wo EEX & AnvPROTECT SWZ OFFIZ Lt=z }7 7/ % Inv < t3w`0 LCDjiiI-WAVE MEMORYOJ4+@ OPTION BOARDOT M#E EEP_ROMOMTMR t#TL*to
+CRYSTAL; RESONATOR/ JVx#1 . ##F 00231178 CA-301 14.31818MHz 00230667 SG-531YH-B 433619MHz
+CRISTAL RESONATOR
+X1 on MB X1 on VB
+FUSE / E-X 12559817
+ERQ-16NKRISE
+Fuse Resistor 0.15 ohm
+FUSE1 on MB
+CONNECTOR/3321 - 13369541 B1OB-PH-K-S 00121101 TX15-SOR-LT-MH
+1OP Post S0P Card Edge
+CN2 on MB CNI on MB
+WIRING CABLE/ 2{+W>J t-Fil 00231189 OP-760-1 WIRING VIDEO on VBBetween MB AND VB
+TRANSFORMER / 65v3
+Start Message Please Push EXIT Key
+12449615
+PT-10244-615 Pulse Trans
+T1, T2 on MB
+SCREW/ 370
+Wave Memory Option: EEP ROM:
+2+ 0+ Digital/CRT OK
+000*8440
+M3x6mm S-Tight Bind Cm M3x8mm P-Tight Bind Bc Boss Nut M3/M3 L22
+0***** 22155546
+MISCELLANEOUS_ rof 00124023 OP-760-1 EXP COVER
+ACCESSORIES (Standard) / ##@+ER 00124012 FLOPPY S-760-0PT DISK SET 00124001 OP-760-1 MANUAL DOM 00125878 OP-760-1 MANUAL EXP
+Fig: 2/ 12 RthatT@ltSEXITk #L T < t<1'o
+To exit the mode, press the EXIT button.
+
+===== page_06 =====
+Dec, 1993
+S-760
+Test procedure Select a test option using the F1, F2, F3 and SHIFT buttons: The F4 and F5 can be selected by pressing F1 and F2 after pressing the SHIFT button: To end a test (except switch check) , press the EXIT button. To end switch test, use the VALUE dial, To change value, use the VALUE dial:
+#Eo t} Jxtox=i-ItFl, F2, F3, SHIFT# y > 7JtR: 3 #+' #x*to SHIFT* #Lt-@I-FL,F2i y > ##v &F4,FS@-J+R <h*+0 #T+hASW check Lf{ -ItEXIT  & > &Hv'++o SW check ( ItVALUEY ^ 7 )tHwtrtlt;o VALUEY / 7 ) â‚¬ Fwvmtzzhz &h#satoo
+LED Check On the Panel Test Menu screen, press the F2 button to select LED Check screen Check ALL LEDs
+LED Check Panel Menu 06 F2 % #v & LED Check KA h * 0
+Test Menu On the start message screen, press the EXIT button to call the Test Menu screen. Use a function button to select the desired test
+Test Menu e@m * L (WAVE MEMORYOg#AIRT+ 6 EXIT & ## 7 & Test Menukz X h $ +0 MTHB *##RL T < +&w`
+Fig: 6/16
+TESTMENU Please Select Fl Panel F2:Display F3 : Device F4 Sound FS : Option Panel Display Fig: 3/ 13
+Verify that all LEDs are turned on and off: A double box on the screen represents a dual-color LED which lights orange when both LEDs light. Buttons that have LED will be displayed in reverse video on the LCD_
+J4T OLEDFAHkUH- 6+&Trlr <tw'o @ It 2 ELEDZTLTw*to 2 LEDI+FI##JJRAIt tlvv@lth*yo LCDJAx) ET@MEI : 3+-0#KLEDFX 2 71*+0
+Device
+Dial Check On the Panel Test Menu screen, press the F3 button to select Dial Check screen_ Turn the VALUE dial and check its function.
+Dial Check Panel Menuz  6F2 * # y & Dial Checkkz X h & +0 VALUEY [ 7 )&mL mHL L Twzz& Mmlt<t&wo
+System Command To have backup copy of the test disk, press the COMMAND button while in the Test menu screen. To copy the test disk onto a floppy disk, insert a disk (with the protect switch at off position) into the drivve slot and then press the F1 button: To copy contents of the test disk onto the hard disk, set the ID No. of the hard disk to 2_
+System Command Test Menuz- 5COMMANDE #ly 2 =z } =[ 7/ 0)4> > 7 v7*nz#nHx}o 7n> â‚¬t$i3mknata_ PROTECT SWt OFFIZ L tsi3m&An Fltm*t_ A-F+37kMzba, )-F7 3/ OIDRBt 2 I3 LTF2&##L*yo
+Display Check On the Test Menu screen, press the F2 button to start Display check: Using the F1, F2, F3 and SHIFT buttons and VALUE dial, verify that all LCD dots turn on and off and the screen contrast can be adjusted_
+Display Check Test Menuf- 6F2 #j & Display CheckI- X h # +0
+Fl,F2, F3 , SHIFTs & > & VALUEY / 7 ) %Hwr-ao LCD F > 6v#RUAkt6+ ? => k5z } Iteefky 3 p ? &TrlT <t<w`0
+Panel Menu Pressing the F1 button calls the Panel Menu screen_
+Panel Menu Test Menu @6 Fl %#y & Panel Menu k X h # : 0 MTJA * ##RL  < K<w'
+Device Test Menu Device Test Menu On the Test Menu screen, press the F3 button to enter the Test Menuf-5F3 % #-y & Device Test Menukz X h # +0 Device Test Menu screen: #TH] * ##RLT < Tzwo Select the desired test option. Device TTest Menu Please Select Fl MIDI Check F2 SCSI Check F3 Wave Memory Check F4 FDD Check
+Panel Test Menu
+Please Select F1 SW Check F2 LED Check F3 Dial Check
+SW
+IFD
+Dial
+MIDI
+SCSI
+Wave Men
+Fig: 4 / [4
+Fig: 7 /[7
+Panel Switch Check Panel SW Check On the Panel Test Menu screen, press the F1 button to Panel Menuf  6FI & #J g & Panel SW Checkkz X h $ +0 select Panel SW Check Check ALL Keys Please Push All Keys
+MIDI Check Hook up the MIDI IN and MIDI OUT sockes via the MIDI: On the Device Test Menu screen press the F1 button to select MIDI check The MIDI output circuit is automatically tested. Pressing the F1 button again repeats the test .
+MIDI Check Device Test Menuz-6FI # #y & MIDI Checkk X h $ +0 MIDI IN & MIDI OUTE MIDI} - T)rimltxw < t <w`0 AmMJWZOUTMTt MTw* +o Fl&#- & #BMRtMTw` *t0
+Pressing the F2 button allows the MIDI signal to be throughed_ This time, connect the MIDI OUT to an external device.
+F2 k #y 2 3 )-#@kt h $ : W#WMIDIRRZ & #l Ltz)-7bbzrtmrlt<tswo
+<Exit
+Dial>
+Fig: 5/[s
+Press the switches (except for POWER) and control knobs _ To cancel the check, turn the VALUE dial.
+347OSwitch, VALUEY / 7 ) & VOLKnob& ##L T < t&w`0 Wfru+trT+nwItVALUEY / 7)&pLT < +*w'o
+
+===== page_07 =====
+S-760
+Dec, 1993
+SCSI Check On the Device Test Menu screen, press the F2 button to start SCSI check. Pressing the F1 button repeats the test: Please Connect HDD Set SCSI ID-2_ SCSI device is not connected, or SCSI ID No. is not 2 Read Error___ Data read failure_ Write Error___ Data write failure_ Verify Error__. Data mismatch SPC Error___ SCSI controller not work:
+SCSI Check Device Test Menuf 6F2 & #l y & SCSI CheckkzX h $ +0 AmMkMEtMw* + Fl & #y & #BMTtHTw* +0 Please Connect HDD Set SCSI ID-2_ SCSI? Iit <ntwtw'8 L < Ix , SCSI IDhs 2 -tcw'2 #0 Read ErTor__. Read / #lk ltz2 & Write Error . Write / !B Lt2 # Verify ErTor_ Deat 0T -1k+Z4 Ltz & $0 SPC Error. SCSIJ > } A-5-W@lltw2 #
+Sampling Check From the Sound Test Menu screen, press the F1 button to start Sampling check: AD and DIA circuits are automatically checked: The F1 button toggles between input and output: The F2 button changes sampling frequency: Check the sound quality at the STEREO OUT 1. Adjust REC LEVEL and VOLUME controls as necessary:
+Sampling Check Sound Test Menuf- BFI # ##v & Sampling CheckkZ X V # - AmMJâ‚¬EADD,DIAMT*Tw'* +. Fl & #+ & A#JJ # 1J h #x $ +. F2t#y 2+>7'>THiittb#z*y REC LEVEL & VOLUMEâ‚¬ Jiff L Ahznt-h#zF#o 135@ PHONES% & USTEREO OUT 1k #hznrwbn& Thrz LT < +<w
+Digital IO Check On the Sound Test Menu screen, press the F2 button to start Digital IO check This test is available only when the optional digital IO board is mounted: Input appropriate digital signal to the Digital IN of the optional board. Connect the Digital OUT of the optional board to a unit having digital input: Check the digital output and display on the LCD for correct reproduction of the input signal:
+Digital I/O Check Sound Test Menuz- 6F2k #Hv & Digital IJO Checkk- X h # - 0 Digital IooiRhk r#p+78a #-Frenltwzi 0#j#RHA + +_ t7v37#_ FODigital INIZDigitall # k XJjL < <t8wo t7va>#_FODigital OUTIZDigitall #* Z1#xz1 #ttMLT <tZw0 Ahznrw30#2LCD@IKETLwzaso#i FsF C+ 2 ) # MrLT <tzw'. AH &n7wzn#r]#on#m#J&nvvz m & Fh @LT < tZw'0
+Wave Memory Check On the Device Test Menu screen, press the F3 button to start Wave Memory check: Pressing the F1 button repeats the test.
+Wave Memory Check Device Test Menuf- 6F3 â‚¬ #v & Wave Memory Checkkz X h *3 AMbkMT*MT*+0 Fl &#y & #JME*Tw* +0
+Note: WAVE MEMORY display (from left) Standard (2 Mbytes) IC87 (socket B) IC88 (socket A) = total working memory capacity If 0 + 16 + 0 is displayed with one SIM72-8 and one SIM72-16 are installed, check connection of SIM72-8 at IC88 (socket A)_ If 0 + 16 + 0 is displayed with one SIM72-16 is installed, remove the SIM72-16 from IC87 (socket B) and insert it into IC88 (socket A): When two SIM72-16's are installed, the display should show 0 16 16, indicating that available wave memory is 32 Mbytes_
+# WAVE MEMORYItE+ 6134 (2M) + IC87 (Socket B; + IC88 (Socket A) TlTvgt 3 30#OTAsgIKI- NEHHx3 WAVE MEMORYO# 7+0 SIM72-8 xl + SIM72-16 xlkg#lt 0 +16+ 0 oxT @#t-tba IC88OSIM72-80#7I@ & MrL< +<wo SIM72-16 xlzg#lt0+16+ 0 ORTTHt+a SMM72-l6og@*IC87@6IC88k22EV L 7 < tw'0 SIM72-16 x2t #ltma 0 +16+16 ORFTHT ElSINH Hskz WAVE MEMORY0#lt32M & t h $ 4 0
+Analog Check Analog Check On the Sound Test Menu screen, press the F3 button to start Sound Test Menuz- 6F3 k #v & Analog Check/- X n # - the Analog Check_ Check Analog Output Stereo Stereo 2 L R L R
+Mute On
+Out+
+Mute
+Fig: 9/ B9
+FDD Check Pressing the F4 button on the Device Test Menu screen starts FDD check To repeat the check; press the F1 button_ Please Change Protect _ PROTECT SW is at ON position: No Format__. The disk has not been formatted on the S-760. Read Error: Read failure_ Write Error: Write failure_ Verify Error__. Data mismatch_
+FDD Check Device Test Menu  6F4 #y & FDD CheckkzX h $ :0 Amii-trtnw'*+o FI & ##- & MEMTEMTw*+0 Please Change Protect_ PROTECT SW@ONkt ? w30 No Format: S-76077+-7v k&ht?i37-lttw'o Read Error, ReadkzYB Ltzx $ Write Error __. Writelz YB Lt2 #0 Verify Error: DeatoT_Tkvz8# lt& $
+Connect the STEREO OUT and STEREO OUT 2 to a separate speaker: Turn the VOLUME control fully clockwise_ Press the F1 button to change outputs_ Turn on and then off mute function by pressing the F2 button. With mute off check that only the selected OUTPUT provides 660 Hz, 11 mV sine wave. With mute on, check that all OUTPUTs provide the same 660 Hz signal.
+7 +0' OSTEREO OUT 1, STEREO OUT 2 zhzhe_ 5 -3E-h-t#mlt<t<wo VOLUME& RkkLT < tzwo FI ##v & #Je)bn#z*to F2r#v & MuteDonloff? &J h #z *+0 Mutefsoffot@~th#zbntwaifoak#v#r 13_& &Fhulr<t*wo Mutef ono Il -+AtoxJwav#twtwz & &Th RLT <taw_ #J660kHz HmVO) EB O*HJJ <n*+0
+Voice Check On the Sound Test Menu screen, press the F4 button to start Voice check Connect the STEREO OUT L (MONO) to a speaker: Turn the VOLUME control fully clockwise_ With mute off, verify that all voices (0-23) can be reproduced: With mut on, verify that all voices (0-23) are silenced:
+Voice Check Sound Test Menuz- 6F4t #lly & Voice Checkkz X h # F0 7+0' OSTEREO OUT 1 L (MONO) K â‚¬=%-71-h tttlt<t? V`0 VOLUME& Rkk LT< t<wo Mutehsoffo#I-+~7 DVoice (0-23) ~#nH-wzzx rTELt < tzw'o MutezsonD4HE: Wg^T DVoice (0-23) ~#hH-ntbz 2 * Frz LT tZwo
+Sound Test Menu Please Select Fl: Sampling F2:Digutal I/0 F3 Analog F4 Voice
+Sample
+Digital
+Analoq
+Fig: 8 / [l8
+Sound Test Menu On the Test Menu screen, press the F4 button to enter Sound Test Menu screen. Select the desired test:
+Sound Test Menu Test Menuz  6F4##lv & Sound Test Menulz X h $ j 0 MTJB * ##RL 7 < t?w'o
+
+===== page_08 =====
+Dec, 1993
+S-760
+Option Check On the Test Menu screen, press the F5 button to select Option check This test is available only when an optional board is installed:
+Option Check Test Menuz- 6 FS â‚¬ ##y & Option Checkk X h # F t7v3-#-rtenltwbmO#j#R#xtto
+Starting the test disk Turn on power and insert the test disk: The LCD will show: Wave memory capacity Whether optional board is mounted Test result of EEPROM
+536713g01m TET & Anrvzk7 7m &Ant < t&w'0 LCDJiâ‚¬ZWAVE MEMORY0 geFi OPTION BOARDOH# EEP_ROMOMET *#71*to
+Check Option Please Move Mouse
+Note: WAVE MEMORY display (from left) Standard (2 Mbytes) + IC87 (socket B) IC88 (socket A) = total working memory capacity If 0 16 + 0 is displayed with one SIM72-8 and one SIM72-16 are installed, check connection of SIM72-8 at IC88 (socket A): If 0 16 0 is displayed with one SIM72-16 is installed, remove the SIM72-16 from IC87 (socket B) and insert it into IC88 (socket A)_ When two SIM72-16's are installed, the display should show 16 16, indicating that available wave memory is 32 Mbytes_
+1 WAVE MEMORYItE+b43# (2M) IC87 (Socket B) + IC88 (Socket A) Tltw'*+ 3 20#kOH@ glsI-NEHJ H* 3 WAVE MEMORYO@ 7 SIM72-8 xl SIM72-16 xlkg#l  0 +16+ 0 Or TR hs#tzhA IC88 (Socket A) 0) SIM72-80#7fFm & ThrzL 7 < t 8w'0 SIM72-16 xlzg@el 0+16+ 0 OEthHt-ha SIM72-16 Ogwe&IC87 (Socket B) 76IC88   (Socket A) KZELT < t< V`0 SIM72-16 x2& #lt-ma 0 +16+16 Ok5TH 7, #lI-NHH# 3 WA VE MEMORY0#It32M & t h $ +0
+Retry
+Fig: 10/ E1o
+Move the mouse and verify that a line is drawn on the LCD: Click the left-hand button on the mouse and verify that the upper circle on the screen turns black Click the right-hand button on the mouse and verify that the lower circle turns black_
+Mouse & Dhv L 7blBf & # < +, E*v1 > 7L7, Eon TSH < 2hesnzvrhrv)) >v L7, Fo[v# <hosznzh rTBL 7 < +1`0
+Replacements SIM72-8 and SIM72-16 are not available as spare parts but as commercial products_
+mEi?6'7 SIM72-88 & USIM72-160) ~ 4 It AH#Ke2 LTIt WTG# ##+ho TROWAItPSG & LTheL T < +&wo
+MEMORY EXPANDERIX EV-I+XR># - (SIM72-8/SIM72-16)
+SIM72-8 SIM72-16
+8 Mbyte SIMM 16 Mbyte SIMM
+SIM72-8 SIM72-16
+8Mbyte > â‚¬ 1) _ > 2 16Mbyte X â‚¬ 1) _ > 4
+Guarantee A label bearing the Roland logo is attached on the SIM72-8 and SIM72-16 Roland Corp. will not assure proper performance if a SIM72- 8 or SIM72-16 having no Roland label is used
+RM6?6'7 SIM72-8*3 & USIM72-160) > 4 kz ItRoland ?/ = )@slbnv w*+ Roland ?  = ) @lbhvwtwWkohrit, V4kUtM D@M* RRHE : 2 < 2 It#e#+ho
+These SIMMs are of 72 pin, 1.27 mm pich and not interchageable with SIMMs of 30 pin_ 2.54 mm pitch: OMS- 770, OMS-750, SIM-8, SIM-2
+72pin 1.27mm â‚¬ > $ 9 ^70? h -xo3Opin 2.54mm E Y F 1 / fov 1 OMS-770, OMS-750, SIM-&, SIM-2 2 OE#lItbh #tko
+SIMMs having no Roland label The SIMMS listed below may be used with the S-760 but Roland will not assure correct performance of the SIMMs and S-760.
+@analtSIMMK ?6'7 S-760 7* Roland tEEoz 2 bLblKZ $ MHJ @jhets #+s& h *+ tztiLRoland & L TIt? 2 JUAMODlt RRHE+h< < It ###tho
+Available combinations
+Rmnalt"2t631'7
+Standard (2M) # 4
+IC87
+IC88
+Total 2 a 2M 1OM 18M 26M 32M
+Mono Sanpling Time (44.1kHz)
+(Socket B)
+(Socket A)
+X X X
+X
+22.5s 113.5s 204.6s 295.6s 363.8s
+Mbyte SIMM For Macintosh LC-3, Centris610, Quadra 800 72 pin, 2 Mword x 32 bits D-RAM module 4 Mbit D-RAMx 16 Access time 8Ons or better
+8Mbyte X = 1) -> 4 Macintosh LC-3, Centris61O, Quadra8O0HJ 72pin 2MT - F x32â‚¬ > 6D-RAME> 1-) 4ME > kD-RAMF > 716/## 7 +7 % / 4 8Ons WF
+SIM72-8 SIM72-16 SIM72-8 SIM72-16
+SIM72-16 SIM72-16
+16 Mbyte SIMM For Macintosh LC-3, Centris 610, Quadra 800 72pin, 4 Mword x 32 bit D-RAM module 16 Mbit D-RAMx 8 Access time 8Ons or bettern
+Do not use them in any other combinations than listed above.
+hlulomatvgltwv<tzw
+16Mbyte X â‚¬ ') _v4 Macintosh LC-3, Centris61O, QuadraBO0HJ 72pin 4MV _ F x32â‚¬ > 6D-RAME> 1 -) 16ME > kD-RAMF > Tsm## 7 m+7 % / 4 8Ons W F
+Installing procedure Remove the top cover by unscrewing eight M4 x 8 mm screws on the sides and three M3 X 6 mm on the rear: With the Roland logo label facing up, insert the SIM72-8/16 into the socket to the bottom (until silver locks latch). To remove the SiM72-8/16, release the locks: Replace the top cover and then secure it with the 11 screws removed: Turn power 0n, insert the disk and verify that the total wave memory is equivalent to the mono sanpling time_
+R#i?'7 S-7607 @EFDx LMAx8mm S-Tight Bind Bc 8  2 V) 7 )? R) Eox lM3xbmm B-Tight Bind Bc 3  % H} L TOP COVER & MLT < t&w' SIM72-8/16* Roland?/ = )@Ektatk Ltnokzlt <t8w' SocketOEEO#EOJ#*SIM72-8/160) Ekt 3 & 5 IZ##L jhv<txwo Fh}}y#aitzzoneontEWF-hh}lv < tzwo TOP COVERk ##Lratnnlt6 2 29 h klbt < T<wo TEX & wn 7m 5 v 7 7 4 7 / 7 " & wh 7 WAVE MEMORY0 Aat < Mono Sanpling Timef ELV'Z & & FR LT< t:< V`0
+Note: OMS-770, OMS-750, SIM-8 and SIM-2 cannot be used with the S-760. 16 Mbyte SIMMs with 32 4-Mbit D-RAMs cannot be used with the S-760.
+# OMS-770, OMS-750, SIM-8, SIM-2ltfeH v 4 #+ko 4ME > } D-RAMF v 732 #G+016MByte X â‚¬ W) _ > 4ItfH va #+ho
+
+===== page_09 =====
+S-760
+Dec, 1993
+How to install the OP-760-1/OP-760-10Iftlz?117
+[PARTS] No PARTS No_ 00233256 70125645 00124023
+PARTS NAME OP-760-1 PWB MAIN SHEET VIDEO BOARD (PCB 00231201) OP-760-1 EXP COVER
+The OP-760-1 includes the following components_
+OP-760-1k3ItbF0s 0751371*to
+OP-760-1 MAIN Board (70016 6834) OP-760-1 VIDEO Board (70125645) SYS-S760-7 Ver. 2.0 (00124012) MOUSE MU-1 (22155546) OP-760-1 EXP Cover (00124023) OP-760-1 Instruction Manual (00125878) Screws Boss Nuts 22mm (22155546) 3X6 STB Cm 3X8 PTB BC
+OP-760-1 MAIN Board (70016834) OP-760-1 VIDEO Board (70125645) SYS-S760-7 Ver. 2.0 (00124012) MOUSE MU-1 (22155546) OP-760-1 EXP Cover (00124023) OP-760-1 Instruction Manual (00125878) Screws Boss Nuts 22mm (22155546) 3X6 STB Cm 3X8 PTB BC
+[SCREW] ******** ******** #**8****
+M3x6mm S-Tight Bind Cm Boss Nut M3IM3 L22 M3x6mm B-Tight Bind Bc M3x8mm P-Tight Bind Bc M2.6x5 S-Tight Bind
+1
+8*******
+0*00***
+Installation Procedure 1_ Trun the power off and disconnect the power cord from the AC inlet: 2 Remove the TOP cover and EXP cover of S-760_ Keep the screws (3X6 BTB CB) for the EXP cover; as they will be used later on. 3 Referring to the figure, use four boss nuts to secure the OP-760-1 MAIN board in place  4 Set "SW1 located on the VIDEO board to match the television system of the country where the S-760 is to be used: Then, connect a wiring cable to "CN2" of OP-760-1 MAIN board, and attach the VIDEO board onto the OP- 760-1 MAIN board using four pieces of 3X6 STB Cm. 5 Remove two screws (2.6X5) securing the MOUSE jack on the OP-780-1 MAIN board, then tighten them along with OP-760-1 EXP cover: The EXP cover should be fastened using the two screws removed in step 2 Screw into the middle of the four pin jacks using a 3X8 PTB CB. 6_ Reattach the TOP cover:
+Wftz 1. Et &h />~y } + hEJ-Fehllrtzwo 2. TOPH ) = & S-760EXPh )1_&lfLT < t<wo EXP H )1= 03 7It@ mHlttott < <twtt 8w'0 3 1Jk ? 7OP-760 MAIN# = Fz#zty } 447, Hh ftb}r < t&w VIDEO# = FoEK6hSW1k @Hvn@o=1 EJ IiAbtt J / +) y " *MAINT = FOCN2A# #L- MAIN$ = Fokk 3x6 S} / k 447Hh t W}t < t< V`0 5. MAINT = FoMOUSE  + > " 03v 2A*Itv1 EXPH )N= &#tikolt< txw`0 EXP h )~= It 2 . ~llltzz tmHLTEor<t 8v`0 Evv+y)ORhAr 3X8 Py / k 1A7167 (t&w'0 TOPH )=&ftb}v < t&wo
+After the installation has been completed, check each of the following functions of OP-760-1_
+ntasrb h * Lt:60P-760-10# he r $ _ > 7 Lt < t&wo
+Startup of the SYS-S760-7 Operation of the MOUSE Output of the S-VIDEO terminal Output of the DIGITAL RGB terminal Output of the VIDEO terminal Din and D.out functions
+SYS-S760-70) E2*} MOUSEO DhKF Si RiFox: RGBM#F O#JJ VIDEOM Fo#JJ Din Douto)TRal
+10
+
+===== page_10 =====
+Dec;  1993
+S-780
+IC DATAIC5 _ 1
+VCO (IC78 on MB) SN7 45124N (15169508)
+1
+16 Bit CPU (IC1 on MB) S8OC196KB 16M (15199812) Top View 101002 8 9 1 8 3 |8 % 3 |x %
+65
+40
+Cext BWAE QPUT G10
+I/0 Gate Array (IC2O on MB) UPD65O0 12GF-473-389 (15239131)
+Vcc OVCCAWNWNGE
+TOP VIEW (FLAT PACKAGE)
+10
+25
+8 & ? R ? R R R { ? R 8 8 6 8 8 64
+ADL/P3
+TZCLK/P2.3
+24
+ADO/P3
+63
+VSS
+AEADY
+PIN NO _
+PIN NAME I/o PIN NO PIN NAME I/o PIN NO PIN NAME I/o PIN NO PIN NAME I/0 I 61 CSEL 0 ; E ; 0 ! 9 #  # 1 3 GND Y1 Yo
+ALE/ADV
+61
+TzaST/P2
+2
+OVCC Cext DWE WIAUT
+INST
+60
+BHE/WAH Wa/WRC
+RANGE FTREY
+buSwIDTH
+59
+CLKOUT
+58
+PHM/P2.5
+XTALZ
+P2. 7 /TZCAPTURE
+XTAL
+56
+Vep
+A/D Converter (IC58 on MB) 566328367) 28
+" : Vcc 13 Z 14 NMI 15 ACH3/PO 16 ACHI/PO 17 ACHO/PO 18 ACH2/PO 19 ACHG/PO 20
+BQiNGP TOP VIEW LOOKING DOWN ON COMPONET SIDE OF PC  BOARD
+5 Vcc VsS HSO . 2 P2.6/T2UP-DN Pi.7
+50
+49
+48
+Pi.6
+46
+Pi
+HSo
+ACHZ /PO
+21
+HSO . 0
+CRT Controller (IC2 on OP-760-1 MB) RFSC 16A (15209137) 33 88 g 3 3
+N.C
+22
+HSO.5/HS1.3
+8-In NAND (IC12 on OP-760-1 MB) TC4S3OF TE8SL TAPE) (15249103)
+ACHS/PO.5
+23
+Vss
+ACHA/PO
+24
+HSO . 4/HS1.2
+8 8 Ri 8 8 8 6 8 8 G 8 9 5 9 8 8
+IN
+Voo
+IN
+9 9 g g E 2 3 2 80 a 1 2 2 2 1
+Vss
+OUT X
+Lld
+60
+M-LEVEL
+50
+2 VDe VD9 VDio VDt4 VD4z VDi? VDi 4 VDis VDO VDi VD? VDa VDa VDs VDG VD7 VAO
+Ro 88 DACK dreq
+D-RAM 1M (ICg on OP-760-1 MB) TC511664BJ-10 (EL) (15279550)
+RGB->Composit IC (IC1 on OP-760-1 MB) CXA1145M-T6 (TAPE) (00230689) 24
+10
+At Az A3 INT VBUS REQ
+40
+Di Dz
+20
+30
+8 & 8 8 6 8 2222322
+20
+11
+
+===== page_11 =====
+S-760
+Dec,  1993
+DIA Converter (IC91, IC92 on MB) AK4328VS-E (00230634)
+1
+102
+65
+40
+103
+68
+AGNDA
+32
+VAEF =
+FDD Controller (IC24 on MB) MPD72O68GF 389 (15209131)
+TOP VIEW (FLAT PACKAGE)
+AOUTL
+31
+CALI
+VA+
+30
+AOUTA
+25
+Gate for CPU (ICA on MB) Fet2E33888 (15239118)
+TOP VIEW
+AGND?
+29
+AGND3
+(FLAT PACKAGE)
+VA-
+28
+ACKI
+24
+CMPO
+27
+NC (Open)
+NC (Open)
+26
+ACKO
+PIN NO
+PIN NAME I/o PIN NO PIN NAME I/o IPIN NO PIN NAME I/o PIN NO PIN NAME I/o ZSIDE JI 21 cs DRA 61 GNDz 3 NC AO NC 62 NC DSO FLT NC 63 64 EM3 SIDE GND1 INDEX GND? GND? PCSO EM2 NC FLTA 5 PCS1 HOLD GND1 EMI GN2 I X Ga 1 VOD L 3 5 D2  EvPcs 1 w  SNp? ACTL D7 DENO WDATA {sez DMARQ G1pa GNp2 0 MSEL 2 Ds3 TRKO RESET GND? WpAT 3 RD 3 Dsz RDATA 20 Wr DRO 60 DSI 80 READY
+CMPI
+25
+CALO
+136
+35
+AST
+24
+LACK
+TST
+10
+23
+BICK
+CKS
+22
+SDATA
+DIF1
+12
+21
+DGND
+DIFO
+13
+20
+VD+
+PIN NO PIME I/o PIN NO PIME I/o PIN NO PIME I/0 PIN NO PIME I/0 PIN NO PIME I/0 PIN NO PIME I/0 Nc 25 A8us1& 59 C8cs7 1/0 XB+o 98 X0o 122 pusd %9 Rockd A8us19 52 cousa X 500 MAI I70 2 pbustz] # XDACKZ 0 XPAD CBUS9 1/0 XWAIT 101 DBUS43 61 x Xewa 5 ceus xo Y9  1 {03 3 peusa] Y9 ABUSI  56 CBUS12 10 Int2 104 ] CASI ABUS2 CBUs 3 1/0 INt3 105 MAA CASO ABUS3 ) 5 CBUS44 XRSTI 106 MA5 RAS ABUSA 0 CBUS15 E DCLK 107 MA6 XoREQ3 Abuss 0 L 60 Frust7 85 Gro 309 MAG 83 Koreoz ABUS7 62 GBUS43 86 CLK 110 DBUSO I/0 134 XOREQO ABUSB BUSW 63 GBUS:12 ALE DBUS1 I/0 135 NC L Gcc Kro 53 [ousd p 88 {Gsz4 2 98us3 19 136 NC ABUS9 CBUSO 1 66 GBUS9 90 TeST2 % DBUS4 I0 ABUS1O CBUSI 67 GBUs8 91 GDMA DBUSS I/0 ABUSI1 CBUS2 68 NC 92 XGwr 116 DBUS6 I/o ABUS12 Cbus3 69 NC 93 XGAD 147 DBUS7 I/0 ABUS43 CBUS4 70 NC 94 XWEH 118 VCC ABUS14 47 Cbuss I/o 71 NC 95 XOEH 119 GND 24 ABUS45 48 CBUS6 I/o 72 READY 96 XWEL 120 DBUS8 I/o
+XTI
+14
+19
+XTO
+Wave Custom (SP1) (IC27 on MB) MB87 422PF-G-LBND (15239109)
+90
+91
+60
+LCD Controller (IC72 on MB) SED1335FOB (15199944)
+TOP VIEW
+(FLAT PACKAGE)
+g g 8 5 % 2 2 4 9 % 8 8 8 8 8
+31
+120
+31
+VD3
+46
+30
+XD3
+VD2
+07
+30
+36
+25
+VD1
+D6 Ds D4 03 D2
+VDO
+37
+24
+Wave Custom (SP2) (IC28 on MB) MB87 423APF-6-LBND (15239137)
+VA15
+SCSI Controller (IC25 on MB) MB893524A-PF-6-BND (15179298)
+TOP VIEW (FLAT PACKAGE)
+VA14
+VA13
+Quad 2-In AND (IC74 on MB) TCZSO8F (TE86L) TAPE (15259884)
+48
+13
+90
+VA42
+SED1335Fo
+D1 Do
+VAII
+12
+91
+VA1O
+Voo
+PIN NO RJME I/0 PIN NO_ PIME I/o PIN NO PJIME I/o PIN NO PIME I/o R 3 dreq 2 0 5 VCC  BE 8 %9 1 0 I/0 24 1/0
+VA9
+AO Cs XD
+IN
+Voo
+VAB
+IN
+VA7
+index
+Vss
+OUT
+(FLKQP PAEEAGE)
+VA6
+XG
+NC
+60
+SEL1 45 46
+120
+2 > ? % : ? I! Ig I2 I@ 9 9 I8 I9 8
+30
+12
+
+===== page_12 =====
+Dec, 1993
+S-760
+10 11
+12 13 14
+VIDEO BOARD ASS'Y (OP-760-1) (pcb 00231201)
+MAIN BOARD ASS'Y (OP-760-1) ASSY 70016834 (pcb 00233245)
+14,31818MHz
+Cl3
+0 3 8 g
+1 8 2 03 8 { 8 1 E 1 8
+HEX Inverter (IC75, ICgO on MB) TCZWOAF TE1ZL TAPE (15249121)
+D-RAM 4M (IC68, IC6g on MB) TC514260Bz-70 (00120834)
+; G 848 0 RIo c9 H
+Fuse
+VCc
+0 3
+R20
+R22 3 83 R2i R19 8 Ij 8
+3A
+I/09
+I/010
+GND
+2y
+I/011
+1/012
+Vss
+1/013
+I/014
+C26
+1/015
+Ci2
+1/016
+VCC
+Vss
+1 8
+1/01
+1/02
+1/03
+1/04
+Vcc
+1/05
+18
+1/06
+I/07
+J K VIDEO BOARD ASS'Y (OP-760-1) (pcb 00231201) ;
+View from component side
+20
+1/08
+N.C
+22
+WaiTe
+23
+RAS
+N.C
+26
+MAIN BOARD ASS'Y (OP-760-1) ASSY 70016834 (pcb 00233245)
+28
+A3
+30
+VcC
+VsS
+32
+A5
+36 A8 38 UCAS
+C35
+OE
+IRI6
+C3
+LCAS 39
+HEX Inverter (IC70 on MB) TCZWUOAF (TE12L) TAPE (15249111)
+C33
+N.C
+Ris C25}
+JC30
+RIS
+VcC
+9
+3y
+3A
+P
+I
+GND
+2y
+3 Ia 8
+cio
+R 8
+Cis
+â‚¬ ci3E @ C1zD
+8 8
+81T79x25 Ri
+View from solder side
+13
+
+===== page_13 =====
+S-760
+Dec, 1993
+10
+11
+12 13 14 15
+16 17
+18 19 20 21 22 23 24 25 26 27 28 29 30
+4
+MAIN BOARD ASS'Y (OP-760-1) MYUo:
+'Gc
+JK1 DBLC-JIPAF-IL9
+RAB 47x4 Ay 2
+220/23v
+c9
+VGC
+MoUse BUS
+Ec 828/6.av @irs.7 928/6 [SNigvBoe_LT-KkE av F5V GRD T5V Ta
+'SC RAI Iollre
+OKXB
+vcd 29 AA7 47X4 18 # 1 0 U 0 PIR IOE 10 GND ICB Ac*35 Ci0 A22 ZNoK 0 . 0068
+Tple
+RA9 47Xc] C18 C20 C22 'QEi74788,947882147op {5sc 470p 470P 470P -r47-101 Ey@c-282-104
+JK2 ICS5o40-18-4051
+D E Te epjo Da DI Ep32 D3 B03 F 20_ 8 BPE 34 76 807 106 XPRD XPWA XB XEALCKI 'DACK G 88358 DETI cs 18888 STTTT OTO EAPOOT Mesur E? GPOIT UFS Dhoun AhH BCR DOOT 3834 DOI RESE IIa PA MEt IL ZC IPE  3ZF0 Ez 5P7 1 VEC Ic4 HCUo4 IC4 VCC HCUo4 IC4 C35 GND HCUo4 IC4 U
+BlLo: 71
+IC2
+VCC
+VGc Fuse1 EAO_ ENKRiSE
+Xebo Yewa XDCKL Xopbol
+vcc 25
+Exgc-292-101 Eyec-2A2-101 E58c-2A2-101
+C1
+^2
+BND 57
+BQQ 4Z ppn 83a # 0 # 0164 805 V_eYNct8 23 Bo6 S-3YNd # #; A25 IK BQZ 24 1/ acLKs2 Ic9 AAS 220x4 XPBB AO VACK 32 DO YpO AR 01 VD DACKA  pACK a XojiEH Ep Dz 88576 29) 83 Cz 4 Vos 18P 80 CLK PUT 82 07 2 R 220x4 De V6T2- FAS DE CA CAS P1A WE 3360 6LCLK_IN FEA 8 Vok _ REC VDII X1 Di V01o 14.31818MHZ Vdo vpoto Von 01 Di 99) Vob voata? VDz Vo? Vo= 30 VD_ 26 VcC_ VDS WDS VCC_ VCC_ 20 CC vostar Cil vp7kz3 VOL JOF 25 NE CL 40 VOc EvE 26 NC_ 21 VDP8 10.o 27NC- 3 vSS 20 lveus eo VD Vior 30 vss AQ VD Vo? 5A80 V572 VBus_ ZST VD VoazX JEN 14 L04a TC5TT8678J NC VD15  VOAS
+DIGITAL AGB
+ENa- Ph-K-s
+750 GFD
+CFS VZE83 TZo0T O0 IO
+JKA YKF51-5502
+E58C-282-101 "FXec - ZA2 401
+S-VIDEO
+JK3 YKC2i 3524
+FFSCTI6A
+c To
+E58C-282-104
+1cB
+CC vod-2e
+VIDEO OUT
+#g; CK ACK VsS 14 RKs 882 3 15 vGc 4+82 VCC Mikiz Macie EPK Es48 26 8te4 3Z JEKAz ctosi2a
+C25
+BCOZANZ-A62 Ri6 FL7
+Ci4
+VEC
+A15 V 956v8P 3e PT-10
+DEGITAL OUTI
+C42
+VGc
+vcq16 Ho SEA
+VcCL
+C27 _
+0A QeX oC ODX 06X an DCLK OFF 99 CCR 88334
+C28
+BLOZAN?-R62 FLB
+OCK #48c E82424 357c827T vEC 32+82 vod-28 VODA9 C5 25 19 opY vssk45 vSSAA 20 RROR VEc INOF VGC Az 3EL INA 750 #4 NEDINF E TesT Yso PD S1 23 szkr B8k A3 750 R6 CON 46 AMPI 28# NCOI F536422 TC4 TC92Z5F HCUo4 cB C7 420p 047
+DIGITAL OUT2
+elKz GND_o 48385"
+957X6v8p 3ie Pt-10
+C30
+C31 01
+VCC
+CC
+C15
+400 40] 43 IC4 IC4 497+6v8P HCUO4 HCUO4 A2o 100
+DIGITAL IN
+C43
+vcchi6 seR
+VCc
+QA QBX 88 70 8F PcLK TI o_ ccR ok 4
+C6 Z20p
+SND A3x 64
+#SeLke 3H/LD ND ICZ HC165
+IC42
+Rz1 ca3TC s30F 1oop
+14
+VCC
+
+===== page_14 =====
+Dec; 1993
+S-760
+ 2   3 4  5   6 7
+8
+10
+11
+12
+13 14 15
+16 17 18 19 20 21
+22 23 24 25 26 27 28 29 30
+A
+VIDEO BOARD ASS'Y (OP-760-1)
+F83_BOAADIN VSC 80/6.av F5 cND
+ICi
+vGc 42 veea ia Gs 8NBZ 24 Ca A9 75 C_VIDEO_ ou12o _ M 220/6.3v
+1 OUT CESNCL TZACIR 470 Az CFou VIDEO C3 OU LOUT IN R0 ant CHAOMA_IN 470 A6 Rio 1k C_SYNC_gut SYNC_IN Icz FcOO ICc2 VEc X1 IC2 Ab Ko_ Snt CHAOMA OuT 45 VvoD ouv I0 Acoo 33k 5xO_ GND Nc ' Acoo 7.7336M VCC IC2 Eaa4lose 13 Y_Im48 Ai2 N 1K ACOO NTSC/PAL A11 C8 1K Iisop Y_put 16 1 VReRL C88/46V VCC IC2 @Au818_07 IReF VCC CXATI45M 27k (1X) " Ai3 C:8/46V C15 GND ;
+s332-22-04
+H2az85J8-3108Hwo
+H23z8sJs-4438HND C4
+NtsC
+VCC
+VCC
+IPAL
+Ai7 Xak A16 C42
+01 C2412k C13
+180
+220/6.3v A19 75
+A18 1K
+VGc 02 C2412k C14
+220/6.3v R2xk 83
+15
+
+===== page_15 =====
+S-760
+Dec,  1993
+10
+11
+12 13 14 15
+16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
+S-760 MAIN BOARD ASS'Y ASSY 70011290 (pcb 00124478)
+ENCODER BOARD ASS'Y (pcb 00126812)
+AIN-32 ENCODER BOARD 3 8 00 70122 90
+Gs4z5v) FUSE
+6} LL 2 0z CN2 RA2I R423 RA22
+A
+OD 0 EnS 4 1 8 ~CNS CN6 HY6Z6LALJ IC73 60 "P07206P #8 E 3 1 8 72 OE IC38 8 ILIC3IcL IC8L @ 1C798 JC86e 44IC85
+CNZ
+F RAI8 TERMINATOR 24 {413 5 QsorV? 8 1 20 830 Ic76 1C75 2778= IC26 19 H1c25 G LE Hc7L TERMINATOR IC74 6 [] [8] RAI9 ILo6R 59 16 IC77 MI RAI3 5124 8i2s Fo8 F32 F32 8izs 8 6 H 41 MV Mbl Nm AbL LITul1c22 IC78 [2] [8] 30 1C36 'e 14IC33 IC3 1c92 Ic83 8 IC37 8 8 U HC425 HCUOL HCOB Hi IC2 C8 IC5 IC6 FOO Fo8 1 0 6 FL2 5 C83 C208 [8] [8] si953/9)g C35 416 C80 46 IC8 46IC82 20 {IC4o Ic9 zztLbah C39 IC2 245 FI5  F574 1 C5 1 C50 9 Hc7L 9 FL3 HICT IC88 A;8M or I6M 6ME "@1a] FLL 5 06 TC27 ; Hc08 Icio 1 C871 B : {6Monly IC3 RAZ 08 3 2 g 1 [x] O[8] Jk9 32 CNI OC RAz RA3 CL6 1 VEz7Legk UTTITI 20 68 22 ( 10 4 ^ ^ C207 30 6 1920 C79 8 1CL2 1920 ICL| 3 9o a 'pe] O[:] C43 N JK8 R15le [C28 )R+ss IcLL ICL3 RA6 1 8 C24360 C135 8 8 C2L4 8 8 9 { 3 8 9 CNIDL CNI3 Oe] e] RaQI Lc93_ 2 [ces] UMT p C63 IC65 9c V7z7Lb8h 8ze7X Ic92/ Mn C90 7i2v K6 StCjH 8 08 IC29 C242 8 Ic8 CL8 3 ZE7 IC629 R IC9 1 AJ [49zzosnzai I IC68 cti6 C24 E { 08 IC3O IC5| M S C49 JK3 SX-6eesS) IC69 3 IC6 IC64 IC70| Hcisi HCOL IC58 0 PEOPLE WORLD 18.L32MHz X6 T LET'$ GROOVE IC52 ICL9 Wth 8 S-760 STANDARD 16.936MHz 12.. 288MHZ C206 Cizo C118
+PANEL BOARD ASS'Y (pcb 00126801)
+View from component side
+16
+
+===== page_16 =====
+Dec,  1993
+S-760
+2
+10 11
+12 13 14 15
+16 17
+18 19 20 21 22 23 24 25 26 27 28 29 30
+S-760
+MAIN BOARD ASS'Y ASSY 70011290 (pcb 00124478)
+PANEL BOARD ASS'Y (pcb 00126801)
+B : F ENCODER BOARD ASS'Y G (pcb 00126812) H
+PXu
+00426812
+Rig
+40 0 010 8 1 g3 2 0 IR36
+8 85
+8
+8
+8
+8
+8
+C202 C203
+8
+8 6 1
+Ecoo- 020 2232 Db {e223 C217 CJc62
+6 #: O
+8
+CJR2 0
+CJc63
+Jril
+C59
+MaIN Ruxrd 8-760 Pwa 00 26870 02
+C227
+CZc6l
+1 8 0992 Q8 Q7 % 037 038 C65 3282 CiioLl I7cio7 Cim Ccne 2 3 CJc66 CJc6? R6S  822 Ci9 1 EE0 C7cs8 R138 R16 Jr6t 8 1 Lnto @2 ZRi52 Da 8 03 Di0 RL3 R63 38 %8 88 RL6 RLL R45
+R/35 Ci76
+Rt32 C125 CJ
+5 @ ~8
+239 88
+23
+2
+Zci58
+View from solder side
+17
+17c162
+
+===== page_17 =====
+S-760
+Dec, 1993
+5
+6 7
+10 11
+12 13
+14 15
+16
+17
+18 19 20 21 22 23 24 25 26 27 28 29 30
+A
+MAIN BOARD ASS'Y (S-760)
+YkFb] ~58k8
+B 80T-0488 s8t-0788 _ VSc 38p ~0460 84 -0460 220 ? 220 820 C227 80/6_ B3149 ecs 0 DTTTZATY R8k 32o 84.487 Te325 TE32s Doz Hcho  1 1 ] JA 88u3 I 0 Ime 4o AfF Veo EGco bushiotk HcT IC7 7313/+883 @ VEC Icb 4C14 830 Slkout AC14 pol E RIOSpNS_AST DCLK KEL YEC 402 Yoo CLK cc (62 38ios24Fe 0 VEE OND TFORTTTS F fesov R8r ; 0 = BOCTTOBRU A31 Iee c9 C10 ve8  88498 10p 45p C12 B Ho62e33b08 N T 
+Rae
+Fae
+83449
+{P3 j8
+887401 C72 C204 0 VOD
+7cza
+Y2zo A430 220 Eeo 1cbociz Icorcc:  ACi4 483"4 220 IcB 108et IcB #f Ts 33P
+49230
+7C7? K9 [ vcC "EC
+OkX
+I
+C204 Ul0 . 1
+99PT
+VEc 4
+88 m
+883
+BihZ, 2 1 2 a8; 3 I3 @ YETCECTL
+S3GN? 4510
+E8o UNIT
+Cie
+493124 4PXB71 73
+R30
+E2 Pkw IcHS 27c238
+78142808z
+19831 428082
+TTTIIT~STE
+Fon
+[CSCHE_Ce 6oC Cel8c8t_CalVo boud Jot_u sco ceo: L4co86 Lxd Muol24 LYDPiou(oL 21 Mp-lXoh
+ocicos_C8l6I FFSUG
+cUI
+L JNI_Byzouj_EypINLAL9 NT
+EcNT 49E
+ICNEC8OS
+JNIO"
+Icatorbus
+4okxe
+A4a
+4oze
+vGc
+Ao
+ZEXOX` dERosd= AH00sE*Jb09 [b9e0 p
+Mcol8i
+edel92
+vSC Cor
+Iczo
+TIe
+VGc R33k R24k { 937k
+pe Vcc
+TC2a
+I 0 
+XBBI
+0
+8k8
+F80 UNIT (DatA)
+240 UO
+010
+Rokc4
+vcck
+VEe 40kXB 28
+Y"ETp
+2t4  5 C3z FhN
+C9 Fl4BH
+VB8
+GSLfoQT
+C3=
+Ror*e
+8
+Celeiaip
+3 B 0. 1 938P
+JokXB A42L VGC
+ZhIT
+GiEILL 
+#) 3te38
+ALD_PHD Eus 
+C9 Heg
+GND?
+4o0r
+xok
+Up0720680
+L2Dol{83 Acoo
+LC5 To
+0 cyp SCE FR8*L 828/6. 3v 820/6.Jv 828/6. 3v 838/6.av  5208/6 5228/6 . 928/6.3v ~UnTT FFFFFFFFFFFFF P 828/6 . 528/6 . 928/0.av   %88/0.3v 98,0 4il %8/0.3v] 928/6.3v c398/2589298 /25v 398/25v 4S38 4338 ICb_ 8.7,0.40 LaT 126  ICZB Ucn 3 1 E 8 88 836 87 858 vGC #D" #E88 5124 ICib TEi2s i 3 R C59 Cbo 0. 1 Ke8a LDo Ke83 Fi' {ezroaF
+CS LCoS
+A423 100x4 WPDeED+OCF
+{Eboa C38
+F9o UNIT (POHER)
+Icece
+Hcg84  HcG8 _
+'C?E vGc VcC
+C35
+ICAO
+ICAD
+VEC
+{Ei23
+Hcob
+DBLC-Jzbsak?
+Hcob
+OTTTTaek
+DISTTCAGE
+{8ao-2910 BRNEL BOAAD CNB
+8;
+ENCODER BOARD ASS'Y LED Ja 41081524
+F8y TETEOTEea
+~PH-K-9
+cBLAEDL "ioraocu B8Q4-K-9
+g261
+HCN8 Pojoavi
+C41
+948/6.3v
+Taa 0 . 01
+8284
+40Y
+c3e 0 . 1
+838 %894sv
+c30
+18
+1C0e
+88140
+
+===== page_18 =====
+S-760
+Dec, 1993
+10
+11
+12 13 14
+15
+16
+17
+18 19 20 21
+22 23 24 25 26 27 28 29 30
+MAIN BOARD ASS'Y (S-760)
+HOOSECJUS Z0Esbus DAIA BuSI [GER-goS>
+HLo: 7 Geuel
+C64 220/6
+YGc
+C 4
+CaR
+C68 C69
+C62 (c63
+c65
+(c87
+Tcan
+TC?F
+133838 1828338383833833 H0m g888
+Icze
+1333333333 3383 1 @ eeee
+3383883833838
+3333333888888838
+e88
+8 888 0
+H 4b874234 E I Eesebz W 3EFer Hcee LIC9c 1cz4o4 3828045 IcgI Fo ea T2:
+7i2
+4A874244
+7C248c220a5 -007
+; 4Kh742? XALa E Uwli Eeeg
+blaiL
+Fa8
+18473 Fnuuk
+88
+TXi4-soA-Lt-Hh
+VEC CNT
+88+ION BOAAD
+IC49
+3Dol IC52Coa
+Cis
+VEc
+HENELZE
+Aeset7731P
+UULO"
+AdCko:
+Wdnfcvioe 2KPPDL Kahn
+UCND
+LYDN
+FTo:
+Fout{O
+FNTE ECuoa1 suo 7 Lycose
+FesN
+Ld_PyD24
+Iuanenalue
+YEC Ces MiVcC
+IiovioL MNor
+A426 1OkXB VEc vcq2d
+AMAC
+CA
+Tc7500
+SETPcTZ
+41c32
+7FiCa: 3 0k5 426 cl9 25 5 D8 VEc VEc v8Ec79 VCcc F74 TZ F7 4 426
+DaAHHF 240 1t TCZHUO 4C
+89 83
+1C41 Vcq15
+CBF 304 C78 981 928/6
+TcAR vE8 VCC 901# CbO 8831 c62 "Ce1 220/6 220/6
+TCAC
+C7S L0 4
+VSS
+GhO #E, Vfe A4z
+58P7
+TC35 7245 c219 0
+16. Aa2MHz Idg} 2021 TC7ho4
+ICee HC7=
+LaGNovcqusd 81A2
+8449_ BMA OL BMAAOH_ BMA0
+ISTTTZOOZp
+1042 ~cC_ K?
+C2i0 C
+VEc LeENovcq AHAIOL MAQI 9LHAOH
+SAAO
+52T
+TC32
+Ic5s Hc74
+X2.288khZ 4DI Ic7o 20841 SC7huo 4I
+TE84
+JCTTTT37
+PMAOL
+IC4a 9838
+IASTTZOOZP  1C43 vcdu5
+IC40T757
+ vcd c36 16M_SIMM 826 IC44 5174002 IC3e C3g FND EnctTo 757 vcq15 "C7e CoSCO Vec END vcC 33 # HARTTZooZP SIc79 126 92 {F7 a Vcc 1c021Ts7
+T7s 26 ADo? TC74046
+Ic76 D2C
+246 @5 4Cze 588 czp ~980 R4b YEEse R54 'plex? T8K Bax 7 Jext 5124
+A36
+VEC VEC ICT 9 ICZE 426 ~09 LDolu Tc7wo4F
+1c76. 34.36, 77 aA 55, 70, 78, 79, 83 1EENZ+ETTE Tue C9: C9z C93 C94 C95 c9b Coodio 122 C225 0.: 0.1 0 1 0.1 0. 1 0.1 0.: 0.1 0.1 0.1 0.1 0.1 0.4 0.1 0.1 0 04 0 4 0 CNO
+0De {88 13 % ADs K%83 #Du%o' E)e K%83 Tc9845 _14e88 ED'
+19
+
+===== page_19 =====
+S-760
+Dec,  1993
+7
+10 11
+12 13 14 15
+16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
+A
+MAIN BOARD ASS'Y
+B C 35 5co 3 PAUA @ALuA 123 A ECk DZA FcR ECR 3x@ FEEE DZA IT ;
+Rase XX (4QoP) 894
+c484 C457 R96 22/25v (SME) 10/25v (SME) X 898457062 2 8 837 348 KAG #AG #AG C460 4k (49oP) hge 2484 2gie3v Ai01 (SME) 10/25v (BME) X 4 898457062 82 18 323 ZAD #AG #AG #AG
+8c0 sp5) 3 32m BCR 89 RCK Eck 2465 AZS_PlD DZA N RiESE
+~KB21-5227 INPUT
+02967R Tupop) peeweki A66 A69
+ATA #587 C143 7z4578: 3v (OS) AGNDS To: IczkNc C445%2 KAG # VAS To.4 24OcLK CITB 147/6.3v (Os) 88} 680 23 ICLK 1 A63 VL+25 Mo C117 "5488380 Lexdestes sx55 (0S) VD+ie 42 bpg C1.9 #zc4zo DOND 49 47/6 av (OS) Zs84E { AINL AINAX Tst 288842 28 #AG 2 vaEF-20 To . CC121 C122 7/25v 4G
+09 MA71S
+AG
+8 8884s7o62 %3  ET. 0 #AG ~c23z +k " IhOoP) Bza AeKL
+YKa24- 5227 INPUT
+040 MA715
+AG
+2 w 8s8a57og2 1 83 8 0 #AG #AG
+PREVIEW
+Rec LEVEL
+VOLUME
+C163 4 10/25V 9464 t40/25v
+VA+
+c229 (1oop)
+@A27^ C123 ~S#3ov (Pz) AGND? 0. XFa C425@7 KAG Va- To . RsT 47/10v 79z5 CMPO 1 VD+ NA CMPI C127 E2c420 i0 a89 DGND 0.4 10/6.3v (Os) CALI #AG Vaef _ g 8239 58/8 av (Os) 8EF8 AGNB3 CKS 7AG Tst AOUTL NG AOUTA
+A107 W a9k
+VA: AK0972424
+2k C145 ICb2 Abo 10/25v (SME) "Wo  Upc4570g2 %
+C165 010 220/25v (SME) ai04 DTC3i4tK mio MAN 3.3K 100 3C8240 8 822 m 1 83 8 YKB2:-5224 IAG #AG #AG a1i4 #AG #AG PHONES 133k C488 011 220/25v (SME) AI41 DTC3i4TK Ai,7 MV Y3k 100 Ic3,0 38 3 132 8 1 88 8 8 7AG #AG #AG #AG LAG a4ro C471 A42 Ai23 ks A119 4 YKB2:-5227 WV 22/25v 560 a 00 steaeo OUT AL 29 '898857002 0 40126 74G C473 #AG ptc3 6kat29 # Ars 58877 Ma 4GStergo 22/25v 29 OUT AA 20 898857062 0 A0 AG a130 ptca Ai3z YK82:-5227 588v ~ 8 3 NC 6 stereo OUT BL 1 3 ZAG A133 pTc3 4tk Ri35 YK8241-5227 588v w 9 3 steAEO OUT Br 6 3 IAG Ik 4G ptc3e
+0?379
+CN42 5483-03AX
+#AG
+A154 MAN- 33 (1w)
+JIN Out3 3 C107 Ci08 0 . 1
+VCC
+C231 (10op)
+(tozbmo5)
+C148 Ic62 Rbs 10/25v (SME} 16 + Upc4570g2 82 #AG
+C43
+220/25v (KME) #AG
+C243 #AG 47/16v (KME)
+AB2
+0R389
+CNi3IL-6-3P-5312-E a155 (to79mos) OuT2 8 C110 C111 0 . 0 .
+42 20
+VA+
+30
+C233 (1oop)
+EAe^ "C14293 47/iOv (Pz) AGNDZ Ico XTS C431 ZAG VA- To . FST C13Z ov (Pz) CMPO 1 VD+ 6n 2b ScRa T8:33 "2983,8 .av (0s) ACKI DGND EAL? 7AG VAEF _ 28 Ec 8 C241 c343 c2 AGNOI av (OS) 88 AGND3 LAG TsT AOUTL NE_ 3 AOUTA
+~Iv C44 220/25v (KME) ZAG
+C454 22/25v (SME)
+Ic63
+1 A9816v (KME) 7AG AG 008240808801 +15v 8L 1 @L po 8_ g @x 8 8 Wp 3 J 1 1 k 1 Ic62- # 1 4 8 Je 8 8 8 J 1 AG 4 1 @ [ # L @ [ L 1 1 J 1 1 3 6 l kE 999844000814-sv U
+AB
+UPc457062
+2 TAG C235 (1oop)
+~ce; 22/26v (SMe)
+A9
+UPC4570g2 8X #AG
+Ev 4 g 54 84 R6.25^ 9837k83 328k lu 838 4 4G_ #AG ~Yv
+20
+
+===== page_20 =====
+Dec, 1993
+S-760
+ 2   3   4   5   6 . 7
+10 11
+12 13 14 15
+16 17
+18 19 20 21 22 23 24 25 26 27 28 29 30
+A
+ADDING A HOUSING (SHORTING PIN) TO NEW FDDIFDDAO/r) 7> 1 (3-6E>) #AK?617 Since the replacement FDD (22405255) is provided with FDD (22405255) It limWolrtrexl*to only two housings (shorting pins) , an additional housing Riy a_} â‚¬v)h % }DCKOAF >v ' * EfIl  < t (shorting pin) should be mounted on the socket marked 'DC" 8w`0 on the rear of the FDD, before using it on the S-760.
+8 D E PANEL BOARD ASS'Y (S-760) G 82830-2010 H Cdo #sv 5 @ 3 CeO9 8 SCH L 18 Sp0 32 SPa Swi 011 Sw2 012 Sw3 013 Sw4 014 Ev021405 DA119 Ev021405 DA119 Ev021405 DA119 Ev021405 DA119 [COMMANDL (MODE [E1l [F2] Sws 0i5 Swb 046 Sw7 017 Swb D18 4 Ev02i405 DA119 Ev021405 DA119 Ev021405 DA119 Evo21405 DA119 [S1 [EXIIL [Fal [SHIFT) sw9 019 Sw10 D3z SWii 033 Sw12 034 Ev021405 DA119 Ev021405 DA119 Ev021405 DA119 Ev021405 DA119 Is2 La (v] Sw43 035 Ev021405 DA119 (~>] 
+FZ-357
+Before adding a housing/ihX FJ:
+After adding a housing/))rh 3 > ' JBJjI
+[COAGAND-6]
+GCaCCe [COMMAND-R} 023
+The additional housing can be obtained by recycling one mounted on the old FDD or placing an order for the replacement housing "S-760 FDD short pin" (no PIN is given). Adding the housing make the FDD idential to the common FDD (12409185) used also on the S-750 and other models
+*moma_ TR OFDD & h )0 > y7 (J 3_ k Ey) #twt, #TBOFDDKmALT < t< V`0 2omRi * hEx (s-7504) O)FDD (12409185) 2 @# Bkth * t0 A0)vm (J3-KE>) osilt [S-760 FDD > 3 - } E>] #Ax#tlrltatl<tzw'o
+SLA-342vcaF [MOQE}
+9LsHZEt2Vc3F D2s
+SLA-342MC [F1] 026
+SLA-342MC [F2] 027
+CHANGE INFORMATIONPEEEMy
+SLA-34ZMC (F3)
+[Reason]
+To avoid possible overloaded diodes D9 and D1o. [Change diodes] D9 and D10 of the main board: from 1SS295(00126512) to MA715(00342789) [Effective] Sorarevsian 50800-&nd up [Field service] On prodecuts returend for service_
+(ZETFLH]
+Mlm#kZ ^ v / 3-)=0@ThENEzs 63t*0
+[xi]
+S-760 MB D9, D1OZ 1SS295 (00126512) * h MA71S (00342789)(-2H [9luthz] $-760 ZES OROOJ/4 [#-EzO%e] NIkmn +~7
+21
+
+===== page_21 =====
+S - 7 6 0 S E R V [ â‚¬ E N 0 T E $ 19 94 . 0 1. 2 1 E R R A T A & S U P P L E M E N T 1#x & 1 +0 m# ERO 0 0 9 5 (Smal 1 etor $ ar e ignored. 1# < t ! I 5 _ It # # L * to )
+PREV [ 0 U S
+IA
+NEW  #
+(iE 0 Ia # : @ % 0 & )
+[SUPPL EMENTARY INF O RMA T [ON ]
+ATTENTION WHEN CHAnG [NG FDD /MA IN BOARD
+Due to "Safety Regu lat ion " _ a flat cab ] e 0 f t he interna ] FDD ha s been fa s tened us ing S 0m e adhes i Ve tape a $ shown in Fig. A_
+Khen Iepa if ing (changing FDD / Ma in Board) , P ]ea s e S UTe ]y fas t en the flat cab ] e us ing S 0m e adhe s i V e tape a $ shown in Fig. A_
+FDDMa in BoardxlE Q#EHY
+%2## E, 7 $ " } & _7 ) % @t 3 2, F 1 g . A 0 # Iz = _ 7 - BG V It Ij 7 w * $ +, F D D x11, Y It X ^ > #_ FzME} 6, T & @  #@I >-7rBb ? -T & Wo
+(F i g . A )
+Adhesive Tape T-78 Flat Cable 77v4h-7"Il
+Fbb
+Pa ge
+
+===== page_22 =====
+S - 7 6 0 / 0 P _ 7 6 0 _ 1 S E R V [ â‚¬ E N 0 T E $ E R R A T A & S U P P L E M E N T E#a & 1 M0 1A # (Smal1 errors are ignored. ##vt w I $ _ It #% L * t )
+19 94. 4. 12 ERO 0 1 0 6
+Page
+WRO NG
+3
+CORRECT
+E
+Part s List>
+PCB ASSY/* #S 6k R
+38488 258 0P=4 60 +P#B-MAHISHEEF 70 0 16 8 3 4 MA IN BOARD (PCB 0 0 2 33 2 45 )
+DELETION
+Ku [Y
+AcCESSORIES ( Standard) /14NR &
+0 0 12 40 12 FLOPPY S-76 0-0PT DISK SET 40+40+0 400+=#A#HHIDo# 0 0 12 5 8 7 8 OP-76 0 - 1 MANUAL EXP 8*8***** *888*** 88*88*
+DELETION EXPIDOM ADDITION
+Hju] IG
+j M
+0 0 1240 12 FLOPPY S_760-0PT DISK SET 0 0 12 5 8 7 8 0 P-76 0 -1 MANUAL_ EXP ZDOM 0023615 6 MOUSE MU-l
+ADDITIoN jE J
+
+===== page_23 =====
+S - 7 6 0 / 0 P _ 7 6 0 _ 1 S E R V I C E N 0 T E $ 1994 . 4. 12 E R R A T A & S U P P L E M E N T 1#z & j M m# ERO 0 1 0 7 (Smal1 errors aT e ignored. 1W7t h I $ - It ## L * $ )
+Pa g e
+WRO NG
+#
+CORRECT E
+10
+How t0 inst al l the OP-76 0 - 1 /0P-76 0-1 0 H N IZ ? ! 7
+The 0 P-76 0 - 1 inc ludes the following component s _
+#0P-76 0 - 1 MA IN Board #0P-76 0 - 1 VIDEO Board #SyS-S760-7 Ver. 2 _ 0 #MO USE MU-1
+(70 0 1 6 8 34 ) (101256.45 (0 0 124012 _ (22155546)
+(70 0 16 8 3 4 )
+(0 0 2 3 6 1 5 6 )
+0P-76 0-1 / It W T0 $ 0 Fs A > 7 1 & 7o
+#0P_76 0 -1 MAIN Board *0P-7 6 0 - 1 VIDEO Board #SyS-S760-7 Ver. 2.0 #MO SE MU - 1
+(70 0 1 6 8 3 4 ) (10125.6.45) (0 0 124012) (221555 46)
+(70 0 16 8 3 4 )
+(0023 6 1 5 6 )
+[PARTS] No . PARTS No_ PARTS NAME 00233256 OP-7 6 0 - 1 PWB MA IN SHEET 10125.645 VIDEO BOARD (PCB 0 0 231201) - 0 0 1 240 2 3 OP_76 0 - 1 EXP COVER
+No. PARTS No _ PARTS NAME 70016 834 0 P-76 0 - 1 MA IN BOARD 70016 834 VIDEO BOARD (PCB 0 0 23120 1 ) 0 0 1240 2 3 0P-76 0-1 EXP CO VER

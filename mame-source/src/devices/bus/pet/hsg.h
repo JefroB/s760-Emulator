@@ -1,0 +1,102 @@
+// license:BSD-3-Clause
+// copyright-holders:Curt Coder
+/**********************************************************************
+
+    CBM 8000 High Speed Graphics (324402-01) card emulation
+
+**********************************************************************/
+
+#ifndef MAME_BUS_PET_HSG_H
+#define MAME_BUS_PET_HSG_H
+
+#pragma once
+
+#include "exp.h"
+#include "emupal.h"
+#include "video/ef9365.h"
+
+
+
+//**************************************************************************
+//  TYPE DEFINITIONS
+//**************************************************************************
+
+// ======================> cbm8000_hsg_device
+
+class cbm8000_hsg_device : public device_t, public device_pet_expansion_card_interface
+{
+protected:
+	// construction/destruction
+	cbm8000_hsg_device(const machine_config &mconfig, device_type type, const char *tag, device_t *owner, uint32_t clock);
+
+	// device-level overrides
+	virtual void device_start() override ATTR_COLD;
+	virtual void device_reset() override ATTR_COLD;
+
+	// optional information overrides
+	virtual const tiny_rom_entry *device_rom_region() const override ATTR_COLD;
+
+	void mode_w(uint8_t data);
+
+	uint32_t screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+
+	required_device<ef9365_device> m_gdc;
+	required_device<palette_device> m_palette;
+	memory_share_creator<uint8_t> m_vram;
+
+	uint8_t m_mode;
+
+private:
+	virtual offs_t display_base() = 0;
+
+	required_memory_region m_9000;
+	required_memory_region m_a000;
+};
+
+
+// ======================> cbm8000_hsg_a_device
+
+class cbm8000_hsg_a_device :  public cbm8000_hsg_device
+{
+public:
+	// construction/destruction
+	cbm8000_hsg_a_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
+
+protected:
+	// optional information overrides
+	virtual void device_add_mconfig(machine_config &config) override ATTR_COLD;
+
+private:
+	virtual offs_t display_base() override { return 0; }
+
+	void hsg_a_map(address_map &map) ATTR_COLD;
+};
+
+
+// ======================> cbm8000_hsg_b_device
+
+class cbm8000_hsg_b_device :  public cbm8000_hsg_device
+{
+public:
+	// construction/destruction
+	cbm8000_hsg_b_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
+
+protected:
+	// optional information overrides
+	virtual void device_add_mconfig(machine_config &config) override ATTR_COLD;
+
+private:
+	virtual offs_t display_base() override { return BIT(m_mode, 4) << 14; }
+
+	uint8_t vram_r(offs_t offset);
+	void vram_w(offs_t offset, uint8_t data);
+
+	void hsg_b_map(address_map &map) ATTR_COLD;
+};
+
+
+// device type definition
+DECLARE_DEVICE_TYPE(CBM8000_HSG_A, cbm8000_hsg_a_device)
+DECLARE_DEVICE_TYPE(CBM8000_HSG_B, cbm8000_hsg_b_device)
+
+#endif // MAME_BUS_PET_HSG_H

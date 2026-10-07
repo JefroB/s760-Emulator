@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE softwarelist SYSTEM "softwarelist.dtd">
+<!--
+license:CC0-1.0
+-->
+<softwarelist name="pc1640_hdd" description="Amstrad PC1640 hard disks">
+
+	<software name="hd20">
+		<description>Amstrad PC1640 HD20</description>
+		<year>1987</year>
+		<publisher>Amstrad</publisher>
+
+		<!-- Amstrad 40095 (Alps DRMD20A12A), Tandon TM-262 -->
+		<part name="hdd" interface="st_hdd">
+			<diskarea name="harddriv">
+				<disk name="40095" sha1="d3c8b579e40063e98331e667caf7bd3667b18d1c" writeable="yes" />
+			</diskarea>
+		</part>
+	</software>
+
+	<software name="hd30">
+		<description>Amstrad PC1640 HD30</description>
+		<year>1987</year>
+		<publisher>Amstrad</publisher>
+
+		<!-- Western Digital WD95038-X -->
+		<part name="hdd" interface="st_hdd">
+			<diskarea name="harddriv">
+				<disk name="wd95038" sha1="0bfc1c61a2df6f097bd2b5d132a2e914f302c94b" writeable="yes" />
+			</diskarea>
+		</part>
+	</software>
+
+</softwarelist>
