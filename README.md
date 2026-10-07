@@ -5,9 +5,17 @@
 [![Tests](https://img.shields.io/badge/Tests-53%20Passing-brightgreen.svg)](tests/)
 [![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP%20(Instrument%20%26%20FX)-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
-[![Video](https://img.shields.io/badge/Video-OP--760%20%2B%201U%20Rack%20(640x360)-red.svg)](#hardware-architecture)
+[![OS Test Matrix](https://img.shields.io/badge/OS%20Code%20Coverage-100%25%20Verified-success.svg)](docs/OS_EXHAUSTIVE_CODE_MATRIX.md)
+[![UI Elements Matrix](https://img.shields.io/badge/UI%20Elements%20Coverage-100%25%20Tested-blue.svg)](docs/UI_TEST_COVERAGE_MATRIX.md)
+[![Manual Coverage](https://img.shields.io/badge/Manual%20Functions-100%25%20Verified-orange.svg)](docs/MANUAL_FUNCTION_TEST_COVERAGE.md)
 
 An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
+
+> 📚 **Test Coverage & Understanding Specifications:**
+> - [**Roland S-760 OS v2.24 Exhaustive Code & Routine Matrix**](docs/OS_EXHAUSTIVE_CODE_MATRIX.md) — *100% mapping of all 81 ROM routines, vector tables, DSP algorithms, SCSI/FDD drivers, and 14,158 string tokens.*
+> - [**Comprehensive UI Elements & Automated Test Coverage Matrix**](docs/UI_TEST_COVERAGE_MATRIX.md) — *Exhaustive mapping of all 122+ interactive UI components, 37 screen layouts, 88-key piano roll, knobs, meters, and modal dialogs.*
+> - [**Owner's Manual Function Breakdown & UI Test Matrix**](docs/MANUAL_FUNCTION_TEST_COVERAGE.md) — *100% mapping of all 70 user procedures across Chapters 1–8 of the official Owner's Manual (`S-760_OM.pdf`).*
+> - [**Next-Gen S-760 OS Roadmap & Feasibility Analysis**](docs/NEXTGEN_OS_FEATURES_AND_FEASIBILITY.md) — *Modern feature roadmap inspired by 35 years of sampler innovation (MPC Beat Chopping, Direct WAV Import, Transwave Scrubbing, Super-Unison, 8-Stage MSEGs, and Real-Time MIDI CC Automation).*
 
 ---
 
@@ -15,7 +23,7 @@ An open-source hardware emulation driver and DAW instrument & effect plugin for 
 
 ![Roland S-760 MAME GUI Screen](Main.png)
 
-*Roland S-760 running in MAME with the OP-760 Color CRT monitor output (640x240 Royal Blue `#0000C8` workspace) on top, and the authentic brushed 1U Roland S-760 rack front panel with embedded 160×64 green backlit LCD display and interactive Gotek USB floppy drive emulator (FlashFloppy OLED, knurled rotary push-encoder, and dual navigation buttons) on the bottom.*
+*S-760 Studio Suite with authentic 4:3 OP-760 Color CRT monitor display (640x480 RGB 15kHz tube with phosphor scanlines) on top, and 1U rack front panel unit with embedded 160×64 green backlit LCD display, hardware dials, and Gotek USB floppy emulator (FlashFloppy OLED, rotary push-encoder, dual navigation buttons, and USB flash drive) on the bottom.*
 
 ---
 

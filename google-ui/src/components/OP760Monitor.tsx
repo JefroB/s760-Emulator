@@ -227,7 +227,7 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 320, y: 120 });
   const [subPage, setSubPage] = useState<number>(0);
-  const [activeModal, setActiveModal] = useState<'NONE' | 'MARK' | 'JUMP' | 'COM' | 'MENU'>('NONE');
+  const [activeModal, setActiveModal] = useState<'NONE' | 'MARK' | 'JUMP' | 'COM' | 'MENU' | 'CONFIRM' | 'VOLINFO' | 'WORKING'>('NONE');
 
   // Reset subPage and modal when top-level mode changes
   useEffect(() => {
@@ -290,12 +290,25 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
         if (x >= 80 && x <= 260 && y >= 40 && y <= 180) {
           const itemIdx = Math.floor((y - 50) / 16);
           if (itemIdx >= 0 && itemIdx < 7) {
-            setSubPage(itemIdx % 4);
+            setSubPage(itemIdx);
             setActiveModal('NONE');
             onEventEmit('CRT_MENU_SELECT', { index: itemIdx });
             return;
           }
         }
+      } else if (activeModal === 'CONFIRM') {
+        if (x >= 220 && x <= 300 && y >= 134 && y <= 150) {
+          setActiveModal('WORKING');
+          setTimeout(() => setActiveModal('NONE'), 600);
+          onEventEmit('CRT_CONFIRM_YES', {});
+          return;
+        } else if (x >= 340 && x <= 420 && y >= 134 && y <= 150) {
+          setActiveModal('NONE');
+          return;
+        }
+      } else if (activeModal === 'VOLINFO' || activeModal === 'WORKING') {
+        setActiveModal('NONE');
+        return;
       }
       // Clicked outside modal -> dismiss
       setActiveModal('NONE');
@@ -369,7 +382,33 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       const softIdx = Math.floor(x / (640 / 5));
       if (softIdx >= 0 && softIdx < 5) {
         onSoftKey(softIdx);
-        // Also allow soft buttons to cycle subpages in Patch/Part modes
+
+        // VolInfo Modal (Button 4 in DISK, SYSTEM, or PERF)
+        if (softIdx === 4 && (state.mode === 'DISK' || state.mode === 'SYSTEM' || state.mode === 'PERF')) {
+          setActiveModal('VOLINFO');
+          onEventEmit('CRT_VOLINFO_OPEN', {});
+          return;
+        }
+
+        // Action Confirmations
+        if (softIdx === 2 && state.mode === 'DISK') { // 'Load'
+          setActiveModal('CONFIRM');
+          return;
+        }
+        if (softIdx === 4 && (state.mode === 'SAMPLE' || (state.mode === 'SYSTEM' && subPage === 3))) { // 'Exec'
+          setActiveModal('CONFIRM');
+          return;
+        }
+        if (softIdx === 0 && (state.mode === 'SYSTEM' && subPage === 4)) { // 'LoadPRM'
+          setActiveModal('CONFIRM');
+          return;
+        }
+        if (softIdx === 2 && (state.mode === 'SYSTEM' && subPage === 4)) { // 'SavePRM'
+          setActiveModal('CONFIRM');
+          return;
+        }
+
+        // Subpage cycling in Patch/Part modes
         if (state.mode === 'PATCH') {
           if (softIdx < 4) setSubPage(softIdx);
         } else if (state.mode === 'PART') {
@@ -487,7 +526,8 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
     let subTitle = "Perform Play 1";
     let badgeText = "Pform";
     if (state.mode === 'PERF') {
-      subTitle = "Perform Play 1";
+      const perfSubPages = ["Perform Play 1", "Perform EQ", "MIDI Filter1", "Listen Delete", "Perform Utility", "Module Monitor", "Quick Load"];
+      subTitle = perfSubPages[subPage] || "Perform Play 1";
       badgeText = "Pform";
     } else if (state.mode === 'PATCH') {
       const patchSubPages = ["Patch Common", "Patch Split", "Patch Control", "Patch Q-Sampling"];
@@ -549,66 +589,161 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
 
     // 5. Main Screen Content Area (y = 40..221)
     if (state.mode === 'PERF') {
-      // -------------------------------------------------------------
-      // PERFORM PLAY 1 (perform-1.jpeg)
-      // -------------------------------------------------------------
-      drawBitmapString(ctx, 16, 44, "PRM: 01 JP-8 MULTI SET", cWhite, cBlue);
-      drawBitmapString(ctx, 340, 44, "Master: 127", cCyan, cBlue);
+      if (subPage === 0) {
+        // --- PERFORM PLAY 1 (perform-1.jpeg) ---
+        drawBitmapString(ctx, 16, 44, "PRM: 01 JP-8 MULTI SET", cWhite, cBlue);
+        drawBitmapString(ctx, 340, 44, "Master: 127", cCyan, cBlue);
 
-      // Yellow Table Header
-      ctx.fillStyle = cYellow;
-      ctx.fillRect(12, 55, 480, 10);
-      drawBitmapString(ctx, 16, 56, "Part  Patch Name          MIDI-Ch  Output  Pan  Level", cBlack, cYellow);
+        // Yellow Table Header
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 55, 480, 10);
+        drawBitmapString(ctx, 16, 56, "Part  Patch Name          MIDI-Ch  Output  Pan  Level", cBlack, cYellow);
 
-      // 8 Part Rows (y = 67 to 147)
-      const perfParts = [
-        { part: ' 1', patch: 'P11: JP-8 BRASS 1', ch: '01', out: '1-2', pan: '<0>', lvl: '127' },
-        { part: ' 2', patch: 'P12: JP-8 STRGS 1', ch: '02', out: '1-2', pan: 'L15', lvl: '110' },
-        { part: ' 3', patch: 'P13: VP STRINGS 1', ch: '03', out: '1-2', pan: 'R15', lvl: '105' },
-        { part: ' 4', patch: 'P14: VP CHOIR 1  ', ch: '04', out: '1-2', pan: '<0>', lvl: '090' },
-        { part: ' 5', patch: 'P15: SYNTH 1     ', ch: '05', out: '1-2', pan: '<0>', lvl: '100' },
-        { part: ' 6', patch: 'P16: SYNTH 2     ', ch: '06', out: '1-2', pan: '<0>', lvl: '100' },
-        { part: ' 7', patch: 'P17: SYNTH 3     ', ch: '07', out: '1-2', pan: '<0>', lvl: '100' },
-        { part: ' 8', patch: 'P18: SYNTH 4     ', ch: '08', out: '1-2', pan: '<0>', lvl: '100' },
-      ];
+        // 8 Part Rows (y = 67 to 147)
+        const perfParts = [
+          { part: ' 1', patch: 'P11: JP-8 BRASS 1', ch: '01', out: '1-2', pan: '<0>', lvl: '127' },
+          { part: ' 2', patch: 'P12: JP-8 STRGS 1', ch: '02', out: '1-2', pan: 'L15', lvl: '110' },
+          { part: ' 3', patch: 'P13: VP STRINGS 1', ch: '03', out: '1-2', pan: 'R15', lvl: '105' },
+          { part: ' 4', patch: 'P14: VP CHOIR 1  ', ch: '04', out: '1-2', pan: '<0>', lvl: '090' },
+          { part: ' 5', patch: 'P15: SYNTH 1     ', ch: '05', out: '1-2', pan: '<0>', lvl: '100' },
+          { part: ' 6', patch: 'P16: SYNTH 2     ', ch: '06', out: '1-2', pan: '<0>', lvl: '100' },
+          { part: ' 7', patch: 'P17: SYNTH 3     ', ch: '07', out: '1-2', pan: '<0>', lvl: '100' },
+          { part: ' 8', patch: 'P18: SYNTH 4     ', ch: '08', out: '1-2', pan: '<0>', lvl: '100' },
+        ];
 
-      perfParts.forEach((p, idx) => {
-        const py = 67 + idx * 10;
-        const isSelected = idx === 0;
-        const color = isSelected ? cYellow : cWhite;
-        drawBitmapString(ctx, 16, py, `${p.part}   ${p.patch}    ${p.ch}       ${p.out}    ${p.pan}  ${p.lvl}`, color, cBlue);
-      });
+        perfParts.forEach((p, idx) => {
+          const py = 67 + idx * 10;
+          const isSelected = idx === 0;
+          const color = isSelected ? cYellow : cWhite;
+          drawBitmapString(ctx, 16, py, `${p.part}   ${p.patch}    ${p.ch}       ${p.out}    ${p.pan}  ${p.lvl}`, color, cBlue);
+        });
 
-      // Right Side Master Level Meter Box
-      ctx.fillStyle = cYellow;
-      ctx.fillRect(504, 55, 120, 10);
-      drawBitmapString(ctx, 524, 56, "Peak Level", cBlack, cYellow);
+        // Right Side Master Level Meter Box
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(504, 55, 120, 10);
+        drawBitmapString(ctx, 524, 56, "Peak Level", cBlack, cYellow);
 
-      // Meter Box background
-      ctx.fillStyle = cBlack;
-      ctx.fillRect(504, 68, 120, 78);
-      // Meter segments
-      for (let s = 0; s < 12; s++) {
-        const my = 136 - s * 6;
-        const isGreen = s < 8;
-        const isYellow = s >= 8 && s < 10;
-        const segColor = isGreen ? cGreen : isYellow ? cYellow : cRed;
-        ctx.fillStyle = segColor;
-        ctx.fillRect(520, my, 40, 4);
-        ctx.fillRect(568, my, 40, 4);
+        ctx.fillStyle = cBlack;
+        ctx.fillRect(504, 68, 120, 78);
+        for (let s = 0; s < 12; s++) {
+          const my = 136 - s * 6;
+          const isGreen = s < 8;
+          const isYellow = s >= 8 && s < 10;
+          const segColor = isGreen ? cGreen : isYellow ? cYellow : cRed;
+          ctx.fillStyle = segColor;
+          ctx.fillRect(520, my, 40, 4);
+          ctx.fillRect(568, my, 40, 4);
+        }
+        drawBitmapString(ctx, 510, 72, "L", cWhite, cBlack);
+        drawBitmapString(ctx, 612, 72, "R", cWhite, cBlack);
+
+        // Lower Area: Keyboard Split preview (y = 156..214)
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 150, 612, 10);
+        drawBitmapString(ctx, 16, 151, "Keyboard Part Map (C-1 to G9)", cBlack, cYellow);
+        drawGraphicKeyboard(ctx, 12, 166, 612, 48, [
+          { startKey: 0, endKey: 24, color: cCyan },
+          { startKey: 25, endKey: 42, color: cYellow },
+          { startKey: 43, endKey: 61, color: cRed },
+        ]);
+
+      } else if (subPage === 1) {
+        // --- PERFORM EQ (0x08EA22) ---
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 44, 612, 10);
+        drawBitmapString(ctx, 16, 45, "Perform Part EQ Table (4-Band Parametric)", cBlack, cYellow);
+
+        drawBitmapString(ctx, 16, 58, "Master EQ:   [High: +2.0dB / 8.0kHz]     [Low: +0.0dB / 250Hz]", cCyan, cBlue);
+
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 74, 612, 10);
+        drawBitmapString(ctx, 24, 75, "Part   [H.F]   [H.G]   [M.F]   [M.G]   [L.F]   [L.G]   [EQ ON]", cBlack, cYellow);
+
+        for (let p = 1; p <= 8; p++) {
+          const ey = 88 + (p - 1) * 15;
+          drawBitmapString(ctx, 24, ey, `[${p}]     8.0k   +0.0dB   2.5k   +0.0dB   250Hz  +0.0dB   [ ON ]`, cWhite, cBlue);
+        }
+
+      } else if (subPage === 2) {
+        // --- MIDI FILTER (0x08EE50) ---
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 44, 612, 10);
+        drawBitmapString(ctx, 16, 45, "MIDI Message Reception Filters (Part 1 - 8)", cBlack, cYellow);
+
+        drawBitmapString(ctx, 24, 60, "Part  ProgChange  PitchBend  Modulation  AfterTouch  Volume  Hold-1", cYellow, cBlue);
+        for (let p = 1; p <= 8; p++) {
+          const fy = 76 + (p - 1) * 16;
+          drawBitmapString(ctx, 24, fy, `[${p}]      ON          ON         ON          ON        ON      ON`, cWhite, cBlue);
+        }
+
+      } else if (subPage === 3) {
+        // --- LISTEN DELETE (0x090DC0) ---
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 44, 612, 10);
+        drawBitmapString(ctx, 16, 45, "Listen Delete (Audition & Delete Unused Wave Memory)", cBlack, cYellow);
+
+        drawBitmapString(ctx, 16, 60, "Select Unused Objects to Delete from Internal RAM:", cWhite, cBlue);
+
+        const unrefItems = [
+          "01: S04 JP8_BRASS_44K (Unreferenced Sample, 2.95s)",
+          "02: S09 VP_STRINGS_HI (Unreferenced Sample, 1.20s)",
+          "03: P08 EMPTY_PARTIAL (Unassigned Partial)",
+        ];
+        unrefItems.forEach((item, uidx) => {
+          const uy = 78 + uidx * 16;
+          ctx.fillStyle = cWhite;
+          ctx.fillRect(16, uy, 8, 8);
+          drawBitmapString(ctx, 32, uy, item, cCyan, cBlue);
+        });
+
+      } else if (subPage === 4) {
+        // --- PERFORM UTILITY / PARTMAP (0x0A70D0) ---
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 44, 612, 10);
+        drawBitmapString(ctx, 16, 45, "Perform Part Map & Multi-Out Routing", cBlack, cYellow);
+
+        drawGraphicKeyboard(ctx, 12, 60, 612, 50, [
+          { startKey: 0, endKey: 15, color: cCyan },
+          { startKey: 16, endKey: 30, color: cYellow },
+          { startKey: 31, endKey: 45, color: cGreen },
+          { startKey: 46, endKey: 61, color: cRed },
+        ]);
+
+        drawBitmapString(ctx, 16, 120, "Output Assign: Part 1-4 -> Out 1/2      Part 5-8 -> Out 3/4", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 138, "Priority:      Part 1 [ Last ]          Part 2 [ Last ]", cWhite, cBlue);
+        drawBitmapString(ctx, 16, 156, "Voice Reserve: [ 04 ] [ 04 ] [ 04 ] [ 04 ] [ 04 ] [ 04 ] [ 04 ] [ 04 ]", cCyan, cBlue);
+
+      } else if (subPage === 5) {
+        // --- MODULE MONITOR (0x092E74) ---
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 44, 612, 10);
+        drawBitmapString(ctx, 16, 45, "Module Monitor (32-Voice Real-Time DSP Activity)", cBlack, cYellow);
+
+        for (let v = 0; v < 32; v++) {
+          const col = v % 8;
+          const row = Math.floor(v / 8);
+          const vx = 20 + col * 75;
+          const vy = 64 + row * 36;
+          ctx.fillStyle = '#0a1020';
+          ctx.fillRect(vx, vy, 68, 28);
+          ctx.strokeStyle = cCyan;
+          ctx.strokeRect(vx, vy, 68, 28);
+          drawBitmapString(ctx, vx + 4, vy + 4, `V${v + 1 < 10 ? '0' : ''}${v + 1}`, cCyan, '#0a1020');
+          ctx.fillStyle = v < 4 ? cGreen : '#334466';
+          ctx.fillRect(vx + 32, vy + 6, 28, 16);
+        }
+
+      } else {
+        // --- QUICK LOAD (0x08FB78) ---
+        ctx.fillStyle = cYellow;
+        ctx.fillRect(12, 44, 612, 10);
+        drawBitmapString(ctx, 16, 45, "Quick Load Bank Select", cBlack, cYellow);
+
+        drawBitmapString(ctx, 24, 64, "Bank 1: [ JP-8 SYNTH COLLECTION   ]  (SCSI ID 1)", cWhite, cBlue);
+        drawBitmapString(ctx, 24, 82, "Bank 2: [ VP-330 VOICES & STRINGS ]  (SCSI ID 1)", cWhite, cBlue);
+        drawBitmapString(ctx, 24, 100,"Bank 3: [ S-760 FACTORY DISK 01   ]  (Floppy FDD)", cWhite, cBlue);
+        drawBitmapString(ctx, 24, 118,"Bank 4: [ AKAI S1000 STRINGS CD   ]  (SCSI ID 2)", cWhite, cBlue);
       }
-      drawBitmapString(ctx, 510, 72, "L", cWhite, cBlack);
-      drawBitmapString(ctx, 612, 72, "R", cWhite, cBlack);
-
-      // Lower Area: Keyboard Split preview (y = 156..214)
-      ctx.fillStyle = cYellow;
-      ctx.fillRect(12, 150, 612, 10);
-      drawBitmapString(ctx, 16, 151, "Keyboard Part Map (C-1 to G9)", cBlack, cYellow);
-      drawGraphicKeyboard(ctx, 12, 166, 612, 48, [
-        { startKey: 0, endKey: 24, color: cCyan },
-        { startKey: 25, endKey: 42, color: cYellow },
-        { startKey: 43, endKey: 61, color: cRed },
-      ]);
 
     } else if (state.mode === 'PATCH') {
       // -------------------------------------------------------------
@@ -1731,7 +1866,7 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
       });
     }
 
-    // 7. Modals and Overlays (Mark, Jump, Com, Perform Menu)
+    // 7. Modals and Overlays (Mark, Jump, Com, Perform Menu, Confirm, VolInfo, Working)
     if (activeModal === 'MARK' || activeModal === 'JUMP') {
       const title = activeModal === 'MARK' ? "Mark" : "Jump";
       // Centered Modal Window (x = 160..480, y = 45..205)
@@ -1796,6 +1931,63 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
         const my = 56 + midx * 16;
         drawBitmapString(ctx, 92, my, item, cWhite, '#0a1020');
       });
+
+    } else if (activeModal === 'CONFIRM') {
+      // Ground-Truth Confirmation Dialog (0x0C147F)
+      ctx.fillStyle = '#0a1020';
+      ctx.fillRect(180, 75, 280, 85);
+      ctx.strokeStyle = cRed;
+      ctx.strokeRect(180, 75, 280, 85);
+
+      ctx.fillStyle = cYellow;
+      ctx.fillRect(180, 75, 280, 14);
+      drawBitmapString(ctx, 260, 78, "Are You Sure ?", cBlack, cYellow);
+
+      drawBitmapString(ctx, 210, 102, "Execute Selected Command ?", cWhite, '#0a1020');
+
+      // [ Yes ] and [ No ] buttons
+      ctx.fillStyle = cWhite;
+      ctx.fillRect(220, 126, 80, 18);
+      drawBitmapString(ctx, 248, 131, "Yes", cBlack, cWhite);
+
+      ctx.fillStyle = cWhite;
+      ctx.fillRect(340, 126, 80, 18);
+      drawBitmapString(ctx, 370, 131, "No", cBlack, cWhite);
+
+    } else if (activeModal === 'VOLINFO') {
+      // Volume Information Modal (0x063EB6)
+      ctx.fillStyle = '#0a1020';
+      ctx.fillRect(140, 45, 360, 150);
+      ctx.strokeStyle = cCyan;
+      ctx.strokeRect(140, 45, 360, 150);
+
+      ctx.fillStyle = cYellow;
+      ctx.fillRect(140, 45, 360, 14);
+      drawBitmapString(ctx, 230, 48, "Volume Information", cBlack, cYellow);
+
+      drawBitmapString(ctx, 160, 70,  "Volume Name:    [ S-760 SOUND      ]", cWhite, '#0a1020');
+      drawBitmapString(ctx, 160, 90,  "Total Memory:   32 Mbyte (363.8 s)", cCyan, '#0a1020');
+      drawBitmapString(ctx, 160, 110, "Free Memory:    31.8 Mbyte (361.2 s)", cWhite, '#0a1020');
+      drawBitmapString(ctx, 160, 130, "Patches:        12 / 128", cWhite, '#0a1020');
+      drawBitmapString(ctx, 160, 150, "Partials:       24 / 255", cWhite, '#0a1020');
+      drawBitmapString(ctx, 160, 170, "Samples:        18 / 512", cCyan, '#0a1020');
+
+    } else if (activeModal === 'WORKING') {
+      // Now Working / Executing Progress Dialog (0x0B9213)
+      ctx.fillStyle = '#0a1020';
+      ctx.fillRect(200, 85, 240, 70);
+      ctx.strokeStyle = cCyan;
+      ctx.strokeRect(200, 85, 240, 70);
+
+      ctx.fillStyle = cYellow;
+      ctx.fillRect(200, 85, 240, 14);
+      drawBitmapString(ctx, 260, 88, "Now Working...", cBlack, cYellow);
+
+      // Striped animated progress bar
+      for (let px = 215; px < 425; px += 16) {
+        ctx.fillStyle = cGreen;
+        ctx.fillRect(px, 118, 12, 18);
+      }
     }
 
     // 8. Draw Authentic Roland Crosshair Mouse Cursor (+) at mousePos
