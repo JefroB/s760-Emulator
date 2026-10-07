@@ -15,6 +15,7 @@ An open-source hardware emulation driver and DAW instrument & effect plugin for 
 > - [**Roland S-760 OS v2.24 Exhaustive Code & Routine Matrix**](docs/OS_EXHAUSTIVE_CODE_MATRIX.md) — *100% mapping of all 81 ROM routines, vector tables, DSP algorithms, SCSI/FDD drivers, and 14,158 string tokens.*
 > - [**Comprehensive UI Elements & Automated Test Coverage Matrix**](docs/UI_TEST_COVERAGE_MATRIX.md) — *Exhaustive mapping of all 122+ interactive UI components, 37 screen layouts, 88-key piano roll, knobs, meters, and modal dialogs.*
 > - [**Owner's Manual Function Breakdown & UI Test Matrix**](docs/MANUAL_FUNCTION_TEST_COVERAGE.md) — *100% mapping of all 70 user procedures across Chapters 1–8 of the official Owner's Manual (`S-760_OM.pdf`).*
+> - [**Next-Gen S-760 OS Roadmap & Feasibility Analysis**](docs/NEXTGEN_OS_FEATURES_AND_FEASIBILITY.md) — *Modern feature roadmap inspired by 35 years of sampler innovation (MPC Beat Chopping, Direct WAV Import, Transwave Scrubbing, Super-Unison, 8-Stage MSEGs, and Real-Time MIDI CC Automation).*
 
 ---
 
