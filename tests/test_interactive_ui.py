@@ -74,13 +74,14 @@ end, "nav_test")
 
 
 def test_no_missing_sound_warning():
-    """Verify stereo speakers are configured and audio warning is not triggered."""
+    """Verify stereo speakers and s760_sound DSP device are configured and active."""
     lua = """
 local count = 0
 emu.register_frame_done(function()
     count = count + 1
     if count == 5 then
         results["speakers_ok"] = (manager.machine.devices[":lspeaker"] ~= nil) and (manager.machine.devices[":rspeaker"] ~= nil)
+        results["sound_device_ok"] = (manager.machine.devices[":s760_sound"] ~= nil)
         save_and_exit()
     end
 end, "sound_test")
@@ -90,6 +91,8 @@ end, "sound_test")
 
     assert res["returncode"] == 0, f"Audio check failed: {res['stderr']}"
     assert res["data"].get("speakers_ok") is True
+    assert res["data"].get("sound_device_ok") is True
+
 
 
 def test_mouse_motion_and_button_clicks():

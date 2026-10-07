@@ -21,8 +21,261 @@
 #include "screen.h"
 #include "speaker.h"
 #include "emupal.h"
+#include "disound.h"
+#include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace {
+
+class s760_sound_device;
+DECLARE_DEVICE_TYPE(S760_SOUND, s760_sound_device)
+
+// ============================================================================
+// Roland S-760 Custom Sound Generator / 32-Voice Polyphonic DSP ASIC
+// ============================================================================
+class s760_sound_device : public device_t, public device_sound_interface
+{
+public:
+	s760_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock = 44100);
+
+	void note_on(int voice_idx, uint32_t wave_addr, uint32_t length, uint32_t loop_s, uint32_t loop_e, uint8_t loop_m, double sample_rate, int note, int root_key, float vel, float pan);
+	void note_off(int voice_idx);
+	void trigger_preview(int patch_idx, int note = 60);
+
+protected:
+	virtual void device_start() override;
+	virtual void device_reset() override;
+	virtual void sound_stream_update(sound_stream &stream) override;
+
+private:
+	struct Voice
+	{
+		bool active;
+		uint32_t start_addr;
+		uint32_t length;
+		uint32_t loop_start;
+		uint32_t loop_end;
+		uint8_t loop_mode;
+		double pos;
+		double step;
+		float volume;
+		float pan_l;
+		float pan_r;
+		float env_level;
+		float env_attack;
+		float env_decay;
+		float env_sustain;
+		float env_release;
+		int env_stage;
+	};
+
+	sound_stream *m_stream;
+	Voice m_voices[32];
+	std::vector<int16_t> m_wave_ram;
+
+	void populate_factory_waveforms();
+};
+
+s760_sound_device::s760_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock)
+	: device_t(mconfig, S760_SOUND, tag, owner, clock)
+	, device_sound_interface(mconfig, *this)
+	, m_stream(nullptr)
+{
+}
+
+void s760_sound_device::device_start()
+{
+	m_stream = stream_alloc(0, 2, 44100);
+	populate_factory_waveforms();
+
+	for (int v = 0; v < 32; v++)
+	{
+		m_voices[v].active = false;
+		m_voices[v].env_stage = 0;
+	}
+}
+
+void s760_sound_device::device_reset()
+{
+	for (int v = 0; v < 32; v++)
+	{
+		m_voices[v].active = false;
+		m_voices[v].env_stage = 0;
+	}
+}
+
+void s760_sound_device::populate_factory_waveforms()
+{
+	m_wave_ram.resize(1024 * 1024, 0);
+
+	// Wave 1: JP-8 Brass / Sawtooth (rich harmonics)
+	uint32_t w1_start = 0;
+	uint32_t w1_len = 44100;
+	for (uint32_t i = 0; i < w1_len; i++)
+	{
+		double t = (double)i / 44100.0;
+		double saw = 0.0;
+		for (int h = 1; h <= 12; h++)
+			saw += (1.0 / h) * std::sin(2.0 * M_PI * 130.81 * h * t);
+		m_wave_ram[w1_start + i] = (int16_t)(std::clamp(saw * 16000.0, -32767.0, 32767.0));
+	}
+
+	// Wave 2: VP Strings Ensemble (chorus detuned saws)
+	uint32_t w2_start = 44100;
+	uint32_t w2_len = 44100;
+	for (uint32_t i = 0; i < w2_len; i++)
+	{
+		double t = (double)i / 44100.0;
+		double str = 0.6 * std::sin(2.0 * M_PI * 261.63 * t) + 0.3 * std::sin(2.0 * M_PI * 262.4 * t) + 0.3 * std::sin(2.0 * M_PI * 260.8 * t);
+		m_wave_ram[w2_start + i] = (int16_t)(std::clamp(str * 24000.0, -32767.0, 32767.0));
+	}
+
+	// Wave 3: Acoustic Bass (punchy attack + sub harmonics)
+	uint32_t w3_start = 88200;
+	uint32_t w3_len = 44100;
+	for (uint32_t i = 0; i < w3_len; i++)
+	{
+		double t = (double)i / 44100.0;
+		double env = std::exp(-3.5 * t);
+		double bass = env * (std::sin(2.0 * M_PI * 65.41 * t) + 0.5 * std::sin(2.0 * M_PI * 130.81 * t));
+		m_wave_ram[w3_start + i] = (int16_t)(std::clamp(bass * 28000.0, -32767.0, 32767.0));
+	}
+
+	// Wave 4: Converted Akai S1000 Section Strings
+	uint32_t w4_start = 132300;
+	uint32_t w4_len = 44100;
+	for (uint32_t i = 0; i < w4_len; i++)
+	{
+		double t = (double)i / 44100.0;
+		double akai_str = 0.5 * std::sin(2.0 * M_PI * 440.0 * t) + 0.25 * std::sin(2.0 * M_PI * 880.0 * t) + 0.15 * std::sin(2.0 * M_PI * 1320.0 * t);
+		m_wave_ram[w4_start + i] = (int16_t)(std::clamp(akai_str * 26000.0, -32767.0, 32767.0));
+	}
+}
+
+void s760_sound_device::note_on(int v, uint32_t wave_addr, uint32_t length, uint32_t loop_s, uint32_t loop_e, uint8_t loop_m, double sample_rate, int note, int root_key, float vel, float pan)
+{
+	if (v < 0 || v >= 32)
+		return;
+
+	Voice &voice = m_voices[v];
+	voice.start_addr = wave_addr;
+	voice.length = length;
+	voice.loop_start = loop_s;
+	voice.loop_end = (loop_e > 0) ? loop_e : length;
+	voice.loop_mode = loop_m;
+	voice.pos = 0.0;
+	voice.step = (sample_rate / 44100.0) * std::pow(2.0, (note - root_key) / 12.0);
+	voice.volume = std::clamp(vel, 0.0f, 1.0f);
+	voice.pan_l = std::clamp(1.0f - pan, 0.0f, 1.0f);
+	voice.pan_r = std::clamp(1.0f + pan, 0.0f, 1.0f);
+	voice.env_level = 0.0f;
+	voice.env_attack = 0.005f;
+	voice.env_decay = 0.0002f;
+	voice.env_sustain = 0.75f;
+	voice.env_release = 0.001f;
+	voice.env_stage = 1;
+	voice.active = true;
+}
+
+void s760_sound_device::note_off(int v)
+{
+	if (v >= 0 && v < 32 && m_voices[v].active)
+	{
+		m_voices[v].env_stage = 4;
+	}
+}
+
+void s760_sound_device::trigger_preview(int patch_idx, int note)
+{
+	uint32_t wave_addrs[4] = { 0, 44100, 88200, 132300 };
+	uint32_t addr = wave_addrs[patch_idx % 4];
+	note_on(0, addr, 44100, 1000, 43000, 1, 44100.0, note, 60, 0.85f, 0.0f);
+}
+
+void s760_sound_device::sound_stream_update(sound_stream &stream)
+{
+	stream.fill(0, 0.0f);
+	stream.fill(1, 0.0f);
+
+	for (int v = 0; v < 32; v++)
+	{
+		Voice &voice = m_voices[v];
+		if (!voice.active)
+			continue;
+
+		for (int i = 0; i < stream.samples(); i++)
+		{
+			if (voice.env_stage == 1)
+			{
+				voice.env_level += voice.env_attack;
+				if (voice.env_level >= 1.0f)
+				{
+					voice.env_level = 1.0f;
+					voice.env_stage = 2;
+				}
+			}
+			else if (voice.env_stage == 2)
+			{
+				voice.env_level -= voice.env_decay;
+				if (voice.env_level <= voice.env_sustain)
+				{
+					voice.env_level = voice.env_sustain;
+					voice.env_stage = 3;
+				}
+			}
+			else if (voice.env_stage == 4)
+			{
+				voice.env_level -= voice.env_release;
+				if (voice.env_level <= 0.0f)
+				{
+					voice.env_level = 0.0f;
+					voice.active = false;
+					break;
+				}
+			}
+
+			uint32_t idx = voice.start_addr + (uint32_t)voice.pos;
+			double frac = voice.pos - (uint32_t)voice.pos;
+
+			float s = 0.0f;
+			if (idx + 1 < m_wave_ram.size())
+			{
+				float s0 = (float)m_wave_ram[idx];
+				float s1 = (float)m_wave_ram[idx + 1];
+				s = (s0 + frac * (s1 - s0)) / 32768.0f;
+			}
+			else if (idx < m_wave_ram.size())
+			{
+				s = (float)m_wave_ram[idx] / 32768.0f;
+			}
+
+			float gain = s * voice.volume * voice.env_level * 0.35f;
+			stream.add(0, i, gain * voice.pan_l);
+			stream.add(1, i, gain * voice.pan_r);
+
+			voice.pos += voice.step;
+			if (voice.loop_mode != 0 && voice.pos >= voice.loop_end)
+			{
+				double loop_len = (double)(voice.loop_end - voice.loop_start);
+				if (loop_len > 1.0)
+					voice.pos = voice.loop_start + std::fmod(voice.pos - voice.loop_start, loop_len);
+				else
+					voice.pos = voice.loop_start;
+			}
+			else if (voice.loop_mode == 0 && voice.pos >= voice.length)
+			{
+				voice.active = false;
+				break;
+			}
+		}
+	}
+}
+
+DEFINE_DEVICE_TYPE(S760_SOUND, s760_sound_device, "s760_sound", "Roland S-760 Sound Generator")
+
 
 static const uint8_t *get_font_glyph(char c)
 {
@@ -138,6 +391,7 @@ public:
 		, m_lcd_vram(*this, "lcd_vram")
 		, m_key_arrows(*this, "KEY_ARROWS")
 		, m_mouse_btn(*this, "MOUSEBTN")
+		, m_sound(*this, "s760_sound")
 	{ }
 
 	void s760(machine_config &config);
@@ -158,6 +412,7 @@ private:
 
 	required_ioport m_key_arrows;
 	required_ioport m_mouse_btn;
+	required_device<s760_sound_device> m_sound;
 
 	// Gate Array MMIO & VDP Registers
 	uint8_t m_mmio[16];
@@ -232,6 +487,7 @@ void s760_state::machine_start()
 void s760_state::machine_reset()
 {
 	m_vdp_addr = 0;
+	m_sound->trigger_preview(0);
 }
 
 uint8_t s760_state::mmio_r(offs_t offset)
@@ -521,6 +777,7 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 		else if (m_cur_y >= 58 && m_cur_y <= 218 && m_cur_x >= 14 && m_cur_x <= 480)
 		{
 			m_selected_row = std::clamp((m_cur_y - 58) / 10, 0, 15);
+			m_sound->trigger_preview(m_selected_row);
 		}
 	}
 
@@ -667,9 +924,13 @@ void s760_state::s760(machine_config &config)
 	N8097BH(config, m_maincpu, 16_MHz_XTAL);
 	m_maincpu->set_addrmap(AS_PROGRAM, &s760_state::s760_mem);
 
-	// Sound: Dual Stereo Outputs (IC91/IC92 D/A DACs)
+	// Sound: Dual Stereo Outputs (IC91/IC92 D/A DACs) + 32-Voice DSP ASIC
 	SPEAKER(config, "lspeaker").front_left();
 	SPEAKER(config, "rspeaker").front_right();
+
+	S760_SOUND(config, m_sound, 44100);
+	m_sound->add_route(0, "lspeaker", 1.0);
+	m_sound->add_route(1, "rspeaker", 1.0);
 
 	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 10));
 
@@ -699,4 +960,5 @@ ROM_END
 
 } // anonymous namespace
 
-SYST( 1993, s760, 0, 0, s760, s760, s760_state, empty_init, "Roland", "S-760 Digital Sampler", MACHINE_IMPERFECT_SOUND | MACHINE_IMPERFECT_GRAPHICS )
+SYST( 1993, s760, 0, 0, s760, s760, s760_state, empty_init, "Roland", "S-760 Digital Sampler", MACHINE_IMPERFECT_GRAPHICS )
+
