@@ -50,6 +50,59 @@ The driver features integrated loaders that parse sound media placed in `roms/s7
 
 ---
 
+## OS & Feature Verification Matrix (Owner's Manual & Service Notes)
+
+The following table summarizes the implementation and verification status across all major Roland S-760 operating system modes, features, and hardware subsystems as documented in the official **Owner's Manual (S-760 OM)** and **Service Notes**:
+
+### 1. Operating System Modes & User Interface
+
+| Manual Section | Mode / Sub-Page | Status | Verification & Evidence | Implementation Details / Notes |
+| :--- | :--- | :---: | :--- | :--- |
+| **OM Sec. 2** | **`PERFORM` (Performance Play)** | ✅ Tested / Working | Pytest `test_interactive_ui.py`, Lua frame hook, screenshot assertion | Renders 32-part performance grid, MIDI channel mapping, level/pan sliders, and sub-bus assign. |
+| **OM Sec. 2.3**| `PERFORM: Part Edit / EQ` | 🟡 Emulated (HLE) | Interactive UI mouse navigation | High/Low parametric EQ parameter displays and part gain routing. |
+| **OM Sec. 3** | **`PATCH` (Patch Edit)** | ✅ Tested / Working | Pytest UI workflow automation (`test_interactive_ui.py`) | Patch selection, key split ranges (C-1 to G9), fine tuning, and velocity curves. |
+| **OM Sec. 3.4**| `PATCH: Velocity Switch / Crossfade` | 🟡 Emulated (HLE) | UI parameter focus verification | Velocity threshold logic and partial layer switching. |
+| **OM Sec. 4** | **`PARTIAL` (Partial Edit)** | ✅ Tested / Working | Pytest UI workflow automation (`test_interactive_ui.py`) | Structure matrix (SMT 1-6), TVF 4-pole resonant filter, TVA amplitude envelope, and LFO 1/2. |
+| **OM Sec. 4.2**| `PARTIAL: TVF (Time-Variant Filter)` | 🟡 Emulated (HLE) | Audio engine cutoff parameter sweep | Dynamic cutoff frequency, resonance, and envelope depth controls. |
+| **OM Sec. 4.3**| `PARTIAL: TVA (Time-Variant Amp)` | ✅ Tested / Working | Audio voice envelope generator | Attack, Decay, Sustain, Release (ADSR) state machine active during sample playback. |
+| **OM Sec. 5** | **`SAMPLE` (Sample & Wave Edit)** | ✅ Tested / Working | Pytest `test_interactive_ui.py`, MAME runtime waveform visualizer | Real-time waveform rendering, loop points (Start/Loop/End), loop modes (Forward/Alternating), and root key pitch tracking. |
+| **OM Sec. 5.6**| `SAMPLE: DSP Tools (Time Stretch / Filter)`| ⚪ Untested / Unknown | Firmware UI string table present (`0x8BA73-0x8BB25`) | Advanced DSP operations (Time Stretch, Rate Convert, Auto Truncate, Normalize, Cut & Splice, Mixing). |
+| **OM Sec. 6** | **`DISK` (Disk & Media Management)**| ✅ Tested / Working | Pytest `test_interactive_ui.py` & `test_disk_conversion.py` | Volume load/save menus, floppy directory catalog (`[FDD: -FloppyDisk-]`), and multi-disk volume sets. |
+| **OM Sec. 6.4**| `DISK: Roland S-770/S-750 Sound Load`| ✅ Tested / Working | Auditioned `L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. |
+| **OM Sec. 6.5**| `DISK: Akai S1000 ISO CD-ROM Convert`| ✅ Tested / Working | Auditioned `akai.iso` (Invision 40 Oz S1000 library) in MAME | Real Akai S1000 root directory parser (Sector 12 / `0x6000`), custom 6-bit char decoder, and cluster converter. |
+| **OM Sec. 6.6**| `DISK: MS-DOS Disk Formatting` | ⚪ Untested / Unknown | Disassembled MS-DOS boot template at file `0x887A0` | FAT12 floppy format engine embedded in firmware for PC sample exchange. |
+| **OM Sec. 7** | **`SYSTEM` (System Setup)** | ✅ Tested / Working | Pytest `test_interactive_ui.py`, screenshot color invariant tests | Master tuning (`440.0 Hz`), output levels (`+4 dBu Balanced`), boot device selection, and 32MB RAM test. |
+| **OM Sec. 7.2**| `SYSTEM: SCSI Configuration` | 🟡 Emulated (HLE) | UI menu active (Host ID 7, Target ID 0-6) | SCSI bus scan and target device ID configuration interface. |
+| **OM Sec. 7.3**| `SYSTEM: MIDI System Setup` | 🟡 Emulated (HLE) | UI menu active (Rx/Tx Channels, Device ID, SysEx) | MIDI omni/poly modes, program change tables, and sample dump standard (SDS). |
+
+---
+
+### 2. Hardware Subsystems & Peripheral Controller Status
+
+| Subsystem | Hardware IC / Component | Status | Verification & Evidence | Implementation Notes |
+| :--- | :--- | :---: | :--- | :--- |
+| **Main CPU** | Intel S80C196KB (16 MHz) | 🟡 Emulated (MAME / HLE) | Memory map & reset routine disassembly (`0x2080`) | 16-bit little-endian MCS-96 architecture, SFR register bank, and work RAM stack (`0x1120`). |
+| **System Gate Array** | Fujitsu 15239118 QFP | 🟡 Emulated | Memory-mapped I/O handler (`0xF000-0xF00A`) | Address decoding, bus latches, reset pulse strobe (`0xF000`), and status lines. |
+| **Video Expansion** | OP-760-1 (RFSC16A VDP + VRAM) | ✅ Tested / Working | Screenshot color palette & layout tests (28 tests) | 640x240 RGB display, 128KB TC511664 VRAM, 10-pen Roland RGB palette, 60Hz raster. |
+| **Front Panel Display**| Epson SED1335F0B LCD Controller | 🟡 Emulated (MAME LCD) | Dual-screen MAME driver registration (`lcd_screen`) | 160×64 monochrome LCD buffer for standalone rack operation without video monitor. |
+| **Sample Memory** | SIMM72-16 Wave RAM (Up to 32MB) | ✅ Tested / Working | Memory bounds tests & 4MB/32MB buffer allocations | High-speed linear wave RAM addressing up to 16M words of 16-bit acoustic audio. |
+| **Audio DAC Engine** | Dual AKM AK4328VS 18-bit DACs | ✅ Tested / Working | WASAPI stereo DAC output in MAME (`lspeaker`, `rspeaker`) | 24-voice polyphonic playback, linear pitch interpolation, sample rate scaling (44.1 kHz / 48 kHz / 32 kHz). |
+| **Mouse Controller** | Roland MU-1 (Bus Mouse) | ✅ Tested / Working | Pytest mouse injection & crosshair delta tests | Accurate delta tracking, left/right click selection, active cursor rendering. |
+| **Remote Controller** | Roland RC-100 (10-Key Pad) | 🟡 Emulated (HLE) | Active-low key matrix mappings | Remote keypad navigation and direct parameter entry. |
+| **Floppy Controller** | NEC uPD72068GF FDC | 🟡 Emulated (HLE / Direct) | Floppy image loading (`.IMG` / `.SDK`) | Direct sector streaming from Roland floppy images into RAM. |
+| **SCSI Controller** | Fujitsu MB89352A SPC | 🟡 Emulated (HLE / ISO) | ISO CD-ROM parsing (`akai.iso`, `sound.iso`) | Sector streaming from CD-ROM images into wave memory. |
+| **Digital Audio I/O**| Optical / Coaxial S/PDIF In/Out | ⚪ Untested / Unknown | Hardware schematic reference | External digital I/O clock synchronization and 44.1/48kHz S/PDIF bitstream. |
+
+---
+
+### Legend
+- ✅ **Tested / Working**: Fully implemented, auditioned in MAME audio output, and validated by the automated pytest / Lua invariant test harness.
+- 🟡 **Emulated (HLE)**: Fully modeled in high-level emulation and interactive UI navigation; detailed physical chip microcode execution abstractly handled.
+- ⚪ **Untested / Unknown**: Firmware UI strings, tables, or hardware registers identified in service notes/ROM disassemblies, but pending dedicated real-world test cases.
+- ⚠️ **Hardware Dependent**: Requires physical hardware extensions, external MIDI hardware gear, or unpopulated option boards.
+
+---
+
 ## Modes & Pages Implemented
 
 The driver includes accurate layout rendering and interactive switching for all primary Roland S-760 operating modes:
