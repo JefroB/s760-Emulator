@@ -56,6 +56,7 @@ end
             "-window",
             "-video", "gdi",
             "-numscreens", "1",
+            "-nothrottle",
             "-rompath", ROMS_DIR,
             "-snapname", f"s760/{self.snap_name}",
             "-autoboot_script", self.script_path,
@@ -67,7 +68,7 @@ end
             cwd=r"d:\S-760\mame-source",
             capture_output=True,
             text=True,
-            timeout=self.timeout_sec + 5
+            timeout=max(20, self.timeout_sec * 3)
         )
 
         data = {}

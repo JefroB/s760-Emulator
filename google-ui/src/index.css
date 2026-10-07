@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Brushed aluminum faceplate texture */
+  .bg-brushed-rack {
+    background-color: #1c1e22;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(180deg, #26292e 0%, #1c1e22 45%, #18191d 55%, #22252a 100%);
+    background-size: 100% 2px, 2px 100%, 100% 100%;
+  }
+
+  .bg-brushed-metal-horizontal {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 2px
+    ), linear-gradient(180deg, #282b30 0%, #1d1f23 48%, #17181c 52%, #222529 100%);
+  }
+
+  /* Knurled metal pattern for alpha dial & gotek knob */
+  .bg-knurled-radial {
+    background: radial-gradient(circle at 35% 35%, #555960 0%, #2a2c31 60%, #151619 100%);
+  }
+
+  .bg-knurled-rim {
+    background: repeating-conic-gradient(
+      from 0deg,
+      #45484f 0deg 3deg,
+      #1f2125 3deg 6deg,
+      #5a5e66 6deg 9deg,
+      #292b30 9deg 12deg
+    );
+  }
+
+  /* LCD emerald pixel screen backlight & scanline grid */
+  .lcd-green-glow {
+    box-shadow: inset 0 0 12px rgba(122, 255, 56, 0.35), 0 0 16px rgba(122, 255, 56, 0.15);
+  }
+
+  .lcd-amber-glow {
+    box-shadow: inset 0 0 12px rgba(255, 175, 45, 0.4), 0 0 16px rgba(255, 175, 45, 0.2);
+  }
+
+  /* Gotek cyan OLED glow */
+  .oled-cyan-glow {
+    box-shadow: inset 0 0 8px rgba(0, 242, 255, 0.3), 0 0 12px rgba(0, 242, 255, 0.2);
+  }
+
+  /* Subtle glass reflection overlay */
+  .acrylic-reflection {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.03) 40%,
+      rgba(255, 255, 255, 0) 60%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+  }
+
+  /* Hardware tactile button shadow */
+  .tactile-btn {
+    box-shadow: 
+      0 2px 3px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .tactile-btn-pressed {
+    transform: translateY(1.5px);
+    box-shadow: 
+      0 0 1px rgba(0, 0, 0, 0.7),
+      inset 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+
+  .tactile-rubber-btn {
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.7),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Custom scrollbars for data panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111215;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2d34;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3e424c;
+}

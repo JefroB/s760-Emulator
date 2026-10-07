@@ -829,7 +829,6 @@ public:
 		: driver_device(mconfig, type, tag)
 		, m_maincpu(*this, "maincpu")
 		, m_crt_screen(*this, "crt_screen")
-		, m_lcd_screen(*this, "lcd_screen")
 		, m_lcd_vram(*this, "lcd_vram")
 		, m_key_arrows(*this, "KEY_ARROWS")
 		, m_mouse_btn(*this, "MOUSEBTN")
@@ -850,7 +849,6 @@ protected:
 private:
 	required_device<i8x9x_device> m_maincpu;
 	required_device<screen_device> m_crt_screen;
-	required_device<screen_device> m_lcd_screen;
 	required_shared_ptr<uint16_t> m_lcd_vram;
 
 	required_ioport m_key_arrows;
@@ -1840,7 +1838,7 @@ void s760_state::s760(machine_config &config)
 
 	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 16));
 
-	// Primary Output: Unified OP-760 CRT Display + 1U Rack Panel with LCD & Gotek (640x360)
+	// Unified Output: OP-760 Color CRT Display + 1U Rack Panel with LCD & Gotek (640x360)
 	screen_device &crt_screen(SCREEN(config, "crt_screen"));
 	crt_screen.set_refresh_hz(60);
 	crt_screen.set_vblank_time(ATTOSECONDS_IN_USEC(2500));
@@ -1848,15 +1846,6 @@ void s760_state::s760(machine_config &config)
 	crt_screen.set_visarea(0, 639, 0, 359);
 	crt_screen.set_screen_update(FUNC(s760_state::crt_update));
 	crt_screen.set_palette(palette);
-
-	// Secondary Output: Dedicated Front Panel Monochrome LCD Display (160x64 pixels)
-	screen_device &lcd_screen(SCREEN(config, "lcd_screen"));
-	lcd_screen.set_refresh_hz(60);
-	lcd_screen.set_vblank_time(ATTOSECONDS_IN_USEC(2500));
-	lcd_screen.set_size(160, 64);
-	lcd_screen.set_visarea(0, 159, 0, 63);
-	lcd_screen.set_screen_update(FUNC(s760_state::lcd_update));
-	lcd_screen.set_palette(palette);
 }
 
 ROM_START( s760 )
