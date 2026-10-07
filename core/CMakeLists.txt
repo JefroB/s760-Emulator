@@ -14,6 +14,7 @@ add_library(s760_core STATIC
     src/s760_drive_manager.cpp
     src/s760_libretro_host.cpp
     src/s760_clap_plugin.cpp
+    src/s760_vst_plugin.cpp
 )
 
 target_include_directories(s760_core PUBLIC
@@ -21,7 +22,17 @@ target_include_directories(s760_core PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-# CLAP Plugin Shared Library (.clap / .dll)
+# VST Plugin Shared Library (.dll)
+add_library(s760_vst MODULE
+    src/s760_vst_plugin.cpp
+)
+target_link_libraries(s760_vst PRIVATE s760_core)
+set_target_properties(s760_vst PROPERTIES
+    OUTPUT_NAME "Roland_S760"
+    SUFFIX ".dll"
+)
+
+# CLAP Plugin Shared Library (.clap)
 add_library(s760_clap MODULE
     src/s760_clap_plugin.cpp
 )
@@ -44,7 +55,7 @@ add_executable(s760_core_tests
 target_link_libraries(s760_core_tests PRIVATE s760_core)
 add_dependencies(s760_core_tests mock_core)
 
-# Plugin Host Test Executable
+# Plugin Host Test Executable (VST + CLAP)
 add_executable(s760_plugin_tests
     tests/test_plugin_host.cpp
 )

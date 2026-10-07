@@ -1,5 +1,7 @@
 #include "s760/clap_defs.h"
 #include "s760/s760_clap_plugin.hpp"
+#include "s760/vst_defs.h"
+#include "s760/s760_vst_plugin.hpp"
 #include "s760/s760_disk.hpp"
 
 #include <iostream>
@@ -176,19 +178,56 @@ void test_plugin_state_serialization() {
     std::cout << "  -> CLAP Plugin State Serialization Tests PASSED!" << std::endl;
 }
 
+extern "C" AEffect* VSTPluginMain(audioMasterCallback audioMaster);
+
+void test_vst_plugin_lifecycle_and_audio() {
+    std::cout << "[TEST] VST2/VST3 Plugin Instantiation & Audio Processing..." << std::endl;
+
+    auto* effect = VSTPluginMain(nullptr);
+    assert(effect != nullptr);
+    assert(effect->magic == VST_MAGIC);
+    assert(effect->numOutputs == 2);
+
+    // Dispatch effOpen, effSetSampleRate, effSetBlockSize
+    assert(effect->dispatcher(effect, effOpen, 0, 0, nullptr, 0.0f) == 1);
+    assert(effect->dispatcher(effect, effSetSampleRate, 0, 0, nullptr, 44100.0f) == 1);
+    assert(effect->dispatcher(effect, effSetBlockSize, 0, 512, nullptr, 0.0f) == 1);
+
+    // Audio Output Buffers
+    std::vector<float> out_l(512, 0.0f);
+    std::vector<float> out_r(512, 0.0f);
+    float* channel_ptrs[2] = {out_l.data(), out_r.data()};
+
+    // Process audio
+    effect->processReplacing(effect, nullptr, channel_ptrs, 512);
+
+    // Test Chunk Save & Restore (DAW project state)
+    void* chunk_ptr = nullptr;
+    intptr_t chunk_sz = effect->dispatcher(effect, effGetChunk, 0, 0, &chunk_ptr, 0.0f);
+    assert(chunk_sz > 0 && chunk_ptr != nullptr);
+
+    assert(effect->dispatcher(effect, effSetChunk, 0, chunk_sz, chunk_ptr, 0.0f) == 1);
+
+    // Close effect
+    assert(effect->dispatcher(effect, effClose, 0, 0, nullptr, 0.0f) == 1);
+
+    std::cout << "  -> VST2/VST3 Plugin Tests PASSED!" << std::endl;
+}
+
 int main() {
     std::cout << "==========================================" << std::endl;
-    std::cout << "  Roland S-760 CLAP Plugin DAW Test Suite " << std::endl;
+    std::cout << "  Roland S-760 VST & CLAP DAW Test Suite  " << std::endl;
     std::cout << "==========================================" << std::endl;
 
     try {
         test_plugin_lifecycle_and_audio();
         test_plugin_state_serialization();
+        test_vst_plugin_lifecycle_and_audio();
     } catch (const std::exception& e) {
         std::cerr << "[FATAL TEST ERROR] " << e.what() << std::endl;
         return 1;
     }
 
-    std::cout << "\n>>> ALL CLAP PLUGIN TESTS PASSED SUCCESSFULLY! <<<" << std::endl;
+    std::cout << "\n>>> ALL VST & CLAP PLUGIN TESTS PASSED SUCCESSFULLY! <<<" << std::endl;
     return 0;
 }
