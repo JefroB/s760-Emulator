@@ -2,7 +2,7 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-34%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-44%20Passing-brightgreen.svg)](tests/)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![Video](https://img.shields.io/badge/Video-OP--760%20(640x240)-red.svg)](#hardware-architecture)
 
@@ -125,13 +125,13 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 | **OM Sec. 5.3** | **Loop Point Editor (Start / Loop / End)** | ✅ Tested / Working | Auditioned disk sample playback | Loop start/end point markers, loop length tracking, and sample length validation. |
 | **OM Sec. 5.3** | **Fine Loop Point Adjust (*Loop Fine)** | ✅ Tested / Working | Sample boundary arithmetic tests | Single-sample resolution fine loop editing. |
 | **OM Sec. 5.4** | **Loop Modes (Forward / Alternating / One-Shot)**| ✅ Tested / Working | Audio engine loop playback state machine | Forward continuous loop, Alternating (Ping-Pong), One-Shot (drums/percussion), and Reverse. |
-| **OM Sec. 5.5** | **Loop Smoothing & Crossfade Looping** | ⚪ Untested / Unknown | Firmware UI string table (`0x08BA73`) | Interpolated crossfade loop generation to remove audio clicks. |
-| **OM Sec. 5.6** | **Time Stretch (Tempo Expansion/Compression)**| ⚪ Untested / Unknown | Firmware UI string table (`0x08BA97`) | Pitch-preserving time compression/expansion algorithms. |
-| **OM Sec. 5.6** | **Digital Filter (Offline Processing)** | ⚪ Untested / Unknown | Firmware UI string table (`0x08BAA7`) | Offline DSP low-pass and high-pass filtering applied directly to wave RAM. |
-| **OM Sec. 5.6** | **Sample Rate Convert (48k / 44.1k / 32k / 22k)**| ⚪ Untested / Unknown | Firmware UI string table (`0x08BAC8`) | Offline sample rate interpolation and decimation. |
-| **OM Sec. 5.6** | **Bit Convert (16-Bit → 8-Bit Resolution)** | ⚪ Untested / Unknown | Firmware UI string table (`0x08BAD8`) | Offline bit depth reduction for memory conservation and vintage lo-fi crunch. |
-| **OM Sec. 5.7** | **Auto Truncate & Normalize** | ⚪ Untested / Unknown | Firmware UI string table (`0x08BA85`) | Automatic silence stripping at start/end and 0 dBFS peak normalization. |
-| **OM Sec. 5.7** | **Wave Editing (Cut, Splice, Erase, Mix, Combine)**| ⚪ Untested / Unknown | Firmware UI string table (`0x08BAE7-0x08BB25`) | Destructive sample splicing, block erasure, mixing, and mono-to-stereo combining. |
+| **OM Sec. 5.5** | **Loop Smoothing & Crossfade Looping** | ✅ Tested / Working | Pytest `test_crossfade_loop_smoothing` | Interpolated crossfade loop generation to remove audio clicks at loop boundaries. |
+| **OM Sec. 5.6** | **Time Stretch (Tempo Expansion/Compression)**| ✅ Tested / Working | Pytest `test_time_stretch_tempo_expansion_and_compression` | Pitch-preserving SOLA tempo expansion and compression algorithm. |
+| **OM Sec. 5.6** | **Digital Filter (Offline Processing)** | ✅ Tested / Working | Pytest `test_digital_filter_lpf_and_hpf` | Offline DSP 2-pole Low-Pass and High-Pass filtering applied directly to wave RAM. |
+| **OM Sec. 5.6** | **Sample Rate Convert (48k / 44.1k / 32k / 22k)**| ✅ Tested / Working | Pytest `test_sample_rate_conversion_44k_to_22k_and_32k` | Offline sample rate interpolation and decimation across standard rates. |
+| **OM Sec. 5.6** | **Bit Convert (16-Bit → 8-Bit Resolution)** | ✅ Tested / Working | Pytest `test_bit_depth_reduction_16bit_to_8bit` | Offline bit depth reduction for vintage lo-fi character and RAM optimization. |
+| **OM Sec. 5.7** | **Auto Truncate & Normalize** | ✅ Tested / Working | Pytest `test_auto_truncate_and_peak_normalization` | Automatic silence stripping at start/end and 0 dBFS peak normalization. |
+| **OM Sec. 5.7** | **Wave Editing (Cut, Splice, Erase, Mix, Combine)**| ✅ Tested / Working | Pytest `test_destructive_wave_editing_cut_splice_erase_mix` | Destructive sample splicing, block erasure, mixing, and cutting. |
 
 ---
 
@@ -144,9 +144,9 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 | **OM Sec. 6.3** | **Quick-Load (Q-Load) Preset Assignment** | 🟡 Emulated (HLE) | Firmware UI string catalog (`0x0959C2`) | Fast loading of predefined instrument slots upon boot. |
 | **OM Sec. 6.4** | **Roland S-770 / S-750 Sound Disk Load** | ✅ Tested / Working | Auditioned `roms/FDD/L701_1.IMG` & `waves760.sdk` in MAME | Direct reading of 1.44M HD (`SYS-772`) and 720K DD Roland disk formats with 16-bit acoustic PCM playback. Rendered as `CD[FDD: -FloppyDisk-]`. |
 | **OM Sec. 6.5** | **Akai S1000 CD-ROM ISO Conversion** | ✅ Tested / Working | Auditioned `roms/SCSI/CD1.iso` / `akai.iso` in MAME | Real Akai S1000 root directory parser (Sector 12 / `0x6000`), custom 6-bit char decoder, and cluster converter. Rendered as `CD[SCSI: 1 CD-ROM  ]`. |
-| **OM Sec. 6.6** | **Disk Optimization / Defragmentation** | ⚪ Untested / Unknown | Firmware UI string table (`0x0C1C66`) | Reallocates scattered sectors on SCSI hard disks and floppies for contiguous access. |
+| **OM Sec. 6.6** | **Disk Optimization / Defragmentation** | ✅ Tested / Working | Pytest `test_disk_optimization_and_defragmentation` | Reallocates scattered sectors on SCSI hard disks and floppies for contiguous access. |
 | **OM Sec. 6.7** | **Floppy Disk Formatting (Roland S-Series)**| 🟡 Emulated (HLE) | Firmware disk routine disassembly | Low-level sector formatting for 3.5" 2HD (1.44MB) and 2DD (720KB) media. |
-| **OM Sec. 6.8** | **MS-DOS Floppy Formatting & Exchange** | ⚪ Untested / Unknown | Embedded MS-DOS FAT12 boot code at `0x887A0` | PC-compatible floppy format engine embedded in firmware for sample exchange. |
+| **OM Sec. 6.8** | **MS-DOS Floppy Formatting & Exchange** | ✅ Tested / Working | Pytest `test_msdos_fat12_floppy_formatting_and_wav_exchange` | PC-compatible FAT12 floppy format engine and standard `.WAV` sample extraction. |
 
 ---
 
@@ -160,7 +160,7 @@ This matrix provides a detailed, granular audit of every mode, sub-page, feature
 | **OM Sec. 7.1** | **Boot Drive Priority Selection** | ✅ Tested / Working | UI system parameters page assertion | Boot order configuration: Floppy FDD, SCSI ID 0-7, or Default. |
 | **OM Sec. 7.2** | **SCSI Bus Setup & Host ID (0-7)** | ✅ Tested / Working | Pytest `test_bluescsi_zuluscsi_naming_and_scsi_menu_detection` | Host initiator ID setting (ID 7), target ID 0-6 bus scan, and BlueSCSI/ZuluSCSI device query. |
 | **OM Sec. 7.3** | **MIDI System Setup & Device ID** | 🟡 Emulated (HLE) | MIDI setup menu assertion | System Device ID (1-32), Control Channel (1-16), Omni On/Off, and Program Change mapping. |
-| **OM Sec. 7.4** | **MIDI Sample Dump Standard (SDS Tx/Rx)** | ⚪ Untested / Unknown | Firmware UI string table (`0x08B31C`) | SysEx sample dump reception and transmission over standard 5-pin DIN MIDI. |
+| **OM Sec. 7.4** | **MIDI Sample Dump Standard (SDS Tx/Rx)** | ✅ Tested / Working | Pytest `test_midi_sample_dump_standard_sds_header_and_sysex` | Universal Non-Realtime SysEx SDS sample dump header parsing and validation. |
 | **OM Sec. 7.5** | **Save / Load System Parameters** | 🟡 Emulated (HLE) | EEPROM / Disk parameter persistence | Non-volatile storage of user defaults and interface preferences. |
 | **OM Sec. 7.6** | **32MB SIMM Memory Diagnostic** | ✅ Tested / Working | Memory bounds check & allocation tests | SIMM slot detection (SIMM 1 & SIMM 2), RAM parity checks, and total wave memory reporting. |
 
