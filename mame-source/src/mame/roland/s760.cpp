@@ -40,11 +40,24 @@ DECLARE_DEVICE_TYPE(S760_SOUND, s760_sound_device)
 class s760_sound_device : public device_t, public device_sound_interface
 {
 public:
+	struct SampleDesc
+	{
+		char name[16];
+		uint32_t wave_offset;
+		uint32_t length;
+		uint32_t loop_start;
+		uint32_t loop_end;
+		uint8_t loop_mode;
+		uint32_t sample_rate;
+		uint8_t root_key;
+	};
+
 	s760_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock = 44100);
 
 	void note_on(int voice_idx, uint32_t wave_addr, uint32_t length, uint32_t loop_s, uint32_t loop_e, uint8_t loop_m, double sample_rate, int note, int root_key, float vel, float pan);
 	void note_off(int voice_idx);
 	void trigger_preview(int patch_idx, int note = 60);
+	const std::vector<SampleDesc>& samples() const { return m_samples; }
 
 protected:
 	virtual void device_start() override;
@@ -71,18 +84,6 @@ private:
 		float env_sustain;
 		float env_release;
 		int env_stage;
-	};
-
-	struct SampleDesc
-	{
-		char name[16];
-		uint32_t wave_offset;
-		uint32_t length;
-		uint32_t loop_start;
-		uint32_t loop_end;
-		uint8_t loop_mode;
-		uint32_t sample_rate;
-		uint8_t root_key;
 	};
 
 	sound_stream *m_stream;
@@ -557,6 +558,7 @@ private:
 	int m_cur_y;
 	int m_active_tab;
 	int m_selected_row;
+	bool m_last_clicked;
 
 	void s760_mem(address_map &map) ATTR_COLD;
 
@@ -613,13 +615,14 @@ void s760_state::machine_start()
 	m_cur_x = 350;
 	m_cur_y = 100;
 	m_active_tab = 4; // Default to DISK Load Mode
-	m_selected_row = 0;
+	m_selected_row = 3; // Default to Row 3 (Double Bass)
+	m_last_clicked = false;
 }
 
 void s760_state::machine_reset()
 {
 	m_vdp_addr = 0;
-	m_sound->trigger_preview(0);
+	m_sound->trigger_preview(3);
 }
 
 uint8_t s760_state::mmio_r(offs_t offset)
@@ -828,24 +831,27 @@ void s760_state::render_disk_mode(bitmap_ind16 &bitmap)
 	for (int x = 16; x < 624; x++)
 		bitmap.pix(54, x) = 1;
 
-	const char *patches[] = {
-		"P11: JP-8 Brass 1", "P12: JP-8 Strgs 1", "P13: VP Strings 1", "P14: VP Choir 1",
-		"P15: Synth 1",      "P16: Synth 2",      "P17: Synth 3",      "P18: Synth 4",
-		"P21:",              "P22:",              "P23:",              "P24:",
-		"P25:",              "P26:",              "P27:",              "P28:"
-	};
-
-	int sy = 58 + m_selected_row * 10;
-	for (int y = sy; y < sy + 11; y++)
-		for (int x = 14; x < 480; x++)
-			bitmap.pix(y, x) = 4;
-
+	const auto &samples = m_sound->samples();
+	char row_buf[64];
 	for (int i = 0; i < 16; i++)
 	{
+		const char *name = "";
+		if (i < samples.size())
+			name = samples[i].name;
+		else if (i == 0) name = "JP-8 Brass 1";
+		else if (i == 1) name = "JP-8 Strgs 1";
+		else if (i == 2) name = "VP Strings 1";
+		else if (i == 3) name = "Double Bass";
+		else if (i == 4) name = "VP Choir 1";
+		else if (i == 5) name = "Synth 1";
+		else if (i == 6) name = "Synth 2";
+		else if (i == 7) name = "Synth 3";
+
+		snprintf(row_buf, sizeof(row_buf), "P%02d: %-16s", i + 1, name);
 		if (i == m_selected_row)
-			draw_string(bitmap, 16, 60 + i * 10, patches[i], 0, 4);
+			draw_string(bitmap, 16, 60 + i * 10, row_buf, 0, 4);
 		else
-			draw_string(bitmap, 16, 60 + i * 10, patches[i], 1, 2);
+			draw_string(bitmap, 16, 60 + i * 10, row_buf, 1, 2);
 	}
 
 	auto draw_param_box = [&](int pbx, int pby, int pbw, int pbh, const char *txt) {
@@ -895,7 +901,10 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 	// Handle Click / Selection (Mouse Button 1, Space, or Enter)
 	uint8_t btn = m_mouse_btn->read();
 	bool clicked = !(keys & 0x10) || !(btn & 0x01);
-	if (clicked)
+	bool click_edge = clicked && !m_last_clicked;
+	m_last_clicked = clicked;
+
+	if (click_edge)
 	{
 		if (m_cur_y >= 14 && m_cur_y <= 28)
 		{
