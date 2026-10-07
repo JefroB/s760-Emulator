@@ -15,7 +15,7 @@ An open-source hardware emulation driver and DAW instrument & effect plugin for 
 
 ![Roland S-760 MAME GUI Screen](Main.png)
 
-*Roland S-760 running in MAME with the OP-760 Color CRT monitor output (640x240 Royal Blue `#0000C8` workspace) on top, and the authentic brushed 1U Roland S-760 rack front panel with embedded 160×64 green backlit LCD display and interactive Gotek USB floppy drive emulator (FlashFloppy OLED, knurled rotary push-encoder, and dual navigation buttons) on the bottom.*
+*S-760 Studio Suite with authentic 4:3 OP-760 Color CRT monitor display (640x480 RGB 15kHz tube with phosphor scanlines) on top, and 1U rack front panel unit with embedded 160×64 green backlit LCD display, hardware dials, and Gotek USB floppy emulator (FlashFloppy OLED, rotary push-encoder, dual navigation buttons, and USB flash drive) on the bottom.*
 
 ---
 
