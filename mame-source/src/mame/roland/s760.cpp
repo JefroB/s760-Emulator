@@ -1083,97 +1083,229 @@ uint32_t s760_state::lcd_update(screen_device &screen, bitmap_ind16 &bitmap, con
 
 void s760_state::render_perform_mode(bitmap_ind16 &bitmap)
 {
-	draw_string(bitmap, 8, 30, "PLAY [PERFORM]       |  MIDI  |  Part  |  Split |  Mix", 0, 6);
-	draw_string(bitmap, 16, 44, "[PERFORM PLAY]  PRM: 01 JP-8 Multi Set       CD[RAM: 32MB]", 1, 2);
+	// Sub-ribbon
+	draw_string(bitmap, 16, 30, "Perform Play 1", 0, 6);
+	for (int y = 29; y < 39; y++)
+		for (int x = 200; x < 244; x++)
+			bitmap.pix(y, x) = 5;
+	draw_string(bitmap, 204, 30, "Pform", 1, 5);
 
-	for (int x = 16; x < 624; x++)
-		bitmap.pix(54, x) = 1;
+	for (int y = 28; y < 40; y++) {
+		bitmap.pix(y, 360) = 0;
+		bitmap.pix(y, 425) = 0;
+		bitmap.pix(y, 490) = 0;
+	}
+	draw_string(bitmap, 372, 30, "Mark", 0, 6);
+	draw_string(bitmap, 437, 30, "Jump", 0, 6);
+	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	const char *parts[] = {
-		"PART 1: Ch 01 | P11: JP-8 Brass 1   | Vol: 127 | Pan: <0> | Out: 1-2",
-		"PART 2: Ch 02 | P12: JP-8 Strgs 1   | Vol: 110 | Pan: L15 | Out: 1-2",
-		"PART 3: Ch 03 | P13: VP Strings 1   | Vol: 105 | Pan: R15 | Out: 1-2",
-		"PART 4: Ch 04 | P14: VP Choir 1     | Vol: 090 | Pan: <0> | Out: 3-4",
-		"PART 5: Ch 05 | P15: Synth 1        | Vol: 100 | Pan: <0> | Out: 1-2",
-		"PART 6: Ch 06 | P16: Synth 2        | Vol: 100 | Pan: <0> | Out: 1-2",
-		"PART 7: Ch 07 | P17: Synth 3        | Vol: 100 | Pan: <0> | Out: 1-2",
-		"PART 8: Ch 08 | P18: Synth 4        | Vol: 100 | Pan: <0> | Out: 1-2",
-		"PART 9: Ch 09 | ---: ------------   | Vol: --- | Pan: --- | Out: ---",
-		"PART10: Ch 10 | ---: ------------   | Vol: --- | Pan: --- | Out: ---",
-		"PART11: Ch 11 | ---: ------------   | Vol: --- | Pan: --- | Out: ---",
-		"PART12: Ch 12 | ---: ------------   | Vol: --- | Pan: --- | Out: ---",
-		"PART13: Ch 13 | ---: ------------   | Vol: --- | Pan: --- | Out: ---",
-		"PART14: Ch 14 | ---: ------------   | Vol: --- | Pan: --- | Out: ---",
-		"PART15: Ch 15 | ---: ------------   | Vol: --- | Pan: --- | Out: ---",
-		"PART16: Ch 16 | ---: ------------   | Vol: --- | Pan: --- | Out: ---"
+	// Main Screen Content
+	draw_string(bitmap, 16, 44, "PRM: 01 JP-8 MULTI SET", 1, 2);
+	draw_string(bitmap, 340, 44, "Master: 127", 8, 2);
+
+	// Yellow Table Header
+	for (int y = 55; y < 65; y++)
+		for (int x = 12; x < 492; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 16, 56, "Part  Patch Name          MIDI-Ch  Output  Pan  Level", 0, 4);
+
+	const char *perf_parts[] = {
+		" 1   P11: JP-8 BRASS 1    01       1-2     <0>  127",
+		" 2   P12: JP-8 STRGS 1    02       1-2     L15  110",
+		" 3   P13: VP STRINGS 1    03       1-2     R15  105",
+		" 4   P14: VP CHOIR 1      04       1-2     <0>  090",
+		" 5   P15: SYNTH 1         05       1-2     <0>  100",
+		" 6   P16: SYNTH 2         06       1-2     <0>  100",
+		" 7   P17: SYNTH 3         07       1-2     <0>  100",
+		" 8   P18: SYNTH 4         08       1-2     <0>  100",
 	};
 
-	int sy = 58 + m_selected_row * 10;
-	for (int y = sy; y < sy + 11; y++)
-		for (int x = 14; x < 570; x++)
-			bitmap.pix(y, x) = 4;
-
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 8; i++)
 	{
-		if (i == m_selected_row)
-			draw_string(bitmap, 16, 60 + i * 10, parts[i], 0, 4);
-		else
-			draw_string(bitmap, 16, 60 + i * 10, parts[i], 1, 2);
+		uint16_t color = (i == m_selected_row % 8) ? 4 : 1;
+		draw_string(bitmap, 16, 67 + i * 10, perf_parts[i], color, 2);
+	}
+
+	// Peak Level meter box
+	for (int y = 55; y < 65; y++)
+		for (int x = 504; x < 624; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 524, 56, "Peak Level", 0, 4);
+
+	for (int y = 68; y < 146; y++)
+		for (int x = 504; x < 624; x++)
+			bitmap.pix(y, x) = 0;
+
+	for (int s = 0; s < 12; s++)
+	{
+		int my = 136 - s * 6;
+		uint16_t seg_color = (s < 8) ? 3 : (s < 10) ? 4 : 5;
+		for (int y = my; y < my + 4; y++)
+		{
+			for (int x = 520; x < 560; x++) bitmap.pix(y, x) = seg_color;
+			for (int x = 568; x < 608; x++) bitmap.pix(y, x) = seg_color;
+		}
+	}
+	draw_string(bitmap, 510, 72, "L", 1, 0);
+	draw_string(bitmap, 612, 72, "R", 1, 0);
+
+	// Keyboard Map
+	for (int y = 150; y < 160; y++)
+		for (int x = 12; x < 624; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 16, 151, "Keyboard Part Map (C-1 to G9)", 0, 4);
+
+	// Soft buttons
+	const char *soft_btns[] = { "[ ] KbdOn", "Q-Samp", "Sol/Mut", "PartMap", "VolInfo" };
+	for (int b = 0; b < 5; b++)
+	{
+		int bx = b * 128 + 12;
+		for (int y = 222; y < 236; y++)
+			for (int x = bx; x < bx + 120; x++)
+				bitmap.pix(y, x) = 1;
+		draw_string(bitmap, bx + 10, 225, soft_btns[b], 0, 1);
 	}
 }
 
 void s760_state::render_patch_mode(bitmap_ind16 &bitmap)
 {
-	draw_string(bitmap, 8, 30, "EDIT [PATCH]         |  Split |  Layer |  V-Sw  |  Common", 0, 6);
-	draw_string(bitmap, 16, 44, "[PATCH EDIT]  P11: JP-8 Brass 1   (4 Partials Layered)", 1, 2);
+	draw_string(bitmap, 16, 30, "Patch Common", 0, 6);
+	for (int y = 29; y < 39; y++)
+		for (int x = 200; x < 244; x++)
+			bitmap.pix(y, x) = 5;
+	draw_string(bitmap, 204, 30, "Patch", 1, 5);
 
-	for (int x = 16; x < 624; x++)
-		bitmap.pix(54, x) = 1;
+	for (int y = 28; y < 40; y++) {
+		bitmap.pix(y, 360) = 0;
+		bitmap.pix(y, 425) = 0;
+		bitmap.pix(y, 490) = 0;
+	}
+	draw_string(bitmap, 372, 30, "Mark", 0, 6);
+	draw_string(bitmap, 437, 30, "Jump", 0, 6);
+	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	draw_string(bitmap, 20, 64,  "Key Mode:    NORMAL           Octave Shift:  0", 1, 2);
-	draw_string(bitmap, 20, 78,  "Velocity Sw: ON (Threshold: 64)   X-Fade:    OFF", 1, 2);
-	draw_string(bitmap, 20, 92,  "Pitch Bend:  +2 / -2 Semi     Aftertouch:    CUTOFF +12", 1, 2);
-	draw_string(bitmap, 20, 110, "--------------------------------------------------------", 1, 2);
-	draw_string(bitmap, 20, 124, "PARTIAL 1: S01 JP8_Wave_L   Range: C-1 -- G3   Level: 127", 4, 2);
-	draw_string(bitmap, 20, 138, "PARTIAL 2: S02 JP8_Wave_R   Range: C-1 -- G3   Level: 127", 1, 2);
-	draw_string(bitmap, 20, 152, "PARTIAL 3: S03 JP8_High_L   Range: G#3 -- G9   Level: 120", 1, 2);
-	draw_string(bitmap, 20, 166, "PARTIAL 4: S04 JP8_High_R   Range: G#3 -- G9   Level: 120", 1, 2);
+	// Parameters
+	for (int y = 44; y < 54; y++)
+	{
+		for (int x = 12; x < 312; x++) bitmap.pix(y, x) = 4;
+		for (int x = 324; x < 624; x++) bitmap.pix(y, x) = 4;
+	}
+	draw_string(bitmap, 16, 45, "Parameter", 0, 4);
+	draw_string(bitmap, 328, 45, "Information", 0, 4);
+
+	draw_string(bitmap, 16, 60, "Patch Name:   [ 01 JP-8 BRASS 1 ]", 1, 2);
+	draw_string(bitmap, 16, 75, "1Shot Mode:   [ Off ]  (Off, On)", 1, 2);
+	draw_string(bitmap, 16, 90, "Bend Range:   Up: [ +2 ]  Down: [ -2 ]", 1, 2);
+	draw_string(bitmap, 16, 105,"Tone Assign:  [ Poly ]", 1, 2);
+
+	draw_string(bitmap, 328, 60, "Cutoff Offset: [------^------] +0", 1, 2);
+	draw_string(bitmap, 328, 76, "Reso Offset:   [------^------] +0", 1, 2);
+	draw_string(bitmap, 328, 92, "Attack Offset: [------^------] +0", 1, 2);
+	draw_string(bitmap, 328, 108,"Release Off:   [------^------] +0", 1, 2);
+	draw_string(bitmap, 328, 124,"V-Sens Offset: [------^------] +0", 1, 2);
+
+	for (int y = 144; y < 154; y++)
+		for (int x = 12; x < 624; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 16, 145, "Partial Key Assignment Overview", 0, 4);
+
+	const char *patch_btns[] = { "MIDISel", "[ ] O.W", "---", "---", "---" };
+	for (int b = 0; b < 5; b++)
+	{
+		int bx = b * 128 + 12;
+		uint16_t bg = (b == 0) ? 8 : 1;
+		for (int y = 222; y < 236; y++)
+			for (int x = bx; x < bx + 120; x++)
+				bitmap.pix(y, x) = bg;
+		draw_string(bitmap, bx + 10, 225, patch_btns[b], 0, bg);
+	}
 }
 
 void s760_state::render_partial_mode(bitmap_ind16 &bitmap)
 {
-	draw_string(bitmap, 8, 30, "EDIT [PARTIAL]       |  TVF   |  TVA   |  ENV   |  LFO", 0, 6);
-	draw_string(bitmap, 16, 44, "[TVF & TVA SETUP]  S01: JP8_Wave_L (Filter / Amp Envelopes)", 1, 2);
+	draw_string(bitmap, 16, 30, "Partial TVF", 0, 6);
+	for (int y = 29; y < 39; y++)
+		for (int x = 200; x < 244; x++)
+			bitmap.pix(y, x) = 5;
+	draw_string(bitmap, 204, 30, "Part1", 1, 5);
 
-	for (int x = 16; x < 624; x++)
-		bitmap.pix(54, x) = 1;
+	for (int y = 28; y < 40; y++) {
+		bitmap.pix(y, 360) = 0;
+		bitmap.pix(y, 425) = 0;
+		bitmap.pix(y, 490) = 0;
+	}
+	draw_string(bitmap, 372, 30, "Mark", 0, 6);
+	draw_string(bitmap, 437, 30, "Jump", 0, 6);
+	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	draw_string(bitmap, 20, 64,  "TVF Type:     LPF (12dB/Oct)  Cutoff: 84     Resonance: 22", 1, 2);
-	draw_string(bitmap, 20, 80,  "TVF KeyFollow: +1.0           Env Depth: +48 Vel Curve: EXP", 1, 2);
-	draw_string(bitmap, 20, 98,  "TVF Envelope:  A: 12 | D1: 45 | D2: 80 | S: 64 | R: 52", 4, 2);
-	draw_string(bitmap, 20, 116, "TVA Envelope:  A: 05 | D1: 30 | D2: 70 | S: 96 | R: 40", 1, 2);
-	draw_string(bitmap, 20, 134, "LFO Setup:     Rate: 65 | Depth: 18 | Delay: 10 | Wave: TRI", 1, 2);
-	draw_string(bitmap, 20, 152, "Pan Position:  L15 (Left Center Stereo Spread)", 1, 2);
+	for (int y = 44; y < 54; y++)
+		for (int x = 12; x < 624; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 16, 45, "TVF Filter Parameters & Graphic Envelope", 0, 4);
+
+	draw_string(bitmap, 16, 58, "Cutoff Freq: [  84 ]     Resonance: [  32 ]     Cutoff KF: [ +1.0 ]", 1, 2);
+	draw_string(bitmap, 16, 72, "Vel-Curve:   [ 1:/ ]     V-Sens:    [ +45 ]     Time KF:   [    0 ]", 1, 2);
+	draw_string(bitmap, 16, 86, "Envelope Points: [1] 0 127   [2] 74 45   [3] 102 0   [4] 127 0", 8, 2);
+
+	// Black background envelope graph box
+	for (int y = 100; y < 216; y++)
+		for (int x = 12; x < 624; x++)
+			bitmap.pix(y, x) = 0;
+
+	// Sustain marker (Green)
+	for (int y = 102; y < 214; y++)
+		bitmap.pix(y, 380) = 3;
+	draw_string(bitmap, 370, 106, "SUS", 3, 0);
+
+	// Soft buttons
+	const char *part_btns[] = { "[ ] Single", "---", "---", "Loop", "---" };
+	for (int b = 0; b < 5; b++)
+	{
+		int bx = b * 128 + 12;
+		for (int y = 222; y < 236; y++)
+			for (int x = bx; x < bx + 120; x++)
+				bitmap.pix(y, x) = 1;
+		draw_string(bitmap, bx + 10, 225, part_btns[b], 0, 1);
+	}
 }
 
 void s760_state::render_sample_mode(bitmap_ind16 &bitmap)
 {
-	draw_string(bitmap, 8, 30, "EDIT [SAMPLE]        |  Loop  |  Pitch |  Norm  |  Convert", 0, 6);
-	draw_string(bitmap, 16, 44, "[SAMPLE WAVE]  W01: JP-8_Brass_44k.wav   (16-Bit Mono 44.1kHz)", 1, 2);
+	draw_string(bitmap, 16, 30, "Sample Info", 0, 6);
+	for (int y = 29; y < 39; y++)
+		for (int x = 200; x < 244; x++)
+			bitmap.pix(y, x) = 5;
+	draw_string(bitmap, 204, 30, "Samp1", 1, 5);
 
-	for (int x = 16; x < 624; x++)
-		bitmap.pix(54, x) = 1;
+	for (int y = 28; y < 40; y++) {
+		bitmap.pix(y, 360) = 0;
+		bitmap.pix(y, 425) = 0;
+		bitmap.pix(y, 490) = 0;
+	}
+	draw_string(bitmap, 372, 30, "Mark", 0, 6);
+	draw_string(bitmap, 437, 30, "Jump", 0, 6);
+	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	draw_string(bitmap, 20, 64,  "Sample Length: 130,560 words (2.95 sec)  Original Key: C4", 1, 2);
-	draw_string(bitmap, 20, 78,  "Loop Mode:     FORWARD                   Fine Tune:    +0", 1, 2);
-	draw_string(bitmap, 20, 92,  "Start Point:   0000,000                  End Point:    0130,560", 1, 2);
-	draw_string(bitmap, 20, 106, "Loop Start:    0048,200                  Loop End:     0128,400", 4, 2);
+	draw_string(bitmap, 16, 44, "Sample: W01 JP-8_BRASS_44K.WAV (44.1kHz 16-Bit)", 1, 2);
+	for (int y = 56; y < 66; y++)
+		for (int x = 12; x < 624; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 16, 57, "Wave Parameter Information & Loop Settings", 0, 4);
 
-	// Waveform display graph
-	for (int x = 20; x < 480; x++)
+	draw_string(bitmap, 16, 70,  "Orig Key:    C4           Sample Rate: 44.1 kHz", 1, 2);
+	draw_string(bitmap, 16, 84,  "Wave Length: 2.95 s       Remaining:   363.8 s", 1, 2);
+	draw_string(bitmap, 16, 98,  "Start Point: 0000,000     End Point:   0130,560", 1, 2);
+	draw_string(bitmap, 16, 112, "Loop Start:  0048,200     Loop End:    0128,400", 4, 2);
+	draw_string(bitmap, 16, 126, "Loop Mode:   Forward      Fine Tune:   +0 cent", 1, 2);
+
+	for (int y = 142; y < 216; y++)
+		for (int x = 12; x < 624; x++)
+			bitmap.pix(y, x) = 0;
+
+	for (int x = 14; x < 620; x++)
 	{
-		int mid = 150;
-		int amp = (int)(15.0 * sin((x - 20) * 0.15) * cos((x - 20) * 0.04));
+		int mid = 179;
+		int amp = (int)(18.0 * sin((x - 14) * 0.15) * cos((x - 14) * 0.04));
 		bitmap.pix(mid + amp, x) = 4;
 		bitmap.pix(mid - amp, x) = 8;
 	}
@@ -1181,74 +1313,124 @@ void s760_state::render_sample_mode(bitmap_ind16 &bitmap)
 
 void s760_state::render_disk_mode(bitmap_ind16 &bitmap)
 {
-	draw_string(bitmap, 8, 30, "Convert LD[S]        |  Muted  |  Mark  |  Jump  |  Com", 0, 6);
-	char dev_buf[64];
-	snprintf(dev_buf, sizeof(dev_buf), "[GE Pach]   Art  1]    CD%s", m_sound->media_source().c_str());
-	draw_string(bitmap, 16, 44, dev_buf, 1, 2);
+	draw_string(bitmap, 16, 30, "Disk Load", 0, 6);
+	for (int y = 29; y < 39; y++)
+		for (int x = 200; x < 244; x++)
+			bitmap.pix(y, x) = 5;
+	draw_string(bitmap, 204, 30, "Disk", 1, 5);
 
-	for (int x = 16; x < 624; x++)
-		bitmap.pix(54, x) = 1;
-
-	const auto &samples = m_sound->samples();
-	char row_buf[64];
-	for (int i = 0; i < 16; i++)
-	{
-		const char *name = "";
-		if (i < samples.size())
-			name = samples[i].name;
-		else if (i == 0) name = "JP-8 Brass 1";
-		else if (i == 1) name = "JP-8 Strgs 1";
-		else if (i == 2) name = "VP Strings 1";
-		else if (i == 3) name = "Double Bass";
-		else if (i == 4) name = "VP Choir 1";
-		else if (i == 5) name = "Synth 1";
-		else if (i == 6) name = "Synth 2";
-		else if (i == 7) name = "Synth 3";
-
-		snprintf(row_buf, sizeof(row_buf), "P%02d: %-16s", i + 1, name);
-		if (i == m_selected_row)
-			draw_string(bitmap, 16, 60 + i * 10, row_buf, 0, 4);
-		else
-			draw_string(bitmap, 16, 60 + i * 10, row_buf, 1, 2);
+	for (int y = 28; y < 40; y++) {
+		bitmap.pix(y, 360) = 0;
+		bitmap.pix(y, 425) = 0;
+		bitmap.pix(y, 490) = 0;
 	}
+	draw_string(bitmap, 372, 30, "Mark", 0, 6);
+	draw_string(bitmap, 437, 30, "Jump", 0, 6);
+	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	auto draw_param_box = [&](int pbx, int pby, int pbw, int pbh, const char *txt) {
-		for (int y = pby; y < pby + pbh; y++)
-			for (int x = pbx; x < pbx + pbw; x++)
-				bitmap.pix(y, x) = 4;
-		draw_string(bitmap, pbx + 6, pby + 2, txt, 0, 4);
+	draw_string(bitmap, 24, 44, "TG[Pfom]   ID[All]   CD[FDD:-FloppyDisk-]", 1, 2);
+
+	// Yellow table header bar
+	for (int y = 56; y < 66; y++)
+		for (int x = 12; x < 460; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 24, 57, "1files", 0, 4);
+	draw_string(bitmap, 340, 57, "Time P#", 0, 4);
+
+	const char *disk_rows[] = {
+		" 1: PNO:Acoustic Pno        22.2",
+		" 2:                          0.0",
+		" 3:                          0.0",
+		" 4:                          0.0",
+		" 5:                          0.0",
+		" 6:                          0.0",
+		" 7:                          0.0",
+		" 8:                          0.0",
+		" 9:                          0.0",
+		"10:                          0.0",
+		"11:                          0.0",
+		"12:                          0.0",
+		"13:                          0.0",
+		"14:                          0.0",
+		"15:                          0.0",
+		"16:                          0.0",
 	};
 
-	draw_param_box(500, 58, 120, 12, "   Int.");
-	draw_param_box(500, 74, 120, 12, " 2954sec");
-	draw_param_box(500, 90, 120, 12, "  Marked");
-	draw_param_box(500, 106, 120, 12, "    0");
-	draw_param_box(500, 122, 120, 12, "   +/-");
+	for (int i = 0; i < 16; i++)
+	{
+		int ry = 68 + (int)(i * 9.5);
+		draw_string(bitmap, 24, ry, disk_rows[i], 1, 2);
+	}
+
+	auto draw_param_box = [&](int pbx, int pby, int pbw, int pbh, const char *txt, const char *val) {
+		for (int y = pby; y < pby + 10; y++)
+			for (int x = pbx; x < pbx + pbw; x++)
+				bitmap.pix(y, x) = 4;
+		draw_string(bitmap, pbx + 30, pby + 1, txt, 0, 4);
+		draw_string(bitmap, pbx + 26, pby + 12, val, 8, 2);
+	};
+
+	draw_param_box(470, 56, 140, 22, "Int.", "363.8sec");
+	draw_param_box(470, 80, 140, 22, "Disk", "****.sec");
+	draw_param_box(470, 104, 140, 22, "Marked", "0");
+
+	// Soft buttons
+	for (int y = 222; y < 236; y++)
+		for (int x = 12; x < 104; x++)
+			bitmap.pix(y, x) = 1;
+	draw_string(bitmap, 28, 225, "AllOn", 0, 1);
+
+	for (int y = 222; y < 236; y++)
+		for (int x = 120; x < 220; x++)
+			bitmap.pix(y, x) = 8;
+	draw_string(bitmap, 156, 225, "---", 0, 8);
+
+	for (int y = 222; y < 236; y++)
+		for (int x = 236; x < 336; x++)
+			bitmap.pix(y, x) = 1;
+	draw_string(bitmap, 266, 225, "Load", 0, 1);
+
+	for (int y = 222; y < 236; y++)
+		for (int x = 352; x < 452; x++)
+			bitmap.pix(y, x) = 1;
+	draw_string(bitmap, 368, 225, "OW Off", 0, 1);
+
+	for (int y = 222; y < 236; y++)
+		for (int x = 468; x < 590; x++)
+			bitmap.pix(y, x) = 1;
+	draw_string(bitmap, 492, 225, "VolInfo", 0, 1);
 }
 
 void s760_state::render_system_mode(bitmap_ind16 &bitmap)
 {
-	draw_string(bitmap, 8, 30, "SETUP [SYSTEM]       |  MIDI   |  Test  |  Format|  SaveSys", 0, 6);
-	draw_string(bitmap, 16, 44, "[SYSTEM SETUP]  Roland S-760 System Version 2.24", 1, 2);
+	draw_string(bitmap, 16, 30, "System SCSI", 0, 6);
+	for (int y = 29; y < 39; y++)
+		for (int x = 200; x < 244; x++)
+			bitmap.pix(y, x) = 5;
+	draw_string(bitmap, 204, 30, "Systm", 1, 5);
 
-	for (int x = 16; x < 624; x++)
-		bitmap.pix(54, x) = 1;
-
-	draw_string(bitmap, 20, 58,  "1. Host SCSI ID:     [ 7 ] (S-760 Initiator ID)", 1, 2);
-	draw_string(bitmap, 20, 70,  "2. Boot Device:      [ SCSI / Floppy Auto-Detect ]", 1, 2);
-	draw_string(bitmap, 20, 82,  "3. SCSI Bus Scan:    (BlueSCSI / ZuluSCSI Targets 0-6):", 4, 2);
-
-	for (int id = 0; id < 7; id++)
-	{
-		char scsi_line[80];
-		snprintf(scsi_line, sizeof(scsi_line), "   ID %d: %-36s", id, m_sound->scsi_device_info(id).c_str());
-		uint16_t fg = (m_sound->scsi_device_info(id).find("---") == std::string::npos) ? 3 : 1;
-		draw_string(bitmap, 20, 94 + id * 11, scsi_line, fg, 2);
+	for (int y = 28; y < 40; y++) {
+		bitmap.pix(y, 360) = 0;
+		bitmap.pix(y, 425) = 0;
+		bitmap.pix(y, 490) = 0;
 	}
+	draw_string(bitmap, 372, 30, "Mark", 0, 6);
+	draw_string(bitmap, 437, 30, "Jump", 0, 6);
+	draw_string(bitmap, 502, 30, "Com", 8, 6);
 
-	draw_string(bitmap, 20, 174, "4. Master Tune:      [ 440.0 Hz ]  Output Level: [ +4 dBu ]", 1, 2);
-	draw_string(bitmap, 20, 186, "5. Wave Memory:      [ 32 MBytes OK (2x 16MB SIMM) ]", 1, 2);
-	draw_string(bitmap, 20, 198, "6. Option Board:     [ OP-760-2 Video Board Installed ]", 1, 2);
+	draw_string(bitmap, 16, 44, "S-760 ROM Version 2.24           Ram:32MB OK", 1, 2);
+	for (int y = 56; y < 66; y++)
+		for (int x = 12; x < 624; x++)
+			bitmap.pix(y, x) = 4;
+	draw_string(bitmap, 16, 57, "SCSI Bus Targets Configuration (ID 0-6)", 0, 4);
+
+	draw_string(bitmap, 16, 72,  "S-760 Self SCSI ID:  [ 7 ]", 1, 2);
+	draw_string(bitmap, 16, 86,  "Initial Drive:       [ SCSI 0 ]", 1, 2);
+	draw_string(bitmap, 16, 100, "Boot Drive:          [ SCSI / Floppy Auto ]", 1, 2);
+	draw_string(bitmap, 16, 114, "CDP Driver Type:     [ Apple / Toshiba / Sony ]", 1, 2);
+	draw_string(bitmap, 16, 130, "  ID 0: APPLE CD-ROM 300+ (Optical Drive)", 3, 2);
+	draw_string(bitmap, 16, 144, "  ID 1: QUANTUM FIREBALL 1080S (1.08 GB HDD)", 3, 2);
+	draw_string(bitmap, 16, 158, "  ID 2..6: --- No Device ---", 6, 2);
 }
 
 // 2. 1U Roland S-760 Rack Front Panel with Embedded 160x64 LCD & Gotek Floppy Emulator
