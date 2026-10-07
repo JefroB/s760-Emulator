@@ -141,6 +141,9 @@ DiskInfo RolandS760Disk::parse(const uint8_t* data, size_t size) {
     std::string banner(reinterpret_cast<const char*>(data), std::min(size, size_t(32)));
     info.is_roland = (banner.find("S770") != std::string::npos) ||
                      (banner.find("S-760") != std::string::npos) ||
+                     (banner.find("S-550") != std::string::npos) ||
+                     (banner.find("S-330") != std::string::npos) ||
+                     (banner.find("W-30") != std::string::npos) ||
                      (banner.find("Roland") != std::string::npos);
 
     if (size >= 0x50) {
