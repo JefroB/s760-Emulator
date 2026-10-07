@@ -73,9 +73,22 @@ private:
 		int env_stage;
 	};
 
+	struct SampleDesc
+	{
+		char name[16];
+		uint32_t wave_offset;
+		uint32_t length;
+		uint32_t loop_start;
+		uint32_t loop_end;
+		uint8_t loop_mode;
+		uint32_t sample_rate;
+		uint8_t root_key;
+	};
+
 	sound_stream *m_stream;
 	Voice m_voices[32];
 	std::vector<int16_t> m_wave_ram;
+	std::vector<SampleDesc> m_samples;
 
 	void populate_factory_waveforms();
 };
@@ -110,12 +123,13 @@ void s760_sound_device::device_reset()
 
 void s760_sound_device::populate_factory_waveforms()
 {
-	m_wave_ram.resize(1024 * 1024, 0);
+	m_wave_ram.resize(2 * 1024 * 1024, 0); // 4MB sample memory
+	m_samples.clear();
 
 	// 1. Check for user-supplied Akai S1000 ISO or Roland sound disk files
 	const char *disk_paths[] = {
-		"roms/s760/sound.iso", "roms/akai.iso", "roms/s760/sound.img",
-		"roms/sound.img", "roms/s760.iso", "sound.iso", "sound.img"
+		"roms/s760/sound.iso", "roms/akai.iso", "sound.iso", "roms/s760/sound.img",
+		"roms/sound.img", "roms/s760.iso"
 	};
 
 	bool loaded_from_disk = false;
@@ -124,18 +138,53 @@ void s760_sound_device::populate_factory_waveforms()
 		std::ifstream file(path, std::ios::binary);
 		if (file.is_open())
 		{
-			// Read up to 2MB of 16-bit PCM wave samples
-			file.seekg(0, std::ios::end);
-			size_t fsize = file.tellg();
-			if (fsize >= 0x8000)
+			char magic[24] = {0};
+			file.read(magic, 22);
+			if (strstr(magic, "AKAI") != nullptr || strstr(magic, "S1000") != nullptr)
 			{
-				size_t offset = (fsize > 0x10000) ? 0x8000 : 0x2000;
-				file.seekg(offset, std::ios::beg);
-				size_t read_bytes = std::min(fsize - offset, size_t(m_wave_ram.size() * sizeof(int16_t)));
-				file.read(reinterpret_cast<char *>(m_wave_ram.data()), read_bytes);
-				loaded_from_disk = true;
-				logerror("[S760 SOUND] Successfully loaded %zu bytes of acoustic PCM samples from '%s'\n", read_bytes, path);
-				break;
+				uint32_t num_programs = 0, num_samples = 0;
+				file.seekg(0x30, std::ios::beg);
+				file.read(reinterpret_cast<char *>(&num_programs), 4);
+				file.read(reinterpret_cast<char *>(&num_samples), 4);
+
+				size_t cur_offset = 0x2000;
+				uint32_t word_dest = 0;
+
+				for (uint32_t s_idx = 0; s_idx < num_samples && s_idx < 16; s_idx++)
+				{
+					file.seekg(cur_offset, std::ios::beg);
+					char s_hdr[150] = {0};
+					file.read(s_hdr, 150);
+
+					SampleDesc desc;
+					memset(desc.name, 0, sizeof(desc.name));
+					memcpy(desc.name, s_hdr, 12);
+					desc.sample_rate = *reinterpret_cast<uint32_t *>(&s_hdr[0x0C]);
+					desc.loop_start = *reinterpret_cast<uint32_t *>(&s_hdr[0x10]);
+					desc.loop_end = *reinterpret_cast<uint32_t *>(&s_hdr[0x14]);
+					desc.root_key = static_cast<uint8_t>(s_hdr[0x18]);
+					uint32_t data_len_bytes = *reinterpret_cast<uint32_t *>(&s_hdr[0x1A]);
+
+					desc.wave_offset = word_dest;
+					desc.length = data_len_bytes / sizeof(int16_t);
+					desc.loop_mode = (desc.loop_end > desc.loop_start) ? 1 : 0;
+
+					if (word_dest + desc.length <= m_wave_ram.size())
+					{
+						file.read(reinterpret_cast<char *>(&m_wave_ram[word_dest]), data_len_bytes);
+						word_dest += desc.length;
+					}
+
+					m_samples.push_back(desc);
+					cur_offset += 150 + ((data_len_bytes + 2047) & ~2047);
+				}
+
+				if (!m_samples.empty())
+				{
+					loaded_from_disk = true;
+					osd_printf_info("[S-760] Loaded and converted %zu Akai S1000 acoustic samples from '%s'\n", m_samples.size(), path);
+					break;
+				}
 			}
 		}
 	}
@@ -256,6 +305,16 @@ void s760_sound_device::note_off(int v)
 
 void s760_sound_device::trigger_preview(int patch_idx, int note)
 {
+	if (!m_samples.empty())
+	{
+		int p = patch_idx % m_samples.size();
+		const SampleDesc &s = m_samples[p];
+		int play_note = (note == 60) ? s.root_key : note;
+		note_on(0, s.wave_offset, s.length, s.loop_start, s.loop_end, s.loop_mode, s.sample_rate, play_note, s.root_key, 0.95f, 0.0f);
+		osd_printf_info("[S-760 AUDITION] Playing Akai S1000 Sample: '%s' (Root Key %d, %d Hz, %u samples)\n", s.name, s.root_key, s.sample_rate, s.length);
+		return;
+	}
+
 	uint32_t wave_addrs[4] = { 0, 44100, 88200, 132300 };
 	int root_keys[4] = { 48, 60, 60, 28 }; // Brass=C3, Strings=C4, Piano=C4, Bass=E1 (deep acoustic bass)
 	int default_notes[4] = { 48, 60, 60, 28 };
