@@ -1021,6 +1021,10 @@ public:
 	uint8_t irq_pending() const { return m_irq_pending; }
 	bool int_line_asserted() const { return m_int_line_asserted; }
 
+	// Epson SED1335 (S1D13305) LCD Controller (0xE000 - 0xEFF7)
+	uint8_t lcd_r(offs_t offset);
+	void lcd_w(offs_t offset, uint8_t data);
+
 protected:
 	virtual void machine_start() override ATTR_COLD;
 	virtual void machine_reset() override ATTR_COLD;
@@ -1034,6 +1038,19 @@ private:
 	required_ioport m_mouse_btn;
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
+
+	// Epson SED1335 (S1D13305) LCD Controller State
+	uint8_t m_sed_cmd;
+	uint8_t m_sed_params[16];
+	int m_sed_param_idx;
+	int m_sed_param_len;
+	uint16_t m_sed_cursor_addr;
+	uint16_t m_sed_sad1;
+	uint16_t m_sed_sad2;
+	uint8_t m_sed_disp_mode;
+	uint8_t m_sed_overlay_mode;
+	uint8_t m_sed_vram[4096];
+	bool m_sed_vram_active;
 
 	// Interrupt Subsystem & 60Hz Timer
 	emu_timer *m_timer_60hz;
@@ -2516,33 +2533,131 @@ void s760_state::s760_palette(palette_device &palette) const
 	palette.set_pen_color(15, rgb_t(120, 125, 135));  // 15: Metallic Knob Gray
 }
 
+// Epson SED1335 (S1D13305) Front Panel LCD Controller Interface (0xE000 - 0xEFF7)
+uint8_t s760_state::lcd_r(offs_t offset)
+{
+	if ((offset & 0x01) == 1) // Status Port
+	{
+		return 0x40; // Ready flag
+	}
+	else // Data Port (MREAD)
+	{
+		uint8_t val = m_sed_vram[m_sed_cursor_addr & 0x0FFF];
+		m_sed_cursor_addr = (m_sed_cursor_addr + 1) & 0x0FFF;
+		return val;
+	}
+}
+
+void s760_state::lcd_w(offs_t offset, uint8_t data)
+{
+	if ((offset & 0x01) == 1) // Command Port
+	{
+		m_sed_cmd = data;
+		m_sed_param_idx = 0;
+		switch (data)
+		{
+			case 0x40: m_sed_param_len = 8; break;  // SYSTEM SET
+			case 0x44: m_sed_param_len = 10; break; // SCROLL
+			case 0x46: m_sed_param_len = 2; break;  // CSRW
+			case 0x42: m_sed_param_len = -1; break; // MWRITE (stream)
+			case 0x58: m_sed_disp_mode = 0; break;  // DISP OFF
+			case 0x59: m_sed_param_len = 1; break;  // DISP ON
+			case 0x5A: m_sed_param_len = 1; break;  // HDOT SCR
+			case 0x5B: m_sed_param_len = 1; break;  // OVLAY
+			case 0x5D: m_sed_param_len = 2; break;  // CSRFORM
+			default: m_sed_param_len = 0; break;
+		}
+	}
+	else // Data Port
+	{
+		if (m_sed_cmd == 0x42) // MWRITE stream
+		{
+			m_sed_vram[m_sed_cursor_addr & 0x0FFF] = data;
+			m_sed_cursor_addr = (m_sed_cursor_addr + 1) & 0x0FFF;
+			m_sed_vram_active = true;
+		}
+		else if (m_sed_param_len > 0)
+		{
+			if (m_sed_param_idx < 16)
+				m_sed_params[m_sed_param_idx++] = data;
+
+			if (m_sed_param_idx >= m_sed_param_len)
+			{
+				if (m_sed_cmd == 0x46) // CSRW
+				{
+					m_sed_cursor_addr = m_sed_params[0] | (m_sed_params[1] << 8);
+				}
+				else if (m_sed_cmd == 0x44) // SCROLL
+				{
+					m_sed_sad1 = m_sed_params[0] | (m_sed_params[1] << 8);
+					m_sed_sad2 = m_sed_params[3] | (m_sed_params[4] << 8);
+				}
+				else if (m_sed_cmd == 0x59) // DISP ON
+				{
+					m_sed_disp_mode = m_sed_params[0];
+				}
+				else if (m_sed_cmd == 0x5B) // OVLAY
+				{
+					m_sed_overlay_mode = m_sed_params[0] & 0x03;
+				}
+			}
+		}
+	}
+}
+
 // 1. Built-in Front Panel LCD Display (Epson SED1335: 160x64 monochrome)
 uint32_t s760_state::lcd_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	bool vram_has_data = false;
-	for (int i = 0; i < 0x3FF; i++)
+	bool vram_has_data = m_sed_vram_active;
+	if (!vram_has_data)
 	{
-		if (m_lcd_vram[i] != 0)
+		for (int i = 0; i < 4096; i++)
 		{
-			vram_has_data = true;
-			break;
+			if (m_sed_vram[i] != 0)
+			{
+				vram_has_data = true;
+				m_sed_vram_active = true;
+				break;
+			}
 		}
 	}
 
 	bitmap.fill(0, cliprect);
 
-	if (vram_has_data)
+	if (vram_has_data && (m_sed_disp_mode != 0))
 	{
 		for (int y = 0; y < 64; y++)
 		{
+			int char_row = y / 8;
+			int py = y % 8;
+
 			for (int x = 0; x < 160; x++)
 			{
-				int bit_global = y * 160 + x;
-				int word_idx = bit_global / 16;
-				int bit_idx = 15 - (bit_global % 16);
-				uint16_t word_val = m_lcd_vram[word_idx & 0x3FF];
-				uint16_t color = (word_val & (1 << bit_idx)) ? 1 : 0;
-				bitmap.pix(y, x) = color;
+				int char_col = x / 8;
+				int px = x % 8;
+
+				// Layer 1: Text Character Matrix (20x8 characters at m_sed_sad1)
+				uint8_t text_bit = 0;
+				if (m_sed_disp_mode & 0x01)
+				{
+					uint8_t char_code = m_sed_vram[(m_sed_sad1 + char_row * 20 + char_col) & 0x0FFF];
+					const uint8_t *glyph = get_font_glyph(char_code ? (char)char_code : ' ');
+					text_bit = (glyph[py] & (0x80 >> px)) ? 1 : 0;
+				}
+
+				// Layer 2: 1-Bit Graphics Plane (160x64 dots at m_sed_sad2)
+				uint8_t gfx_bit = 0;
+				if (m_sed_disp_mode & 0x04)
+				{
+					int byte_offset = y * 20 + (x / 8);
+					uint8_t b = m_sed_vram[(m_sed_sad2 + byte_offset) & 0x0FFF];
+					gfx_bit = (b & (0x80 >> px)) ? 1 : 0;
+				}
+
+				// Layer Composition Mode (OR, XOR, AND)
+				uint8_t color = (m_sed_overlay_mode == 1) ? (text_bit ^ gfx_bit) :
+				                (m_sed_overlay_mode == 2) ? (text_bit & gfx_bit) : (text_bit | gfx_bit);
+				bitmap.pix(y, x) = color ? 1 : 0;
 			}
 		}
 	}
@@ -3050,13 +3165,17 @@ void s760_state::render_rack_panel(bitmap_ind16 &bitmap)
 	}
 
 	// Render LCD screen pixels (160x64) from (52, 250) to (211, 313)
-	bool vram_has_data = false;
-	for (int i = 0; i < 0x3FF; i++)
+	bool vram_has_data = m_sed_vram_active;
+	if (!vram_has_data)
 	{
-		if (m_lcd_vram[i] != 0)
+		for (int i = 0; i < 4096; i++)
 		{
-			vram_has_data = true;
-			break;
+			if (m_sed_vram[i] != 0)
+			{
+				vram_has_data = true;
+				m_sed_vram_active = true;
+				break;
+			}
 		}
 	}
 
@@ -3065,17 +3184,37 @@ void s760_state::render_rack_panel(bitmap_ind16 &bitmap)
 		for (int x = 0; x < 160; x++)
 			bitmap.pix(250 + y, 52 + x) = 12;
 
-	if (vram_has_data)
+	if (vram_has_data && (m_sed_disp_mode != 0))
 	{
 		for (int y = 0; y < 64; y++)
 		{
+			int char_row = y / 8;
+			int py = y % 8;
+
 			for (int x = 0; x < 160; x++)
 			{
-				int bit_global = y * 160 + x;
-				int word_idx = bit_global / 16;
-				int bit_idx = 15 - (bit_global % 16);
-				uint16_t word_val = m_lcd_vram[word_idx & 0x3FF];
-				if (word_val & (1 << bit_idx))
+				int char_col = x / 8;
+				int px = x % 8;
+
+				uint8_t text_bit = 0;
+				if (m_sed_disp_mode & 0x01)
+				{
+					uint8_t char_code = m_sed_vram[(m_sed_sad1 + char_row * 20 + char_col) & 0x0FFF];
+					const uint8_t *glyph = get_font_glyph(char_code ? (char)char_code : ' ');
+					text_bit = (glyph[py] & (0x80 >> px)) ? 1 : 0;
+				}
+
+				uint8_t gfx_bit = 0;
+				if (m_sed_disp_mode & 0x04)
+				{
+					int byte_offset = y * 20 + (x / 8);
+					uint8_t b = m_sed_vram[(m_sed_sad2 + byte_offset) & 0x0FFF];
+					gfx_bit = (b & (0x80 >> px)) ? 1 : 0;
+				}
+
+				uint8_t color = (m_sed_overlay_mode == 1) ? (text_bit ^ gfx_bit) :
+				                (m_sed_overlay_mode == 2) ? (text_bit & gfx_bit) : (text_bit | gfx_bit);
+				if (color)
 					bitmap.pix(250 + y, 52 + x) = 13; // Bright LCD Pixel (Pen 13)
 			}
 		}
@@ -3599,7 +3738,7 @@ void s760_state::s760_mem(address_map &map)
 	map(0x0000, 0x1FFF).ram();                                                   // Register File & Work RAM (0x1120 = SP)
 	map(0x2080, 0xDFFF).rom().region("maincpu", 0x4800);                         // OS Code segment (S760224.IMG offset 0x4800)
 	map(0xD000, 0xD0FF).rw(FUNC(s760_state::vdp_r), FUNC(s760_state::vdp_w));   // Roland RFSC16A VDP registers & VRAM port
-	map(0xE000, 0xEFF7).ram().share("lcd_vram");                                 // LCD Display VRAM (SED1335)
+	map(0xE000, 0xEFF7).rw(FUNC(s760_state::lcd_r), FUNC(s760_state::lcd_w));   // Epson SED1335 LCD controller & 4KB VRAM
 	map(0xF000, 0xF01F).rw(FUNC(s760_state::mmio_r), FUNC(s760_state::mmio_w)); // Gate array MMIO latches
 	map(0xF020, 0xF02F).rw(FUNC(s760_state::scsi_r), FUNC(s760_state::scsi_w)); // Fujitsu MB89352A SCSI SPC registers
 	map(0xF040, 0xF047).rw(FUNC(s760_state::fdc_r), FUNC(s760_state::fdc_w));   // NEC uPD72068 FDC registers

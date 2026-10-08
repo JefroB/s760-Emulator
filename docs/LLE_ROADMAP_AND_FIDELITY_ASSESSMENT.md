@@ -90,7 +90,7 @@ flowchart TD
 - **Goal:** Allow the real OS to draw the CRT monitor and LCD display natively by writing character glyphs, line boxes, and palette indexes into 128KB TC511664 VRAM.
 - **Key Milestones:**
   1. **RFSC16A VRAM Rasterizer & VDP Command Registers:** ✅ **DONE** — Implemented address decoding for `0xD000 - 0xD0FF` (Control 0xD010, Data port 0xD018 with auto-increment, Mouse X/Y/Ctrl 0xD020/0xD021/0xD022/0xD024, Tile Table Base 0xD030/0xD032, 17-bit VRAM Address Pointer 0xD034/0xD036, Status 0xD040) and native dual-pipeline rasterizer in `crt_update()` scanning Plane 0 (Char Matrix), Plane 1 (Color Attributes), Plane 2 (Font Glyphs), and Plane 4 (1-bit Waveform Overlay) with 100% preservation of the Google-made 1U rack front panel UI.
-  2. **SED1335 LCD Register Model:** Emulate Epson SED1335 LCD controller command/data interface for the front panel LCD display.
+  2. **SED1335 LCD Register Model:** ✅ **DONE** — Implemented Epson SED1335 (S1D13305) LCD controller command decoder (`0xE000 – 0xEFF7`) supporting `SYSTEM SET` (0x40), `SCROLL` (0x44), `CSRW`/`CSRR` (0x46/0x47), `MWRITE` (0x42), `DISP ON/OFF` (0x58/0x59), `OVLAY` (0x5B) and dual-layer rasterization (Layer 1 Text Matrix at SAD1 + Layer 2 Graphics Bitplane at SAD2) with OR/XOR/AND composition and 100% preservation of the front panel UI.
   3. **Retire Hand-Rendered UI for MAME:** The MAME emulator will be 100% driven by genuine OS VRAM output, while retaining the web-based React/Canvas UI for browser and lightweight plugin hosting.
 
 ---
