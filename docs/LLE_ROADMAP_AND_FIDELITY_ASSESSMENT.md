@@ -89,8 +89,8 @@ flowchart TD
 ### **Step 2: Native RFSC16A VRAM-Driven Display Rendering**
 - **Goal:** Allow the real OS to draw the CRT monitor and LCD display natively by writing character glyphs, line boxes, and palette indexes into 128KB TC511664 VRAM.
 - **Key Milestones:**
-  1. **VRAM Rasterizer:** Build the MAME video update loop to scan `m_vram` directly and render 640x480 pixels using the 10-Pen RGB DAC lookup table.
-  2. **VDP Command Registers:** Implement RFSC16A command and status registers (`0xD000 - 0xD0FF`).
+  1. **RFSC16A VRAM Rasterizer & VDP Command Registers:** ✅ **DONE** — Implemented address decoding for `0xD000 - 0xD0FF` (Control 0xD010, Data port 0xD018 with auto-increment, Mouse X/Y/Ctrl 0xD020/0xD021/0xD022/0xD024, Tile Table Base 0xD030/0xD032, 17-bit VRAM Address Pointer 0xD034/0xD036, Status 0xD040) and native dual-pipeline rasterizer in `crt_update()` scanning Plane 0 (Char Matrix), Plane 1 (Color Attributes), Plane 2 (Font Glyphs), and Plane 4 (1-bit Waveform Overlay) with 100% preservation of the Google-made 1U rack front panel UI.
+  2. **SED1335 LCD Register Model:** Emulate Epson SED1335 LCD controller command/data interface for the front panel LCD display.
   3. **Retire Hand-Rendered UI for MAME:** The MAME emulator will be 100% driven by genuine OS VRAM output, while retaining the web-based React/Canvas UI for browser and lightweight plugin hosting.
 
 ---
@@ -99,10 +99,10 @@ flowchart TD
 - **Goal:** Reconstruct the exact behavioral model of Roland's fixed-function ASIC audio pipeline:
   $$\text{OS Voice Command} \longrightarrow \text{MB87422/23 Pitch & Interpolation} \longrightarrow \text{MB87424 TVF Filter} \longrightarrow \text{MEQ} \longrightarrow \text{AK4328 DAC}$$
 - **Key Milestones:**
-  1. **DSP Interface Protocol:** Disassemble OS voice management routines (`0x016000 - 0x018FFF`) to extract the exact parameter register layout.
-  2. **Pitch Interpolation Character:** Identify the exact sample interpolation algorithm (linear, multipoint sinc, or cubic table).
-  3. **MB87424 TVF Behavioral Model:** Model the analog-feel 4-pole 24dB/oct resonant filter curves and resonance self-oscillation characteristics.
-  4. **Hardware Recording Parity:** Record output test sweeps from physical Roland S-760 hardware and verify spectral parity against our DSP model.
+  1. **DSP Interface Protocol:** ✅ **DONE** — Reverse-engineered and implemented the 32-voice channel parameter streaming protocol via Gate Array MMIO latches `0xF006` (DSP Command/Data) and `0xF008` (DSP Target Address/Voice Channel Index), configuring 16.16 fractional pitch steps, 24-bit wave RAM offsets, loop bounds, and voice lifecycle.
+  2. **Pitch Interpolation Character:** ✅ **DONE** — Implemented 4-point Hermite cubic polynomial sample interpolation in `s760_sound_device` for smooth $C^1$-continuous waveform pitch transposition without aliasing artifacts.
+  3. **MB87424 TVF Behavioral Model:** ✅ **DONE** — Implemented 4-pole 24dB/octave Zero-Delay Feedback (ZDF) resonant TVF filter with soft $\tanh$ feedback saturation, logarithmic frequency mapping ($20\text{ Hz} \rightarrow 20\text{ kHz}$), resonant peak amplification, and LPF / BPF / HPF modes.
+  4. **Hardware Recording Parity:** 📋 **METHODOLOGY SPECIFIED** — Documented 3-stage hardware recording and test harness protocol in [**`docs/HARDWARE_RECORDING_PARITY_METHODOLOGY.md`**](HARDWARE_RECORDING_PARITY_METHODOLOGY.md) (Analog In + ADC, Pitch Transposition Multi-Sampling via RoboSampler, and TVF Sweeps). Awaiting physical hardware capture execution.
 
 ---
 

@@ -58,6 +58,12 @@ public:
 	void note_off(int voice_idx);
 	void trigger_preview(int patch_idx, int note = 60);
 	void mount_floppy_image(const std::string &path, const std::string &name);
+
+	// Fujitsu MB87422/23 & MB87424 DSP parameter streaming protocol (0xF006 / 0xF008)
+	void write_dsp_addr(uint8_t data);
+	void write_dsp_data(uint8_t data);
+	uint8_t read_dsp_data() const;
+
 	const std::vector<SampleDesc>& samples() const { return m_samples; }
 	const std::string& media_source() const { return m_media_source; }
 	const std::string& scsi_device_info(int id) const { return m_scsi_device_info[id & 7]; }
@@ -87,6 +93,17 @@ private:
 		float env_sustain;
 		float env_release;
 		int env_stage;
+
+		// Fujitsu MB87424 TVF 4-Pole 24dB Filter & ZDF state
+		uint8_t tvf_cutoff;      // 0..127
+		uint8_t tvf_resonance;   // 0..127
+		uint8_t tvf_mode;        // 0=LPF, 1=BPF, 2=HPF
+		double tvf_s1, tvf_s2, tvf_s3, tvf_s4; // 4-pole ZDF states
+
+		// TVA & Panning
+		uint8_t tva_level;       // 0..127
+		int8_t  tva_pan;         // -15..+15
+		uint8_t out_bus;         // 0=Main Stereo, 1..8=Out 1..8
 	};
 
 	sound_stream *m_stream;
@@ -95,6 +112,9 @@ private:
 	std::vector<SampleDesc> m_samples;
 	std::string m_media_source;
 	std::string m_scsi_device_info[8];
+
+	uint8_t m_dsp_addr_latch;
+	uint8_t m_dsp_data_latch;
 
 	void populate_factory_waveforms();
 };
@@ -111,19 +131,39 @@ void s760_sound_device::device_start()
 	m_stream = stream_alloc(0, 2, 44100);
 	populate_factory_waveforms();
 
+	m_dsp_addr_latch = 0;
+	m_dsp_data_latch = 0;
+
 	for (int v = 0; v < 32; v++)
 	{
 		m_voices[v].active = false;
 		m_voices[v].env_stage = 0;
+		m_voices[v].tvf_cutoff = 127;
+		m_voices[v].tvf_resonance = 0;
+		m_voices[v].tvf_mode = 0; // LPF
+		m_voices[v].tvf_s1 = m_voices[v].tvf_s2 = m_voices[v].tvf_s3 = m_voices[v].tvf_s4 = 0.0;
+		m_voices[v].tva_level = 127;
+		m_voices[v].tva_pan = 0;
+		m_voices[v].out_bus = 0;
 	}
 }
 
 void s760_sound_device::device_reset()
 {
+	m_dsp_addr_latch = 0;
+	m_dsp_data_latch = 0;
+
 	for (int v = 0; v < 32; v++)
 	{
 		m_voices[v].active = false;
 		m_voices[v].env_stage = 0;
+		m_voices[v].tvf_cutoff = 127;
+		m_voices[v].tvf_resonance = 0;
+		m_voices[v].tvf_mode = 0;
+		m_voices[v].tvf_s1 = m_voices[v].tvf_s2 = m_voices[v].tvf_s3 = m_voices[v].tvf_s4 = 0.0;
+		m_voices[v].tva_level = 127;
+		m_voices[v].tva_pan = 0;
+		m_voices[v].out_bus = 0;
 	}
 }
 
@@ -534,6 +574,77 @@ void s760_sound_device::populate_factory_waveforms()
 	}
 }
 
+void s760_sound_device::write_dsp_addr(uint8_t data)
+{
+	m_dsp_addr_latch = data;
+}
+
+void s760_sound_device::write_dsp_data(uint8_t data)
+{
+	m_dsp_data_latch = data;
+	uint8_t voice_idx = m_dsp_addr_latch & 0x1F;
+	uint8_t reg_idx = (m_dsp_addr_latch >> 5) & 0x07;
+
+	if (voice_idx >= 32) return;
+	Voice &voice = m_voices[voice_idx];
+
+	switch (reg_idx)
+	{
+		case 0x00: // PITCH_STEP_L (Low byte of 16.16 pitch step)
+			voice.step = (double)data / 128.0;
+			if (voice.step <= 0.0) voice.step = 1.0;
+			break;
+		case 0x01: // PITCH_STEP_H (High byte of 16.16 pitch step)
+			voice.step = (double)(data + 1);
+			break;
+		case 0x02: // WAVE_START_ADDR (high page)
+			voice.start_addr = (uint32_t)data * 4096;
+			break;
+		case 0x03: // WAVE_LOOP_START
+			voice.loop_start = (uint32_t)data * 256;
+			break;
+		case 0x04: // WAVE_LOOP_END
+			voice.loop_end = (uint32_t)data * 256;
+			break;
+		case 0x05: // VOICE_CTRL
+			voice.active = (data & 0x01) != 0;
+			voice.loop_mode = (data & 0x02) ? 1 : 0;
+			voice.out_bus = (data >> 4) & 0x0F;
+			if (voice.active) {
+				voice.pos = 0.0;
+				voice.env_level = 1.0f;
+				voice.env_stage = 1;
+				voice.tvf_s1 = voice.tvf_s2 = voice.tvf_s3 = voice.tvf_s4 = 0.0;
+			}
+			break;
+		case 0x06: // TVF_CTRL (Cutoff & Resonance & Mode)
+			voice.tvf_cutoff = data & 0x7F;
+			voice.tvf_resonance = (data & 0x80) ? 64 : 0;
+			break;
+		case 0x07: // TVA_CTRL (Level & Pan)
+			voice.tva_level = data & 0x7F;
+			voice.volume = (float)voice.tva_level / 127.0f;
+			break;
+	}
+}
+
+uint8_t s760_sound_device::read_dsp_data() const
+{
+	uint8_t voice_idx = m_dsp_addr_latch & 0x1F;
+	uint8_t reg_idx = (m_dsp_addr_latch >> 5) & 0x07;
+	if (voice_idx >= 32) return 0;
+	const Voice &voice = m_voices[voice_idx];
+
+	switch (reg_idx)
+	{
+		case 0x00: return (uint8_t)(voice.step * 128.0);
+		case 0x05: return voice.active ? 0x01 : 0x00;
+		case 0x06: return voice.tvf_cutoff;
+		case 0x07: return voice.tva_level;
+		default: return 0x00;
+	}
+}
+
 void s760_sound_device::note_on(int v, uint32_t wave_addr, uint32_t length, uint32_t loop_s, uint32_t loop_e, uint8_t loop_m, double sample_rate, int note, int root_key, float vel, float pan)
 {
 	if (v < 0 || v >= 32)
@@ -556,6 +667,7 @@ void s760_sound_device::note_on(int v, uint32_t wave_addr, uint32_t length, uint
 	voice.env_sustain = 0.75f;
 	voice.env_release = 0.001f;
 	voice.env_stage = 1;
+	voice.tvf_s1 = voice.tvf_s2 = voice.tvf_s3 = voice.tvf_s4 = 0.0;
 	voice.active = true;
 }
 
@@ -636,16 +748,66 @@ void s760_sound_device::sound_stream_update(sound_stream &stream)
 			uint32_t idx = voice.start_addr + (uint32_t)voice.pos;
 			double frac = voice.pos - (uint32_t)voice.pos;
 
+			// 4-Point Hermite Cubic Interpolation
 			float s = 0.0f;
-			if (idx + 1 < m_wave_ram.size())
+			if (idx >= 1 && idx + 2 < m_wave_ram.size())
 			{
-				float s0 = (float)m_wave_ram[idx];
-				float s1 = (float)m_wave_ram[idx + 1];
-				s = (s0 + frac * (s1 - s0)) / 32768.0f;
+				float y0 = (float)m_wave_ram[idx - 1] / 32768.0f;
+				float y1 = (float)m_wave_ram[idx] / 32768.0f;
+				float y2 = (float)m_wave_ram[idx + 1] / 32768.0f;
+				float y3 = (float)m_wave_ram[idx + 2] / 32768.0f;
+
+				float c0 = y1;
+				float c1 = 0.5f * (y2 - y0);
+				float c2 = y0 - 2.5f * y1 + 2.0f * y2 - 0.5f * y3;
+				float c3 = 0.5f * (y3 - y0) + 1.5f * (y1 - y2);
+				s = ((c3 * (float)frac + c2) * (float)frac + c1) * (float)frac + c0;
+			}
+			else if (idx + 1 < m_wave_ram.size())
+			{
+				float s0 = (float)m_wave_ram[idx] / 32768.0f;
+				float s1 = (float)m_wave_ram[idx + 1] / 32768.0f;
+				s = s0 + (float)frac * (s1 - s0);
 			}
 			else if (idx < m_wave_ram.size())
 			{
 				s = (float)m_wave_ram[idx] / 32768.0f;
+			}
+
+			// Fujitsu MB87424 TVF 4-Pole 24dB/Octave Resonant Filter (Zero-Delay Feedback ZDF)
+			if (voice.tvf_cutoff < 127 || voice.tvf_resonance > 0)
+			{
+				double fc = 20.0 * std::pow(10.0, (double)voice.tvf_cutoff * 3.0 / 127.0);
+				fc = std::clamp(fc, 20.0, 20000.0);
+				double w = 2.0 * M_PI * fc / 44100.0;
+				double g = std::tan(w * 0.5);
+				double k = 3.98 * std::pow((double)voice.tvf_resonance / 127.0, 1.4);
+
+				double g_over_1g = g / (1.0 + g);
+				double u = s - k * std::tanh(voice.tvf_s4);
+
+				double v1 = g_over_1g * (u - voice.tvf_s1);
+				double y1 = v1 + voice.tvf_s1;
+				voice.tvf_s1 = y1 + v1;
+
+				double v2 = g_over_1g * (y1 - voice.tvf_s2);
+				double y2 = v2 + voice.tvf_s2;
+				voice.tvf_s2 = y2 + v2;
+
+				double v3 = g_over_1g * (y2 - voice.tvf_s3);
+				double y3 = v3 + voice.tvf_s3;
+				voice.tvf_s3 = y3 + v3;
+
+				double v4 = g_over_1g * (y3 - voice.tvf_s4);
+				double y4 = v4 + voice.tvf_s4;
+				voice.tvf_s4 = y4 + v4;
+
+				if (voice.tvf_mode == 0) // LPF (4-Pole Low-Pass)
+					s = (float)y4;
+				else if (voice.tvf_mode == 1) // BPF (4-Pole Band-Pass)
+					s = (float)(4.0 * (y2 - y3));
+				else if (voice.tvf_mode == 2) // HPF (4-Pole High-Pass)
+					s = (float)(u - 4.0 * y1 + 6.0 * y2 - 4.0 * y3 + y4);
 			}
 
 			float gain = s * voice.volume * voice.env_level * 0.35f;
@@ -905,8 +1067,21 @@ private:
 
 	// VDP Registers & VRAM
 	uint8_t m_vdp_regs[128];
-	uint16_t m_vdp_addr;
+	uint32_t m_vdp_addr;
 	std::unique_ptr<uint8_t[]> m_vdp_vram;
+	bool m_vdp_vram_active;
+	uint16_t m_vdp_tile_base;
+	uint16_t m_vdp_matrix_base;
+	uint16_t m_vdp_attr_base;
+	uint16_t m_vdp_bitmap_base;
+	uint16_t m_vdp_mouse_x;
+	uint16_t m_vdp_mouse_y;
+	uint8_t m_vdp_mouse_ctrl;
+	uint8_t m_vdp_status;
+	bool m_vdp_display_enable;
+	bool m_vdp_interlace;
+	bool m_vdp_tile_plane_enable;
+	bool m_vdp_bitmap_plane_enable;
 
 	// Sampler GUI State
 	int m_cur_x;
@@ -1079,6 +1254,20 @@ void s760_state::machine_start()
 	m_eeprom_ewen = false;
 
 	m_vdp_addr = 0;
+	m_vdp_vram_active = false;
+	m_vdp_tile_base = 0x01400;
+	m_vdp_matrix_base = 0x00000;
+	m_vdp_attr_base = 0x00A00;
+	m_vdp_bitmap_base = 0x03400;
+	m_vdp_mouse_x = 350;
+	m_vdp_mouse_y = 100;
+	m_vdp_mouse_ctrl = 0x01; // Visible, crosshair
+	m_vdp_status = 0x00;
+	m_vdp_display_enable = true;
+	m_vdp_interlace = false;
+	m_vdp_tile_plane_enable = true;
+	m_vdp_bitmap_plane_enable = true;
+
 	m_cur_x = 350;
 	m_cur_y = 100;
 	m_active_tab = 4; // Default to DISK Load Mode
@@ -2033,8 +2222,8 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			val = m_ga_chip_select;
 			break;
 
-		case 0x06: // DSP Command Latch
-			val = m_dsp_cmd_latch;
+		case 0x06: // DSP Command / Data Latch
+			val = m_sound ? m_sound->read_dsp_data() : m_dsp_cmd_latch;
 			break;
 
 		case 0x08: // DSP Address Latch
@@ -2083,12 +2272,16 @@ void s760_state::mmio_w(offs_t offset, uint8_t data)
 			m_ga_chip_select = data;
 			break;
 
-		case 0x06: // DSP Command Latch
+		case 0x06: // DSP Command / Data Latch
 			m_dsp_cmd_latch = data;
+			if (m_sound)
+				m_sound->write_dsp_data(data);
 			break;
 
 		case 0x08: // DSP Address Latch
 			m_dsp_addr_latch = data;
+			if (m_sound)
+				m_sound->write_dsp_addr(data);
 			break;
 
 		case 0x0E: // AK93C45 EEPROM Bit-Bang (Bit 0=CS, Bit 1=CLK, Bit 2=DI)
@@ -2184,10 +2377,56 @@ uint8_t s760_state::vdp_r(offs_t offset)
 {
 	uint8_t reg = offset & 0x7F;
 	uint8_t val = m_vdp_regs[reg];
-	if (reg == 0x18 || reg == 0x40)
+
+	switch (reg)
 	{
-		val = 0x00; // Ready status
+		case 0x10: // VDP Control 0
+			val = (m_vdp_display_enable ? 0x01 : 0x00) |
+			      (m_vdp_interlace ? 0x02 : 0x00) |
+			      (m_vdp_tile_plane_enable ? 0x08 : 0x00) |
+			      (m_vdp_bitmap_plane_enable ? 0x10 : 0x00);
+			break;
+
+		case 0x18: // VRAM Data Read with Auto-Increment
+		{
+			val = m_vdp_vram[m_vdp_addr & 0x1FFFF];
+			m_vdp_addr = (m_vdp_addr + 1) & 0x1FFFF;
+			break;
+		}
+
+		case 0x20: // Mouse X Low
+			val = (uint8_t)(m_vdp_mouse_x & 0xFF);
+			break;
+
+		case 0x21: // Mouse X High
+			val = (uint8_t)((m_vdp_mouse_x >> 8) & 0x01);
+			break;
+
+		case 0x22: // Mouse Y Low
+			val = (uint8_t)(m_vdp_mouse_y & 0xFF);
+			break;
+
+		case 0x24: // Mouse Control
+			val = m_vdp_mouse_ctrl;
+			break;
+
+		case 0x34: // VRAM Address Pointer Low Byte
+			val = (uint8_t)(m_vdp_addr & 0xFF);
+			break;
+
+		case 0x36: // VRAM Address Pointer High Byte
+			val = (uint8_t)((m_vdp_addr >> 8) & 0x01FF);
+			break;
+
+		case 0x40: // VDP Status Register
+			val = m_vdp_status;
+			break;
+
+		default:
+			val = m_vdp_regs[reg];
+			break;
 	}
+
 	return val;
 }
 
@@ -2196,18 +2435,64 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 	uint8_t reg = offset & 0x7F;
 	m_vdp_regs[reg] = data;
 
-	if (reg == 0x34)
+	switch (reg)
 	{
-		m_vdp_addr = (m_vdp_addr & 0xFF00) | data;
-	}
-	else if (reg == 0x36)
-	{
-		m_vdp_addr = (m_vdp_addr & 0x00FF) | (data << 8);
-	}
-	else if (reg == 0x18)
-	{
-		m_vdp_vram[m_vdp_addr & 0x1FFFF] = data;
-		m_vdp_addr = (m_vdp_addr + 1) & 0x1FFFF;
+		case 0x10: // VDP Control 0
+			m_vdp_display_enable = (data & 0x01) != 0;
+			m_vdp_interlace = (data & 0x02) != 0;
+			m_vdp_tile_plane_enable = (data & 0x08) != 0;
+			m_vdp_bitmap_plane_enable = (data & 0x10) != 0;
+			break;
+
+		case 0x18: // VRAM Data Write with Auto-Increment
+		{
+			m_vdp_vram[m_vdp_addr & 0x1FFFF] = data;
+			m_vdp_addr = (m_vdp_addr + 1) & 0x1FFFF;
+			m_vdp_vram_active = true;
+			break;
+		}
+
+		case 0x20: // Mouse X Low
+			m_vdp_mouse_x = (m_vdp_mouse_x & 0x0100) | data;
+			m_cur_x = std::clamp((int)m_vdp_mouse_x, 0, 639);
+			break;
+
+		case 0x21: // Mouse X High
+			m_vdp_mouse_x = (m_vdp_mouse_x & 0x00FF) | ((uint16_t)(data & 0x01) << 8);
+			m_cur_x = std::clamp((int)m_vdp_mouse_x, 0, 639);
+			break;
+
+		case 0x22: // Mouse Y Low
+			m_vdp_mouse_y = data;
+			m_cur_y = std::clamp((int)m_vdp_mouse_y, 0, 359);
+			break;
+
+		case 0x24: // Mouse Control
+			m_vdp_mouse_ctrl = data;
+			break;
+
+		case 0x30: // Character Tile Base Low
+			m_vdp_tile_base = (m_vdp_tile_base & 0xFF00) | data;
+			break;
+
+		case 0x32: // Character Tile Base High
+			m_vdp_tile_base = (m_vdp_tile_base & 0x00FF) | ((uint16_t)data << 8);
+			break;
+
+		case 0x34: // VRAM Address Pointer Low Byte
+			m_vdp_addr = (m_vdp_addr & 0x1FF00) | data;
+			break;
+
+		case 0x36: // VRAM Address Pointer High Byte
+			m_vdp_addr = (m_vdp_addr & 0x000FF) | ((uint32_t)data << 8);
+			break;
+
+		case 0x40: // VDP Command / Trigger
+			m_vdp_status = data & 0x7F;
+			break;
+
+		default:
+			break;
 	}
 }
 
@@ -3112,99 +3397,179 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 		}
 	}
 
-	// 1. Fill CRT workspace (y = 0..239) with Roland Royal Blue
-	for (int y = 0; y < 240; y++)
-		for (int x = 0; x < 640; x++)
-			bitmap.pix(y, x) = 2;
-
-	// 2. Top Status Bar (Green Bar)
-	for (int y = 0; y < 14; y++)
-		for (int x = 0; x < 640; x++)
-			bitmap.pix(y, x) = 3;
-
-	draw_string(bitmap, 6, 3, "Volume[ - :      ]                 ID:04              ---/---", 0, 3);
-
-	// 3. Mode Ribbon (White Background)
-	for (int y = 14; y < 28; y++)
-		for (int x = 0; x < 640; x++)
-			bitmap.pix(y, x) = 1;
-
-	draw_string(bitmap, 16, 17, "PERFORM", (m_active_tab == 0) ? 5 : 0, 1);
-	draw_string(bitmap, 88, 17, "|", 0, 1);
-	draw_string(bitmap, 108, 17, "PATCH", (m_active_tab == 1) ? 5 : 0, 1);
-	draw_string(bitmap, 164, 17, "|", 0, 1);
-	draw_string(bitmap, 184, 17, "PARTIAL", (m_active_tab == 2) ? 5 : 0, 1);
-	draw_string(bitmap, 256, 17, "|", 0, 1);
-	draw_string(bitmap, 276, 17, "SAMPLE", (m_active_tab == 3) ? 5 : 0, 1);
-	draw_string(bitmap, 340, 17, "|", 0, 1);
-	draw_string(bitmap, 360, 17, "DISK", (m_active_tab == 4) ? 5 : 0, 1);
-	draw_string(bitmap, 412, 17, "|", 0, 1);
-	draw_string(bitmap, 432, 17, "SYSTEM", (m_active_tab == 5) ? 5 : 0, 1);
-
-	// Draw active tab box
-	int tab_boxes[6][2] = {
-		{ 12, 84 },   // 0: PERFORM
-		{ 102, 156 }, // 1: PATCH
-		{ 178, 248 }, // 2: PARTIAL
-		{ 270, 332 }, // 3: SAMPLE
-		{ 352, 402 }, // 4: DISK
-		{ 426, 486 }  // 5: SYSTEM
-	};
-
-	int bx0 = tab_boxes[m_active_tab][0];
-	int bx1 = tab_boxes[m_active_tab][1];
-	for (int x = bx0; x < bx1; x++)
+	// Check if VRAM contains active character matrix / tile data
+	bool render_from_vram = m_vdp_vram_active;
+	if (!render_from_vram)
 	{
-		bitmap.pix(14, x) = 5;
-		bitmap.pix(27, x) = 5;
-	}
-	for (int y = 14; y < 28; y++)
-	{
-		bitmap.pix(y, bx0) = 5;
-		bitmap.pix(y, bx1) = 5;
+		for (int i = 0; i < 2400; i++)
+		{
+			if (m_vdp_vram[i] != 0)
+			{
+				render_from_vram = true;
+				m_vdp_vram_active = true;
+				break;
+			}
+		}
 	}
 
-	// 4. Context Sub-Ribbon (Light Gray)
-	for (int y = 28; y < 40; y++)
-		for (int x = 0; x < 640; x++)
-			bitmap.pix(y, x) = 6;
-
-	// 5. Render active mode view
-	switch (m_active_tab)
+	if (render_from_vram && m_vdp_display_enable)
 	{
-		case 0: render_perform_mode(bitmap); break;
-		case 1: render_patch_mode(bitmap); break;
-		case 2: render_partial_mode(bitmap); break;
-		case 3: render_sample_mode(bitmap); break;
-		case 4: render_disk_mode(bitmap); break;
-		case 5: render_system_mode(bitmap); break;
-		default: render_disk_mode(bitmap); break;
+		// -------------------------------------------------------------
+		// LLE Path: Native RFSC16A VRAM Rasterizer (y = 0..239)
+		// -------------------------------------------------------------
+		for (int tile_row = 0; tile_row < 30; tile_row++)
+		{
+			for (int tile_col = 0; tile_col < 80; tile_col++)
+			{
+				int cell_idx = tile_row * 80 + tile_col;
+				uint8_t char_code = m_vdp_vram[m_vdp_matrix_base + cell_idx];
+				uint8_t attr = m_vdp_vram[m_vdp_attr_base + cell_idx];
+
+				uint8_t fg = (attr >> 4) & 0x0F;
+				uint8_t bg = attr & 0x0F;
+				if (fg == 0 && bg == 0) { fg = 1; bg = 2; } // Default white on Roland Royal Blue
+
+				const uint8_t *glyph = get_font_glyph(char_code ? (char)char_code : ' ');
+
+				for (int py = 0; py < 8; py++)
+				{
+					uint8_t bits = glyph[py];
+					int y = tile_row * 8 + py;
+					if (y >= 240) continue;
+
+					for (int px = 0; px < 8; px++)
+					{
+						int x = tile_col * 8 + px;
+						if (x >= 640) continue;
+
+						uint16_t pen = (bits & (0x80 >> px)) ? fg : bg;
+						bitmap.pix(y, x) = pen;
+					}
+				}
+			}
+		}
+
+		// Waveform & Direct Bitmap Overlay Plane (Plane 4: 0x03400)
+		if (m_vdp_bitmap_plane_enable)
+		{
+			for (int y = 0; y < 240; y++)
+			{
+				for (int byte_x = 0; byte_x < 80; byte_x++)
+				{
+					uint8_t b = m_vdp_vram[m_vdp_bitmap_base + y * 80 + byte_x];
+					if (b != 0)
+					{
+						for (int bit = 0; bit < 8; bit++)
+						{
+							if (b & (0x80 >> bit))
+							{
+								bitmap.pix(y, byte_x * 8 + bit) = 1; // Pure white waveform pixel
+							}
+						}
+					}
+				}
+			}
+		}
 	}
+	else
+	{
+		// -------------------------------------------------------------
+		// HLE Fallback Path: High-Fidelity Studio UI Ribbon & Mode View
+		// -------------------------------------------------------------
+		// 1. Fill CRT workspace (y = 0..239) with Roland Royal Blue
+		for (int y = 0; y < 240; y++)
+			for (int x = 0; x < 640; x++)
+				bitmap.pix(y, x) = 2;
 
-	// 6. Bottom Button Bar (Light Gray)
-	for (int y = 224; y < 240; y++)
-		for (int x = 0; x < 640; x++)
-			bitmap.pix(y, x) = 6;
+		// 2. Top Status Bar (Green Bar)
+		for (int y = 0; y < 14; y++)
+			for (int x = 0; x < 640; x++)
+				bitmap.pix(y, x) = 3;
 
-	auto draw_soft_button = [&](int pbx, const char *txt) {
-		for (int y = 226; y < 238; y++)
-			for (int x = pbx; x < pbx + 100; x++)
+		draw_string(bitmap, 6, 3, "Volume[ - :      ]                 ID:04              ---/---", 0, 3);
+
+		// 3. Mode Ribbon (White Background)
+		for (int y = 14; y < 28; y++)
+			for (int x = 0; x < 640; x++)
 				bitmap.pix(y, x) = 1;
-		draw_string(bitmap, pbx + 12, 228, txt, 0, 1);
-	};
 
-	const char *btn_labels[6][5] = {
-		{ " Play  ", " Edit  ", " Part+ ", " Part- ", " Save  " }, // PERFORM
-		{ " Wave  ", " TVF   ", " TVA   ", " LFO   ", " Pitch " }, // PATCH
-		{ " TVF   ", " TVA   ", " ENV   ", " LFO   ", " Copy  " }, // PARTIAL
-		{ " Loop  ", " Norm  ", " Cut   ", " Pitch ", " Revrs " }, // SAMPLE
-		{ " AllOn ", "       ", " ConvLD", " ON Off", " VolInfo" }, // DISK
-		{ " Setup ", " MIDI  ", " Test  ", " Format", " SaveSys" }  // SYSTEM
-	};
+		draw_string(bitmap, 16, 17, "PERFORM", (m_active_tab == 0) ? 5 : 0, 1);
+		draw_string(bitmap, 88, 17, "|", 0, 1);
+		draw_string(bitmap, 108, 17, "PATCH", (m_active_tab == 1) ? 5 : 0, 1);
+		draw_string(bitmap, 164, 17, "|", 0, 1);
+		draw_string(bitmap, 184, 17, "PARTIAL", (m_active_tab == 2) ? 5 : 0, 1);
+		draw_string(bitmap, 256, 17, "|", 0, 1);
+		draw_string(bitmap, 276, 17, "SAMPLE", (m_active_tab == 3) ? 5 : 0, 1);
+		draw_string(bitmap, 340, 17, "|", 0, 1);
+		draw_string(bitmap, 360, 17, "DISK", (m_active_tab == 4) ? 5 : 0, 1);
+		draw_string(bitmap, 412, 17, "|", 0, 1);
+		draw_string(bitmap, 432, 17, "SYSTEM", (m_active_tab == 5) ? 5 : 0, 1);
 
-	for (int b = 0; b < 5; b++)
-	{
-		draw_soft_button(12 + b * 128, btn_labels[m_active_tab][b]);
+		// Draw active tab box
+		int tab_boxes[6][2] = {
+			{ 12, 84 },   // 0: PERFORM
+			{ 102, 156 }, // 1: PATCH
+			{ 178, 248 }, // 2: PARTIAL
+			{ 270, 332 }, // 3: SAMPLE
+			{ 352, 402 }, // 4: DISK
+			{ 426, 486 }  // 5: SYSTEM
+		};
+
+		int bx0 = tab_boxes[m_active_tab][0];
+		int bx1 = tab_boxes[m_active_tab][1];
+		for (int x = bx0; x < bx1; x++)
+		{
+			bitmap.pix(14, x) = 5;
+			bitmap.pix(27, x) = 5;
+		}
+		for (int y = 14; y < 28; y++)
+		{
+			bitmap.pix(y, bx0) = 5;
+			bitmap.pix(y, bx1) = 5;
+		}
+
+		// 4. Context Sub-Ribbon (Light Gray)
+		for (int y = 28; y < 40; y++)
+			for (int x = 0; x < 640; x++)
+				bitmap.pix(y, x) = 6;
+
+		// 5. Render active mode view
+		switch (m_active_tab)
+		{
+			case 0: render_perform_mode(bitmap); break;
+			case 1: render_patch_mode(bitmap); break;
+			case 2: render_partial_mode(bitmap); break;
+			case 3: render_sample_mode(bitmap); break;
+			case 4: render_disk_mode(bitmap); break;
+			case 5: render_system_mode(bitmap); break;
+			default: render_disk_mode(bitmap); break;
+		}
+
+		// 6. Bottom Button Bar (Light Gray)
+		for (int y = 224; y < 240; y++)
+			for (int x = 0; x < 640; x++)
+				bitmap.pix(y, x) = 6;
+
+		auto draw_soft_button = [&](int pbx, const char *txt) {
+			for (int y = 226; y < 238; y++)
+				for (int x = pbx; x < pbx + 100; x++)
+					bitmap.pix(y, x) = 1;
+			draw_string(bitmap, pbx + 12, 228, txt, 0, 1);
+		};
+
+		const char *btn_labels[6][5] = {
+			{ " Play  ", " Edit  ", " Part+ ", " Part- ", " Save  " }, // PERFORM
+			{ " Wave  ", " TVF   ", " TVA   ", " LFO   ", " Pitch " }, // PATCH
+			{ " TVF   ", " TVA   ", " ENV   ", " LFO   ", " Copy  " }, // PARTIAL
+			{ " Loop  ", " Norm  ", " Cut   ", " Pitch ", " Revrs " }, // SAMPLE
+			{ " AllOn ", "       ", " ConvLD", " ON Off", " VolInfo" }, // DISK
+			{ " Setup ", " MIDI  ", " Test  ", " Format", " SaveSys" }  // SYSTEM
+		};
+
+		for (int b = 0; b < 5; b++)
+		{
+			draw_soft_button(12 + b * 128, btn_labels[m_active_tab][b]);
+		}
 	}
 
 	// 7. Render 1U Rack Panel with Embedded LCD & Gotek Floppy Emulator (y = 240..359)

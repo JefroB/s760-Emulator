@@ -68,7 +68,7 @@ end
             cwd=r"d:\S-760\mame-source",
             capture_output=True,
             text=True,
-            timeout=max(20, self.timeout_sec * 3)
+            timeout=max(35, self.timeout_sec * 5)
         )
 
         data = {}

@@ -2,7 +2,7 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-83%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-101%20Passing-brightgreen.svg)](tests/)
 [![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP%20(Instrument%20%26%20FX)-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![OS Test Matrix](https://img.shields.io/badge/OS%20Code%20Coverage-100%25%20Verified-success.svg)](docs/OS_EXHAUSTIVE_CODE_MATRIX.md)
@@ -12,6 +12,7 @@
 An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
 
 > 📚 **Test Coverage & Architectural Documentation:**
+> - [**Roland RFSC16A VDP & Display Subsystem Architecture**](docs/ROLAND_RFSC16A_VDP_AND_DISPLAY_ARCHITECTURE.md) — *Authoritative technical specification of the RFSC16A VDP ASIC, 128KB TC511664 VRAM layout, Sony CXA1145M RGB DAC palette, Epson SED1335 LCD, and dual-pipeline rendering engine.*
 > - [**LLE Roadmap & Hardware Fidelity Assessment**](docs/LLE_ROADMAP_AND_FIDELITY_ASSESSMENT.md) — *Detailed fidelity matrix, HLE vs. LLE terminology standards, and the 4-step roadmap to native OS boot and DSP ASIC modeling.*
 > - [**Roland S-760 OS v2.24 Exhaustive Code & Routine Matrix**](docs/OS_EXHAUSTIVE_CODE_MATRIX.md) — *100% mapping of all 81 ROM routines, vector tables, DSP algorithms, SCSI/FDD drivers, and 14,158 string tokens.*
 > - [**Comprehensive UI Elements & Automated Test Coverage Matrix**](docs/UI_TEST_COVERAGE_MATRIX.md) — *Exhaustive mapping of all 122+ interactive UI components, 37 screen layouts, 88-key piano roll, knobs, meters, and modal dialogs.*
