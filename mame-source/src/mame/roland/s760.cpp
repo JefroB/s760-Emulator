@@ -842,6 +842,23 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(mouse_x);
 	DECLARE_INPUT_CHANGED_MEMBER(mouse_y);
 
+	// IRQ Sources handled by Gate Array (0xF001)
+	enum irq_source : uint8_t
+	{
+		IRQ_TIMER_60HZ = 0x01, // Bit 0: 60Hz periodic event tick
+		IRQ_FDC        = 0x02, // Bit 1: NEC uPD72068 FDC interrupt
+		// Bit 2: Bus Ready Status flag (0x04) - not an IRQ
+		IRQ_SCSI       = 0x08, // Bit 3: MB89352A SCSI SPC interrupt
+		IRQ_VDP_VBLANK = 0x10, // Bit 4: RFSC16A VDP Vertical Blank
+		IRQ_MIDI_RX    = 0x20  // Bit 5: MIDI UART RX FIFO ready
+	};
+
+	void trigger_irq(uint8_t irq_mask);
+	void clear_irq(uint8_t irq_mask);
+	void check_irq_state();
+	uint8_t irq_pending() const { return m_irq_pending; }
+	bool int_line_asserted() const { return m_int_line_asserted; }
+
 protected:
 	virtual void machine_start() override ATTR_COLD;
 	virtual void machine_reset() override ATTR_COLD;
@@ -856,8 +873,37 @@ private:
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
 
-	// Gate Array MMIO & VDP Registers
+	// Interrupt Subsystem & 60Hz Timer
+	emu_timer *m_timer_60hz;
+	uint8_t m_irq_pending;
+	uint8_t m_irq_mask;
+	bool m_int_line_asserted;
+
+	TIMER_CALLBACK_MEMBER(timer_60hz_tick);
+
+	// Roland Gate Array & Peripheral Registers (0xF000 - 0xF01F)
 	uint8_t m_mmio[16];
+	uint8_t m_ga_ctrl;
+	uint8_t m_ga_status;
+	uint8_t m_simm_bank;
+	uint8_t m_ga_chip_select;
+	uint8_t m_dsp_cmd_latch;
+	uint8_t m_dsp_addr_latch;
+	uint8_t m_eeprom_latch;
+	uint8_t m_eeprom_do;
+	bool m_peripherals_enabled;
+
+	// AK93C45 1024-Bit Serial EEPROM State Machine (64 x 16-bit words)
+	uint16_t m_eeprom_data[64];
+	uint32_t m_eeprom_shift_reg;
+	int m_eeprom_bit_count;
+	int m_eeprom_state; // 0=IDLE, 1=READING_CMD, 2=READING_DATA, 3=SHIFTING_OUT
+	bool m_eeprom_cs;
+	bool m_eeprom_clk;
+	bool m_eeprom_di;
+	bool m_eeprom_ewen;
+
+	// VDP Registers & VRAM
 	uint8_t m_vdp_regs[128];
 	uint16_t m_vdp_addr;
 	std::unique_ptr<uint8_t[]> m_vdp_vram;
@@ -880,10 +926,81 @@ private:
 	bool m_last_gotek_next;
 	bool m_last_gotek_select;
 
+	// NEC uPD72068 Floppy Disk Controller (FDC) State Machine
+	uint8_t m_fdc_msr;
+	uint8_t m_fdc_dor;
+	uint8_t m_fdc_ccr;
+	uint8_t m_fdc_dir;
+	uint8_t m_fdc_st0;
+	uint8_t m_fdc_st1;
+	uint8_t m_fdc_st2;
+	uint8_t m_fdc_st3;
+
+	uint8_t m_fdc_cmd_buffer[16];
+	int m_fdc_cmd_idx;
+	int m_fdc_cmd_len;
+	uint8_t m_fdc_res_buffer[16];
+	int m_fdc_res_idx;
+	int m_fdc_res_len;
+	int m_fdc_phase; // 0=CMD/IDLE, 1=EXECUTION, 2=RESULT
+
+	int m_fdc_current_cyl[2];
+	int m_fdc_current_head[2];
+	int m_fdc_current_sector[2];
+	int m_fdc_selected_drive;
+	bool m_fdc_motor_on[2];
+	bool m_fdc_disk_inserted;
+	std::vector<uint8_t> m_fdc_disk_image;
+	int m_fdc_data_byte_idx;
+	int m_fdc_data_byte_total;
+	uint32_t m_fdc_sector_offset;
+
+	// Fujitsu MB89352A SCSI Protocol Controller (SPC) State Machine (0xF020 - 0xF02F)
+	uint8_t m_scsi_bdid;      // Bus Device ID (Host=0x80 / ID 7)
+	uint8_t m_scsi_sctl;      // SPC Control Register
+	uint8_t m_scsi_scmd;      // SPC Command Register
+	uint8_t m_scsi_tmod;      // Transfer Mode Register
+	uint8_t m_scsi_ints;      // Interrupt Status Register
+	uint8_t m_scsi_psns;      // Phase Sense & Control Register
+	uint8_t m_scsi_ssts;      // SPC Status Register
+	uint8_t m_scsi_serr;      // SPC Error Register
+	uint8_t m_scsi_pctl;      // Phase Control Register
+	uint8_t m_scsi_mbc;       // Modified Byte Counter
+	uint8_t m_scsi_dreg;      // Data Register / FIFO Port
+	uint8_t m_scsi_temp;      // Temporary Register
+	uint32_t m_scsi_tc;       // 24-bit Transfer Counter (TCH, TCM, TCL)
+
+	// SCSI Bus Phase & CDB State Machine
+	int m_scsi_bus_phase;     // 0=FREE, 1=ARBITRATION, 2=SELECTION, 3=COMMAND, 4=DATA_IN, 5=DATA_OUT, 6=STATUS, 7=MESSAGE_IN
+	int m_scsi_target_id;     // 0..6
+	uint8_t m_scsi_cdb[16];   // Command Descriptor Block buffer
+	int m_scsi_cdb_idx;
+	int m_scsi_cdb_len;
+	std::vector<uint8_t> m_scsi_data_buffer;
+	size_t m_scsi_data_idx;
+	uint8_t m_scsi_target_status; // Good = 0x00, Check Condition = 0x02, Busy = 0x08
+
+	// SCSI Media Files / Images
+	std::vector<uint8_t> m_scsi_disk_images[7]; // ID 0..6
+	bool m_scsi_device_present[7];
+	uint8_t m_scsi_device_type[7]; // 0=Direct Access (HD), 5=CD-ROM, 7=MO
+
 	void s760_mem(address_map &map) ATTR_COLD;
 
 	uint8_t mmio_r(offs_t offset);
 	void mmio_w(offs_t offset, uint8_t data);
+
+	uint8_t fdc_r(offs_t offset);
+	void fdc_w(offs_t offset, uint8_t data);
+	void fdc_execute_command();
+	void fdc_start_result_phase(int length);
+	void fdc_load_disk_image(const std::string &path);
+
+	uint8_t scsi_r(offs_t offset);
+	void scsi_w(offs_t offset, uint8_t data);
+	void scsi_execute_cdb();
+	void scsi_init_devices();
+	void scsi_load_device_image(int id, const std::string &path, uint8_t dev_type);
 
 	uint8_t vdp_r(offs_t offset);
 	void vdp_w(offs_t offset, uint8_t data);
@@ -929,8 +1046,37 @@ void s760_state::machine_start()
 	memset(m_vdp_regs, 0, sizeof(m_vdp_regs));
 	memset(m_mmio, 0, sizeof(m_mmio));
 
-	m_mmio[0] = 0x80; // Gate array ready status bit
-	m_mmio[2] = 0x20; // Gate array status bit 5
+	// Timer & IRQ Subsystem
+	m_timer_60hz = timer_alloc(FUNC(s760_state::timer_60hz_tick), this);
+	m_irq_pending = 0;
+	m_irq_mask = 0x3B; // Unmask Bit 0 (Timer), Bit 1 (FDC), Bit 3 (SCSI), Bit 4 (VDP), Bit 5 (MIDI)
+	m_int_line_asserted = false;
+
+	m_ga_ctrl = 0x80;
+	m_ga_status = 0x04; // Bit 2 = Peripheral Bus Ready
+	m_simm_bank = 0x00;
+	m_ga_chip_select = 0x00;
+	m_dsp_cmd_latch = 0x00;
+	m_dsp_addr_latch = 0x00;
+	m_eeprom_latch = 0x00;
+	m_eeprom_do = 0x00;
+	m_peripherals_enabled = false;
+
+	// Initialize AK93C45 EEPROM with factory configuration
+	memset(m_eeprom_data, 0, sizeof(m_eeprom_data));
+	m_eeprom_data[0] = 0x414A; // Roland Magic ID
+	m_eeprom_data[1] = 0x0224; // Version 2.24
+	m_eeprom_data[2] = 0x0007; // SCSI ID 7 (Host)
+	m_eeprom_data[3] = 0x01B8; // Master Tune: 440.0 Hz
+	m_eeprom_data[4] = 0x0008; // LCD Contrast: 8
+	m_eeprom_data[5] = 0x0002; // Mouse Speed: 2x
+	m_eeprom_shift_reg = 0;
+	m_eeprom_bit_count = 0;
+	m_eeprom_state = 0;
+	m_eeprom_cs = false;
+	m_eeprom_clk = false;
+	m_eeprom_di = false;
+	m_eeprom_ewen = false;
 
 	m_vdp_addr = 0;
 	m_cur_x = 350;
@@ -967,17 +1113,947 @@ void s760_state::machine_start()
 	m_last_gotek_prev = false;
 	m_last_gotek_next = false;
 	m_last_gotek_select = false;
+
+	// Initialize NEC uPD72068 FDC State Machine
+	m_fdc_msr = 0x80; // RQM=1, DIO=0 (Ready for CPU command)
+	m_fdc_dor = 0x0C; // Motors OFF, DMA Enabled, Drive 0
+	m_fdc_ccr = 0x00; // 500 kbps (1.44M HD)
+	m_fdc_dir = 0x00;
+	m_fdc_st0 = 0x00;
+	m_fdc_st1 = 0x00;
+	m_fdc_st2 = 0x00;
+	m_fdc_st3 = 0x28; // Ready + Two-Sided
+	m_fdc_cmd_idx = 0;
+	m_fdc_cmd_len = 0;
+	m_fdc_res_idx = 0;
+	m_fdc_res_len = 0;
+	m_fdc_phase = 0; // CMD/IDLE
+	m_fdc_current_cyl[0] = 0;
+	m_fdc_current_cyl[1] = 0;
+	m_fdc_current_head[0] = 0;
+	m_fdc_current_head[1] = 0;
+	m_fdc_current_sector[0] = 1;
+	m_fdc_current_sector[1] = 1;
+	m_fdc_selected_drive = 0;
+	m_fdc_motor_on[0] = false;
+	m_fdc_motor_on[1] = false;
+	m_fdc_disk_inserted = true;
+	m_fdc_data_byte_idx = 0;
+	m_fdc_data_byte_total = 0;
+	m_fdc_sector_offset = 0;
+	fdc_load_disk_image(m_gotek_paths[0]);
+
+	// Initialize Fujitsu MB89352A SCSI SPC State Machine (0xF020 - 0xF02F)
+	m_scsi_bdid = 0x80; // Host ID 7 (Bit 7 = 1)
+	m_scsi_sctl = 0x00;
+	m_scsi_scmd = 0x00;
+	m_scsi_tmod = 0x00;
+	m_scsi_ints = 0x00;
+	m_scsi_psns = 0x00; // Bus Free
+	m_scsi_ssts = 0x28; // DREG Empty, TC Zero
+	m_scsi_serr = 0x00;
+	m_scsi_pctl = 0x00;
+	m_scsi_mbc = 0x00;
+	m_scsi_dreg = 0x00;
+	m_scsi_temp = 0x00;
+	m_scsi_tc = 0;
+	m_scsi_bus_phase = 0; // FREE
+	m_scsi_target_id = 0;
+	m_scsi_cdb_idx = 0;
+	m_scsi_cdb_len = 6;
+	m_scsi_data_idx = 0;
+	m_scsi_target_status = 0x00;
+	scsi_init_devices();
 }
 
 void s760_state::machine_reset()
 {
 	m_vdp_addr = 0;
+	m_ga_status = 0x04; // Bus Ready
+	m_irq_pending = 0;
+	m_int_line_asserted = false;
+	m_maincpu->set_input_line(MCS96_INT_VECTOR, CLEAR_LINE);
+
+	// Start 60Hz periodic system timer (software tick / HSO comparator pump)
+	m_timer_60hz->adjust(attotime::from_hz(60), 0, attotime::from_hz(60));
+
+	// Reset FDC
+	m_fdc_msr = 0x80;
+	m_fdc_phase = 0;
+	m_fdc_cmd_idx = 0;
+	m_fdc_res_idx = 0;
+	m_fdc_current_cyl[0] = 0;
+	m_fdc_current_cyl[1] = 0;
+
+	// Reset SCSI SPC
+	m_scsi_bus_phase = 0;
+	m_scsi_ints = 0x00;
+	m_scsi_psns = 0x00;
+	m_scsi_ssts = 0x28;
+	m_scsi_tc = 0;
+
+	m_peripherals_enabled = true;
 	m_sound->trigger_preview(m_selected_row);
+}
+
+void s760_state::fdc_load_disk_image(const std::string &path)
+{
+	m_fdc_disk_image.clear();
+	std::ifstream file(path, std::ios::binary);
+	if (file.is_open())
+	{
+		file.seekg(0, std::ios::end);
+		size_t sz = file.tellg();
+		file.seekg(0, std::ios::beg);
+		m_fdc_disk_image.resize(sz);
+		file.read(reinterpret_cast<char *>(m_fdc_disk_image.data()), sz);
+		m_fdc_disk_inserted = true;
+	}
+	else
+	{
+		// Default to formatted 1.44MB floppy (80 tracks * 2 heads * 18 sectors * 512 bytes = 1,474,560 bytes)
+		m_fdc_disk_image.resize(1474560, 0x00);
+		m_fdc_disk_inserted = true;
+	}
+}
+
+uint8_t s760_state::fdc_r(offs_t offset)
+{
+	uint8_t val = 0x00;
+	switch (offset & 0x07)
+	{
+		case 0x00: // Main Status Register (MSR)
+			val = m_fdc_msr;
+			break;
+
+		case 0x01: // Data FIFO Port (Data Register)
+		{
+			if (m_fdc_phase == 2) // RESULT phase
+			{
+				if (m_fdc_res_idx < m_fdc_res_len)
+				{
+					val = m_fdc_res_buffer[m_fdc_res_idx++];
+					if (m_fdc_res_idx >= m_fdc_res_len)
+					{
+						// Return to IDLE
+						m_fdc_phase = 0;
+						m_fdc_cmd_idx = 0;
+						m_fdc_msr = 0x80; // RQM=1, DIO=0
+					}
+				}
+			}
+			else if (m_fdc_phase == 1) // EXECUTION (Data Read)
+			{
+				if (m_fdc_data_byte_idx < m_fdc_data_byte_total && m_fdc_sector_offset + m_fdc_data_byte_idx < m_fdc_disk_image.size())
+				{
+					val = m_fdc_disk_image[m_fdc_sector_offset + m_fdc_data_byte_idx++];
+					if (m_fdc_data_byte_idx >= m_fdc_data_byte_total)
+					{
+						// Finished sector read -> Transition to Result phase
+						fdc_start_result_phase(7);
+					}
+				}
+				else
+				{
+					fdc_start_result_phase(7);
+				}
+			}
+			break;
+		}
+
+		case 0x07: // Digital Input Register (DIR)
+			val = m_fdc_disk_inserted ? 0x00 : 0x80; // Bit 7: Disk Change (0 = disk present)
+			break;
+
+		default:
+			val = 0x00;
+			break;
+	}
+	return val;
+}
+
+void s760_state::fdc_w(offs_t offset, uint8_t data)
+{
+	switch (offset & 0x07)
+	{
+		case 0x01: // Data FIFO Port (Data Register)
+		{
+			if (m_fdc_phase == 0) // COMMAND phase
+			{
+				if (m_fdc_cmd_idx == 0)
+				{
+					m_fdc_cmd_buffer[0] = data;
+					m_fdc_cmd_idx = 1;
+					uint8_t opcode = data & 0x1F;
+					switch (opcode)
+					{
+						case 0x03: m_fdc_cmd_len = 3; break; // Specify
+						case 0x04: m_fdc_cmd_len = 2; break; // Sense Drive Status
+						case 0x07: m_fdc_cmd_len = 2; break; // Recalibrate
+						case 0x08: m_fdc_cmd_len = 1; break; // Sense Interrupt Status
+						case 0x0F: m_fdc_cmd_len = 3; break; // Seek
+						case 0x0A: m_fdc_cmd_len = 2; break; // Read ID
+						case 0x06: m_fdc_cmd_len = 9; break; // Read Data
+						case 0x05: m_fdc_cmd_len = 9; break; // Write Data
+						case 0x0D: m_fdc_cmd_len = 6; break; // Format Track
+						case 0x18: m_fdc_cmd_len = 1; break; // Version
+						default:   m_fdc_cmd_len = 1; break;
+					}
+					m_fdc_msr = 0x90; // RQM=1, CB=1
+				}
+				else
+				{
+					m_fdc_cmd_buffer[m_fdc_cmd_idx++] = data;
+				}
+
+				if (m_fdc_cmd_idx >= m_fdc_cmd_len)
+				{
+					fdc_execute_command();
+				}
+			}
+			else if (m_fdc_phase == 1) // EXECUTION (Data Write)
+			{
+				if (m_fdc_data_byte_idx < m_fdc_data_byte_total && m_fdc_sector_offset + m_fdc_data_byte_idx < m_fdc_disk_image.size())
+				{
+					m_fdc_disk_image[m_fdc_sector_offset + m_fdc_data_byte_idx++] = data;
+					if (m_fdc_data_byte_idx >= m_fdc_data_byte_total)
+					{
+						fdc_start_result_phase(7);
+					}
+				}
+				else
+				{
+					fdc_start_result_phase(7);
+				}
+			}
+			break;
+		}
+
+		case 0x02: // Digital Output Register (DOR)
+		{
+			m_fdc_dor = data;
+			m_fdc_selected_drive = data & 0x03;
+			m_fdc_motor_on[0] = (data & 0x10) != 0;
+			m_fdc_motor_on[1] = (data & 0x20) != 0;
+			bool reset_asserted = (data & 0x04) == 0;
+			if (reset_asserted)
+			{
+				// FDC software reset
+				m_fdc_phase = 0;
+				m_fdc_cmd_idx = 0;
+				m_fdc_msr = 0x80;
+				m_fdc_st0 = 0xC0; // Reset condition
+				trigger_irq(IRQ_FDC);
+			}
+			break;
+		}
+
+		case 0x03: // Configuration Control / Data Rate Select (CCR)
+		case 0x07:
+			m_fdc_ccr = data & 0x03; // 0=500kbps (HD), 1=300kbps, 2=250kbps (DD)
+			break;
+
+		default:
+			break;
+	}
+}
+
+void s760_state::fdc_start_result_phase(int length)
+{
+	m_fdc_phase = 2;
+	m_fdc_res_idx = 0;
+	m_fdc_res_len = length;
+	m_fdc_msr = 0xD0; // RQM=1, DIO=1, CB=1
+	trigger_irq(IRQ_FDC);
+}
+
+void s760_state::fdc_execute_command()
+{
+	uint8_t opcode = m_fdc_cmd_buffer[0] & 0x1F;
+	switch (opcode)
+	{
+		case 0x03: // SPECIFY
+			m_fdc_phase = 0;
+			m_fdc_cmd_idx = 0;
+			m_fdc_msr = 0x80;
+			break;
+
+		case 0x07: // RECALIBRATE (Seek to Cyl 0)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			m_fdc_current_cyl[drv] = 0;
+			m_fdc_st0 = 0x20 | drv; // Seek Complete
+			m_fdc_phase = 0;
+			m_fdc_cmd_idx = 0;
+			m_fdc_msr = 0x80 | (1 << drv); // RQM=1, Drive Busy
+			trigger_irq(IRQ_FDC);
+			break;
+		}
+
+		case 0x0F: // SEEK (Step to target cylinder)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int target_cyl = m_fdc_cmd_buffer[2];
+			m_fdc_current_cyl[drv] = std::clamp(target_cyl, 0, 79);
+			m_fdc_st0 = 0x20 | drv; // Seek Complete
+			m_fdc_phase = 0;
+			m_fdc_cmd_idx = 0;
+			m_fdc_msr = 0x80 | (1 << drv);
+			trigger_irq(IRQ_FDC);
+			break;
+		}
+
+		case 0x08: // SENSE INTERRUPT STATUS
+		{
+			int drv = m_fdc_selected_drive & 1;
+			m_fdc_res_buffer[0] = m_fdc_st0;
+			m_fdc_res_buffer[1] = (uint8_t)m_fdc_current_cyl[drv];
+			fdc_start_result_phase(2);
+			clear_irq(IRQ_FDC);
+			break;
+		}
+
+		case 0x04: // SENSE DRIVE STATUS
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int head = (m_fdc_cmd_buffer[1] >> 2) & 1;
+			uint8_t st3 = 0x28 | (head << 2) | drv; // Ready (Bit 5) + Two-Sided (Bit 3)
+			if (m_fdc_current_cyl[drv] == 0)
+				st3 |= 0x10; // Track 0 (Bit 4)
+			m_fdc_res_buffer[0] = st3;
+			fdc_start_result_phase(1);
+			break;
+		}
+
+		case 0x0A: // READ ID
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int head = (m_fdc_cmd_buffer[1] >> 2) & 1;
+			m_fdc_res_buffer[0] = 0x00 | drv | (head << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)m_fdc_current_cyl[drv];
+			m_fdc_res_buffer[4] = (uint8_t)head;
+			m_fdc_res_buffer[5] = 1; // Sector 1
+			m_fdc_res_buffer[6] = 2; // Sector size 512 (128 << 2)
+			fdc_start_result_phase(7);
+			break;
+		}
+
+		case 0x06: // READ DATA (MFM)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int c = m_fdc_cmd_buffer[2];
+			int h = m_fdc_cmd_buffer[3];
+			int r = m_fdc_cmd_buffer[4];
+			int n = m_fdc_cmd_buffer[5];
+
+			int spt = (m_fdc_ccr == 0x00) ? 18 : 9; // 18 sectors/track (HD) or 9 (DD)
+			int lba = (c * 2 + (h & 1)) * spt + std::clamp(r - 1, 0, spt - 1);
+			m_fdc_sector_offset = lba * 512;
+			m_fdc_data_byte_idx = 0;
+			m_fdc_data_byte_total = 512;
+
+			// Prepare result status for after read
+			m_fdc_res_buffer[0] = 0x00 | drv | (h << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)c;
+			m_fdc_res_buffer[4] = (uint8_t)h;
+			m_fdc_res_buffer[5] = (uint8_t)(r + 1);
+			m_fdc_res_buffer[6] = (uint8_t)n;
+
+			m_fdc_phase = 1; // Execution phase
+			m_fdc_msr = 0xF0; // RQM=1, DIO=1, NonDMA=1, CB=1
+			break;
+		}
+
+		case 0x05: // WRITE DATA (MFM)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int c = m_fdc_cmd_buffer[2];
+			int h = m_fdc_cmd_buffer[3];
+			int r = m_fdc_cmd_buffer[4];
+			int n = m_fdc_cmd_buffer[5];
+
+			int spt = (m_fdc_ccr == 0x00) ? 18 : 9;
+			int lba = (c * 2 + (h & 1)) * spt + std::clamp(r - 1, 0, spt - 1);
+			m_fdc_sector_offset = lba * 512;
+			m_fdc_data_byte_idx = 0;
+			m_fdc_data_byte_total = 512;
+
+			m_fdc_res_buffer[0] = 0x00 | drv | (h << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)c;
+			m_fdc_res_buffer[4] = (uint8_t)h;
+			m_fdc_res_buffer[5] = (uint8_t)(r + 1);
+			m_fdc_res_buffer[6] = (uint8_t)n;
+
+			m_fdc_phase = 1;
+			m_fdc_msr = 0xB0; // RQM=1, DIO=0, NonDMA=1, CB=1
+			break;
+		}
+
+		case 0x0D: // FORMAT TRACK
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int h = (m_fdc_cmd_buffer[1] >> 2) & 1;
+			m_fdc_res_buffer[0] = 0x00 | drv | (h << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)m_fdc_current_cyl[drv];
+			m_fdc_res_buffer[4] = (uint8_t)h;
+			m_fdc_res_buffer[5] = 1;
+			m_fdc_res_buffer[6] = 2;
+			fdc_start_result_phase(7);
+			break;
+		}
+
+		case 0x18: // VERSION (NEC uPD72068 / 765B)
+			m_fdc_res_buffer[0] = 0x90; // Enhanced Controller Flag
+			fdc_start_result_phase(1);
+			break;
+
+		default:
+			m_fdc_res_buffer[0] = 0x80; // Invalid Command (ST0 Bit 7..6 = 10)
+			fdc_start_result_phase(1);
+			break;
+	}
+}
+
+void s760_state::scsi_init_devices()
+{
+	for (int id = 0; id < 7; id++)
+	{
+		m_scsi_device_present[id] = false;
+		m_scsi_device_type[id] = (id == 1 || id == 3 || id == 6) ? 5 : (id == 4 ? 7 : 0);
+		m_scsi_disk_images[id].clear();
+	}
+
+	// ID 0: Primary Hard Disk (512 bytes/sector)
+	scsi_load_device_image(0, "roms/SCSI/HD00_512.img", 0);
+	if (!m_scsi_device_present[0]) scsi_load_device_image(0, "roms/SCSI/HD0.img", 0);
+	if (!m_scsi_device_present[0]) scsi_load_device_image(0, "roms/SCSI/HD0.hda", 0);
+
+	// ID 1: CD-ROM (2048 bytes/sector)
+	scsi_load_device_image(1, "roms/SCSI/CD1.iso", 5);
+	if (!m_scsi_device_present[1]) scsi_load_device_image(1, "roms/SCSI/CD10_2048.iso", 5);
+	if (!m_scsi_device_present[1]) scsi_load_device_image(1, "roms/SCSI/akai.iso", 5);
+	if (!m_scsi_device_present[1]) scsi_load_device_image(1, "roms/SCSI/sound.iso", 5);
+
+	// ID 2: Secondary Hard Disk
+	scsi_load_device_image(2, "roms/SCSI/HD20_512.img", 0);
+	if (!m_scsi_device_present[2]) scsi_load_device_image(2, "roms/SCSI/HD2.img", 0);
+
+	// ID 3: Secondary CD-ROM
+	scsi_load_device_image(3, "roms/SCSI/CD30_2048.iso", 5);
+	if (!m_scsi_device_present[3]) scsi_load_device_image(3, "roms/SCSI/CD3.iso", 5);
+
+	// ID 4: Magneto-Optical (MO) Drive
+	scsi_load_device_image(4, "roms/SCSI/MO40_512.img", 7);
+
+	// ID 5: Hard Disk 5
+	scsi_load_device_image(5, "roms/SCSI/HD50_512.img", 0);
+
+	// ID 6: CD-ROM 6
+	scsi_load_device_image(6, "roms/SCSI/CD60_2048.iso", 5);
+
+	// Ensure ID 0 and ID 1 are always ready with at least standard formatted media
+	if (!m_scsi_device_present[0])
+	{
+		m_scsi_disk_images[0].resize(10 * 1024 * 1024, 0x00); // 10MB blank hard disk
+		m_scsi_device_present[0] = true;
+	}
+	if (!m_scsi_device_present[1])
+	{
+		m_scsi_disk_images[1].resize(10 * 1024 * 1024, 0x00); // 10MB sample CD-ROM
+		m_scsi_device_present[1] = true;
+	}
+}
+
+void s760_state::scsi_load_device_image(int id, const std::string &path, uint8_t dev_type)
+{
+	std::ifstream file(path, std::ios::binary);
+	if (file.is_open())
+	{
+		file.seekg(0, std::ios::end);
+		size_t sz = file.tellg();
+		file.seekg(0, std::ios::beg);
+		m_scsi_disk_images[id].resize(sz);
+		file.read(reinterpret_cast<char *>(m_scsi_disk_images[id].data()), sz);
+		m_scsi_device_present[id] = true;
+		m_scsi_device_type[id] = dev_type;
+	}
+}
+
+uint8_t s760_state::scsi_r(offs_t offset)
+{
+	uint8_t val = 0x00;
+	switch (offset & 0x0F)
+	{
+		case 0x00: // BDID
+			val = m_scsi_bdid;
+			break;
+
+		case 0x01: // SCTL
+			val = m_scsi_sctl;
+			break;
+
+		case 0x02: // SCMD
+			val = m_scsi_scmd;
+			break;
+
+		case 0x03: // TMOD
+			val = m_scsi_tmod;
+			break;
+
+		case 0x04: // INTS (Interrupt Status Register)
+			val = m_scsi_ints;
+			m_scsi_ints = 0x00; // Clear on read
+			clear_irq(IRQ_SCSI);
+			break;
+
+		case 0x05: // PSNS (Phase Sense & Bus Lines)
+			val = m_scsi_psns;
+			break;
+
+		case 0x06: // SSTS (SPC Status Register)
+			val = m_scsi_ssts;
+			break;
+
+		case 0x07: // SERR
+			val = m_scsi_serr;
+			break;
+
+		case 0x08: // PCTL
+			val = m_scsi_pctl;
+			break;
+
+		case 0x09: // MBC
+			val = m_scsi_mbc;
+			break;
+
+		case 0x0A: // DREG (Data Register / FIFO)
+		{
+			if (m_scsi_bus_phase == 4) // DATA_IN phase
+			{
+				if (m_scsi_data_idx < m_scsi_data_buffer.size())
+				{
+					val = m_scsi_data_buffer[m_scsi_data_idx++];
+					if (m_scsi_data_idx >= m_scsi_data_buffer.size())
+					{
+						// Transition to STATUS phase (011)
+						m_scsi_bus_phase = 6;
+						m_scsi_psns = 0x8B; // BSY=1, REQ=1, Status Phase (011)
+						m_scsi_ints = 0x08; // Service Required
+						trigger_irq(IRQ_SCSI);
+					}
+				}
+				else
+				{
+					m_scsi_bus_phase = 6;
+					m_scsi_psns = 0x8B;
+					m_scsi_ints = 0x08;
+					trigger_irq(IRQ_SCSI);
+				}
+			}
+			else if (m_scsi_bus_phase == 6) // STATUS phase
+			{
+				val = m_scsi_target_status; // 0x00 = Good Status
+				// Transition to MESSAGE_IN phase (111)
+				m_scsi_bus_phase = 7;
+				m_scsi_psns = 0x8F; // BSY=1, REQ=1, Message In Phase (111)
+				m_scsi_ints = 0x08;
+				trigger_irq(IRQ_SCSI);
+			}
+			else if (m_scsi_bus_phase == 7) // MESSAGE_IN phase
+			{
+				val = 0x00; // COMMAND COMPLETE (0x00)
+				// Transition to BUS FREE
+				m_scsi_bus_phase = 0;
+				m_scsi_psns = 0x00; // Bus Free
+				m_scsi_ints = 0x01; // Command Complete
+				trigger_irq(IRQ_SCSI);
+			}
+			break;
+		}
+
+		case 0x0B: // TEMP
+			val = m_scsi_temp;
+			break;
+
+		case 0x0C: // TCH
+			val = (uint8_t)((m_scsi_tc >> 16) & 0xFF);
+			break;
+
+		case 0x0D: // TCM
+			val = (uint8_t)((m_scsi_tc >> 8) & 0xFF);
+			break;
+
+		case 0x0E: // TCL
+			val = (uint8_t)(m_scsi_tc & 0xFF);
+			break;
+
+		default:
+			break;
+	}
+	return val;
+}
+
+void s760_state::scsi_w(offs_t offset, uint8_t data)
+{
+	switch (offset & 0x0F)
+	{
+		case 0x00: // BDID
+			m_scsi_bdid = data;
+			break;
+
+		case 0x01: // SCTL
+			m_scsi_sctl = data;
+			if (data & 0x01) // RST (Reset Bus)
+			{
+				m_scsi_bus_phase = 0;
+				m_scsi_psns = 0x00;
+				m_scsi_ints = 0x80; // Reset condition
+				trigger_irq(IRQ_SCSI);
+			}
+			break;
+
+		case 0x02: // SCMD
+		{
+			m_scsi_scmd = data;
+			uint8_t cmd = data & 0x07;
+			if (cmd == 0x01 || cmd == 0x02 || cmd == 0x03) // Select without/with ATN
+			{
+				int target_id = -1;
+				uint8_t mask = (m_scsi_temp != 0) ? m_scsi_temp : m_scsi_dreg;
+				for (int i = 0; i < 7; i++)
+				{
+					if (mask & (1 << i))
+					{
+						target_id = i;
+						break;
+					}
+				}
+				if (target_id < 0) target_id = m_scsi_target_id;
+
+				if (target_id >= 0 && target_id < 7 && m_scsi_device_present[target_id])
+				{
+					m_scsi_target_id = target_id;
+					m_scsi_bus_phase = 3; // COMMAND phase
+					m_scsi_psns = 0x8A;   // BSY=1, REQ=1, Command Phase (010)
+					m_scsi_cdb_idx = 0;
+					m_scsi_cdb_len = 6;
+					m_scsi_ints = 0x02;   // Selection Done
+					trigger_irq(IRQ_SCSI);
+				}
+				else
+				{
+					m_scsi_bus_phase = 0; // FREE
+					m_scsi_psns = 0x00;
+					m_scsi_ints = 0x04;   // Timeout
+					trigger_irq(IRQ_SCSI);
+				}
+			}
+			else if (cmd == 0x00) // Bus Release
+			{
+				m_scsi_bus_phase = 0;
+				m_scsi_psns = 0x00;
+				m_scsi_ints = 0x20; // Disconnected
+			}
+			break;
+		}
+
+		case 0x03: // TMOD
+			m_scsi_tmod = data;
+			break;
+
+		case 0x04: // INTS (Write to Clear)
+			m_scsi_ints &= ~data;
+			if (m_scsi_ints == 0)
+				clear_irq(IRQ_SCSI);
+			break;
+
+		case 0x08: // PCTL
+			m_scsi_pctl = data;
+			break;
+
+		case 0x0A: // DREG (Data Register / FIFO write)
+		{
+			m_scsi_dreg = data;
+			if (m_scsi_bus_phase == 3) // COMMAND phase
+			{
+				m_scsi_cdb[m_scsi_cdb_idx++] = data;
+				if (m_scsi_cdb_idx == 1)
+				{
+					uint8_t op = data;
+					if (op >= 0x20 && op <= 0x3F) m_scsi_cdb_len = 10;
+					else if (op >= 0xA0 && op <= 0xBF) m_scsi_cdb_len = 12;
+					else m_scsi_cdb_len = 6;
+				}
+
+				if (m_scsi_cdb_idx >= m_scsi_cdb_len)
+				{
+					scsi_execute_cdb();
+				}
+			}
+			else if (m_scsi_bus_phase == 5) // DATA_OUT phase (Write data)
+			{
+				if (m_scsi_data_idx < m_scsi_data_buffer.size())
+				{
+					m_scsi_data_buffer[m_scsi_data_idx++] = data;
+					if (m_scsi_data_idx >= m_scsi_data_buffer.size())
+					{
+						// Finished writing payload
+						m_scsi_bus_phase = 6; // STATUS phase
+						m_scsi_psns = 0x8B;
+						m_scsi_ints = 0x08;
+						trigger_irq(IRQ_SCSI);
+					}
+				}
+			}
+			break;
+		}
+
+		case 0x0B: // TEMP
+			m_scsi_temp = data;
+			break;
+
+		case 0x0C: // TCH
+			m_scsi_tc = (m_scsi_tc & 0x00FFFF) | (data << 16);
+			break;
+
+		case 0x0D: // TCM
+			m_scsi_tc = (m_scsi_tc & 0xFF00FF) | (data << 8);
+			break;
+
+		case 0x0E: // TCL
+			m_scsi_tc = (m_scsi_tc & 0xFFFF00) | data;
+			break;
+
+		default:
+			break;
+	}
+}
+
+void s760_state::scsi_execute_cdb()
+{
+	uint8_t opcode = m_scsi_cdb[0];
+	int target = m_scsi_target_id;
+	uint8_t dev_type = m_scsi_device_type[target];
+	m_scsi_target_status = 0x00; // Good status
+
+	switch (opcode)
+	{
+		case 0x00: // TEST UNIT READY
+			m_scsi_bus_phase = 6; // STATUS phase (011)
+			m_scsi_psns = 0x8B;   // BSY=1, REQ=1, Status (011)
+			m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI);
+			break;
+
+		case 0x12: // INQUIRY
+		{
+			int alloc_len = m_scsi_cdb[4];
+			if (alloc_len == 0) alloc_len = 36;
+			m_scsi_data_buffer.resize(36, 0);
+
+			m_scsi_data_buffer[0] = dev_type; // 0=HD, 5=CD-ROM, 7=MO
+			m_scsi_data_buffer[1] = (dev_type == 5 || dev_type == 7) ? 0x80 : 0x00; // Removable media
+			m_scsi_data_buffer[2] = 0x02; // SCSI-2
+			m_scsi_data_buffer[3] = 0x02; // Standard response
+			m_scsi_data_buffer[4] = 31;   // Additional length
+
+			const char *vendor = (dev_type == 0) ? "ROLAND  " : "SONY    ";
+			const char *product = (dev_type == 0) ? "S-760 HARD DISK " : ((dev_type == 5) ? "CD-ROM CDU-8012 " : "SMO-S501        ");
+			memcpy(&m_scsi_data_buffer[8], vendor, 8);
+			memcpy(&m_scsi_data_buffer[16], product, 16);
+			memcpy(&m_scsi_data_buffer[32], "1.00", 4);
+
+			if ((size_t)alloc_len < m_scsi_data_buffer.size())
+				m_scsi_data_buffer.resize(alloc_len);
+
+			m_scsi_data_idx = 0;
+			m_scsi_bus_phase = 4; // DATA_IN phase (001)
+			m_scsi_psns = 0x89;   // BSY=1, REQ=1, Data In (001)
+			m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI);
+			break;
+		}
+
+		case 0x03: // REQUEST SENSE
+		{
+			m_scsi_data_buffer.resize(18, 0);
+			m_scsi_data_buffer[0] = 0x70; // Current error
+			m_scsi_data_buffer[2] = 0x00; // Sense Key: No Error
+			m_scsi_data_buffer[7] = 10;   // Additional sense length
+			m_scsi_data_idx = 0;
+			m_scsi_bus_phase = 4; // DATA_IN
+			m_scsi_psns = 0x89;
+			m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI);
+			break;
+		}
+
+		case 0x25: // READ CAPACITY (10)
+		{
+			m_scsi_data_buffer.resize(8, 0);
+			uint32_t block_size = (dev_type == 5) ? 2048 : 512;
+			size_t img_sz = m_scsi_disk_images[target].size();
+			uint32_t last_lba = (img_sz > 0) ? (uint32_t)(img_sz / block_size - 1) : 20479;
+
+			m_scsi_data_buffer[0] = (last_lba >> 24) & 0xFF;
+			m_scsi_data_buffer[1] = (last_lba >> 16) & 0xFF;
+			m_scsi_data_buffer[2] = (last_lba >> 8) & 0xFF;
+			m_scsi_data_buffer[3] = last_lba & 0xFF;
+
+			m_scsi_data_buffer[4] = (block_size >> 24) & 0xFF;
+			m_scsi_data_buffer[5] = (block_size >> 16) & 0xFF;
+			m_scsi_data_buffer[6] = (block_size >> 8) & 0xFF;
+			m_scsi_data_buffer[7] = block_size & 0xFF;
+
+			m_scsi_data_idx = 0;
+			m_scsi_bus_phase = 4; // DATA_IN
+			m_scsi_psns = 0x89;
+			m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI);
+			break;
+		}
+
+		case 0x08: // READ (6)
+		case 0x28: // READ (10)
+		{
+			uint32_t lba = 0;
+			uint32_t count = 0;
+			if (opcode == 0x08)
+			{
+				lba = ((m_scsi_cdb[1] & 0x1F) << 16) | (m_scsi_cdb[2] << 8) | m_scsi_cdb[3];
+				count = m_scsi_cdb[4];
+				if (count == 0) count = 256;
+			}
+			else
+			{
+				lba = (m_scsi_cdb[2] << 24) | (m_scsi_cdb[3] << 16) | (m_scsi_cdb[4] << 8) | m_scsi_cdb[5];
+				count = (m_scsi_cdb[7] << 8) | m_scsi_cdb[8];
+			}
+
+			uint32_t block_size = (dev_type == 5) ? 2048 : 512;
+			size_t byte_offset = (size_t)lba * block_size;
+			size_t byte_count = (size_t)count * block_size;
+
+			m_scsi_data_buffer.resize(byte_count, 0);
+			if (byte_offset + byte_count <= m_scsi_disk_images[target].size())
+			{
+				memcpy(m_scsi_data_buffer.data(), &m_scsi_disk_images[target][byte_offset], byte_count);
+			}
+
+			m_scsi_data_idx = 0;
+			m_scsi_bus_phase = 4; // DATA_IN
+			m_scsi_psns = 0x89;
+			m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI);
+			break;
+		}
+
+		case 0x0A: // WRITE (6)
+		case 0x2A: // WRITE (10)
+		{
+			uint32_t count = (opcode == 0x0A) ? (m_scsi_cdb[4] == 0 ? 256 : m_scsi_cdb[4]) : ((m_scsi_cdb[7] << 8) | m_scsi_cdb[8]);
+			uint32_t block_size = (dev_type == 5) ? 2048 : 512;
+			m_scsi_data_buffer.resize((size_t)count * block_size, 0);
+			m_scsi_data_idx = 0;
+			m_scsi_bus_phase = 5; // DATA_OUT
+			m_scsi_psns = 0x88;   // BSY=1, REQ=1, Data Out (000)
+			m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI);
+			break;
+		}
+
+		default:
+			m_scsi_bus_phase = 6; // STATUS
+			m_scsi_psns = 0x8B;
+			m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI);
+			break;
+	}
+}
+
+TIMER_CALLBACK_MEMBER(s760_state::timer_60hz_tick)
+{
+	trigger_irq(IRQ_TIMER_60HZ);
+}
+
+void s760_state::trigger_irq(uint8_t irq_mask)
+{
+	m_irq_pending |= (irq_mask & ~0x04);
+	m_ga_status = (m_ga_status & 0x04) | m_irq_pending;
+	check_irq_state();
+}
+
+void s760_state::clear_irq(uint8_t irq_mask)
+{
+	m_irq_pending &= ~irq_mask;
+	m_ga_status = (m_ga_status & 0x04) | m_irq_pending;
+	check_irq_state();
+}
+
+void s760_state::check_irq_state()
+{
+	bool should_assert = (m_irq_pending & m_irq_mask) != 0;
+	if (should_assert != m_int_line_asserted)
+	{
+		m_int_line_asserted = should_assert;
+		m_maincpu->set_input_line(MCS96_INT_VECTOR, should_assert ? ASSERT_LINE : CLEAR_LINE);
+	}
 }
 
 uint8_t s760_state::mmio_r(offs_t offset)
 {
-	uint8_t val = m_mmio[offset & 0x0F];
+	uint8_t val = 0x00;
+	switch (offset & 0x1F)
+	{
+		case 0x00: // Gate Array Control / Bus Reset Latch
+			val = m_ga_ctrl | 0x80;
+			break;
+
+		case 0x01: // Gate Array Master Status & Peripheral IRQ Flags
+			val = (m_ga_status & 0x04) | m_irq_pending; // Bit 2 = Bus Ready, other bits = IRQs
+			break;
+
+		case 0x02: // SIMM Memory Bank Selector (32MB address space)
+			val = m_simm_bank;
+			break;
+
+		case 0x03: // Front Panel Rotary Encoder & Switch Matrix
+			val = (uint8_t)(m_gotek_encoder_angle & 0x0F);
+			break;
+
+		case 0x04: // Peripheral Chip Select Status
+			val = m_ga_chip_select;
+			break;
+
+		case 0x06: // DSP Command Latch
+			val = m_dsp_cmd_latch;
+			break;
+
+		case 0x08: // DSP Address Latch
+			val = m_dsp_addr_latch;
+			break;
+
+		case 0x0E: // EEPROM Latch
+			val = m_eeprom_latch;
+			break;
+
+		case 0x10: // EEPROM Serial Data Out (DO)
+			val = m_eeprom_do & 0x01;
+			break;
+
+		default:
+			val = m_mmio[offset & 0x0F];
+			break;
+	}
+
 	logerror("[MMIO R] 0xF0%02X => 0x%02X\n", offset, val);
 	return val;
 }
@@ -986,6 +2062,122 @@ void s760_state::mmio_w(offs_t offset, uint8_t data)
 {
 	logerror("[MMIO W] 0xF0%02X <= 0x%02X\n", offset, data);
 	m_mmio[offset & 0x0F] = data;
+
+	switch (offset & 0x1F)
+	{
+		case 0x00: // Control & Reset latch
+			m_ga_ctrl = data;
+			if (data & 0x01)
+				m_peripherals_enabled = true;
+			break;
+
+		case 0x01: // Clear IRQ Ack (write-to-clear)
+			clear_irq(data);
+			break;
+
+		case 0x02: // SIMM Bank switch (0..15)
+			m_simm_bank = data & 0x0F;
+			break;
+
+		case 0x04: // Peripheral Chip Select
+			m_ga_chip_select = data;
+			break;
+
+		case 0x06: // DSP Command Latch
+			m_dsp_cmd_latch = data;
+			break;
+
+		case 0x08: // DSP Address Latch
+			m_dsp_addr_latch = data;
+			break;
+
+		case 0x0E: // AK93C45 EEPROM Bit-Bang (Bit 0=CS, Bit 1=CLK, Bit 2=DI)
+		{
+			m_eeprom_latch = data;
+			bool new_cs = (data & 0x01) != 0;
+			bool new_clk = (data & 0x02) != 0;
+			bool new_di = (data & 0x04) != 0;
+
+			if (!new_cs)
+			{
+				m_eeprom_cs = false;
+				m_eeprom_state = 0;
+				m_eeprom_bit_count = 0;
+				m_eeprom_do = 0;
+			}
+			else
+			{
+				m_eeprom_cs = true;
+				if (!m_eeprom_clk && new_clk) // Rising clock edge
+				{
+					if (m_eeprom_state == 0) // Waiting for Start Bit (1)
+					{
+						if (new_di)
+						{
+							m_eeprom_state = 1; // READING_CMD
+							m_eeprom_shift_reg = 0;
+							m_eeprom_bit_count = 0;
+						}
+					}
+					else if (m_eeprom_state == 1) // Reading 8-bit Opcode + Address
+					{
+						m_eeprom_shift_reg = (m_eeprom_shift_reg << 1) | (new_di ? 1 : 0);
+						m_eeprom_bit_count++;
+						if (m_eeprom_bit_count == 8)
+						{
+							uint8_t op = (m_eeprom_shift_reg >> 6) & 0x03;
+							uint8_t addr = m_eeprom_shift_reg & 0x3F;
+							if (op == 0x02) // READ (1 0 + A5..A0)
+							{
+								m_eeprom_shift_reg = m_eeprom_data[addr & 0x3F];
+								m_eeprom_bit_count = 0;
+								m_eeprom_state = 3; // SHIFTING_OUT
+								m_eeprom_do = 0; // Dummy 0 bit
+							}
+							else if (op == 0x01) // WRITE (0 1 + A5..A0)
+							{
+								m_eeprom_bit_count = 0;
+								m_eeprom_shift_reg = 0;
+								m_eeprom_state = 2; // READING_DATA
+							}
+							else if (op == 0x00) // EWEN / EWDS
+							{
+								if ((addr & 0x30) == 0x30) m_eeprom_ewen = true;
+								else if ((addr & 0x30) == 0x00) m_eeprom_ewen = false;
+								m_eeprom_state = 0;
+							}
+						}
+					}
+					else if (m_eeprom_state == 2) // Reading 16-bit Write Data
+					{
+						m_eeprom_shift_reg = (m_eeprom_shift_reg << 1) | (new_di ? 1 : 0);
+						m_eeprom_bit_count++;
+						if (m_eeprom_bit_count == 16)
+						{
+							uint8_t addr = m_mmio[0x0E] & 0x3F;
+							if (m_eeprom_ewen)
+								m_eeprom_data[addr & 0x3F] = (uint16_t)m_eeprom_shift_reg;
+							m_eeprom_state = 0;
+						}
+					}
+					else if (m_eeprom_state == 3) // Shifting out 16-bit Read Data
+					{
+						m_eeprom_do = (m_eeprom_shift_reg & 0x8000) ? 1 : 0;
+						m_eeprom_shift_reg <<= 1;
+						m_eeprom_bit_count++;
+						if (m_eeprom_bit_count == 16)
+							m_eeprom_state = 0;
+					}
+				}
+				m_eeprom_clk = new_clk;
+				m_eeprom_di = new_di;
+			}
+			break;
+		}
+
+		default:
+			break;
+	}
 }
 
 uint8_t s760_state::vdp_r(offs_t offset)
@@ -1893,6 +3085,7 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 				m_gotek_mounted_idx = m_gotek_selected_idx;
 				m_gotek_activity_timer = 40;
 				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
+				fdc_load_disk_image(m_gotek_paths[m_gotek_mounted_idx]);
 			}
 		}
 		// Gotek Rotary Encoder Dial (center at 592, 276, radius 16):
@@ -1904,6 +3097,7 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 				m_gotek_mounted_idx = m_gotek_selected_idx;
 				m_gotek_activity_timer = 40;
 				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
+				fdc_load_disk_image(m_gotek_paths[m_gotek_mounted_idx]);
 			}
 			else if (m_cur_y < 276) // Turn left
 			{
@@ -2029,6 +3223,9 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 		}
 	}
 
+	// 9. Trigger RFSC16A VDP VBlank Interrupt (Bit 4)
+	trigger_irq(IRQ_VDP_VBLANK);
+
 	return 0;
 }
 
@@ -2038,7 +3235,9 @@ void s760_state::s760_mem(address_map &map)
 	map(0x2080, 0xDFFF).rom().region("maincpu", 0x4800);                         // OS Code segment (S760224.IMG offset 0x4800)
 	map(0xD000, 0xD0FF).rw(FUNC(s760_state::vdp_r), FUNC(s760_state::vdp_w));   // Roland RFSC16A VDP registers & VRAM port
 	map(0xE000, 0xEFF7).ram().share("lcd_vram");                                 // LCD Display VRAM (SED1335)
-	map(0xF000, 0xF00F).rw(FUNC(s760_state::mmio_r), FUNC(s760_state::mmio_w)); // Gate array MMIO latches
+	map(0xF000, 0xF01F).rw(FUNC(s760_state::mmio_r), FUNC(s760_state::mmio_w)); // Gate array MMIO latches
+	map(0xF020, 0xF02F).rw(FUNC(s760_state::scsi_r), FUNC(s760_state::scsi_w)); // Fujitsu MB89352A SCSI SPC registers
+	map(0xF040, 0xF047).rw(FUNC(s760_state::fdc_r), FUNC(s760_state::fdc_w));   // NEC uPD72068 FDC registers
 }
 
 static INPUT_PORTS_START( s760 )
