@@ -84,28 +84,26 @@ export default function App() {
   const handleTogglePower = useCallback(() => {
     setState((prev) => {
       const nextPower = !prev.powerOn;
-      emitHardwareEvent('POWER_STATE_CHANGE', { powerOn: nextPower });
       return {
         ...prev,
         powerOn: nextPower,
       };
     });
-  }, [emitHardwareEvent]);
+    emitHardwareEvent('POWER_STATE_CHANGE', { powerOn: !state.powerOn });
+  }, [emitHardwareEvent, state.powerOn]);
 
   // Master Volume Change
   const handleSetVolume = useCallback(
     (vol: number) => {
-      setState((prev) => {
-        const clamped = Math.max(0, Math.min(100, vol));
-        const angle = -135 + (clamped / 100) * 270;
-        soundFx.setVolume(clamped / 100);
-        return {
-          ...prev,
-          volume: clamped,
-          volumeAngle: angle,
-        };
-      });
-      emitHardwareEvent('VOLUME_CHANGE', { volume: vol });
+      const clamped = Math.max(0, Math.min(100, vol));
+      const angle = -135 + (clamped / 100) * 270;
+      soundFx.setVolume(clamped / 100);
+      setState((prev) => ({
+        ...prev,
+        volume: clamped,
+        volumeAngle: angle,
+      }));
+      emitHardwareEvent('VOLUME_CHANGE', { volume: clamped });
     },
     [emitHardwareEvent]
   );
@@ -183,7 +181,7 @@ export default function App() {
     if (state.mode === 'DISK') {
       handleMountDisk();
     }
-  }, [emitHardwareEvent, state.mode]);
+  }, [emitHardwareEvent, state.mode, handleMountDisk]);
 
   // Exit Button
   const handleExit = useCallback(() => {
@@ -196,35 +194,38 @@ export default function App() {
     (fIndex: number) => {
       emitHardwareEvent('SOFT_KEY', { key: `F${fIndex + 1}`, mode: state.mode });
 
-      setState((prev) => {
-        if (prev.mode === 'SAMPLE') {
-          if (fIndex === 0) {
-            triggerAudition();
-            return prev;
-          }
-          if (fIndex === 1) {
-            const nextZoom = prev.sampleZoom === 1 ? 4 : prev.sampleZoom === 4 ? 16 : 1;
-            return { ...prev, sampleZoom: nextZoom };
-          }
-        } else if (prev.mode === 'DISK') {
-          if (fIndex === 0) {
-            handleMountDisk();
-            return prev;
-          }
-          if (fIndex === 4) {
-            handleToggleUsb();
-            return prev;
-          }
-        } else if (prev.mode === 'SYSTEM') {
-          if (fIndex === 3) {
-            const nextColor = prev.backlightColor === 'emerald' ? 'amber' : 'emerald';
-            return { ...prev, backlightColor: nextColor };
-          }
+      if (state.mode === 'SAMPLE') {
+        if (fIndex === 0) {
+          triggerAudition();
+          return;
         }
-        return prev;
-      });
+        if (fIndex === 1) {
+          setState((prev) => ({
+            ...prev,
+            sampleZoom: prev.sampleZoom === 1 ? 4 : prev.sampleZoom === 4 ? 16 : 1,
+          }));
+          return;
+        }
+      } else if (state.mode === 'DISK') {
+        if (fIndex === 0) {
+          handleMountDisk();
+          return;
+        }
+        if (fIndex === 4) {
+          handleToggleUsb();
+          return;
+        }
+      } else if (state.mode === 'SYSTEM') {
+        if (fIndex === 3) {
+          setState((prev) => ({
+            ...prev,
+            backlightColor: prev.backlightColor === 'emerald' ? 'amber' : 'emerald',
+          }));
+          return;
+        }
+      }
     },
-    [emitHardwareEvent, state.mode]
+    [emitHardwareEvent, state.mode, triggerAudition, handleMountDisk, handleToggleUsb]
   );
 
   // Gotek Disk Selection
@@ -304,21 +305,20 @@ export default function App() {
 
   // Toggle USB Flash Drive
   const handleToggleUsb = useCallback(() => {
-    setState((prev) => {
-      const nextInserted = !prev.gotek.usbInserted;
-      soundFx.playClick('button');
-      emitHardwareEvent('GOTEK_USB_TOGGLE', { inserted: nextInserted });
-      return {
-        ...prev,
-        gotek: {
-          ...prev.gotek,
-          usbInserted: nextInserted,
-          mountedImageIndex: nextInserted ? prev.gotek.mountedImageIndex : null,
-          statusText: nextInserted ? 'READY' : 'NO USB',
-        },
-      };
-    });
-  }, [emitHardwareEvent]);
+    const nextInserted = !state.gotek.usbInserted;
+    soundFx.playClick('button');
+    emitHardwareEvent('GOTEK_USB_TOGGLE', { inserted: nextInserted });
+
+    setState((prev) => ({
+      ...prev,
+      gotek: {
+        ...prev.gotek,
+        usbInserted: nextInserted,
+        mountedImageIndex: nextInserted ? prev.gotek.mountedImageIndex : null,
+        statusText: nextInserted ? 'READY' : 'NO USB',
+      },
+    }));
+  }, [emitHardwareEvent, state.gotek.usbInserted]);
 
   // Audition Patch Sound
   const triggerAudition = useCallback(() => {

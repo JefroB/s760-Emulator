@@ -10,7 +10,7 @@ interface OP760MonitorProps {
   onEventEmit: (type: string, payload: any) => void;
 }
 
-// Complete 8x8 Roland OP-760 ROM Bitmap Font Table from S-760 VDP firmware
+// 8x8 Roland OP-760 Simulation Font Table (UI Behavioral Model)
 const FONT_GLYPHS: Record<string, number[]> = {
   // Uppercase
   A: [0x3c, 0x66, 0x66, 0x7e, 0x66, 0x66, 0x66, 0x00],

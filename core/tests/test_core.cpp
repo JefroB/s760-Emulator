@@ -347,6 +347,110 @@ void test_sample_recorder() {
     std::cout << "  -> S-760 Sample Recorder & Live Sampling Tests PASSED!" << std::endl;
 }
 
+void test_adversarial_remediation() {
+    std::cout << "[TEST] Adversarial Code Review Regression & Hardening Tests..." << std::endl;
+
+    // 1. Finding 1 & 3: Mount replacement over dirty image without self-deadlock & LBA bounds
+    fs::create_directories("test_adversarial");
+    std::string path_a = "test_adversarial/disk_a.img";
+    std::string path_b = "test_adversarial/disk_b.img";
+    {
+        std::ofstream fa(path_a, std::ios::binary);
+        std::vector<uint8_t> buf_a(512 * 10, 0xAA);
+        fa.write(reinterpret_cast<const char*>(buf_a.data()), buf_a.size());
+
+        std::ofstream fb(path_b, std::ios::binary);
+        std::vector<uint8_t> buf_b(512 * 10, 0xBB);
+        fb.write(reinterpret_cast<const char*>(buf_b.data()), buf_b.size());
+    }
+
+    s760::FileBackedBlockDevice dev(s760::DeviceType::Floppy_35_HD, 512);
+    assert(dev.mount_file(path_a));
+    assert(dev.get_status().is_mounted);
+
+    // Modify sector 0 to make it dirty
+    uint8_t mod_sec[512] = {0x12, 0x34};
+    assert(dev.write_sector(0, mod_sec));
+    assert(dev.get_status().is_dirty);
+
+    // Mount disk_b over disk_a: must not deadlock and must flush disk_a cleanly
+    assert(dev.mount_file(path_b));
+    assert(dev.get_status().is_mounted);
+    assert(dev.get_status().image_name == "disk_b.img");
+    assert(!dev.get_status().is_dirty);
+
+    // Verify disk_a was flushed
+    {
+        std::ifstream fa(path_a, std::ios::binary);
+        uint8_t check[2];
+        fa.read(reinterpret_cast<char*>(check), 2);
+        assert(check[0] == 0x12 && check[1] == 0x34);
+    }
+
+    // Overflow LBA bounds test (UINT64_MAX, extreme values)
+    uint8_t lba_buf[512];
+    assert(!dev.read_sector(UINT64_MAX, lba_buf));
+    assert(!dev.write_sector(UINT64_MAX, lba_buf));
+    assert(!dev.read_sector(0x1000000000ULL, lba_buf));
+
+    // Reject empty file (0 bytes) and sub-sector file (128 bytes)
+    std::string empty_path = "test_adversarial/empty.img";
+    std::string sub_path = "test_adversarial/sub.img";
+    {
+        std::ofstream fe(empty_path, std::ios::binary);
+        std::ofstream fs_sub(sub_path, std::ios::binary);
+        std::vector<uint8_t> sub_buf(128, 0xFF);
+        fs_sub.write(reinterpret_cast<const char*>(sub_buf.data()), sub_buf.size());
+    }
+    assert(!dev.mount_file(empty_path));
+    assert(!dev.mount_file(sub_path));
+
+    // 2. Finding 4 & 5: Roland & Akai parser and builder hardening
+    // Akai build_iso(0) must reject safely
+    bool akai_zero_threw = false;
+    try {
+        s760::AkaiS1000Disk akai_disk;
+        auto iso = akai_disk.build_iso(0);
+    } catch (const std::invalid_argument&) {
+        akai_zero_threw = true;
+    }
+    assert(akai_zero_threw);
+
+    // Roland build_image(100) must reject safely
+    bool roland_small_threw = false;
+    try {
+        s760::RolandS760Disk r_disk;
+        auto img = r_disk.build_image(100);
+    } catch (const std::invalid_argument&) {
+        roland_small_threw = true;
+    }
+    assert(roland_small_threw);
+
+    // Malformed counts 0xFFFFFFFF in Roland header
+    std::vector<uint8_t> malformed_img(512, 0);
+    std::memcpy(&malformed_img[0], "S770 MR25A", 10);
+    uint32_t bad_count = 0xFFFFFFFF;
+    std::memcpy(&malformed_img[0x60], &bad_count, 4);
+    std::memcpy(&malformed_img[0x64], &bad_count, 4);
+    auto malformed_info = s760::RolandS760Disk::parse(malformed_img.data(), malformed_img.size());
+    assert(malformed_info.patches.empty());
+    assert(malformed_info.samples.empty());
+
+    // 3. Finding 24: Audio underrun telemetry tracking
+    s760::S760LibretroHost host;
+    std::vector<float> dummy_out_l(500, 0.0f);
+    std::vector<float> dummy_out_r(500, 0.0f);
+    size_t read_frames = host.read_audio_frames(dummy_out_l.data(), dummy_out_r.data(), 500);
+    assert(read_frames == 0); // Nothing in ring buffer yet
+    auto stats = host.get_audio_stats();
+    assert(stats.underrun_count == 1);
+    assert(stats.underrun_frames == 500);
+
+    // Clean up
+    fs::remove_all("test_adversarial");
+    std::cout << "  -> Adversarial Code Review Regression Tests PASSED!" << std::endl;
+}
+
 int main() {
     std::cout << "========================================" << std::endl;
     std::cout << "  Roland S-760 C++ Core Test Suite      " << std::endl;
@@ -359,6 +463,7 @@ int main() {
         test_drive_manager();
         test_libretro_host();
         test_sample_recorder();
+        test_adversarial_remediation();
     } catch (const std::exception& e) {
         std::cerr << "[FATAL TEST ERROR] " << e.what() << std::endl;
         return 1;

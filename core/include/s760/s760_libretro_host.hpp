@@ -11,12 +11,16 @@
 #include <queue>
 #include <functional>
 
+#include <atomic>
+
 namespace s760 {
 
 struct AudioBufferStats {
     size_t available_frames = 0;
     size_t capacity_frames = 0;
     double sample_rate = 44100.0;
+    uint64_t underrun_count = 0;
+    uint64_t underrun_frames = 0;
 };
 
 struct VideoFrame {
@@ -118,6 +122,9 @@ private:
     size_t m_audio_write_pos = 0;
     size_t m_audio_frames_available = 0;
     static constexpr size_t AUDIO_BUFFER_FRAMES = 65536;
+
+    std::atomic<uint64_t> m_underrun_count{0};
+    std::atomic<uint64_t> m_underrun_frames{0};
 
     // Video Frame
     mutable std::mutex m_video_mutex;

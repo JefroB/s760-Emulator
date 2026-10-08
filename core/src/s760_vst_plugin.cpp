@@ -115,14 +115,18 @@ void S760VstPlugin::process_replacing(float** inputs, float** outputs, int32_t s
         m_host.feed_audio_input(in_l, in_r, needed);
     }
 
-    // Run emulator frames to maintain audio generation
-    while (m_host.is_system_running() && m_host.get_audio_stats().available_frames < needed) {
+    // Run emulator frames to maintain audio generation with bounded loop
+    constexpr int MAX_EMULATOR_FRAMES_PER_BLOCK = 4;
+    int emu_ticks = 0;
+    while (m_host.is_system_running() && 
+           m_host.get_audio_stats().available_frames < needed &&
+           emu_ticks < MAX_EMULATOR_FRAMES_PER_BLOCK) {
         m_host.run_frame();
+        emu_ticks++;
     }
 
     if (m_scratch_left.size() < needed) {
-        m_scratch_left.resize(needed);
-        m_scratch_right.resize(needed);
+        needed = static_cast<uint32_t>(m_scratch_left.size());
     }
 
     m_host.read_audio_frames(m_scratch_left.data(), m_scratch_right.data(), needed);
@@ -163,8 +167,13 @@ void S760VstPlugin::build_state_chunk() {
     // Floppy path
     auto f_stat = m_host.get_drive_manager().get_floppy_status();
     uint32_t f_len = static_cast<uint32_t>(f_stat.file_path.size());
-    const uint8_t* fl_ptr = reinterpret_cast<const uint8_t*>(&f_len);
-    m_chunk_data.insert(m_chunk_data.end(), fl_ptr, fl_ptr + 4);
+    uint8_t fl_buf[4] = {
+        static_cast<uint8_t>(f_len & 0xFF),
+        static_cast<uint8_t>((f_len >> 8) & 0xFF),
+        static_cast<uint8_t>((f_len >> 16) & 0xFF),
+        static_cast<uint8_t>((f_len >> 24) & 0xFF)
+    };
+    m_chunk_data.insert(m_chunk_data.end(), fl_buf, fl_buf + 4);
     if (f_len > 0) {
         m_chunk_data.insert(m_chunk_data.end(), f_stat.file_path.begin(), f_stat.file_path.end());
     }
@@ -173,8 +182,13 @@ void S760VstPlugin::build_state_chunk() {
     for (int i = 0; i < 7; ++i) {
         auto scsi_stat = m_host.get_drive_manager().get_scsi_status(i);
         uint32_t s_len = static_cast<uint32_t>(scsi_stat.file_path.size());
-        const uint8_t* sl_ptr = reinterpret_cast<const uint8_t*>(&s_len);
-        m_chunk_data.insert(m_chunk_data.end(), sl_ptr, sl_ptr + 4);
+        uint8_t sl_buf[4] = {
+            static_cast<uint8_t>(s_len & 0xFF),
+            static_cast<uint8_t>((s_len >> 8) & 0xFF),
+            static_cast<uint8_t>((s_len >> 16) & 0xFF),
+            static_cast<uint8_t>((s_len >> 24) & 0xFF)
+        };
+        m_chunk_data.insert(m_chunk_data.end(), sl_buf, sl_buf + 4);
         if (s_len > 0) {
             m_chunk_data.insert(m_chunk_data.end(), scsi_stat.file_path.begin(), scsi_stat.file_path.end());
         }
@@ -183,8 +197,13 @@ void S760VstPlugin::build_state_chunk() {
     // Core savestate
     auto state = m_host.save_state();
     uint32_t state_len = static_cast<uint32_t>(state.size());
-    const uint8_t* st_ptr = reinterpret_cast<const uint8_t*>(&state_len);
-    m_chunk_data.insert(m_chunk_data.end(), st_ptr, st_ptr + 4);
+    uint8_t st_buf[4] = {
+        static_cast<uint8_t>(state_len & 0xFF),
+        static_cast<uint8_t>((state_len >> 8) & 0xFF),
+        static_cast<uint8_t>((state_len >> 16) & 0xFF),
+        static_cast<uint8_t>((state_len >> 24) & 0xFF)
+    };
+    m_chunk_data.insert(m_chunk_data.end(), st_buf, st_buf + 4);
     if (state_len > 0) {
         m_chunk_data.insert(m_chunk_data.end(), state.begin(), state.end());
     }
@@ -199,37 +218,60 @@ bool S760VstPlugin::restore_state_chunk(const uint8_t* data, size_t size) {
     if (offset + 4 > size) return false;
 
     // Floppy path
-    uint32_t f_len = 0;
-    std::memcpy(&f_len, data + offset, 4);
+    uint32_t f_len = static_cast<uint32_t>(data[offset]) |
+                     (static_cast<uint32_t>(data[offset + 1]) << 8) |
+                     (static_cast<uint32_t>(data[offset + 2]) << 16) |
+                     (static_cast<uint32_t>(data[offset + 3]) << 24);
     offset += 4;
-    if (f_len > 0 && offset + f_len <= size) {
-        std::string f_path(reinterpret_cast<const char*>(data + offset), f_len);
+    if (f_len > 4096 || offset + f_len > size) return false;
+    std::string f_path;
+    if (f_len > 0) {
+        f_path.assign(reinterpret_cast<const char*>(data + offset), f_len);
         offset += f_len;
-        m_host.get_drive_manager().mount_floppy(f_path);
     }
 
     // SCSI paths
+    std::string s_paths[7];
     for (int i = 0; i < 7; ++i) {
         if (offset + 4 > size) return false;
-        uint32_t s_len = 0;
-        std::memcpy(&s_len, data + offset, 4);
+        uint32_t s_len = static_cast<uint32_t>(data[offset]) |
+                         (static_cast<uint32_t>(data[offset + 1]) << 8) |
+                         (static_cast<uint32_t>(data[offset + 2]) << 16) |
+                         (static_cast<uint32_t>(data[offset + 3]) << 24);
         offset += 4;
-        if (s_len > 0 && offset + s_len <= size) {
-            std::string s_path(reinterpret_cast<const char*>(data + offset), s_len);
+        if (s_len > 4096 || offset + s_len > size) return false;
+        if (s_len > 0) {
+            s_paths[i].assign(reinterpret_cast<const char*>(data + offset), s_len);
             offset += s_len;
-            m_host.get_drive_manager().mount_scsi_device(i, s_path, DeviceType::HardDisk_SCSI);
         }
     }
 
     // Core savestate
+    std::vector<uint8_t> st_data;
     if (offset + 4 <= size) {
-        uint32_t state_len = 0;
-        std::memcpy(&state_len, data + offset, 4);
+        uint32_t state_len = static_cast<uint32_t>(data[offset]) |
+                             (static_cast<uint32_t>(data[offset + 1]) << 8) |
+                             (static_cast<uint32_t>(data[offset + 2]) << 16) |
+                             (static_cast<uint32_t>(data[offset + 3]) << 24);
         offset += 4;
-        if (state_len > 0 && offset + state_len <= size) {
-            std::vector<uint8_t> st(data + offset, data + offset + state_len);
-            m_host.load_state(st);
+        if (state_len > 64 * 1024 * 1024 || offset + state_len > size) return false;
+        if (state_len > 0) {
+            st_data.assign(data + offset, data + offset + state_len);
+            offset += state_len;
         }
+    }
+
+    // Atomic application
+    if (!f_path.empty()) {
+        m_host.get_drive_manager().mount_floppy(f_path);
+    }
+    for (int i = 0; i < 7; ++i) {
+        if (!s_paths[i].empty()) {
+            m_host.get_drive_manager().mount_scsi_device(i, s_paths[i], DeviceType::HardDisk_SCSI);
+        }
+    }
+    if (!st_data.empty()) {
+        m_host.load_state(st_data);
     }
 
     return true;

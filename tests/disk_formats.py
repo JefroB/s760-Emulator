@@ -138,17 +138,18 @@ class RolandS760Disk:
                 lend = struct.unpack_from("<I", data, offset + 0x1A)[0]
                 root_k = data[offset + 0x1E]
                 slen = struct.unpack_from("<I", data, offset + 0x20)[0]
-                pcm = data[offset + 256:offset + 256 + slen] if offset + 256 + slen <= len(data) else b""
-                parsed_samples.append({
-                    "id": sid,
-                    "name": sname,
-                    "sample_rate": srate,
-                    "loop_start": lstart,
-                    "loop_end": lend,
-                    "root_key": root_k,
-                    "data": pcm,
-                    "length": slen
-                })
+                if slen > 0 and (slen % 2 == 0) and (offset + 256 + slen <= len(data)):
+                    pcm = data[offset + 256:offset + 256 + slen]
+                    parsed_samples.append({
+                        "id": sid,
+                        "name": sname,
+                        "sample_rate": srate,
+                        "loop_start": lstart,
+                        "loop_end": lend,
+                        "root_key": root_k,
+                        "data": pcm,
+                        "length": slen
+                    })
                 offset += 256 + ((slen + 511) & ~511)
 
         return {
@@ -224,6 +225,8 @@ class AkaiS1000Disk:
         })
 
     def build_iso(self, total_mb=4) -> bytes:
+        if total_mb is None or total_mb <= 0:
+            raise ValueError("Invalid ISO capacity (total_mb must be > 0)")
         total_bytes = total_mb * 1024 * 1024
         img = bytearray(total_bytes)
 

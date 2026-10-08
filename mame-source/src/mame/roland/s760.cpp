@@ -445,10 +445,12 @@ void s760_sound_device::populate_factory_waveforms()
 					}
 					else
 					{
-						uint32_t num_patches = 0, num_samples = 0;
 						file.seekg(0x60, std::ios::beg);
-						file.read(reinterpret_cast<char *>(&num_patches), 4);
-						file.read(reinterpret_cast<char *>(&num_samples), 4);
+						uint32_t num_patches = 0, num_samples = 0;
+						uint8_t count_buf[8] = {0};
+						file.read(reinterpret_cast<char *>(count_buf), 8);
+						num_patches = static_cast<uint32_t>(count_buf[0]) | (static_cast<uint32_t>(count_buf[1]) << 8) | (static_cast<uint32_t>(count_buf[2]) << 16) | (static_cast<uint32_t>(count_buf[3]) << 24);
+						num_samples = static_cast<uint32_t>(count_buf[4]) | (static_cast<uint32_t>(count_buf[5]) << 8) | (static_cast<uint32_t>(count_buf[6]) << 16) | (static_cast<uint32_t>(count_buf[7]) << 24);
 
 						size_t cur_offset = 0x10000; // Sector 128 (64KB offset for Sample Blocks)
 						uint32_t word_dest = 0;
@@ -456,29 +458,37 @@ void s760_sound_device::populate_factory_waveforms()
 						for (uint32_t s_idx = 0; s_idx < num_samples && s_idx < 16; s_idx++)
 						{
 							file.seekg(cur_offset, std::ios::beg);
-							char s_hdr[256] = {0};
-							file.read(s_hdr, 256);
+							uint8_t s_hdr[256] = {0};
+							file.read(reinterpret_cast<char *>(s_hdr), 256);
+							if (file.gcount() != 256) break;
 
 							SampleDesc desc;
 							memset(desc.name, 0, sizeof(desc.name));
 							memcpy(desc.name, &s_hdr[0x02], 16);
-							desc.sample_rate = *reinterpret_cast<uint32_t *>(&s_hdr[0x12]);
-							desc.loop_start = *reinterpret_cast<uint32_t *>(&s_hdr[0x16]);
-							desc.loop_end = *reinterpret_cast<uint32_t *>(&s_hdr[0x1A]);
-							desc.root_key = static_cast<uint8_t>(s_hdr[0x1E]);
-							uint32_t data_len_bytes = *reinterpret_cast<uint32_t *>(&s_hdr[0x20]);
+							desc.sample_rate = static_cast<uint32_t>(s_hdr[0x12]) | (static_cast<uint32_t>(s_hdr[0x13]) << 8) | (static_cast<uint32_t>(s_hdr[0x14]) << 16) | (static_cast<uint32_t>(s_hdr[0x15]) << 24);
+							desc.loop_start = static_cast<uint32_t>(s_hdr[0x16]) | (static_cast<uint32_t>(s_hdr[0x17]) << 8) | (static_cast<uint32_t>(s_hdr[0x18]) << 16) | (static_cast<uint32_t>(s_hdr[0x19]) << 24);
+							desc.loop_end = static_cast<uint32_t>(s_hdr[0x1A]) | (static_cast<uint32_t>(s_hdr[0x1B]) << 8) | (static_cast<uint32_t>(s_hdr[0x1C]) << 16) | (static_cast<uint32_t>(s_hdr[0x1D]) << 24);
+							desc.root_key = s_hdr[0x1E];
+							uint32_t data_len_bytes = static_cast<uint32_t>(s_hdr[0x20]) | (static_cast<uint32_t>(s_hdr[0x21]) << 8) | (static_cast<uint32_t>(s_hdr[0x22]) << 16) | (static_cast<uint32_t>(s_hdr[0x23]) << 24);
+
+							if (data_len_bytes == 0 || (data_len_bytes % 2 != 0)) {
+								cur_offset += 256 + ((data_len_bytes + 511) & ~511);
+								continue;
+							}
 
 							desc.wave_offset = word_dest;
 							desc.length = data_len_bytes / sizeof(int16_t);
 							desc.loop_mode = (desc.loop_end > desc.loop_start) ? 1 : 0;
 
-							if (word_dest + desc.length <= m_wave_ram.size())
+							if (word_dest <= m_wave_ram.size() && desc.length <= m_wave_ram.size() - word_dest)
 							{
 								file.read(reinterpret_cast<char *>(&m_wave_ram[word_dest]), data_len_bytes);
-								word_dest += desc.length;
+								if (static_cast<uint32_t>(file.gcount()) == data_len_bytes) {
+									word_dest += desc.length;
+									m_samples.push_back(desc);
+								}
 							}
 
-							m_samples.push_back(desc);
 							cur_offset += 256 + ((data_len_bytes + 511) & ~511);
 						}
 					}
@@ -497,6 +507,11 @@ void s760_sound_device::populate_factory_waveforms()
 		return;
 
 	// 2. High-Fidelity Multi-Harmonic Acoustic & Analog Instruments (Fallback Synthesis)
+	// Deterministic LCG pseudo-random generator for reproducible noise transients across runs
+	auto lcg_noise = [seed = 19930760u]() mutable -> double {
+		seed = seed * 1664525u + 1013904223u;
+		return (static_cast<double>(seed & 0xFFFF) / 65535.0) * 2.0 - 1.0;
+	};
 
 	// Wave 1: Roland JP-8 Brass Ensemble (Dual detuned analog saws + brass formant resonance)
 	uint32_t w1_start = 0;
@@ -528,7 +543,7 @@ void s760_sound_device::populate_factory_waveforms()
 		double s3 = 0.5 * std::sin(2.0 * M_PI * 260.85 * t);
 		double s4 = 0.3 * std::sin(2.0 * M_PI * 523.26 * t);
 		double s5 = 0.2 * std::sin(2.0 * M_PI * 784.89 * t);
-		double noise = ((double)(rand() % 100) / 100.0 - 0.5) * 0.05 * std::exp(-20.0 * t); // Bow friction transient
+		double noise = lcg_noise() * 0.05 * std::exp(-20.0 * t); // Bow friction transient
 		double strings = bow_attack * (0.4 * s1 + 0.25 * s2 + 0.25 * s3 + 0.15 * s4 + 0.1 * s5 + noise);
 		m_wave_ram[w2_start + i] = (int16_t)(std::clamp(strings * 24000.0, -32767.0, 32767.0));
 	}
@@ -539,7 +554,7 @@ void s760_sound_device::populate_factory_waveforms()
 	for (uint32_t i = 0; i < w3_len; i++)
 	{
 		double t = (double)i / 44100.0;
-		double hammer = ((double)(rand() % 100) / 100.0 - 0.5) * 0.4 * std::exp(-60.0 * t); // Felt hammer knock
+		double hammer = lcg_noise() * 0.4 * std::exp(-60.0 * t); // Felt hammer knock
 		double piano = hammer;
 		for (int p = 1; p <= 12; p++)
 		{
@@ -555,7 +570,7 @@ void s760_sound_device::populate_factory_waveforms()
 	uint32_t w4_len = 44100;
 	std::vector<double> delay_line(700, 0.0);
 	for (size_t d = 0; d < delay_line.size(); d++)
-		delay_line[d] = ((double)(rand() % 1000) / 500.0 - 1.0) * std::exp(- (double)d / 120.0); // Pluck excitation
+		delay_line[d] = lcg_noise() * std::exp(- (double)d / 120.0); // Pluck excitation
 
 	double last_val = 0.0;
 	size_t ptr = 0;
