@@ -926,10 +926,45 @@ private:
 	bool m_last_gotek_next;
 	bool m_last_gotek_select;
 
+	// NEC uPD72068 Floppy Disk Controller (FDC) State Machine
+	uint8_t m_fdc_msr;
+	uint8_t m_fdc_dor;
+	uint8_t m_fdc_ccr;
+	uint8_t m_fdc_dir;
+	uint8_t m_fdc_st0;
+	uint8_t m_fdc_st1;
+	uint8_t m_fdc_st2;
+	uint8_t m_fdc_st3;
+
+	uint8_t m_fdc_cmd_buffer[16];
+	int m_fdc_cmd_idx;
+	int m_fdc_cmd_len;
+	uint8_t m_fdc_res_buffer[16];
+	int m_fdc_res_idx;
+	int m_fdc_res_len;
+	int m_fdc_phase; // 0=CMD/IDLE, 1=EXECUTION, 2=RESULT
+
+	int m_fdc_current_cyl[2];
+	int m_fdc_current_head[2];
+	int m_fdc_current_sector[2];
+	int m_fdc_selected_drive;
+	bool m_fdc_motor_on[2];
+	bool m_fdc_disk_inserted;
+	std::vector<uint8_t> m_fdc_disk_image;
+	int m_fdc_data_byte_idx;
+	int m_fdc_data_byte_total;
+	uint32_t m_fdc_sector_offset;
+
 	void s760_mem(address_map &map) ATTR_COLD;
 
 	uint8_t mmio_r(offs_t offset);
 	void mmio_w(offs_t offset, uint8_t data);
+
+	uint8_t fdc_r(offs_t offset);
+	void fdc_w(offs_t offset, uint8_t data);
+	void fdc_execute_command();
+	void fdc_start_result_phase(int length);
+	void fdc_load_disk_image(const std::string &path);
 
 	uint8_t vdp_r(offs_t offset);
 	void vdp_w(offs_t offset, uint8_t data);
@@ -1042,6 +1077,35 @@ void s760_state::machine_start()
 	m_last_gotek_prev = false;
 	m_last_gotek_next = false;
 	m_last_gotek_select = false;
+
+	// Initialize NEC uPD72068 FDC State Machine
+	m_fdc_msr = 0x80; // RQM=1, DIO=0 (Ready for CPU command)
+	m_fdc_dor = 0x0C; // Motors OFF, DMA Enabled, Drive 0
+	m_fdc_ccr = 0x00; // 500 kbps (1.44M HD)
+	m_fdc_dir = 0x00;
+	m_fdc_st0 = 0x00;
+	m_fdc_st1 = 0x00;
+	m_fdc_st2 = 0x00;
+	m_fdc_st3 = 0x28; // Ready + Two-Sided
+	m_fdc_cmd_idx = 0;
+	m_fdc_cmd_len = 0;
+	m_fdc_res_idx = 0;
+	m_fdc_res_len = 0;
+	m_fdc_phase = 0; // CMD/IDLE
+	m_fdc_current_cyl[0] = 0;
+	m_fdc_current_cyl[1] = 0;
+	m_fdc_current_head[0] = 0;
+	m_fdc_current_head[1] = 0;
+	m_fdc_current_sector[0] = 1;
+	m_fdc_current_sector[1] = 1;
+	m_fdc_selected_drive = 0;
+	m_fdc_motor_on[0] = false;
+	m_fdc_motor_on[1] = false;
+	m_fdc_disk_inserted = true;
+	m_fdc_data_byte_idx = 0;
+	m_fdc_data_byte_total = 0;
+	m_fdc_sector_offset = 0;
+	fdc_load_disk_image(m_gotek_paths[0]);
 }
 
 void s760_state::machine_reset()
@@ -1055,8 +1119,342 @@ void s760_state::machine_reset()
 	// Start 60Hz periodic system timer (software tick / HSO comparator pump)
 	m_timer_60hz->adjust(attotime::from_hz(60), 0, attotime::from_hz(60));
 
+	// Reset FDC
+	m_fdc_msr = 0x80;
+	m_fdc_phase = 0;
+	m_fdc_cmd_idx = 0;
+	m_fdc_res_idx = 0;
+	m_fdc_current_cyl[0] = 0;
+	m_fdc_current_cyl[1] = 0;
+
 	m_peripherals_enabled = true;
 	m_sound->trigger_preview(m_selected_row);
+}
+
+void s760_state::fdc_load_disk_image(const std::string &path)
+{
+	m_fdc_disk_image.clear();
+	std::ifstream file(path, std::ios::binary);
+	if (file.is_open())
+	{
+		file.seekg(0, std::ios::end);
+		size_t sz = file.tellg();
+		file.seekg(0, std::ios::beg);
+		m_fdc_disk_image.resize(sz);
+		file.read(reinterpret_cast<char *>(m_fdc_disk_image.data()), sz);
+		m_fdc_disk_inserted = true;
+	}
+	else
+	{
+		// Default to formatted 1.44MB floppy (80 tracks * 2 heads * 18 sectors * 512 bytes = 1,474,560 bytes)
+		m_fdc_disk_image.resize(1474560, 0x00);
+		m_fdc_disk_inserted = true;
+	}
+}
+
+uint8_t s760_state::fdc_r(offs_t offset)
+{
+	uint8_t val = 0x00;
+	switch (offset & 0x07)
+	{
+		case 0x00: // Main Status Register (MSR)
+			val = m_fdc_msr;
+			break;
+
+		case 0x01: // Data FIFO Port (Data Register)
+		{
+			if (m_fdc_phase == 2) // RESULT phase
+			{
+				if (m_fdc_res_idx < m_fdc_res_len)
+				{
+					val = m_fdc_res_buffer[m_fdc_res_idx++];
+					if (m_fdc_res_idx >= m_fdc_res_len)
+					{
+						// Return to IDLE
+						m_fdc_phase = 0;
+						m_fdc_cmd_idx = 0;
+						m_fdc_msr = 0x80; // RQM=1, DIO=0
+					}
+				}
+			}
+			else if (m_fdc_phase == 1) // EXECUTION (Data Read)
+			{
+				if (m_fdc_data_byte_idx < m_fdc_data_byte_total && m_fdc_sector_offset + m_fdc_data_byte_idx < m_fdc_disk_image.size())
+				{
+					val = m_fdc_disk_image[m_fdc_sector_offset + m_fdc_data_byte_idx++];
+					if (m_fdc_data_byte_idx >= m_fdc_data_byte_total)
+					{
+						// Finished sector read -> Transition to Result phase
+						fdc_start_result_phase(7);
+					}
+				}
+				else
+				{
+					fdc_start_result_phase(7);
+				}
+			}
+			break;
+		}
+
+		case 0x07: // Digital Input Register (DIR)
+			val = m_fdc_disk_inserted ? 0x00 : 0x80; // Bit 7: Disk Change (0 = disk present)
+			break;
+
+		default:
+			val = 0x00;
+			break;
+	}
+	return val;
+}
+
+void s760_state::fdc_w(offs_t offset, uint8_t data)
+{
+	switch (offset & 0x07)
+	{
+		case 0x01: // Data FIFO Port (Data Register)
+		{
+			if (m_fdc_phase == 0) // COMMAND phase
+			{
+				if (m_fdc_cmd_idx == 0)
+				{
+					m_fdc_cmd_buffer[0] = data;
+					m_fdc_cmd_idx = 1;
+					uint8_t opcode = data & 0x1F;
+					switch (opcode)
+					{
+						case 0x03: m_fdc_cmd_len = 3; break; // Specify
+						case 0x04: m_fdc_cmd_len = 2; break; // Sense Drive Status
+						case 0x07: m_fdc_cmd_len = 2; break; // Recalibrate
+						case 0x08: m_fdc_cmd_len = 1; break; // Sense Interrupt Status
+						case 0x0F: m_fdc_cmd_len = 3; break; // Seek
+						case 0x0A: m_fdc_cmd_len = 2; break; // Read ID
+						case 0x06: m_fdc_cmd_len = 9; break; // Read Data
+						case 0x05: m_fdc_cmd_len = 9; break; // Write Data
+						case 0x0D: m_fdc_cmd_len = 6; break; // Format Track
+						case 0x18: m_fdc_cmd_len = 1; break; // Version
+						default:   m_fdc_cmd_len = 1; break;
+					}
+					m_fdc_msr = 0x90; // RQM=1, CB=1
+				}
+				else
+				{
+					m_fdc_cmd_buffer[m_fdc_cmd_idx++] = data;
+				}
+
+				if (m_fdc_cmd_idx >= m_fdc_cmd_len)
+				{
+					fdc_execute_command();
+				}
+			}
+			else if (m_fdc_phase == 1) // EXECUTION (Data Write)
+			{
+				if (m_fdc_data_byte_idx < m_fdc_data_byte_total && m_fdc_sector_offset + m_fdc_data_byte_idx < m_fdc_disk_image.size())
+				{
+					m_fdc_disk_image[m_fdc_sector_offset + m_fdc_data_byte_idx++] = data;
+					if (m_fdc_data_byte_idx >= m_fdc_data_byte_total)
+					{
+						fdc_start_result_phase(7);
+					}
+				}
+				else
+				{
+					fdc_start_result_phase(7);
+				}
+			}
+			break;
+		}
+
+		case 0x02: // Digital Output Register (DOR)
+		{
+			m_fdc_dor = data;
+			m_fdc_selected_drive = data & 0x03;
+			m_fdc_motor_on[0] = (data & 0x10) != 0;
+			m_fdc_motor_on[1] = (data & 0x20) != 0;
+			bool reset_asserted = (data & 0x04) == 0;
+			if (reset_asserted)
+			{
+				// FDC software reset
+				m_fdc_phase = 0;
+				m_fdc_cmd_idx = 0;
+				m_fdc_msr = 0x80;
+				m_fdc_st0 = 0xC0; // Reset condition
+				trigger_irq(IRQ_FDC);
+			}
+			break;
+		}
+
+		case 0x03: // Configuration Control / Data Rate Select (CCR)
+		case 0x07:
+			m_fdc_ccr = data & 0x03; // 0=500kbps (HD), 1=300kbps, 2=250kbps (DD)
+			break;
+
+		default:
+			break;
+	}
+}
+
+void s760_state::fdc_start_result_phase(int length)
+{
+	m_fdc_phase = 2;
+	m_fdc_res_idx = 0;
+	m_fdc_res_len = length;
+	m_fdc_msr = 0xD0; // RQM=1, DIO=1, CB=1
+	trigger_irq(IRQ_FDC);
+}
+
+void s760_state::fdc_execute_command()
+{
+	uint8_t opcode = m_fdc_cmd_buffer[0] & 0x1F;
+	switch (opcode)
+	{
+		case 0x03: // SPECIFY
+			m_fdc_phase = 0;
+			m_fdc_cmd_idx = 0;
+			m_fdc_msr = 0x80;
+			break;
+
+		case 0x07: // RECALIBRATE (Seek to Cyl 0)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			m_fdc_current_cyl[drv] = 0;
+			m_fdc_st0 = 0x20 | drv; // Seek Complete
+			m_fdc_phase = 0;
+			m_fdc_cmd_idx = 0;
+			m_fdc_msr = 0x80 | (1 << drv); // RQM=1, Drive Busy
+			trigger_irq(IRQ_FDC);
+			break;
+		}
+
+		case 0x0F: // SEEK (Step to target cylinder)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int target_cyl = m_fdc_cmd_buffer[2];
+			m_fdc_current_cyl[drv] = std::clamp(target_cyl, 0, 79);
+			m_fdc_st0 = 0x20 | drv; // Seek Complete
+			m_fdc_phase = 0;
+			m_fdc_cmd_idx = 0;
+			m_fdc_msr = 0x80 | (1 << drv);
+			trigger_irq(IRQ_FDC);
+			break;
+		}
+
+		case 0x08: // SENSE INTERRUPT STATUS
+		{
+			int drv = m_fdc_selected_drive & 1;
+			m_fdc_res_buffer[0] = m_fdc_st0;
+			m_fdc_res_buffer[1] = (uint8_t)m_fdc_current_cyl[drv];
+			fdc_start_result_phase(2);
+			clear_irq(IRQ_FDC);
+			break;
+		}
+
+		case 0x04: // SENSE DRIVE STATUS
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int head = (m_fdc_cmd_buffer[1] >> 2) & 1;
+			uint8_t st3 = 0x28 | (head << 2) | drv; // Ready (Bit 5) + Two-Sided (Bit 3)
+			if (m_fdc_current_cyl[drv] == 0)
+				st3 |= 0x10; // Track 0 (Bit 4)
+			m_fdc_res_buffer[0] = st3;
+			fdc_start_result_phase(1);
+			break;
+		}
+
+		case 0x0A: // READ ID
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int head = (m_fdc_cmd_buffer[1] >> 2) & 1;
+			m_fdc_res_buffer[0] = 0x00 | drv | (head << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)m_fdc_current_cyl[drv];
+			m_fdc_res_buffer[4] = (uint8_t)head;
+			m_fdc_res_buffer[5] = 1; // Sector 1
+			m_fdc_res_buffer[6] = 2; // Sector size 512 (128 << 2)
+			fdc_start_result_phase(7);
+			break;
+		}
+
+		case 0x06: // READ DATA (MFM)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int c = m_fdc_cmd_buffer[2];
+			int h = m_fdc_cmd_buffer[3];
+			int r = m_fdc_cmd_buffer[4];
+			int n = m_fdc_cmd_buffer[5];
+
+			int spt = (m_fdc_ccr == 0x00) ? 18 : 9; // 18 sectors/track (HD) or 9 (DD)
+			int lba = (c * 2 + (h & 1)) * spt + std::clamp(r - 1, 0, spt - 1);
+			m_fdc_sector_offset = lba * 512;
+			m_fdc_data_byte_idx = 0;
+			m_fdc_data_byte_total = 512;
+
+			// Prepare result status for after read
+			m_fdc_res_buffer[0] = 0x00 | drv | (h << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)c;
+			m_fdc_res_buffer[4] = (uint8_t)h;
+			m_fdc_res_buffer[5] = (uint8_t)(r + 1);
+			m_fdc_res_buffer[6] = (uint8_t)n;
+
+			m_fdc_phase = 1; // Execution phase
+			m_fdc_msr = 0xF0; // RQM=1, DIO=1, NonDMA=1, CB=1
+			break;
+		}
+
+		case 0x05: // WRITE DATA (MFM)
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int c = m_fdc_cmd_buffer[2];
+			int h = m_fdc_cmd_buffer[3];
+			int r = m_fdc_cmd_buffer[4];
+			int n = m_fdc_cmd_buffer[5];
+
+			int spt = (m_fdc_ccr == 0x00) ? 18 : 9;
+			int lba = (c * 2 + (h & 1)) * spt + std::clamp(r - 1, 0, spt - 1);
+			m_fdc_sector_offset = lba * 512;
+			m_fdc_data_byte_idx = 0;
+			m_fdc_data_byte_total = 512;
+
+			m_fdc_res_buffer[0] = 0x00 | drv | (h << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)c;
+			m_fdc_res_buffer[4] = (uint8_t)h;
+			m_fdc_res_buffer[5] = (uint8_t)(r + 1);
+			m_fdc_res_buffer[6] = (uint8_t)n;
+
+			m_fdc_phase = 1;
+			m_fdc_msr = 0xB0; // RQM=1, DIO=0, NonDMA=1, CB=1
+			break;
+		}
+
+		case 0x0D: // FORMAT TRACK
+		{
+			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			int h = (m_fdc_cmd_buffer[1] >> 2) & 1;
+			m_fdc_res_buffer[0] = 0x00 | drv | (h << 2);
+			m_fdc_res_buffer[1] = 0x00;
+			m_fdc_res_buffer[2] = 0x00;
+			m_fdc_res_buffer[3] = (uint8_t)m_fdc_current_cyl[drv];
+			m_fdc_res_buffer[4] = (uint8_t)h;
+			m_fdc_res_buffer[5] = 1;
+			m_fdc_res_buffer[6] = 2;
+			fdc_start_result_phase(7);
+			break;
+		}
+
+		case 0x18: // VERSION (NEC uPD72068 / 765B)
+			m_fdc_res_buffer[0] = 0x90; // Enhanced Controller Flag
+			fdc_start_result_phase(1);
+			break;
+
+		default:
+			m_fdc_res_buffer[0] = 0x80; // Invalid Command (ST0 Bit 7..6 = 10)
+			fdc_start_result_phase(1);
+			break;
+	}
 }
 
 TIMER_CALLBACK_MEMBER(s760_state::timer_60hz_tick)
@@ -2165,6 +2563,7 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 				m_gotek_mounted_idx = m_gotek_selected_idx;
 				m_gotek_activity_timer = 40;
 				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
+				fdc_load_disk_image(m_gotek_paths[m_gotek_mounted_idx]);
 			}
 		}
 		// Gotek Rotary Encoder Dial (center at 592, 276, radius 16):
@@ -2176,6 +2575,7 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 				m_gotek_mounted_idx = m_gotek_selected_idx;
 				m_gotek_activity_timer = 40;
 				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
+				fdc_load_disk_image(m_gotek_paths[m_gotek_mounted_idx]);
 			}
 			else if (m_cur_y < 276) // Turn left
 			{
@@ -2313,7 +2713,8 @@ void s760_state::s760_mem(address_map &map)
 	map(0x2080, 0xDFFF).rom().region("maincpu", 0x4800);                         // OS Code segment (S760224.IMG offset 0x4800)
 	map(0xD000, 0xD0FF).rw(FUNC(s760_state::vdp_r), FUNC(s760_state::vdp_w));   // Roland RFSC16A VDP registers & VRAM port
 	map(0xE000, 0xEFF7).ram().share("lcd_vram");                                 // LCD Display VRAM (SED1335)
-	map(0xF000, 0xF00F).rw(FUNC(s760_state::mmio_r), FUNC(s760_state::mmio_w)); // Gate array MMIO latches
+	map(0xF000, 0xF01F).rw(FUNC(s760_state::mmio_r), FUNC(s760_state::mmio_w)); // Gate array MMIO latches
+	map(0xF040, 0xF047).rw(FUNC(s760_state::fdc_r), FUNC(s760_state::fdc_w));   // NEC uPD72068 FDC registers
 }
 
 static INPUT_PORTS_START( s760 )

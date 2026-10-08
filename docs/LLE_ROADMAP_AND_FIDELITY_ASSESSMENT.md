@@ -80,7 +80,7 @@ flowchart TD
   1. **Gate Array MMIO & Control Latches:** ✅ **DONE** — Implemented address decoding and register state machine for `0xF000 - 0xF014` (Control 0xF000, Status 0xF001, SIMM Bank 0xF002, Switch Matrix 0xF003, Chip Selects 0xF004, DSP Latches 0xF006/0xF008).
   2. **AK93C45 Serial EEPROM Emulation:** ✅ **DONE** — Implemented Microwire bit-banging protocol on `0xF00E` (CS/CLK/DI) and `0xF010` (DO) with factory calibration parameters.
   3. **Interrupt Subsystem:** ✅ **DONE** — Full interrupt vector & Gate Array IRQ delivery: 60Hz periodic timer tick (`0x01`), FDC IRQ (`0x02`), SCSI IRQ (`0x08`), VDP VBlank (`0x10`), and MIDI RX (`0x20`), with write-to-clear acknowledgement on `0xF001` and 80C196 external interrupt line assertion/deassertion.
-  4. **FDC Register Emulation:** Register-level NEC uPD72068GF floppy controller emulation with real MFM sector handshakes.
+  4. **FDC Register Emulation:** ✅ **DONE** — Register-level NEC uPD72068GF floppy disk controller emulation (`0xF040 – 0xF047`): Main Status Register (MSR), Data FIFO port, Digital Output Register (DOR), DIR disk change detection, CCR data rate selection, Seek, Recalibrate, Read ID, Sense Drive/Interrupt Status, and cycle-accurate 512-byte MFM sector Read/Write operations backed by loaded floppy images.
   5. **SCSI SPC Emulation:** Register-level Fujitsu MB89352A SCSI protocol controller with Command Descriptor Block (CDB) issuing.
 
 ---
