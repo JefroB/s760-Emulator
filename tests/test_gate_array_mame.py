@@ -1,6 +1,6 @@
 """
-tests/test_gate_array_mame.py — Dedicated regression tests for Roland Gate Array MMIO & AK93C45 EEPROM.
-Verifies cycle-accurate register behavior, status flags, SIMM memory banking, and serial EEPROM protocol.
+tests/test_gate_array_mame.py — Dedicated regression tests for Roland Gate Array MMIO, AK93C45 EEPROM, and Interrupt Subsystem.
+Verifies cycle-accurate register behavior, status flags, SIMM memory banking, serial EEPROM protocol, and 60Hz Timer / Peripheral IRQ delivery.
 """
 
 import os
@@ -11,7 +11,14 @@ DRIVER_PATH = os.path.join(ROOT, "mame-source", "src", "mame", "roland", "s760.c
 
 
 class RolandGateArraySimulator:
-    """Python reference simulator mirroring s760_state Gate Array & AK93C45 implementation."""
+    """Python reference simulator mirroring s760_state Gate Array, AK93C45, and Interrupt Subsystem implementation."""
+    IRQ_TIMER_60HZ = 0x01
+    IRQ_FDC        = 0x02
+    # Bit 2 (0x04) is Peripheral Bus Ready status flag
+    IRQ_SCSI       = 0x08
+    IRQ_VDP_VBLANK = 0x10
+    IRQ_MIDI_RX    = 0x20
+
     def __init__(self):
         self.mmio = [0] * 16
         self.ga_ctrl = 0x80
@@ -23,6 +30,11 @@ class RolandGateArraySimulator:
         self.eeprom_latch = 0x00
         self.eeprom_do = 0x00
         self.peripherals_enabled = False
+
+        # Interrupt Subsystem State
+        self.irq_pending = 0
+        self.irq_mask = 0x3B  # Bits 0, 1, 3, 4, 5 unmasked
+        self.int_line_asserted = False
 
         # 64 x 16-bit EEPROM array
         self.eeprom_data = [0] * 64
@@ -41,12 +53,29 @@ class RolandGateArraySimulator:
         self.eeprom_di = False
         self.eeprom_ewen = False
 
+    def trigger_irq(self, source_mask):
+        """Assert hardware interrupt source in Gate Array."""
+        self.irq_pending |= (source_mask & ~0x04)
+        self.ga_status = (self.ga_status & 0x04) | self.irq_pending
+        self.check_irq_state()
+
+    def clear_irq(self, clear_mask):
+        """Acknowledge / clear interrupt sources (write-to-clear)."""
+        self.irq_pending &= ~clear_mask
+        self.ga_status = (self.ga_status & 0x04) | self.irq_pending
+        self.check_irq_state()
+
+    def check_irq_state(self):
+        """Update CPU External Interrupt Line (MCS-96 EXTINT / INT)."""
+        should_assert = bool((self.irq_pending & self.irq_mask) != 0)
+        self.int_line_asserted = should_assert
+
     def read(self, offset):
         reg = offset & 0x1F
         if reg == 0x00:
             return self.ga_ctrl | 0x80
         elif reg == 0x01:
-            return self.ga_status | 0x04
+            return (self.ga_status & 0x04) | self.irq_pending
         elif reg == 0x02:
             return self.simm_bank
         elif reg == 0x03:
@@ -71,7 +100,7 @@ class RolandGateArraySimulator:
             if data & 0x01:
                 self.peripherals_enabled = True
         elif reg == 0x01:
-            self.ga_status &= ~(data & 0xFF)
+            self.clear_irq(data & 0xFF)
         elif reg == 0x02:
             self.simm_bank = data & 0x0F
         elif reg == 0x04:
@@ -140,7 +169,7 @@ class RolandGateArraySimulator:
 
 
 def test_gate_array_driver_implementation_present():
-    """Verify s760.cpp contains the Gate Array and EEPROM state machine code."""
+    """Verify s760.cpp contains the Gate Array, EEPROM, and Interrupt subsystem code."""
     assert os.path.exists(DRIVER_PATH), f"Driver file missing: {DRIVER_PATH}"
     with open(DRIVER_PATH, "r", encoding="utf-8") as f:
         content = f.read()
@@ -151,6 +180,10 @@ def test_gate_array_driver_implementation_present():
     assert "m_eeprom_data" in content
     assert "0x414A" in content  # Roland Magic ID in EEPROM
     assert "0x0224" in content  # OS version in EEPROM
+    assert "m_timer_60hz" in content
+    assert "trigger_irq" in content
+    assert "clear_irq" in content
+    assert "IRQ_TIMER_60HZ" in content
 
 
 def test_gate_array_control_and_reset_latch():
@@ -232,3 +265,83 @@ def test_gate_array_ak93c45_eeprom_read_protocol():
     # Read Address 3 (Master Tune = 0x01B8 / 440Hz)
     tune = read_eeprom_word(3)
     assert tune == 0x01B8, f"Expected 0x01B8, got 0x{tune:04X}"
+
+
+def test_interrupt_subsystem_timer_60hz_irq_assertion():
+    """Verify 60Hz timer tick sets Bit 0 in status register (0xF001) and asserts CPU INT line."""
+    ga = RolandGateArraySimulator()
+    assert not ga.int_line_asserted
+    assert (ga.read(0x01) & 0x01) == 0
+
+    # Trigger 60Hz periodic timer tick
+    ga.trigger_irq(RolandGateArraySimulator.IRQ_TIMER_60HZ)
+
+    assert ga.int_line_asserted, "CPU INT line should assert on 60Hz timer tick"
+    assert (ga.read(0x01) & 0x01) == 0x01, "Bit 0 should be set in 0xF001 status register"
+    assert (ga.read(0x01) & 0x04) == 0x04, "Bit 2 (Bus ready) must stay preserved"
+
+
+def test_interrupt_subsystem_write_to_clear_ack():
+    """Verify writing bitmask to 0xF001 clears pending IRQ and de-asserts CPU INT line."""
+    ga = RolandGateArraySimulator()
+    ga.trigger_irq(RolandGateArraySimulator.IRQ_TIMER_60HZ)
+    assert ga.int_line_asserted
+
+    # OS acknowledges Timer IRQ by writing 0x01 to 0xF001
+    ga.write(0x01, 0x01)
+
+    assert not ga.int_line_asserted, "CPU INT line should de-assert once IRQ is acknowledged"
+    assert (ga.read(0x01) & 0x01) == 0x00, "Bit 0 should be cleared"
+    assert (ga.read(0x01) & 0x04) == 0x04, "Bus Ready bit 2 must remain asserted"
+
+
+def test_interrupt_subsystem_multiple_irqs_and_line_deassertion():
+    """Verify multiple simultaneous IRQs (Timer + SCSI + VDP) keep INT asserted until all are acknowledged."""
+    ga = RolandGateArraySimulator()
+
+    # Trigger Timer (Bit 0) and SCSI (Bit 3)
+    ga.trigger_irq(RolandGateArraySimulator.IRQ_TIMER_60HZ)
+    ga.trigger_irq(RolandGateArraySimulator.IRQ_SCSI)
+
+    assert ga.int_line_asserted
+    assert ga.read(0x01) & 0x09 == 0x09  # Bits 0 and 3 set
+
+    # Acknowledge only Timer IRQ
+    ga.write(0x01, 0x01)
+    assert ga.int_line_asserted, "CPU INT line must stay asserted while SCSI IRQ is still pending"
+    assert (ga.read(0x01) & 0x01) == 0x00
+    assert (ga.read(0x01) & 0x08) == 0x08
+
+    # Acknowledge SCSI IRQ
+    ga.write(0x01, 0x08)
+    assert not ga.int_line_asserted, "CPU INT line must de-assert once all IRQs are acknowledged"
+    assert (ga.read(0x01) & 0x08) == 0x00
+
+
+def test_interrupt_subsystem_vblank_and_fdc_irq_routing():
+    """Verify VBlank (Bit 4) and FDC (Bit 1) IRQs assert and clear properly."""
+    ga = RolandGateArraySimulator()
+
+    # Trigger VDP VBlank and FDC IRQ
+    ga.trigger_irq(RolandGateArraySimulator.IRQ_VDP_VBLANK)
+    ga.trigger_irq(RolandGateArraySimulator.IRQ_FDC)
+
+    assert ga.int_line_asserted
+    status = ga.read(0x01)
+    assert (status & 0x10) == 0x10, "VDP VBlank Bit 4 pending"
+    assert (status & 0x02) == 0x02, "FDC IRQ Bit 1 pending"
+
+    # Clear both at once with 0x12
+    ga.write(0x01, 0x12)
+    assert not ga.int_line_asserted
+    assert (ga.read(0x01) & 0x12) == 0x00
+
+
+def test_interrupt_subsystem_irq_masking():
+    """Verify IRQ masking prevents unmasked IRQs from asserting INT line."""
+    ga = RolandGateArraySimulator()
+    ga.irq_mask = 0x00  # Mask all IRQs
+
+    ga.trigger_irq(RolandGateArraySimulator.IRQ_TIMER_60HZ)
+    assert (ga.read(0x01) & 0x01) == 0x01  # Pending flag still sets
+    assert not ga.int_line_asserted        # But CPU INT line is not asserted due to mask

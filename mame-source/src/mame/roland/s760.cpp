@@ -842,6 +842,23 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(mouse_x);
 	DECLARE_INPUT_CHANGED_MEMBER(mouse_y);
 
+	// IRQ Sources handled by Gate Array (0xF001)
+	enum irq_source : uint8_t
+	{
+		IRQ_TIMER_60HZ = 0x01, // Bit 0: 60Hz periodic event tick
+		IRQ_FDC        = 0x02, // Bit 1: NEC uPD72068 FDC interrupt
+		// Bit 2: Bus Ready Status flag (0x04) - not an IRQ
+		IRQ_SCSI       = 0x08, // Bit 3: MB89352A SCSI SPC interrupt
+		IRQ_VDP_VBLANK = 0x10, // Bit 4: RFSC16A VDP Vertical Blank
+		IRQ_MIDI_RX    = 0x20  // Bit 5: MIDI UART RX FIFO ready
+	};
+
+	void trigger_irq(uint8_t irq_mask);
+	void clear_irq(uint8_t irq_mask);
+	void check_irq_state();
+	uint8_t irq_pending() const { return m_irq_pending; }
+	bool int_line_asserted() const { return m_int_line_asserted; }
+
 protected:
 	virtual void machine_start() override ATTR_COLD;
 	virtual void machine_reset() override ATTR_COLD;
@@ -855,6 +872,14 @@ private:
 	required_ioport m_mouse_btn;
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
+
+	// Interrupt Subsystem & 60Hz Timer
+	emu_timer *m_timer_60hz;
+	uint8_t m_irq_pending;
+	uint8_t m_irq_mask;
+	bool m_int_line_asserted;
+
+	TIMER_CALLBACK_MEMBER(timer_60hz_tick);
 
 	// Roland Gate Array & Peripheral Registers (0xF000 - 0xF01F)
 	uint8_t m_mmio[16];
@@ -950,6 +975,12 @@ void s760_state::machine_start()
 	memset(m_vdp_regs, 0, sizeof(m_vdp_regs));
 	memset(m_mmio, 0, sizeof(m_mmio));
 
+	// Timer & IRQ Subsystem
+	m_timer_60hz = timer_alloc(FUNC(s760_state::timer_60hz_tick), this);
+	m_irq_pending = 0;
+	m_irq_mask = 0x3B; // Unmask Bit 0 (Timer), Bit 1 (FDC), Bit 3 (SCSI), Bit 4 (VDP), Bit 5 (MIDI)
+	m_int_line_asserted = false;
+
 	m_ga_ctrl = 0x80;
 	m_ga_status = 0x04; // Bit 2 = Peripheral Bus Ready
 	m_simm_bank = 0x00;
@@ -1017,8 +1048,44 @@ void s760_state::machine_reset()
 {
 	m_vdp_addr = 0;
 	m_ga_status = 0x04; // Bus Ready
+	m_irq_pending = 0;
+	m_int_line_asserted = false;
+	m_maincpu->set_input_line(MCS96_INT_VECTOR, CLEAR_LINE);
+
+	// Start 60Hz periodic system timer (software tick / HSO comparator pump)
+	m_timer_60hz->adjust(attotime::from_hz(60), 0, attotime::from_hz(60));
+
 	m_peripherals_enabled = true;
 	m_sound->trigger_preview(m_selected_row);
+}
+
+TIMER_CALLBACK_MEMBER(s760_state::timer_60hz_tick)
+{
+	trigger_irq(IRQ_TIMER_60HZ);
+}
+
+void s760_state::trigger_irq(uint8_t irq_mask)
+{
+	m_irq_pending |= (irq_mask & ~0x04);
+	m_ga_status = (m_ga_status & 0x04) | m_irq_pending;
+	check_irq_state();
+}
+
+void s760_state::clear_irq(uint8_t irq_mask)
+{
+	m_irq_pending &= ~irq_mask;
+	m_ga_status = (m_ga_status & 0x04) | m_irq_pending;
+	check_irq_state();
+}
+
+void s760_state::check_irq_state()
+{
+	bool should_assert = (m_irq_pending & m_irq_mask) != 0;
+	if (should_assert != m_int_line_asserted)
+	{
+		m_int_line_asserted = should_assert;
+		m_maincpu->set_input_line(MCS96_INT_VECTOR, should_assert ? ASSERT_LINE : CLEAR_LINE);
+	}
 }
 
 uint8_t s760_state::mmio_r(offs_t offset)
@@ -1031,7 +1098,7 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			break;
 
 		case 0x01: // Gate Array Master Status & Peripheral IRQ Flags
-			val = m_ga_status | 0x04; // Bit 2 = Bus Ready (allows OS boot loop pass)
+			val = (m_ga_status & 0x04) | m_irq_pending; // Bit 2 = Bus Ready, other bits = IRQs
 			break;
 
 		case 0x02: // SIMM Memory Bank Selector (32MB address space)
@@ -1084,8 +1151,8 @@ void s760_state::mmio_w(offs_t offset, uint8_t data)
 				m_peripherals_enabled = true;
 			break;
 
-		case 0x01: // Clear IRQ Ack
-			m_ga_status &= ~data;
+		case 0x01: // Clear IRQ Ack (write-to-clear)
+			clear_irq(data);
 			break;
 
 		case 0x02: // SIMM Bank switch (0..15)
@@ -2233,6 +2300,9 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 			bitmap.pix(m_cur_y, m_cur_x + i) = 1;
 		}
 	}
+
+	// 9. Trigger RFSC16A VDP VBlank Interrupt (Bit 4)
+	trigger_irq(IRQ_VDP_VBLANK);
 
 	return 0;
 }
