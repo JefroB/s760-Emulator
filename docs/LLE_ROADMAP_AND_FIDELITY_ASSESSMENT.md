@@ -80,8 +80,9 @@ flowchart TD
   1. **Gate Array MMIO & Control Latches:** ✅ **DONE** — Implemented address decoding and register state machine for `0xF000 - 0xF014` (Control 0xF000, Status 0xF001, SIMM Bank 0xF002, Switch Matrix 0xF003, Chip Selects 0xF004, DSP Latches 0xF006/0xF008).
   2. **AK93C45 Serial EEPROM Emulation:** ✅ **DONE** — Implemented Microwire bit-banging protocol on `0xF00E` (CS/CLK/DI) and `0xF010` (DO) with factory calibration parameters.
   3. **Interrupt Subsystem:** ✅ **DONE** — Full interrupt vector & Gate Array IRQ delivery: 60Hz periodic timer tick (`0x01`), FDC IRQ (`0x02`), SCSI IRQ (`0x08`), VDP VBlank (`0x10`), and MIDI RX (`0x20`), with write-to-clear acknowledgement on `0xF001` and 80C196 external interrupt line assertion/deassertion.
-  4. **FDC Register Emulation:** ✅ **DONE** — Register-level NEC uPD72068GF floppy disk controller emulation (`0xF040 – 0xF047`): Main Status Register (MSR), Data FIFO port, Digital Output Register (DOR), DIR disk change detection, CCR data rate selection, Seek, Recalibrate, Read ID, Sense Drive/Interrupt Status, and cycle-accurate 512-byte MFM sector Read/Write operations backed by loaded floppy images.
-  5. **SCSI SPC Emulation:** Register-level Fujitsu MB89352A SCSI protocol controller with Command Descriptor Block (CDB) issuing.
+  5. **SCSI SPC Emulation:** ✅ **DONE** — Register-level Fujitsu MB89352A SCSI Protocol Controller (SPC) emulation (`0xF020 – 0xF02F`): Bus Device ID (BDID), SPC Control (SCTL), Command register (SCMD), Interrupt Status (INTS), Phase Sense (PSNS), Data FIFO (DREG), Transfer Counters (TCH/TCM/TCL), Selection, Arbitration, and CDB execution (`TEST UNIT READY`, `INQUIRY`, `REQUEST SENSE`, `READ CAPACITY`, `READ 6/10`, `WRITE 6/10`) for hard disks, CD-ROMs, and MO drives with Gate Array `IRQ_SCSI` handshakes.
+
+> 🏆 **Step 1 (Finish the CPU / OS Execution Environment) is 100% Complete!** All MMIO latches, serial EEPROM, 60Hz timer / IRQ delivery, NEC uPD72068 FDC, and Fujitsu MB89352A SCSI SPC engines are fully implemented and passing regression testing.
 
 ---
 
