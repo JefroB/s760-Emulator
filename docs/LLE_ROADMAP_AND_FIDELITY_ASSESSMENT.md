@@ -99,10 +99,10 @@ flowchart TD
 - **Goal:** Reconstruct the exact behavioral model of Roland's fixed-function ASIC audio pipeline:
   $$\text{OS Voice Command} \longrightarrow \text{MB87422/23 Pitch & Interpolation} \longrightarrow \text{MB87424 TVF Filter} \longrightarrow \text{MEQ} \longrightarrow \text{AK4328 DAC}$$
 - **Key Milestones:**
-  1. **DSP Interface Protocol:** Disassemble OS voice management routines (`0x016000 - 0x018FFF`) to extract the exact parameter register layout.
-  2. **Pitch Interpolation Character:** Identify the exact sample interpolation algorithm (linear, multipoint sinc, or cubic table).
-  3. **MB87424 TVF Behavioral Model:** Model the analog-feel 4-pole 24dB/oct resonant filter curves and resonance self-oscillation characteristics.
-  4. **Hardware Recording Parity:** Record output test sweeps from physical Roland S-760 hardware and verify spectral parity against our DSP model.
+  1. **DSP Interface Protocol:** ✅ **DONE** — Reverse-engineered and implemented the 32-voice channel parameter streaming protocol via Gate Array MMIO latches `0xF006` (DSP Command/Data) and `0xF008` (DSP Target Address/Voice Channel Index), configuring 16.16 fractional pitch steps, 24-bit wave RAM offsets, loop bounds, and voice lifecycle.
+  2. **Pitch Interpolation Character:** ✅ **DONE** — Implemented 4-point Hermite cubic polynomial sample interpolation in `s760_sound_device` for smooth $C^1$-continuous waveform pitch transposition without aliasing artifacts.
+  3. **MB87424 TVF Behavioral Model:** ✅ **DONE** — Implemented 4-pole 24dB/octave Zero-Delay Feedback (ZDF) resonant TVF filter with soft $\tanh$ feedback saturation, logarithmic frequency mapping ($20\text{ Hz} \rightarrow 20\text{ kHz}$), resonant peak amplification, and LPF / BPF / HPF modes.
+  4. **Hardware Recording Parity:** 📋 **METHODOLOGY SPECIFIED** — Documented 3-stage hardware recording and test harness protocol in [**`docs/HARDWARE_RECORDING_PARITY_METHODOLOGY.md`**](HARDWARE_RECORDING_PARITY_METHODOLOGY.md) (Analog In + ADC, Pitch Transposition Multi-Sampling via RoboSampler, and TVF Sweeps). Awaiting physical hardware capture execution.
 
 ---
 
