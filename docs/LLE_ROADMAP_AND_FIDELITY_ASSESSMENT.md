@@ -108,6 +108,7 @@ flowchart TD
 
 ### **Step 4: Unified Hardware Core (MAME + Standalone DAW Plugins)**
 - **Goal:** Consolidate the low-level hardware and DSP models into a single, clean C++ library shared across both MAME and the DAW plugins.
+- **Status:** ✅ **DONE** — Implemented [`core/include/s760/s760_core.hpp`](file:///d:/S-760/core/include/s760/s760_core.hpp) and [`core/src/s760_core.cpp`](file:///d:/S-760/core/src/s760_core.cpp) defining the standalone `S760HardwareCore` engine. Encapsulates 32-voice polyphony, MMIO streaming, 4-point Hermite cubic sample interpolation, 4-pole ZDF resonant TVF ladder filtering, and multi-channel rendering with 100% parity across MAME and DAW plugins (VST3 / CLAP / AU).
 
 ```mermaid
 flowchart TD
