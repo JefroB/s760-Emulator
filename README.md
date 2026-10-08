@@ -2,7 +2,7 @@
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-116%20Passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-120%20Passing-brightgreen.svg)](tests/)
 [![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP%20(Instrument%20%26%20FX)-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
 [![OS Test Matrix](https://img.shields.io/badge/OS%20Code%20Coverage-100%25%20Verified-success.svg)](docs/OS_EXHAUSTIVE_CODE_MATRIX.md)
