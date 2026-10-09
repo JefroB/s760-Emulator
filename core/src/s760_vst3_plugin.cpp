@@ -17,21 +17,35 @@ static const TUID S760FXProcessorUID = INLINE_UID(0x53373630, 0x56535433, 0x4658
 
 S760Vst3Plugin::S760Vst3Plugin(bool is_fx)
     : m_is_fx(is_fx) {
-    m_scratch_left.resize(2048, 0.0f);
-    m_scratch_right.resize(2048, 0.0f);
+    m_scratch_left.resize(8192, 0.0f);
+    m_scratch_right.resize(8192, 0.0f);
 }
 
 S760Vst3Plugin::~S760Vst3Plugin() {
     m_host.get_drive_manager().flush_all();
 }
 
+static const TUID FUnknown_iid = INLINE_UID(0x00000000, 0x00000000, 0xC0000000, 0x00000046);
+static const TUID IComponent_iid = INLINE_UID(0xE8318227, 0x79A447F6, 0x8E6AEF5D, 0xDC202293);
+static const TUID IAudioProcessor_iid = INLINE_UID(0x420423E5, 0x12DA4541, 0xA6190EB9, 0x99615A3B);
+
 tresult S760Vst3Plugin::queryInterface(const TUID _iid, void** obj) {
     if (!obj) return kInvalidArgument;
 
-    // Check basic COM interfaces
-    *obj = static_cast<Steinberg::IComponent*>(this);
-    addRef();
-    return kResultOk;
+    if (std::memcmp(_iid, FUnknown_iid, sizeof(TUID)) == 0 ||
+        std::memcmp(_iid, IComponent_iid, sizeof(TUID)) == 0) {
+        *obj = static_cast<Steinberg::IComponent*>(this);
+        addRef();
+        return kResultOk;
+    }
+    if (std::memcmp(_iid, IAudioProcessor_iid, sizeof(TUID)) == 0) {
+        *obj = static_cast<Steinberg::IAudioProcessor*>(this);
+        addRef();
+        return kResultOk;
+    }
+
+    *obj = nullptr;
+    return kResultFalse;
 }
 
 uint32_t S760Vst3Plugin::addRef() {
@@ -120,8 +134,9 @@ tresult S760Vst3Plugin::setupProcessing(Steinberg::ProcessSetup& setup) {
     m_sample_rate = setup.sampleRate;
     m_max_block_size = setup.maxSamplesPerBlock;
     m_host.set_target_sample_rate(setup.sampleRate);
-    m_scratch_left.resize(std::max(2048, m_max_block_size));
-    m_scratch_right.resize(std::max(2048, m_max_block_size));
+    size_t alloc_size = std::max(size_t(8192), static_cast<size_t>(m_max_block_size));
+    m_scratch_left.resize(alloc_size, 0.0f);
+    m_scratch_right.resize(alloc_size, 0.0f);
     return kResultOk;
 }
 
@@ -177,14 +192,18 @@ tresult S760Vst3Plugin::process(Steinberg::ProcessData& data) {
         m_host.feed_audio_input(in_l, in_r, needed);
     }
 
-    // 3. Generate emulator audio
-    while (m_host.is_system_running() && m_host.get_audio_stats().available_frames < needed) {
+    // 3. Generate emulator audio with bounded loop to prevent audio deadline dropouts
+    constexpr int MAX_EMULATOR_FRAMES_PER_BLOCK = 4;
+    int emu_ticks = 0;
+    while (m_host.is_system_running() && 
+           m_host.get_audio_stats().available_frames < needed && 
+           emu_ticks < MAX_EMULATOR_FRAMES_PER_BLOCK) {
         m_host.run_frame();
+        emu_ticks++;
     }
 
     if (m_scratch_left.size() < needed) {
-        m_scratch_left.resize(needed);
-        m_scratch_right.resize(needed);
+        needed = static_cast<uint32_t>(m_scratch_left.size());
     }
 
     m_host.read_audio_frames(m_scratch_left.data(), m_scratch_right.data(), needed);
@@ -228,32 +247,32 @@ tresult S760Vst3Plugin::getState(Steinberg::IBStream* state) {
 
     int32_t written = 0;
     const char magic[] = "S760VST3";
-    state->write((void*)magic, 8, &written);
+    if (state->write((void*)magic, 8, &written) != kResultOk || written != 8) return kResultFalse;
 
     // Floppy path
     auto f_stat = m_host.get_drive_manager().get_floppy_status();
     uint32_t f_len = static_cast<uint32_t>(f_stat.file_path.size());
-    state->write(&f_len, 4, &written);
+    if (state->write(&f_len, 4, &written) != kResultOk || written != 4) return kResultFalse;
     if (f_len > 0) {
-        state->write((void*)f_stat.file_path.data(), f_len, &written);
+        if (state->write((void*)f_stat.file_path.data(), f_len, &written) != kResultOk || written != static_cast<int32_t>(f_len)) return kResultFalse;
     }
 
     // SCSI paths
     for (int i = 0; i < 7; ++i) {
         auto s_stat = m_host.get_drive_manager().get_scsi_status(i);
         uint32_t s_len = static_cast<uint32_t>(s_stat.file_path.size());
-        state->write(&s_len, 4, &written);
+        if (state->write(&s_len, 4, &written) != kResultOk || written != 4) return kResultFalse;
         if (s_len > 0) {
-            state->write((void*)s_stat.file_path.data(), s_len, &written);
+            if (state->write((void*)s_stat.file_path.data(), s_len, &written) != kResultOk || written != static_cast<int32_t>(s_len)) return kResultFalse;
         }
     }
 
     // Core savestate
     auto st = m_host.save_state();
     uint32_t st_len = static_cast<uint32_t>(st.size());
-    state->write(&st_len, 4, &written);
+    if (state->write(&st_len, 4, &written) != kResultOk || written != 4) return kResultFalse;
     if (st_len > 0) {
-        state->write(st.data(), st_len, &written);
+        if (state->write(st.data(), st_len, &written) != kResultOk || written != static_cast<int32_t>(st_len)) return kResultFalse;
     }
 
     return kResultOk;
@@ -264,33 +283,61 @@ tresult S760Vst3Plugin::setState(Steinberg::IBStream* state) {
 
     int32_t bytes_read = 0;
     char magic[8] = {0};
-    if (state->read(magic, 8, &bytes_read) != kResultOk || std::memcmp(magic, "S760VST3", 8) != 0) {
+    if (state->read(magic, 8, &bytes_read) != kResultOk || bytes_read != 8 || std::memcmp(magic, "S760VST3", 8) != 0) {
         return kResultFalse;
     }
 
-    // Floppy path
+    // Parse into temporary state to ensure transactionality
+    std::string f_path;
     uint32_t f_len = 0;
-    if (state->read(&f_len, 4, &bytes_read) == kResultOk && f_len > 0 && f_len < 4096) {
-        std::string f_path(f_len, '\0');
-        state->read(f_path.data(), f_len, &bytes_read);
-        m_host.get_drive_manager().mount_floppy(f_path);
+    if (state->read(&f_len, 4, &bytes_read) != kResultOk || bytes_read != 4 || f_len > 4096) {
+        return kResultFalse;
+    }
+    if (f_len > 0) {
+        f_path.resize(f_len);
+        if (state->read(f_path.data(), f_len, &bytes_read) != kResultOk || bytes_read != static_cast<int32_t>(f_len)) {
+            return kResultFalse;
+        }
     }
 
     // SCSI paths
+    std::string s_paths[7];
     for (int i = 0; i < 7; ++i) {
         uint32_t s_len = 0;
-        if (state->read(&s_len, 4, &bytes_read) == kResultOk && s_len > 0 && s_len < 4096) {
-            std::string s_path(s_len, '\0');
-            state->read(s_path.data(), s_len, &bytes_read);
-            m_host.get_drive_manager().mount_scsi_device(i, s_path, DeviceType::HardDisk_SCSI);
+        if (state->read(&s_len, 4, &bytes_read) != kResultOk || bytes_read != 4 || s_len > 4096) {
+            return kResultFalse;
+        }
+        if (s_len > 0) {
+            s_paths[i].resize(s_len);
+            if (state->read(s_paths[i].data(), s_len, &bytes_read) != kResultOk || bytes_read != static_cast<int32_t>(s_len)) {
+                return kResultFalse;
+            }
         }
     }
 
     // Core savestate
+    std::vector<uint8_t> st_data;
     uint32_t st_len = 0;
-    if (state->read(&st_len, 4, &bytes_read) == kResultOk && st_len > 0 && st_len < 64 * 1024 * 1024) {
-        std::vector<uint8_t> st_data(st_len);
-        state->read(st_data.data(), st_len, &bytes_read);
+    if (state->read(&st_len, 4, &bytes_read) != kResultOk || bytes_read != 4 || st_len > 64 * 1024 * 1024) {
+        return kResultFalse;
+    }
+    if (st_len > 0) {
+        st_data.resize(st_len);
+        if (state->read(st_data.data(), st_len, &bytes_read) != kResultOk || bytes_read != static_cast<int32_t>(st_len)) {
+            return kResultFalse;
+        }
+    }
+
+    // All validation passed - atomically apply to live instance
+    if (!f_path.empty()) {
+        m_host.get_drive_manager().mount_floppy(f_path);
+    }
+    for (int i = 0; i < 7; ++i) {
+        if (!s_paths[i].empty()) {
+            m_host.get_drive_manager().mount_scsi_device(i, s_paths[i], DeviceType::HardDisk_SCSI);
+        }
+    }
+    if (!st_data.empty()) {
         m_host.load_state(st_data);
     }
 

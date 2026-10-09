@@ -55,13 +55,16 @@ public:
     bool flush_to_disk() override;
 
     bool read_sector(uint64_t lba, uint8_t* out_buffer) override;
-    virtual bool write_sector(uint64_t lba, const uint8_t* in_buffer) override;
+    bool write_sector(uint64_t lba, const uint8_t* in_buffer) override;
 
     DriveStatus get_status() const override;
     const uint8_t* get_raw_memory() const override { return m_buffer.data(); }
     size_t get_size_bytes() const override { return m_buffer.size(); }
 
 private:
+    bool unmount_locked(bool flush);
+    bool flush_to_disk_locked();
+
     DeviceType m_type;
     size_t m_sector_size;
     std::string m_file_path;
@@ -82,7 +85,7 @@ public:
     bool eject_floppy();
     bool flush_floppy();
     DriveStatus get_floppy_status() const;
-    std::shared_ptr<VirtualBlockDevice> get_floppy_device() const { return m_floppy; }
+    std::shared_ptr<VirtualBlockDevice> get_floppy_device() const;
 
     // SCSI Bus (IDs 0..6)
     bool mount_scsi_device(uint8_t scsi_id, const std::string& filepath, DeviceType type, bool read_only = false);
@@ -96,6 +99,7 @@ public:
     static std::vector<std::string> scan_image_folder(const std::string& directory_path);
 
 private:
+    mutable std::mutex m_manager_mutex;
     std::shared_ptr<FileBackedBlockDevice> m_floppy;
     std::shared_ptr<FileBackedBlockDevice> m_scsi_devices[7];
 };

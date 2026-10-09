@@ -382,6 +382,76 @@ void test_vst3_plugin_lifecycle_and_audio() {
     std::cout << "  -> VST3 Plugin Tests PASSED!" << std::endl;
 }
 
+void test_adversarial_plugin_state_remediation() {
+    std::cout << "[TEST] Adversarial Plugin State Hardening & Contract Tests..." << std::endl;
+
+    // 1. CLAP Truncated & Corrupted State
+    std::cout << "  -> Step 1: CLAP" << std::endl;
+    clap_host_t host_ctx;
+    std::memset(&host_ctx, 0, sizeof(host_ctx));
+    host_ctx.clap_version = CLAP_VERSION;
+    auto* clap_plugin = new s760::S760ClapPlugin(&host_ctx);
+
+    std::cout << "  -> Step 1a: saving state" << std::endl;
+    MemoryStream ms_valid;
+    clap_ostream ostream = { &ms_valid, mem_write };
+    bool saved = clap_plugin->state_save(&ostream);
+    std::cout << "  -> saved = " << saved << ", buf size = " << ms_valid.buffer.size() << std::endl;
+    assert(saved);
+    assert(ms_valid.buffer.size() > 16);
+
+    std::cout << "  -> Step 1b: testing truncated load" << std::endl;
+    MemoryStream ms_trunc;
+    ms_trunc.buffer.assign(ms_valid.buffer.begin(), ms_valid.buffer.begin() + 10);
+    clap_istream istream_trunc = { &ms_trunc, mem_read };
+    bool trunc_loaded = clap_plugin->state_load(&istream_trunc);
+    std::cout << "  -> trunc_loaded = " << trunc_loaded << std::endl;
+    assert(!trunc_loaded);
+
+    std::cout << "  -> Step 1c: testing corrupt magic load" << std::endl;
+    MemoryStream ms_corrupt;
+    ms_corrupt.buffer = ms_valid.buffer;
+    std::memcpy(ms_corrupt.buffer.data(), "BADMAGIC", 8);
+    clap_istream istream_corrupt = { &ms_corrupt, mem_read };
+    bool corrupt_loaded = clap_plugin->state_load(&istream_corrupt);
+    std::cout << "  -> corrupt_loaded = " << corrupt_loaded << std::endl;
+    assert(!corrupt_loaded);
+
+    delete clap_plugin;
+
+    // 2. VST3 Truncated & Corrupted State and Interface Query Contract
+    std::cout << "  -> Step 2: VST3" << std::endl;
+    auto* vst3_plugin = new s760::S760Vst3Plugin(false);
+    void* iface_ptr = nullptr;
+    TUID bad_iid = {0xFF, 0xFE, 0xFD};
+    tresult qi_res = vst3_plugin->queryInterface(bad_iid, &iface_ptr);
+    std::cout << "  -> qi_res = " << qi_res << ", iface_ptr = " << iface_ptr << std::endl;
+    assert(qi_res == kResultFalse);
+    assert(iface_ptr == nullptr);
+
+    Vst3MemoryStream vstream_valid;
+    tresult get_res = vst3_plugin->getState(&vstream_valid);
+    std::cout << "  -> get_res = " << get_res << ", valid buf size = " << vstream_valid.buffer.size() << std::endl;
+    assert(get_res == kResultOk);
+    assert(vstream_valid.buffer.size() > 16);
+
+    Vst3MemoryStream vstream_trunc;
+    vstream_trunc.buffer.assign(vstream_valid.buffer.begin(), vstream_valid.buffer.begin() + 12);
+    tresult set_res = vst3_plugin->setState(&vstream_trunc);
+    std::cout << "  -> set_res = " << set_res << std::endl;
+    assert(set_res == kResultFalse);
+
+    delete vst3_plugin;
+
+    // 3. VST2 Truncated State Chunk
+    std::cout << "  -> Step 3: VST2" << std::endl;
+    s760::S760VstPlugin vst2_plug(nullptr, false);
+    std::vector<uint8_t> vst2_trunc = { 'S', '7', '6', '0', 'V', 'S', 'T', 'P', 0x05 };
+    assert(!vst2_plug.restore_state_chunk(vst2_trunc.data(), vst2_trunc.size()));
+
+    std::cout << "  -> Adversarial Plugin State Hardening Tests PASSED!" << std::endl;
+}
+
 int main() {
     std::cout << "==========================================" << std::endl;
     std::cout << "  Roland S-760 VST3, VST2 & CLAP DAW Suite" << std::endl;
@@ -392,6 +462,7 @@ int main() {
         test_clap_plugin_state_serialization();
         test_vst_plugin_lifecycle_and_audio();
         test_vst3_plugin_lifecycle_and_audio();
+        test_adversarial_plugin_state_remediation();
     } catch (const std::exception& e) {
         std::cerr << "[FATAL TEST ERROR] " << e.what() << std::endl;
         return 1;

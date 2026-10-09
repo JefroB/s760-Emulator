@@ -241,7 +241,14 @@ void S760ClapPlugin::handle_events(const clap_input_events_t* in_events) {
             m_host.send_midi_message(midi_msg, 3);
         } else if (hdr->type == CLAP_EVENT_MIDI) {
             const auto* ev = reinterpret_cast<const clap_event_midi_t*>(hdr);
-            m_host.send_midi_message(ev->data, 3);
+            uint8_t status = ev->data[0];
+            size_t msg_len = 3;
+            if ((status & 0xF0) == 0xC0 || (status & 0xF0) == 0xD0) {
+                msg_len = 2; // Program Change / Channel Pressure
+            } else if (status >= 0xF8) {
+                msg_len = 1; // Realtime system message
+            }
+            m_host.send_midi_message(ev->data, msg_len);
         }
     }
 }
@@ -266,15 +273,19 @@ clap_process_status S760ClapPlugin::process(const clap_process_t* process) {
         }
     }
 
-    // 3. Ensure enough audio frames in host buffer
-    while (m_host.is_system_running() && m_host.get_audio_stats().available_frames < needed_frames) {
+    // 3. Ensure enough audio frames in host buffer with bounded iteration loop
+    constexpr int MAX_EMULATOR_FRAMES_PER_BLOCK = 4;
+    int emu_ticks = 0;
+    while (m_host.is_system_running() && 
+           m_host.get_audio_stats().available_frames < needed_frames &&
+           emu_ticks < MAX_EMULATOR_FRAMES_PER_BLOCK) {
         m_host.run_frame();
+        emu_ticks++;
     }
 
     // 4. Read audio from S760 host into scratch buffers
     if (m_scratch_left.size() < needed_frames) {
-        m_scratch_left.resize(needed_frames);
-        m_scratch_right.resize(needed_frames);
+        needed_frames = static_cast<uint32_t>(m_scratch_left.size());
     }
 
     m_host.read_audio_frames(m_scratch_left.data(), m_scratch_right.data(), needed_frames);
@@ -333,32 +344,32 @@ bool S760ClapPlugin::state_save(const clap_ostream_t* stream) {
 
     // Header Tag
     const char magic[] = "S760CLAP";
-    stream->write(stream, magic, sizeof(magic) - 1);
+    if (stream->write(stream, magic, 8) != 8) return false;
 
     // Write Floppy path
     auto f_stat = m_host.get_drive_manager().get_floppy_status();
     uint32_t f_len = static_cast<uint32_t>(f_stat.file_path.size());
-    stream->write(stream, &f_len, 4);
+    if (stream->write(stream, &f_len, 4) != 4) return false;
     if (f_len > 0) {
-        stream->write(stream, f_stat.file_path.data(), f_len);
+        if (stream->write(stream, f_stat.file_path.data(), f_len) != static_cast<int64_t>(f_len)) return false;
     }
 
     // Write SCSI paths (IDs 0..6)
     for (int i = 0; i < 7; ++i) {
         auto scsi_stat = m_host.get_drive_manager().get_scsi_status(i);
         uint32_t s_len = static_cast<uint32_t>(scsi_stat.file_path.size());
-        stream->write(stream, &s_len, 4);
+        if (stream->write(stream, &s_len, 4) != 4) return false;
         if (s_len > 0) {
-            stream->write(stream, scsi_stat.file_path.data(), s_len);
+            if (stream->write(stream, scsi_stat.file_path.data(), s_len) != static_cast<int64_t>(s_len)) return false;
         }
     }
 
     // Write Core Savestate
     auto state_data = m_host.save_state();
     uint32_t state_len = static_cast<uint32_t>(state_data.size());
-    stream->write(stream, &state_len, 4);
+    if (stream->write(stream, &state_len, 4) != 4) return false;
     if (state_len > 0) {
-        stream->write(stream, state_data.data(), state_len);
+        if (stream->write(stream, state_data.data(), state_len) != static_cast<int64_t>(state_len)) return false;
     }
 
     return true;
@@ -372,32 +383,45 @@ bool S760ClapPlugin::state_load(const clap_istream_t* stream) {
         return false;
     }
 
-    // Read Floppy path
+    // Read Floppy path into temporary
+    std::string f_path;
     uint32_t f_len = 0;
-    if (stream->read(stream, &f_len, 4) != 4) return false;
-    if (f_len > 0 && f_len < 4096) {
-        std::string f_path(f_len, '\0');
-        stream->read(stream, f_path.data(), f_len);
-        m_host.get_drive_manager().mount_floppy(f_path);
+    if (stream->read(stream, &f_len, 4) != 4 || f_len > 4096) return false;
+    if (f_len > 0) {
+        f_path.resize(f_len);
+        if (stream->read(stream, f_path.data(), f_len) != static_cast<int64_t>(f_len)) return false;
     }
 
-    // Read SCSI paths
+    // Read SCSI paths into temporaries
+    std::string s_paths[7];
     for (int i = 0; i < 7; ++i) {
         uint32_t s_len = 0;
-        if (stream->read(stream, &s_len, 4) != 4) return false;
-        if (s_len > 0 && s_len < 4096) {
-            std::string s_path(s_len, '\0');
-            stream->read(stream, s_path.data(), s_len);
-            m_host.get_drive_manager().mount_scsi_device(i, s_path, DeviceType::HardDisk_SCSI);
+        if (stream->read(stream, &s_len, 4) != 4 || s_len > 4096) return false;
+        if (s_len > 0) {
+            s_paths[i].resize(s_len);
+            if (stream->read(stream, s_paths[i].data(), s_len) != static_cast<int64_t>(s_len)) return false;
         }
     }
 
-    // Read Core Savestate
+    // Read Core Savestate into temporary
+    std::vector<uint8_t> state_data;
     uint32_t state_len = 0;
-    if (stream->read(stream, &state_len, 4) != 4) return false;
-    if (state_len > 0 && state_len < 64 * 1024 * 1024) {
-        std::vector<uint8_t> state_data(state_len);
-        stream->read(stream, state_data.data(), state_len);
+    if (stream->read(stream, &state_len, 4) != 4 || state_len > 64 * 1024 * 1024) return false;
+    if (state_len > 0) {
+        state_data.resize(state_len);
+        if (stream->read(stream, state_data.data(), state_len) != static_cast<int64_t>(state_len)) return false;
+    }
+
+    // All chunks read and verified successfully - apply atomically
+    if (!f_path.empty()) {
+        m_host.get_drive_manager().mount_floppy(f_path);
+    }
+    for (int i = 0; i < 7; ++i) {
+        if (!s_paths[i].empty()) {
+            m_host.get_drive_manager().mount_scsi_device(i, s_paths[i], DeviceType::HardDisk_SCSI);
+        }
+    }
+    if (!state_data.empty()) {
         m_host.load_state(state_data);
     }
 

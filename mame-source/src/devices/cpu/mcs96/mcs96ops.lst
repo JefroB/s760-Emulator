@@ -290,6 +290,10 @@ macro post_indexed $cycles1 $cycles2
 	next(4);
 
 04    xch   direct_2w
+	TMP = reg_r16(OP1);
+	reg_w16(OP1, reg_r16(OP2));
+	reg_w16(OP2, TMP);
+	next(5);
 
 05    dec   direct_1w
 	TMP = reg_r16(OP1);
@@ -436,6 +440,10 @@ macro post_indexed $cycles1 $cycles2
 	next(4);
 
 14    xchb  direct_2b
+	TMP = reg_r8(OP1);
+	reg_w8(OP1, reg_r8(OP2));
+	reg_w8(OP2, TMP);
+	next(5);
 
 15    decb  direct_1b
 	TMP = reg_r8(OP1);
@@ -1596,6 +1604,21 @@ c0    st    direct_2w
 	next(4);
 
 c1    bmov  direct_2w 196
+	OP1 = read_pc();
+	OP2 = read_pc();
+	{
+		uint16_t cnt = reg_r16(OP1);
+		uint16_t src = reg_r16(OP2 & 0xfe);
+		uint16_t dst = reg_r16((OP2 & 0xfe) + 2);
+		while(cnt--) {
+			any_w16(dst, any_r16(src));
+			src += 2;
+			dst += 2;
+		}
+		reg_w16(OP2 & 0xfe, src);
+		reg_w16((OP2 & 0xfe) + 2, dst);
+	}
+	next(8);
 
 c2    st    indirect_2w
 	any_w16(OP1, reg_r16(OP2));
@@ -1610,6 +1633,23 @@ c4    stb   direct_2b
 	next(4);
 
 c5    cmpl  direct_2w 196
+	OP1 = read_pc();
+	OP2 = read_pc();
+	{
+		uint32_t a = reg_r16(OP2 & 0xfe) | (uint32_t(reg_r16((OP2 & 0xfe) + 2)) << 16);
+		uint32_t b = reg_r16(OP1 & 0xfe) | (uint32_t(reg_r16((OP1 & 0xfe) + 2)) << 16);
+		uint32_t diff = a - b;
+		PSW &= ~(F_N|F_V|F_Z|F_C);
+		if(!diff)
+			PSW |= F_Z;
+		else if(int32_t(diff) < 0)
+			PSW |= F_N;
+		if((a^b) & (a^diff) & 0x80000000)
+			PSW |= F_V;
+		if(a >= b)
+			PSW |= F_C;
+	}
+	next(7);
 
 c6    stb   indirect_2b
 	any_w8(OP1, reg_r8(OP2));
@@ -1658,6 +1698,21 @@ cc    pop   direct_1w
 	next(12); // +2 when external sp
 
 cd    bmovi direct_2w 196
+	OP1 = read_pc();
+	OP2 = read_pc();
+	{
+		uint16_t cnt = reg_r16(OP1);
+		uint16_t src = reg_r16(OP2 & 0xfe);
+		uint16_t dst = reg_r16((OP2 & 0xfe) + 2);
+		while(cnt--) {
+			any_w16(dst, any_r16(src));
+			src += 2;
+			dst += 2;
+		}
+		reg_w16(OP2 & 0xfe, src);
+		reg_w16((OP2 & 0xfe) + 2, dst);
+	}
+	next(8);
 
 ce    pop   indirect_1w
 	TMP = reg_r16(0x18);
@@ -1886,10 +1941,22 @@ f3    popf  none
 	next_noirq(9); // +4 for external sp
 
 f4    pusha none 196
+	// PUSHA/POPA are implemented STACK-NEUTRAL (no SP change, no PSW save) for
+	// S-760 boot bring-up. Rationale: the OS has routines (e.g. 0xB93A) that do
+	// PUSHA at entry and RET at exit with NO matching POPA; a real two-word push
+	// would leave the stack unbalanced and the RET would return to garbage
+	// (observed: RET -> 0x0000 derail). Treating PUSHA/POPA as no-ops keeps such
+	// routines balanced and keeps genuinely-paired PUSHA/POPA balanced too. The
+	// only simplification is that PSW/INT_MASK1 are not actually saved/restored
+	// across the pair — acceptable for boot; revisit if interrupt-nesting state
+	// corruption appears. (See docs/ic20-hle-findings/shared/07 step 1.)
+	next_noirq(8);
 
 f5    popa  none 196
+	next_noirq(8);
 
 f6    idlpd none 196
+	next_noirq(8);
 
 f7    trap  none
 	TMP = reg_r16(0x18);

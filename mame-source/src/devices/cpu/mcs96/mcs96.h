@@ -219,6 +219,25 @@ protected:
 	O(fetch_noirq);
 
 #undef O
+
+	// Intel 80C196 extended opcodes (PUSHA/POPA/BMOV/BMOVI/CMPL/DJNZW/IDLPD and
+	// the indexed/indirect POP forms). These are generated with the "_196"
+	// suffix (see mcs96make.py). Declared here as mcs96_device:: members so the
+	// 8x9x-family cores (which derive from mcs96_device and whose exec table now
+	// routes these opcodes) can execute them. The real S-760 CPU (S80C196KB) has
+	// both the 8x9x peripherals and these opcodes. The dedicated i8xc196 core
+	// keeps its own identical copies declared in i8xc196.h.
+#define O(o) void o ## _196_full(); void o ## _196_partial()
+	O(bmov_direct_2w);
+	O(bmovi_direct_2w);
+	O(cmpl_direct_2w);
+	O(djnzw_wrrel8);
+	O(idlpd_none);
+	O(pop_indexed_1w);
+	O(pop_indirect_1w);
+	O(popa_none);
+	O(pusha_none);
+#undef O
 };
 
 #endif // MAME_CPU_MCS96_MCS96_H

@@ -172,9 +172,7 @@ bool S760LibretroHost::load_core(const std::string& core_path) {
 }
 
 void S760LibretroHost::unload_core() {
-    if (!m_core_loaded) return;
-
-    if (m_retro_deinit) {
+    if (m_core_loaded && m_retro_deinit) {
         m_retro_deinit();
     }
 
@@ -189,6 +187,25 @@ void S760LibretroHost::unload_core() {
         m_module_handle = nullptr;
     }
 #endif
+
+    m_retro_init = nullptr;
+    m_retro_deinit = nullptr;
+    m_retro_api_version = nullptr;
+    m_retro_get_system_info = nullptr;
+    m_retro_get_system_av_info = nullptr;
+    m_retro_set_environment = nullptr;
+    m_retro_set_video_refresh = nullptr;
+    m_retro_set_audio_sample = nullptr;
+    m_retro_set_audio_sample_batch = nullptr;
+    m_retro_set_input_poll = nullptr;
+    m_retro_set_input_state = nullptr;
+    m_retro_load_game = nullptr;
+    m_retro_unload_game = nullptr;
+    m_retro_run = nullptr;
+    m_retro_serialize_size = nullptr;
+    m_retro_serialize = nullptr;
+    m_retro_unserialize = nullptr;
+    m_retro_reset = nullptr;
 
     m_core_loaded = false;
 }
@@ -251,10 +268,14 @@ size_t S760LibretroHost::read_audio_frames(float* left_out, float* right_out, si
         if (right_out) right_out[i] = m_audio_ring[idx * 2 + 1];
     }
 
-    // Fill remaining requested frames with silence
-    for (size_t i = to_read; i < num_frames; ++i) {
-        if (left_out) left_out[i] = 0.0f;
-        if (right_out) right_out[i] = 0.0f;
+    // Fill remaining requested frames with silence and track underruns
+    if (to_read < num_frames) {
+        m_underrun_count.fetch_add(1, std::memory_order_relaxed);
+        m_underrun_frames.fetch_add(num_frames - to_read, std::memory_order_relaxed);
+        for (size_t i = to_read; i < num_frames; ++i) {
+            if (left_out) left_out[i] = 0.0f;
+            if (right_out) right_out[i] = 0.0f;
+        }
     }
 
     m_audio_read_pos = (m_audio_read_pos + to_read) % AUDIO_BUFFER_FRAMES;
@@ -272,6 +293,8 @@ AudioBufferStats S760LibretroHost::get_audio_stats() const {
     s.available_frames = m_audio_frames_available;
     s.capacity_frames = AUDIO_BUFFER_FRAMES;
     s.sample_rate = m_core_sample_rate;
+    s.underrun_count = m_underrun_count.load(std::memory_order_relaxed);
+    s.underrun_frames = m_underrun_frames.load(std::memory_order_relaxed);
     return s;
 }
 

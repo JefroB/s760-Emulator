@@ -151,6 +151,16 @@ class OpcodeList:
         if not is_196:
             save_full_one(f, t, "fetch", self.fetch.source)
             save_full_one(f, t, "fetch_noirq", self.fetch_noirq.source)
+        # 196 extended opcodes (PUSHA/POPA/BMOV/BMOVI/CMPL/DJNZW/IDLPD/POP) are
+        # part of the real S80C196KB. For the base `mcs96` build, ALSO emit their
+        # bodies as mcs96_device:: members so the 8x9x-family cores (which derive
+        # from mcs96_device and whose exec switch now routes these opcodes) can
+        # execute them. The declarations live in mcs96.h. The dedicated i8xc196
+        # build keeps emitting its own copies (above), unchanged.
+        if t == "mcs96":
+            for opc in self.opcode_info:
+                if opc.is_196:
+                    save_full_one(f, t, opc.name + "_" + opc.amode + "_196", opc.source)
     
     def save_exec(self, f, t):
         print("void %s_device::do_exec_full()" % t, file=f)
@@ -179,7 +189,12 @@ def main(argv):
 
     m = argv[1]
     t = argv[2]
-    opcodes = OpcodeList(argv[3], t == "i8xc196")
+    # The S-760's Intel S80C196KB has BOTH the 8x9x peripheral set AND the 196
+    # extended opcodes (PUSHA/POPA/BMOV/BMOVI/CMPL/DJNZW/IDLPD/POP). MAME's
+    # i8x9x core historically omitted the 196 opcodes; include them here so the
+    # 8x9x-based s760 CPU can execute them instead of hitting fatalerror.
+    cores_with_196_opcodes = ("i8xc196", "i8x9x")
+    opcodes = OpcodeList(argv[3], t in cores_with_196_opcodes)
     
     try:
         f = open(argv[4], "w")

@@ -445,10 +445,12 @@ void s760_sound_device::populate_factory_waveforms()
 					}
 					else
 					{
-						uint32_t num_patches = 0, num_samples = 0;
 						file.seekg(0x60, std::ios::beg);
-						file.read(reinterpret_cast<char *>(&num_patches), 4);
-						file.read(reinterpret_cast<char *>(&num_samples), 4);
+						uint32_t num_patches = 0, num_samples = 0;
+						uint8_t count_buf[8] = {0};
+						file.read(reinterpret_cast<char *>(count_buf), 8);
+						num_patches = static_cast<uint32_t>(count_buf[0]) | (static_cast<uint32_t>(count_buf[1]) << 8) | (static_cast<uint32_t>(count_buf[2]) << 16) | (static_cast<uint32_t>(count_buf[3]) << 24);
+						num_samples = static_cast<uint32_t>(count_buf[4]) | (static_cast<uint32_t>(count_buf[5]) << 8) | (static_cast<uint32_t>(count_buf[6]) << 16) | (static_cast<uint32_t>(count_buf[7]) << 24);
 
 						size_t cur_offset = 0x10000; // Sector 128 (64KB offset for Sample Blocks)
 						uint32_t word_dest = 0;
@@ -456,29 +458,37 @@ void s760_sound_device::populate_factory_waveforms()
 						for (uint32_t s_idx = 0; s_idx < num_samples && s_idx < 16; s_idx++)
 						{
 							file.seekg(cur_offset, std::ios::beg);
-							char s_hdr[256] = {0};
-							file.read(s_hdr, 256);
+							uint8_t s_hdr[256] = {0};
+							file.read(reinterpret_cast<char *>(s_hdr), 256);
+							if (file.gcount() != 256) break;
 
 							SampleDesc desc;
 							memset(desc.name, 0, sizeof(desc.name));
 							memcpy(desc.name, &s_hdr[0x02], 16);
-							desc.sample_rate = *reinterpret_cast<uint32_t *>(&s_hdr[0x12]);
-							desc.loop_start = *reinterpret_cast<uint32_t *>(&s_hdr[0x16]);
-							desc.loop_end = *reinterpret_cast<uint32_t *>(&s_hdr[0x1A]);
-							desc.root_key = static_cast<uint8_t>(s_hdr[0x1E]);
-							uint32_t data_len_bytes = *reinterpret_cast<uint32_t *>(&s_hdr[0x20]);
+							desc.sample_rate = static_cast<uint32_t>(s_hdr[0x12]) | (static_cast<uint32_t>(s_hdr[0x13]) << 8) | (static_cast<uint32_t>(s_hdr[0x14]) << 16) | (static_cast<uint32_t>(s_hdr[0x15]) << 24);
+							desc.loop_start = static_cast<uint32_t>(s_hdr[0x16]) | (static_cast<uint32_t>(s_hdr[0x17]) << 8) | (static_cast<uint32_t>(s_hdr[0x18]) << 16) | (static_cast<uint32_t>(s_hdr[0x19]) << 24);
+							desc.loop_end = static_cast<uint32_t>(s_hdr[0x1A]) | (static_cast<uint32_t>(s_hdr[0x1B]) << 8) | (static_cast<uint32_t>(s_hdr[0x1C]) << 16) | (static_cast<uint32_t>(s_hdr[0x1D]) << 24);
+							desc.root_key = s_hdr[0x1E];
+							uint32_t data_len_bytes = static_cast<uint32_t>(s_hdr[0x20]) | (static_cast<uint32_t>(s_hdr[0x21]) << 8) | (static_cast<uint32_t>(s_hdr[0x22]) << 16) | (static_cast<uint32_t>(s_hdr[0x23]) << 24);
+
+							if (data_len_bytes == 0 || (data_len_bytes % 2 != 0)) {
+								cur_offset += 256 + ((data_len_bytes + 511) & ~511);
+								continue;
+							}
 
 							desc.wave_offset = word_dest;
 							desc.length = data_len_bytes / sizeof(int16_t);
 							desc.loop_mode = (desc.loop_end > desc.loop_start) ? 1 : 0;
 
-							if (word_dest + desc.length <= m_wave_ram.size())
+							if (word_dest <= m_wave_ram.size() && desc.length <= m_wave_ram.size() - word_dest)
 							{
 								file.read(reinterpret_cast<char *>(&m_wave_ram[word_dest]), data_len_bytes);
-								word_dest += desc.length;
+								if (static_cast<uint32_t>(file.gcount()) == data_len_bytes) {
+									word_dest += desc.length;
+									m_samples.push_back(desc);
+								}
 							}
 
-							m_samples.push_back(desc);
 							cur_offset += 256 + ((data_len_bytes + 511) & ~511);
 						}
 					}
@@ -497,6 +507,11 @@ void s760_sound_device::populate_factory_waveforms()
 		return;
 
 	// 2. High-Fidelity Multi-Harmonic Acoustic & Analog Instruments (Fallback Synthesis)
+	// Deterministic LCG pseudo-random generator for reproducible noise transients across runs
+	auto lcg_noise = [seed = 19930760u]() mutable -> double {
+		seed = seed * 1664525u + 1013904223u;
+		return (static_cast<double>(seed & 0xFFFF) / 65535.0) * 2.0 - 1.0;
+	};
 
 	// Wave 1: Roland JP-8 Brass Ensemble (Dual detuned analog saws + brass formant resonance)
 	uint32_t w1_start = 0;
@@ -528,7 +543,7 @@ void s760_sound_device::populate_factory_waveforms()
 		double s3 = 0.5 * std::sin(2.0 * M_PI * 260.85 * t);
 		double s4 = 0.3 * std::sin(2.0 * M_PI * 523.26 * t);
 		double s5 = 0.2 * std::sin(2.0 * M_PI * 784.89 * t);
-		double noise = ((double)(rand() % 100) / 100.0 - 0.5) * 0.05 * std::exp(-20.0 * t); // Bow friction transient
+		double noise = lcg_noise() * 0.05 * std::exp(-20.0 * t); // Bow friction transient
 		double strings = bow_attack * (0.4 * s1 + 0.25 * s2 + 0.25 * s3 + 0.15 * s4 + 0.1 * s5 + noise);
 		m_wave_ram[w2_start + i] = (int16_t)(std::clamp(strings * 24000.0, -32767.0, 32767.0));
 	}
@@ -539,7 +554,7 @@ void s760_sound_device::populate_factory_waveforms()
 	for (uint32_t i = 0; i < w3_len; i++)
 	{
 		double t = (double)i / 44100.0;
-		double hammer = ((double)(rand() % 100) / 100.0 - 0.5) * 0.4 * std::exp(-60.0 * t); // Felt hammer knock
+		double hammer = lcg_noise() * 0.4 * std::exp(-60.0 * t); // Felt hammer knock
 		double piano = hammer;
 		for (int p = 1; p <= 12; p++)
 		{
@@ -555,7 +570,7 @@ void s760_sound_device::populate_factory_waveforms()
 	uint32_t w4_len = 44100;
 	std::vector<double> delay_line(700, 0.0);
 	for (size_t d = 0; d < delay_line.size(); d++)
-		delay_line[d] = ((double)(rand() % 1000) / 500.0 - 1.0) * std::exp(- (double)d / 120.0); // Pluck excitation
+		delay_line[d] = lcg_noise() * std::exp(- (double)d / 120.0); // Pluck excitation
 
 	double last_val = 0.0;
 	size_t ptr = 0;
@@ -963,26 +978,12 @@ static const uint8_t *get_font_glyph(char c)
 	}
 }
 
-static void draw_string(bitmap_ind16 &bitmap, int x, int y, const char *str, uint16_t fg, uint16_t bg = 0xffff)
-{
-	while (*str)
-	{
-		char c = *str++;
-		const uint8_t *glyph = get_font_glyph(c);
-		for (int row = 0; row < 8; row++)
-		{
-			uint8_t bits = glyph[row];
-			for (int col = 0; col < 8; col++)
-			{
-				if (bits & (0x80 >> col))
-					bitmap.pix(y + row, x + col) = fg;
-				else if (bg != 0xffff)
-					bitmap.pix(y + row, x + col) = bg;
-			}
-		}
-		x += 8;
-	}
-}
+// NOTE (ui-consolidation task 1.4): the draw_string() helper was removed (R1.2,
+// R2.2). After tasks 1.1-1.3 deleted the invented GUI renderers and the fabricated
+// LCD/CRT text fallbacks, draw_string had no remaining call sites — it only ever
+// painted invented chrome text. The genuine SED1335 LCD rasterizer (lcd_update) and
+// the dormant RFSC16A VDP rasterizer (crt_update) draw glyphs directly from VRAM via
+// get_font_glyph(), which is kept.
 
 class s760_state : public driver_device
 {
@@ -991,18 +992,13 @@ public:
 		: driver_device(mconfig, type, tag)
 		, m_maincpu(*this, "maincpu")
 		, m_crt_screen(*this, "crt_screen")
-		, m_lcd_vram(*this, "lcd_vram")
 		, m_key_arrows(*this, "KEY_ARROWS")
-		, m_mouse_btn(*this, "MOUSEBTN")
 		, m_gotek_ctrl(*this, "GOTEK_CTRL")
 		, m_sound(*this, "s760_sound")
 	{ }
 
 	void s760(machine_config &config);
 	void s760_palette(palette_device &palette) const;
-
-	DECLARE_INPUT_CHANGED_MEMBER(mouse_x);
-	DECLARE_INPUT_CHANGED_MEMBER(mouse_y);
 
 	// IRQ Sources handled by Gate Array (0xF001)
 	enum irq_source : uint8_t
@@ -1032,10 +1028,52 @@ protected:
 private:
 	required_device<i8x9x_device> m_maincpu;
 	required_device<screen_device> m_crt_screen;
-	required_shared_ptr<uint16_t> m_lcd_vram;
+
+	// IC20 BOOT ROM HLE: the OS makes hardcoded LCALLs into low memory
+	// (e.g. LCALL 0x018D from the init dispatcher at 0x2A94) expecting the
+	// real-hardware IC20 BOOT ROM service routines to live at 0x0000-0x01FF.
+	// Our disk image carries no IC20 code there (that region is the floppy
+	// boot-sector banner, not CPU code), so without HLE the call lands in
+	// zeroed RAM, the CPU derails, and the OS resets forever (observed: 243
+	// reset passes, EI never reached). As a first bring-up step we stub the
+	// entry with a bare RET so the call returns cleanly to the OS; a tap logs
+	// the service selector (RAM slot 0x0104) and pointer args so the real ABI
+	// can be reconstructed. See docs/03-cpu-investigation.md (IC20 ABI).
+	memory_passthrough_handler m_ic20_tap;
+	void ic20_hle_install();
+	uint16_t ic20_ret_stub_r() { return 0xF0F0; } // both bytes = 0xF0 (MCS-96 RET)
+
+	// OS resident image RAM shadow (runtime 0x2080-0xDFFF).
+	//
+	// On real hardware the BOOT ROM (IC20) copies the first 64KB of the disk
+	// payload into RAM and the 80C196KB executes it from there (see
+	// docs/07-emulation-spec.md "OS Code Payload ... loaded into RAM and
+	// executed"). The region is therefore READ/WRITE: the OS stores boot/UI
+	// state flags back into it (e.g. the reset init subroutine at 0x219e writes
+	// 0x8f7e / 0x2476 and reads them back). Mapping it as read-only .rom()
+	// silently drops those writes, so the reset init's validation never settles
+	// and control derails into zeroed low RAM — the OS re-enters reset forever
+	// and never reaches main init at 0x2831 (so the VDP/SED are never driven and
+	// the CRT stays black). Back it with RAM pre-loaded from the image instead.
+	std::unique_ptr<uint8_t[]> m_os_ram; // 0x2080-0xDFFF resident OS code+data RAM
+
+	// Interrupt vector table + low work window (runtime 0x2000-0x207F). The
+	// MCS-96 fetches IRQ vectors from 0x2000 + 2*level; this region sits in the
+	// gap between the register/work RAM (ends 0x1FFF) and the OS code (starts
+	// 0x2080) and was previously UNMAPPED (reads returned 0 → any interrupt
+	// vectored to 0x0000 and derailed the OS once main init enabled interrupts).
+	// Back it with RAM so vectors can be installed/written. Pre-loaded from the
+	// image (file 0x4780) which also lets any image-resident vector bytes land.
+	std::unique_ptr<uint8_t[]> m_vec_ram; // 0x2000-0x207F IRQ vectors + low work
+
+	// Note: the genuine Epson SED1335 LCD VRAM is the m_sed_vram[4096] member below,
+	// accessed via lcd_r/lcd_w. A former required_shared_ptr<uint16_t> m_lcd_vram
+	// ("lcd_vram") was vestigial — it had no backing .share() in s760_mem (the LCD is
+	// register/stream-mapped, not RAM-shared), so it aborted machine start with
+	// "Required shared pointer ':lcd_vram' not found" once the driver was rebuilt.
+	// Removed as a latent-bug fix; it was never read or written anywhere.
 
 	required_ioport m_key_arrows;
-	required_ioport m_mouse_btn;
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
 
@@ -1100,12 +1138,8 @@ private:
 	bool m_vdp_tile_plane_enable;
 	bool m_vdp_bitmap_plane_enable;
 
-	// Sampler GUI State
-	int m_cur_x;
-	int m_cur_y;
-	int m_active_tab;
+	// Sampler state: selected sample row used to seed the sound device preview.
 	int m_selected_row;
-	bool m_last_clicked;
 
 	// Gotek USB Floppy Emulator State
 	std::vector<std::string> m_gotek_paths;
@@ -1199,40 +1233,42 @@ private:
 
 	uint32_t lcd_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 	uint32_t crt_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
-
-	void render_perform_mode(bitmap_ind16 &bitmap);
-	void render_patch_mode(bitmap_ind16 &bitmap);
-	void render_partial_mode(bitmap_ind16 &bitmap);
-	void render_sample_mode(bitmap_ind16 &bitmap);
-	void render_disk_mode(bitmap_ind16 &bitmap);
-	void render_system_mode(bitmap_ind16 &bitmap);
-	void render_rack_panel(bitmap_ind16 &bitmap);
 };
-
-INPUT_CHANGED_MEMBER(s760_state::mouse_x)
-{
-	int delta = newval - oldval;
-	if (delta > 0x80)
-		delta -= 0x100;
-	else if (delta < -0x80)
-		delta += 0x100;
-
-	m_cur_x = std::clamp(m_cur_x + delta, 8, 632);
-}
-
-INPUT_CHANGED_MEMBER(s760_state::mouse_y)
-{
-	int delta = newval - oldval;
-	if (delta > 0x80)
-		delta -= 0x100;
-	else if (delta < -0x80)
-		delta += 0x100;
-
-	m_cur_y = std::clamp(m_cur_y + delta, 4, 354);
-}
 
 void s760_state::machine_start()
 {
+	// Resident OS image RAM (runtime 0x2080-0xCFFF). On real hardware the BOOT
+	// ROM copies the disk payload into RAM and the CPU executes it from there;
+	// the OS then writes boot/UI state back into this window. Allocate the RAM,
+	// pre-load it from the "maincpu" region (disk image) at file offset 0x4800
+	// (== runtime 0x2080), and install it over the program space so the OS's
+	// writes stick. This is what unblocks the boot (previously a read-only .rom()
+	// mapping dropped those writes and the reset init looped forever).
+	{
+		constexpr offs_t os_start = 0x2080;
+		constexpr offs_t os_end   = 0xCFFF;              // just below the 0xD000 VDP window
+		constexpr size_t os_size  = os_end - os_start + 1; // 0xAF80 bytes
+		m_os_ram = std::make_unique<uint8_t[]>(os_size);
+		const uint8_t *img = memregion("maincpu")->base();
+		// file 0x4800 maps to runtime 0x2080 (verified reset/base address)
+		memcpy(m_os_ram.get(), img + 0x4800, os_size);
+		m_maincpu->space(AS_PROGRAM).install_ram(os_start, os_end, m_os_ram.get());
+
+		// Interrupt-vector + low-work window 0x2000-0x207F (file 0x4780). Map as
+		// RAM so IRQ vectors exist (and are writable). The image bytes here are
+		// 0x0F fill, so the vectors still need to be *installed* with real ISR
+		// targets (see ic20_install_irq_vectors) — RAM alone just prevents the
+		// open-bus 0x0000 vector that derailed the OS after EI.
+		constexpr offs_t vec_start = 0x2000;
+		constexpr offs_t vec_end   = 0x207F;
+		constexpr size_t vec_size  = vec_end - vec_start + 1; // 0x80
+		m_vec_ram = std::make_unique<uint8_t[]>(vec_size);
+		memcpy(m_vec_ram.get(), img + 0x4780, vec_size);
+		m_maincpu->space(AS_PROGRAM).install_ram(vec_start, vec_end, m_vec_ram.get());
+	}
+
+	ic20_hle_install();
+
 	m_vdp_vram = std::make_unique<uint8_t[]>(0x20000); // 128KB TC511664 VRAM
 	memset(m_vdp_vram.get(), 0, 0x20000);
 	memset(m_vdp_regs, 0, sizeof(m_vdp_regs));
@@ -1285,11 +1321,7 @@ void s760_state::machine_start()
 	m_vdp_tile_plane_enable = true;
 	m_vdp_bitmap_plane_enable = true;
 
-	m_cur_x = 350;
-	m_cur_y = 100;
-	m_active_tab = 4; // Default to DISK Load Mode
 	m_selected_row = (m_sound->samples().size() > 5) ? 5 : 3;
-	m_last_clicked = false;
 
 	// Populate Gotek floppy disk images
 	m_gotek_paths = {
@@ -1378,7 +1410,7 @@ void s760_state::machine_reset()
 	m_ga_status = 0x04; // Bus Ready
 	m_irq_pending = 0;
 	m_int_line_asserted = false;
-	m_maincpu->set_input_line(MCS96_INT_VECTOR, CLEAR_LINE);
+	m_maincpu->set_input_line(i8x9x_device::EXTINT_LINE, CLEAR_LINE);
 
 	// Start 60Hz periodic system timer (software tick / HSO comparator pump)
 	m_timer_60hz->adjust(attotime::from_hz(60), 0, attotime::from_hz(60));
@@ -1400,6 +1432,7 @@ void s760_state::machine_reset()
 
 	m_peripherals_enabled = true;
 	m_sound->trigger_preview(m_selected_row);
+
 }
 
 void s760_state::fdc_load_disk_image(const std::string &path)
@@ -2210,7 +2243,7 @@ void s760_state::check_irq_state()
 	if (should_assert != m_int_line_asserted)
 	{
 		m_int_line_asserted = should_assert;
-		m_maincpu->set_input_line(MCS96_INT_VECTOR, should_assert ? ASSERT_LINE : CLEAR_LINE);
+		m_maincpu->set_input_line(i8x9x_device::EXTINT_LINE, should_assert ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -2471,17 +2504,14 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 
 		case 0x20: // Mouse X Low
 			m_vdp_mouse_x = (m_vdp_mouse_x & 0x0100) | data;
-			m_cur_x = std::clamp((int)m_vdp_mouse_x, 0, 639);
 			break;
 
 		case 0x21: // Mouse X High
 			m_vdp_mouse_x = (m_vdp_mouse_x & 0x00FF) | ((uint16_t)(data & 0x01) << 8);
-			m_cur_x = std::clamp((int)m_vdp_mouse_x, 0, 639);
 			break;
 
 		case 0x22: // Mouse Y Low
 			m_vdp_mouse_y = data;
-			m_cur_y = std::clamp((int)m_vdp_mouse_y, 0, 359);
 			break;
 
 		case 0x24: // Mouse Control
@@ -2513,6 +2543,23 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 	}
 }
 
+// Authentic OP-760 / Roland RFSC16A studio palette.
+//
+// Per docs/ROLAND_RFSC16A_VDP_AND_DISPLAY_ARCHITECTURE.md §5, the genuine Sony
+// CXA1145M RGB DAC outputs 10 fixed Roland studio pens (indices 0..9) selected
+// from an internal 16-color DAC table. The VDP character-attribute byte encodes
+// a 4-bit foreground pen and 4-bit background pen (both indexing this table).
+//
+// NOTE (ui-consolidation task 1.4): the former chrome-only pens 10..15 have been
+// removed (R1.2, R2.2). They existed solely for the now-deleted invented GUI
+// (render_rack_panel / render_*_mode): 10 = 1U rack charcoal chassis, 11 = rack
+// bezel highlight/screws, 12/13 = the drawn LCD-in-CRT green (the genuine SED1335
+// path renders monochrome pens 0/1 only — the green backlight tint is the React
+// shell's job per R6.2), 14 = the drawn Gotek OLED cyan, 15 = metallic knob gray.
+// None of these are referenced by the kept rasterizers (lcd_update uses pens 0/1;
+// crt_update's genuine VDP rasterizer defaults to fg=1/bg=2 and otherwise indexes
+// the authentic 0..9 studio pens). The chassis/knob/LCD-housing/Gotek chrome they
+// coloured is now owned by google-ui/.
 void s760_state::s760_palette(palette_device &palette) const
 {
 	palette.set_pen_color(0, rgb_t(0, 0, 0));         // 0: Black
@@ -2524,13 +2571,7 @@ void s760_state::s760_palette(palette_device &palette) const
 	palette.set_pen_color(6, rgb_t(190, 195, 205));   // 6: Light Gray Panel
 	palette.set_pen_color(7, rgb_t(0, 0, 96));        // 7: Dark Navy
 	palette.set_pen_color(8, rgb_t(0, 220, 220));     // 8: Cyan
-	palette.set_pen_color(9, rgb_t(24, 26, 30));      // 9: Dark Slate / Gotek Bezel
-	palette.set_pen_color(10, rgb_t(38, 40, 46));     // 10: 1U Rack Dark Charcoal Chassis
-	palette.set_pen_color(11, rgb_t(75, 80, 92));     // 11: Rack Bezel Highlight / Screws
-	palette.set_pen_color(12, rgb_t(30, 95, 35));     // 12: LCD Green Backlight Background
-	palette.set_pen_color(13, rgb_t(165, 245, 110));  // 13: LCD Bright Green Pixel / Text
-	palette.set_pen_color(14, rgb_t(80, 230, 255));   // 14: Gotek OLED Cyan/Blue
-	palette.set_pen_color(15, rgb_t(120, 125, 135));  // 15: Metallic Knob Gray
+	palette.set_pen_color(9, rgb_t(24, 26, 30));      // 9: Dark Slate
 }
 
 // Epson SED1335 (S1D13305) Front Panel LCD Controller Interface (0xE000 - 0xEFF7)
@@ -2661,882 +2702,49 @@ uint32_t s760_state::lcd_update(screen_device &screen, bitmap_ind16 &bitmap, con
 			}
 		}
 	}
-	else
-	{
-		// Render active front panel page according to active tab
-		const char *mode_names[] = { "PERFORM MODE", "PATCH EDIT", "PARTIAL EDIT", "SAMPLE EDIT", "DISK LOAD", "SYSTEM CONFIG" };
-		draw_string(bitmap, 24, 6,  "ROLAND  S-760", 1);
-		draw_string(bitmap, 12, 22, mode_names[m_active_tab], 1);
-		draw_string(bitmap, 12, 38, "SYSTEM v2.24  OK", 1);
-		draw_string(bitmap, 20, 50, "RAM: 32MB READY", 1);
-	}
+	// NOTE (ui-consolidation task 1.3): invented "render active front panel page"
+	// fallback removed (R2.3). The old `else` branch fabricated LCD text
+	// ("ROLAND S-760" / mode name / "SYSTEM v2.24 OK" / "RAM: 32MB READY") via
+	// draw_string whenever the SED1335 VRAM was empty. That content was invented
+	// chrome, not genuine controller output, so it is gone. When VRAM holds no
+	// real data (e.g. until the OS runs — see F2) the LCD now stays a defined
+	// blank screen (the bitmap.fill(0) above). The genuine SED1335 160x64 VRAM
+	// rasterizer above is unchanged.
 	return 0;
 }
 
-void s760_state::render_perform_mode(bitmap_ind16 &bitmap)
-{
-	// Sub-ribbon
-	draw_string(bitmap, 16, 30, "Perform Play 1", 0, 6);
-	for (int y = 29; y < 39; y++)
-		for (int x = 200; x < 244; x++)
-			bitmap.pix(y, x) = 5;
-	draw_string(bitmap, 204, 30, "Pform", 1, 5);
-
-	for (int y = 28; y < 40; y++) {
-		bitmap.pix(y, 360) = 0;
-		bitmap.pix(y, 425) = 0;
-		bitmap.pix(y, 490) = 0;
-	}
-	draw_string(bitmap, 372, 30, "Mark", 0, 6);
-	draw_string(bitmap, 437, 30, "Jump", 0, 6);
-	draw_string(bitmap, 502, 30, "Com", 8, 6);
-
-	// Main Screen Content
-	draw_string(bitmap, 16, 44, "PRM: 01 JP-8 MULTI SET", 1, 2);
-	draw_string(bitmap, 340, 44, "Master: 127", 8, 2);
-
-	// Yellow Table Header
-	for (int y = 55; y < 65; y++)
-		for (int x = 12; x < 492; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 16, 56, "Part  Patch Name          MIDI-Ch  Output  Pan  Level", 0, 4);
-
-	const char *perf_parts[] = {
-		" 1   P11: JP-8 BRASS 1    01       1-2     <0>  127",
-		" 2   P12: JP-8 STRGS 1    02       1-2     L15  110",
-		" 3   P13: VP STRINGS 1    03       1-2     R15  105",
-		" 4   P14: VP CHOIR 1      04       1-2     <0>  090",
-		" 5   P15: SYNTH 1         05       1-2     <0>  100",
-		" 6   P16: SYNTH 2         06       1-2     <0>  100",
-		" 7   P17: SYNTH 3         07       1-2     <0>  100",
-		" 8   P18: SYNTH 4         08       1-2     <0>  100",
-	};
-
-	for (int i = 0; i < 8; i++)
-	{
-		uint16_t color = (i == m_selected_row % 8) ? 4 : 1;
-		draw_string(bitmap, 16, 67 + i * 10, perf_parts[i], color, 2);
-	}
-
-	// Peak Level meter box
-	for (int y = 55; y < 65; y++)
-		for (int x = 504; x < 624; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 524, 56, "Peak Level", 0, 4);
-
-	for (int y = 68; y < 146; y++)
-		for (int x = 504; x < 624; x++)
-			bitmap.pix(y, x) = 0;
-
-	for (int s = 0; s < 12; s++)
-	{
-		int my = 136 - s * 6;
-		uint16_t seg_color = (s < 8) ? 3 : (s < 10) ? 4 : 5;
-		for (int y = my; y < my + 4; y++)
-		{
-			for (int x = 520; x < 560; x++) bitmap.pix(y, x) = seg_color;
-			for (int x = 568; x < 608; x++) bitmap.pix(y, x) = seg_color;
-		}
-	}
-	draw_string(bitmap, 510, 72, "L", 1, 0);
-	draw_string(bitmap, 612, 72, "R", 1, 0);
-
-	// Keyboard Map
-	for (int y = 150; y < 160; y++)
-		for (int x = 12; x < 624; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 16, 151, "Keyboard Part Map (C-1 to G9)", 0, 4);
-
-	// Soft buttons
-	const char *soft_btns[] = { "[ ] KbdOn", "Q-Samp", "Sol/Mut", "PartMap", "VolInfo" };
-	for (int b = 0; b < 5; b++)
-	{
-		int bx = b * 128 + 12;
-		for (int y = 222; y < 236; y++)
-			for (int x = bx; x < bx + 120; x++)
-				bitmap.pix(y, x) = 1;
-		draw_string(bitmap, bx + 10, 225, soft_btns[b], 0, 1);
-	}
-}
-
-void s760_state::render_patch_mode(bitmap_ind16 &bitmap)
-{
-	draw_string(bitmap, 16, 30, "Patch Common", 0, 6);
-	for (int y = 29; y < 39; y++)
-		for (int x = 200; x < 244; x++)
-			bitmap.pix(y, x) = 5;
-	draw_string(bitmap, 204, 30, "Patch", 1, 5);
-
-	for (int y = 28; y < 40; y++) {
-		bitmap.pix(y, 360) = 0;
-		bitmap.pix(y, 425) = 0;
-		bitmap.pix(y, 490) = 0;
-	}
-	draw_string(bitmap, 372, 30, "Mark", 0, 6);
-	draw_string(bitmap, 437, 30, "Jump", 0, 6);
-	draw_string(bitmap, 502, 30, "Com", 8, 6);
-
-	// Parameters
-	for (int y = 44; y < 54; y++)
-	{
-		for (int x = 12; x < 312; x++) bitmap.pix(y, x) = 4;
-		for (int x = 324; x < 624; x++) bitmap.pix(y, x) = 4;
-	}
-	draw_string(bitmap, 16, 45, "Parameter", 0, 4);
-	draw_string(bitmap, 328, 45, "Information", 0, 4);
-
-	draw_string(bitmap, 16, 60, "Patch Name:   [ 01 JP-8 BRASS 1 ]", 1, 2);
-	draw_string(bitmap, 16, 75, "1Shot Mode:   [ Off ]  (Off, On)", 1, 2);
-	draw_string(bitmap, 16, 90, "Bend Range:   Up: [ +2 ]  Down: [ -2 ]", 1, 2);
-	draw_string(bitmap, 16, 105,"Tone Assign:  [ Poly ]", 1, 2);
-
-	draw_string(bitmap, 328, 60, "Cutoff Offset: [------^------] +0", 1, 2);
-	draw_string(bitmap, 328, 76, "Reso Offset:   [------^------] +0", 1, 2);
-	draw_string(bitmap, 328, 92, "Attack Offset: [------^------] +0", 1, 2);
-	draw_string(bitmap, 328, 108,"Release Off:   [------^------] +0", 1, 2);
-	draw_string(bitmap, 328, 124,"V-Sens Offset: [------^------] +0", 1, 2);
-
-	for (int y = 144; y < 154; y++)
-		for (int x = 12; x < 624; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 16, 145, "Partial Key Assignment Overview", 0, 4);
-
-	const char *patch_btns[] = { "MIDISel", "[ ] O.W", "---", "---", "---" };
-	for (int b = 0; b < 5; b++)
-	{
-		int bx = b * 128 + 12;
-		uint16_t bg = (b == 0) ? 8 : 1;
-		for (int y = 222; y < 236; y++)
-			for (int x = bx; x < bx + 120; x++)
-				bitmap.pix(y, x) = bg;
-		draw_string(bitmap, bx + 10, 225, patch_btns[b], 0, bg);
-	}
-}
-
-void s760_state::render_partial_mode(bitmap_ind16 &bitmap)
-{
-	draw_string(bitmap, 16, 30, "Partial TVF", 0, 6);
-	for (int y = 29; y < 39; y++)
-		for (int x = 200; x < 244; x++)
-			bitmap.pix(y, x) = 5;
-	draw_string(bitmap, 204, 30, "Part1", 1, 5);
-
-	for (int y = 28; y < 40; y++) {
-		bitmap.pix(y, 360) = 0;
-		bitmap.pix(y, 425) = 0;
-		bitmap.pix(y, 490) = 0;
-	}
-	draw_string(bitmap, 372, 30, "Mark", 0, 6);
-	draw_string(bitmap, 437, 30, "Jump", 0, 6);
-	draw_string(bitmap, 502, 30, "Com", 8, 6);
-
-	for (int y = 44; y < 54; y++)
-		for (int x = 12; x < 624; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 16, 45, "TVF Filter Parameters & Graphic Envelope", 0, 4);
-
-	draw_string(bitmap, 16, 58, "Cutoff Freq: [  84 ]     Resonance: [  32 ]     Cutoff KF: [ +1.0 ]", 1, 2);
-	draw_string(bitmap, 16, 72, "Vel-Curve:   [ 1:/ ]     V-Sens:    [ +45 ]     Time KF:   [    0 ]", 1, 2);
-	draw_string(bitmap, 16, 86, "Envelope Points: [1] 0 127   [2] 74 45   [3] 102 0   [4] 127 0", 8, 2);
-
-	// Black background envelope graph box
-	for (int y = 100; y < 216; y++)
-		for (int x = 12; x < 624; x++)
-			bitmap.pix(y, x) = 0;
-
-	// Sustain marker (Green)
-	for (int y = 102; y < 214; y++)
-		bitmap.pix(y, 380) = 3;
-	draw_string(bitmap, 370, 106, "SUS", 3, 0);
-
-	// Soft buttons
-	const char *part_btns[] = { "[ ] Single", "---", "---", "Loop", "---" };
-	for (int b = 0; b < 5; b++)
-	{
-		int bx = b * 128 + 12;
-		for (int y = 222; y < 236; y++)
-			for (int x = bx; x < bx + 120; x++)
-				bitmap.pix(y, x) = 1;
-		draw_string(bitmap, bx + 10, 225, part_btns[b], 0, 1);
-	}
-}
-
-void s760_state::render_sample_mode(bitmap_ind16 &bitmap)
-{
-	draw_string(bitmap, 16, 30, "Sampling", 0, 6);
-	for (int y = 29; y < 39; y++)
-		for (int x = 200; x < 244; x++)
-			bitmap.pix(y, x) = 5;
-	draw_string(bitmap, 204, 30, "Samp1", 1, 5);
-
-	for (int y = 28; y < 40; y++) {
-		bitmap.pix(y, 360) = 0;
-		bitmap.pix(y, 425) = 0;
-		bitmap.pix(y, 490) = 0;
-	}
-	draw_string(bitmap, 372, 30, "Mark", 0, 6);
-	draw_string(bitmap, 437, 30, "Jump", 0, 6);
-	draw_string(bitmap, 502, 30, "Com", 8, 6);
-
-	draw_string(bitmap, 16, 44, "[ 1]PNO:MP-1.", 1, 2);
-	draw_string(bitmap, 320, 44, "Remaining 341.0sec/ 342.2sec", 1, 2);
-
-	const char *samp_params[] = {
-		"Mode            Stereo",
-		"Orig Key            C_4",
-		"Freq           44.1KHz",
-		"Time                .6",
-		"Pre-Trig           ---",
-		"Normalize          Off",
-		"Input           Analog",
-		"Type            OneWay",
-		"Trigger          Level",
-		"Threshold            0",
-		"Digital ATT          0"
-	};
-	for (int i = 0; i < 11; i++)
-		draw_string(bitmap, 16, 58 + i * 13, samp_params[i], 1, 2);
-
-	for (int y = 58; y < 70; y++)
-		for (int x = 320; x < 384; x++)
-			bitmap.pix(y, x) = 1;
-	draw_string(bitmap, 324, 60, "[EQ ON ]", 0, 1);
-
-	for (int y = 74; y < 84; y++)
-		for (int x = 320; x < 620; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 420, 75, "[H.F] [H.G] [L.F] [L.G]", 0, 4);
-
-	draw_string(bitmap, 320, 88,  "Input-Left   --    --    --    --", 1, 2);
-	draw_string(bitmap, 320, 102, "Input-Right  --    --    --    --", 1, 2);
-
-	// VU Meters Box
-	for (int y = 126; y < 204; y++)
-		for (int x = 320; x < 620; x++)
-			bitmap.pix(y, x) = 0;
-	for (int x = 320; x < 620; x++) {
-		bitmap.pix(126, x) = 8;
-		bitmap.pix(203, x) = 8;
-	}
-	for (int y = 126; y < 204; y++) {
-		bitmap.pix(y, 320) = 8;
-		bitmap.pix(y, 619) = 8;
-	}
-
-	draw_string(bitmap, 330, 142, "LEFT", 1, 0);
-	for (int seg = 0; seg < 10; seg++) {
-		uint16_t col = (seg < 6) ? 3 : (seg < 8) ? 4 : 5;
-		for (int dy = 0; dy < 6; dy++)
-			for (int dx = 0; dx < 12; dx++)
-				bitmap.pix(142 + dy, 395 + seg * 20 + dx) = col;
-	}
-
-	draw_string(bitmap, 330, 172, "RIGHT", 1, 0);
-	for (int seg = 0; seg < 10; seg++) {
-		uint16_t col = (seg < 5) ? 3 : (seg < 7) ? 4 : 5;
-		for (int dy = 0; dy < 6; dy++)
-			for (int dx = 0; dx < 12; dx++)
-				bitmap.pix(172 + dy, 395 + seg * 20 + dx) = col;
-	}
-}
-
-void s760_state::render_disk_mode(bitmap_ind16 &bitmap)
-{
-	draw_string(bitmap, 16, 30, "Disk Load", 0, 6);
-	for (int y = 29; y < 39; y++)
-		for (int x = 200; x < 244; x++)
-			bitmap.pix(y, x) = 5;
-	draw_string(bitmap, 204, 30, "Disk", 1, 5);
-
-	for (int y = 28; y < 40; y++) {
-		bitmap.pix(y, 360) = 0;
-		bitmap.pix(y, 425) = 0;
-		bitmap.pix(y, 490) = 0;
-	}
-	draw_string(bitmap, 372, 30, "Mark", 0, 6);
-	draw_string(bitmap, 437, 30, "Jump", 0, 6);
-	draw_string(bitmap, 502, 30, "Com", 8, 6);
-
-	draw_string(bitmap, 24, 44, "TG[Pfom]   ID[All]   CD[FDD:-FloppyDisk-]", 1, 2);
-
-	// Yellow table header bar
-	for (int y = 56; y < 66; y++)
-		for (int x = 12; x < 460; x++)
-			bitmap.pix(y, x) = 4;
-	draw_string(bitmap, 24, 57, "1files", 0, 4);
-	draw_string(bitmap, 340, 57, "Time P#", 0, 4);
-
-	const char *disk_rows[] = {
-		" 1: PNO:Acoustic Pno        22.2",
-		" 2:                          0.0",
-		" 3:                          0.0",
-		" 4:                          0.0",
-		" 5:                          0.0",
-		" 6:                          0.0",
-		" 7:                          0.0",
-		" 8:                          0.0",
-		" 9:                          0.0",
-		"10:                          0.0",
-		"11:                          0.0",
-		"12:                          0.0",
-		"13:                          0.0",
-		"14:                          0.0",
-		"15:                          0.0",
-		"16:                          0.0",
-	};
-
-	for (int i = 0; i < 16; i++)
-	{
-		int ry = 68 + (int)(i * 9.5);
-		draw_string(bitmap, 24, ry, disk_rows[i], 1, 2);
-	}
-
-	auto draw_param_box = [&](int pbx, int pby, int pbw, int pbh, const char *txt, const char *val) {
-		for (int y = pby; y < pby + 10; y++)
-			for (int x = pbx; x < pbx + pbw; x++)
-				bitmap.pix(y, x) = 4;
-		draw_string(bitmap, pbx + 30, pby + 1, txt, 0, 4);
-		draw_string(bitmap, pbx + 26, pby + 12, val, 8, 2);
-	};
-
-	draw_param_box(470, 56, 140, 22, "Int.", "363.8sec");
-	draw_param_box(470, 80, 140, 22, "Disk", "****.sec");
-	draw_param_box(470, 104, 140, 22, "Marked", "0");
-
-	// Soft buttons
-	for (int y = 222; y < 236; y++)
-		for (int x = 12; x < 104; x++)
-			bitmap.pix(y, x) = 1;
-	draw_string(bitmap, 28, 225, "AllOn", 0, 1);
-
-	for (int y = 222; y < 236; y++)
-		for (int x = 120; x < 220; x++)
-			bitmap.pix(y, x) = 8;
-	draw_string(bitmap, 156, 225, "---", 0, 8);
-
-	for (int y = 222; y < 236; y++)
-		for (int x = 236; x < 336; x++)
-			bitmap.pix(y, x) = 1;
-	draw_string(bitmap, 266, 225, "Load", 0, 1);
-
-	for (int y = 222; y < 236; y++)
-		for (int x = 352; x < 452; x++)
-			bitmap.pix(y, x) = 1;
-	draw_string(bitmap, 368, 225, "OW Off", 0, 1);
-
-	for (int y = 222; y < 236; y++)
-		for (int x = 468; x < 590; x++)
-			bitmap.pix(y, x) = 1;
-	draw_string(bitmap, 492, 225, "VolInfo", 0, 1);
-}
-
-void s760_state::render_system_mode(bitmap_ind16 &bitmap)
-{
-	draw_string(bitmap, 16, 30, "System SCSI", 0, 6);
-	for (int y = 29; y < 39; y++)
-		for (int x = 200; x < 244; x++)
-			bitmap.pix(y, x) = 5;
-	draw_string(bitmap, 204, 30, "Systm", 1, 5);
-
-	for (int y = 28; y < 40; y++) {
-		bitmap.pix(y, 360) = 0;
-		bitmap.pix(y, 425) = 0;
-		bitmap.pix(y, 490) = 0;
-	}
-	draw_string(bitmap, 372, 30, "Mark", 0, 6);
-	draw_string(bitmap, 437, 30, "Jump", 0, 6);
-	draw_string(bitmap, 502, 30, "Com", 8, 6);
-
-	const char *scsi_prms[] = {
-		"S-760 Self SCSI ID    7",
-		"Initial Drive    SCSI:6",
-		"Initial Volume       65",
-		"Boot Drive      Default",
-		"Fast Delete Mode    Off",
-		"Overwrite Switch    Off",
-		"CDP Driver Type     Off"
-	};
-	for (int i = 0; i < 7; i++)
-		draw_string(bitmap, 16, 60 + i * 18, scsi_prms[i], 1, 2);
-
-	// SCSI Targets Box
-	for (int y = 48; y < 208; y++)
-		for (int x = 310; x < 620; x++)
-			bitmap.pix(y, x) = 0;
-	for (int x = 310; x < 620; x++) {
-		bitmap.pix(48, x) = 8;
-		bitmap.pix(207, x) = 8;
-	}
-	for (int y = 48; y < 208; y++) {
-		bitmap.pix(y, 310) = 8;
-		bitmap.pix(y, 619) = 8;
-	}
-
-	const char *targets[] = {
-		"--0: - No Drive",
-		"--1: - No Drive",
-		"--2: - No Drive",
-		"--3: - No Drive",
-		"--4: - No Drive",
-		"--5: - No Drive",
-		"--6: - No Drive",
-		"ME7: S-760 Self",
-		"*FDD:-FloppyDisk-"
-	};
-	for (int t = 0; t < 9; t++)
-		draw_string(bitmap, 320, 54 + t * 16, targets[t], (t >= 7) ? 8 : 6, 0);
-}
-
-// 2. 1U Rack Front Panel with Embedded 160x64 LCD & Gotek Floppy Emulator
-void s760_state::render_rack_panel(bitmap_ind16 &bitmap)
-{
-	// 1. Fill 1U Rack Chassis Area (y = 240..359) with Dark Charcoal (Pen 10)
-	for (int y = 240; y < 360; y++)
-	{
-		for (int x = 0; x < 640; x++)
-		{
-			bitmap.pix(y, x) = 10;
-		}
-	}
-
-	// 2. Bezel Highlight & Shadow lines
-	for (int x = 0; x < 640; x++)
-	{
-		bitmap.pix(240, x) = 11; // Top Highlight Line
-		bitmap.pix(241, x) = 0;  // Bezel groove
-		bitmap.pix(358, x) = 11; // Bottom groove
-		bitmap.pix(359, x) = 0;  // Bottom shadow
-	}
-
-	// 3. Rack Mount Ears (Left x=0..14, Right x=626..639)
-	for (int y = 240; y < 360; y++)
-	{
-		bitmap.pix(y, 14) = 0;
-		bitmap.pix(y, 15) = 11;
-		bitmap.pix(y, 625) = 0;
-		bitmap.pix(y, 626) = 11;
-	}
-
-	auto draw_rack_screw = [&](int cx, int cy) {
-		for (int dy = -3; dy <= 3; dy++)
-			for (int dx = -3; dx <= 3; dx++)
-				if (dx * dx + dy * dy <= 10)
-					bitmap.pix(cy + dy, cx + dx) = 11;
-		for (int dx = -2; dx <= 2; dx++)
-			bitmap.pix(cy, cx + dx) = 0; // Screw slot
-	};
-
-	draw_rack_screw(7, 256);
-	draw_rack_screw(7, 344);
-	draw_rack_screw(633, 256);
-	draw_rack_screw(633, 344);
-
-	// 4. Left Silkscreen Panel Text & Power Switch (Unbranded Chassis)
-	draw_string(bitmap, 18, 256, "S-760", 8);
-	draw_string(bitmap, 18, 270, "DIGITAL", 6);
-	draw_string(bitmap, 18, 280, "SAMPLER", 6);
-
-	// Power Switch at (18..36, 298..336)
-	draw_string(bitmap, 18, 296, "POWER", 6);
-	for (int y = 308; y < 336; y++)
-		for (int x = 18; x < 38; x++)
-			bitmap.pix(y, x) = 0;
-	for (int y = 310; y < 334; y++)
-		for (int x = 20; x < 36; x++)
-			bitmap.pix(y, x) = 9;
-	for (int y = 312; y < 322; y++)
-		for (int x = 22; x < 34; x++)
-			bitmap.pix(y, x) = 3; // Power ON indicator
-
-	// 5. Embedded 160x64 Monochrome LCD Screen (x=48..215, y=246..317)
-	for (int y = 246; y < 318; y++)
-		for (int x = 48; x < 216; x++)
-			bitmap.pix(y, x) = 9;
-
-	for (int x = 48; x < 216; x++)
-	{
-		bitmap.pix(246, x) = 0;
-		bitmap.pix(317, x) = 11;
-	}
-	for (int y = 246; y < 318; y++)
-	{
-		bitmap.pix(y, 48) = 0;
-		bitmap.pix(y, 215) = 11;
-	}
-
-	// Render LCD screen pixels (160x64) from (52, 250) to (211, 313)
-	bool vram_has_data = m_sed_vram_active;
-	if (!vram_has_data)
-	{
-		for (int i = 0; i < 4096; i++)
-		{
-			if (m_sed_vram[i] != 0)
-			{
-				vram_has_data = true;
-				m_sed_vram_active = true;
-				break;
-			}
-		}
-	}
-
-	// Fill LCD backlight background (Pen 12)
-	for (int y = 0; y < 64; y++)
-		for (int x = 0; x < 160; x++)
-			bitmap.pix(250 + y, 52 + x) = 12;
-
-	if (vram_has_data && (m_sed_disp_mode != 0))
-	{
-		for (int y = 0; y < 64; y++)
-		{
-			int char_row = y / 8;
-			int py = y % 8;
-
-			for (int x = 0; x < 160; x++)
-			{
-				int char_col = x / 8;
-				int px = x % 8;
-
-				uint8_t text_bit = 0;
-				if (m_sed_disp_mode & 0x01)
-				{
-					uint8_t char_code = m_sed_vram[(m_sed_sad1 + char_row * 20 + char_col) & 0x0FFF];
-					const uint8_t *glyph = get_font_glyph(char_code ? (char)char_code : ' ');
-					text_bit = (glyph[py] & (0x80 >> px)) ? 1 : 0;
-				}
-
-				uint8_t gfx_bit = 0;
-				if (m_sed_disp_mode & 0x04)
-				{
-					int byte_offset = y * 20 + (x / 8);
-					uint8_t b = m_sed_vram[(m_sed_sad2 + byte_offset) & 0x0FFF];
-					gfx_bit = (b & (0x80 >> px)) ? 1 : 0;
-				}
-
-				uint8_t color = (m_sed_overlay_mode == 1) ? (text_bit ^ gfx_bit) :
-				                (m_sed_overlay_mode == 2) ? (text_bit & gfx_bit) : (text_bit | gfx_bit);
-				if (color)
-					bitmap.pix(250 + y, 52 + x) = 13; // Bright LCD Pixel (Pen 13)
-			}
-		}
-	}
-	else
-	{
-		const char *mode_names[] = { "PERFORM MODE", "PATCH EDIT", "PARTIAL EDIT", "SAMPLE EDIT", "DISK LOAD", "SYSTEM CONFIG" };
-		draw_string(bitmap, 60, 254, "S-760 SAMPLER", 13, 12);
-		draw_string(bitmap, 56, 268, mode_names[m_active_tab], 13, 12);
-		draw_string(bitmap, 56, 282, "SYSTEM v2.24  OK", 13, 12);
-		draw_string(bitmap, 64, 296, "RAM: 32MB READY", 13, 12);
-	}
-
-	// LCD Function buttons row below LCD [F1]..[F6] (y = 324..338)
-	const char *fkeys[6] = { "F1", "F2", "F3", "F4", "F5", "F6" };
-	for (int b = 0; b < 6; b++)
-	{
-		int bx = 52 + b * 27;
-		for (int y = 324; y < 338; y++)
-			for (int x = bx; x < bx + 22; x++)
-				bitmap.pix(y, x) = 9;
-		draw_string(bitmap, bx + 3, 327, fkeys[b], 1, 9);
-	}
-
-	// 6. Center Controls Section (x=222..434)
-	draw_string(bitmap, 224, 248, "MASTER", 6);
-	draw_string(bitmap, 224, 258, "VOLUME", 6);
-
-	// Master Volume knob (cx=246, cy=284, radius 13)
-	for (int dy = -13; dy <= 13; dy++)
-	{
-		for (int dx = -13; dx <= 13; dx++)
-		{
-			if (dx * dx + dy * dy <= 169)
-				bitmap.pix(284 + dy, 246 + dx) = 15;
-		}
-	}
-	bitmap.pix(284 - 10, 246) = 0; // Pointer notch
-
-	// PHONES jack at (246, 334)
-	draw_string(bitmap, 224, 314, "PHONES", 6);
-	for (int dy = -6; dy <= 6; dy++)
-		for (int dx = -6; dx <= 6; dx++)
-			if (dx * dx + dy * dy <= 36)
-				bitmap.pix(334 + dy, 246 + dx) = 0;
-	for (int dy = -3; dy <= 3; dy++)
-		for (int dx = -3; dx <= 3; dx++)
-			if (dx * dx + dy * dy <= 9)
-				bitmap.pix(334 + dy, 246 + dx) = 11;
-
-	// INPUT Level mini knobs at (286, 334) and (306, 334)
-	draw_string(bitmap, 276, 314, "INPUT L-R", 6);
-	auto draw_mini_knob = [&](int cx, int cy) {
-		for (int dy = -5; dy <= 5; dy++)
-			for (int dx = -5; dx <= 5; dx++)
-				if (dx * dx + dy * dy <= 25)
-					bitmap.pix(cy + dy, cx + dx) = 15;
-		bitmap.pix(cy - 4, cx) = 0;
-	};
-	draw_mini_knob(286, 334);
-	draw_mini_knob(306, 334);
-
-	// Center Keypad Matrix at x=334..430
-	auto draw_rack_btn = [&](int bx, int by, const char *txt, int bw = 28) {
-		for (int y = by; y < by + 16; y++)
-			for (int x = bx; x < bx + bw; x++)
-				bitmap.pix(y, x) = 9;
-		draw_string(bitmap, bx + 2, by + 4, txt, 1, 9);
-	};
-
-	draw_rack_btn(334, 252, "F1");
-	draw_rack_btn(366, 252, "F2");
-	draw_rack_btn(398, 252, "EDIT", 32);
-
-	draw_rack_btn(334, 274, "F3");
-	draw_rack_btn(366, 274, "F4");
-	draw_rack_btn(398, 274, "UTIL", 32);
-
-	draw_rack_btn(334, 296, "EXIT");
-	draw_rack_btn(366, 296, "MENU");
-	draw_rack_btn(398, 296, "ENTR", 32);
-
-	draw_rack_btn(334, 318, "DEC ");
-	draw_rack_btn(366, 318, "INC ");
-	draw_rack_btn(398, 318, "SHFT", 32);
-
-	// 7. Right Drive Bay: GOTEK USB Floppy Emulator (x=438..622, y=246..352)
-	for (int y = 246; y < 352; y++)
-		for (int x = 438; x < 622; x++)
-			bitmap.pix(y, x) = 9;
-
-	for (int x = 438; x < 622; x++)
-	{
-		bitmap.pix(246, x) = 0;
-		bitmap.pix(351, x) = 11;
-	}
-	for (int y = 246; y < 352; y++)
-	{
-		bitmap.pix(y, 438) = 0;
-		bitmap.pix(y, 621) = 11;
-	}
-
-	draw_string(bitmap, 444, 248, "GOTEK FlashFloppy USB", 6, 9);
-
-	// Gotek OLED Display Glass (x=444..564, y=258..298)
-	for (int y = 258; y < 298; y++)
-		for (int x = 444; x < 564; x++)
-			bitmap.pix(y, x) = 0; // OLED Deep Black
-
-	for (int x = 444; x < 564; x++)
-	{
-		bitmap.pix(258, x) = 11;
-		bitmap.pix(297, x) = 11;
-	}
-	for (int y = 258; y < 298; y++)
-	{
-		bitmap.pix(y, 444) = 11;
-		bitmap.pix(y, 563) = 11;
-	}
-
-	// Line 1: [01/08] L701_1.IMG
-	char oled_line1[32];
-	int total_img = (int)m_gotek_names.size();
-	const char *cur_name = (total_img > 0) ? m_gotek_names[m_gotek_selected_idx].c_str() : "NO IMAGES";
-	snprintf(oled_line1, sizeof(oled_line1), "[%02d/%02d] %-9s", m_gotek_selected_idx + 1, total_img, cur_name);
-	draw_string(bitmap, 448, 262, oled_line1, 14, 0);
-
-	// Line 2: Track & Mount Status
-	char oled_line2[32];
-	if (m_gotek_selected_idx == m_gotek_mounted_idx)
-		snprintf(oled_line2, sizeof(oled_line2), "T:00.0 *MOUNTED*");
-	else
-		snprintf(oled_line2, sizeof(oled_line2), "T:00.0 [PUSH-SEL]");
-	draw_string(bitmap, 448, 274, oled_line2, 14, 0);
-
-	// Line 3: Drive Specs
-	draw_string(bitmap, 448, 286, "Roland S-760 1.44M", 14, 0);
-
-	// Rotary Encoder Knob (cx=592, cy=276, radius 14)
-	for (int dy = -14; dy <= 14; dy++)
-	{
-		for (int dx = -14; dx <= 14; dx++)
-		{
-			int dist2 = dx * dx + dy * dy;
-			if (dist2 <= 196)
-			{
-				if (dist2 > 140)
-					bitmap.pix(276 + dy, 592 + dx) = ((dx + dy) & 2) ? 6 : 11; // Knurled outer ring
-				else if (dist2 <= 49)
-					bitmap.pix(276 + dy, 592 + dx) = 9; // Center push button cap
-				else
-					bitmap.pix(276 + dy, 592 + dx) = 15; // Inner dial body
-			}
-		}
-	}
-	draw_string(bitmap, 578, 250, "ENCODER", 6, 9);
-	draw_string(bitmap, 582, 294, "PUSH", 6, 9);
-
-	// Indicator dot on encoder dial based on angle
-	double rad = m_gotek_encoder_angle * (2.0 * M_PI / 12.0);
-	int dot_x = 592 + (int)(9.0 * cos(rad));
-	int dot_y = 276 + (int)(9.0 * sin(rad));
-	bitmap.pix(dot_y, dot_x) = 1;
-	bitmap.pix(dot_y + 1, dot_x) = 1;
-
-	// Gotek Interactive Buttons: [ < ] [ > ] [ SEL ]
-	auto draw_gotek_btn = [&](int bx, int by, int bw, const char *txt, bool is_sel = false) {
-		for (int y = by; y < by + 18; y++)
-			for (int x = bx; x < bx + bw; x++)
-				bitmap.pix(y, x) = 6;
-		for (int x = bx; x < bx + bw; x++)
-		{
-			bitmap.pix(by, x) = 1;
-			bitmap.pix(by + 17, x) = 0;
-		}
-		for (int y = by; y < by + 18; y++)
-		{
-			bitmap.pix(y, bx) = 1;
-			bitmap.pix(y, bx + bw - 1) = 0;
-		}
-		draw_string(bitmap, bx + (bw - (int)strlen(txt) * 8) / 2, by + 5, txt, is_sel ? 5 : 0, 6);
-	};
-
-	draw_gotek_btn(448, 306, 32, "<");
-	draw_gotek_btn(486, 306, 32, ">");
-	draw_gotek_btn(524, 306, 42, "SEL", true);
-
-	// USB Stick Slot & Flash Drive Body (x=572..614, y=308..324)
-	for (int y = 308; y < 324; y++)
-		for (int x = 572; x < 614; x++)
-			bitmap.pix(y, x) = 0; // USB Socket
-
-	for (int y = 310; y < 322; y++)
-		for (int x = 576; x < 610; x++)
-			bitmap.pix(y, x) = 5; // Red USB Flash Drive Body
-	for (int y = 312; y < 320; y++)
-		for (int x = 584; x < 602; x++)
-			bitmap.pix(y, x) = 0; // Black grip inset
-	draw_string(bitmap, 574, 328, "USB", 6, 9);
-
-	// Disk Activity LED at (452, 336)
-	uint16_t led_color = (m_gotek_activity_timer > 0) ? 3 : 7;
-	for (int dy = -3; dy <= 3; dy++)
-		for (int dx = -3; dx <= 3; dx++)
-			if (dx * dx + dy * dy <= 9)
-				bitmap.pix(336 + dy, 452 + dx) = led_color;
-	draw_string(bitmap, 460, 332, "ACT", 6, 9);
-}
-
-// OP-760 Color CRT Monitor Output + 1U Rack Panel Composite Renderer (640x360)
+// NOTE (ui-consolidation task 1.1): invented GUI renderers removed.
+// render_perform_mode / render_patch_mode / render_partial_mode /
+// render_sample_mode / render_disk_mode / render_system_mode /
+// render_rack_panel deleted (R1.2, R2.2).
+//
+// crt_update rewritten in ui-consolidation task 1.2 (R2.3, R2.4).
+// CHOSEN APPROACH: Option 2 (pragmatic blank/background screen).
+//   Per finding F1 there is no authentic VDP framebuffer to "keep": the old CRT
+//   image was 100% invented chrome (banner, mode ribbon/tabs, per-mode pages,
+//   soft-button bar, rack panel, mouse crosshair). Per F2 the OS cannot cold-boot
+//   without the IC20 BOOT ROM, so the RFSC16A VDP is never driven to produce a
+//   real image today.
+//   This function now:
+//     - clears the bitmap to a defined background (blank screen), AND
+//     - still rasterizes genuine RFSC16A VRAM when (and only when) the OS has
+//       actually written tile/attribute data into VDP VRAM (preserves real
+//       emulation for the eventual LLE path; renders blank until then).
+//   ALL invented chrome and chrome-navigation input handling has been removed.
+//   The 1U rack strip, LCD/OLED housings, knobs, cursor and the drawn studio UI
+//   are now owned by the React shell (google-ui/). Live interactive CRT content
+//   is deferred to the C++-core bridge path (see spec Phase 3).
+//
+// Authentic OP-760 (RFSC16A VDP) display surface — CRT region only (640x240).
 uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
-	// Process Keyboard Arrow inputs for instant responsive cursor motion
-	uint8_t keys = m_key_arrows->read();
-	if (!(keys & 0x01)) m_cur_x -= 5; // Arrow Left
-	if (!(keys & 0x02)) m_cur_x += 5; // Arrow Right
-	if (!(keys & 0x04)) m_cur_y -= 5; // Arrow Up
-	if (!(keys & 0x08)) m_cur_y += 5; // Arrow Down
+	// Defined background: clear the full CRT surface to black (pen 0).
+	// This is the blank-screen baseline per Option 2 / F1 / F2.
+	bitmap.fill(0, cliprect);
 
-	m_cur_x = std::clamp(m_cur_x, 8, 632);
-	m_cur_y = std::clamp(m_cur_y, 4, 354);
-
-	// Process Gotek physical buttons & rotary encoder hotkeys
-	uint8_t gotek_in = m_gotek_ctrl->read();
-	bool gotek_prev_btn = !(gotek_in & 0x01);
-	bool gotek_next_btn = !(gotek_in & 0x02);
-	bool gotek_select_btn = !(gotek_in & 0x04);
-
-	if (gotek_prev_btn && !m_last_gotek_prev)
-	{
-		int n = (int)m_gotek_names.size();
-		m_gotek_selected_idx = (m_gotek_selected_idx - 1 + n) % n;
-		m_gotek_encoder_angle = (m_gotek_encoder_angle - 1 + 12) % 12;
-	}
-	if (gotek_next_btn && !m_last_gotek_next)
-	{
-		int n = (int)m_gotek_names.size();
-		m_gotek_selected_idx = (m_gotek_selected_idx + 1) % n;
-		m_gotek_encoder_angle = (m_gotek_encoder_angle + 1) % 12;
-	}
-	if (gotek_select_btn && !m_last_gotek_select)
-	{
-		m_gotek_mounted_idx = m_gotek_selected_idx;
-		m_gotek_activity_timer = 40;
-		m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
-	}
-	m_last_gotek_prev = gotek_prev_btn;
-	m_last_gotek_next = gotek_next_btn;
-	m_last_gotek_select = gotek_select_btn;
-
-	if (m_gotek_activity_timer > 0)
-		m_gotek_activity_timer--;
-
-	// Handle Click / Selection (Mouse Button 1, Space, or Enter)
-	uint8_t btn = m_mouse_btn->read();
-	bool clicked = !(keys & 0x10) || !(btn & 0x01);
-	bool click_edge = clicked && !m_last_clicked;
-	m_last_clicked = clicked;
-
-	if (click_edge)
-	{
-		if (m_cur_y >= 14 && m_cur_y <= 28)
-		{
-			if (m_cur_x >= 12 && m_cur_x <= 84) m_active_tab = 0;       // PERFORM
-			else if (m_cur_x >= 95 && m_cur_x <= 160) m_active_tab = 1;  // PATCH
-			else if (m_cur_x >= 170 && m_cur_x <= 252) m_active_tab = 2; // PARTIAL
-			else if (m_cur_x >= 265 && m_cur_x <= 336) m_active_tab = 3; // SAMPLE
-			else if (m_cur_x >= 345 && m_cur_x <= 408) m_active_tab = 4; // DISK
-			else if (m_cur_x >= 420 && m_cur_x <= 490) m_active_tab = 5; // SYSTEM
-		}
-		else if (m_cur_y >= 58 && m_cur_y <= 218 && m_cur_x >= 14 && m_cur_x <= 480)
-		{
-			m_selected_row = std::clamp((m_cur_y - 58) / 10, 0, 15);
-			m_sound->trigger_preview(m_selected_row);
-		}
-		// Gotek Interactive Buttons:
-		else if (m_cur_y >= 304 && m_cur_y <= 326)
-		{
-			int n = (int)m_gotek_names.size();
-			if (m_cur_x >= 448 && m_cur_x <= 480) // [ < ] Prev Button
-			{
-				m_gotek_selected_idx = (m_gotek_selected_idx - 1 + n) % n;
-				m_gotek_encoder_angle = (m_gotek_encoder_angle - 1 + 12) % 12;
-			}
-			else if (m_cur_x >= 486 && m_cur_x <= 518) // [ > ] Next Button
-			{
-				m_gotek_selected_idx = (m_gotek_selected_idx + 1) % n;
-				m_gotek_encoder_angle = (m_gotek_encoder_angle + 1) % 12;
-			}
-			else if (m_cur_x >= 524 && m_cur_x <= 566) // [ SEL ] Select Button
-			{
-				m_gotek_mounted_idx = m_gotek_selected_idx;
-				m_gotek_activity_timer = 40;
-				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
-				fdc_load_disk_image(m_gotek_paths[m_gotek_mounted_idx]);
-			}
-		}
-		// Gotek Rotary Encoder Dial (center at 592, 276, radius 16):
-		else if (std::hypot(m_cur_x - 592, m_cur_y - 276) <= 16)
-		{
-			int n = (int)m_gotek_names.size();
-			if (std::hypot(m_cur_x - 592, m_cur_y - 276) <= 8) // Center push action
-			{
-				m_gotek_mounted_idx = m_gotek_selected_idx;
-				m_gotek_activity_timer = 40;
-				m_sound->mount_floppy_image(m_gotek_paths[m_gotek_mounted_idx], m_gotek_names[m_gotek_mounted_idx]);
-				fdc_load_disk_image(m_gotek_paths[m_gotek_mounted_idx]);
-			}
-			else if (m_cur_y < 276) // Turn left
-			{
-				m_gotek_selected_idx = (m_gotek_selected_idx - 1 + n) % n;
-				m_gotek_encoder_angle = (m_gotek_encoder_angle - 1 + 12) % 12;
-			}
-			else // Turn right
-			{
-				m_gotek_selected_idx = (m_gotek_selected_idx + 1) % n;
-				m_gotek_encoder_angle = (m_gotek_encoder_angle + 1) % 12;
-			}
-		}
-	}
-
-	// Check if VRAM contains active character matrix / tile data
+	// Determine whether the OS has written any genuine data into VDP VRAM.
+	// Until the IC20 BOOT ROM is dumped (F2) the OS never runs, so this stays
+	// false and the screen remains a defined blank background.
 	bool render_from_vram = m_vdp_vram_active;
 	if (!render_from_vram)
 	{
@@ -3554,7 +2762,8 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 	if (render_from_vram && m_vdp_display_enable)
 	{
 		// -------------------------------------------------------------
-		// LLE Path: Native RFSC16A VRAM Rasterizer (y = 0..239)
+		// Genuine RFSC16A VRAM rasterizer (y = 0..239). Preserved real
+		// emulation path; produces output only when the OS drives the VDP.
 		// -------------------------------------------------------------
 		for (int tile_row = 0; tile_row < 30; tile_row++)
 		{
@@ -3564,8 +2773,13 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 				uint8_t char_code = m_vdp_vram[m_vdp_matrix_base + cell_idx];
 				uint8_t attr = m_vdp_vram[m_vdp_attr_base + cell_idx];
 
+				// Character attribute: high nibble = fg pen, low nibble = bg pen.
+				// The genuine RFSC16A studio palette has 10 pens (0..9); clamp into
+				// that authentic range (chrome pens 10..15 were removed in task 1.4).
 				uint8_t fg = (attr >> 4) & 0x0F;
 				uint8_t bg = attr & 0x0F;
+				if (fg > 9) fg = 1;
+				if (bg > 9) bg = 0;
 				if (fg == 0 && bg == 0) { fg = 1; bg = 2; } // Default white on Roland Royal Blue
 
 				const uint8_t *glyph = get_font_glyph(char_code ? (char)char_code : ' ');
@@ -3610,133 +2824,168 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 			}
 		}
 	}
-	else
-	{
-		// -------------------------------------------------------------
-		// HLE Fallback Path: High-Fidelity Studio UI Ribbon & Mode View
-		// -------------------------------------------------------------
-		// 1. Fill CRT workspace (y = 0..239) with Roland Royal Blue
-		for (int y = 0; y < 240; y++)
-			for (int x = 0; x < 640; x++)
-				bitmap.pix(y, x) = 2;
 
-		// 2. Top Status Bar (Green Bar)
-		for (int y = 0; y < 14; y++)
-			for (int x = 0; x < 640; x++)
-				bitmap.pix(y, x) = 3;
-
-		draw_string(bitmap, 6, 3, "Volume[ - :      ]                 ID:04              ---/---", 0, 3);
-
-		// 3. Mode Ribbon (White Background)
-		for (int y = 14; y < 28; y++)
-			for (int x = 0; x < 640; x++)
-				bitmap.pix(y, x) = 1;
-
-		draw_string(bitmap, 16, 17, "PERFORM", (m_active_tab == 0) ? 5 : 0, 1);
-		draw_string(bitmap, 88, 17, "|", 0, 1);
-		draw_string(bitmap, 108, 17, "PATCH", (m_active_tab == 1) ? 5 : 0, 1);
-		draw_string(bitmap, 164, 17, "|", 0, 1);
-		draw_string(bitmap, 184, 17, "PARTIAL", (m_active_tab == 2) ? 5 : 0, 1);
-		draw_string(bitmap, 256, 17, "|", 0, 1);
-		draw_string(bitmap, 276, 17, "SAMPLE", (m_active_tab == 3) ? 5 : 0, 1);
-		draw_string(bitmap, 340, 17, "|", 0, 1);
-		draw_string(bitmap, 360, 17, "DISK", (m_active_tab == 4) ? 5 : 0, 1);
-		draw_string(bitmap, 412, 17, "|", 0, 1);
-		draw_string(bitmap, 432, 17, "SYSTEM", (m_active_tab == 5) ? 5 : 0, 1);
-
-		// Draw active tab box
-		int tab_boxes[6][2] = {
-			{ 12, 84 },   // 0: PERFORM
-			{ 102, 156 }, // 1: PATCH
-			{ 178, 248 }, // 2: PARTIAL
-			{ 270, 332 }, // 3: SAMPLE
-			{ 352, 402 }, // 4: DISK
-			{ 426, 486 }  // 5: SYSTEM
-		};
-
-		int bx0 = tab_boxes[m_active_tab][0];
-		int bx1 = tab_boxes[m_active_tab][1];
-		for (int x = bx0; x < bx1; x++)
-		{
-			bitmap.pix(14, x) = 5;
-			bitmap.pix(27, x) = 5;
-		}
-		for (int y = 14; y < 28; y++)
-		{
-			bitmap.pix(y, bx0) = 5;
-			bitmap.pix(y, bx1) = 5;
-		}
-
-		// 4. Context Sub-Ribbon (Light Gray)
-		for (int y = 28; y < 40; y++)
-			for (int x = 0; x < 640; x++)
-				bitmap.pix(y, x) = 6;
-
-		// 5. Render active mode view
-		switch (m_active_tab)
-		{
-			case 0: render_perform_mode(bitmap); break;
-			case 1: render_patch_mode(bitmap); break;
-			case 2: render_partial_mode(bitmap); break;
-			case 3: render_sample_mode(bitmap); break;
-			case 4: render_disk_mode(bitmap); break;
-			case 5: render_system_mode(bitmap); break;
-			default: render_disk_mode(bitmap); break;
-		}
-
-		// 6. Bottom Button Bar (Light Gray)
-		for (int y = 224; y < 240; y++)
-			for (int x = 0; x < 640; x++)
-				bitmap.pix(y, x) = 6;
-
-		auto draw_soft_button = [&](int pbx, const char *txt) {
-			for (int y = 226; y < 238; y++)
-				for (int x = pbx; x < pbx + 100; x++)
-					bitmap.pix(y, x) = 1;
-			draw_string(bitmap, pbx + 12, 228, txt, 0, 1);
-		};
-
-		const char *btn_labels[6][5] = {
-			{ " Play  ", " Edit  ", " Part+ ", " Part- ", " Save  " }, // PERFORM
-			{ " Wave  ", " TVF   ", " TVA   ", " LFO   ", " Pitch " }, // PATCH
-			{ " TVF   ", " TVA   ", " ENV   ", " LFO   ", " Copy  " }, // PARTIAL
-			{ " Loop  ", " Norm  ", " Cut   ", " Pitch ", " Revrs " }, // SAMPLE
-			{ " AllOn ", "       ", " ConvLD", " ON Off", " VolInfo" }, // DISK
-			{ " Setup ", " MIDI  ", " Test  ", " Format", " SaveSys" }  // SYSTEM
-		};
-
-		for (int b = 0; b < 5; b++)
-		{
-			draw_soft_button(12 + b * 128, btn_labels[m_active_tab][b]);
-		}
-	}
-
-	// 7. Render 1U Rack Panel with Embedded LCD & Gotek Floppy Emulator (y = 240..359)
-	render_rack_panel(bitmap);
-
-	// 8. Render Hardware Crosshair / Mouse Cursor (Pillar 4)
-	for (int i = -4; i <= 4; i++)
-	{
-		if (m_cur_y + i >= 0 && m_cur_y + i < 360)
-		{
-			bitmap.pix(m_cur_y + i, m_cur_x) = 1; // White crosshair
-		}
-		if (m_cur_x + i >= 0 && m_cur_x + i < 640)
-		{
-			bitmap.pix(m_cur_y, m_cur_x + i) = 1;
-		}
-	}
-
-	// 9. Trigger RFSC16A VDP VBlank Interrupt (Bit 4)
+	// Trigger RFSC16A VDP VBlank Interrupt (Bit 4) — genuine hardware timing,
+	// kept intact regardless of the display path.
 	trigger_irq(IRQ_VDP_VBLANK);
 
 	return 0;
 }
 
+void s760_state::ic20_hle_install()
+{
+	// First bring-up stub for the IC20 BOOT ROM service entry at 0x018D.
+	//
+	// The OS init dispatcher at 0x2A94 does: ST RW1C,0x104 ; LCALL 0x018D.
+	// 0x018D is a real-hardware IC20 ROM routine; our image has none there.
+	// Step 1 of HLE: make the call RETURN cleanly so init can proceed, and LOG
+	// the service selector (RAM word at 0x0104) plus the pointer the caller set
+	// up (RW1E, seen as 0x6A26 in the trace) on every entry, so the real ABI
+	// contract can be reconstructed from observed selectors.
+	address_space &prog = m_maincpu->space(AS_PROGRAM);
+
+	// Force a RET (MCS-96 opcode 0xF0) at every IC20 BOOT ROM service entry via
+	// installed READ HANDLERS rather than RAM pokes. Poking the .ram() byte does
+	// NOT survive: the generic 0x0000-0x1FFF RAM backing is cleared by the core
+	// AFTER both machine_start() and machine_reset() (verified: the fetched
+	// opcode was 0x00 "skip", not 0xF0 "ret"). A read handler is consulted on
+	// every opcode fetch regardless of RAM contents, so the RET is always there.
+	//
+	// The 14 entry points were mapped by static analysis of the whole resident
+	// payload (see docs/ic20-hle-findings/shared/02-ic20-entry-points-and-vector-
+	// table.md). Each is pure IC20 code space (never OS data), so returning RET
+	// for its containing word is safe. We align each to its even word base and
+	// install a handler that returns 0xF0F0 (RET in both bytes), so the entry
+	// opcode is RET whether the entry address is even or odd.
+	static constexpr offs_t IC20_ENTRIES[] = {
+		0x018D, 0x0296, 0x0442, 0x045D, 0x0491, 0x04AC, 0x0551, 0x05AA,
+		0x0B31, 0x0D5D, 0x0EC7, 0x0F15, 0x0F19, 0x1109,
+	};
+	for (offs_t ep : IC20_ENTRIES)
+	{
+		const offs_t wbase = ep & ~offs_t(1); // even word base containing the entry byte
+		prog.install_read_handler(wbase, wbase + 1,
+			read16smo_delegate(*this, FUNC(s760_state::ic20_ret_stub_r)));
+	}
+
+	// HLE the IC20 dispatch by tapping the write to selector slot 0x0104, which
+	// the OS performs (ST RW1C,0x104) immediately before LCALL 0x018D. At that
+	// point the caller's register-file inputs are already set, so we can service
+	// the request here; the RET stub at 0x018D (poked in machine_reset) then
+	// returns control to the OS.
+	//
+	// CRITICAL (Gemini finding 03, AS_DATA vs AS_PROGRAM): the MCS-96 on-chip
+	// register file (addresses 0x00..0xFF, incl. RW1E/R4A/RW4C/RW4E) lives in
+	// **AS_DATA**, not AS_PROGRAM (see mcs96_device::memory_space_config and
+	// any_r16/any_w16: adr<0x100 -> regs == AS_DATA). The core's memory_translate
+	// only redirects the CPU's *own* fetch path; an external space(AS_PROGRAM)
+	// access at 0x4E hits WORK RAM, not the register. So register-file accesses
+	// MUST use space(AS_DATA); only the scratch buffer (>=0x100) uses AS_PROGRAM.
+	//
+	// Selector 0x4B — resource record enumeration/lookup (see
+	// docs/ic20-hle-findings/shared/02-selector-4b-record-enumeration.md):
+	//   inputs : R4A  (0x4A, byte)  = resource type (1..4)
+	//            RW4C (0x4C, word)  = record index
+	//            RW1E (0x1E, word)  = scratch/destination buffer pointer
+	//   output : RW4E (0x4E, word)  = pointer to the located record; the OS then
+	//            reads [RW4E] and treats byte 0x7F as "valid record present".
+	// Increment A (minimal, observable): point RW4E at the scratch buffer and
+	// write the 0x7F "valid header" marker there so the enumeration loops run to
+	// completion, revealing the next boot dependency.
+	m_ic20_tap = prog.install_write_tap(
+		0x0104, 0x0105, "ic20_dispatch",
+		[this](offs_t offset, u16 &data, u16 mem_mask)
+		{
+			if (offset != 0x0104)
+				return;
+			address_space &prog_space = m_maincpu->space(AS_PROGRAM); // buffers >= 0x100
+			address_space &data_space = m_maincpu->space(AS_DATA);    // register file < 0x100
+			const u16 selector = data;
+			const u8  type     = data_space.read_byte(0x4A);  // R4A
+			const u16 index    = data_space.read_word(0x4C);  // RW4C
+			const u16 bufptr   = data_space.read_word(0x1E);  // RW1E
+
+			switch (selector)
+			{
+			case 0x4B:
+				// Record enumeration/lookup: point the output pointer RW4E (in the
+				// AS_DATA register file) at the scratch buffer, and mark a valid
+				// record header (0x7F) at that buffer in AS_PROGRAM so the OS's
+				// post-call [RW4E]==0x7F check passes. (Increment B will copy real
+				// record bytes for (type,index) from the on-disk 256-byte record
+				// table at file ~0xC3000.)
+				data_space.write_word(0x4E, bufptr);   // RW4E (register file)
+				prog_space.write_byte(bufptr, 0x7F);   // scratch buffer (work RAM)
+				break;
+
+			case 0x3B:
+			{
+				// CHS floppy sector read (Gemini finding 07 §2). Inputs: RF0=sector,
+				// RF1=cylinder, RF2=head (bit0), RW1E=dest buffer. Serve 512 bytes
+				// from the disk image at the computed LBA into the dest buffer.
+				const u8  sec  = data_space.read_byte(0xF0);        // RF0
+				const u8  cyl  = data_space.read_byte(0xF1);        // RF1
+				const u8  head = data_space.read_byte(0xF2) & 0x01; // RF2
+				const u32 lba  = (u32(cyl) * 2 + head) * 18 + (sec > 0 ? (sec - 1) % 18 : 0);
+				const u32 off  = lba * 512;
+				const u8 *disk = memregion("maincpu")->base();
+				if (off + 512 <= 0x168000)
+					for (int i = 0; i < 512; i++)
+						prog_space.write_byte(u16(bufptr + i), disk[off + i]);
+				// Clear carry (success). The OS also CLRCs itself on this path,
+				// but 0x1F and other callers rely on the service clearing it.
+				m_maincpu->set_state_int(i8x9x_device::MCS96_PSW,
+					m_maincpu->state_int(i8x9x_device::MCS96_PSW) & ~1);
+				break;
+			}
+
+			case 0x1F:
+			{
+				// Bulk LBA sector transfer (Gemini finding 07 §3). Inputs:
+				// RW4C=sector count, RW48/RW4A=LBA lo/hi, RW1E=dest buffer.
+				const u16 count  = data_space.read_word(0x4C);  // RW4C
+				const u16 lba_lo = data_space.read_word(0x48);  // RW48
+				const u16 lba_hi = data_space.read_word(0x4A);  // RW4A
+				const u32 lba    = (u32(lba_hi) << 16) | lba_lo;
+				const u32 off    = lba * 512;
+				const u32 len    = u32(count) * 512;
+				const u8 *disk = memregion("maincpu")->base();
+				if (off + len <= 0x168000)
+					for (u32 i = 0; i < len; i++)
+						prog_space.write_byte(u16(bufptr + i), disk[off + i]);
+				m_maincpu->set_state_int(i8x9x_device::MCS96_PSW,
+					m_maincpu->state_int(i8x9x_device::MCS96_PSW) & ~1);
+				break;
+			}
+
+			default:
+				// Other IC20 selectors (0x3B, 0x1F, 0x166, 0xB1, 0x129, ...): no
+				// modeled side effect yet. The RET stub at the entry returns
+				// cleanly; we also point RW4E at the scratch buffer so any
+				// generic post-call pointer deref lands in valid RAM rather than
+				// a stale/garbage address. Refine per-selector as new stalls
+				// appear in the boot trace.
+				if (bufptr != 0)
+					data_space.write_word(0x4E, bufptr);  // RW4E (register file)
+				break;
+			}
+
+			logerror("[IC20] sel=0x%04X type=%u index=0x%04X buf=0x%04X PC=0x%04X\n",
+				selector, type, index, bufptr, m_maincpu->pc());
+		},
+		&m_ic20_tap);
+}
+
 void s760_state::s760_mem(address_map &map)
 {
 	map(0x0000, 0x1FFF).ram();                                                   // Register File & Work RAM (0x1120 = SP)
-	map(0x2080, 0xDFFF).rom().region("maincpu", 0x4800);                         // OS Code segment (S760224.IMG offset 0x4800)
+	// OS resident image. Runtime 0x2080-0xCFFF is RAM pre-loaded from the disk
+	// image (file 0x4800+) in machine_start via install_ram() against m_os_ram:
+	// the OS writes boot/UI state back here, so it must be writable (a read-only
+	// .rom() mapping dropped those writes and trapped the boot in a reset loop).
+	// 0xD100-0xDFFF stays ROM — it is above the VDP window and the OS does not
+	// write there. (0xD000-0xD0FF is the VDP, mapped below and overriding ROM.)
+	map(0xD100, 0xDFFF).rom().region("maincpu", 0x4800 + 0xB080);               // OS tail (read-only), file 0x4800 + (0xD100-0x2080)
 	map(0xD000, 0xD0FF).rw(FUNC(s760_state::vdp_r), FUNC(s760_state::vdp_w));   // Roland RFSC16A VDP registers & VRAM port
 	map(0xE000, 0xEFF7).rw(FUNC(s760_state::lcd_r), FUNC(s760_state::lcd_w));   // Epson SED1335 LCD controller & 4KB VRAM
 	map(0xF000, 0xF01F).rw(FUNC(s760_state::mmio_r), FUNC(s760_state::mmio_w)); // Gate array MMIO latches
@@ -3751,16 +3000,6 @@ static INPUT_PORTS_START( s760 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )    PORT_NAME("Cursor Up / Arrow Up")       PORT_CODE(KEYCODE_UP)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )  PORT_NAME("Cursor Down / Arrow Down")   PORT_CODE(KEYCODE_DOWN)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )        PORT_NAME("Select / Enter")             PORT_CODE(KEYCODE_ENTER) PORT_CODE(KEYCODE_SPACE)
-
-	PORT_START("MOUSEX")
-	PORT_BIT( 0xff, 0x00, IPT_MOUSE_X ) PORT_SENSITIVITY(100) PORT_KEYDELTA(0) PORT_PLAYER(1) PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::mouse_x), 0)
-
-	PORT_START("MOUSEY")
-	PORT_BIT( 0xff, 0x00, IPT_MOUSE_Y ) PORT_SENSITIVITY(100) PORT_KEYDELTA(0) PORT_PLAYER(1) PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::mouse_y), 0)
-
-	PORT_START("MOUSEBTN")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Mouse Left Click")  PORT_CODE(MOUSECODE_BUTTON1)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Mouse Right Click") PORT_CODE(MOUSECODE_BUTTON2)
 
 	PORT_START("GOTEK_CTRL")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Gotek Prev Image [ < ]")   PORT_CODE(KEYCODE_OPENBRACE) PORT_CODE(KEYCODE_PGUP)
@@ -3782,14 +3021,18 @@ void s760_state::s760(machine_config &config)
 	m_sound->add_route(0, "lspeaker", 1.0);
 	m_sound->add_route(1, "rspeaker", 1.0);
 
-	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 16));
+	// 10 authentic Roland RFSC16A studio pens (0..9). Chrome-only pens 10..15
+	// were removed in ui-consolidation task 1.4 (R1.2, R2.2).
+	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 10));
 
-	// Unified Output: OP-760 Color CRT Display + 1U Rack Panel with LCD & Gotek (640x360)
+	// OP-760 Color CRT display surface only (RFSC16A VDP), CRT region = 640x240.
+	// ui-consolidation task 1.2 (R2.3): the former 120px rack strip (old 640x360)
+	// is dropped — the 1U rack/LCD/OLED chrome is now the React shell's job.
 	screen_device &crt_screen(SCREEN(config, "crt_screen"));
 	crt_screen.set_refresh_hz(60);
 	crt_screen.set_vblank_time(ATTOSECONDS_IN_USEC(2500));
-	crt_screen.set_size(640, 360);
-	crt_screen.set_visarea(0, 639, 0, 359);
+	crt_screen.set_size(640, 240);
+	crt_screen.set_visarea(0, 639, 0, 239);
 	crt_screen.set_screen_update(FUNC(s760_state::crt_update));
 	crt_screen.set_palette(palette);
 }
