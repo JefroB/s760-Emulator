@@ -9,7 +9,17 @@ from mame_harness import MameTestSession, analyze_screenshot
 
 
 def test_mame_boot_and_palette_rendering():
-    """Verify MAME boots cleanly and renders the authentic Royal Blue S-760 UI."""
+    """Verify MAME boots cleanly and produces a CRT snapshot.
+
+    ui-consolidation task 1.5 (R4.1, R4.2): the former Royal-Blue/Green chrome
+    pixel scraping was removed. Those colors were painted by the deleted invented
+    GUI (crt_update banner/ribbon chrome, tasks 1.1-1.2), not by any authentic
+    display controller. Per F2 the OS cannot cold-boot without the IC20 BOOT ROM,
+    so the genuine RFSC16A VDP produces a blank (defined background) CRT until
+    then. This test now asserts only the authentic invariant: the driver boots
+    and a CRT snapshot is produced. The removed background/ribbon color checks
+    migrate to the React suite (task 4.3).
+    """
     lua = """
 local count = 0
 emu.register_frame_done(function()
@@ -26,23 +36,6 @@ end, "boot_test")
     assert res["returncode"] == 0, f"MAME failed to boot cleanly: {res['stderr']}"
     assert res["data"].get("boot_ok") is True
     assert res["snap_path"] is not None
-
-    # Check that the screen contains Roland Royal Blue (0, 0, 192) and Top Green (0, 200, 80)
-    img, w, h = analyze_screenshot(res["snap_path"])
-    pixels = img.load()
-
-    found_blue = False
-    found_green = False
-    for y in range(0, h, 4):
-        for x in range(0, w, 4):
-            r, g, b = pixels[x, y]
-            if r == 0 and g == 0 and b >= 150:
-                found_blue = True
-            if r == 0 and g >= 180 and b <= 100:
-                found_green = True
-
-    assert found_blue, "Roland Royal Blue (#0000C8) background not detected on screen"
-    assert found_green, "Green Status Ribbon (#00C850) not detected on screen"
 
 
 def test_keyboard_arrow_navigation_moves_cursor():
@@ -95,32 +88,16 @@ end, "sound_test")
 
 
 
-def test_mouse_motion_and_button_clicks():
-    """Verify mouse delta injection and button clicks."""
-    lua = """
-local count = 0
-local mouse_x = manager.machine.ioport.ports[":MOUSEX"]
-local mouse_y = manager.machine.ioport.ports[":MOUSEY"]
-local mouse_btn = manager.machine.ioport.ports[":MOUSEBTN"]
-
-emu.register_frame_done(function()
-    count = count + 1
-    if count == 2 then
-        if mouse_x then mouse_x:set_value(50) end
-        if mouse_y then mouse_y:set_value(25) end
-    elseif count == 5 then
-        if mouse_btn then mouse_btn:field(0x01):set_value(1) end -- Left Click
-    elseif count == 8 then
-        results["mouse_ok"] = true
-        save_and_exit()
-    end
-end, "mouse_test")
-"""
-    session = MameTestSession(lua, timeout_sec=4, snap_name="snap_mouse")
-    res = session.run()
-
-    assert res["returncode"] == 0, f"Mouse test failed: {res['stderr']}"
-    assert res["data"].get("mouse_ok") is True
+# ui-consolidation task 1.8 (R1.2, R2.2): test_mouse_motion_and_button_clicks
+# was removed. It injected host-mouse deltas into the :MOUSEX / :MOUSEY ioports
+# and a left-click into :MOUSEBTN. Those ports were the invented MAME mouse-cursor
+# input path (an 8-bit relative delta register clamped to +/-127 and applied 1:1
+# to m_cur_x/m_cur_y) — the root cause of the slow/crawling cursor. The crosshair
+# render + click dispatch were deleted in tasks 1.1-1.2, and task 1.8 removed the
+# ports and their INPUT_CHANGED handlers. Under D4 the React shell owns the
+# pointer (tasks 3.3/3.4), so host-mouse motion is no longer meaningful at the
+# MAME layer. The genuine OP-760-2 hardware mouse registers (VDP 0x20-0x24) are
+# still covered by tests/test_vdp_mame.py::test_vdp_hardware_mouse_cursor_registers.
 
 
 def test_manual_sampling_and_mode_workflow():
@@ -135,7 +112,6 @@ def test_manual_sampling_and_mode_workflow():
     lua = """
 local count = 0
 local key_arrows = manager.machine.ioport.ports[":KEY_ARROWS"]
-local mouse_btn = manager.machine.ioport.ports[":MOUSEBTN"]
 
 emu.register_frame_done(function()
     count = count + 1
@@ -172,22 +148,29 @@ end, "manual_workflow_test")
     assert res["data"].get("final_mode") == "SYSTEM"
     assert res["snap_path"] is not None
 
-    # Verify SYSTEM mode screen output colors
-    img, w, h = analyze_screenshot(res["snap_path"])
-    pixels = img.load()
-
-    # Verify Orange/Red tab outline (Pen 5: 220, 60, 20) rendered along top ribbon (y=14)
-    found_tab_outline = False
-    for x in range(w):
-        r, g, b = pixels[x, 14]
-        if r >= 200 and g <= 80 and b <= 40: # Pen 5: Red/Orange (220, 60, 20)
-            found_tab_outline = True
-            break
-    assert found_tab_outline, "SYSTEM tab active outline was not rendered"
+    # ui-consolidation task 1.5 (R4.1, R4.2): the Pen-5 SYSTEM-tab-outline pixel
+    # assertion was removed. The mode ribbon / tab outline was invented chrome
+    # drawn by crt_update (deleted in tasks 1.1-1.2); mode tabs and their active
+    # outline are now owned by the React shell. The input-injection workflow above
+    # still exercises the genuine ioport path (keyboard/mouse fields), which is a
+    # real driver invariant; only the drawn-chrome pixel scrape is dropped. The
+    # SYSTEM-tab selection check migrates to the React suite (task 4.3).
 
 
 def test_rack_panel_and_embedded_lcd_rendering():
-    """Verify 1U Rack Panel, embedded 160x64 green LCD, and Gotek display are rendered."""
+    """Verify the CRT display surface boots and reports authentic geometry.
+
+    ui-consolidation task 1.5 (R4.1, R4.2): all rack-chrome scraping was removed.
+    The 1U rack charcoal chassis, embedded LCD-green backlight, and Gotek OLED
+    cyan were invented chrome drawn by render_rack_panel (deleted in task 1.1) in
+    the former 120px rack strip. Per task 1.2 the CRT screen geometry was reduced
+    from 640x360 to the authentic CRT region only (640x240), so the rack strip no
+    longer exists in the MAME output at all — the rack/LCD-housing/Gotek chrome is
+    now the React shell's responsibility (R6). This test now asserts only the
+    authentic invariant: the driver boots and the CRT surface is the real
+    640x240 OP-760 geometry. The rack/LCD/Gotek rendering checks migrate to the
+    React suite (task 4.3).
+    """
     lua = """
 local count = 0
 emu.register_frame_done(function()
@@ -205,33 +188,11 @@ end, "rack_test")
     assert res["data"].get("rack_ok") is True
     assert res["snap_path"] is not None
 
+    # Authentic OP-760 CRT geometry only (640x240). The former composite
+    # 640x360 (CRT + 120px invented rack strip) no longer exists.
     img, w, h = analyze_screenshot(res["snap_path"])
-    assert w >= 640, f"Expected screen width >= 640, got {w}"
-    assert h >= 360, f"Expected composite screen height >= 360, got {h}"
-
-    pixels = img.load()
-    found_lcd_green = False
-    found_gotek_oled_cyan = False
-    found_rack_charcoal = False
-
-    # Check bottom rack area (y in lower 1/3 of the frame)
-    y_start = int(h * 240 / 360)
-    for y in range(y_start, h, 2):
-        for x in range(0, w, 4):
-            r, g, b = pixels[x, y]
-            # LCD Backlight Green: rgb(30, 95, 35) or bright LCD text rgb(165, 245, 110)
-            if (r <= 50 and g >= 80 and b <= 50) or (r >= 140 and g >= 220 and b >= 90):
-                found_lcd_green = True
-            # Gotek OLED Cyan: rgb(80, 230, 255)
-            if r <= 100 and g >= 200 and b >= 230:
-                found_gotek_oled_cyan = True
-            # 1U Rack Charcoal Chassis: rgb(38, 40, 46)
-            if 30 <= r <= 45 and 30 <= g <= 48 and 38 <= b <= 52:
-                found_rack_charcoal = True
-
-    assert found_rack_charcoal, "1U Rack dark charcoal chassis not detected"
-    assert found_lcd_green, "Embedded 160x64 green backlit LCD screen not detected in rack panel"
-    assert found_gotek_oled_cyan, "Gotek OLED cyan display not detected in rack drive bay"
+    assert w == 640, f"Expected authentic CRT width 640, got {w}"
+    assert h == 240, f"Expected authentic CRT height 240 (rack strip removed), got {h}"
 
 
 def test_gotek_oled_and_navigation_controls():
@@ -267,21 +228,14 @@ end, "gotek_nav_test")
 
     assert res["returncode"] == 0, f"Gotek navigation test failed: {res['stderr']}"
     assert res["data"].get("gotek_swap_ok") is True
-    img, w, h = analyze_screenshot(res["snap_path"])
-    pixels = img.load()
 
-    # Verify Gotek OLED area is rendered
-    found_oled_text = False
-    y_start = int(h * 240 / 360)
-    for y in range(y_start, h):
-        for x in range(w):
-            r, g, b = pixels[x, y]
-            if (70 <= r <= 95) and (215 <= g <= 245) and (240 <= b <= 255): # Gotek OLED Cyan rgb(80, 230, 255)
-                found_oled_text = True
-                break
-        if found_oled_text:
-            break
-    assert found_oled_text, "Gotek OLED active text was not rendered"
+    # ui-consolidation task 1.5 (R4.1, R4.2): the Gotek OLED cyan pixel scraping
+    # was removed. The Gotek OLED readout was invented chrome drawn in the former
+    # 120px rack strip (render_rack_panel, deleted task 1.1); that strip no longer
+    # exists after the CRT geometry was reduced to 640x240 (task 1.2). The Gotek
+    # Prev/Next/Select input path above still drives the genuine :GOTEK_CTRL
+    # ioport fields — a real driver invariant that is retained. The OLED readout /
+    # hot-swap visual check migrates to the React suite (task 4.3).
 
 
 def test_seamless_mouse_navigation_between_crt_and_rack_ui():
@@ -338,30 +292,17 @@ end, "seamless_nav_test")
     assert res["data"].get("seamless_navigation_ok") is True
     assert res["snap_path"] is not None
 
-    img, w, h = analyze_screenshot(res["snap_path"])
-    pixels = img.load()
-
-    # 1. Verify SYSTEM tab active outline on CRT top ribbon (Pen 5: Red/Orange at y=14)
-    found_system_outline = False
-    for x in range(w):
-        r, g, b = pixels[x, int(14 * h / 360)]
-        if r >= 200 and g <= 80 and b <= 40:
-            found_system_outline = True
-            break
-    assert found_system_outline, "SYSTEM mode tab was not selected during seamless navigation"
-
-    # 2. Verify Gotek is mounted on cycled image
-    found_gotek_mounted = False
-    y_start = int(h * 240 / 360)
-    for y in range(y_start, h):
-        for x in range(w):
-            r, g, b = pixels[x, y]
-            if (70 <= r <= 95) and (215 <= g <= 245) and (240 <= b <= 255):
-                found_gotek_mounted = True
-                break
-        if found_gotek_mounted:
-            break
-    assert found_gotek_mounted, "Gotek OLED display was not active after rack navigation"
+    # ui-consolidation task 1.5 (R4.1, R4.2): both chrome scrapes were removed.
+    #  1. The SYSTEM-tab active outline (Pen 5 on the top ribbon) was invented
+    #     chrome drawn by crt_update (deleted tasks 1.1-1.2); mode tabs are now
+    #     the React shell's job.
+    #  2. The Gotek-mounted OLED cyan check lived in the former 120px rack strip
+    #     (render_rack_panel, deleted task 1.1), which no longer exists after the
+    #     CRT geometry was reduced to 640x240 (task 1.2).
+    # The cross-surface input injection above still exercises the genuine
+    # :KEY_ARROWS and :GOTEK_CTRL ioport fields (a real driver invariant) and the
+    # run completes cleanly. The "seamless CRT<->rack navigation" visual behavior
+    # is reimplemented against the real owner in the React suite (task 4.3).
 
 
 

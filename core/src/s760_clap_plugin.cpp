@@ -141,6 +141,69 @@ static bool clap_audio_ports_get_thunk(const clap_plugin_t *plugin, uint32_t ind
     return true;
 }
 
+// --- clap.gui thunks (task 3.6) ---------------------------------------------
+static bool clap_gui_is_api_supported_thunk(const clap_plugin_t *plugin, const char *api, bool is_floating) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_is_api_supported(api, is_floating) : false;
+}
+static bool clap_gui_get_preferred_api_thunk(const clap_plugin_t *plugin, const char **api, bool *is_floating) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_get_preferred_api(api, is_floating) : false;
+}
+static bool clap_gui_create_thunk(const clap_plugin_t *plugin, const char *api, bool is_floating) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_create(api, is_floating) : false;
+}
+static void clap_gui_destroy_thunk(const clap_plugin_t *plugin) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    if (p) p->gui_destroy();
+}
+static bool clap_gui_set_scale_thunk(const clap_plugin_t *plugin, double scale) {
+    (void)plugin; (void)scale; return true;
+}
+static bool clap_gui_get_size_thunk(const clap_plugin_t *plugin, uint32_t *width, uint32_t *height) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_get_size(width, height) : false;
+}
+static bool clap_gui_can_resize_thunk(const clap_plugin_t *plugin) {
+    (void)plugin; return true;
+}
+static bool clap_gui_get_resize_hints_thunk(const clap_plugin_t *plugin, clap_gui_resize_hints_t *hints) {
+    (void)plugin;
+    if (!hints) return false;
+    hints->can_resize_horizontally = true;
+    hints->can_resize_vertically = true;
+    hints->preserve_aspect_ratio = false;
+    hints->aspect_ratio_width = 0;
+    hints->aspect_ratio_height = 0;
+    return true;
+}
+static bool clap_gui_adjust_size_thunk(const clap_plugin_t *plugin, uint32_t *width, uint32_t *height) {
+    (void)plugin; (void)width; (void)height; return true;
+}
+static bool clap_gui_set_size_thunk(const clap_plugin_t *plugin, uint32_t width, uint32_t height) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_set_size(width, height) : false;
+}
+static bool clap_gui_set_parent_thunk(const clap_plugin_t *plugin, const clap_window_t *window) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_set_parent(window) : false;
+}
+static bool clap_gui_set_transient_thunk(const clap_plugin_t *plugin, const clap_window_t *window) {
+    (void)plugin; (void)window; return false; // embedded editor; not floating
+}
+static void clap_gui_suggest_title_thunk(const clap_plugin_t *plugin, const char *title) {
+    (void)plugin; (void)title;
+}
+static bool clap_gui_show_thunk(const clap_plugin_t *plugin) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_show() : false;
+}
+static bool clap_gui_hide_thunk(const clap_plugin_t *plugin) {
+    auto* p = static_cast<s760::S760ClapPlugin*>(plugin->plugin_data);
+    return p ? p->gui_hide() : false;
+}
+
 } // extern "C"
 
 // -----------------------------------------------------------------------------
@@ -148,7 +211,7 @@ static bool clap_audio_ports_get_thunk(const clap_plugin_t *plugin, uint32_t ind
 // -----------------------------------------------------------------------------
 
 S760ClapPlugin::S760ClapPlugin(const clap_host_t* host, bool is_fx)
-    : m_clap_host(host), m_is_fx(is_fx) {
+    : m_clap_host(host), m_is_fx(is_fx), m_bridge(select_bridge_host()) {
     m_plugin.desc = is_fx ? &s_descriptor_fx : &s_descriptor_inst;
     m_plugin.plugin_data = this;
     m_plugin.init = clap_init_thunk;
@@ -168,11 +231,60 @@ S760ClapPlugin::S760ClapPlugin(const clap_host_t* host, bool is_fx)
     m_audio_ports_ext.count = clap_audio_ports_count_thunk;
     m_audio_ports_ext.get = clap_audio_ports_get_thunk;
 
+    m_gui_ext.is_api_supported  = clap_gui_is_api_supported_thunk;
+    m_gui_ext.get_preferred_api = clap_gui_get_preferred_api_thunk;
+    m_gui_ext.create            = clap_gui_create_thunk;
+    m_gui_ext.destroy           = clap_gui_destroy_thunk;
+    m_gui_ext.set_scale         = clap_gui_set_scale_thunk;
+    m_gui_ext.get_size          = clap_gui_get_size_thunk;
+    m_gui_ext.can_resize        = clap_gui_can_resize_thunk;
+    m_gui_ext.get_resize_hints  = clap_gui_get_resize_hints_thunk;
+    m_gui_ext.adjust_size       = clap_gui_adjust_size_thunk;
+    m_gui_ext.set_size          = clap_gui_set_size_thunk;
+    m_gui_ext.set_parent        = clap_gui_set_parent_thunk;
+    m_gui_ext.set_transient     = clap_gui_set_transient_thunk;
+    m_gui_ext.suggest_title     = clap_gui_suggest_title_thunk;
+    m_gui_ext.show              = clap_gui_show_thunk;
+    m_gui_ext.hide              = clap_gui_hide_thunk;
+
     m_scratch_left.resize(2048, 0.0f);
     m_scratch_right.resize(2048, 0.0f);
 }
 
+// -----------------------------------------------------------------------------
+//  Backend selection (mame-live-backend task 9.3, Requirements 1.2/7.1/7.3).
+//  Called from the constructor's initializer list to decide which IS760Host the
+//  Bridge is driven from. Keeps the Core path byte-for-byte identical: only when
+//  the selector resolves+inits the MAME backend does the Bridge get the MAME
+//  host; otherwise the Bridge borrows the concrete &m_host (default Core).
+// -----------------------------------------------------------------------------
+IS760Host* S760ClapPlugin::select_bridge_host() {
+    // No runtime value supplied here -> use the CMake build default (Core unless
+    // S760_BACKEND=mame). The selector constructs + init()'s the chosen backend.
+    BackendSelectionResult sel = select_backend();
+
+    if (sel.active == BackendKind::Mame && sel.host) {
+        // MAME selected and available: own it and drive the Bridge from it. The
+        // concrete m_host stays constructed (unused by the Bridge) so all
+        // Core-specific plugin API still compiles.
+        m_selected_host = std::move(sel.host);
+        return m_selected_host.get();
+    }
+
+    if (sel.bothUnavailable) {
+        // Neither backend available: surface the observable error (R7.5) but do
+        // not crash. Fall back to the concrete Core host; the Bridge tolerates
+        // even a null host.
+        std::cerr << "[S760ClapPlugin] backend selection failed: " << sel.error
+                  << " (using Core host)" << std::endl;
+    }
+    // Core selected/defaulted, or MAME fell back to Core: preserve the existing
+    // behavior exactly by driving the Bridge from the concrete Core host.
+    return &m_host;
+}
+
 S760ClapPlugin::~S760ClapPlugin() {
+    if (m_editor) m_editor->close();
     deactivate();
 }
 
@@ -336,7 +448,78 @@ const void* S760ClapPlugin::get_extension(const char* id) {
     if (std::strcmp(id, CLAP_EXT_AUDIO_PORTS) == 0) {
         return &m_audio_ports_ext;
     }
+    if (std::strcmp(id, CLAP_EXT_GUI) == 0) {
+        return &m_gui_ext;
+    }
     return nullptr;
+}
+
+// -----------------------------------------------------------------------------
+//  clap.gui editor (task 3.6) — WebView-backed React editor on m_bridge.
+// -----------------------------------------------------------------------------
+static const char* clap_native_window_api() {
+#if defined(_WIN32)
+    return CLAP_WINDOW_API_WIN32;
+#elif defined(__APPLE__)
+    return CLAP_WINDOW_API_COCOA;
+#else
+    return CLAP_WINDOW_API_X11;
+#endif
+}
+
+bool S760ClapPlugin::gui_is_api_supported(const char* api, bool is_floating) {
+    if (is_floating || !api) return false; // embedded editor only
+    return std::strcmp(api, clap_native_window_api()) == 0;
+}
+
+bool S760ClapPlugin::gui_get_preferred_api(const char** api, bool* is_floating) {
+    if (!api || !is_floating) return false;
+    *api = clap_native_window_api();
+    *is_floating = false;
+    return true;
+}
+
+bool S760ClapPlugin::gui_create(const char* api, bool is_floating) {
+    if (!gui_is_api_supported(api, is_floating)) return false;
+    if (!m_editor) m_editor = std::make_unique<S760EditorController>(&m_bridge);
+    m_gui_created = true;
+    return true;
+}
+
+void S760ClapPlugin::gui_destroy() {
+    if (m_editor) m_editor->close();
+    m_gui_created = false;
+}
+
+bool S760ClapPlugin::gui_get_size(uint32_t* width, uint32_t* height) {
+    if (!width || !height) return false;
+    WebViewSize sz = m_editor ? m_editor->size() : WebViewSize{};
+    *width = sz.width;
+    *height = sz.height;
+    return true;
+}
+
+bool S760ClapPlugin::gui_set_size(uint32_t width, uint32_t height) {
+    if (m_editor) m_editor->set_size(WebViewSize{width, height});
+    return true;
+}
+
+bool S760ClapPlugin::gui_set_parent(const clap_window_t* window) {
+    if (!m_gui_created || !window) return false;
+    if (!m_editor) m_editor = std::make_unique<S760EditorController>(&m_bridge);
+    uint32_t w = 0, h = 0;
+    gui_get_size(&w, &h);
+    return m_editor->open(window->ptr, WebViewSize{w, h});
+}
+
+bool S760ClapPlugin::gui_show() {
+    // The embedded view is shown by the DAW once parented; nothing extra needed
+    // for the WebView host. Return true if the editor exists.
+    return m_editor != nullptr;
+}
+
+bool S760ClapPlugin::gui_hide() {
+    return m_editor != nullptr;
 }
 
 bool S760ClapPlugin::state_save(const clap_ostream_t* stream) {

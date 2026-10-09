@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { SamplerState, SamplerMode, DiskImage } from '../types/sampler';
 import { RolandLCD } from './RolandLCD';
 import { GotekBay } from './GotekBay';
 import { RackEar } from './RackEars';
+import { ShiftButton } from './ShiftButton';
+import { BUTTON_MAPPING, type ButtonMappingEntry } from '../data/shiftButtonMap';
+import { verifiedShiftButtons } from '../data/shiftButtonSelectors';
 import { soundFx } from '../audio/soundFx';
 
 interface S760FrontPanelProps {
@@ -22,6 +25,13 @@ interface S760FrontPanelProps {
   onToggleUsb: () => void;
   onEventEmit: (type: string, payload: any) => void;
   onTriggerAudition: () => void;
+  /**
+   * Optional injected Button_Mapping, defaulting to the authoritative
+   * {@link BUTTON_MAPPING}. The default is the real seeded mapping (all entries
+   * `Unverified`, so no SHIFT buttons render); tests inject generated mappings
+   * to exercise the rendered SHIFT row (R3.1, R5.1).
+   */
+  shiftButtonMapping?: readonly ButtonMappingEntry[];
 }
 
 export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
@@ -41,8 +51,20 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
   onToggleUsb,
   onEventEmit,
   onTriggerAudition,
+  shiftButtonMapping = BUTTON_MAPPING,
 }) => {
   const [pressedBtn, setPressedBtn] = useState<string | null>(null);
+
+  // The exact set of dedicated SHIFT buttons to render: one descriptor per
+  // Verified, non-Gotek, event-bearing SHIFT function (R3.1, R3.4). With the
+  // seeded (all-Unverified) BUTTON_MAPPING this is empty, so no SHIFT buttons
+  // render by default (evidence over invention); injected mappings in tests
+  // produce descriptors. Memoized so the derivation runs only when the mapping
+  // reference changes.
+  const shiftDescriptors = useMemo(
+    () => verifiedShiftButtons(shiftButtonMapping),
+    [shiftButtonMapping],
+  );
 
   // Drag handling for Master Volume
   const volDragStart = useRef<number | null>(null);
@@ -289,7 +311,29 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
           </div>
         </div>
 
-        {/* ================= SECTION B: CENTER CONTROL MATRIX ================= */}
+        {/*
+          ================= SECTION B: CENTER CONTROL MATRIX =================
+
+          Reconciliation-driven removal of fabricated buttons (R2.5, R2.7–R2.11,
+          task 7.2). Running `reconcile(BUTTON_MAPPING, <rendered ids>,
+          <preserved primaries>, <gotek-owned ids>)` over the controls rendered
+          by this panel yields an EMPTY `toRemove` (`fabricationCandidates`):
+
+            • Every rendered control is either a Preserved_Primary_Control
+              (POWER, the 6 MODE buttons, the nav cross, DEC/−, INC/+, ENTER,
+              EXIT, F1–F6, VOLUME, VALUE/DATA) or is present as a BUTTON_MAPPING
+              entry — so none qualifies as a Fabrication_Candidate.
+            • The PHONES jack is a genuine S-760 hardware jack (an audition
+              affordance here), NOT a prior-AI fabrication, so it is retained.
+            • The Gotek drive-bay controls live in Section C and are owned by
+              `GotekBay`; they are excluded from fabrication identification and
+              are never touched by this feature (R2.11, R6).
+
+          Because `toRemove` is empty, no JSX is removed: evidence over
+          invention — a button is deleted ONLY when `reconcile` provably
+          classifies it as a fabrication. The rendered-button-id set is
+          therefore consistent with the authoritative mapping.
+        */}
         <div className="flex items-center px-4 gap-5 border-r border-neutral-700/60">
           {/* Master Volume Potentiometer */}
           <div className="flex flex-col items-center">
@@ -520,6 +564,41 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
             <span className="text-[6.5px] font-mono text-neutral-400 uppercase tracking-tight mt-0.5">
               ALPHA-DIAL
             </span>
+          </div>
+
+          {/*
+            Dedicated SHIFT-function row (Section B, center control matrix).
+            Each button reproduces one hardware SHIFT (secondary) function and
+            emits through the SAME triggerButton/onEventEmit path as the primary
+            buttons above — no alternate emission channel (R5.1, R5.2). The set
+            is derived from the Button_Mapping: it is empty under the seeded
+            all-Unverified mapping, so nothing renders by default (R3.1). The
+            container always exists so injected mappings in tests render buttons.
+            This row lives entirely inside Section B, clearly separated from the
+            Gotek section (Section C); no Shift_Button is rendered in the Gotek
+            subtree (R6.1, R6.2).
+          */}
+          <div
+            data-shift-button-row=""
+            aria-label="SHIFT functions"
+            className="flex flex-col items-center justify-center gap-1"
+          >
+            {shiftDescriptors.length > 0 && (
+              <span className="text-[6.5px] font-mono text-sky-400/80 font-bold uppercase tracking-widest">
+                SHIFT
+              </span>
+            )}
+            <div className="flex flex-wrap items-center justify-center gap-1 max-w-[120px]">
+              {shiftDescriptors.map((descriptor) => (
+                <ShiftButton
+                  key={descriptor.buttonId}
+                  descriptor={descriptor}
+                  onEventEmit={onEventEmit}
+                  triggerButton={triggerButton}
+                  pressed={pressedBtn === `SHIFT_${descriptor.buttonId}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 

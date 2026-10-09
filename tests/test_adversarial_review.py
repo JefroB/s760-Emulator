@@ -73,37 +73,8 @@ def test_finding_08_10_mame_source_hardening_invariants():
     assert "lcg_noise" in content
 
 
-def test_finding_16_react_state_updaters_pure():
-    """Finding 16: React state updater functions in App.tsx must remain pure and free of side-effects."""
-    app_tsx_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "google-ui", "src", "App.tsx")
-    assert os.path.exists(app_tsx_path)
-
-    with open(app_tsx_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    # Verify no side-effects (emitHardwareEvent, soundFx, triggerAudition, handleMountDisk) inside setState
-    lines = content.splitlines()
-    in_updater = False
-    paren_depth = 0
-    for i, line in enumerate(lines):
-        if "setState((prev)" in line:
-            paren_depth = line.count("(") - line.count(")")
-            in_updater = (paren_depth > 0)
-            continue
-        if in_updater:
-            paren_depth += line.count("(") - line.count(")")
-            if any(side_effect in line for side_effect in ["emitHardwareEvent", "soundFx.", "triggerAudition()", "handleMountDisk()", "handleToggleUsb()"]):
-                pytest.fail(f"Side-effect found inside setState updater at line {i+1}: {line.strip()}")
-            if paren_depth <= 0:
-                in_updater = False
-
-
-def test_finding_21_monitor_font_provenance_labeling():
-    """Finding 21: Monitor font in OP760Monitor.tsx must be accurately labeled as simulation model."""
-    monitor_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "google-ui", "src", "components", "OP760Monitor.tsx")
-    assert os.path.exists(monitor_path)
-
-    with open(monitor_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    assert "Simulation Font Table" in content or "UI Behavioral Model" in content
+# NOTE: test_finding_16 (React setState purity in App.tsx) and test_finding_21
+# (OP760Monitor.tsx font provenance labeling) were removed here. They grepped
+# google-ui/ React source from a pytest test, producing false provenance (a
+# Python test claiming to verify React behavior). Their intent migrates to the
+# real React Vitest/Playwright suite — see ui-consolidation spec task 4.3.

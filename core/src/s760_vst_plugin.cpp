@@ -48,7 +48,7 @@ static float vst_get_param_thunk(AEffect* effect, int32_t index) {
 // -----------------------------------------------------------------------------
 
 S760VstPlugin::S760VstPlugin(audioMasterCallback audioMaster, bool is_fx)
-    : m_audio_master(audioMaster), m_is_fx(is_fx) {
+    : m_audio_master(audioMaster), m_bridge(select_bridge_host()), m_is_fx(is_fx) {
     std::memset(&m_effect, 0, sizeof(m_effect));
 
     m_effect.magic = VST_MAGIC;
@@ -62,7 +62,8 @@ S760VstPlugin::S760VstPlugin(audioMasterCallback audioMaster, bool is_fx)
     m_effect.numParams = 1; // Param 0: Master Gain
     m_effect.numInputs = 2;  // Stereo Audio In (Live Sampling / FX)
     m_effect.numOutputs = 2; // Stereo Audio Out
-    m_effect.flags = effFlagsCanReplacing | effFlagsProgramChunks | (is_fx ? 0 : effFlagsIsSynth);
+    // effFlagsHasEditor advertises the WebView-backed React editor (task 3.6).
+    m_effect.flags = effFlagsCanReplacing | effFlagsProgramChunks | effFlagsHasEditor | (is_fx ? 0 : effFlagsIsSynth);
     m_effect.uniqueID = is_fx ? 0x53373646 : 0x53373630; // 'S76F' (FX) vs 'S760' (Synth)
     m_effect.version = 2240;
     m_effect.user = this;
@@ -71,7 +72,29 @@ S760VstPlugin::S760VstPlugin(audioMasterCallback audioMaster, bool is_fx)
     m_scratch_right.resize(2048, 0.0f);
 }
 
+// -----------------------------------------------------------------------------
+//  Backend selection (mame-live-backend task 9.3, Requirements 1.2/7.1/7.3).
+//  Decides which IS760Host the Bridge is driven from. Only when the selector
+//  resolves+inits the MAME backend does the Bridge get the MAME host; otherwise
+//  the Bridge borrows the concrete &m_host (default Core, byte-for-byte identical).
+// -----------------------------------------------------------------------------
+IS760Host* S760VstPlugin::select_bridge_host() {
+    BackendSelectionResult sel = select_backend();
+
+    if (sel.active == BackendKind::Mame && sel.host) {
+        m_selected_host = std::move(sel.host);
+        return m_selected_host.get();
+    }
+
+    if (sel.bothUnavailable) {
+        std::cerr << "[S760VstPlugin] backend selection failed: " << sel.error
+                  << " (using Core host)" << std::endl;
+    }
+    return &m_host;
+}
+
 S760VstPlugin::~S760VstPlugin() {
+    if (m_editor) m_editor->close();
     m_host.get_drive_manager().flush_all();
 }
 
@@ -285,7 +308,34 @@ intptr_t S760VstPlugin::dispatcher(int32_t opcode, int32_t index, intptr_t value
             return 1;
 
         case effClose:
+            if (m_editor) m_editor->close();
             delete this;
+            return 1;
+
+        case effEditGetRect:
+            // Report the editor size to the host. `ptr` is an ERect** the host
+            // reads back; we point it at our stored rect sized to the WebView.
+            if (ptr) {
+                WebViewSize sz = m_editor ? m_editor->size() : WebViewSize{};
+                m_edit_rect.top = 0;
+                m_edit_rect.left = 0;
+                m_edit_rect.bottom = static_cast<int16_t>(sz.height);
+                m_edit_rect.right = static_cast<int16_t>(sz.width);
+                *reinterpret_cast<ERect**>(ptr) = &m_edit_rect;
+                return 1;
+            }
+            return 0;
+
+        case effEditOpen:
+            // `ptr` is the parent native window handle (HWND / NSView* / X11 id).
+            // Create the WebView editor and bind it to this plugin's bridge.
+            if (!m_editor) {
+                m_editor = std::make_unique<S760EditorController>(&m_bridge);
+            }
+            return m_editor->open(static_cast<NativeWindowHandle>(ptr), WebViewSize{}) ? 1 : 0;
+
+        case effEditClose:
+            if (m_editor) m_editor->close();
             return 1;
 
         case effSetSampleRate:

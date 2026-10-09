@@ -1245,9 +1245,17 @@ void s760_state::machine_start()
 	// writes stick. This is what unblocks the boot (previously a read-only .rom()
 	// mapping dropped those writes and the reset init looped forever).
 	{
+		// The resident OS image is a UNIFORM LINEAR 64KB load: file 0x4800 ==
+		// runtime 0x2080, contiguous all the way to runtime 0xFFFF (file
+		// 0x1277F). There is NO code banking for 0xE000-0xFFFF — the main
+		// executive loop and display routines (e.g. 0xE934, which writes the VDP
+		// VRAM port 0xD018) live in this same resident block (Gemini finding 13).
+		// So map the WHOLE 0x2080-0xFFFF as RAM pre-loaded from the image; the
+		// peripheral windows (VDP/LCD/gate array/SCSI/FDC) are re-installed on top
+		// AFTER this, below, so they override only their actual register ports.
 		constexpr offs_t os_start = 0x2080;
-		constexpr offs_t os_end   = 0xCFFF;              // just below the 0xD000 VDP window
-		constexpr size_t os_size  = os_end - os_start + 1; // 0xAF80 bytes
+		constexpr offs_t os_end   = 0xFFFF;                // full 64KB CPU space
+		constexpr size_t os_size  = os_end - os_start + 1; // 0xDF80 bytes
 		m_os_ram = std::make_unique<uint8_t[]>(os_size);
 		const uint8_t *img = memregion("maincpu")->base();
 		// file 0x4800 maps to runtime 0x2080 (verified reset/base address)
@@ -1264,7 +1272,55 @@ void s760_state::machine_start()
 		constexpr size_t vec_size  = vec_end - vec_start + 1; // 0x80
 		m_vec_ram = std::make_unique<uint8_t[]>(vec_size);
 		memcpy(m_vec_ram.get(), img + 0x4780, vec_size);
+
+		// Install the 80C196 hardware interrupt vector table (runtime
+		// 0x2000-0x201F, 8 levels x 2 bytes, little-endian). On real hardware
+		// IC20 supplies these; the disk image carries only 0x0F fill here, so
+		// after EI the first SOFT-timer interrupt (level 5) would fetch 0x200A =
+		// 0x0F0F and derail. Point every vector at a clean RET stub (0x2B22) and
+		// the genuine OS ISRs where known (Gemini finding 10 §2):
+		//   level 5 (IRQ_SOFT, HSO software timer) -> 0x2B51 (re-arms the timer)
+		//   level 7 (IRQ_EXTINT)                   -> 0x2C4F
+		// These are stored into the vector RAM's initial contents so they
+		// persist (writing via the program space in machine_start does not
+		// survive the core's post-start RAM clear).
+		auto set_vec = [&](offs_t vec_addr, uint16_t target) {
+			const size_t o = vec_addr - vec_start;
+			m_vec_ram[o]     = uint8_t(target & 0xFF);
+			m_vec_ram[o + 1] = uint8_t(target >> 8);
+		};
+		for (offs_t v = 0x2000; v <= 0x201E; v += 2)
+			set_vec(v, 0x2B22);     // default: clean RET stub
+		set_vec(0x200A, 0x2B51);    // level 5: software-timer ISR
+		set_vec(0x200E, 0x2C4F);    // level 7: external-interrupt ISR
+
 		m_maincpu->space(AS_PROGRAM).install_ram(vec_start, vec_end, m_vec_ram.get());
+	}
+
+	// Re-assert the peripheral windows ON TOP of the 0x2080-0xFFFF RAM just
+	// installed (install_ram above overrode the static s760_mem peripheral maps
+	// for the overlapping ranges). Each is constrained to its ACTUAL register
+	// ports so the surrounding addresses remain executable OS code (Gemini
+	// finding 13): the SED1335 is only 0xE000/0xE002 — the former wide
+	// 0xE000-0xEFF7 window was intercepting instruction fetches for main-loop
+	// routines like 0xE934.
+	{
+		address_space &prog = m_maincpu->space(AS_PROGRAM);
+		prog.install_readwrite_handler(0xD000, 0xD0FF,
+			read8sm_delegate(*this, FUNC(s760_state::vdp_r)),
+			write8sm_delegate(*this, FUNC(s760_state::vdp_w)));
+		prog.install_readwrite_handler(0xE000, 0xE003,
+			read8sm_delegate(*this, FUNC(s760_state::lcd_r)),
+			write8sm_delegate(*this, FUNC(s760_state::lcd_w)));
+		prog.install_readwrite_handler(0xF000, 0xF01F,
+			read8sm_delegate(*this, FUNC(s760_state::mmio_r)),
+			write8sm_delegate(*this, FUNC(s760_state::mmio_w)));
+		prog.install_readwrite_handler(0xF020, 0xF02F,
+			read8sm_delegate(*this, FUNC(s760_state::scsi_r)),
+			write8sm_delegate(*this, FUNC(s760_state::scsi_w)));
+		prog.install_readwrite_handler(0xF040, 0xF047,
+			read8sm_delegate(*this, FUNC(s760_state::fdc_r)),
+			write8sm_delegate(*this, FUNC(s760_state::fdc_w)));
 	}
 
 	ic20_hle_install();
@@ -2979,18 +3035,17 @@ void s760_state::ic20_hle_install()
 void s760_state::s760_mem(address_map &map)
 {
 	map(0x0000, 0x1FFF).ram();                                                   // Register File & Work RAM (0x1120 = SP)
-	// OS resident image. Runtime 0x2080-0xCFFF is RAM pre-loaded from the disk
-	// image (file 0x4800+) in machine_start via install_ram() against m_os_ram:
-	// the OS writes boot/UI state back here, so it must be writable (a read-only
-	// .rom() mapping dropped those writes and trapped the boot in a reset loop).
-	// 0xD100-0xDFFF stays ROM — it is above the VDP window and the OS does not
-	// write there. (0xD000-0xD0FF is the VDP, mapped below and overriding ROM.)
-	map(0xD100, 0xDFFF).rom().region("maincpu", 0x4800 + 0xB080);               // OS tail (read-only), file 0x4800 + (0xD100-0x2080)
-	map(0xD000, 0xD0FF).rw(FUNC(s760_state::vdp_r), FUNC(s760_state::vdp_w));   // Roland RFSC16A VDP registers & VRAM port
-	map(0xE000, 0xEFF7).rw(FUNC(s760_state::lcd_r), FUNC(s760_state::lcd_w));   // Epson SED1335 LCD controller & 4KB VRAM
-	map(0xF000, 0xF01F).rw(FUNC(s760_state::mmio_r), FUNC(s760_state::mmio_w)); // Gate array MMIO latches
-	map(0xF020, 0xF02F).rw(FUNC(s760_state::scsi_r), FUNC(s760_state::scsi_w)); // Fujitsu MB89352A SCSI SPC registers
-	map(0xF040, 0xF047).rw(FUNC(s760_state::fdc_r), FUNC(s760_state::fdc_w));   // NEC uPD72068 FDC registers
+	// The resident OS image (runtime 0x2080-0xFFFF, uniform linear from file
+	// 0x4800) is installed as RAM in machine_start (m_os_ram), and the IRQ
+	// vector window 0x2000-0x207F too (m_vec_ram). The peripheral register
+	// windows (VDP 0xD000-0xD0FF, SED1335 0xE000-0xE003, gate array/SCSI/FDC
+	// 0xF000-0xF047) are re-installed ON TOP of that RAM in machine_start so
+	// they override only their actual ports and leave all surrounding addresses
+	// executable as OS code (Gemini finding 13). No code banking is needed; the
+	// former wide 0xE000-0xEFF7 LCD window was intercepting main-loop code
+	// fetches (0xE934 etc.) and is now narrowed to the two real SED1335 ports.
+	// (Static map intentionally declares only the base RAM; the OS image +
+	// peripheral windows are installed dynamically in machine_start.)
 }
 
 static INPUT_PORTS_START( s760 )

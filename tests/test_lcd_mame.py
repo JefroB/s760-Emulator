@@ -318,12 +318,40 @@ def test_lcd_display_on_off_modes():
     assert sed.render_framebuffer()[0][0:8] == [0] * 8
 
 
-def test_rack_panel_lcd_preservation_and_fallback():
-    """Verify that rack panel LCD display preserves built-in status when VRAM is uninitialized."""
+def test_lcd_renders_only_authentic_sed1335_vram():
+    """Verify the LCD path renders ONLY genuine SED1335 VRAM — no invented chrome fallback.
+
+    ui-consolidation tasks 1.1-1.4 (R1.2, R2.2, R2.3): the former
+    "render active front panel page" fallback that fabricated the
+    "S-760 SAMPLER / SYSTEM v2.24 OK / RAM: 32MB READY" status text when VRAM was
+    empty, and the render_rack_panel() invented 1U-rack chrome, were deleted. The
+    LCD/rack chrome is now the React shell's responsibility (R6). This test, which
+    previously asserted that invented chrome STILL existed in the driver source,
+    is inverted to assert the authentic invariant: the invented chrome strings and
+    the render_rack_panel renderer are gone, and the genuine SED1335 VRAM path
+    (m_sed_vram + lcd_update) is what drives the LCD.
+    """
+    import re
+
     with open(DRIVER_PATH, "r", encoding="utf-8", errors="ignore") as f:
         src = f.read()
 
-    assert "S-760 SAMPLER" in src
-    assert "SYSTEM v2.24  OK" in src
-    assert "RAM: 32MB READY" in src
-    assert "render_rack_panel" in src
+    # Strip C/C++ comments so that NOTE comments which legitimately *document* the
+    # removed chrome (e.g. "...the draw_string() helper was removed...") are not
+    # mistaken for live code. We assert on actual code, not on documentation.
+    no_block = re.sub(r"/\*.*?\*/", "", src, flags=re.DOTALL)
+    code = "\n".join(line.split("//", 1)[0] for line in no_block.splitlines())
+
+    # The invented GUI renderers and the draw_string chrome helper have no live
+    # call sites or definitions anymore (deleted in tasks 1.1-1.4).
+    assert "render_rack_panel" not in code
+    assert "render_disk_mode" not in code
+    assert "render_perform_mode" not in code
+    assert "draw_string(" not in code
+    # The fabricated LCD status-text fallback is gone from executable code.
+    assert "S-760 SAMPLER" not in code
+    assert "RAM: 32MB READY" not in code
+
+    # Genuine Epson SED1335 VRAM rasterizer path is preserved.
+    assert "m_sed_vram" in code
+    assert "lcd_update" in code

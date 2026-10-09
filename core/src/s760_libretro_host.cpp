@@ -245,11 +245,13 @@ void S760LibretroHost::unload_system() {
     }
 }
 
-void S760LibretroHost::run_frame() {
+bool S760LibretroHost::run_frame() {
     if (m_game_loaded && m_retro_run) {
         s_active_instance = this;
         m_retro_run();
+        return true;
     }
+    return false;
 }
 
 void S760LibretroHost::reset() {

@@ -9,7 +9,9 @@
 [![UI Elements Matrix](https://img.shields.io/badge/UI%20Elements%20Coverage-100%25%20Tested-blue.svg)](docs/UI_TEST_COVERAGE_MATRIX.md)
 [![Manual Coverage](https://img.shields.io/badge/Manual%20Functions-100%25%20Verified-orange.svg)](docs/MANUAL_FUNCTION_TEST_COVERAGE.md)
 
-An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, mouse navigation, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
+An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
+
+The **canonical user interface is the React app in [`google-ui/`](google-ui/)** — it owns the entire device shell and composites the three authentic emulated display surfaces (CRT, LCD, Gotek OLED). The emulation backend emits only those real display buffers and never draws UI chrome.
 
 > 📚 **Test Coverage & Architectural Documentation:**
 > - [**Roland RFSC16A VDP & Display Subsystem Architecture**](docs/ROLAND_RFSC16A_VDP_AND_DISPLAY_ARCHITECTURE.md) — *Authoritative technical specification of the RFSC16A VDP ASIC, 128KB TC511664 VRAM layout, Sony CXA1145M RGB DAC palette, Epson SED1335 LCD, and dual-pipeline rendering engine.*
@@ -21,11 +23,17 @@ An open-source hardware emulation driver and DAW instrument & effect plugin for 
 
 ---
 
-## Screenshot
+## User Interface
 
-![Roland S-760 MAME GUI Screen](Main.png)
+The **canonical S-760 user interface is the React application in [`google-ui/`](google-ui/)**. It owns 100% of the device shell/chrome — the 1U rack chassis, the OP-760 CRT bezel, the 160×64 front-panel LCD housing, hardware dials, and the Gotek drive bay — and composites the three authentic emulated display surfaces inside it:
 
-*S-760 Studio Suite with pixel-accurate 4:3 OP-760 Color CRT monitor display (640x480 RGB 15kHz tube with phosphor scanlines) on top, and 1U rack front panel unit with embedded 160×64 green backlit LCD display, hardware dials, and Gotek USB floppy emulator (FlashFloppy OLED, rotary push-encoder, dual navigation buttons, and USB flash drive) on the bottom.*
+- **OP-760 Color CRT** (Roland RFSC16A VDP output)
+- **Front-panel LCD** (Epson SED1335 160×64 monochrome)
+- **Gotek OLED** readout (128×32)
+
+The emulation backend (the C++ Core / libretro host now, MAME later) renders only those authentic display buffers — it does **not** draw any UI chrome. See the [UI Consolidation plan](docs/UI_CONSOLIDATION_PLAN.md) and the [UI Elements & Test Coverage Matrix](docs/UI_TEST_COVERAGE_MATRIX.md) for the component-by-component breakdown.
+
+> ⚠️ **Note:** `Main.png` is an older MAME-driver debug render of hand-drawn chrome; it is **not** the product UI and does not represent the canonical React interface. It is retained only as a historical reference.
 
 ---
 
@@ -97,7 +105,7 @@ All primary modes, sub-pages, synthesis blocks, and hardware peripherals are aud
 
 ## Modes & Pages Implemented
 
-The driver includes accurate layout rendering and interactive switching for all primary Roland S-760 operating modes:
+The canonical React UI (`google-ui/`) renders and interactively switches between all primary Roland S-760 operating modes:
 
 1. **`PERFORM` (Performance Play)**: Multi-part performance matrix with MIDI channels, patch assignments, output bus routing (1-2 / 3-4), and volume/pan sliders.
 2. **`PATCH` (Patch Edit)**: Patch assignment matrix, key split ranges, tuning offsets, and velocity curves.
@@ -217,9 +225,11 @@ Or run directly via command line:
 
 ### Controls & Navigation
 
-- **Mouse Movement**: Moves the on-screen crosshair cursor.
+Interaction is driven through the canonical React UI (`google-ui/`), which owns the pointer and front-panel input and forwards events to the backend:
+
+- **Mouse Movement**: Moves the pointer over the React shell (CRT bezel, front panel, Gotek bay).
 - **Mouse Left Click / Button 1**: Select active mode tab or toggle parameter.
-- **Keyboard Arrow Keys (`Up` / `Down` / `Left` / `Right`)**: Direct precision cursor stepping (5px per step).
+- **Keyboard Arrow Keys (`Up` / `Down` / `Left` / `Right`)**: Step the active cursor / selection.
 - **Enter / Spacebar**: Confirm selection / trigger action.
 
 ---
@@ -249,7 +259,8 @@ pytest tests -v
 
 ```
 d:/S-760/
-├── Main.png                                # Main UI reference screenshot
+├── Main.png                                # Legacy MAME-chrome debug render (NOT the product UI; see google-ui/)
+├── google-ui/                              # Canonical React UI (device shell + display compositing)
 ├── README.md                               # Project documentation & guide
 ├── .gitignore                              # Git exclusion rules (ROMs, binaries, snaps, disk images)
 ├── run_s760_mame.bat                       # Interactive launch script

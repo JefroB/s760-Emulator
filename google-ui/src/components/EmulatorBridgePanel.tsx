@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { HardwareEvent, DiskImage, SamplerMode } from '../types/sampler';
 import { soundFx } from '../audio/soundFx';
+import { useBridgeStatus, useBridgeTelemetry, useBridgeClient } from '../bridge/BridgeContext';
+import { DEFAULT_BRIDGE_URL } from '../bridge/S760BridgeClient';
 
 interface EmulatorBridgePanelProps {
   events: HardwareEvent[];
@@ -29,8 +31,13 @@ export const EmulatorBridgePanel: React.FC<EmulatorBridgePanelProps> = ({
   onSelectDiskIndex,
   onEventEmit,
 }) => {
-  const [activeTab, setActiveTab] = useState<'events' | 'disks' | 'cpp_api' | 'settings'>('events');
+  const [activeTab, setActiveTab] = useState<'events' | 'disks' | 'bridge' | 'settings'>('events');
   const [soundEnabled, setSoundEnabled] = useState(soundFx.isSoundEnabled());
+
+  // Live bridge connection state (low-rate React state only — never per-pixel).
+  const bridgeStatus = useBridgeStatus();
+  const telemetry = useBridgeTelemetry();
+  const bridgeClient = useBridgeClient();
   const [seekEnabled, setSeekEnabled] = useState(soundFx.isFloppySeekEnabled());
   const [copied, setCopied] = useState(false);
 
@@ -94,8 +101,30 @@ export const EmulatorBridgePanel: React.FC<EmulatorBridgePanelProps> = ({
           <span className="text-xs font-mono font-bold text-neutral-200 tracking-wider">
             S-760 EMULATOR BRIDGE &amp; INTEGRATION BUS
           </span>
-          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-800/40">
-            IPC LIVE
+          {/* Live connection indicator driven by the real bridge status (R6.4). */}
+          <span
+            className={`flex items-center gap-1.5 text-[10px] font-mono px-2 py-0.5 rounded border ${
+              bridgeStatus === 'connected'
+                ? 'text-emerald-400 bg-emerald-950/50 border-emerald-800/40'
+                : bridgeStatus === 'connecting'
+                ? 'text-amber-400 bg-amber-950/50 border-amber-800/40'
+                : 'text-neutral-400 bg-neutral-800/50 border-neutral-700/50'
+            }`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                bridgeStatus === 'connected'
+                  ? 'bg-emerald-400 shadow-[0_0_6px_#34d399]'
+                  : bridgeStatus === 'connecting'
+                  ? 'bg-amber-400 animate-pulse'
+                  : 'bg-neutral-500'
+              }`}
+            />
+            {bridgeStatus === 'connected'
+              ? 'BRIDGE LIVE'
+              : bridgeStatus === 'connecting'
+              ? 'CONNECTING'
+              : 'OFFLINE'}
           </span>
         </div>
 
@@ -125,14 +154,14 @@ export const EmulatorBridgePanel: React.FC<EmulatorBridgePanelProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('cpp_api')}
+            onClick={() => setActiveTab('bridge')}
             className={`px-3 py-1 text-xs font-mono rounded transition-colors ${
-              activeTab === 'cpp_api'
+              activeTab === 'bridge'
                 ? 'bg-neutral-800 text-neutral-100 font-semibold shadow-sm'
                 : 'text-neutral-400 hover:text-neutral-200'
             }`}
           >
-            C++ / MAME Spec
+            Live Bridge
           </button>
           <button
             type="button"
@@ -326,46 +355,101 @@ export const EmulatorBridgePanel: React.FC<EmulatorBridgePanelProps> = ({
           </div>
         )}
 
-        {/* Tab 3: C++ / MAME Emulator Integration API */}
-        {activeTab === 'cpp_api' && (
-          <div className="flex flex-col gap-2">
+        {/* Tab 3: Live Bridge connection + status to the in-process C++ core */}
+        {activeTab === 'bridge' && (
+          <div className="flex flex-col gap-3">
             <span className="text-xs text-neutral-400">
-              Sample C++ / MAME emulator driver integration hook for connecting this frontend
-              digital twin to your emulation core:
+              Live link to the in-process C++ <span className="font-mono">S760Bridge</span>. React
+              composites the three authentic display surfaces (CRT / SED1335 LCD / Gotek OLED) it
+              streams, and forwards front-panel input over one message contract.
             </span>
-            <pre className="p-3 bg-neutral-950 rounded border border-neutral-800 font-mono text-xs text-emerald-400/90 overflow-x-auto leading-relaxed">
-{`// ============================================================
-// Roland S-760 Digital Twin Hardware Bridge (C++ / MAME core)
-// ============================================================
 
-#include "s760_emulator.h"
+            {/* Connection status + controls */}
+            <div className="flex items-center justify-between p-3 bg-neutral-950 rounded border border-neutral-800">
+              <div className="flex items-center gap-3">
+                <span
+                  className={`flex items-center gap-2 text-sm font-mono font-bold ${
+                    bridgeStatus === 'connected'
+                      ? 'text-emerald-400'
+                      : bridgeStatus === 'connecting'
+                      ? 'text-amber-400'
+                      : 'text-neutral-400'
+                  }`}
+                >
+                  <span
+                    className={`w-2.5 h-2.5 rounded-full ${
+                      bridgeStatus === 'connected'
+                        ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]'
+                        : bridgeStatus === 'connecting'
+                        ? 'bg-amber-400 animate-pulse'
+                        : 'bg-neutral-600'
+                    }`}
+                  />
+                  {bridgeStatus === 'connected'
+                    ? 'CONNECTED'
+                    : bridgeStatus === 'connecting'
+                    ? 'CONNECTING…'
+                    : 'DISCONNECTED'}
+                </span>
+                <span className="text-[11px] font-mono text-neutral-500">
+                  {DEFAULT_BRIDGE_URL}
+                </span>
+              </div>
 
-void S760FrontendBridge::onHardwareEvent(const std::string& type, const nlohmann::json& payload) {
-    if (type == "GOTEK_BTN_SEL" || type == "DISK_MOUNT") {
-        std::string imageName = payload["mountedDisk"].get<std::string>();
-        m_floppyDrive->mountImage(imageName.c_str());
-        m_cpu->triggerInterrupt(S760_IRQ_FLOPPY_READY);
-    }
-    else if (type == "DIAL_STEP") {
-        int delta = payload["delta"].get<int>();
-        m_frontPanelRegisters->alphaDialAccumulator += delta;
-    }
-    else if (type == "MODE_SELECT") {
-        std::string mode = payload["mode"].get<std::string>();
-        m_dsp->setOperatingMode(parseMode(mode));
-    }
-    else if (type == "NOTE_ON") {
-        uint8_t note = payload["note"].get<uint8_t>();
-        uint8_t vel  = payload["velocity"].get<uint8_t>();
-        m_midiEngine->handleNoteOn(0, note, vel);
-    }
-}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => bridgeClient?.connect()}
+                  disabled={!bridgeClient || bridgeStatus === 'connected'}
+                  className="px-2.5 py-1 text-xs font-mono bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 disabled:cursor-not-allowed text-neutral-200 rounded border border-neutral-700 transition-colors"
+                >
+                  Connect
+                </button>
+                <button
+                  type="button"
+                  onClick={() => bridgeClient?.disconnect()}
+                  disabled={!bridgeClient || bridgeStatus === 'disconnected'}
+                  className="px-2.5 py-1 text-xs font-mono bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 disabled:cursor-not-allowed text-neutral-200 rounded border border-neutral-700 transition-colors"
+                >
+                  Disconnect
+                </button>
+              </div>
+            </div>
 
-// Window Event Dispatcher from JS to Emulator WebAssembly / WebSocket:
-window.addEventListener('s760_input', (e) => {
-    emulatorCore.dispatchInput(e.detail.type, e.detail.payload);
-});`}
-            </pre>
+            {/* Live telemetry (low-rate; pixels never travel through React state) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { label: 'FPS', value: telemetry ? telemetry.fps.toFixed(0) : '—' },
+                { label: 'Mode', value: telemetry?.currentMode || '—' },
+                { label: 'Voices', value: telemetry ? String(telemetry.activeVoices) : '—' },
+                {
+                  label: 'Peak L/R',
+                  value: telemetry
+                    ? `${telemetry.peakL.toFixed(2)}/${telemetry.peakR.toFixed(2)}`
+                    : '—',
+                },
+              ].map((cell) => (
+                <div
+                  key={cell.label}
+                  className="flex flex-col gap-0.5 p-2.5 bg-neutral-950 rounded border border-neutral-800"
+                >
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500">
+                    {cell.label}
+                  </span>
+                  <span className="text-sm font-mono font-bold text-emerald-400/90">
+                    {cell.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {bridgeStatus !== 'connected' && (
+              <div className="text-[11px] font-mono text-neutral-500 p-2 bg-neutral-950/60 rounded border border-neutral-800/60">
+                No backend connected — the shell renders its offline/local display state and the
+                client retries with backoff. Start the C++ <span className="font-mono">S760Bridge</span>{' '}
+                standalone server to go live.
+              </div>
+            )}
           </div>
         )}
 

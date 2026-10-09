@@ -4,6 +4,7 @@
 #include "s760/s760_drive_manager.hpp"
 #include "s760/s760_recorder.hpp"
 
+#include <cstddef>
 #include <string>
 #include <vector>
 #include <memory>
@@ -29,7 +30,17 @@ struct VideoFrame {
     std::vector<uint32_t> rgba_pixels; // 32-bit RGBA
 };
 
-class S760LibretroHost {
+} // namespace s760
+
+// VideoFrame (above) is the shared surface struct the IS760Host contract uses.
+// It must be fully defined before including the interface header, which depends
+// on it. The interface header also includes this file; the #pragma once guard
+// plus this ordering keeps the mutual include well-formed.
+#include "s760/s760_host_interface.hpp"
+
+namespace s760 {
+
+class S760LibretroHost : public IS760Host {
 public:
     S760LibretroHost();
     ~S760LibretroHost();
@@ -45,7 +56,17 @@ public:
     void unload_system();
     bool is_system_running() const { return m_game_loaded; }
 
-    void run_frame();
+    // IS760Host: load / initialize the backend. For the Core backend the core
+    // and system are brought up via load_core()/load_system(); init() reports
+    // whether a system is running so the Bridge can treat a non-running host as
+    // an initialization failure (Requirement 1.4) without changing any existing
+    // behavior. No process is spawned and the host is never terminated here.
+    bool init() override { return is_system_running(); }
+
+    // IS760Host: advance exactly one emulated frame. Returns true when a frame
+    // was advanced. Behavior is otherwise identical to the previous void
+    // run_frame() (the Bridge already ignores the result).
+    bool run_frame() override;
     void reset();
 
     // Audio Processing for DAW Audio Thread
@@ -55,18 +76,27 @@ public:
     void set_target_sample_rate(double rate) { m_target_sample_rate = rate; }
 
     // Sample Recorder (Live Sampling Ingestion & Triggers)
-    S760SampleRecorder& get_recorder() { return m_recorder; }
-    const S760SampleRecorder& get_recorder() const { return m_recorder; }
+    S760SampleRecorder& get_recorder() override { return m_recorder; }
+    const S760SampleRecorder& get_recorder() const override { return m_recorder; }
 
     // Video CRT Frame for DAW UI
-    VideoFrame get_latest_video_frame() const;
+    VideoFrame get_latest_video_frame() const override;
+
+    // IS760Host: the Core backend exposes no SED1335/OLED LCD raster, so this
+    // returns false and the Bridge keeps its authentic-blank LCD behavior,
+    // preserving byte-for-byte parity on the wire for this backend.
+    bool get_lcd_surface(uint8_t* out, std::size_t len) const override {
+        (void)out;
+        (void)len;
+        return false;
+    }
 
     // MIDI Input for DAW MIDI Thread
     void send_midi_byte(uint8_t byte);
-    void send_midi_message(const uint8_t* msg, size_t len);
+    void send_midi_message(const uint8_t* msg, size_t len) override;
 
     // Hardware Drive Manager (FDD & SCSI ZuluSCSI/Gotek)
-    S760DriveManager& get_drive_manager() { return m_drive_manager; }
+    S760DriveManager& get_drive_manager() override { return m_drive_manager; }
     const S760DriveManager& get_drive_manager() const { return m_drive_manager; }
 
     // Savestates (DAW Project Chunk Serialization)
@@ -79,7 +109,7 @@ public:
     void handle_video_refresh(const void* data, unsigned width, unsigned height, size_t pitch);
     void handle_audio_sample(int16_t left, int16_t right);
     size_t handle_audio_sample_batch(const int16_t* data, size_t frames);
-    int16_t handle_input_state(unsigned port, unsigned device, unsigned index, unsigned id);
+    int16_t handle_input_state(unsigned port, unsigned device, unsigned index, unsigned id) override;
 
     static S760LibretroHost* get_active_instance() { return s_active_instance; }
 

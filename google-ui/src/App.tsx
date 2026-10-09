@@ -14,6 +14,7 @@ import {
 import { OP760Monitor } from './components/OP760Monitor';
 import { S760FrontPanel } from './components/S760FrontPanel';
 import { soundFx } from './audio/soundFx';
+import { BridgeProvider } from './bridge/BridgeContext';
 
 export default function App() {
   const [diskList, setDiskList] = useState<DiskImage[]>(DEFAULT_DISK_IMAGES);
@@ -175,6 +176,100 @@ export default function App() {
     [handleAlphaDialStep, emitHardwareEvent]
   );
 
+  // Gotek Mount / Load Operation
+  const handleMountDisk = useCallback(() => {
+    if (!state.gotek.usbInserted) return;
+
+    if (seekTimerRef.current !== null) {
+      clearInterval(seekTimerRef.current);
+    }
+
+    setState((prev) => ({
+      ...prev,
+      gotek: {
+        ...prev.gotek,
+        isBusy: true,
+        currentTrack: 0,
+        statusText: 'READING...',
+      },
+    }));
+
+    soundFx.playFloppySeekSound();
+
+    let trk = 0;
+    seekTimerRef.current = window.setInterval(() => {
+      trk += 4;
+      if (trk >= 80) {
+        if (seekTimerRef.current !== null) {
+          clearInterval(seekTimerRef.current);
+          seekTimerRef.current = null;
+        }
+        setState((prev) => ({
+          ...prev,
+          currentPatchIndex: 0,
+          gotek: {
+            ...prev.gotek,
+            isBusy: false,
+            mountedImageIndex: prev.gotek.selectedImageIndex,
+            currentTrack: 0,
+            statusText: 'READY',
+          },
+        }));
+        emitHardwareEvent('GOTEK_MOUNT_COMPLETE', {
+          mountedDisk: diskList[state.gotek.selectedImageIndex]?.filename,
+        });
+      } else {
+        setState((prev) => ({
+          ...prev,
+          gotek: {
+            ...prev.gotek,
+            currentTrack: trk,
+          },
+        }));
+        if (trk % 12 === 0) {
+          soundFx.playFloppySeekSound();
+        }
+      }
+    }, 90);
+  }, [diskList, emitHardwareEvent, state.gotek.selectedImageIndex, state.gotek.usbInserted]);
+
+  // Toggle USB Flash Drive
+  const handleToggleUsb = useCallback(() => {
+    const nextInserted = !state.gotek.usbInserted;
+    soundFx.playClick('button');
+    emitHardwareEvent('GOTEK_USB_TOGGLE', { inserted: nextInserted });
+
+    setState((prev) => ({
+      ...prev,
+      gotek: {
+        ...prev.gotek,
+        usbInserted: nextInserted,
+        mountedImageIndex: nextInserted ? prev.gotek.mountedImageIndex : null,
+        statusText: nextInserted ? 'READY' : 'NO USB',
+      },
+    }));
+  }, [emitHardwareEvent, state.gotek.usbInserted]);
+
+  // Audition Patch Sound
+  const triggerAudition = useCallback(() => {
+    if (!state.powerOn) return;
+    const currentDisk =
+      state.gotek.mountedImageIndex !== null
+        ? diskList[state.gotek.mountedImageIndex]
+        : diskList[state.gotek.selectedImageIndex];
+    const patchName =
+      currentDisk?.patches[state.currentPatchIndex % currentDisk.patches.length] || 'Default';
+
+    soundFx.auditionSample(patchName, 60 + (state.currentPatchIndex % 12));
+
+    setState((prev) => ({ ...prev, peakL: true, peakR: true, midiRx: true }));
+    setTimeout(() => {
+      setState((prev) => ({ ...prev, peakL: false, peakR: false, midiRx: false }));
+    }, 180);
+
+    emitHardwareEvent('AUDITION_TRIGGER', { patch: patchName });
+  }, [diskList, emitHardwareEvent, state.currentPatchIndex, state.gotek.mountedImageIndex, state.gotek.selectedImageIndex, state.powerOn, state.volume]);
+
   // Enter Button
   const handleEnter = useCallback(() => {
     emitHardwareEvent('ENTER_KEY', { mode: state.mode });
@@ -246,100 +341,6 @@ export default function App() {
     [diskList, emitHardwareEvent]
   );
 
-  // Gotek Mount / Load Operation
-  const handleMountDisk = useCallback(() => {
-    if (!state.gotek.usbInserted) return;
-
-    if (seekTimerRef.current !== null) {
-      clearInterval(seekTimerRef.current);
-    }
-
-    setState((prev) => ({
-      ...prev,
-      gotek: {
-        ...prev.gotek,
-        isBusy: true,
-        currentTrack: 0,
-        statusText: 'READING...',
-      },
-    }));
-
-    soundFx.playTrackSeek();
-
-    let trk = 0;
-    seekTimerRef.current = window.setInterval(() => {
-      trk += 4;
-      if (trk >= 80) {
-        if (seekTimerRef.current !== null) {
-          clearInterval(seekTimerRef.current);
-          seekTimerRef.current = null;
-        }
-        setState((prev) => ({
-          ...prev,
-          currentPatchIndex: 0,
-          gotek: {
-            ...prev.gotek,
-            isBusy: false,
-            mountedImageIndex: prev.gotek.selectedImageIndex,
-            currentTrack: 0,
-            statusText: 'READY',
-          },
-        }));
-        emitHardwareEvent('GOTEK_MOUNT_COMPLETE', {
-          mountedDisk: diskList[state.gotek.selectedImageIndex]?.filename,
-        });
-      } else {
-        setState((prev) => ({
-          ...prev,
-          gotek: {
-            ...prev.gotek,
-            currentTrack: trk,
-          },
-        }));
-        if (trk % 12 === 0) {
-          soundFx.playTrackSeek();
-        }
-      }
-    }, 90);
-  }, [diskList, emitHardwareEvent, state.gotek.selectedImageIndex, state.gotek.usbInserted]);
-
-  // Toggle USB Flash Drive
-  const handleToggleUsb = useCallback(() => {
-    const nextInserted = !state.gotek.usbInserted;
-    soundFx.playClick('button');
-    emitHardwareEvent('GOTEK_USB_TOGGLE', { inserted: nextInserted });
-
-    setState((prev) => ({
-      ...prev,
-      gotek: {
-        ...prev.gotek,
-        usbInserted: nextInserted,
-        mountedImageIndex: nextInserted ? prev.gotek.mountedImageIndex : null,
-        statusText: nextInserted ? 'READY' : 'NO USB',
-      },
-    }));
-  }, [emitHardwareEvent, state.gotek.usbInserted]);
-
-  // Audition Patch Sound
-  const triggerAudition = useCallback(() => {
-    if (!state.powerOn) return;
-    const currentDisk =
-      state.gotek.mountedImageIndex !== null
-        ? diskList[state.gotek.mountedImageIndex]
-        : diskList[state.gotek.selectedImageIndex];
-    const patchName =
-      currentDisk?.patches[state.currentPatchIndex % currentDisk.patches.length] || 'Default';
-
-    soundFx.playAuditionTone(state.currentPatchIndex, state.volume / 100);
-
-    setState((prev) => ({ ...prev, peakL: true, peakR: true, midiRx: true }));
-    setTimeout(() => {
-      setState((prev) => ({ ...prev, peakL: false, peakR: false, midiRx: false }));
-    }, 180);
-
-    emitHardwareEvent('AUDITION_TRIGGER', { patch: patchName });
-  }, [diskList, emitHardwareEvent, state.currentPatchIndex, state.gotek.mountedImageIndex, state.gotek.selectedImageIndex, state.powerOn, state.volume]);
-
   // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -389,6 +390,7 @@ export default function App() {
   }, [diskList.length, handleEnter, handleExit, handleIncDec, handleMountDisk, handleNavigate, handleSelectDiskIndex, state.gotek.selectedImageIndex, triggerAudition]);
 
   return (
+    <BridgeProvider>
     <div className="min-h-screen bg-[#0a0c0f] text-neutral-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
       {/* Top Header Bar */}
       <header className="flex items-center justify-between px-6 py-2.5 border-b border-neutral-800 bg-[#101216] shrink-0">
@@ -451,5 +453,6 @@ export default function App() {
         </div>
       </main>
     </div>
+    </BridgeProvider>
   );
 }

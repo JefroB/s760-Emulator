@@ -191,6 +191,58 @@ typedef struct clap_plugin_audio_ports {
     bool (*get)(const clap_plugin_t *plugin, uint32_t index, bool is_input, clap_audio_port_info_t *info);
 } clap_plugin_audio_ports_t;
 
+// GUI Extension (clap.gui) — minimal subset to host an embedded WebView editor.
+#define CLAP_EXT_GUI "clap.gui"
+
+// Window API strings (match the CLAP spec).
+#define CLAP_WINDOW_API_WIN32 "win32"
+#define CLAP_WINDOW_API_COCOA "cocoa"
+#define CLAP_WINDOW_API_X11   "x11"
+#define CLAP_WINDOW_API_WAYLAND "wayland"
+
+typedef struct clap_hwnd  clap_hwnd;
+typedef struct clap_nsview clap_nsview;
+
+typedef struct clap_window {
+    const char *api; // one of CLAP_WINDOW_API_*
+    union {
+        void *cocoa;  // NSView*
+        void *x11;    // X11 window id (as pointer-sized)
+        void *win32;  // HWND
+        void *ptr;    // generic
+    };
+} clap_window_t;
+
+typedef struct clap_gui_resize_hints {
+    bool can_resize_horizontally;
+    bool can_resize_vertically;
+    bool preserve_aspect_ratio;
+    uint32_t aspect_ratio_width;
+    uint32_t aspect_ratio_height;
+} clap_gui_resize_hints_t;
+
+typedef struct clap_plugin_gui {
+    bool (*is_api_supported)(const clap_plugin_t *plugin, const char *api, bool is_floating);
+    bool (*get_preferred_api)(const clap_plugin_t *plugin, const char **api, bool *is_floating);
+    bool (*create)(const clap_plugin_t *plugin, const char *api, bool is_floating);
+    void (*destroy)(const clap_plugin_t *plugin);
+    bool (*set_scale)(const clap_plugin_t *plugin, double scale);
+    bool (*get_size)(const clap_plugin_t *plugin, uint32_t *width, uint32_t *height);
+    bool (*can_resize)(const clap_plugin_t *plugin);
+    bool (*get_resize_hints)(const clap_plugin_t *plugin, clap_gui_resize_hints_t *hints);
+    bool (*adjust_size)(const clap_plugin_t *plugin, uint32_t *width, uint32_t *height);
+    bool (*set_size)(const clap_plugin_t *plugin, uint32_t width, uint32_t height);
+    bool (*set_parent)(const clap_plugin_t *plugin, const clap_window_t *window);
+    bool (*set_transient)(const clap_plugin_t *plugin, const clap_window_t *window);
+    void (*suggest_title)(const clap_plugin_t *plugin, const char *title);
+    bool (*show)(const clap_plugin_t *plugin);
+    bool (*hide)(const clap_plugin_t *plugin);
+} clap_plugin_gui_t;
+
+// Timer-support host extension id (used to drive the editor pump). We only need
+// the id string; the plugin can request a periodic callback via the host.
+#define CLAP_EXT_TIMER_SUPPORT "clap.timer-support"
+
 // Factory
 typedef struct clap_plugin_factory {
     uint32_t (*get_plugin_count)(const struct clap_plugin_factory *factory);

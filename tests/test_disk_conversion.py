@@ -156,21 +156,17 @@ end, "disk_convert_test")
     assert res["data"].get("disk_ui_ok") is True
     assert res["snap_path"] is not None
 
+    # ui-consolidation tasks 1.1-1.2, 1.5 (R2.3, R2.4, R4.1, R4.2): the Pen-4
+    # "yellow parameter button" pixel scrape was removed. Those widgets were part
+    # of the invented render_disk_mode CRT chrome (deleted in task 1.1); mode
+    # pages are now owned by the React shell (R6). Per F2 the OS cannot cold-boot
+    # without the IC20 BOOT ROM, so the genuine RFSC16A VDP produces a defined
+    # blank CRT. This test retains the authentic invariants: the driver boots
+    # cleanly, the DISK-tab input workflow drives the genuine :KEY_ARROWS ioport
+    # path, and a CRT snapshot is produced. The DISK-screen widget rendering check
+    # migrates to the React suite (task 4.3).
     img, w, h = analyze_screenshot(res["snap_path"])
-    pixels = img.load()
-
-    # Verify DISK active tab highlight or yellow parameter buttons (Pen 4: 255, 230, 0)
-    found_yellow_params = False
-    for y in range(50, 150, 5):
-        for x in range(w):
-            r, g, b = pixels[x, y]
-            if r >= 240 and g >= 210 and b <= 30: # Yellow parameter widget
-                found_yellow_params = True
-                break
-        if found_yellow_params:
-            break
-
-    assert found_yellow_params, "Yellow parameter buttons not rendered on DISK screen"
+    assert w == 640 and h == 240, f"Expected authentic 640x240 CRT geometry, got {w}x{h}"
 
 
 def test_akai_s1000_sample_audio_playback_and_pitch_accuracy():
@@ -714,22 +710,18 @@ end, "fdd_to_hd_ui_test")
     assert res["data"].get("disk_save_ui_ok") is True
     assert res["snap_path"] is not None
 
+    # ui-consolidation tasks 1.1-1.2, 1.5 (R2.3, R2.4, R4.1, R4.2): the Royal-Blue
+    # workspace (#0000C8) and Pen-4 yellow parameter-widget pixel scrapes were
+    # removed. Both were invented render_disk_mode CRT chrome (deleted in task
+    # 1.1); the DISK workspace and its widgets are now the React shell's job (R6).
+    # Per F2 the genuine RFSC16A VDP produces a defined blank CRT until the OS
+    # boots. This test retains the authentic invariants: the driver boots cleanly,
+    # the save workflow drives the genuine :KEY_ARROWS ioport path, the s760_sound
+    # device is present, and a CRT snapshot of the real 640x240 geometry is
+    # produced. The DISK save-UI widget rendering migrates to the React suite
+    # (task 4.3).
     img, w, h = analyze_screenshot(res["snap_path"])
-    pixels = img.load()
-
-    # Verify DISK Royal Blue workspace (#0000C8) and Yellow parameter widgets (Pen 4: 255, 230, 0)
-    found_blue = False
-    found_yellow = False
-    for y in range(40, 200, 4):
-        for x in range(0, w, 4):
-            r, g, b = pixels[x, y]
-            if r == 0 and g == 0 and b >= 150:
-                found_blue = True
-            if r >= 240 and g >= 210 and b <= 30:
-                found_yellow = True
-
-    assert found_blue, "Royal Blue background not detected in DISK save UI"
-    assert found_yellow, "Yellow parameter highlights not detected on DISK screen"
+    assert w == 640 and h == 240, f"Expected authentic 640x240 CRT geometry, got {w}x{h}"
 
 
 
