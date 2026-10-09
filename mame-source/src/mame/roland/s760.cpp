@@ -1024,6 +1024,7 @@ public:
 protected:
 	virtual void machine_start() override ATTR_COLD;
 	virtual void machine_reset() override ATTR_COLD;
+	void vdp_dump_vram_occupancy(); // verification-only VRAM occupancy dump (S760_VDP_TRACE)
 
 private:
 	required_device<i8x9x_device> m_maincpu;
@@ -1125,6 +1126,22 @@ private:
 	uint32_t m_vdp_addr;
 	std::unique_ptr<uint8_t[]> m_vdp_vram;
 	bool m_vdp_vram_active;
+	// Diagnostics (ChatGPT review): did the OS ever write VDP Control 0 (0xD010)
+	// with the display-enable bit set? Lets the harness distinguish a STATE
+	// problem (OS never enables display) from a RENDERING problem (crt_update).
+	bool m_vdp_display_enabled_ever = false;
+	// Verification-only VDP transaction trace toggle (set via S760_VDP_TRACE env
+	// in machine_start). When on, vdp_w logs PC/reg/value/vram_addr so the running
+	// OS acts as an RFSC16A protocol analyzer.
+	bool m_vdp_trace = false;
+	// Board/controller config reported at gate-array 0xF00A. The OS reads this at
+	// boot (0x249B), caches it at 0x2085, and uses it to decide the controller
+	// mode (Panel+LCD vs Mouse+CRT vs RC-100+CRT) and whether to drive the OP-760
+	// RFSC16A VDP/CRT. Models the user's real hardware config (CRT + mouse/remote
+	// enabled). Overridable via the S760_F00A env (hex) while the exact bit
+	// layout is being decoded (Gemini task 21). Default 0xFF = all config straps
+	// asserted (OP-760 present + CRT controller) as a first-pass probe.
+	uint8_t m_board_config_f00a = 0xFF;
 	uint16_t m_vdp_tile_base;
 	uint16_t m_vdp_matrix_base;
 	uint16_t m_vdp_attr_base;
@@ -1237,7 +1254,21 @@ private:
 
 void s760_state::machine_start()
 {
-	// Resident OS image RAM (runtime 0x2080-0xCFFF). On real hardware the BOOT
+	// Verification-only VDP transaction trace + VRAM occupancy dump, enabled by
+	// the S760_VDP_TRACE environment variable (off by default, zero cost in
+	// normal runs). The occupancy dump fires at emulator exit via a notifier.
+	m_vdp_trace = (getenv("S760_VDP_TRACE") != nullptr);
+	if (m_vdp_trace)
+		machine().add_notifier(MACHINE_NOTIFY_EXIT,
+			machine_notify_delegate(&s760_state::vdp_dump_vram_occupancy, this));
+
+	// Board/controller config reported at 0xF00A (OP-760 video board + CRT
+	// controller). Override with S760_F00A=<hex> while decoding the exact bit
+	// layout (Gemini task 21); default 0xFF asserts all config straps.
+	if (const char *f = getenv("S760_F00A"))
+		m_board_config_f00a = (uint8_t)strtol(f, nullptr, 16);
+
+	// Resident OS image RAM (runtime 0x2080-0xFFFF). On real hardware the BOOT
 	// ROM copies the disk payload into RAM and the CPU executes it from there;
 	// the OS then writes boot/UI state back into this window. Allocate the RAM,
 	// pre-load it from the "maincpu" region (disk image) at file offset 0x4800
@@ -2340,6 +2371,15 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			val = m_eeprom_latch;
 			break;
 
+		case 0x0A: // Board/controller config strap (OP-760 video board + mode).
+			// The OS reads this at 0x249B and caches it at 0x2085 to choose the
+			// controller mode and gate the RFSC16A VDP/CRT. Report the user's
+			// real hardware config (CRT + mouse/remote) instead of 0 ("no board"
+			// → Panel+LCD → CRT never enabled). Independent of m_mmio so the
+			// OS's own strobe-write to 0xF00A at 0x2496 doesn't clobber it.
+			val = m_board_config_f00a;
+			break;
+
 		case 0x10: // EEPROM Serial Data Out (DO)
 			val = m_eeprom_do & 0x01;
 			break;
@@ -2432,6 +2472,9 @@ void s760_state::mmio_w(offs_t offset, uint8_t data)
 								m_eeprom_bit_count = 0;
 								m_eeprom_state = 3; // SHIFTING_OUT
 								m_eeprom_do = 0; // Dummy 0 bit
+								if (m_vdp_trace) // reuse the trace toggle for EEPROM read logging
+									logerror("[EEPROM R] word[%02x] = %04x (PC=%04x)\n",
+										addr & 0x3F, m_eeprom_data[addr & 0x3F], m_maincpu->pc());
 							}
 							else if (op == 0x01) // WRITE (0 1 + A5..A0)
 							{
@@ -2524,8 +2567,43 @@ uint8_t s760_state::vdp_r(offs_t offset)
 			val = (uint8_t)((m_vdp_addr >> 8) & 0x01FF);
 			break;
 
+		case 0x04: // Raster Beam Counter X / HBlank status (OP-760 present).
+		case 0x05:
+		{
+			// The OP-760 video board drives a live raster. The OS polls this to
+			// detect the board and to sync VRAM updates to blanking. Returning a
+			// static 0 (card-absent / dead raster) makes the OS conclude there is
+			// no CRT and keep Panel+LCD mode. Return the live horizontal beam
+			// position so the board reads as installed and generating timing.
+			const int h = m_crt_screen->hpos();
+			val = (reg == 0x05) ? (uint8_t)((h >> 8) & 0xFF) : (uint8_t)(h & 0xFF);
+			break;
+		}
+
+		case 0x06: // Raster Scanline Counter Y / VBlank status (OP-760 present).
+		case 0x07:
+		{
+			const int v = m_crt_screen->vpos();
+			val = (reg == 0x07) ? (uint8_t)((v >> 8) & 0xFF) : (uint8_t)(v & 0xFF);
+			break;
+		}
+
 		case 0x40: // VDP Status Register
 			val = m_vdp_status;
+			break;
+
+		case 0x7E: // Debug/verification introspection (NOT real hardware).
+			// Side-effect-free readback of the controller-activity flags so the
+			// test harness can observe genuine OS display activity WITHOUT
+			// perturbing the VDP VRAM address pointer (reading the 0x18 data port
+			// auto-increments it, which made the old scan-for-nonzero heuristic
+			// miss writes). bit0 = m_vdp_vram_active, bit1 = m_sed_vram_active,
+			// bit2 = m_vdp_display_enabled_ever (distinguishes a STATE problem —
+			// OS never enables display — from a RENDERING problem).
+			// The OS never reads 0xD07E, so this is inert for emulation.
+			val = (m_vdp_vram_active ? 0x01 : 0x00)
+			    | (m_sed_vram_active ? 0x02 : 0x00)
+			    | (m_vdp_display_enabled_ever ? 0x04 : 0x00);
 			break;
 
 		default:
@@ -2536,21 +2614,64 @@ uint8_t s760_state::vdp_r(offs_t offset)
 	return val;
 }
 
+void s760_state::vdp_dump_vram_occupancy()
+{
+	// Verification-only: dump a map of non-zero VDP VRAM ranges straight from
+	// m_vdp_vram (NOT via the 0xD018 port, which mutates the shared address
+	// pointer and produced misleading results). Shows whether the OS built
+	// recognizable matrix/attribute/font/bitmap structures (ChatGPT review
+	// step 4) and the final VDP control state.
+	logerror("[VDPDUMP] vram_active=%d sed_active=%d display_enabled_ever=%d "
+		"ctrl0(D010)=%02x addr=%05x matrix_base=%04x attr_base=%04x tile_base=%04x bitmap_base=%04x\n",
+		m_vdp_vram_active, m_sed_vram_active, m_vdp_display_enabled_ever,
+		m_vdp_regs[0x10], m_vdp_addr & 0x1FFFF,
+		m_vdp_matrix_base, m_vdp_attr_base, m_vdp_tile_base, m_vdp_bitmap_base);
+	// Scan in 0x400-byte blocks across the 128KB VRAM; report non-empty blocks.
+	for (uint32_t base = 0; base < 0x20000; base += 0x400)
+	{
+		uint32_t nz = 0;
+		for (uint32_t i = 0; i < 0x400; i++)
+			if (m_vdp_vram[base + i] != 0) nz++;
+		if (nz)
+			logerror("[VDPDUMP]   %05x-%05x: %u non-zero\n", base, base + 0x3FF, nz);
+	}
+}
+
 void s760_state::vdp_w(offs_t offset, uint8_t data)
 {
 	uint8_t reg = offset & 0x7F;
 	m_vdp_regs[reg] = data;
 
+	// VDP transaction trace (verification-only, S760_VDP_TRACE): turn the running
+	// OS into an RFSC16A protocol analyzer — PC, register, value, and the current
+	// VRAM pointer. Lets us see exactly how the OS programs the VDP before
+	// touching crt_update() (ChatGPT review step 2).
+	if (m_vdp_trace)
+		logerror("[VDPW] PC=%04x D0%02X <- %02x  (vram_addr=%05x)\n",
+			m_maincpu->pc(), reg, data, m_vdp_addr & 0x1FFFF);
+
 	switch (reg)
 	{
-		case 0x10: // VDP Control 0
-			m_vdp_display_enable = (data & 0x01) != 0;
+		// NOTE (Gemini finding "17-render-path"): the MCS-96 writes every VDP
+		// register as a 16-bit WORD store, but this is an 8-bit handler on a
+		// 16-bit bus — MAME delivers byte0 at the even offset and byte1 at the
+		// odd offset+1. The old model only handled the even byte of each pair, so
+		// VRAM data, the VRAM address pointer, and the tile base all silently
+		// dropped their high byte. Handle BOTH bytes of each 16-bit register.
+		case 0x10: // VDP Control 0 (low byte)
+			// Display is enabled when master-enable (bit0) OR a plane-enable
+			// (tile bit3 / bitmap bit4) is asserted — the OS activates via the
+			// plane bits, not bit0 alone (Gemini: condition is (data & 0x19)).
+			m_vdp_display_enable = (data & 0x19) != 0;
 			m_vdp_interlace = (data & 0x02) != 0;
 			m_vdp_tile_plane_enable = (data & 0x08) != 0;
 			m_vdp_bitmap_plane_enable = (data & 0x10) != 0;
+			if (m_vdp_display_enable)
+				m_vdp_display_enabled_ever = true;
 			break;
 
-		case 0x18: // VRAM Data Write with Auto-Increment
+		case 0x18: // VRAM Data Port, byte 0 (low)
+		case 0x19: // VRAM Data Port, byte 1 (high) — 16-bit stream, both bytes
 		{
 			m_vdp_vram[m_vdp_addr & 0x1FFFF] = data;
 			m_vdp_addr = (m_vdp_addr + 1) & 0x1FFFF;
@@ -2559,35 +2680,43 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 		}
 
 		case 0x20: // Mouse X Low
-			m_vdp_mouse_x = (m_vdp_mouse_x & 0x0100) | data;
+			m_vdp_mouse_x = (m_vdp_mouse_x & 0xFF00) | data;
 			break;
 
 		case 0x21: // Mouse X High
-			m_vdp_mouse_x = (m_vdp_mouse_x & 0x00FF) | ((uint16_t)(data & 0x01) << 8);
+			m_vdp_mouse_x = (m_vdp_mouse_x & 0x00FF) | ((uint16_t)data << 8);
 			break;
 
 		case 0x22: // Mouse Y Low
-			m_vdp_mouse_y = data;
+			m_vdp_mouse_y = (m_vdp_mouse_y & 0xFF00) | data;
+			break;
+
+		case 0x23: // Mouse Y High
+			m_vdp_mouse_y = (m_vdp_mouse_y & 0x00FF) | ((uint16_t)data << 8);
 			break;
 
 		case 0x24: // Mouse Control
 			m_vdp_mouse_ctrl = data;
 			break;
 
-		case 0x30: // Character Tile Base Low
+		case 0x30: // Character Tile Base, byte 0 (low)
 			m_vdp_tile_base = (m_vdp_tile_base & 0xFF00) | data;
 			break;
 
-		case 0x32: // Character Tile Base High
+		case 0x31: // Character Tile Base, byte 1 (high) — was dropped before
 			m_vdp_tile_base = (m_vdp_tile_base & 0x00FF) | ((uint16_t)data << 8);
 			break;
 
-		case 0x34: // VRAM Address Pointer Low Byte
-			m_vdp_addr = (m_vdp_addr & 0x1FF00) | data;
+		case 0x34: // VRAM Address Pointer, byte 0 (bits 0..7)
+			m_vdp_addr = (m_vdp_addr & 0x1FF00) | (uint32_t)data;
 			break;
 
-		case 0x36: // VRAM Address Pointer High Byte
-			m_vdp_addr = (m_vdp_addr & 0x000FF) | ((uint32_t)data << 8);
+		case 0x35: // VRAM Address Pointer, byte 1 (bits 8..15) — was dropped
+			m_vdp_addr = (m_vdp_addr & 0x100FF) | ((uint32_t)data << 8);
+			break;
+
+		case 0x36: // VRAM Address Pointer, byte 2 (bits 16..17 bank)
+			m_vdp_addr = (m_vdp_addr & 0x0FFFF) | ((uint32_t)(data & 0x01) << 16);
 			break;
 
 		case 0x40: // VDP Command / Trigger
@@ -2633,11 +2762,17 @@ void s760_state::s760_palette(palette_device &palette) const
 // Epson SED1335 (S1D13305) Front Panel LCD Controller Interface (0xE000 - 0xEFF7)
 uint8_t s760_state::lcd_r(offs_t offset)
 {
-	if ((offset & 0x01) == 1) // Status Port
+	// SED1335 port decode (Gemini finding "17-render-path"): both ports are at
+	// EVEN addresses on the 16-bit bus — 0xE000 = command/status, 0xE002 = data.
+	// The old `offset & 0x01` test routed BOTH to the data port (both even), so
+	// the OS's status polls at 0x2DE1 never saw "ready". Decode on bit 1.
+	if ((offset & 0x02) == 0) // Command/Status Port (0xE000)
 	{
-		return 0x40; // Ready flag
+		// Status: bit7 ready + bit4 buffer-ready. The OS spins on these bits
+		// (ANDB #0x10 / CMPB #0x10 at 0x2DF6, and the #0x80 test at 0x2DE9).
+		return 0x90;
 	}
-	else // Data Port (MREAD)
+	else // Data Port (0xE002, MREAD)
 	{
 		uint8_t val = m_sed_vram[m_sed_cursor_addr & 0x0FFF];
 		m_sed_cursor_addr = (m_sed_cursor_addr + 1) & 0x0FFF;
@@ -2647,7 +2782,7 @@ uint8_t s760_state::lcd_r(offs_t offset)
 
 void s760_state::lcd_w(offs_t offset, uint8_t data)
 {
-	if ((offset & 0x01) == 1) // Command Port
+	if ((offset & 0x02) == 0) // Command Port (0xE000)
 	{
 		m_sed_cmd = data;
 		m_sed_param_idx = 0;
