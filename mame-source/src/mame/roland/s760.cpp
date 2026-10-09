@@ -3030,6 +3030,16 @@ void s760_state::ic20_hle_install()
 				selector, type, index, bufptr, m_maincpu->pc());
 		},
 		&m_ic20_tap);
+
+	// Write-audit result (ChatGPT review, finding 16): over the upper region
+	// 0xD100-0xFFFF the OS writes ONLY to 0xD400-0xD41C (a peripheral register
+	// block it zero-clears at init, PC ~0x2AEC-0x2B1x) — it never writes into
+	// the executable code (0xE000-0xFFFF etc.). So that code is effectively
+	// read-only; the current RAM backing is functionally correct (zero-writes to
+	// 0xD400 land harmlessly and read back consistently) but a more hardware-
+	// faithful model would make the code ROM with a decoded hole at 0xD400-0xD41C
+	// (candidate: TVF/MEQ or VDP-companion register block). Deferred as non-
+	// blocking — the VDP VRAM write path (0xD018) is already exercised.
 }
 
 void s760_state::s760_mem(address_map &map)
