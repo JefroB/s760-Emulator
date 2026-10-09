@@ -1024,6 +1024,7 @@ public:
 protected:
 	virtual void machine_start() override ATTR_COLD;
 	virtual void machine_reset() override ATTR_COLD;
+	void vdp_dump_vram_occupancy(); // verification-only VRAM occupancy dump (S760_VDP_TRACE)
 
 private:
 	required_device<i8x9x_device> m_maincpu;
@@ -1125,6 +1126,14 @@ private:
 	uint32_t m_vdp_addr;
 	std::unique_ptr<uint8_t[]> m_vdp_vram;
 	bool m_vdp_vram_active;
+	// Diagnostics (ChatGPT review): did the OS ever write VDP Control 0 (0xD010)
+	// with the display-enable bit set? Lets the harness distinguish a STATE
+	// problem (OS never enables display) from a RENDERING problem (crt_update).
+	bool m_vdp_display_enabled_ever = false;
+	// Verification-only VDP transaction trace toggle (set via S760_VDP_TRACE env
+	// in machine_start). When on, vdp_w logs PC/reg/value/vram_addr so the running
+	// OS acts as an RFSC16A protocol analyzer.
+	bool m_vdp_trace = false;
 	uint16_t m_vdp_tile_base;
 	uint16_t m_vdp_matrix_base;
 	uint16_t m_vdp_attr_base;
@@ -1237,7 +1246,15 @@ private:
 
 void s760_state::machine_start()
 {
-	// Resident OS image RAM (runtime 0x2080-0xCFFF). On real hardware the BOOT
+	// Verification-only VDP transaction trace + VRAM occupancy dump, enabled by
+	// the S760_VDP_TRACE environment variable (off by default, zero cost in
+	// normal runs). The occupancy dump fires at emulator exit via a notifier.
+	m_vdp_trace = (getenv("S760_VDP_TRACE") != nullptr);
+	if (m_vdp_trace)
+		machine().add_notifier(MACHINE_NOTIFY_EXIT,
+			machine_notify_delegate(&s760_state::vdp_dump_vram_occupancy, this));
+
+	// Resident OS image RAM (runtime 0x2080-0xFFFF). On real hardware the BOOT
 	// ROM copies the disk payload into RAM and the CPU executes it from there;
 	// the OS then writes boot/UI state back into this window. Allocate the RAM,
 	// pre-load it from the "maincpu" region (disk image) at file offset 0x4800
@@ -2528,6 +2545,20 @@ uint8_t s760_state::vdp_r(offs_t offset)
 			val = m_vdp_status;
 			break;
 
+		case 0x7E: // Debug/verification introspection (NOT real hardware).
+			// Side-effect-free readback of the controller-activity flags so the
+			// test harness can observe genuine OS display activity WITHOUT
+			// perturbing the VDP VRAM address pointer (reading the 0x18 data port
+			// auto-increments it, which made the old scan-for-nonzero heuristic
+			// miss writes). bit0 = m_vdp_vram_active, bit1 = m_sed_vram_active,
+			// bit2 = m_vdp_display_enabled_ever (distinguishes a STATE problem —
+			// OS never enables display — from a RENDERING problem).
+			// The OS never reads 0xD07E, so this is inert for emulation.
+			val = (m_vdp_vram_active ? 0x01 : 0x00)
+			    | (m_sed_vram_active ? 0x02 : 0x00)
+			    | (m_vdp_display_enabled_ever ? 0x04 : 0x00);
+			break;
+
 		default:
 			val = m_vdp_regs[reg];
 			break;
@@ -2536,10 +2567,41 @@ uint8_t s760_state::vdp_r(offs_t offset)
 	return val;
 }
 
+void s760_state::vdp_dump_vram_occupancy()
+{
+	// Verification-only: dump a map of non-zero VDP VRAM ranges straight from
+	// m_vdp_vram (NOT via the 0xD018 port, which mutates the shared address
+	// pointer and produced misleading results). Shows whether the OS built
+	// recognizable matrix/attribute/font/bitmap structures (ChatGPT review
+	// step 4) and the final VDP control state.
+	logerror("[VDPDUMP] vram_active=%d sed_active=%d display_enabled_ever=%d "
+		"ctrl0(D010)=%02x addr=%05x matrix_base=%04x attr_base=%04x tile_base=%04x bitmap_base=%04x\n",
+		m_vdp_vram_active, m_sed_vram_active, m_vdp_display_enabled_ever,
+		m_vdp_regs[0x10], m_vdp_addr & 0x1FFFF,
+		m_vdp_matrix_base, m_vdp_attr_base, m_vdp_tile_base, m_vdp_bitmap_base);
+	// Scan in 0x400-byte blocks across the 128KB VRAM; report non-empty blocks.
+	for (uint32_t base = 0; base < 0x20000; base += 0x400)
+	{
+		uint32_t nz = 0;
+		for (uint32_t i = 0; i < 0x400; i++)
+			if (m_vdp_vram[base + i] != 0) nz++;
+		if (nz)
+			logerror("[VDPDUMP]   %05x-%05x: %u non-zero\n", base, base + 0x3FF, nz);
+	}
+}
+
 void s760_state::vdp_w(offs_t offset, uint8_t data)
 {
 	uint8_t reg = offset & 0x7F;
 	m_vdp_regs[reg] = data;
+
+	// VDP transaction trace (verification-only, S760_VDP_TRACE): turn the running
+	// OS into an RFSC16A protocol analyzer — PC, register, value, and the current
+	// VRAM pointer. Lets us see exactly how the OS programs the VDP before
+	// touching crt_update() (ChatGPT review step 2).
+	if (m_vdp_trace)
+		logerror("[VDPW] PC=%04x D0%02X <- %02x  (vram_addr=%05x)\n",
+			m_maincpu->pc(), reg, data, m_vdp_addr & 0x1FFFF);
 
 	switch (reg)
 	{
@@ -2548,6 +2610,8 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 			m_vdp_interlace = (data & 0x02) != 0;
 			m_vdp_tile_plane_enable = (data & 0x08) != 0;
 			m_vdp_bitmap_plane_enable = (data & 0x10) != 0;
+			if (m_vdp_display_enable)
+				m_vdp_display_enabled_ever = true;
 			break;
 
 		case 0x18: // VRAM Data Write with Auto-Increment
