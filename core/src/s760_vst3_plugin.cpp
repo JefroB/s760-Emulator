@@ -16,18 +16,128 @@ static const TUID S760ProcessorUID = INLINE_UID(0x53373630, 0x56535433, 0x50524F
 static const TUID S760FXProcessorUID = INLINE_UID(0x53373630, 0x56535433, 0x46585052, 0x30303032);
 
 S760Vst3Plugin::S760Vst3Plugin(bool is_fx)
-    : m_is_fx(is_fx) {
+    : m_bridge(select_bridge_host()), m_is_fx(is_fx) {
     m_scratch_left.resize(8192, 0.0f);
     m_scratch_right.resize(8192, 0.0f);
+}
+
+// -----------------------------------------------------------------------------
+//  Backend selection (mame-live-backend task 9.3, Requirements 1.2/7.1/7.3).
+//  Decides which IS760Host the Bridge is driven from. Only when the selector
+//  resolves+inits the MAME backend does the Bridge get the MAME host; otherwise
+//  the Bridge borrows the concrete &m_host (default Core, byte-for-byte identical).
+// -----------------------------------------------------------------------------
+IS760Host* S760Vst3Plugin::select_bridge_host() {
+    BackendSelectionResult sel = select_backend();
+
+    if (sel.active == BackendKind::Mame && sel.host) {
+        m_selected_host = std::move(sel.host);
+        return m_selected_host.get();
+    }
+
+    if (sel.bothUnavailable) {
+        std::cerr << "[S760Vst3Plugin] backend selection failed: " << sel.error
+                  << " (using Core host)" << std::endl;
+    }
+    return &m_host;
 }
 
 S760Vst3Plugin::~S760Vst3Plugin() {
     m_host.get_drive_manager().flush_all();
 }
 
-static const TUID FUnknown_iid = INLINE_UID(0x00000000, 0x00000000, 0xC0000000, 0x00000046);
-static const TUID IComponent_iid = INLINE_UID(0xE8318227, 0x79A447F6, 0x8E6AEF5D, 0xDC202293);
-static const TUID IAudioProcessor_iid = INLINE_UID(0x420423E5, 0x12DA4541, 0xA6190EB9, 0x99615A3B);
+// -----------------------------------------------------------------------------
+//  S760Vst3PlugView — WebView-backed IPlugView (task 3.6).
+//  Vended by S760Vst3Plugin::createView("editor"); binds the webview to the
+//  plugin's in-process S760Bridge via S760EditorController.
+// -----------------------------------------------------------------------------
+static const TUID FUnknown_iid       = INLINE_UID(0x00000000, 0x00000000, 0xC0000000, 0x00000046);
+static const TUID IComponent_iid     = INLINE_UID(0xE8318227, 0x79A447F6, 0x8E6AEF5D, 0xDC202293);
+static const TUID IAudioProcessor_iid= INLINE_UID(0x420423E5, 0x12DA4541, 0xA6190EB9, 0x99615A3B);
+static const TUID IEditController_iid = INLINE_UID(0xDCD7BBE3, 0x7742448D, 0xA874AACC, 0x979C759E);
+static const TUID IPlugView_iid       = INLINE_UID(0x5BC32507, 0xD06049EA, 0xA6151B52, 0x2B755B29);
+
+class S760Vst3PlugView : public Steinberg::IPlugView {
+public:
+    explicit S760Vst3PlugView(S760Bridge* bridge)
+        : m_controller(bridge) {}
+    ~S760Vst3PlugView() override { m_controller.close(); }
+
+    // FUnknown
+    tresult queryInterface(const TUID _iid, void** obj) override {
+        if (!obj) return kInvalidArgument;
+        if (std::memcmp(_iid, FUnknown_iid, sizeof(TUID)) == 0 ||
+            std::memcmp(_iid, IPlugView_iid, sizeof(TUID)) == 0) {
+            *obj = static_cast<Steinberg::IPlugView*>(this);
+            addRef();
+            return kResultOk;
+        }
+        *obj = nullptr;
+        return kResultFalse;
+    }
+    uint32_t addRef() override { return ++m_ref; }
+    uint32_t release() override {
+        uint32_t c = --m_ref;
+        if (c == 0) { delete this; }
+        return c;
+    }
+
+    tresult isPlatformTypeSupported(FIDString type) override {
+        if (!type) return kResultFalse;
+#if defined(_WIN32)
+        return (std::strcmp(type, kPlatformTypeHWND) == 0) ? kResultOk : kResultFalse;
+#elif defined(__APPLE__)
+        return (std::strcmp(type, kPlatformTypeNSView) == 0) ? kResultOk : kResultFalse;
+#else
+        return (std::strcmp(type, kPlatformTypeX11EmbedWindowID) == 0) ? kResultOk : kResultFalse;
+#endif
+    }
+
+    tresult attached(void* parent, FIDString type) override {
+        if (isPlatformTypeSupported(type) != kResultOk) return kResultFalse;
+        WebViewSize def{};
+        WebViewSize sz{m_rect.getWidth()  > 0 ? static_cast<uint32_t>(m_rect.getWidth())  : def.width,
+                       m_rect.getHeight() > 0 ? static_cast<uint32_t>(m_rect.getHeight()) : def.height};
+        return m_controller.open(static_cast<NativeWindowHandle>(parent), sz) ? kResultOk : kResultFalse;
+    }
+
+    tresult removed() override { m_controller.close(); return kResultOk; }
+    tresult onWheel(float) override { return kResultOk; }
+    tresult onKeyDown(char16_t, int16_t, int16_t) override { return kResultOk; }
+    tresult onKeyUp(char16_t, int16_t, int16_t) override { return kResultOk; }
+
+    tresult getSize(Steinberg::ViewRect* size) override {
+        if (!size) return kInvalidArgument;
+        WebViewSize sz = m_controller.size();
+        size->left = 0; size->top = 0;
+        size->right = static_cast<int32_t>(sz.width);
+        size->bottom = static_cast<int32_t>(sz.height);
+        return kResultOk;
+    }
+
+    tresult onSize(Steinberg::ViewRect* newSize) override {
+        if (!newSize) return kInvalidArgument;
+        m_rect = *newSize;
+        m_controller.set_size(WebViewSize{static_cast<uint32_t>(newSize->getWidth()),
+                                          static_cast<uint32_t>(newSize->getHeight())});
+        return kResultOk;
+    }
+
+    tresult onFocus(bool) override { return kResultOk; }
+    tresult setFrame(Steinberg::IPlugFrame* frame) override { m_frame = frame; return kResultOk; }
+    tresult canResize() override { return kResultOk; }
+    tresult checkSizeConstraint(Steinberg::ViewRect*) override { return kResultOk; }
+
+    // Pump the bridge (DAW UI timer / test harness drives this).
+    void tick() { m_controller.tick(); }
+    S760EditorController& controller() { return m_controller; }
+
+private:
+    std::atomic<uint32_t> m_ref{1};
+    S760EditorController m_controller;
+    Steinberg::IPlugFrame* m_frame = nullptr;
+    Steinberg::ViewRect m_rect{};
+};
 
 tresult S760Vst3Plugin::queryInterface(const TUID _iid, void** obj) {
     if (!obj) return kInvalidArgument;
@@ -40,6 +150,11 @@ tresult S760Vst3Plugin::queryInterface(const TUID _iid, void** obj) {
     }
     if (std::memcmp(_iid, IAudioProcessor_iid, sizeof(TUID)) == 0) {
         *obj = static_cast<Steinberg::IAudioProcessor*>(this);
+        addRef();
+        return kResultOk;
+    }
+    if (std::memcmp(_iid, IEditController_iid, sizeof(TUID)) == 0) {
+        *obj = static_cast<Steinberg::IEditController*>(this);
         addRef();
         return kResultOk;
     }
@@ -342,6 +457,65 @@ tresult S760Vst3Plugin::setState(Steinberg::IBStream* state) {
     }
 
     return kResultOk;
+}
+
+// -----------------------------------------------------------------------------
+// IEditController (editor half) — vends the WebView-backed editor view.
+// -----------------------------------------------------------------------------
+tresult S760Vst3Plugin::setComponentState(Steinberg::IBStream* state) {
+    (void)state; // no automatable parameters mirrored into the editor yet
+    return kResultOk;
+}
+
+int32_t S760Vst3Plugin::getParameterCount() { return 0; }
+
+tresult S760Vst3Plugin::getParameterInfo(int32_t paramIndex, void* info) {
+    (void)paramIndex; (void)info;
+    return kResultFalse;
+}
+
+tresult S760Vst3Plugin::getParamStringByValue(uint32_t id, double valueNormalized, void* string) {
+    (void)id; (void)valueNormalized; (void)string;
+    return kResultFalse;
+}
+
+tresult S760Vst3Plugin::getParamValueByString(uint32_t id, char16_t* string, double* valueNormalized) {
+    (void)id; (void)string; (void)valueNormalized;
+    return kResultFalse;
+}
+
+double S760Vst3Plugin::normalizedParamToPlain(uint32_t id, double valueNormalized) {
+    (void)id;
+    return valueNormalized;
+}
+
+double S760Vst3Plugin::plainParamToNormalized(uint32_t id, double plainValue) {
+    (void)id;
+    return plainValue;
+}
+
+double S760Vst3Plugin::getParamNormalized(uint32_t id) {
+    (void)id;
+    return 0.0;
+}
+
+tresult S760Vst3Plugin::setParamNormalized(uint32_t id, double value) {
+    (void)id; (void)value;
+    return kResultOk;
+}
+
+tresult S760Vst3Plugin::setComponentHandler(void* handler) {
+    (void)handler;
+    return kResultOk;
+}
+
+Steinberg::IPlugView* S760Vst3Plugin::createView(FIDString name) {
+    // Only the "editor" view is vended; it is the WebView-backed React editor
+    // bound to this plugin's in-process bridge.
+    if (!name || std::strcmp(name, ViewType_kEditor) != 0) {
+        return nullptr;
+    }
+    return new S760Vst3PlugView(&m_bridge);
 }
 
 // -----------------------------------------------------------------------------

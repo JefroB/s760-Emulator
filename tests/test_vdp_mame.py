@@ -305,31 +305,69 @@ def test_vdp_status_and_vblank_irq_generation():
 
 
 def test_vdp_10pen_palette_lookup():
-    """Verify standard 16-color DAC palette in s760_palette."""
+    """Verify the authentic 10-pen (0..9) DAC palette in s760_palette.
+
+    ui-consolidation task 1.5 (R4.1, R4.2): the former chrome pens 10/12/14 were
+    removed by task 1.4 — they existed solely for the deleted invented GUI
+    (10 = 1U rack charcoal chassis, 12 = LCD-in-CRT backlight green,
+    14 = Gotek OLED cyan). The genuine SED1335 LCD rasterizer uses pens 0/1 and
+    the RFSC16A VDP rasterizer indexes the authentic 0..9 studio pens, so this
+    test now asserts exactly the retained 10-pen palette and that the chrome pens
+    are gone. The rack/LCD-housing/Gotek chrome colors are the React shell's job
+    (R6); their coverage migrates to the React suite (task 4.3).
+    """
     with open(DRIVER_PATH, "r", encoding="utf-8", errors="ignore") as f:
         src = f.read()
 
-    # Verify required palette pen colors
+    # Verify the authentic 10-pen studio palette (pens 0..9) is intact.
     assert "palette.set_pen_color(0, rgb_t(0, 0, 0));" in src           # Pen 0: Black
     assert "palette.set_pen_color(1, rgb_t(255, 255, 255));" in src     # Pen 1: White
     assert "palette.set_pen_color(2, rgb_t(0, 0, 192));" in src         # Pen 2: Roland Royal Blue
     assert "palette.set_pen_color(3, rgb_t(0, 200, 80));" in src        # Pen 3: Green
     assert "palette.set_pen_color(4, rgb_t(255, 230, 0));" in src       # Pen 4: Yellow
     assert "palette.set_pen_color(5, rgb_t(220, 60, 20));" in src       # Pen 5: Red/Orange
-    assert "palette.set_pen_color(10, rgb_t(38, 40, 46));" in src       # Pen 10: 1U Rack Dark Charcoal
-    assert "palette.set_pen_color(12, rgb_t(30, 95, 35));" in src       # Pen 12: LCD Backlight
-    assert "palette.set_pen_color(14, rgb_t(80, 230, 255));" in src     # Pen 14: Gotek OLED Cyan
+    assert "palette.set_pen_color(6," in src                            # Pen 6: Light Gray Panel
+    assert "palette.set_pen_color(7," in src                            # Pen 7: Dark Navy
+    assert "palette.set_pen_color(8," in src                            # Pen 8: Cyan
+    assert "palette.set_pen_color(9," in src                            # Pen 9: Dark Slate
+
+    # Verify the chrome-only pens 10..15 were removed (owned by React now).
+    for chrome_pen in (10, 11, 12, 13, 14, 15):
+        assert f"palette.set_pen_color({chrome_pen}," not in src, \
+            f"Chrome pen {chrome_pen} should have been removed (task 1.4)"
 
 
-def test_dual_pipeline_crt_and_rack_panel_preservation():
-    """Verify that VRAM rasterization strictly renders y = 0..239 and preserves rack panel at y = 240..359."""
+def test_crt_region_only_no_rack_panel():
+    """Verify the CRT surface is the authentic 640x240 region with NO rack panel.
+
+    ui-consolidation task 1.5 (R4.1, R4.2): the former
+    test_dual_pipeline_crt_and_rack_panel_preservation asserted the invented
+    composite pipeline (CRT y=0..239 + a hand-drawn 1U rack panel at y=240..359
+    via render_rack_panel + the "GOTEK FlashFloppy USB" chrome string). Tasks
+    1.1-1.2 deleted render_rack_panel and reduced the CRT geometry from 640x360
+    to the authentic OP-760 region only (640x240). This test now verifies the
+    genuine RFSC16A VDP tile rasterizer still renders the real 80x30 text matrix
+    (y bounded to the CRT region) AND that the invented rack panel / Gotek chrome
+    are gone. The rack panel is the React shell's responsibility (R6); its
+    behavior migrates to the React suite (task 4.3).
+    """
     with open(DRIVER_PATH, "r", encoding="utf-8", errors="ignore") as f:
         src = f.read()
 
-    # Verify CRT rasterizer bounds and rack panel call
+    # Genuine VDP tile rasterizer (80x30 character matrix) is preserved.
     assert "for (int tile_row = 0; tile_row < 30; tile_row++)" in src
     assert "for (int tile_col = 0; tile_col < 80; tile_col++)" in src
-    assert "render_rack_panel(bitmap);" in src
-    assert "render_rack_panel" in src
-    assert "GOTEK FlashFloppy USB" in src
+    # Rasterizer stays within the authentic CRT region (640x240).
+    assert "if (y >= 240) continue;" in src
+    assert "crt_screen.set_size(640, 240);" in src
+    assert "crt_screen.set_visarea(0, 639, 0, 239);" in src
+    # The genuine SED1335 LCD view is still present.
     assert "lcd_update" in src
+
+    # The invented rack panel + Gotek chrome string must be gone (tasks 1.1-1.2).
+    # Check for the call site / definition form specifically — the bare identifier
+    # legitimately survives in the task 1.1/1.4 removal-documentation comments.
+    assert "render_rack_panel(" not in src, \
+        "render_rack_panel() call/definition should have been removed (task 1.1)"
+    assert "GOTEK FlashFloppy USB" not in src, \
+        "Invented Gotek chrome string should have been removed (task 1.2)"

@@ -1,17 +1,41 @@
 """
-Script to generate the truly exhaustive Roland S-760 UI Elements & Interactive Test Coverage Matrix.
-Covers 100% of all UI components, controls, parameter fields, sliders, dials, meters, graphs,
-buttons, chassis controls, LCD readouts, and modal dialogs.
+Script to generate the exhaustive Roland S-760 UI Elements & Test Coverage Matrix.
+Covers every UI component, control, parameter field, slider, dial, meter, graph,
+button, chassis control, LCD readout, and modal dialog in the canonical React shell.
+
+PROVENANCE POLICY (ui-consolidation spec, F4 / F5 / R3.1 / R3.2 / R3.3):
+- Every element in this matrix is UI shell/chrome owned by the canonical React app in
+  `google-ui/`. Each element is attributed to its REAL owning React component
+  (OP760Monitor for CRT content; S760FrontPanel for the physical front panel; RolandLCD for
+  the SED1335 readout; GotekBay for the Gotek OLED/encoder) — NOT to a fabricated
+  `OP760Monitor.tsx:<line>` number.
+- Per F5, `google-ui/` has NO automated test tooling yet, and the former
+  `tests/test_interactive_ui.py` only drives the MAME driver via Lua and never loads any
+  React component. It therefore CANNOT be cited as a test for any React source line. Every
+  shell/chrome row is honestly "⚪ Untested" with NO test reference until the React
+  Vitest/Playwright suite lands (ui-consolidation spec Phase 4).
+- Metrics (Known / Tested / Testable) are computed from the data, never hard-coded.
 """
 
 import os
 
 OUTPUT_PATH = "docs/UI_TEST_COVERAGE_MATRIX.md"
 
+TESTED = "✅ Tested"
+UNTESTED = "⚪ Untested"
+
+# Real owning React component files (verified to exist in google-ui/src/components/).
+# Shell/chrome elements are attributed to these — never to a fabricated :<line> number.
+OWNER_OP760 = "google-ui/src/components/OP760Monitor.tsx"
+OWNER_PANEL = "google-ui/src/components/S760FrontPanel.tsx"
+OWNER_LCD = "google-ui/src/components/RolandLCD.tsx"
+OWNER_GOTEK = "google-ui/src/components/GotekBay.tsx"
+
 EXHAUSTIVE_UI_SECTIONS = [
     {
         "category": "1. Chassis, Physical Hardware Controls & Dual-Display Shell",
-        "description": "Hardware rack housing, 4:3 OP-760 Color CRT monitor frame, 160x64 LCD panel, rotary encoder, tactile keys, and Gotek OLED floppy emulator.",
+        "description": "Hardware rack housing, 4:3 OP-760 Color CRT monitor frame, 160x64 LCD panel, rotary encoder, tactile keys, and Gotek OLED floppy emulator. These are physical-shell components owned by the React front panel / LCD / Gotek-bay components.",
+        "owner": OWNER_PANEL,
         "elements": [
             ("OP-760 CRT Screen Bezel & Canvas", "Global CRT Top", "640x480 RGB (4:3 aspect ratio, 15kHz CRT scanlines & phosphor glow)", "View / Click / Mouse Focus", "Yes", "Renders authentic CRT display with 10-pen Roland RGB palette and retro tube bezel", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:394", "tests/test_interactive_ui.py"),
             ("CRT 15kHz Scanline Shader Layer", "Global CRT Top", "Horizontal 1px scanline mask with 25% raster line darkening", "View / Shader", "Yes", "Simulates authentic 15kHz composite/RGB video signal scanlines", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:410", "tests/test_interactive_ui.py"),
@@ -47,7 +71,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "2. Global CRT Shell, Headers, Meters & Soft-Key Function Bar",
-        "description": "CRT top banner, mode selectors, RAM/Disk free space meters, status readouts, and F1-F6 function keys.",
+        "description": "CRT top banner, mode selectors, RAM/Disk free space meters, status readouts, and F1-F6 function keys. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("Top Mode Tab: PERFORM", "CRT Header", "Top tab with white/blue highlight badge", "Click / '1' Key", "Yes", "Switches to 32-part Performance mixing and setup", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:450", "tests/test_interactive_ui.py"),
             ("Top Mode Tab: PATCH", "CRT Header", "Top tab with white/blue highlight badge", "Click / '2' Key", "Yes", "Switches to Patch editing, 88-key piano roll, and key split matrix", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:455", "tests/test_interactive_ui.py"),
@@ -72,7 +97,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "3. PERFORM Mode (Pages 01 - 07)",
-        "description": "32-Part multi-timbral mixing, master 4-band EQ, 3-page MIDI filter matrix, voice auditioning, and PartMap grid.",
+        "description": "32-Part multi-timbral mixing, master 4-band EQ, 3-page MIDI filter matrix, voice auditioning, and PartMap grid. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("Perform Play 1: Performance Name Input", "PERFORM 01", "16-character ASCII text input field", "Text / Edit", "Yes", "Edits performance volume name with instant memory commit", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:590", "tests/test_interactive_ui.py"),
             ("Perform Play 1: Part 1-32 Selector Grid", "PERFORM 01", "32 clickable cells displaying Part numbers 01 to 32", "Click / Select", "Yes", "Selects active part for parameter editing and keyboard assignment", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:592", "tests/test_interactive_ui.py"),
@@ -103,7 +129,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "4. PATCH Mode (Pages 01 - 04)",
-        "description": "Patch common parameters, 88-key interactive keyboard with key split drag brackets, controller depth matrix, and quick sampling.",
+        "description": "Patch common parameters, 88-key interactive keyboard with key split drag brackets, controller depth matrix, and quick sampling. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("Patch Common: Patch Name Input Box", "PATCH 01", "16-character ASCII text input field", "Text / Edit", "Yes", "Edits patch name label", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:750", "tests/test_interactive_ui.py"),
             ("Patch Common: Patch Level Slider", "PATCH 01", "Level slider (0-127)", "Drag / Dial", "Yes", "Sets patch master output volume", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:755", "tests/test_interactive_ui.py"),
@@ -126,7 +153,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "5. PARTIAL Mode (Pages 01 - 06)",
-        "description": "Partial common settings, velocity SMT, interactive 4-point TVF resonant filter canvas, 4-point TVA amplitude envelope, and LFO generator.",
+        "description": "Partial common settings, velocity SMT, interactive 4-point TVF resonant filter canvas, 4-point TVA amplitude envelope, and LFO generator. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("Partial Common: Partial Name Input Box", "PARTIAL 01", "16-character ASCII text input field", "Text / Edit", "Yes", "Edits partial name label", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:880", "tests/test_interactive_ui.py"),
             ("Partial Common: Sample 1-4 Slot Selectors", "PARTIAL 01", "4 Sample ID slots with Waveform name and Original Key readouts", "Click / Select", "Yes", "Assigns up to 4 raw sample waveforms to the partial", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:885", "tests/test_interactive_ui.py"),
@@ -145,7 +173,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "6. SAMPLE Mode & DSP Tools Suite (Pages 01 - 14)",
-        "description": "Live recording with high-res stereo VU meters, 440px graphical audio wave display with draggable loop markers, zoom match, and 11 DSP tool subpages.",
+        "description": "Live recording with high-res stereo VU meters, 440px graphical audio wave display with draggable loop markers, zoom match, and 11 DSP tool subpages. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("Sampling 01: High-Res Peak VU Meters", "SAMPLE 01", "Dual 30-segment LED peak meters (-48dB to 0dBFS + Red CLIP)", "View / Real-Time Pulse", "Yes", "Monitors live input audio stream level with clip hold indicators", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:1040", "tests/test_interactive_ui.py"),
             ("Sampling 01: Rate & Pre-Trigger Selectors", "SAMPLE 01", "Sampling Freq (48k/44.1k/32k/22.05k/16k), Pre-Trigger time (0-500ms), Auto-Trig Level", "Click / Dial", "Yes", "Configures ADC capture clock, threshold trigger, and circular pre-buffer", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:1050", "tests/test_interactive_ui.py"),
@@ -165,7 +194,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "7. DISK Mode (Pages 01 - 02)",
-        "description": "16-file directory table, drive selector buttons (FDD, SCSI Hard Disks, CD-ROMs), Load/Save/Overwrite, and free space meters.",
+        "description": "16-file directory table, drive selector buttons (FDD, SCSI Hard Disks, CD-ROMs), Load/Save/Overwrite, and free space meters. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("Disk: Drive Selector Dropdown", "DISK 01", "CD[FDD: -FloppyDisk-], CD[SCSI: 0 HardDisk ], CD[SCSI: 1 CD-ROM  ]", "Click / Select", "Yes", "Switches active storage media drive and refreshes directory table", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:980", "tests/test_disk_conversion.py"),
             ("Disk: 16-Row File Directory Table", "DISK 01", "16-row file list (Index 01-16) with Name, Type, Size, Time, P#", "Click / Arrow Keys", "Yes", "Displays directory contents with row selection, scrolling, and column headers", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:970", "tests/test_interactive_ui.py"),
@@ -179,7 +209,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "8. SYSTEM Mode (Pages 01 - 05)",
-        "description": "Master tuning, LCD contrast, mouse speed, 7-row SCSI target matrix, MIDI channel configuration, and Volume ID.",
+        "description": "Master tuning, LCD contrast, mouse speed, 7-row SCSI target matrix, MIDI channel configuration, and Volume ID. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("System Parameter: Master Tune Dial", "SYSTEM 01", "Master Tune (440.0 Hz +/- 10.0Hz)", "Drag / Dial", "Yes", "Calibrates master pitch reference frequency", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:1625", "tests/test_interactive_ui.py"),
             ("System Parameter: Output Gain Switch", "SYSTEM 01", "Switch (+0dB / +6dB)", "Click / Toggle", "Yes", "Adjusts master analog output buffer gain", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:1628", "tests/test_interactive_ui.py"),
@@ -194,7 +225,8 @@ EXHAUSTIVE_UI_SECTIONS = [
     },
     {
         "category": "9. Modals, Popups, Overlays & Dialogs",
-        "description": "Interactive popups including Mark bookmarking, Jump page hopping, Command shortcuts, confirmation dialogs, and progress spinners.",
+        "description": "Interactive popups including Mark bookmarking, Jump page hopping, Command shortcuts, confirmation dialogs, and progress spinners. Rendered by the React CRT monitor component.",
+        "owner": OWNER_OP760,
         "elements": [
             ("Mark Modal: 10 Quick-Bookmark Slots", "Global Modal", "10 Bookmark buttons (01-10) with assigned page names", "Click / Number Key", "Yes", "Saves current UI page and cursor location into one of 10 quick-recall slots", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:1875", "tests/test_interactive_ui.py"),
             ("Jump Modal: 10 Rapid Screen Hops", "Global Modal", "10 Rapid navigation buttons (01-10)", "Click / Number Key", "Yes", "Jumps instantly to bookmarked page and restores focused parameter", "✅ Tested", "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:1890", "tests/test_interactive_ui.py"),
@@ -209,35 +241,48 @@ EXHAUSTIVE_UI_SECTIONS = [
 def generate_markdown():
     total_elements = sum(len(sec["elements"]) for sec in EXHAUSTIVE_UI_SECTIONS)
     known_elements = sum(1 for sec in EXHAUSTIVE_UI_SECTIONS for el in sec["elements"] if el[4] == "Yes")
-    tested_elements = sum(1 for sec in EXHAUSTIVE_UI_SECTIONS for el in sec["elements"] if "Tested" in el[6])
     testable_elements = sum(1 for sec in EXHAUSTIVE_UI_SECTIONS for el in sec["elements"] if el[7] == "Yes")
 
+    # Honest provenance (F4/F5/R3): every element here is React shell/chrome. google-ui/ has no
+    # automated test tooling yet, so NONE of these rows can be marked "Tested" and NO test file is
+    # cited. Tested status is computed, never read from the (stale) per-row literals.
+    tested_elements = 0  # No React test suite exists yet (ui-consolidation spec Phase 4).
+
+    pct_known = (known_elements / total_elements * 100.0) if total_elements else 0.0
+    pct_tested = (tested_elements / total_elements * 100.0) if total_elements else 0.0
+    pct_testable = (testable_elements / total_elements * 100.0) if total_elements else 0.0
+
     md = []
-    md.append("# Roland S-760 — Comprehensive UI Elements & Automated Test Coverage Matrix\n")
-    md.append("This document provides an exhaustive, element-by-element mapping of **every interactive UI component, screen layout, hardware chassis control, LCD panel, CRT graphic element, and modal dialog** in the Roland S-760 emulator suite, correlated directly with source code lines and automated UI test suites.\n")
+    md.append("# Roland S-760 — Comprehensive UI Elements & Test Coverage Matrix\n")
+    md.append("This document provides an exhaustive, element-by-element mapping of **every interactive UI component, screen layout, hardware chassis control, LCD panel, CRT graphic element, and modal dialog** in the canonical Roland S-760 React UI (`google-ui/`). Each element is attributed to its **real owning React component**; the automated-test column reflects reality.\n")
+    md.append("---\n")
+    md.append("## Provenance & Test-Status Notes\n")
+    md.append("- Every element below is UI **shell/chrome** owned by the canonical React app in `google-ui/` and is attributed to its real owning component (`OP760Monitor.tsx` for CRT content; `S760FrontPanel.tsx` for the physical front panel; `RolandLCD.tsx`/`GotekBay.tsx` for the LCD and Gotek readouts).\n")
+    md.append("- `google-ui/` has **no automated test tooling yet**, so every row is honestly **⚪ Untested** with no test reference. The former `tests/test_interactive_ui.py` only drives the MAME driver via Lua and never loads these React components, so it is NOT cited here. These elements become testable once the React Vitest/Playwright suite lands (ui-consolidation spec Phase 4).\n")
     md.append("---\n")
     md.append("## Executive UI Metrics\n")
     md.append(f"- **Total UI Elements & Controls Cataloged:** {total_elements}")
-    md.append(f"- **Component Behavior Known & Documented:** {known_elements} / {total_elements} (**100.0%**)")
-    md.append(f"- **Automated UI Test Coverage:** {tested_elements} / {total_elements} (**100.0% Verified**)")
-    md.append(f"- **Headless Automation Testability:** {testable_elements} / {total_elements} (**100.0% Testable**)")
-    md.append("- **Automated Interactive UI Suite:** [`tests/test_interactive_ui.py`](../tests/test_interactive_ui.py) — **100% PASSING**\n")
+    md.append(f"- **Component Behavior Known & Documented:** {known_elements} / {total_elements} (**{pct_known:.1f}%**)")
+    md.append(f"- **Automated UI Test Coverage:** {tested_elements} / {total_elements} (**{pct_tested:.1f}%**) — React test suite pending (Phase 4)")
+    md.append(f"- **Headless Automation Testability:** {testable_elements} / {total_elements} (**{pct_testable:.1f}%**)\n")
     md.append("---\n")
 
     for section in EXHAUSTIVE_UI_SECTIONS:
+        owner = section["owner"]
         md.append(f"## {section['category']}\n")
         md.append(f"> {section['description']}\n")
-        md.append("| UI Element / Component | Screen / Context | Coordinate / Layout Spec | Interaction Type | Known? | Function / Behavioral Specification | Tested? | Testable? | Difficulty | Component Source Line | Test Reference File |")
+        md.append("| UI Element / Component | Screen / Context | Coordinate / Layout Spec | Interaction Type | Known? | Function / Behavioral Specification | Tested? | Testable? | Difficulty | Owning React Component | Test Reference |")
         md.append("| :--- | :--- | :--- | :--- | :---: | :--- | :---: | :---: | :---: | :--- | :--- |")
         for el in section["elements"]:
-            name, screen, coords, itype, known, desc, tested, testable, diff, src, test_file = el
-            md.append(f"| **{name}** | `{screen}` | `{coords}` | `{itype}` | {known} | {desc} | {tested} | {testable} | `{diff}` | [`{src}`]({src}) | [`{test_file}`]({test_file}) |")
+            name, screen, coords, itype, known, desc, _tested, testable, diff, _src, _test_file = el
+            # Honest provenance: owning component (no fabricated :line), untested, no test ref.
+            md.append(f"| **{name}** | `{screen}` | `{coords}` | `{itype}` | {known} | {desc} | {UNTESTED} | {testable} | `{diff}` | [`{owner}`]({owner}) | — |")
         md.append("\n---\n")
 
-    md.append("## Automated UI Testing Invariants & Methodology\n")
-    md.append("1. **Coordinate Hit Testing:** All buttons, sliders, dials, and tabs have verified pixel bounding boxes matching Roland VDP layout grid coordinates.\n")
-    md.append("2. **Seamless Dual-Display Mouse Traversal:** Moving the mouse smoothly travels between the 4:3 CRT monitor and the 1U rack front panel, maintaining drag focus.\n")
-    md.append("3. **Gotek & SCSI Interactive State:** OLED text and track stepping respond immediately to virtual encoder turns and tactile button clicks in tests.\n")
+    md.append("## Verification & Quality Assurance Policy\n")
+    md.append("1. **Honest provenance:** every element is attributed to the React component that actually renders it; no fabricated `:<line>` numbers and no non-existent test IDs are emitted.\n")
+    md.append("2. **No false coverage:** because `google-ui/` has no automated test suite yet, every row is `⚪ Untested`. The MAME-only `tests/test_interactive_ui.py` never loads React and is not cited here.\n")
+    md.append("3. **Pending React tests:** these rows become `✅ Tested` once the Vitest/Playwright suite is added (ui-consolidation spec Phase 4).\n")
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write("\n".join(md))

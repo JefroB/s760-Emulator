@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { SamplerMode, DiskImage } from '../types/sampler';
+import { useSurfaceCanvas, backlightTint } from '../bridge/BridgeContext';
+import { SurfaceId, LCD_WIDTH as BRIDGE_LCD_WIDTH, LCD_HEIGHT as BRIDGE_LCD_HEIGHT } from '../bridge/S760BridgeClient';
 
 interface RolandLCDProps {
   powerOn: boolean;
@@ -32,6 +34,12 @@ export const RolandLCD: React.FC<RolandLCDProps> = ({
   activeCursorField,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // Live SED1335 160x64 buffer from the bridge (MONO1), tinted to the selected
+  // backlight color (R6.2). Blitted imperatively with no per-frame React state;
+  // overlays the offline canvas and is transparent until the first frame.
+  const lcdLiveRef = useSurfaceCanvas(SurfaceId.LCD, {
+    tint: backlightTint(backlightColor),
+  });
 
   // 160 x 64 native S-760 LCD resolution
   const LCD_WIDTH = 160;
@@ -298,6 +306,15 @@ export const RolandLCD: React.FC<RolandLCDProps> = ({
             width={LCD_WIDTH}
             height={LCD_HEIGHT}
             className="w-full h-full object-fill [image-rendering:pixelated]"
+          />
+
+          {/* Live SED1335 buffer from the bridge (R6.2). Transparent until the
+              first frame so the offline canvas shows through when disconnected. */}
+          <canvas
+            ref={lcdLiveRef}
+            width={BRIDGE_LCD_WIDTH}
+            height={BRIDGE_LCD_HEIGHT}
+            className="pointer-events-none absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
           />
 
           {/* Authentic scanline & LCD dot-matrix subtle overlay */}

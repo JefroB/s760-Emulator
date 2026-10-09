@@ -71,6 +71,14 @@ enum {
     kVstSysExType = 6,
 };
 
+// Editor rect returned by effEditGetRect (VST2 ERect: top,left,bottom,right).
+struct ERect {
+    int16_t top;
+    int16_t left;
+    int16_t bottom;
+    int16_t right;
+};
+
 struct VstEvent {
     int32_t type;
     int32_t byteSize;

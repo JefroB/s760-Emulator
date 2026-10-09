@@ -190,6 +190,81 @@ public:
     virtual uint32_t getTailSamples() = 0;
 };
 
+// -----------------------------------------------------------------------------
+//  Editor view interfaces (IPlugView / IPlugFrame / IEditController).
+//  Minimal subset sufficient to host the WebView-backed React editor (task 3.6).
+//  The platform window-type tokens match the VST3 SDK string constants.
+// -----------------------------------------------------------------------------
+
+// Platform UI type strings (VST3 SDK kPlatformType*).
+#define kPlatformTypeHWND       "HWND"       // Windows
+#define kPlatformTypeNSView     "NSView"     // macOS Cocoa
+#define kPlatformTypeX11EmbedWindowID "X11EmbedWindowID" // Linux X11
+
+struct ViewRect {
+    int32_t left   = 0;
+    int32_t top    = 0;
+    int32_t right  = 0;
+    int32_t bottom = 0;
+    int32_t getWidth()  const { return right - left; }
+    int32_t getHeight() const { return bottom - top; }
+};
+
+class IPlugFrame; // fwd
+
+// IPlugView — the editor view the host attaches to its window (VST3 SDK).
+class IPlugView : virtual public FUnknown {
+public:
+    // Return kResultTrue (==kResultOk here) if the given platform type is
+    // supported (e.g. "HWND" on Windows).
+    virtual tresult isPlatformTypeSupported(FIDString type) = 0;
+    // Attach the view to a parent platform window (HWND/NSView/X11 id).
+    virtual tresult attached(void* parent, FIDString type) = 0;
+    // Detach from the parent window.
+    virtual tresult removed() = 0;
+    virtual tresult onWheel(float distance) = 0;
+    virtual tresult onKeyDown(char16_t key, int16_t keyCode, int16_t modifiers) = 0;
+    virtual tresult onKeyUp(char16_t key, int16_t keyCode, int16_t modifiers) = 0;
+    // Report the view's current size to the host.
+    virtual tresult getSize(ViewRect* size) = 0;
+    // Host asks the view to resize to the given rect.
+    virtual tresult onSize(ViewRect* newSize) = 0;
+    virtual tresult onFocus(bool state) = 0;
+    // Host supplies a frame callback object (used for resize requests).
+    virtual tresult setFrame(IPlugFrame* frame) = 0;
+    virtual tresult canResize() = 0;
+    // Constrain a proposed size (default: accept as-is).
+    virtual tresult checkSizeConstraint(ViewRect* rect) = 0;
+};
+
+// IPlugFrame — host-provided callback for view-initiated resize.
+class IPlugFrame : virtual public FUnknown {
+public:
+    virtual tresult resizeView(IPlugView* view, ViewRect* newSize) = 0;
+};
+
+// IEditController — the controller half of a VST3 plugin. We implement just
+// enough to vend the editor view via createView(ViewType::kEditor).
+#define ViewType_kEditor "editor"
+
+class IEditController : virtual public IPluginBase {
+public:
+    virtual tresult setComponentState(IBStream* state) = 0;
+    virtual tresult setState(IBStream* state) = 0;
+    virtual tresult getState(IBStream* state) = 0;
+    virtual int32_t getParameterCount() = 0;
+    virtual tresult getParameterInfo(int32_t paramIndex, void* info) = 0;
+    virtual tresult getParamStringByValue(uint32_t id, double valueNormalized, void* string) = 0;
+    virtual tresult getParamValueByString(uint32_t id, char16_t* string, double* valueNormalized) = 0;
+    virtual double normalizedParamToPlain(uint32_t id, double valueNormalized) = 0;
+    virtual double plainParamToNormalized(uint32_t id, double plainValue) = 0;
+    virtual double getParamNormalized(uint32_t id) = 0;
+    virtual tresult setParamNormalized(uint32_t id, double value) = 0;
+    virtual tresult setComponentHandler(void* handler) = 0;
+    // Create a named view; for "editor" this returns our WebView-backed IPlugView.
+    virtual IPlugView* createView(FIDString name) = 0;
+};
+
 struct PClassInfo {
     TUID cid;
     int32_t cardinality;

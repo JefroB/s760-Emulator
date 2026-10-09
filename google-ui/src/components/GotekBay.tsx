@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { DiskImage } from '../types/sampler';
 import { soundFx } from '../audio/soundFx';
+import { useSurfaceCanvas, GOTEK_OLED_TINT } from '../bridge/BridgeContext';
+import { SurfaceId, GOTEK_WIDTH, GOTEK_HEIGHT } from '../bridge/S760BridgeClient';
 
 interface GotekBayProps {
   powerOn: boolean;
@@ -38,6 +40,10 @@ export const GotekBay: React.FC<GotekBayProps> = ({
   const [selPressed, setSelPressed] = useState(false);
   const dragStartY = useRef<number | null>(null);
   const initialAngle = useRef<number>(0);
+  // Live Gotek 128x32 OLED buffer from the bridge (MONO1, cyan tint — R6.3).
+  // Blitted imperatively with no per-frame React state; overlays the simulated
+  // OLED readout and is transparent until the first frame arrives.
+  const oledLiveRef = useSurfaceCanvas(SurfaceId.OLED, { tint: GOTEK_OLED_TINT });
 
   // Mouse wheel rotation on encoder knob
   const handleWheel = (e: React.WheelEvent) => {
@@ -180,6 +186,16 @@ export const GotekBay: React.FC<GotekBayProps> = ({
             ) : (
               <div className="w-full h-full bg-[#020406] opacity-30" />
             )}
+
+            {/* Live Gotek OLED buffer from the bridge (R6.3). Transparent until
+                the first frame so the simulated readout shows through when
+                disconnected. */}
+            <canvas
+              ref={oledLiveRef}
+              width={GOTEK_WIDTH}
+              height={GOTEK_HEIGHT}
+              className="pointer-events-none absolute inset-0 w-full h-full [image-rendering:pixelated]"
+            />
 
             {/* OLED Glass Reflection */}
             <div className="pointer-events-none absolute inset-0 acrylic-reflection opacity-40" />

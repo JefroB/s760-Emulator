@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { SamplerState, SamplerMode, DiskImage } from '../types/sampler';
+import { useSurfaceCanvas } from '../bridge/BridgeContext';
+import { SurfaceId, CRT_WIDTH, CRT_HEIGHT } from '../bridge/S760BridgeClient';
 
 interface OP760MonitorProps {
   state: SamplerState;
@@ -225,6 +227,11 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
   onEventEmit,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // Live CRT buffer from the bridge (RFSC16A VDP, RGBA8888). Blitted
+  // imperatively by useSurfaceCanvas with no per-frame React state (R6.1).
+  // Overlays the offline canvas; transparent until the first frame arrives, so
+  // the local render shows through while disconnected.
+  const crtLiveRef = useSurfaceCanvas(SurfaceId.CRT);
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 320, y: 120 });
   const [subPage, setSubPage] = useState<number>(0);
   const [activeModal, setActiveModal] = useState<'NONE' | 'MARK' | 'JUMP' | 'COM' | 'MENU' | 'CONFIRM' | 'VOLINFO' | 'WORKING'>('NONE');
@@ -329,9 +336,11 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
 
     // Sub-Ribbon Click (y: 28 to 39)
     if (y >= 28 && y <= 39) {
-      // Red badge click (e.g. [Pform], [Patch], [Part1], [Disk])
+      // Red badge click (e.g. [Pform], [Patch], [Part1], [Disk]).
+      // Reached only when no modal is open (the activeModal !== 'NONE' path
+      // returns above), so this always opens the MENU modal.
       if (x >= 180 && x <= 270) {
-        setActiveModal(activeModal === 'MENU' ? 'NONE' : 'MENU');
+        setActiveModal('MENU');
         return;
       }
       // Subscreen Title click -> cycle subpage
@@ -342,19 +351,19 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
         else if (state.mode === 'SYSTEM') setSubPage((subPage + 1) % 5);
         return;
       }
-      // Mark Click
+      // Mark Click (no modal open here, so always open MARK)
       if (x >= 360 && x <= 420) {
-        setActiveModal(activeModal === 'MARK' ? 'NONE' : 'MARK');
+        setActiveModal('MARK');
         return;
       }
-      // Jump Click
+      // Jump Click (no modal open here, so always open JUMP)
       if (x >= 425 && x <= 485) {
-        setActiveModal(activeModal === 'JUMP' ? 'NONE' : 'JUMP');
+        setActiveModal('JUMP');
         return;
       }
-      // Com Click
+      // Com Click (no modal open here, so always open COM)
       if (x >= 490 && x <= 560) {
-        setActiveModal(activeModal === 'COM' ? 'NONE' : 'COM');
+        setActiveModal('COM');
         return;
       }
     }
@@ -2053,6 +2062,17 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
               style={{
                 imageRendering: 'pixelated',
               }}
+            />
+
+            {/* Live CRT buffer from the bridge (OP-760 RFSC16A VDP). Blitted
+                imperatively via putImageData; transparent until the first frame
+                so the offline canvas above shows through when disconnected. */}
+            <canvas
+              ref={crtLiveRef}
+              width={CRT_WIDTH}
+              height={CRT_HEIGHT}
+              className="absolute inset-0 w-full h-full pointer-events-none block"
+              style={{ imageRendering: 'pixelated' }}
             />
 
             {/* Subtle CRT Phosphor Scanline Mesh */}
