@@ -10,6 +10,13 @@ roms/*
 !roms/FDD/.gitkeep
 !roms/SCSI/
 !roms/SCSI/.gitkeep
+# IC20 BOOT ROM: track the README (how to obtain it) but NOT the ROM binaries.
+# The actual *.BIN/*.HEX dumps stay ignored (copyrighted Roland firmware) via the
+# global *.BIN/*.HEX/*.bin rules below.
+!roms/BOOT/
+!roms/BOOT/README.md
+*.hex
+*.HEX
 *.rom
 *.ROM
 *.img
