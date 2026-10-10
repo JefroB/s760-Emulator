@@ -1,161 +1,116 @@
-# S-760 Execution Pipeline & Emulator Action Plan
+# Execution Status & Engineering Priorities
 
-This document synthesizes the complete software execution path of the Roland S-760 operating system—from cold CPU reset to the active UI event loop—and provides the concrete, prioritized engineering action plan to achieve a fully rendered boot screen (Gate G8) in the emulator.
+**Current priority (shared 38):** verify separate instruction/data banking.
+ROM 4F74 converts CPU data addresses through four words at 0108–010E;
+0100–0106 are candidate instruction-bank selectors. Invalid queues and
+instruction-boundary conflicts in the flat preload may arise from ignored
+mapping rather than missing zeroing or firmware rewriting startup code.
+Earlier lifecycle/overlap conclusions below describe the flat model's symptom,
+not proved physical-memory overlap. Trace mapping words, translated data/fetch
+addresses and transfer registers 011A/011C before choosing a state-init fix.
 
----
+Snapshot 2026-10-09: shared findings through 26, checked against current code.
+Runtime results are Kiro's finding 25; this documentation pass did not rerun MAME.
 
-## 1. System Execution Pipeline
+## Established bring-up path
 
-Understanding the exact sequence of initialization prevents chasing false leads and pinpoints exactly where emulation hurdles arise:
+Disk RAM preload → reset 2080 → stack/work init → resource HLE → B93A → 2237
+→ EI 2185 → main entry 2831 → timer ISR 2B51 → executive 2887 → controller writes.
+This is disk-reset HLE, not native IC15 cold boot.
 
+Resolved blockers: AS_DATA register access; vector RAM (200A→2B51); narrow
+E000–E003 LCD window; RET compatibility shims at 9B42/9B51/9B71 to prevent a
+zero-byte sled into 9C80 blanking; high-byte handling at D019/D025/D035/D031.
+The original runtime population of delay stubs remains unknown.
+
+Current F00A default is **80**, overridable with `S760_F00A`; this is the tested
+bring-up setting, not a complete board-strap specification.
+
+## CPU workaround status
+
+PUSHA/POPA are stack-neutral in `mcs96ops.lst`. PUSHF is stack-neutral but clears
+PSW and checks IRQ; POPF leaves PSW/SP. These are **boot compatibility workarounds**,
+not proved Intel architectural semantics. Do not change them in unrelated work.
+
+Finding 25 traced the derail to PUSHF E086 followed by RET E136 popping PSW as
+an address. With the workaround Kiro reports six seconds, exit zero, no derail.
+The 519F BR[RW3C] failure followed misaligned execution; task 24 identifies the
+normal RW3C load at 5186. It does not justify forcing RW3C through HLE.
+
+Gemini's `25-rw3c-dispatch-decode.md` confirms the consumed dispatch record:
+RW38=2184+4*(RE0-17h), handler word at +0, selector word at +2. Its proposed
+F121 continuation is not verified: aligned original-image code has a five-byte
+load at F120 and the comparison at F125, so F121 is inside an instruction.
+Live handler/loader behavior must explain the pushed F121 before adding RET
+stubs or stack padding. Shared review 29 records the exact bytes and requests.
+
+Gemini's response `30-gemini-response-to-chatgpt-dispatch-review.md` accepts
+that correction and rejects the earlier artificial dispatch fixes. Original
+bytes at 4AC2–4AE0 confirm this caller selects RE0=17h–1Ch before jumping to
+5141, addressing six four-byte slots at 2184–2198. This establishes the
+caller's accepted IDs, not exclusive entry points or valid live table contents.
+The response commits to shadow/countdown watches but supplies no new live
+write-watch results; initialization and the natural D010 trigger remain open.
+
+## Latest reported result
+
+```text
+vram_active=1 sed_active=83 display_enabled_ever=0 ctrl0(D010)=00
+addr=074ba matrix_base=0000 attr_base=0a00 tile_base=1400 bitmap_base=3400
 ```
-+-----------------------------------------------------------------------------------+
-| Phase 1: Cold Reset & HLE Bootstrap (PC = 0x2080)                                 |
-| - CPU executes `FA` (DI), clears internal work RAM (0x0120..0x111F).              |
-| - Sets SP = 0x1120.                                                               |
-| - Writes interrupt vector table into RAM at 0x2000..0x207F.                       |
-+-----------------------------------------------------------------------------------+
-                                      │
-                                      ▼
-+-----------------------------------------------------------------------------------+
-| Phase 2: Hardware Probing & Configuration Caching (PC = 0x249B)                   |
-| - Reads expansion hardware configuration port at `0xF00A`.                        |
-| - Writes result to `0x2085`.                                                      |
-|   * Value 0x80: OP-760 Video Board present + CRT controller selected (Bit 7=1, 6=0) |
-+-----------------------------------------------------------------------------------+
-                                      │
-                                      ▼
-+-----------------------------------------------------------------------------------+
-| Phase 3: Firmware ABI Handshake & Resource Loading (PC = 0xBA00..0xBBE0)          |
-| - Calls IC15 EPROM service ABI via `0x0104` selector dispatch.                    |
-| - Selector 0x4B: Enumerates resource descriptors (expects `[RW4E] == 0x7F`).      |
-| - Selector 0x3B: Reads system font, parameter tables, and presets from floppy.    |
-+-----------------------------------------------------------------------------------+
-                                      │
-                                      ▼
-+-----------------------------------------------------------------------------------+
-| Phase 4: Video Subsystem & VDP Initialization (PC = 0xAF00..0xDB00)               |
-| - Unlatches RFSC16A VDP hardware reset at `0xF000` (Bit 3).                       |
-| - Configures VDP registers 0xD000..0xD07F (display clip, video clock, DAC mode).  |
-| - Loads font tile glyphs into VRAM at 0x8000 via pointer 0xD030.                  |
-| - Renders boot UI character matrix and attribute matrix via VRAM port 0xD018.     |
-+-----------------------------------------------------------------------------------+
-                                      │
-                                      ▼
-+-----------------------------------------------------------------------------------+
-| Phase 5: Interrupt Enable & Main Executive Loop (PC = 0x2185 -> 0x2831 -> 0x2887) |
-| - Unmasks interrupts (`INT_MASK = 0x24`), executes `FB` (EI).                    |
-| - Starts hardware timer ISR at `0x2B51` (vector `0x200A`).                        |
-| - Enters main event pump (`0x2887..0x2921`): polls 128-byte FIFO at `0x21B0`.    |
-| - Dispatches UI tasks, MIDI processing, mouse events, and floppy motor timer.     |
-+-----------------------------------------------------------------------------------+
-```
 
----
+Controller activity is established for this bounded run. A complete CRT UI,
+native ROM boot, hardware DSP parity, and all-suite test success are not.
+Finding 23's earlier blue-screen observation is a different run.
 
-## 2. Root Cause Analysis: The Three Gate G8 Blockers
+Task 26 asks for the natural nonzero D010 writers and their root guards. Named
+candidates: 92D0, 9326, 9F95, A012, A900; blank writers include 2999 and 9CAC.
+Event pump 54E8 reads FIFO indices 21AC/21AE and storage 21B0. Finding 21 links
+event 0C to 5714/drawing, but the natural boot producer and exact enable guard
+still need proof. Do not inject a synthetic event or force the register.
 
-Three specific architectural pitfalls previously prevented the emulator from reaching a visible CRT display:
+The earlier assertion that `(cached_config & C0)==40` is satisfied by F00A=80
+is arithmetically false. Some cited locations are disk offsets beyond resident
+64 KB. Mapping/branch sense must be established before defining a controller
+contract; the evidence request is in `shared/`.
 
-### Blocker 1: The Bus-Timing Delay Sled Derail (`0x9B42` / `0x9B51` / `0x9B71`)
-- **Mechanism:** In the disk image `S760224.IMG`, runtime address span `0x9954..0x9C7F` is filled with zeroes (`0x00`). In MCS-96, opcode `0x00 0x00` is `SKIP 0` (NOP).
-- **Failure Chain:** The OS contains 35 calls to `0x9B42`, `0x9B51`, and `0x9B71` immediately following VDP register stores (e.g. `0xDA52: LCALL 0x9B51` right after streaming the first character to VRAM). On physical hardware, these are short bus-settling delay loops supplied by the BIOS/resident setup. Without `RET` stubs, the CPU executes 160 NOPs and sleds straight into **`0x9C80`**—the OS display-blanking routine! That routine writes zeroes to `0xD010` and `0xD012`, wiping out the display and aborting the draw routine before reaching subsequent characters (`0xDA64`).
-- **Required Fix:** Install an immediate `RET` (`0xF0`) at `0x9B42`, `0x9B51`, and `0x9B71` in RAM during machine initialization.
+Priorities: solve task 26; align streamed VRAM with renderer; verify authentic
+UI output; correct HLE records/disk errors; replace workarounds only with proof.
 
-### Blocker 2: VDP Bus Word-Splitting & Address Pointer Separation
-- **Mechanism:** The CPU uses 16-bit word stores (`ST`) across the 16-bit bus. An 8-bit memory handler receives two consecutive 8-bit writes (low byte at `N`, high byte at `N+1`).
-- **Failure Chain:** 
-  1. The VRAM data port `0xD018` was not advancing on high-byte writes (`0xD019`), causing streamed data to be corrupted or truncated.
-  2. The VDP utilizes **two distinct address pointers**:
-     - `0xD024 / 0xD025 / 0xD026`: Plane 0 (Character Matrix) address pointer.
-     - `0xD034 / 0xD035 / 0xD036`: Plane 1 (Attribute Matrix) address pointer.
-     Routing both pointers and data writes to a unified internal address state (`m_vdp_addr`) with 16-bit word handling is essential.
-- **Required Fix:** Update `vdp_w()` so `0x18/0x19` stream and auto-increment VRAM bytes, `0x24/0x25/0x26` load Plane 0 VRAM address, and `0x34/0x35/0x36` load Plane 1 VRAM address.
+Kiro's later finding `29-RESPONSE-root-cause-work-ram-not-zeroed-queue-ptrs-garbage.md`
+reports no executed 2496/24A0, natural queue-post entry or candidate display
+enable routine in the reset trace. Invalid queue indices retain startup-image
+bytes. This supports an initialization/loading problem; the proposed zeroing
+fix is unproved. The cited ROM clear range 4000–8000 excludes 21AC/21AE,
+which overlap startup instructions in the preload. Establish the loader's
+actual writes and transition from startup code to data before clearing them.
+Shared review 30 provides exact overlapping instructions and evidence requests.
 
-### Blocker 3: Hardware Config Strap `0xF00A` (`0x2085`)
-- **Mechanism:** The OS inspects RAM address `0x2085` (cached from `0xF00A` at `0x249B`) to decide which display pipeline to activate:
-  - `0x14D33`: `TESTB 0x2085, #0x80; JE skip_display` (Bit 7 MUST be 1, or the entire display setup is skipped!).
-  - `0x14D53` / `0x14EAA`: Tests bits 6..7 for CRT vs front-panel LCD.
-- **Failure Chain:** Using `0xFF` as a stub asserted Bit 6, which caused the OS to select an unmodeled remote controller mode rather than the standard OP-760 CRT path.
-- **Required Fix:** Default gate-array config read `0xF00A` to **`0x80`** (Bit 7 = 1, Bit 6 = 0).
+Finding 31 reports an opt-in queue-zero diagnostic reaching the empty-queue
+exit and 3F1C, then faulting at B92B; it does not demonstrate D010 enable.
+Original-image bytes put B92B inside the load at B928 (`A1 E6 54 1E`),
+and B93A inside the byte load at B938 (`B1 05 F4`). These alternate entry
+boundaries need live loader/service evidence before opcode changes. Review 32
+records the decode. Current source enables this diagnostic whenever the
+`S760_QUEUE_INIT` variable exists, even with value `0`; unset it for baseline.
 
----
+## Verification gates
 
-## 3. Prioritized Emulator Implementation Checklist
+Retain the original independent-review meanings (older condensed renumbering
+was inconsistent):
 
-Follow this exact implementation checklist in MAME's `src/mame/roland/s760.cpp` and `src/devices/cpu/mcs96/`:
+| Gate | Meaning |
+| --- | --- |
+| G1/G2 | EI 2185 / main entry 2831 |
+| G3/G4 | Proven interrupt/vector acceptance / sane return |
+| G5/G6/G7 | VDP register / VDP VRAM / SED command-data activity |
+| G8 | Non-background rendered frame; assess actual UI separately |
+| G9 | Automated verification passes |
 
-### Step 1: CPU Opcode Accuracy (`mcs96ops.lst`)
-- [x] **PUSHA (0xF4) & POPA (0xF5):** Push/pop two full words:
-  - Word 1: `PSW` (with interrupt flags).
-  - Word 2: `(INT_MASK1 << 8) | INT_MASK`.
-  - Decrement / increment SP by 4 bytes.
-  - Clears `INT_MASK` and `INT_MASK1` during PUSHA to enter critical sections cleanly.
+Activity, enabled-ever, frame content, and UI legibility are different checks.
+Prefer direct activity flags to intrusive auto-increment data-port reads.
 
-### Step 2: Machine Startup Stubs (`s760.cpp` -> `machine_start`)
-- [x] **Install Delay Settle Stubs:**
-  ```cpp
-  for (offs_t stub : { offs_t(0x9B42), offs_t(0x9B51), offs_t(0x9B71) })
-      m_os_ram[stub - 0x2080] = 0xF0; // MCS-96 RET
-  ```
-- [x] **Configure Hardware Straps:**
-  - Set `m_board_config_f00a = 0x80;` (Bit 7=1, Bit 6=0: OP-760 CRT present).
-
-### Step 3: RFSC16A VDP Register & VRAM Handling (`s760.cpp` -> `vdp_w`)
-- [x] **Plane 0 Address Pointer (`0xD024..0xD026`):**
-  - Case `0x24`: `m_vdp_addr = (m_vdp_addr & 0x1FF00) | (uint32_t)data;`
-  - Case `0x25`: `m_vdp_addr = (m_vdp_addr & 0x100FF) | ((uint32_t)data << 8);`
-  - Case `0x26`: `m_vdp_addr = (m_vdp_addr & 0x0FFFF) | ((uint32_t)(data & 0x01) << 16);`
-- [ ] **Plane 1 Address Pointer (`0xD034..0xD036`):**
-  - Case `0x34`: `m_vdp_addr = (m_vdp_addr & 0x1FF00) | (uint32_t)data;`
-  - Case `0x35`: `m_vdp_addr = (m_vdp_addr & 0x100FF) | ((uint32_t)data << 8);`
-  - Case `0x36`: `m_vdp_addr = (m_vdp_addr & 0x0FFFF) | ((uint32_t)(data & 0x01) << 16);`
-- [ ] **Streaming VRAM Data Port (`0xD018 / 0xD019`):**
-  - Both cases `0x18` and `0x19`:
-    ```cpp
-    m_vdp_vram[m_vdp_addr & 0x1FFFF] = data;
-    m_vdp_addr = (m_vdp_addr + 1) & 0x1FFFF;
-    m_vdp_vram_active = true;
-    ```
-
-### Step 4: Video Rasterizer (`s760.cpp` -> `crt_update`)
-- [ ] **Character Matrix + Attribute Matrix Composition:**
-  - Screen dimensions: 640 x 480 (or 640 x 240 double-scanned), 80 columns x 30 rows.
-  - Character code read from `m_vdp_vram[cell_offset]` (`0x0000..0x095F`).
-  - Attribute read from `m_vdp_vram[0x8000 + cell_offset]` or `m_vdp_vram[0x0A00 + cell_offset]`.
-  - Foreground pen = `attr >> 4`, Background pen = `attr & 0x0F`.
-  - Palette lookup using the 10-pen Sony CXA1145M table (`0xD800`).
-  - Default empty cell fallback: Pen 1 (White) on Pen 2 (Roland Royal Blue).
-
----
-
-## 4. Verification & Milestone Progression
-
-| Gate | Milestone Description | Verification Metric | Status |
-| :--- | :--- | :--- | :--- |
-| **G1** | Image Layout Decoded | Sector 0, volume header, code offset 0x4800 confirmed | **PASSED** |
-| **G2** | CPU Core Accuracy | MCS-96 80C196KB opcodes implemented & verified | **PASSED** |
-| **G3** | IC15 Boot Handoff | Clean reset at 0x2080, work RAM clear, stack set | **PASSED** |
-| **G4** | Service ABI Dispatch | Selectors 0x4B, 0x3B, 0x1F execute cleanly without crash | **PASSED** |
-| **G5** | Interrupt Pipeline | Timer ISR 0x2B51 firing at 0x200A, main loop resident | **PASSED** |
-| **G6** | VDP Access Active | OS writes to VDP MMIO registers 0xD000..0xD07F | **PASSED** |
-| **G7** | VRAM Streaming Active | OS streams character and attribute data via 0xD018 | **PASSED** |
-| **G8** | **Visible Rendered Frame** | **Full 640x480 CRT screen with Roland Blue UI & text** | **TARGET** |
-
----
-
-## 5. Build and Test Commands
-
-To build and test the changes on Windows:
-
-```powershell
-# 1. Regenerate MCS-96 instruction decoder tables (if mcs96ops.lst modified):
-powershell -ExecutionPolicy Bypass -File .\temp\regen_mcs96.ps1
-
-# 2. Compile and link the MAME S-760 executable:
-powershell -ExecutionPolicy Bypass -File .\temp\build_s760.ps1
-powershell -ExecutionPolicy Bypass -File .\temp\link_s760.ps1
-
-# 3. Run verification harness:
-python temp\verify.py
-```
+Existing helpers: `.agents/scripts/regen_mcs96.ps1`, `temp/build_s760.ps1`,
+`temp/link_s760.ps1`, `temp/verify.py`, `temp/run_trace.ps1`, `temp/trace_crash.ps1`.
+Inspect options before use. New scratch belongs in the author's work folder;
+move finished findings to shared. Full testing guidance is in document 08.
