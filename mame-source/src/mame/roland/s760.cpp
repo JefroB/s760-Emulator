@@ -1047,6 +1047,15 @@ private:
 	// reads it, since the disk-OS reset doesn't clear the 0x2000-0x2FFF work area.
 	memory_passthrough_handler m_queue_init_tap;
 	bool m_queue_initialized = false;
+
+	// 0x010C-paged 0x8000-0xBFFF window instrumentation (findings 36/37/38). The
+	// disk OS reads UI/resource data through a 1KB-granular paged window selected
+	// by RAM word 0x010C; backing = (sel<<10)+(addr-0x8000). Tap LOGS accesses
+	// (no behavior change) so we gather native evidence before modeling paging.
+	memory_passthrough_handler m_page_read_tap;
+	memory_passthrough_handler m_page_write_tap;
+	bool m_page_trace = false;
+	uint32_t m_page_log_count = 0;
 	void ic20_hle_install();
 	uint16_t ic20_ret_stub_r() { return 0xF0F0; } // both bytes = 0xF0 (MCS-96 RET)
 
@@ -1384,6 +1393,37 @@ void s760_state::machine_start()
 	}
 
 	ic20_hle_install();
+
+	// --- 0x010C-paged window INSTRUMENTATION (findings 36/37/38, S760_PAGE_TRACE)
+	// Evidence-gathering only (no behavior change): log the first N accesses to
+	// the 0x8000-0xBFFF window alongside the live 0x010C selection, the flat-map
+	// byte, and the formula-predicted backing offset/byte, so we can confirm the
+	// banking model natively and see whether data-access vs code-fetch can be
+	// separated before implementing real paging.
+	m_page_trace = (getenv("S760_PAGE_TRACE") != nullptr);
+	if (m_page_trace)
+	{
+		address_space &prog = m_maincpu->space(AS_PROGRAM);
+		auto log_access = [this](const char *rw, offs_t a, uint16_t val)
+		{
+			if (m_page_log_count >= 400)
+				return;
+			address_space &data = m_maincpu->space(AS_DATA);
+			const uint16_t sel = data.read_word(0x010C);
+			const uint32_t backing = ((uint32_t)sel << 10) + (a - 0x8000);
+			const uint8_t *img = memregion("maincpu")->base();
+			const uint8_t flatb = img[(a - 0x2080) + 0x4800];
+			const uint8_t pageb = (backing < 0x168000) ? img[backing] : 0xFF;
+			logerror("[PAGE %s] PC=%04x addr=%04x sel(10C)=%04x -> backing=%06x "
+				"flat=%02x page=%02x val=%02x\n",
+				rw, m_maincpu->pc(), a, sel, backing, flatb, pageb, val & 0xFF);
+			m_page_log_count++;
+		};
+		m_page_read_tap = prog.install_read_tap(0x8000, 0xBFFF, "page_r",
+			[log_access](offs_t off, u16 &data, u16 mem_mask) { log_access("R", off, data); });
+		m_page_write_tap = prog.install_write_tap(0x8000, 0xBFFF, "page_w",
+			[log_access](offs_t off, u16 &data, u16 mem_mask) { log_access("W", off, data); });
+	}
 
 	// --- Event-queue power-on state (finding 29) ------------------------------
 	// The disk-OS executive message pump at 0x54E8 uses runtime 0x21AC/0x21AE as
