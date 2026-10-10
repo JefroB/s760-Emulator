@@ -1925,20 +1925,29 @@ f0    ret   none
 	next(12); // +4 for external sp
 
 f2    pushf none
-	TMP = reg_r16(0x18);
-	TMP -= 2;
-	reg_w16(0x18, TMP);
-	any_w16(TMP, PSW);
+	// PUSHF is STACK-NEUTRAL for the S-760 OS (same discipline as PUSHA/POPA —
+	// finding 23). Evidence: the OS routine at 0xE080 (a UI-record sort/relink)
+	// does PUSHF at entry (0xE086) and exits via a plain RET at 0xE136 with NO
+	// matching POPF on the taken path; its caller at 0x28E1 does `LCALL 0xE080`
+	// and the instruction AFTER the call (0x28E4) is a normal STB — NO
+	// compensating POP. A real two-byte PUSHF makes the E136 RET pop the pushed
+	// PSW instead of the return address 0x28E4 and derail to 0x0224 (observed on
+	// EVERY completion of this routine). Across the whole 279k-instruction boot
+	// trace there are exactly 2 PUSHF and 0 POPF, and the timer ISR (0x2B51) uses
+	// PUSHA (also net-zero), not PUSHF — so nothing depends on PUSHF actually
+	// saving PSW. Keep PSW cleared (interrupts off during the "pushf" region) but
+	// do NOT touch SP. (If a genuinely-paired PUSHF/POPF user appears later with
+	// real stack dependence, revisit — but this OS does not have one.)
 	PSW = 0x0000;
 	check_irq();
-	next_noirq(8); // +4 for external sp
+	next_noirq(8);
 
 f3    popf  none
-	TMP = reg_r16(0x18);
-	reg_w16(0x18, TMP+2);
-	PSW = any_r16(TMP);
+	// Net-zero counterpart to the stack-neutral PUSHF above (finding 23). No SP
+	// change; PSW is left as-is (the OS does not rely on PUSHF/POPF to actually
+	// round-trip PSW — see the PUSHF note).
 	check_irq();
-	next_noirq(9); // +4 for external sp
+	next_noirq(9);
 
 f4    pusha none 196
 	// PUSHA/POPA are implemented STACK-NEUTRAL (no SP change, no PSW save) for
