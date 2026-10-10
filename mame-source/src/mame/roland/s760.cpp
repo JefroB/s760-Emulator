@@ -1054,6 +1054,7 @@ private:
 	// (no behavior change) so we gather native evidence before modeling paging.
 	memory_passthrough_handler m_page_read_tap;
 	memory_passthrough_handler m_page_write_tap;
+	memory_passthrough_handler m_map_write_tap; // finding 40: 0x0100-0x010F selector-word write tap
 	bool m_page_trace = false;
 	uint32_t m_page_log_count = 0;
 	void ic20_hle_install();
@@ -1404,25 +1405,64 @@ void s760_state::machine_start()
 	if (m_page_trace)
 	{
 		address_space &prog = m_maincpu->space(AS_PROGRAM);
-		auto log_access = [this](const char *rw, offs_t a, uint16_t val)
+
+		// CORRECTION (finding 40, ChatGPT): the MCS-96 register file (AS_DATA)
+		// is only 8 address bits wide (regs_config "...16,8,0,regs_map"), and
+		// any_r16/any_w16 route addresses >= 0x100 to AS_PROGRAM. Finding 39's
+		// probe read 0x010C from AS_DATA, which ALIASES register 0x0C -- it was
+		// NOT observing the CPU's real 0x010C word. Read the selector words from
+		// AS_PROGRAM here so the observation is valid. Also raise the cap so the
+		// probe does not exhaust before the enumeration/draw path is reached.
+		auto log_access = [this, &prog](const char *rw, offs_t a, uint16_t val)
 		{
-			if (m_page_log_count >= 400)
+			if (m_page_log_count >= 4000)
 				return;
-			address_space &data = m_maincpu->space(AS_DATA);
-			const uint16_t sel = data.read_word(0x010C);
+			// Read ALL EIGHT candidate mapping words 0x0100-0x010E from the
+			// CORRECT space (AS_PROGRAM). ChatGPT finding 40 posits a four-window
+			// code/data split: data selectors at 0108/010A/010C/010E and fetch
+			// selectors at 0100/0102/0104/0106. Log them together so we can see
+			// which (if any) a windowed access actually tracks.
+			const uint16_t s0100 = prog.read_word(0x0100);
+			const uint16_t s0102 = prog.read_word(0x0102);
+			const uint16_t s0104 = prog.read_word(0x0104);
+			const uint16_t s0106 = prog.read_word(0x0106);
+			const uint16_t s0108 = prog.read_word(0x0108);
+			const uint16_t s010a = prog.read_word(0x010A);
+			const uint16_t sel   = prog.read_word(0x010C); // candidate data selector
+			const uint16_t s010e = prog.read_word(0x010E);
 			const uint32_t backing = ((uint32_t)sel << 10) + (a - 0x8000);
 			const uint8_t *img = memregion("maincpu")->base();
 			const uint8_t flatb = img[(a - 0x2080) + 0x4800];
 			const uint8_t pageb = (backing < 0x168000) ? img[backing] : 0xFF;
-			logerror("[PAGE %s] PC=%04x addr=%04x sel(10C)=%04x -> backing=%06x "
-				"flat=%02x page=%02x val=%02x\n",
-				rw, m_maincpu->pc(), a, sel, backing, flatb, pageb, val & 0xFF);
+			const bool is_fetch = (m_maincpu->pc() == a); // candidate signal only
+			logerror("[PAGE %s] seq=%u PC=%04x addr=%04x %s "
+				"map[0100..010E]=%04x %04x %04x %04x %04x %04x %04x %04x "
+				"sel(10C)=%04x backing=%06x flat=%02x page=%02x val=%02x\n",
+				rw, m_page_log_count, m_maincpu->pc(), a,
+				is_fetch ? "FETCH?" : "data ",
+				s0100, s0102, s0104, s0106, s0108, s010a, sel, s010e,
+				sel, backing, flatb, pageb, val & 0xFF);
 			m_page_log_count++;
 		};
 		m_page_read_tap = prog.install_read_tap(0x8000, 0xBFFF, "page_r",
 			[log_access](offs_t off, u16 &data, u16 mem_mask) { log_access("R", off, data); });
 		m_page_write_tap = prog.install_write_tap(0x8000, 0xBFFF, "page_w",
 			[log_access](offs_t off, u16 &data, u16 mem_mask) { log_access("W", off, data); });
+
+		// NEW (finding 40): tap WRITES to the mapping words 0x0100-0x010F so we
+		// capture every selector update with PC, data, mem_mask and sequence --
+		// evidence for whether 0100-0106 (fetch) and 0108-010E (data) are
+		// written as distinct selectors (four-window model) or 0x010C is just a
+		// reused context pointer (finding 39's claim).
+		m_map_write_tap = prog.install_write_tap(0x0100, 0x010F, "map_w",
+			[this](offs_t off, u16 &data, u16 mem_mask)
+			{
+				if (m_page_log_count >= 4000)
+					return;
+				logerror("[MAPW] seq=%u PC=%04x off=%04x data=%04x mask=%04x\n",
+					m_page_log_count, m_maincpu->pc(), off, data, mem_mask);
+				m_page_log_count++;
+			});
 	}
 
 	// --- Event-queue power-on state (finding 29) ------------------------------

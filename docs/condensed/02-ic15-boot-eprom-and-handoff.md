@@ -1,54 +1,123 @@
-# IC15 BOOT EPROM & Boot Handoff Architecture
+# IC15 BOOT EPROM & Current HLE
 
-This document synthesizes the role of the Roland S-760 **IC15 BOOT EPROM**, the service dispatch ABI, and the handoff to the disk operating system.
+Kiro's corrected probe (42) reports steady 010C=0299, agreeing with reset
+initialization; the wrong-space issue described below was fixed for that run.
+Its flat-byte match percentages describe an unchanged flat emulator. They
+cannot refute physical paging or prove raw IMG-offset placement. Shared
+response 43 separates those hypotheses; hardware mapping remains open.
 
----
+Gemini's ROM strap report (39) matches the numeric 4140 branches: raw F00A
+bits7:6=00→mode1/flag1, 01→mode2/flag1, 10 or 11→mode0/flag0.
+For raw80, the complemented mask is 40h, not 00h. Controller-name mapping
+and electrical wiring remain provisional. Shared review 41 also verifies
+219A–21AC copying 47h bytes from logical 8312–8358 to 4C62–4CA8;
+its backing-ROM mapping and purported boot-sector-table purpose need proof.
 
-## 1. Chip Identification & Provenance
+Kiro's later response 39 does not establish a paging refutation: its source
+reads selector 010C from AS_DATA, which has only 8 address bits. The CPU routes
+010C stores/reads through AS_PROGRAM. Shared review 40 requests a corrected
+probe. Flat reads observed under an unchanged flat emulator also cannot prove
+the physical hardware ignores selection. The ROM conversion evidence below
+stands; actual fetch/data mapping and backing still require verification.
 
-- **IC15 = Main-Board BOOT/OS EPROM (32 KB, 27C256):**
-  - Holds power-on hardware diagnostics, expansion board detection (OP-760 video board), floppy drive controller init, and the disk bootstrap loader.
-  - Dump verified and available in `roms/BOOT/Roland_S-760_v1.11.BIN` (OS v1.11).
-  - *Correction:* Earlier documentation referred to the BOOT ROM as "IC20". In the S-760 service manual, **IC15 is the BOOT EPROM** and **IC20 is the Intel S80C196KB CPU**.
-- **Execution Flow at Power-On:**
-  1. CPU resets at address `0x2080` executing IC15 ROM code (`FA` = `DI`).
-  2. IC15 initializes hardware registers, checks RAM, and polls `0xF00A` for expansion boards.
-  3. IC15 reads floppy sector 0 (volume header) and the resident OS payload (`0x4800..0x1277F`) into RAM `0x2080..0xFFFF`.
-  4. IC15 sets up low RAM service entry points (`0x0120..0x0308`) and hands off execution to the disk OS at `0x2080`.
+**Mapping correction (shared 38):** ROM 4F74–4FB0 explicitly converts a CPU
+buffer address V using `S=word[0108+2*(V>>14)]`, then computes
+`P=(S<<10)+(V&3FFFh)` and writes transfer address bytes at 011A/011C.
+The four data quadrants select 0108/010A/010C/010E. These are mapping words,
+not established routine pointers. Disk reset initializes them to
+0204/02FA/0299/0400. Under that conversion, logical queue 21AC maps to
+candidate backing 831AC; no disk-file offset equivalence is established.
 
----
+Instruction quadrants selected by 0100/0102/0104/0106 are now a strong
+hypothesis from call sequences and the 0106=0→LJMP C000 transition; exact
+fetch translation remains to be verified. The flat preload can conflate code
+and data at the same logical address. Earlier claims that live queue/shadow
+initialization necessarily overwrites physical startup code are withdrawn.
+Likewise immediate HLE service dispatch on 0104 writes is current emulator
+behavior, not a proven hardware service ABI. The constant file=runtime+2780
+describes decoding the preloaded slice, not a universal bank mapping.
 
-## 2. Low-Memory Service ABI & Parameter Slots
+**IC15 = BOOT EPROM, IC1 = CPU, IC20 = I/O gate array** (service parts list p.5).
+The HLE functions/directory retain the old IC20 name for continuity.
 
-The disk OS continues to call back into low memory for firmware services throughout normal operation. Services are dispatched through parameter slots in low RAM:
+## ROM versus current boot path
 
-### Dispatch Slots
-- **`0x0104` (Selector Word):** General OS and floppy disk services.
-- **`0x0102` (Sub-Selector Word):** Subsystem/command parameter.
-- **`0x010A` / `0x010C` (Context Pointers):** Display, UI table descriptors, and video subsystem services.
+Local `roms/BOOT/Roland_S-760_v1.11.BIN` is 32,768 bytes, with a HEX companion.
+Finding 22 records coherent MCS-96 code, reset at 2080, and service code including
+018D. It is v1.11; the disk is v2.24. Complete native mapping, loader handoff,
+and ABI compatibility have not been established, so no native cold-boot sequence
+is presented as fact here.
 
-### Core Service Contracts
+Finding 33's ROM reset block is byte-verified: 208A sets SP=4800;
+208E–2099 clears words through RW20 from 4000 to 7FFF. This loop does not
+clear disk queue addresses. ROM 3C38–3C67 samples F00A bits5:3 and returns
+28h→1, 10h→2, 00h→3, otherwise zero. 3C68–3C95 stores four complemented
+F00A samples at 4D2B–4D2E. The D010/D012 stores at 3CA9/3CAE write zero.
+These decoded blocks do not establish the complete physical mapping/handoff.
 
-| Selector | Slot | Input Registers | Output / Side Effect | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| **`0x4B`** | `0x0104` | `R4A` = Type, `RW4C` = Index, `RW1E` = Buffer pointer | Writes pointer to `RW4E` (in `AS_DATA`), writes `0x7F` record header to buffer | Resource Record Enumeration (Presets, Patches, UI tables) |
-| **`0x3B`** | `0x0104` | `RF0` = Sector (1..18), `RF1` = Cylinder (0..79), `RF2` = Head (0..1), `RW1E` = Dest Buffer | Reads 512 bytes from floppy image at `LBA = ((cyl * 2) + head) * 18 + (sec - 1)`, clears Carry (`PSW.C = 0`) | CHS Floppy Sector Read |
-| **`0x1F`** | `0x0104` | `RW4C` = Sector Count, `RW48`/`RW4A` = LBA Low/High, `RW1E` = Dest Buffer | Copies `Count * 512` bytes from disk image to RAM at `RW1E`, clears Carry (`PSW.C = 0`) | Bulk LBA Floppy Sector Read |
-| **`0x196`**| `0x0104` | None | Stored immediately before floppy re-calibration | FDC Calibrate / State Reset |
-| **`0x166`**| `0x0104` | None | Stored during main executive loop iterations | Background floppy motor / head idle poll |
-| **`0x299`**| `0x010C` | `RW1C` = `0x299` | Sets up display descriptor pointers in RAM | Display & Video Option Service |
-| **`0x2BE`**| `0x010C` | `RW1C` = `0x2BE` | Sets up UI font descriptor tables in RAM | UI Font & Palette Service |
+The new static write-map script does not resolve indirect destinations;
+even the reset clear and sampled-byte stores above are omitted from its
+address buckets. Its lack of 2000–2FFF targets cannot prove that IC15 never
+writes that region. Shared review 34 qualifies finding 33's global negative
+claim. Actual loader/service writes and real returned records remain the
+next evidence needed; a particular HLE selector fix is not yet established.
 
----
+Independent static analysis (shared 36) identifies paired ROM memory-access
+loops at 022D–024F and 0274–0296: split a 32-bit address into offset `A&03FFh`
+at window `8000h+offset`, write `(A>>10)&FFFFh` to 010C, then read/write
+through the computed pointer. This supports a page/window protocol; physical
+backing and full window extent remain unproved. Current driver has no handler
+modeling that selection. Treating 010C solely as a callback pointer is unsupported.
 
-## 3. High-Level Emulation (HLE) Requirements
+Further static decode (shared 37) establishes a wider accessed range:
+40A4–40BE selects 010C then fills 8000–BFFF with 8192 words; 40BF–40E8
+verifies it, restoring the selector on both exits. The diagnostic caller
+4043–4084 uses 5555h, AAAAh and page-value patterns over 63 chunks, advancing
+selection by 10h per 4000h-byte chunk. Together these sequences support a
+16 KB window selected in 1 KB address units; actual backing, masks and disk
+mapping remain to be established. No driver paging change has been made here.
 
-When running without executing the IC15 EPROM natively, the emulator's HLE must satisfy the following invariant conditions:
+ROM 474F–4755 disables interrupts, stores zero to 0106, then jumps to C000.
+Several main-init paths target 474F. Actual execution, mapping after 0106,
+and whether this is the successful disk handoff require a native trace; the
+preload's C000 peripheral interpretation cannot establish the ROM contract.
 
-1. **AS_DATA vs AS_PROGRAM Register Space Separation:**
-   - Registers `RW1E`, `RW4C`, `RW4E`, `RF0`, `RF1`, `RF2` (< `0x100`) must be accessed via `space(AS_DATA)`.
-   - Data buffers and MMIO (>= `0x100`) must be accessed via `space(AS_PROGRAM)`.
-2. **Selector 0x4B Record Valid Flag:**
-   - The byte at the buffer destination (`[RW1E]`) must be set to `0x7F`. The OS explicitly verifies `CMPB [RW4E], #0x7F` at `0xB9DC`, `0xBA0F`, `0xBA75`.
-3. **Low-Memory Call Targets:**
-   - 14 entry points in `0x0100..0x01FF` (including `0x018D`) must have clean `RET` stubs (`0xF0`) installed as read handlers so unmodeled calls return without executing unmapped RAM.
+Finding 35's sampled C7000+i*100h headers are independently verified: 128/128
+are 7F. That supports matching first-byte branch decisions only if those records
+are proved to map to the queried type/index. Full records differ, and multiple
+resource types/counts are queried; complete 4B equivalence remains unproved.
+
+Current MAME preloads the disk resident slice into RAM and executes disk reset
+at 2080. It does not execute IC15 cold boot. The original image is preserved.
+
+## Actual HLE implementation
+
+`ic20_hle_install()` watches writes to selector word 0104 and performs side
+effects immediately; installed RET read handlers let subsequent low calls return.
+Other parameter/context slots include 0102, 010A, 010C; their writes alone do
+not prove full service contracts.
+
+| Selector | Inputs and current behavior | Classification |
+| --- | --- | --- |
+| 4B | R4A type, RW4C index, RW1E buffer; sets RW4E=buffer and writes 7F | Synthetic validity shim; no real enumeration |
+| 3B | RF0 sector, RF1 cylinder, RF2 bit0 head, RW1E destination; copies 512 bytes | Approximate CHS read |
+| 1F | RW4C count, RW48/RW4A LBA low/high, RW1E destination | Approximate bulk read |
+| Others | Sets RW4E=buffer when nonzero | Side effects otherwise unmodeled |
+
+Registers below 100 use **AS_DATA**; buffers/parameter slots use **AS_PROGRAM**.
+That separation fixed the RW4E register-file bug.
+
+Actual 3B formula: `(cyl*2+(head&1))*18 + (sec>0 ? (sec-1)%18 : 0)`.
+It wraps invalid sectors and treats zero as the first sector. Standard geometry
+has sectors 1–18; wrapping is not a proven hardware contract.
+
+1F uses 32-bit `off=LBA*512`, `len=count*512`, tests `off+len<=0x168000`, and
+copies to addresses narrowed to 16 bits. Both transfer paths clear carry even
+if no copy occurred. Overflow-safe bounds and genuine failure semantics are
+not implemented. Earlier summaries saying otherwise were wrong.
+
+Fourteen targets have RET read handlers, returning F0F0 at the aligned word:
+018D, 0296, 0442, 045D, 0491, 04AC, 0551, 05AA, 0B31, 0D5D, 0EC7, 0F15,
+0F19, 1109. These survive RAM clearing; poked bytes did not. Stubbing is not a
+verified implementation of these services. Real ROM mapping/ABI evidence is
+requested in the shared findings folder.

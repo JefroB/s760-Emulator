@@ -86,8 +86,8 @@ Because IC15 inverts the read value with `NOTB RDA`:
 | **Mode 2 (Mouse + CRT)** | Bits 7:6 = `1 0` (`0x80`) | Bits 7:6 = `0 1` (`0x40`) | Bit 7 grounded by OP-760 board, Bit 6 pulled high |
 | **No Option Board** | Bits 7:6 = `0 0` (`0x00`) | Bits 7:6 = `1 1` (`0xC0`) | Both lines pulled high (unconnected open-collector) |
 
-When MAME returned `0x80` (`1 0` in raw bits), `NOTB` inverted it to `0 1`, producing `0x4D2B & 0xC0 == 0x00`, which routed to `0x4179` and forced **`0x4D2F = 0` (No Display Board Present)**!  
-To select **Mode 2 (Mouse + CRT)**, the raw hardware read on `0xF00A` must return **bit 7 = 0 and bit 6 = 1** (e.g. raw `0x40` or `0x78` with mode bits).
+When MAME returned `0x80` (`1 0` in raw bits), `NOTB` inverted bits 7:6 to `0 1`, producing `(~0x80) & 0xC0 == 0x40`. Since `0x40` is neither `0xC0` nor `0x80`, both comparisons failed and routed to `0x4179`, which forced **`0x4D2F = 0` (No Display Board Present)**!  
+To select **Mode 2 (Mouse + CRT)**, the raw hardware read on `0xF00A` must return **bit 7 = 0 and bit 6 = 1** (e.g. raw `0x40` or `0x78` with mode bits), which inverts to `1 0` (`0x80`).
 
 ---
 
