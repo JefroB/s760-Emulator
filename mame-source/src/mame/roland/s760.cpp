@@ -1041,6 +1041,12 @@ private:
 	// the service selector (RAM slot 0x0104) and pointer args so the real ABI
 	// can be reconstructed. See docs/03-cpu-investigation.md (IC20 ABI).
 	memory_passthrough_handler m_ic20_tap;
+
+	// Event-queue power-on init (finding 29): one-shot read-tap that establishes
+	// the empty-queue state (0x21AC/0x21AE = 0) the first time the executive pump
+	// reads it, since the disk-OS reset doesn't clear the 0x2000-0x2FFF work area.
+	memory_passthrough_handler m_queue_init_tap;
+	bool m_queue_initialized = false;
 	void ic20_hle_install();
 	uint16_t ic20_ret_stub_r() { return 0xF0F0; } // both bytes = 0xF0 (MCS-96 RET)
 
@@ -1378,6 +1384,61 @@ void s760_state::machine_start()
 	}
 
 	ic20_hle_install();
+
+	// --- Event-queue power-on state (finding 29) ------------------------------
+	// The disk-OS executive message pump at 0x54E8 uses runtime 0x21AC/0x21AE as
+	// the event-queue READ/WRITE pointers and 0x21B0.. as the 128-byte FIFO. On
+	// our boot those words still hold the disk image's bytes (0x21AC=0x0102,
+	// 0x21AE=0xEF1C) because the disk-OS reset only zero-clears 0x0120..0x111F —
+	// the 0x2000-0x2FFF work area is NOT cleared. (Those same bytes are also the
+	// operand of a reset-time instruction at 0x21AA `ST RW1C,0x102`, which runs
+	// ONCE at power-on and then that RAM is repurposed as the queue — code and
+	// data share the address on the real unified 80C196 space.) On real hardware
+	// the queue is empty at startup (read ptr == write ptr == 0); with the
+	// garbage pointers the pump sees read!=write forever, dispatches garbage, and
+	// never consumes a genuine screen-draw event, so the rasterizer (0xA133) and
+	// the 0xD010 display-enable (0x92A6/0x92D0) are never reached.
+	//
+	// DIAGNOSTIC EXPERIMENT ONLY (env S760_QUEUE_INIT), NOT a proven fix. ChatGPT
+	// review (shared/30) correctly notes this is not yet hardware-faithful: the
+	// IC15 clear range (0x4000-0x8000) does NOT cover 0x2000-0x2FFF, so there is
+	// no evidence the BOOT ROM leaves 0x21AC/0x21AE zero; and 0x21AC overlaps live
+	// startup CODE. The real open question is the loader/mapping lifecycle (when
+	// 0x21AC transitions from startup code to queue data). This tap only CONFIRMS
+	// the diagnosis — zeroing the queue pointers lets the pump return empty and the
+	// OS enters the executive fall-through (0x2891 -> 0x3F1C) — it does not model
+	// the real power-on contract. Gated OFF by default so it never ships as a
+	// false fix; enable with S760_QUEUE_INIT=1 to reproduce the experiment.
+	//
+	// Model the real power-on empty queue WITHOUT touching the reset code bytes:
+	// a one-shot read-tap on 0x21AC lazily zeroes the two pointer words the FIRST
+	// time the pump reads them (which is AFTER the 0x21Axx reset code has already
+	// executed), then removes itself. This is not forcing a draw and not injecting
+	// an event — it only establishes the documented empty-queue power-on state.
+	// IMPORTANT: 0x21AC is ALSO the operand of a reset-time instruction at 0x21AA
+	// (`ST RW1C,0x102`) that executes during power-on; its operand fetch reads
+	// 0x21AC. So we must NOT touch 0x21AC until AFTER reset is done — only when
+	// the executive message PUMP (PC=0x54E8) reads it. Gate the tap on the reading
+	// PC: fire exactly once, from the pump, which is reached only after reset and
+	// before any genuine event is consumed.
+	if (getenv("S760_QUEUE_INIT"))
+	m_queue_init_tap = m_maincpu->space(AS_PROGRAM).install_read_tap(
+		0x21AC, 0x21AD, "queue_ptr_init",
+		[this](offs_t offset, u16 &data, u16 mem_mask)
+		{
+			if (m_queue_initialized)
+				return;
+			// Only act when the executive pump (0x54E8) is the reader; ignore the
+			// reset-time operand fetch of the ST at 0x21AA.
+			if (m_maincpu->pc() < 0x54E0 || m_maincpu->pc() > 0x54F0)
+				return;
+			m_queue_initialized = true;
+			address_space &prog = m_maincpu->space(AS_PROGRAM);
+			prog.write_word(0x21AC, 0x0000); // queue READ pointer = empty
+			prog.write_word(0x21AE, 0x0000); // queue WRITE pointer = empty
+			data = 0x0000;                   // the in-flight pump read sees empty
+			m_queue_init_tap.remove();       // one-shot: detach after first use
+		});
 
 	m_vdp_vram = std::make_unique<uint8_t[]>(0x20000); // 128KB TC511664 VRAM
 	memset(m_vdp_vram.get(), 0, 0x20000);
