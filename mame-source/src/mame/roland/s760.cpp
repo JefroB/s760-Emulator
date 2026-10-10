@@ -1137,11 +1137,16 @@ private:
 	// Board/controller config reported at gate-array 0xF00A. The OS reads this at
 	// boot (0x249B), caches it at 0x2085, and uses it to decide the controller
 	// mode (Panel+LCD vs Mouse+CRT vs RC-100+CRT) and whether to drive the OP-760
-	// RFSC16A VDP/CRT. Models the user's real hardware config (CRT + mouse/remote
-	// enabled). Overridable via the S760_F00A env (hex) while the exact bit
-	// layout is being decoded (Gemini task 21). Default 0xFF = all config straps
-	// asserted (OP-760 present + CRT controller) as a first-pass probe.
-	uint8_t m_board_config_f00a = 0xFF;
+	// RFSC16A VDP/CRT. Value is now EVIDENCE-BASED from the IC15 BOOT-ROM dump
+	// (finding 23): the OS gates all display output on 0x2085 (== raw 0xF00A):
+	//   - 0x14D33: `(0x2085 & 0x80)==0` -> RET (skip ALL display setup)  => bit7=1
+	//   - 0x14D53/0x14EAA: `(0x2085 & 0xC0)==0x40` selects the CRT path    => bit6=0
+	//   - IC15 0x3C38 decodes controller mode from bits 3-5 (0x28/0x10/0x00).
+	// So the first-pass 0xFF probe was WRONG: 0xFF has bit6=1 (fails the ==0x40
+	// CRT test) and bits3-5=0x38 (matches NO valid IC15 strap). The correct
+	// "OP-760 CRT + mouse/remote present" strap is bit7=1, bit6=0 => 0x80.
+	// Overridable via S760_F00A=<hex> for experiments.
+	uint8_t m_board_config_f00a = 0x80;
 	uint16_t m_vdp_tile_base;
 	uint16_t m_vdp_matrix_base;
 	uint16_t m_vdp_attr_base;
@@ -1291,6 +1296,24 @@ void s760_state::machine_start()
 		const uint8_t *img = memregion("maincpu")->base();
 		// file 0x4800 maps to runtime 0x2080 (verified reset/base address)
 		memcpy(m_os_ram.get(), img + 0x4800, os_size);
+
+		// --- Missing VDP bus-timing delay stubs (findings 21/23) ------------
+		// The OS calls three short bus-settle delay routines after programming
+		// VDP registers: 0x9B42 (20 callers), 0x9B51 (7), 0x9B71 (8). On the
+		// disk image the entire runtime 0x9954-0x9C7F region is 0x00 fill (812
+		// bytes) — these routines are NOT in the disk payload; on real hardware
+		// they are present at runtime (supplied by the IC15 BOOT ROM / resident
+		// setup). Without them LCALL 0x9B51 (from 0xDA52, mid-draw) sleds through
+		// the 0x00 (= MCS-96 SKIP) padding straight into the screen-BLANKING
+		// routine at 0x9C80 (which zeroes VDP Control 0/1 at 0x9CAC/0x9CA7),
+		// aborting the draw and disabling the display. Cross-verified two ways:
+		// Kiro's live CPU trace (RET from 0xE136 -> slide -> 0x9C80 blank) and
+		// Gemini's static analysis (finding 21). Model the missing delay stubs
+		// as a bare RET (0xF0) at each entry — a zero-length settle delay, which
+		// is correct for an instruction-accurate emulator with no real bus wait.
+		for (offs_t stub : { offs_t(0x9B42), offs_t(0x9B51), offs_t(0x9B71) })
+			m_os_ram[stub - os_start] = 0xF0; // MCS-96 RET
+
 		m_maincpu->space(AS_PROGRAM).install_ram(os_start, os_end, m_os_ram.get());
 
 		// Interrupt-vector + low-work window 0x2000-0x207F (file 0x4780). Map as
@@ -2695,8 +2718,23 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 			m_vdp_mouse_y = (m_vdp_mouse_y & 0x00FF) | ((uint16_t)data << 8);
 			break;
 
-		case 0x24: // Mouse Control
-			m_vdp_mouse_ctrl = data;
+		case 0x24: // Plane-0 (character) VRAM Address Pointer, bits 0..7.
+			// Gemini finding 21 breakthrough 3 + Kiro trace: the ACTIVE VRAM
+			// pointer that the D018 data stream auto-increments is written here
+			// (trace: D024<-99 D025<-02 => 0x0299, then D018 data lands at the
+			// matching VRAM address). This is the primary plane-0 pointer; the
+			// D034/D035 pair is the secondary plane-1 (attribute) pointer which
+			// the OS sets with bit15 (0x8000) set. Both load m_vdp_addr; the OS
+			// programs whichever plane it is about to stream into last.
+			m_vdp_addr = (m_vdp_addr & 0x1FF00) | (uint32_t)data;
+			break;
+
+		case 0x25: // Plane-0 VRAM Address Pointer, bits 8..15.
+			m_vdp_addr = (m_vdp_addr & 0x100FF) | ((uint32_t)data << 8);
+			break;
+
+		case 0x26: // Plane-0 VRAM Address Pointer, bits 16..17 (bank).
+			m_vdp_addr = (m_vdp_addr & 0x0FFFF) | ((uint32_t)(data & 0x01) << 16);
 			break;
 
 		case 0x30: // Character Tile Base, byte 0 (low)

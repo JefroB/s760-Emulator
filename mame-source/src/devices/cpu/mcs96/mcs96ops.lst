@@ -1942,14 +1942,19 @@ f3    popf  none
 
 f4    pusha none 196
 	// PUSHA/POPA are implemented STACK-NEUTRAL (no SP change, no PSW save) for
-	// S-760 boot bring-up. Rationale: the OS has routines (e.g. 0xB93A) that do
-	// PUSHA at entry and RET at exit with NO matching POPA; a real two-word push
-	// would leave the stack unbalanced and the RET would return to garbage
-	// (observed: RET -> 0x0000 derail). Treating PUSHA/POPA as no-ops keeps such
-	// routines balanced and keeps genuinely-paired PUSHA/POPA balanced too. The
-	// only simplification is that PSW/INT_MASK1 are not actually saved/restored
-	// across the pair — acceptable for boot; revisit if interrupt-nesting state
-	// corruption appears. (See docs/ic20-hle-findings/shared/07 step 1.)
+	// the S-760 OS. This is NOT a simplification to revisit lightly — it is the
+	// model this OS's code requires. Evidence (finding 23):
+	//   * 0xB93A does PUSHA at entry and exits via a plain RET with NO matching
+	//     POPA on either branch (verified disasm B93A..B979). Its caller at
+	//     0x2286 does `LCALL 0xB93A; POP 0x10C`. A real two-word PUSHA makes the
+	//     B979 RET pop the pushed mask word instead of the return address and
+	//     derail to 0x0000 — observed directly when PUSHA was made a real push.
+	//   * Treating PUSHA/POPA as net-zero keeps 0xB93A (and the many other
+	//     PUSHA-entry / RET-no-POPA routines) balanced, which is what lets the
+	//     boot reach the main loop and drive the VDP (blue CRT).
+	// The only thing not modeled is actually saving/restoring PSW+INT_MASK1
+	// across the pair; no interrupt-nesting corruption has been observed from
+	// that. Do NOT convert to a real push without re-proving the 0xB93A path.
 	next_noirq(8);
 
 f5    popa  none 196
