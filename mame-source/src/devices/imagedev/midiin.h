@@ -37,6 +37,13 @@ public:
 	~midiin_device();
 
 	auto input_callback() { return m_input_cb.bind(); }
+	// Host runtime input uses the same 31250-baud transmitter as physical MIDI.
+	void write_byte(u8 data) { xmit_char(data); }
+	bool can_write(size_t count) const
+	{
+		const int used = (m_xmit_write - m_xmit_read + XMIT_RING_SIZE) % XMIT_RING_SIZE;
+		return count <= size_t(XMIT_RING_SIZE - 1 - used);
+	}
 
 	// device_image_interface implementation
 	virtual std::pair<std::error_condition, std::string> call_load() override;

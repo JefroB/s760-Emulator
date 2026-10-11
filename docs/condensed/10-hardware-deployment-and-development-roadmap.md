@@ -3,7 +3,32 @@
 Condensed from HIL deployment, LLE fidelity assessment, and next-generation OS
 proposal, reconciled with current source and hardware specifications.
 
+Milestone 1 is complete for the Windows native-engine integration profile.
+The final compound objective was split: native-only selection and bounded
+project state have acceptance evidence; graphical configuration/editor delivery,
+native sampling and actual DAW qualification remain open in Milestones 2–4.
+The fresh module test passes 480000 exact stereo frames at48kHz with no missed
+deadlines, and current identities match the accepted SCSI/host-state record.
+See the [closure review](../MILESTONE_1_COMPLETION.md) and
+[closure evidence](validation/milestone-1-completion-2026-10-11.json).
+
 ## Physical deployment
+
+The Windows native boundary passes crash cleanup/reopen, saved-session recovery
+and host-clocked module audio acceptance. The exact Windows standalone package
+now has a [distribution qualification](../DISTRIBUTION_QUALIFICATION.md): actual
+frozen dependencies and vendor DLLs are attributed, notices retained, copied
+Windows runtime DLLs excluded, and the delivered MAME source snapshot rebuilt
+cleanly. That rebuilt engine passes native boot/audio and packaged desktop
+readback. Original project-owned code remains BSD-3-Clause; MAME retains GPL
+and its individual component terms. No Roland firmware or sample media ships.
+
+The release gate recomputes the complete package tree against a reviewed
+manifest; changed artifacts require a new review. This completes the separated
+Milestone 1 standalone distribution objective, not clean-machine installation,
+finished sampler workflows or actual VST3/DAW/editor qualification. See the
+[distribution evidence](validation/distribution-2026-10-11.json) and
+[remaining roadmap](../COMPLETION_ROADMAP.md).
 
 The project has a proven raw-IMG → Gotek → physical S-760 boot loop. Use copies
 of `S760224.IMG`, keep total size `0x168000`, verify patch bytes/diffs, and retain
@@ -29,17 +54,70 @@ patch milestones and document 06 for audio capture isolation.
 ## Current implementation versus fidelity
 
 MAME has a local S-760 driver, resident disk preload/HLE, peripheral handlers,
-CRT/LCD models, and its own sound device. C++ provides disk/DSP/recorder/host/
-plugin/bridge infrastructure; React provides the shell and test suites. The
-native IC15 boot, full physical bus semantics, faithful firmware services, and
-hardware DSP equivalence remain unfinished. “Step 1 100% complete,” “cycle
-accurate,” and “bit accurate across all frontends” were unsupported roadmap
-claims and are not retained as completed milestones.
+CRT/LCD models, and its own sound device. The opt-in **banked native path now
+cold-loads the real IC15 v1.11 ROM, boots OS v2.24 to colour Perform Play,
+scans the panel, loads samples, and produces diagnostic audio** (documents 02–07)
+— so the earlier blanket "native IC15 boot remains unfinished" is superseded for
+the opt-in path. What is still NOT finished: full physical bus semantics
+(IC4/DMA arbitration, exact interrupt vectoring), hardware-exact DSP (filter
+moving/BP-HP precision, DI, MEQ gain), and a single shipped product (the live
+runtime integration is "Milestone 1", in progress — see above). "Step 1 100%
+complete," "cycle accurate," and "bit accurate across all frontends" remain
+unsupported and are not claimed; numerical replay is implementation agreement,
+not hardware equivalence.
 
 In particular, `S760HardwareCore` exists but its implementation file is omitted
 from the CMake library source list, and MAME defines a separate sound engine.
 Completing a genuinely shared DSP implementation requires explicit integration
 and compiled end-to-end verification, not just adding another reference model.
+
+## Native runtime integration (findings 100, 125–135) — "Milestone 1", in progress
+
+A live-engine integration effort is building one product around the native MAME
+instance. Confirmed, but all explicitly **opt-in / dev-checkpoint, not a finished
+release**:
+
+- **Save/load state (finding100):** handler-backed banked RAM, bank regs, wave
+  memory and wave regs were unregistered with MAME's save manager (caused an
+  `Unhandled 1e` load crash); now registered. An active BP-sweep save→load is
+  byte-exact (57,330 PCM16 samples, corr 1). No machine-wide save flag yet;
+  display/media/other-peripheral/fresh-process restore are separate work.
+- **Native floppy Save/export/reload (findings128/129):** the OS Save path is
+  decoded (bank005A:6C41 programs C00E/C00C, count 0x1200, control **E2** copies
+  wave RAM → floppy). A fresh machine reloads the export; all 13 sample payloads
+  (119,808 bytes for the 88-key patch) match exactly. The controller tracks
+  media generation/write-revision and **rejects dirty/busy insert or eject**
+  until an atomic no-clobber export. LIMITS: whole-wave-RAM compare still differs
+  by 347 name/high-mem bytes (sample bytes unchanged); no library writeback,
+  formatting, write-protect/error, or SCSI-save; "dirty" = controller writes, not
+  firmware Save completion.
+- **Standalone dev player (finding127, supersedes finding125's "no working host"):**
+  a desktop player boots an isolated native MAME process, shows the real CRT/LCD
+  in React, accepts mouse/panel, inserts a private floppy copy, and plays MIDI
+  through the serial receiver (note60 peak 1459 PCM16, zero release tail). Two
+  independent runtime processes work; duplicate state dir rejected.
+- **Native C++ runtime + VST3 (findings130–133):** the shared runtime exposes
+  pause/resume/step, demand-driven PCM render (1–8192 frames, exact block sizes,
+  ≤0.9999 PCM16 vs MAME WAV), a direct Windows C++ client (no Python/React,
+  authenticated loopback + kill-on-close job), emulated-time MIDI scheduling
+  (absolute 44.1 kHz timestamps via MAME coroutine timers + the 31250-baud
+  transmitter, <0.001-sample error), and the real MAME instance driven **through
+  the VST3 processor** with a ~12,288-sample (~279 ms, conservative) delay budget
+  and alloc-free callbacks. LIMITS: a "class-level processor harness", not a DAW
+  plugin-scan/load; not calibrated low-latency/sample-exact onset; 44.1 kHz
+  float stereo + note on/off only; native sampling rejects; suspended bounded native plugin state now works.
+- **Cold checkpoints (findings134/135):** state registration was extended to the
+  handler-backed VDP/LCD+VRAM, EEPROM, gate/IRQ, floppy-controller and MIDI
+  transmit ring; **Version2** checkpoints also preserve future scheduled MIDI
+  events (and cancel stale ones on reload). Active-note and serial-boundary cold
+  restores are byte-exact (65,536–131,072 frames). LIMITS: paused isolated-runtime
+  checkpoints, NOT complete project recall; VST3 getState/setState still reject;
+  Version1 archives deliberately rejected; all six Milestone-1 gates remain open.
+
+Validation JSON for these lives under `docs/condensed/validation/` (e.g.
+`native-cpp-runtime-2026-10-11.json`, `native-plugin-stream-2026-10-11.json`,
+`native-checkpoint-2026-10-11.json`); design notes in `docs/NATIVE_CPP_RUNTIME.md`
+and `docs/NATIVE_CHECKPOINTS.md`.
 
 ## Ordered development work
 
@@ -74,3 +152,14 @@ established by the proposal. Evaluate CPU cycles, memory, I/O, format changes,
 and backward compatibility separately for emulator extensions and physical OS
 patches. Modern software features need not be assumed executable on vintage
 hardware.
+
+Native plugin state now archives machine state, pending host MIDI/PCM, timing
+and FIR converter history together. Cold and repeated replay matches exactly at
+44.1/48/96 kHz; invalid native apply blocks processing until valid reload. This
+now includes the bounded SCSI snapshot profile: device metadata, partial
+commands/transfers and startup-sized media buffers. External SCSI files are
+limited to 64 MiB total and pinned to startup identities. Native cold audio and
+refreshed displays match; all-rate plugin replay passes. SCSI writeback remains
+broken (BUG-015), and actual DAW compatibility remains unqualified.
+See the [state contract](../NATIVE_PLUGIN_STATE.md) and
+[validation](validation/native-plugin-state-2026-10-11.json).

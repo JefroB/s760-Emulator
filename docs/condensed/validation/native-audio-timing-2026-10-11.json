@@ -1,0 +1,168 @@
+{
+  "date": "2026-10-11",
+  "scope": "Explicit native processor harness; not exported plugin, DAW, device or hardware parity",
+  "source_head": "f6c37813a062afad9f15dfc3d1bdea12fbfdffdc",
+  "working_tree_changes": true,
+  "host": {
+    "os": "Windows NT 10.0.26200.0",
+    "cpu": "AMD Ryzen 5 5600X",
+    "logical_processors": 12,
+    "build": "MSVC Release x64"
+  },
+  "sha256": {
+    "core/include/s760/s760_native_rate_converter.hpp": "7f721183db5e28ea9910f0cfab879e5d36a12df81aa379760a0902a1c3b63fdd",
+    "core/include/s760/s760_native_stream.hpp": "4f8aad922eb14ec78074d751e389d2541897a1775b740997b07ef0d41721d25f",
+    "core/src/s760_vst3_plugin.cpp": "c1139a71bcdd28270a8014ae85f5f1116d14ea18c2ebe3ccee7b4798ecd1aba1",
+    "core/tests/test_native_rate_converter.cpp": "98e7ea5746bfd87828a6a53b8e8654542170566f4cbd5e91e71db13a711b52ee",
+    "core/tests/test_native_plugin.cpp": "b542e403ffc8c369026338d9fcf19a028e93ff4f40b1a7bf37a07868072a08d2",
+    "core/src/s760_native_runtime.cpp": "e5b49e504c632ff75e72a922b5ee23f06e237e45a21011ba41393bcaac74f981",
+    "scripts/s760_runtime.lua": "389f9f474cd7f66d22d2e3e7f17d5849674aafc858681c54dd644713fa57167e",
+    "build/Release/s760_native_plugin_tests.exe": "11e53fe021417bb37c33b1a854020e55309b0e25963d59d69720ea0e10fb303d",
+    "build/Release/s760_native_rate_converter_tests.exe": "87e605aa055ca1012a2623ec7d52a9091c504a57be594484196789f59fcbe5c2",
+    "mame-source/mames760.exe": "2827786b421631a80b1397718ea889dd0a675e467124cfe1bf7b52877f28e976",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "wall_clock": [
+    {
+      "frames": 2646000,
+      "rate": 44100,
+      "reference_exact": 1,
+      "peak": 0.0445375,
+      "tail": 0,
+      "first_audible": 12726,
+      "reported_latency": 12288,
+      "paced": 1,
+      "varied": 1,
+      "max_callback_us": 547.7,
+      "max_deadline_fraction": 0.0688373,
+      "missed_deadlines": 0,
+      "duration_seconds": 60,
+      "block_sizes": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "stream_faults": 0,
+      "log": "sustained-44100-137.log",
+      "log_sha256": "19d7f43d7834f0c3b4bebd09b16e5b2116263a6aa8a10a0357de0e6424b9cec0",
+      "command": "./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/sustained-44100-137 --paced-var 44100 60"
+    },
+    {
+      "frames": 2880000,
+      "rate": 48000,
+      "reference_exact": 1,
+      "peak": 0.0445375,
+      "tail": 0,
+      "first_audible": 13857,
+      "reported_latency": 13393,
+      "paced": 1,
+      "varied": 1,
+      "max_callback_us": 58.1,
+      "max_deadline_fraction": 0.0222,
+      "missed_deadlines": 0,
+      "duration_seconds": 60,
+      "block_sizes": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "stream_faults": 0,
+      "log": "sustained-48000-137.log",
+      "log_sha256": "012cf2ecc8e9c7462263d322afb2bdc5f5dc57a670847383f5e7adf4f36f50e3",
+      "command": "./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/sustained-48000-137 --paced-var 48000 60"
+    },
+    {
+      "frames": 5760000,
+      "rate": 96000,
+      "reference_exact": 1,
+      "peak": 0.0446113,
+      "tail": 0,
+      "first_audible": 27373,
+      "reported_latency": 26785,
+      "paced": 1,
+      "varied": 1,
+      "max_callback_us": 89.7,
+      "max_deadline_fraction": 0.036,
+      "missed_deadlines": 0,
+      "duration_seconds": 60,
+      "block_sizes": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "stream_faults": 0,
+      "log": "sustained-96000-137.log",
+      "log_sha256": "60bc50b688b9d01e0d02696b4b868d019d7390484eb3fe956ad790a5731bd2ee",
+      "command": "./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/sustained-96000-137 --paced-var 96000 60"
+    }
+  ],
+  "converter": {
+    "max_relative_tone_rms_error": 0.000183985,
+    "test_frequencies_hz": [
+      100,
+      1000,
+      10000,
+      18000
+    ],
+    "partition_exact": true,
+    "independent_channels": true,
+    "impulse_centroid_tolerance_host_samples": 0.01,
+    "event_clock_sweep_seconds": 600,
+    "event_rounding_native_samples_less_than": 1
+  },
+  "regressions": {
+    "cpp_executables_passed": 25,
+    "python_passed": 211
+  },
+  "limitations": [
+    "Approximately279ms software budget; total audible latency is not calibrated.",
+    "Only note-on/off, float32 stereo, 44100/48000/96000Hz, blocks1..1024; negotiated rate cannot change after stream start.",
+    "One60-second workload per rate; no arbitrary host/load/driver guarantee.",
+    "Same-process rewind of pre-capture checkpoint can overflow; cold reference child succeeds.",
+    "Production selection, native ADC, complete state and DAW/editor acceptance remain open."
+  ],
+  "supplemental_native": [
+    {
+      "frames": 240000,
+      "rate": 48000,
+      "reference_exact": 1,
+      "peak": 0.0445375,
+      "tail": 0,
+      "first_audible": 14496,
+      "reported_latency": 13393,
+      "paced": 1,
+      "varied": 0,
+      "max_callback_us": 31.5,
+      "max_deadline_fraction": 0.00590625,
+      "missed_deadlines": 0,
+      "command": "./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/fixed48-final-137 --paced 48000 5",
+      "log": "fixed48-final-137.log",
+      "log_sha256": "899b97437cbae11fa5b3887387ca19b7592fcbf00e621a61edd80991bed9500d"
+    },
+    {
+      "frames": 132300,
+      "rate": 44100,
+      "reference_exact": 1,
+      "peak": 0.0445375,
+      "tail": 0,
+      "first_audible": 12578,
+      "reported_latency": 12288,
+      "paced": 0,
+      "varied": 0,
+      "max_callback_us": 9.6,
+      "max_deadline_fraction": 0.00165375,
+      "missed_deadlines": 0,
+      "command": "./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/accelerated44-137",
+      "log": "accelerated44-137.log",
+      "log_sha256": "f059240b56235eb0d0f21fe4a588cee0dac02c22e56d339deb9adc02071a0b9a"
+    }
+  ]
+}

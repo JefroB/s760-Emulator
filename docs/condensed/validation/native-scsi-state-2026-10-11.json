@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-11",
+  "scope": "Full snapshot of implemented native engine and host queues within bounded media profile",
+  "sha256": {
+    "mame-source/mames760.exe": "b45a19278d9f5958b0b9d5a4bfeff58a343d57db21e787dbc0eef1faf388f676",
+    "build/Release/Roland_S760.vst3": "402e2c509f4a10ecf619dd94834b700c0c4052d431268c210ff9e5202da4ad55",
+    "scripts/s760_runtime.lua": "c42bd668b11b5533f63f87ba50f425b8e6b284beb3e29f02510287a7e4672902",
+    "mame-source/src/mame/roland/s760.cpp": "d775672da51ccc3c779d1431d2c649b6fcd9f2296c5b647101cbfd82a04edf08",
+    "core/src/s760_native_runtime.cpp": "be8d5e3028996963145b756b9f7a57cd06abef37bf900cfed57e454fb9788b22",
+    "scripts/s760_runtime.py": "5f1bd4e2b0b3d4318225fb1e347a69191d6c4a3538593ff26018d18c5e3bb130",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "native_cold": {
+    "scsi_identity_verified": true,
+    "cold_pcm_frames_exact": 131072,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": true,
+    "serial_boundary": false,
+    "enqueue_age_seconds": -0.02269841269807671,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "scsi_device": {
+    "remaining_bytes": 28,
+    "partial_cdb": true,
+    "writeback_supported": false,
+    "partial_data_out": true,
+    "passed": true
+  },
+  "scsi_cold": {
+    "passed": true,
+    "response_bytes": 28,
+    "media_bytes": 512
+  },
+  "plugin_rates": {
+    "44100": {
+      "exact_stereo_frames": 220500,
+      "matched_row": "Native plugin state passed rate=44100 exact_frames=220500 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1"
+    },
+    "48000": {
+      "exact_stereo_frames": 240000,
+      "matched_row": "Native plugin state passed rate=48000 exact_frames=240000 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1"
+    },
+    "96000": {
+      "exact_stereo_frames": 480000,
+      "matched_row": "Native plugin state passed rate=96000 exact_frames=480000 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1"
+    }
+  },
+  "regressions": {
+    "python_passed": 229,
+    "cpp_executables_passed": 25
+  },
+  "limits": {
+    "external_scsi_bytes": 67108864,
+    "native_state_bytes": 268435456,
+    "plugin_archive_bytes": 272629760
+  },
+  "not_claimed": [
+    "SCSI firmware save/writeback",
+    "hardware parity",
+    "real DAW/editor acceptance",
+    "cross-build/rate migration",
+    "concurrent controls during save",
+    "autosave"
+  ]
+}

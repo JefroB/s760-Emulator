@@ -5,7 +5,23 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), {
+      name: 'distribution-module-inventory',
+      generateBundle(_options, bundle) {
+        const modules = new Set<string>();
+        for (const output of Object.values(bundle)) {
+          if (output.type !== 'chunk') continue;
+          for (const id of Object.keys(output.modules)) {
+            const normalized = id.replaceAll('\\', '/');
+            const marker = '/node_modules/';
+            const offset = normalized.lastIndexOf(marker);
+            if (offset >= 0) modules.add(normalized.slice(offset + marker.length).replace(/\?.*$/, ''));
+          }
+        }
+        this.emitFile({type: 'asset', fileName: 'BUNDLED-MODULES.json',
+          source: JSON.stringify({schema: 1, modules: [...modules].sort()}, null, 2) + '\n'});
+      },
+    }],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

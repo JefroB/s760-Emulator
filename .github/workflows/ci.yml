@@ -57,7 +57,7 @@ jobs:
           # pybind11: required by core/CMakeLists.txt to build the s760_cpp module.
           # pytest + Pillow(PIL): the test suite imports pytest and PIL (mame_harness).
           # NumPy/SciPy: band-limited hardware-capture reference and alias tests.
-          python -m pip install pybind11 pytest Pillow numpy scipy
+          python -m pip install pybind11 pytest Pillow numpy scipy -r scripts/requirements-standalone.txt
 
       - name: Configure CMake (Release)
         shell: pwsh
@@ -78,6 +78,14 @@ jobs:
       - name: Run C++ bridge tests
         shell: pwsh
         run: .\build\Release\s760_bridge_tests.exe
+
+      - name: Run native audio queue and worker tests
+        shell: pwsh
+        run: .\build\Release\s760_native_audio_queue_tests.exe
+      - name: Native sample-rate conversion tests
+        run: .\build\Release\s760_native_rate_converter_tests.exe
+      - name: Native callback stream tests
+        run: .\build\Release\s760_native_stream_tests.exe
 
       # The pybind11 module is emitted into `tests/` (LIBRARY/RUNTIME_OUTPUT_DIRECTORY
       # in core/CMakeLists.txt), so `import s760_cpp` resolves when pytest runs there.

@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-11",
+  "source_head": "f6c37813a062afad9f15dfc3d1bdea12fbfdffdc",
+  "working_tree_changes": true,
+  "scope": "Standalone floppy-runtime sessions; not complete VST3 or SCSI state",
+  "sha256": {
+    "scripts/s760_runtime.py": "339ffe721027c237e0af7e00032fc11771bc6d6ddc166750223fa633a0e1c8f9",
+    "scripts/s760_runtime.lua": "03adc6c2813a5053478c42560f29db0223ade2accbf3b923fddcfb9b27a15d4a",
+    "scripts/s760_standalone.py": "e48def594d0b483bbd58c009c2a973bf1121efa1d6b467f78fc71401b98cad24",
+    "scripts/verify_native_checkpoint.py": "77f8290dba11ae34f4427b2f6a8f992cc457b6718feadbe6565468d6ddb513de",
+    "scripts/build_standalone.ps1": "bd9a2a36852f2e32e8e8eefbaea47fb032b08c943300103e6fc6db0cebe4fb7a",
+    "google-ui/src/NativeStudio.tsx": "f5cbc4340f5809bd868ced96c6b6f680f360089bf887459cd7b508f6cb9b9b4a",
+    "google-ui/src/NativeStudio.test.tsx": "7d35e48b07840725203aa0d569ade7c1795a5881fe4f86adfd7db54620a62855",
+    "google-ui/e2e/native-runtime.spec.ts": "ba2825d706225d97940a6f6e24e377899a2690716c9022fb312b12280975b9bb",
+    "tests/test_standalone_sessions.py": "2f9bcb73980c573310cebd7ec2bcef81009b3630a2baada629234bdc40593fb0",
+    "mame-source/mames760.exe": "2827786b421631a80b1397718ea889dd0a675e467124cfe1bf7b52877f28e976",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "native": {
+    "standalone_pcm_frames_exact": 131072,
+    "displays_exact": true,
+    "crash_recovery_new_process": true,
+    "recovered_patch_play_release": true,
+    "saved_archive_preserved": true,
+    "firmware_ready_after_recovery": true
+  },
+  "scheduled_regression": {
+    "cold_pcm_frames_exact": 131072,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": true,
+    "serial_boundary": false,
+    "enqueue_age_seconds": -0.022675736961460302,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "native_command": "python scripts/verify_native_checkpoint.py --standalone-session --state-dir docs/ic20-hle-findings/chatGPT-work/session-grace-139",
+  "scheduled_command": "python scripts/verify_native_checkpoint.py --scheduled --state-dir docs/ic20-hle-findings/chatGPT-work/scheduled-grace-139",
+  "browser": {
+    "real_runtime": true,
+    "normal_throttle": true,
+    "passed": 1,
+    "command": "S760_NATIVE_URL from browser-session4-139/session.json; node node_modules/@playwright/test/cli.js test e2e/native-runtime.spec.ts",
+    "patch_table_hash_before_and_after": 3384624565,
+    "flow": [
+      "firmware load",
+      "save session",
+      "reconnect",
+      "export",
+      "confirmed restart",
+      "confirmed session restore",
+      "original patch-table pixels"
+    ]
+  },
+  "regressions": {
+    "python_passed": 220,
+    "react_passed": 90,
+    "final_native_studio_passed": 6,
+    "typescript": true
+  },
+  "packaged": {
+    "status": "OS ready \u2014 Perform Play.",
+    "width": 640,
+    "height": 480,
+    "nonzero": 225776,
+    "executable_sha256": "6fce0c70e745b57565203d416f20d94e0ab34586226f067d25a1796729417e82",
+    "final_source_rebuilt": true
+  },
+  "limitations": [
+    "Explicit last-save recovery, no autosave or newer-edit recovery.",
+    "Floppy only, matching MAME/firmware/Lua identities required.",
+    "Physical MIDI must be disconnected.",
+    "Full plugin queues/state and SCSI remain open.",
+    "Package smoke uses local machine and no sound; no clean-machine/device acceptance."
+  ],
+  "logs": {
+    "session-grace-139.log": "71dcc39358f30f0892dda4ba9957109e71def76f05bf0a7e1e99d86e6a2de4a2",
+    "scheduled-grace-139.log": "5a708563d45f21f264291a09c7a6aea54cd21dde759e86522ec0a75e6500521e",
+    "browser-test4-139.log": "c7c8fde0fd545518737e146d4ca85e59aff171e39f7e8a0f81807419996b8616",
+    "ui-tests-139.log": "a6505465c8454302cc6f8ab81845a04df3c88f9722589d7eae9858411c53f49a",
+    "regression-complete-139.log": "8a4fb648a74c5f8770362c66615fe0ff9aafa704a63049449edc626f48d4528f"
+  }
+}

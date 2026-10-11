@@ -1,10 +1,14 @@
 # Roland S-760 Condensed Reference
 
-Current checkpoint: 2026-10-10, findings through124. Native original-ROM boot
+Current checkpoint: 2026-10-11, findings through146. Native original-ROM boot
 reaches the colour, mouse-interactive Perform Play screen, loads sample disks,
-and plays firmware-driven MIDI voices. Measured loop, envelope, filter and
-pitch audition paths are available; complete CPU/peripheral/ASIC fidelity is
-not claimed.
+and plays firmware-driven MIDI voices (up to 24-voice polyphony). Measured loop,
+envelope, filter (LP/BP/HP) and 128-step pitch-interpolation audition paths are
+available (document06). The native-runtime integration — standalone player, C++ worker, exported VST3
+stream and bounded native/host/SCSI state — completes Milestone 1
+([closure](../MILESTONE_1_COMPLETION.md)). Configuration/editor, native sampling
+and real DAW acceptance remain in Milestones 2–4. Numerical replay establishes
+implementation agreement, not complete CPU/peripheral/ASIC hardware parity.
 
 The full88-key hardware capture resolves a measurement-resampling bug. With
 fixed coefficients,28 pulse rates match within0.697–0.926% normalized RMS error
@@ -12,6 +16,8 @@ and four independent noise cases within0.380–0.538%, in100Hz–18kHz. The new
 opt-in native interpolator passes all88 fixture notes; disabled output remains
 bit-identical. Hardware limits and distinctions between models and facts remain
 explicit in document06.
+
+The exact Windows standalone artifact has passed [distribution qualification](../DISTRIBUTION_QUALIFICATION.md): source archives and component notices accompany it, and integrity checks bind the reviewed package. This does not complete clean-machine setup or actual DAW/editor acceptance.
 
 For product completion and review gates, use the [completion roadmap](../COMPLETION_ROADMAP.md). Dated milestone histories in these references are subordinate to their current-status summaries.
 

@@ -1,9 +1,12 @@
 # Roland S-760 Digital Sampler — MAME Emulator Driver
 
-> **Current status (2026-10-10):** Native MAME boots the original OS and has hardware-validated playback work. The React standalone/VST integration is still in progress; historical coverage tables below do not establish end-to-end product readiness. Follow the **[completion roadmap](docs/COMPLETION_ROADMAP.md)** for remaining work and acceptance gates, and the [native runbook](docs/condensed/11-native-boot-and-audio-runbook.md) for the tested checkpoint.
+> **Current status (2026-10-10):** Native MAME boots the original OS and has hardware-validated playback work. The new **[standalone development player](docs/STANDALONE_PLAYER.md)** displays live MAME CRT/LCD pixels in React/WebView2, with firmware mouse/panel controls, floppy loading and MIDI audition. The [exported VST3 factory](docs/NATIVE_PLUGIN_SELECTION.md) now selects native MAME exclusively and passes module boot/load/display/audio tests; native input, host configuration UX, actual DAW acceptance and several standalone workflows remain unfinished; historical coverage tables below do not establish end-to-end product readiness. The standalone now exposes [firmware readiness and UI recovery](docs/NATIVE_FIRMWARE_STATUS.md), including native-child restart, and [saved-session recovery](docs/NATIVE_SESSIONS.md). Follow the **[completion roadmap](docs/COMPLETION_ROADMAP.md)** for remaining work and acceptance gates, and the [native runbook](docs/condensed/11-native-boot-and-audio-runbook.md) for the tested checkpoint.
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
-[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
+[Runtime qualification and distribution status](docs/NATIVE_BOUNDARY_QUALIFICATION.md)
+[Qualified Windows standalone distribution and source delivery](docs/DISTRIBUTION_QUALIFICATION.md)
+
+**[Milestone 1 complete](docs/MILESTONE_1_COMPLETION.md):** standalone and the exported module share native execution, display/MIDI/audio and bounded state. Configuration/editor, sampling and actual DAW acceptance remain open in Milestones 2–4.
 [![Tests](https://img.shields.io/badge/Tests-127%20Passing-brightgreen.svg)](tests/)
 [![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP%20(Instrument%20%26%20FX)-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
 [![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
@@ -53,6 +56,12 @@ The emulation backend (the C++ Core / libretro host now, MAME later) renders onl
 ---
 
 ## ROM & Media Organization (`System`, `FDD`, `SCSI`)
+
+**Bring your own firmware:** follow [firmware setup and distribution policy](docs/FIRMWARE_SETUP.md)
+for exact files, sizes, hashes and path overrides. Roland firmware, system disks
+and third-party sample libraries are excluded from this repository and future
+packages. Independently authored, working replacements may be included once
+their provenance and licensing are established.
 
 To keep disk images cleanly segregated without moving files, the emulator uses a **3-folder layout** inside `roms/` matching real hardware setups (e.g. Gotek floppy emulators and BlueSCSI / ZuluSCSI devices):
 
@@ -166,7 +175,7 @@ flowchart LR
 ```
 
 ### Features:
-- **`Roland_S760.vst3` (Steinberg VST3)**: Native modern 64-bit VST3 plugin with dual factory registration for both **Instrument** (`Instrument|Synth`) and **Audio Effect** (`Fx|Sampler`), stereo audio input bus, and `IBStream` state streaming.
+- **`Roland_S760.vst3` (VST3 development module)**: Native MAME instrument selected through the exported factory. Explicit runtime/firmware configuration is required. Live-input FX, native ADC and complete project state are unavailable; actual SDK/DAW/editor acceptance remains open. See the [configuration and compatibility contract](docs/NATIVE_PLUGIN_SELECTION.md).
 - **`Roland_S760.dll` & `Roland_S760_FX.dll` (VST2 / `libretro_vst`)**: Dedicated VST2 instrument and live sampler effect binaries.
 - **`Roland_S760.clap` (CLAP)**: Universal open-standard plugin exporting both Instrument and FX descriptors with the `clap.audio-ports` stereo routing extension.
 - **Live Audio Sampling into Sampler**: Feed audio directly from any DAW track, mic, synthesizer, or bus into the S-760 sampler. Supports:
@@ -321,4 +330,12 @@ This project is an independent, non-commercial open-source hardware emulation an
 
 ## License
 
-This project is distributed under the **BSD 3-Clause License** in compliance with MAME driver standards. See individual source files for copyright notices.
+Original project-owned code is available under [BSD-3-Clause](LICENSE), permitting
+broad reuse with the required notices. Third-party files retain their existing
+licenses; this does not relicense the complete MAME engine as BSD.
+
+The software is provided **as is**, without warranty. Emulation is a development
+tool, not a guarantee that experimental firmware is safe on physical hardware.
+See [license scope and hardware-use guidance](docs/LICENSING.md). Roland binaries
+are excluded. Public executable release qualification remains open; see the
+[source/package audit](docs/NATIVE_BOUNDARY_QUALIFICATION.md).

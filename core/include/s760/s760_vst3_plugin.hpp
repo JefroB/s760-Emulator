@@ -5,6 +5,8 @@
 #include "s760/s760_backend_selector.hpp"
 #include "s760/s760_bridge.hpp"
 #include "s760/s760_webview_host.hpp"
+#include "s760/s760_mame_host.hpp"
+#include "s760/s760_native_stream.hpp"
 
 #include <atomic>
 #include <memory>
@@ -23,7 +25,11 @@ class S760Vst3Plugin : public Steinberg::IComponent,
                        public Steinberg::IAudioProcessor,
                        public Steinberg::IEditController {
 public:
+    // Direct construction for historical core diagnostic tests only. The
+    // exported VST3 factory uses the native configuration overload exclusively.
     explicit S760Vst3Plugin(bool is_fx = false);
+    // Same native engine used by the standalone and exported factory.
+    explicit S760Vst3Plugin(const NativeRuntimeConfig& config);
     virtual ~S760Vst3Plugin();
 
     // FUnknown
@@ -73,6 +79,8 @@ public:
 
     S760LibretroHost& get_host() { return m_host; }
     S760Bridge& get_bridge() { return m_bridge; }
+    S760MameHost* native_host() { return dynamic_cast<S760MameHost*>(m_selected_host.get()); }
+    NativeStream* native_stream() { return m_native_stream.get(); }
 
 private:
     std::atomic<uint32_t> m_ref_count{1};
@@ -85,6 +93,14 @@ private:
     // host pointer. Owns the MAME backend when selected; stays null for Core.
     std::unique_ptr<IS760Host> m_selected_host;
     S760Bridge m_bridge; // in-process UI bridge (3.2); editor view binds to it
+    std::unique_ptr<NativeStream> m_native_stream;
+    std::shared_ptr<class NativeRateConverter> m_native_converter;
+    std::uint64_t m_native_origin=0;
+    void rebuild_native_stream(const NativeStream::Snapshot* saved=nullptr);
+    tresult get_native_state(Steinberg::IBStream*);
+    tresult set_native_state(Steinberg::IBStream*);
+    bool m_native_mode = false;
+    bool m_native_state_failed = false;
 
     double m_sample_rate = 44100.0;
     int32_t m_max_block_size = 512;
@@ -96,6 +112,7 @@ private:
     std::vector<float> m_scratch_right;
 
     void process_events(Steinberg::IEventList* events);
+    tresult process_native(Steinberg::ProcessData& data);
 
     // Run the backend selector and decide which IS760Host the Bridge is driven
     // from (mame-live-backend task 9.3). Called from the constructor's

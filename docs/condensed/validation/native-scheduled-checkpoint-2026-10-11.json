@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-11",
+  "scope": "Pending runtime MIDI checkpoints and unit-tested C++ stream reconstruction; not complete plugin state",
+  "sha256": {
+    "scripts/s760_runtime.lua": "c6994c93ca999a7c7b41d74f95ee2ecd8f9244fee809f60a73cdfe511bcb4a83",
+    "scripts/s760_runtime.py": "19aa3ef581389f47463d7078517f36a60d88c09d3b04e8af158eab41b4f3170a",
+    "scripts/verify_native_checkpoint.py": "eeea40bee7a6701b7cc0eaa69289ce488cfbcebf7ad96cf2c4e561f2690718a0",
+    "core/include/s760/s760_native_stream.hpp": "3870770c6acac6d6a034efbd97c19ffc22e179ecfb2b0e6f6819efd2e82e059e",
+    "core/include/s760/s760_native_audio_queue.hpp": "fc2b96dcd9ef1ec6a23ef77fa0f88b5a1ece8a2c5896093cfad22615243bd920",
+    "core/tests/test_native_stream.cpp": "58d81fb1c779915a529436989d01cb0c91f74bf3d0adcf8126727ae7af0c8a24",
+    "core/tests/test_native_audio_queue.cpp": "0c46433312d2123869883f9306fa133212620bd2f2b7fa5a6fe19d09eb4f8dbc",
+    "mame-source/mames760.exe": "2827786b421631a80b1397718ea889dd0a675e467124cfe1bf7b52877f28e976",
+    "mame-source/src/frontend/mame/luaengine.cpp": "952f8b08aca0d88816d13cd7585a208a77387a7fab4afb787c0d92ca38e86718",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "scheduled_checkpoint": {
+    "cold_pcm_frames_exact": 131072,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": true,
+    "serial_boundary": false,
+    "enqueue_age_seconds": -0.022675736961787152,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "serial_checkpoint": {
+    "cold_pcm_frames_exact": 65536,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": false,
+    "serial_boundary": true,
+    "enqueue_age_seconds": 4.5351473588084446e-05,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "native_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 79.166666666667,
+    "note_release": 81.35,
+    "process_shutdown": "clean",
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999065399169922,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "seconds": 85.756009070295,
+        "sample": 3781840
+      },
+      {
+        "seconds": 86.756009070295,
+        "sample": 3825940
+      }
+    ],
+    "runtime_contract": {
+      "pause_freezes_time": true,
+      "step_seconds": 0.016666666666999674,
+      "pcm_frames": 191394,
+      "pcm_dropped_frames": 0,
+      "overflow_reported_frames": 48510,
+      "pcm_wav_max_error_pcm16": 0.998046875
+    }
+  },
+  "regressions": {
+    "python_passed": 204,
+    "cpp_executables_passed": 24,
+    "native_varied_processor_frames": 441344,
+    "max_callback_us_observed": 32.8,
+    "midi_capacity": 256,
+    "queue_unit_coverage": [
+      "wrapped unread stereo PCM",
+      "malformed queue length rejection",
+      "pending note-off restored once at original offset",
+      "clock/padding preserved",
+      "inconsistent clock rejection"
+    ]
+  },
+  "commands": [
+    "python scripts/verify_native_checkpoint.py --scheduled --state-dir docs/ic20-hle-findings/chatGPT-work/scheduled-final-135",
+    "python scripts/verify_native_checkpoint.py --serial --state-dir docs/ic20-hle-findings/chatGPT-work/serial-135b",
+    "python scripts/verify_native_runtime.py --runtime-contract --pull-render --scheduled-midi --state-dir docs/ic20-hle-findings/chatGPT-work/runtime-135",
+    "python scripts/verify_native_midi_queue.py --state-dir docs/ic20-hle-findings/chatGPT-work/midi-135",
+    "cmake --build build --config Release",
+    "build/Release/s760_native_stream_tests.exe",
+    "build/Release/s760_native_audio_queue_tests.exe",
+    "build/Release/s760_native_plugin_tests.exe D:/S-760 D:/S-760/docs/ic20-hle-findings/chatGPT-work/plugin-var-135 --paced-var"
+  ],
+  "limitations": [
+    "All six compound Milestone1 objectives remain open",
+    "No combined native-machine/plugin queue archive or VST3 getState/setState",
+    "No SCSI, UI recall, crash recovery or cross-build migration",
+    "No real DAW/editor acceptance",
+    "Immediate cached display pixels are stale until refresh",
+    "Version1 checkpoints rejected"
+  ]
+}

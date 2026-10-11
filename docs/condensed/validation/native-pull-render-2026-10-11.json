@@ -1,0 +1,47 @@
+{
+  "native_boot_frames": true,
+  "long_mouse_jump": [
+    300,
+    120
+  ],
+  "midi_note": 60,
+  "held_peak_pcm16": 1459.0,
+  "release_tail_peak_pcm16": 0,
+  "sample_rate": 44100,
+  "note_start": 78.433333333333,
+  "note_release": 80.7,
+  "process_shutdown": "clean",
+  "pull_render": {
+    "sizes": [
+      1,
+      63,
+      127,
+      256,
+      511,
+      1024,
+      4096,
+      8192
+    ],
+    "frames": 122616,
+    "wav_max_error_pcm16": 0.9999065399169922,
+    "dropped_frames": 0,
+    "paused_between_requests": true,
+    "release_tail_silent": true
+  },
+  "runtime_contract": {
+    "pause_freezes_time": true,
+    "step_seconds": 0.016666666666999674,
+    "pcm_frames": 194040,
+    "pcm_dropped_frames": 0,
+    "overflow_reported_frames": 48510,
+    "pcm_wav_max_error_pcm16": 0.998046875
+  },
+  "command": "python scripts/verify_native_runtime.py --runtime-contract --pull-render --state-dir <private-dir>",
+  "identities": {
+    "scripts\\s760_runtime.lua": "9dea122cf2b704a8d9f4c68a3fe3f4a63697387897b750b18eb1b298c7c91219",
+    "scripts\\s760_runtime.py": "90d7a4d299704c1bf10e1164e9076083efeca6b86c6e28be1cd5d454c5d9abb4",
+    "mame-source\\mames760.exe": "c463e93e5121c00b63ad4b659b57fa207e4a116e3016a6873a1b61a6ad4ab919",
+    "roms\\FDD\\ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "scope": "Exact requested PCM block sizes at44100Hz; MAME advances in video-frame quanta. Not sample-exact MIDI, realtime latency, VST3, snapshots or hardware parity qualification."
+}

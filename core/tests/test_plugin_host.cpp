@@ -8,6 +8,9 @@
 
 #include <iostream>
 #include <vector>
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
 #include <cassert>
 #include <cstring>
 #include <filesystem>
@@ -304,21 +307,32 @@ void test_vst3_plugin_lifecycle_and_audio() {
 
     auto* factory = GetPluginFactory();
     assert(factory != nullptr);
-    assert(factory->countClasses() == 2); // Instrument + Live Sampler FX
+    assert(factory->countClasses() == 1); // Native instrument; ADC/FX not qualified.
 
     Steinberg::PClassInfo info_inst;
     assert(factory->getClassInfo(0, &info_inst) == kResultOk);
     assert(std::string(info_inst.name).find("S-760") != std::string::npos);
 
     Steinberg::PClassInfo info_fx;
-    assert(factory->getClassInfo(1, &info_fx) == kResultOk);
-    assert(std::string(info_fx.name).find("FX") != std::string::npos);
+    assert(factory->getClassInfo(1, &info_fx) == kInvalidArgument);
 
     void* plugin_obj = nullptr;
-    assert(factory->createInstance(nullptr, nullptr, &plugin_obj) == kResultOk);
-    assert(plugin_obj != nullptr);
+    assert(factory->createInstance(nullptr, nullptr, &plugin_obj) == kInvalidArgument);
+    assert(plugin_obj == nullptr);
+    TUID component_iid = INLINE_UID(0xE8318227, 0x79A447F6, 0x8E6AEF5D, 0xDC202293);
+    TUID unknown_iid{};
+    TUID retired_fx = INLINE_UID(0x53373630, 0x56535433, 0x46585052, 0x30303032);
+    plugin_obj = reinterpret_cast<void*>(1);
+    assert(factory->createInstance(reinterpret_cast<char*>(info_inst.cid), reinterpret_cast<char*>(unknown_iid), &plugin_obj) == kResultFalse);
+    assert(plugin_obj == nullptr);
+    plugin_obj = reinterpret_cast<void*>(1);
+    assert(factory->createInstance(reinterpret_cast<char*>(retired_fx), reinterpret_cast<char*>(component_iid), &plugin_obj) == kInvalidArgument);
+    assert(plugin_obj == nullptr);
+    assert(factory->createInstance(reinterpret_cast<char*>(info_inst.cid), reinterpret_cast<char*>(component_iid), nullptr) == kInvalidArgument);
 
-    auto* plugin = static_cast<s760::S760Vst3Plugin*>(plugin_obj);
+    // Historical core behavior remains available only through direct diagnostic
+    // construction. The exported factory must never silently select it.
+    auto* plugin = new s760::S760Vst3Plugin(false);
     auto* comp = static_cast<Steinberg::IComponent*>(plugin);
     auto* proc = static_cast<Steinberg::IAudioProcessor*>(plugin);
 
@@ -447,7 +461,7 @@ void test_adversarial_plugin_state_remediation() {
     std::cout << "  -> Step 3: VST2" << std::endl;
     s760::S760VstPlugin vst2_plug(nullptr, false);
     std::vector<uint8_t> vst2_trunc = { 'S', '7', '6', '0', 'V', 'S', 'T', 'P', 0x05 };
-    assert(!vst2_plug.restore_state_chunk(vst2_trunc.data(), vst2_trunc.size()));
+    assert(vst2_plug.dispatcher(effSetChunk, 0, vst2_trunc.size(), vst2_trunc.data(), 0.f) == 0);
 
     std::cout << "  -> Adversarial Plugin State Hardening Tests PASSED!" << std::endl;
 }

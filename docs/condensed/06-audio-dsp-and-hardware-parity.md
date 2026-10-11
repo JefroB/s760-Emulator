@@ -335,13 +335,49 @@ matches an independent SciPy reference at correlation 0.99999 (−41.96 dB).
 Firmware filter words observed: R00 cutoff 0x01AE(430)/res 0x0FFF, R64 res 0x0055.
 
 Hard limits (do NOT overstate): this is validated against **static** recordings
-only; the **moving/sweep** resonant response does not yet match (median ~4.4 dB at
-R64), the filter **topology is not uniquely identified** (analog-form and bilinear
-two-pole remain close at low cutoff), the cutoff low-bit precision (430→428) is a
-**single-point hypothesis** awaiting the cutoff-96 discriminator, and fixed-point
-width, saturation, update timing, BPF/HPF and reset behaviour are unresolved. The
-model is opt-in/diagnostic, not the default audio path, and not a hardware-parity
-claim.
+only; the **moving/sweep** resonant response does not yet match, the filter
+**topology is not uniquely identified** (analog-form and bilinear two-pole remain
+close at low cutoff), the cutoff low-bit precision (430→428, confirmed low-2-bits
+cleared in finding108) and fixed-point width, saturation, update timing and reset
+behaviour are unresolved. The model is opt-in/diagnostic, not the default audio
+path, and not a hardware-parity claim.
+
+**BP/HP filter modes (findings 98/99/106/108).** DSP mode register 10100A =
+**0000 LP, 0400 BP, 0200 HP** (directly observed as the OS plays BP/HP patches —
+these are DSP words, not patch bytes). Transfer forms share the LP denominator
+`1-(2-c·d-c·c)z+(1-c·d)z`: **BP numerator c(1-z), HP numerator (1-z)²**, and
+BP/HP use UNSCALED (unity) band/high — the damping-scaled BP hypothesis is
+rejected (finding106). On STATIC captures at cutoff 428/damping 85: BP residual
+−60.84 dB (passes 1% RMS), **HP 1.59% (does NOT pass)**. Implemented in the opt-in
+audition for res words 0FFF and 85 at 44.1 kHz. Resonant/moving BP/HP, other
+clocks and HP precision remain open.
+
+**Pitch & interpolation (findings 110–124).** Pitch words: C4=0x4000 (unity),
+D4=0x2000 (half speed), 0x1000 (quarter); effective source clock ≈44100.95 Hz
+relative to the capture clock. The source-position phase is a **128-step (7-bit
+fractional) quantizer** (finding120, matched via HF-sine sidebands). The
+interpolation is a measured response implemented as an opt-in audition
+(`S760_NATIVE_INTERPOLATION_MONITOR`): a Catmull-Rom-like cubic **B=1.04227,
+C=−0.02284** plus 128-step phase. Validated after fixing a SciPy anti-imaging
+*measurement* artifact (finding124 — this, not the ASIC, caused the earlier
+3–8% fractional errors): 28 pulse rates (quarter→double) 0.70–0.93% held RMS,
+4 independent noise cases 0.38–0.54%, over 100 Hz–18 kHz. LIMITS: this is a
+measured audition model, not the ASIC's exact coefficient table/precision; the
+1% claim is pulse/noise 100 Hz–18 kHz only (NOT 20 kHz sine images); floor-rounding
+convention, combined pitch+filter, transitions and other clocks are unresolved.
+Reusable reconstruction at `scripts/audio_capture_reference.py`; results in
+`condensed/validation/audio-pitch-2026-10-10.json`.
+
+**Loop modes & sample-completion service (findings 102/103/104).** Seven loop
+controls traced (mode byte 0–6: Forward End, Forward Release, One Shot, Forward
+One Shot, Alternate, Reverse One Shot, Reverse Loop; DSP flag words 0000/2000/
+4000/8000/A000). Hardware boundary behaviour (unity pitch, 44.1 kHz): forward
+loop **end-exclusive**, alternate turnarounds one sample above the specified
+points, reverse loop a **−4-sample register offset**. The completion-service
+firmware is decoded (source2 stub 0128→CBCF; reads C002 slot/status, acks via
+C016 read; per-channel type at 1ECA: type1 = continuing release, else clear wave
+enable). All seven implemented in the opt-in `S760_NATIVE_LOOP_MONITOR`; electrical
+timing, ack edge, source priority and fractional-pitch cases remain provisional.
 
 ## Three-stage hardware measurement plan
 
@@ -415,37 +451,37 @@ Finding96 adds **opt-in** `S760_NATIVE_LPF_MONITOR` to the native MAME monitor. 
 
 Finding97: the opt-in LP audition clears channel states immediately at wave-enable transitions. A native sweep plus30 retriggers reuses12 channels, all enables start zero, and the final tail is silent. Logged-write numerical replay correlates0.999994; this validates implementation, not physical sweep precision. BP/HP remain bypassed pending targeted hardware captures. See lifecycle test and next evidence.
 
-Finding98: replacement BP and accepted HP hardware sweeps support band/high outputs of the same candidate recurrence at resonance0, with unity calibrated gain and withheld correlations0.996438/0.991801. Earlier BP capture was all-zero and unusable. Free phase cannot distinguish old/new BP state; resonance0 cannot establish resonant BP gain. Offline coefficient interpolation and fitted timing remain diagnostic; native BP/HP audition is still bypassed. See [capture evidence and limits](../ic20-hle-findings/shared/98-chatgpt-bandpass-and-highpass-hardware-captures.md).
+Finding98: replacement BP and accepted HP hardware sweeps support band/high outputs of the same candidate recurrence at resonance0, with unity calibrated gain and withheld correlations0.996438/0.991801. Earlier BP capture was all-zero and unusable. Free phase cannot distinguish old/new BP state; resonance0 cannot establish resonant BP gain. Offline coefficient interpolation and fitted timing remain diagnostic; native BP/HP audition is still bypassed. See capture evidence and limits.
 
-Finding99 extends the existing opt-in filter monitor to native DSP mode0400 BP and0200 HP at resonance word0FFF only,44.1kHz and the existing unflagged domain. Native replay correlations0.999789/0.999993, unsupported BP R32 raw output identical, boot checks pass and release tail is silent. This is implementation validation; hardware coverage remains finding98's resonance0 captures. See [implementation and checks](../ic20-hle-findings/shared/99-chatgpt-native-bandpass-highpass-audition.md).
+Finding99 extends the existing opt-in filter monitor to native DSP mode0400 BP and0200 HP at resonance word0FFF only,44.1kHz and the existing unflagged domain. Native replay correlations0.999789/0.999993, unsupported BP R32 raw output identical, boot checks pass and release tail is silent. This is implementation validation; hardware coverage remains finding98's resonance0 captures. See implementation and checks.
 
-Finding100 registers native banked RAM, bank selectors, wave memory and wave registers for snapshots, fixing a reproducible reload CPU fault with both raw and filtered monitors. An active BP sweep restores with57,330 identical PCM samples. This does not establish full-system save support. See [save/load evidence](../ic20-hle-findings/shared/100-chatgpt-native-save-load-memory-fix.md). Finding101 audits remaining coverage and prioritizes currently unsupported loop/direction modes.
+Finding100 registers native banked RAM, bank selectors, wave memory and wave registers for snapshots, fixing a reproducible reload CPU fault with both raw and filtered monitors. An active BP sweep restores with57,330 identical PCM samples. This does not establish full-system save support. See save/load evidence. Finding101 audits remaining coverage and prioritizes currently unsupported loop/direction modes.
 
-Finding102 traces sample loop-mode bytes0–6 to distinct native control/parameter flags. Current monitor rejects six of the seven configurations; code and native test reproduce the coverage gap. A native-load-tested single patch maps modes across notes60–66 at constant pitch, ready for hardware capture. Encodings establish controls, not physical sample order or endpoint semantics. See [mode table and recording fixture](../ic20-hle-findings/shared/102-chatgpt-loop-mode-trace-and-hardware-capture.md).
+Finding102 traces sample loop-mode bytes0–6 to distinct native control/parameter flags. Current monitor rejects six of the seven configurations; code and native test reproduce the coverage gap. A native-load-tested single patch maps modes across notes60–66 at constant pitch, ready for hardware capture. Encodings establish controls, not physical sample order or endpoint semantics. See mode table and recording fixture.
 
 Findings103–104 identify and implement the seven-mode unity-pitch loop fixture behind S760_NATIVE_LOOP_MONITOR. Forward/alternate/reverse periods are1023/2046/1024 source samples; one-shots emit2047/2048 samples in native tests. An opt-in source2 completion model lets the original OS retain type1 release looping and stop type3. Exact source ordering, alternate save/load and unchanged disabled output pass; physical interrupt timing/arbitration and fractional-pitch coverage remain provisional. Finding105 requests resonance64 BP/HP captures to resolve output gain before expanding filter support.
 
-Finding106: hardware R64 BP/HP sweeps support unscaled band/high outputs with calibrated gains0.994/1.030. Damping-scaled BP is rejected; moving withheld correlations0.978/0.981 still leave substantial error. Opt-in native BP/HP now also accepts resonance word85, with independent numerical replay above0.99999, silent release tails and unchanged R32 fallback. This is not exact moving-filter hardware parity. See [evidence and tests](../ic20-hle-findings/shared/106-chatgpt-resonant-bp-hp-hardware-and-audition.md).
+Finding106: hardware R64 BP/HP sweeps support unscaled band/high outputs with calibrated gains0.994/1.030. Damping-scaled BP is rejected; moving withheld correlations0.978/0.981 still leave substantial error. Opt-in native BP/HP now also accepts resonance word85, with independent numerical replay above0.99999, silent release tails and unchanged R32 fallback. This is not exact moving-filter hardware parity. See evidence and tests.
 
-Finding108 validates stationary BP/HP at C64/R64 using the new hardware captures. Fixed effective cutoff428/damping85 gives withheld correlations0.999999588/0.999873196 and calibrated gain within0.03% of unity. Folded RMS residuals are0.091% BP and1.59% HP; HP remains sensitive to phase/reconstruction method. No DSP constant or native-code adjustment is warranted. This supports stationary outputs, not exact moving sweeps or whole-chip accuracy. See [validation and limits](../ic20-hle-findings/shared/108-chatgpt-stationary-bp-hp-hardware-validation.md).
+Finding108 validates stationary BP/HP at C64/R64 using the new hardware captures. Fixed effective cutoff428/damping85 gives withheld correlations0.999999588/0.999873196 and calibrated gain within0.03% of unity. Folded RMS residuals are0.091% BP and1.59% HP; HP remains sensitive to phase/reconstruction method. No DSP constant or native-code adjustment is warranted. This supports stationary outputs, not exact moving sweeps or whole-chip accuracy. See validation and limits.
 
-Finding110: physical noise captures verify unity, approximately43CE/4000 and half-speed pitch relationships. Interpolation remains unresolved: simple linear/hold/cubic candidates do not explain both half and fractional captures, and spectral results depend on reference reconstruction. No inferred kernel was added to the renderer. See [measurements and qualifications](../ic20-hle-findings/shared/110-chatgpt-hardware-pitch-and-interpolation-analysis.md); sparse-pulse fixture111 is the next discriminator.
+Finding110: physical noise captures verify unity, approximately43CE/4000 and half-speed pitch relationships. Interpolation remains unresolved: simple linear/hold/cubic candidates do not explain both half and fractional captures, and spectral results depend on reference reconstruction. No inferred kernel was added to the renderer. See measurements and qualifications; sparse-pulse fixture111 is the next discriminator.
 
-Finding112: pulse-derived effective half-speed response predicts withheld pulses at0.185% RMS error and independent noise at0.481% over100–18000Hz, with phase alignment and fixed gain. New opt-in S760_NATIVE_HALF_INTERPOLATION_MONITOR applies only to the tested44.1kHz, word2000, integer-bound forward-loop domain. Native replay passes, unsupported unity/upward paths and disabled full output remain bit-identical. Effective taps are not a generalized ASIC interpolation law. See [physical evidence, implementation and limits](../ic20-hle-findings/shared/112-chatgpt-pulse-derived-half-speed-audition.md).
+Finding112: pulse-derived effective half-speed response predicts withheld pulses at0.185% RMS error and independent noise at0.481% over100–18000Hz, with phase alignment and fixed gain. New opt-in S760_NATIVE_HALF_INTERPOLATION_MONITOR applies only to the tested44.1kHz, word2000, integer-bound forward-loop domain. Native replay passes, unsupported unity/upward paths and disabled full output remain bit-identical. Effective taps are not a generalized ASIC interpolation law. See physical evidence, implementation and limits.
 
-Finding114: two cascaded copies of112's half-speed response predict withheld physical quarter-speed pulses within0.515% normalized RMS, without new coefficients. The existing opt-in interpolation switch now supports word1000 under the same restricted forward-loop domain. Native pulse/noise replay checks pass. A broader cubic model fits averaged fractional pulses but fails independent upward-noise validation (~8.3% RMS); arbitrary-pitch changes are not justified. See [prediction, implementation and rejected extrapolation](../ic20-hle-findings/shared/114-chatgpt-quarter-speed-and-fractional-interpolation.md).
+Finding114: two cascaded copies of112's half-speed response predict withheld physical quarter-speed pulses within0.515% normalized RMS, without new coefficients. The existing opt-in interpolation switch now supports word1000 under the same restricted forward-loop domain. Native pulse/noise replay checks pass. A broader cubic model fits averaged fractional pulses but fails independent upward-noise validation (~8.3% RMS); arbitrary-pitch changes are not justified. See prediction, implementation and rejected extrapolation.
 
-Finding116: fixed quarter-speed response predicts independent physical noise within0.742% normalized RMS over100–18000Hz, strengthening the existing opt-in case. Separating output-clock phase from waveform alignment supersedes114's8.3% fractional mismatch: unchanged pulse-derived cubic coefficients give1.01% down/1.35% up (0.947%/1.320% with separate unity-noise response calibration). This correction does not identify a general ASIC interpolator. Remaining upward error is concentrated above16kHz; phase-quantization and broader-kernel diagnostics do not resolve it. Finding117 requests louder known noise to test amplitude dependence. See [measurements and timing correction](../ic20-hle-findings/shared/116-chatgpt-lower-noise-and-output-clock-phase.md).
+Finding116: fixed quarter-speed response predicts independent physical noise within0.742% normalized RMS over100–18000Hz, strengthening the existing opt-in case. Separating output-clock phase from waveform alignment supersedes114's8.3% fractional mismatch: unchanged pulse-derived cubic coefficients give1.01% down/1.35% up (0.947%/1.320% with separate unity-noise response calibration). This correction does not identify a general ASIC interpolator. Remaining upward error is concentrated above16kHz; phase-quantization and broader-kernel diagnostics do not resolve it. Finding117 requests louder known noise to test amplitude dependence. See measurements and timing correction.
 
-Finding118: eightfold noise PCM amplitude leaves fractional mismatch approximately unchanged. Fixed-pulse predictions give1.06% down/1.38% up RMS; independent same-session unity calibration gives0.906%/1.268%. This argues against a simple additive noise/rounding floor as the main cause. Higher reconstruction precision and flexible kernel diagnostics do not resolve it; no arbitrary-pitch coefficients were implemented. Finding119 supplies a high-frequency sine discriminator. See [capture comparison and limits](../ic20-hle-findings/shared/118-chatgpt-high-level-noise-validation.md).
+Finding118: eightfold noise PCM amplitude leaves fractional mismatch approximately unchanged. Fixed-pulse predictions give1.06% down/1.38% up RMS; independent same-session unity calibration gives0.906%/1.268%. This argues against a simple additive noise/rounding floor as the main cause. Higher reconstruction precision and flexible kernel diagnostics do not resolve it; no arbitrary-pitch coefficients were implemented. Finding119 supplies a high-frequency sine discriminator. See capture comparison and limits.
 
-Finding120: twelve16kHz-sine sidebands match128-step source-phase predictions within0.019Hz; first-pair levels within0.067dB. This strongly supports effective seven-bit interpolation phase in the tested path, but does not identify rounding convention or the coefficient table. Applying relative clock correction to the complete output avoids artificial phase drift. The fixed cubic plus128-step model gives0.827% withheld upward-sine error; independent upward noise still leaves1.24–1.30%, so general interpolation remains provisional. Finding121 requests an18-note grid spanning six source frequencies at unity/down/up, including20kHz to constrain the stronger image response. See [sideband evidence and limits](../ic20-hle-findings/shared/120-chatgpt-sine-sidebands-and-128-phase-evidence.md).
+Finding120: twelve16kHz-sine sidebands match128-step source-phase predictions within0.019Hz; first-pair levels within0.067dB. This strongly supports effective seven-bit interpolation phase in the tested path, but does not identify rounding convention or the coefficient table. Applying relative clock correction to the complete output avoids artificial phase drift. The fixed cubic plus128-step model gives0.827% withheld upward-sine error; independent upward noise still leaves1.24–1.30%, so general interpolation remains provisional. Finding121 requests an18-note grid spanning six source frequencies at unity/down/up, including20kHz to constrain the stronger image response. See sideband evidence and limits.
 
 ## Frequency grid and full-keyboard follow-up (122–123)
 
 The18-note hardware grid spans six source frequencies around1–20kHz at unity/down/up. It confirms increasing interpolation images at high source frequencies, but neither a weighted curve nor a512-parameter phase-table diagnostic establishes the remaining coefficients. The latter still leaves approximately1.225% held-window RMS error on earlier high-level noise; this is not an independent-capture accuracy result.128-phase evidence from120 remains supported. No arbitrary-pitch model is promoted, and measurements above18kHz do not extend the previous noise-validation band.
 
-[Finding122 and measured artifacts](../ic20-hle-findings/shared/122-chatgpt-frequency-grid-results.md) distinguish measurements from rejected candidate fits. [Finding123](../ic20-hle-findings/shared/123-chatgpt-full-keyboard-capture.md) provides a native-verified88-key fixture: twelve sine frequencies at five pitch settings and28 dense-pulse rates. All88 routed notes/pitch words/loop lengths and60 sine frequencies pass MAME verification; physical capture is pending. This verifies the fixture, not full-chip fidelity.
+Finding122 and measured artifacts distinguish measurements from rejected candidate fits. Finding123 provides a native-verified88-key fixture: twelve sine frequencies at five pitch settings and28 dense-pulse rates. All88 routed notes/pitch words/loop lengths and60 sine frequencies pass MAME verification; physical capture is pending. This verifies the fixture, not full-chip fidelity.
 
 ## Current pitch result: capture124 and reconstruction correction
 

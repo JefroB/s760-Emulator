@@ -1,8 +1,13 @@
+#include "s760/s760_native_rate_converter.hpp"
+#include "s760/s760_native_plugin_state.hpp"
 #include "s760/s760_vst3_plugin.hpp"
 
 #include <cstring>
 #include <algorithm>
 #include <iostream>
+#include <cmath>
+#include <cstdlib>
+#include <chrono>
 
 #if defined(_WIN32)
 #define VST3_EXPORT __declspec(dllexport)
@@ -19,6 +24,15 @@ S760Vst3Plugin::S760Vst3Plugin(bool is_fx)
     : m_bridge(select_bridge_host()), m_is_fx(is_fx) {
     m_scratch_left.resize(8192, 0.0f);
     m_scratch_right.resize(8192, 0.0f);
+}
+
+S760Vst3Plugin::S760Vst3Plugin(const NativeRuntimeConfig& config)
+    : m_selected_host(std::make_unique<S760MameHost>()), m_bridge(m_selected_host.get()), m_native_mode(true) {
+    auto* host=native_host();
+    host->configure_native(config);
+    if(!host->init()) throw std::runtime_error(host->native_error());
+    m_scratch_left.resize(NativeStream::max_frames);
+    m_scratch_right.resize(NativeStream::max_frames);
 }
 
 // -----------------------------------------------------------------------------
@@ -43,11 +57,12 @@ IS760Host* S760Vst3Plugin::select_bridge_host() {
 }
 
 S760Vst3Plugin::~S760Vst3Plugin() {
-    m_host.get_drive_manager().flush_all();
+    m_native_stream.reset();
+    if(!m_selected_host) m_host.get_drive_manager().flush_all();
 }
 
 // -----------------------------------------------------------------------------
-//  S760Vst3PlugView — WebView-backed IPlugView (task 3.6).
+//  S760Vst3PlugView â€” WebView-backed IPlugView (task 3.6).
 //  Vended by S760Vst3Plugin::createView("editor"); binds the webview to the
 //  plugin's in-process S760Bridge via S760EditorController.
 // -----------------------------------------------------------------------------
@@ -181,7 +196,10 @@ tresult S760Vst3Plugin::initialize(Steinberg::FUnknown* context) {
 }
 
 tresult S760Vst3Plugin::terminate() {
-    m_host.get_drive_manager().flush_all();
+    m_is_processing=false;
+    m_native_stream.reset();
+    if(m_native_mode) native_host()->close_native();
+    if(!m_selected_host) m_host.get_drive_manager().flush_all();
     return kResultOk;
 }
 
@@ -197,6 +215,7 @@ tresult S760Vst3Plugin::setIoMode(int32_t mode) {
 
 tresult S760Vst3Plugin::getBusCount(int32_t type, int32_t dir) {
     if (type == kAudio) {
+        if(m_selected_host && dir==kInput) return 0; // Native ADC is not connected yet.
         return 1; // 1 Stereo Input bus (for live sampling / recording) + 1 Stereo Output bus
     } else if (type == kEvent) {
         return (dir == kInput) ? 1 : 0;
@@ -221,7 +240,8 @@ tresult S760Vst3Plugin::activateBus(int32_t type, int32_t dir, int32_t index, bo
 
 tresult S760Vst3Plugin::setActive(bool state) {
     m_is_active = state;
-    if (!state) {
+    if(!state && m_native_mode) m_is_processing=false;
+    if (!state && !m_selected_host) {
         m_host.get_drive_manager().flush_all();
     }
     return kResultOk;
@@ -242,10 +262,21 @@ tresult S760Vst3Plugin::canProcessSampleSize(int32_t symbolicSampleSize) {
 }
 
 uint32_t S760Vst3Plugin::getLatencySamples() {
+    if(m_native_mode) return NativeRateConverter::host_samples(NativeStream::output_delay+NativeStream::midi_lead,unsigned(m_sample_rate))+NativeRateConverter::latency(unsigned(m_sample_rate));
     return 0;
 }
 
 tresult S760Vst3Plugin::setupProcessing(Steinberg::ProcessSetup& setup) {
+    if(m_selected_host) {
+        if(!m_native_mode || m_is_processing || !NativeRateConverter::supported(setup.sampleRate) || setup.symbolicSampleSize!=0 ||
+           setup.maxSamplesPerBlock<1 || setup.maxSamplesPerBlock>NativeStream::max_frames)
+            return kResultFalse;
+        // Preserve queued PCM/note-offs. A started timeline cannot change its
+        // rate without a stateful migration; require a fresh native instance.
+        if(setup.sampleRate!=m_sample_rate && m_native_stream) return kResultFalse;
+        m_sample_rate=setup.sampleRate; m_max_block_size=setup.maxSamplesPerBlock;
+        return kResultOk;
+    }
     m_sample_rate = setup.sampleRate;
     m_max_block_size = setup.maxSamplesPerBlock;
     m_host.set_target_sample_rate(setup.sampleRate);
@@ -255,7 +286,47 @@ tresult S760Vst3Plugin::setupProcessing(Steinberg::ProcessSetup& setup) {
     return kResultOk;
 }
 
+void S760Vst3Plugin::rebuild_native_stream(const NativeStream::Snapshot* saved) {
+    auto* native=native_host()->native_runtime();
+    auto origin=m_native_origin;auto rate=unsigned(m_sample_rate);auto converter=m_native_converter;
+    NativeStream::Renderer renderer=[native,origin,rate,converter](const NativeStream::Block& b,float* pcm) {
+        if(b.events) {
+            std::string json="{\"op\":\"schedule_midi\",\"append\":true,\"events\":[";
+            for(unsigned i=0;i<b.events;++i) {
+                if(i) json+=",";const auto& e=b.midi[i];
+                json+="{\"sample\":"+std::to_string(origin+NativeRateConverter::native_sample(b.first+e.offset,rate)+NativeStream::midi_lead)+",\"bytes\":["+
+                    std::to_string(e.bytes[0])+","+std::to_string(e.bytes[1])+","+std::to_string(e.bytes[2])+"]}";
+            }
+            native->request(json+"]}");
+        }
+        return converter->host_frames()==b.first && converter->pull(pcm,b.frames);
+    };
+    if(saved) m_native_stream=std::make_unique<NativeStream>(renderer,*saved);
+    else m_native_stream=std::make_unique<NativeStream>(renderer,NativeRateConverter::host_samples(NativeStream::output_delay,rate),NativeRateConverter::host_samples(2048,rate));
+    m_native_stream->start();
+}
+
 tresult S760Vst3Plugin::setProcessing(bool state) {
+    if(m_selected_host) {
+        if(!m_native_mode || !native_host()->native_runtime()) return kResultFalse;
+        if(state && m_native_state_failed) return kResultFalse;
+        if(state && m_native_stream && m_native_stream->fault()!=NativeStream::Fault::none) return kResultFalse;
+        if(state && !m_native_stream) {
+            try {
+                auto* native=native_host()->native_runtime();
+                auto now=native->request("{\"op\":\"pause\"}").seconds;
+                native->request("{\"op\":\"audio_capture\",\"enabled\":true}");
+                m_native_origin=std::uint64_t(std::ceil(now*44100));
+                auto rate=unsigned(m_sample_rate);
+                m_native_converter=std::make_shared<NativeRateConverter>(rate,[native](float* pcm,std::size_t frames) { return native->render(pcm,frames); });
+                rebuild_native_stream();
+            } catch(...) { m_native_stream.reset(); return kResultFalse; }
+        }
+        // Suspension retains queued PCM, pending serial events and the clock.
+        // With no callback input the worker finishes its finite backlog and idles.
+        m_is_processing=state;
+        return kResultOk;
+    }
     m_is_processing = state;
     if (!state) {
         m_host.get_drive_manager().flush_all();
@@ -293,7 +364,50 @@ void S760Vst3Plugin::process_events(Steinberg::IEventList* events) {
     }
 }
 
+tresult S760Vst3Plugin::process_native(Steinberg::ProcessData& data) {
+    // Clear even rejected blocks, including unsupported 64-bit host buffers.
+    if(data.numSamples>0 && data.outputs) for(int b=0;b<data.numOutputs;++b) {
+        auto& out=data.outputs[b];
+        for(int ch=0;ch<out.numChannels;++ch) {
+            if(data.symbolicSampleSize==0 && out.channelBuffers32 && out.channelBuffers32[ch])
+                std::fill_n(out.channelBuffers32[ch],data.numSamples,0.f);
+            else if(data.symbolicSampleSize==1 && out.channelBuffers64 && out.channelBuffers64[ch])
+                std::fill_n(out.channelBuffers64[ch],data.numSamples,0.0);
+        }
+        out.silenceFlags=~std::uint64_t(0);
+    }
+    if(!m_native_mode || !m_is_processing || !m_native_stream) return kResultFalse;
+    auto reject=[this] { m_native_stream->fail(NativeStream::Fault::invalid_block); return kResultFalse; };
+    if(data.numSamples==0 && (!data.inputEvents || data.inputEvents->getEventCount()==0)) return kResultOk;
+    if(data.numSamples<1 || data.numSamples>m_max_block_size || data.symbolicSampleSize!=0 ||
+       data.numInputs!=0 || data.numOutputs!=1 || !data.outputs || data.outputs[0].numChannels!=2 ||
+       !data.outputs[0].channelBuffers32 || !data.outputs[0].channelBuffers32[0] || !data.outputs[0].channelBuffers32[1])
+        return reject();
+    std::array<NativeStream::Midi,NativeStream::max_events> events{};
+    int count=data.inputEvents ? data.inputEvents->getEventCount() : 0;
+    if(count<0 || count>NativeStream::max_events) return reject();
+    for(int i=0;i<count;++i) {
+        Event e{};
+        if(data.inputEvents->getEvent(i,e)!=kResultOk || e.busIndex!=0 || e.sampleOffset<0 || e.sampleOffset>=data.numSamples)
+            return reject();
+        if(e.type!=kNoteOnEvent && e.type!=kNoteOffEvent) return reject();
+        const auto channel=e.type==kNoteOnEvent ? e.noteOn.channel : e.noteOff.channel;
+        const auto pitch=e.type==kNoteOnEvent ? e.noteOn.pitch : e.noteOff.pitch;
+        const auto velocity=e.type==kNoteOnEvent ? e.noteOn.velocity : e.noteOff.velocity;
+        if(channel<0 || channel>15 || pitch<0 || pitch>127 || !std::isfinite(velocity) || velocity<0 || velocity>1)
+            return reject();
+        events[i]={unsigned(e.sampleOffset),{std::uint8_t((e.type==kNoteOnEvent ? 0x90 : 0x80)|channel),
+            std::uint8_t(pitch),std::uint8_t(velocity*127.f)}};
+    }
+    auto& out=data.outputs[0];
+    if(!m_native_stream->process(out.channelBuffers32[0],out.channelBuffers32[1],unsigned(data.numSamples),events.data(),unsigned(count)))
+        return kResultFalse;
+    out.silenceFlags=0;
+    return kResultOk;
+}
+
 tresult S760Vst3Plugin::process(Steinberg::ProcessData& data) {
+    if(m_selected_host) return process_native(data);
     if (data.numSamples <= 0) return kResultOk;
 
     // 1. Process MIDI Note Events
@@ -357,7 +471,75 @@ tresult S760Vst3Plugin::process(Steinberg::ProcessData& data) {
     return kResultOk;
 }
 
+namespace {
+bool state_transfer(Steinberg::IBStream* stream,void* data,std::size_t bytes,bool write) {
+    auto* p=static_cast<std::uint8_t*>(data);
+    while(bytes) {
+        auto request=int32_t(std::min<std::size_t>(bytes,1024*1024));int32_t done=0;
+        auto result=write ? stream->write(p,request,&done) : stream->read(p,request,&done);
+        if(result!=kResultOk || done<=0 || done>request) return false;
+        p+=done;bytes-=done;
+    } return true;
+}
+}
+tresult S760Vst3Plugin::get_native_state(Steinberg::IBStream* state) {
+    // Hosts must quiesce process() before state operations. No serialization or
+    // disk/network access is introduced into the realtime callback.
+    if(!state || m_is_processing || m_native_state_failed || !native_host()->native_runtime()) return kResultFalse;
+    NativePluginState saved;bool captured_stream=false,was_running=false;
+    auto* native=native_host()->native_runtime();
+    try {
+        saved.rate=unsigned(m_sample_rate);saved.max_block=m_max_block_size;saved.origin=m_native_origin;
+        saved.has_stream=bool(m_native_stream);
+        if(saved.has_stream) {
+            m_native_stream->stop();saved.stream=m_native_stream->snapshot();captured_stream=true;
+            saved.converter=m_native_converter->snapshot();
+        } else was_running=native->request("{\"op\":\"status\"}").json.find("\"running\"")!=std::string::npos;
+        native->request("{\"op\":\"pause\"}");
+        saved.identity=native->checkpoint_identity();saved.machine=native->save_checkpoint();
+        auto bytes=saved.encode();
+        if(captured_stream) {rebuild_native_stream(&saved.stream);captured_stream=false;}
+        if(was_running) {native->request("{\"op\":\"resume\"}");was_running=false;}
+        std::uint32_t size=std::uint32_t(bytes.size());
+        return state_transfer(state,&size,4,true) && state_transfer(state,bytes.data(),bytes.size(),true) ? kResultOk : kResultFalse;
+    } catch(...) {
+        try {if(captured_stream) rebuild_native_stream(&saved.stream);if(was_running) native->request("{\"op\":\"resume\"}");} catch(...) {}
+        return kResultFalse;
+    }
+}
+tresult S760Vst3Plugin::set_native_state(Steinberg::IBStream* state) {
+    if(!state || m_is_processing || !native_host()->native_runtime()) return kResultFalse;
+    auto* native=native_host()->native_runtime();
+    bool applying=false;
+    try {
+        std::uint32_t size=0;
+        if(!state_transfer(state,&size,4,false) || size>NativePluginState::max_bytes || size<40) return kResultFalse;
+        std::vector<std::uint8_t> bytes(size);
+        if(!state_transfer(state,bytes.data(),size,false)) return kResultFalse;
+        auto saved=NativePluginState::decode(bytes);
+        if(saved.rate!=m_sample_rate || saved.max_block!=unsigned(m_max_block_size) || saved.identity!=native->checkpoint_identity()) return kResultFalse;
+        // Allocate/validate replacement host objects before touching the machine.
+        std::shared_ptr<NativeRateConverter> converter;
+        if(saved.has_stream) converter=std::make_shared<NativeRateConverter>(saved.converter,[native](float* pcm,std::size_t n){return native->render(pcm,n);});
+        applying=true; // Any failure after stopping the worker requires a successful reload.
+        m_native_state_failed=true;
+        if(m_native_stream) m_native_stream->stop();
+        native->request("{\"op\":\"pause\"}");
+        native->load_checkpoint(saved.machine);
+        m_native_stream.reset();m_native_converter=std::move(converter);m_native_origin=saved.origin;
+        if(saved.has_stream) rebuild_native_stream(&saved.stream);
+        m_native_state_failed=false;
+        return kResultOk;
+    } catch(...) {
+        // An apply failure must never run a partially restored timeline.
+        if(applying && m_native_stream) m_native_stream->fail(NativeStream::Fault::renderer_failed);
+        return kResultFalse;
+    }
+}
+
 tresult S760Vst3Plugin::getState(Steinberg::IBStream* state) {
+    if(m_native_mode) return get_native_state(state);
+    if(m_selected_host) return kResultFalse; // Never serialize a different machine.
     if (!state) return kInvalidArgument;
 
     int32_t written = 0;
@@ -394,6 +576,8 @@ tresult S760Vst3Plugin::getState(Steinberg::IBStream* state) {
 }
 
 tresult S760Vst3Plugin::setState(Steinberg::IBStream* state) {
+    if(m_native_mode) return set_native_state(state);
+    if(m_selected_host) return kResultFalse;
     if (!state) return kInvalidArgument;
 
     int32_t bytes_read = 0;
@@ -460,7 +644,7 @@ tresult S760Vst3Plugin::setState(Steinberg::IBStream* state) {
 }
 
 // -----------------------------------------------------------------------------
-// IEditController (editor half) — vends the WebView-backed editor view.
+// IEditController (editor half) â€” vends the WebView-backed editor view.
 // -----------------------------------------------------------------------------
 tresult S760Vst3Plugin::setComponentState(Steinberg::IBStream* state) {
     (void)state; // no automatable parameters mirrored into the editor yet
@@ -522,6 +706,38 @@ Steinberg::IPlugView* S760Vst3Plugin::createView(FIDString name) {
 // VST3 Factory Implementation
 // -----------------------------------------------------------------------------
 
+static std::filesystem::path native_environment_path(const char* key) {
+#if defined(_WIN32)
+    const std::wstring wide_key(key,key+std::strlen(key));
+    const auto* value=_wgetenv(wide_key.c_str());
+#else
+    const auto* value=std::getenv(key);
+#endif
+    return value ? std::filesystem::path(value) : std::filesystem::path{};
+}
+
+static NativeRuntimeConfig native_factory_config() {
+    NativeRuntimeConfig config;
+    config.root=native_environment_path("S760_NATIVE_ROOT");
+    auto state_root=native_environment_path("S760_NATIVE_STATE_ROOT");
+    config.boot_rom=native_environment_path("S760_BOOT_ROM");
+    config.system_disk=native_environment_path("S760_SYSTEM_DISK");
+    // Explicit paths make scanner/host working directories irrelevant. Firmware
+    // is user supplied; never fall back to the historical emulation backend.
+    if(!config.root.is_absolute() || !state_root.is_absolute() ||
+       !config.boot_rom.is_absolute() || !config.system_disk.is_absolute())
+        throw std::runtime_error("Set absolute S760_NATIVE_ROOT, S760_NATIVE_STATE_ROOT, S760_BOOT_ROM and S760_SYSTEM_DISK paths");
+    for(const auto& path:{config.root/"mame-source/mames760.exe",config.root/"scripts/s760_runtime.lua",config.boot_rom,config.system_disk})
+        if(!std::filesystem::is_regular_file(path)) throw std::runtime_error("Missing native runtime or firmware file: "+path.string());
+    std::filesystem::create_directories(state_root);
+    static std::atomic<unsigned long long> next{0};
+    for(unsigned retry=0;retry<100;++retry) {
+        config.state=state_root/("vst3-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count())+"-"+std::to_string(next++));
+        if(std::filesystem::create_directory(config.state)) return config;
+    }
+    throw std::runtime_error("Cannot allocate an independent native instance directory");
+}
+
 class S760Vst3Factory : public Steinberg::IPluginFactory {
 public:
     tresult queryInterface(const TUID _iid, void** obj) override {
@@ -539,7 +755,7 @@ public:
     }
 
     int32_t countClasses() override {
-        return 2; // Class 0: Instrument, Class 1: Live Sampler FX
+        return 1; // Native instrument. Live-sampling FX requires native ADC.
     }
 
     tresult getClassInfo(int32_t index, Steinberg::PClassInfo* info) override {
@@ -550,27 +766,27 @@ public:
             std::strncpy(info->category, "Instrument|Synth", sizeof(info->category) - 1);
             std::strncpy(info->name, "Roland S-760 Sampler", sizeof(info->name) - 1);
             return kResultOk;
-        } else if (index == 1) {
-            std::memcpy(info->cid, S760FXProcessorUID, 16);
-            info->cardinality = 0;
-            std::strncpy(info->category, "Fx|Sampler", sizeof(info->category) - 1);
-            std::strncpy(info->name, "Roland S-760 Live Sampler FX", sizeof(info->name) - 1);
-            return kResultOk;
         }
         return kInvalidArgument;
     }
 
     tresult createInstance(FIDString cid, FIDString _iid, void** obj) override {
-        (void)_iid;
         if (!obj) return kInvalidArgument;
-        if (cid && std::memcmp(cid, S760FXProcessorUID, 16) == 0) {
-            auto* plugin = new S760Vst3Plugin(true);
-            *obj = static_cast<Steinberg::IComponent*>(plugin);
-            return kResultOk;
+        *obj=nullptr;
+        if(!cid || !_iid || std::memcmp(cid,S760ProcessorUID,16)!=0) return kInvalidArgument;
+        if(std::memcmp(_iid,FUnknown_iid,16) && std::memcmp(_iid,IComponent_iid,16) &&
+           std::memcmp(_iid,IAudioProcessor_iid,16) && std::memcmp(_iid,IEditController_iid,16)) return kResultFalse;
+        try {
+            auto* plugin = new S760Vst3Plugin(native_factory_config());
+            auto result=plugin->queryInterface(reinterpret_cast<const std::uint8_t*>(_iid),obj);
+            plugin->release(); // queryInterface owns the returned reference.
+            return result;
+        } catch(const std::exception& error) {
+            std::cerr << "[S760 native VST3] " << error.what() << std::endl;
+            return kResultFalse;
+        } catch(...) {
+            return kInternalError; // Never unwind through a host/plugin ABI.
         }
-        auto* plugin = new S760Vst3Plugin(false);
-        *obj = static_cast<Steinberg::IComponent*>(plugin);
-        return kResultOk;
     }
 };
 

@@ -1,5 +1,28 @@
 # Disk Format, Forensics & Patching
 
+## Native persistence checkpoint — 2026-10-11
+
+Firmware Save now completes observed IC4 DMA modes FA (RAM to floppy) and E2
+(wave memory to floppy). Original OS bytes at file01DC41 onward program the
+wave address at C00C/C00E, count1200 and controlE2; the runtime trace confirms
+the subsequent WRITE DATA45. These are bounded synchronous transfers, not proof
+of exact controller timing or complete FDC behavior.
+
+The standalone exports actual controller media to a new image after firmware
+Save. A fresh-machine reload preserves all13 generated sample payloads used by
+the88-key ROBOFULL fixture:119808 bytes, with note60 playback and silent release
+verified. High wave-memory records differ across save/reload, so full session
+state equivalence is not claimed. Library originals remain unchanged.
+See [reproducible evidence](validation/native-media-2026-10-11.json) and
+[the player runbook](../STANDALONE_PLAYER.md). Busy or dirty controller media
+now rejects replacement/ejection. Export acknowledges only its captured revision
+after host publication; subsequent writes remain dirty. Native regression covers
+134 writes, rejected changes, export, ejection/reinsertion and fresh reload.
+Firmware empty-drive behavior, shutdown/crash recovery, formatting, firmware
+write protection, SCSI saves and full recall remain open.
+
+## Earlier format research
+
 Updated mapping evidence (findings53/54): ROM loader copies file4800..1007FF
 to physical0..FBFFF and jumps CPUC000. Banked fetch/data addresses use separate
 selector sets. The runtime+2780 relation below applies only to the old flat
