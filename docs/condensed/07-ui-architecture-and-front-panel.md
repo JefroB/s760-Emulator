@@ -1,13 +1,24 @@
 # UI Architecture & Front Panel
 
-Latest input update: finding59. Native F008 now supplies the four-nibble
+## Current status — 2026-10-10 review
+
+Native MAME provides the tested colour display, mouse interaction and firmware UI. React has display consumers, but the MAME host adapter and WebView implementation are still scaffolds; there is no demonstrated end-to-end native engine in the React/plugin product. Milestones1–4 in the completion roadmap cover that work.
+
+See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+
+## Technical reference and dated milestone history
+
+Milestone labels below apply to their cited finding, not to the present project status.
+
+
+Input checkpoint: finding59. Native F008 now supplies the four-nibble
 mouse movement packet and active-low buttons. A ROM-boot integration test
 verifies firmware coordinate changes in both directions and left-button press/
 release. The launcher enables host mouse input. Hardware cursor rendering,
 encoder, RC-100 and complete IC20 behavior remain unfinished.
 
 
-Latest: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
+At that checkpoint: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
 and reaches interactive Perform Play. Correct OP-760 identification and live VDP
 pointer readback remove the video blockers. New native EEPROM profiles default
 to Mouse+CRT at the user's request; existing profiles retain their setting.
@@ -15,7 +26,7 @@ Native LCD writes and its screen surface are restored. Rendering, hardware curso
 complete chip behavior and power-on bank defaults still need work.
 
 
-Latest: finding56 connects the
+At that checkpoint: finding56 connects the
 13-switch native panel matrix. FixedF00A=80 incorrectly asserted all low scan
 bits; native reads now return sequential active-low rows. Command/Mode open
 firmware menus and Exit returns to Perform Play. Host keys: C/M/Backspace,

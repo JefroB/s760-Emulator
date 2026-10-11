@@ -1,28 +1,39 @@
 # Execution Status & Engineering Priorities
 
-Latest functional milestone: finding64. Original-ROM boot plus a host floppy swap loads the TX81Z sample performance through Disk > Load. Perform Play shows populated patches;211,968 wave-memory bytes match the original sample disk. BMOV operand over-fetch and observed IC4 controlBC RAM-to-wave DMA were fixed. Native audio synthesis remains unverified.
+## Current status — 2026-10-10 review
 
-Latest analysis and CPU fix: finding65. Native keyboard notes now have a verified write trace: wave slot selection, sample-address fields, pitch changes and note release. CMPL operand over-fetch and sticky-overflow handling are fixed and tested. The native path no longer starts the unrelated host audition. Boot and sample loading still pass; native audio output remains unfinished.
+Native ROM boot, colour mouse interaction, sample loading and measured audio paths are established through finding124. The next product milestone is one live MAME engine connected to React and VST3; CPU/peripheral fidelity and IC4 arbitration remain separate open gates. Use the completion roadmap for current priorities and the native runbook for public launch instructions. Earlier private launchers and raw-only audio descriptions below are historical.
 
-Latest implementation: finding66. Native Wave Custom selector/data writes now populate per-slot register state;1,080 updates pass independent replay. Pitch/rate tables are decoded with explicit inference limits. Native waveform output remains unfinished.
+See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
-Latest audio milestone: finding67. The opt-in raw-wave monitor produces verified PCM from firmware notes and loaded wave RAM. CPU PORT1 selects the internal output clock. It bypasses TVF/MEQ/envelope and uses provisional loop/interpolation behavior; this is not full hardware audio emulation.
+## Technical reference and dated milestone history
 
-Current next step: decode downstream amplitude/filter and mixer commands, then validate loop and DI behavior. Separate pending work includes BMOVI applicability/implementation, SCSI, FDC save/errors, DMA timing, encoder/RC-100 and remaining display modes. Complete chip fidelity is not claimed.
+Milestone labels below apply to their cited finding, not to the present project status.
+
+
+Functional checkpoint: finding64. Original-ROM boot plus a host floppy swap loads the TX81Z sample performance through Disk > Load. Perform Play shows populated patches;211,968 wave-memory bytes match the original sample disk. BMOV operand over-fetch and observed IC4 controlBC RAM-to-wave DMA were fixed. Native audio synthesis remains unverified.
+
+CPU checkpoint: finding65. Native keyboard notes now have a verified write trace: wave slot selection, sample-address fields, pitch changes and note release. CMPL operand over-fetch and sticky-overflow handling are fixed and tested. The native path no longer starts the unrelated host audition. Boot and sample loading still pass; native audio output remains unfinished.
+
+Implementation checkpoint: finding66. Native Wave Custom selector/data writes now populate per-slot register state;1,080 updates pass independent replay. Pitch/rate tables are decoded with explicit inference limits. Native waveform output remains unfinished.
+
+Audio checkpoint: finding67. The opt-in raw-wave monitor produces verified PCM from firmware notes and loaded wave RAM. CPU PORT1 selects the internal output clock. It bypasses TVF/MEQ/envelope and uses provisional loop/interpolation behavior; this is not full hardware audio emulation.
+
+Next step at finding67 (superseded): decode downstream amplitude/filter and mixer commands, then validate loop and DI behavior. Separate pending work includes BMOVI applicability/implementation, SCSI, FDC save/errors, DMA timing, encoder/RC-100 and remaining display modes. Complete chip fidelity is not claimed.
 
 Reproduction: run `docs/ic20-hle-findings/chatGPT-work/run-native-os.ps1`; after ROM/system-disk boot, F5 inserts the configured TX81Z sample disk, then use Disk > Load. The launcher defaults new EEPROM profiles to Mouse+CRT. Normal launch disables sound. Add `-RawWaveMonitor` for the diagnostic forward-loop PCM path; filtering, envelopes and mixing are not yet emulated there.
 
 Latest display update: finding63, correcting finding62's text colours. Text RGB uses attribute bits4/5/6: the active Perform tab is red, B0/B1 labels yellow, E0 labels cyan. Native original-ROM boot now composes the guest graphics planes and uploaded text font. Perform hover reverses red/white text, keyboard hover turns its border pink, and Command/Exit remains functional. The colour/attribute model matches these observed transitions; exact output intensity, mask/alternate-font behavior, cursor pixels and other display modes remain provisional or unresolved.
 
 
-Latest input update: finding59. Native F008 now supplies the four-nibble
+Input checkpoint: finding59. Native F008 now supplies the four-nibble
 mouse movement packet and active-low buttons. A ROM-boot integration test
 verifies firmware coordinate changes in both directions and left-button press/
 release. The launcher enables host mouse input. Hardware cursor rendering,
 encoder, RC-100 and complete IC20 behavior remain unfinished.
 
 
-Latest: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
+At that checkpoint: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
 and reaches interactive Perform Play. Correct OP-760 identification and live VDP
 pointer readback remove the video blockers. New native EEPROM profiles default
 to Mouse+CRT at the user's request; existing profiles retain their setting.
@@ -37,14 +48,14 @@ services timer interrupts and scans the panel, but its CRT remains blank.
 Reset bank defaults are experimental; DMA is synchronous and CPU/peripheral
 emulation remains partial. The older direct handoff still reaches Perform Play.
 
-Latest: finding56 connects the
+At that checkpoint: finding56 connects the
 13-switch native panel matrix. FixedF00A=80 incorrectly asserted all low scan
 bits; native reads now return sequential active-low rows. Command/Mode open
 firmware menus and Exit returns to Perform Play. Host keys: C/M/Backspace,
 arrows, A/S/D for F1/F2/F3, Z/X for S1/S2, left Shift. Encoder/mouse and complete
 IC20/CPU/display behavior remain unfinished.
 
-Latest finding55 supersedes the SEEK stop below: documented KB extended interrupts
+Historical finding55 supersedes the SEEK stop below: documented KB extended interrupts
 and real flag-stack operations let firmware service SEEK and reach its main loop.
 A30-second native run writes the Perform Play screen to guest VRAM; MAME renders
 it through a diagnostic ASCII raster. This is the reconstructed disk handoff,
