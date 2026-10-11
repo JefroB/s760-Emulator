@@ -15,6 +15,9 @@
 
 class mcs96_device : public cpu_device {
 public:
+	// Optional board fetch mapping; operand accesses retain AS_PROGRAM.
+	void set_board_fetch(std::function<u8 (u16)> fetch, u16 reset_pc) { m_board_fetch = std::move(fetch); m_reset_pc = reset_pc; }
+	void set_kb_mode(bool enabled) { m_kb_mode = enabled; }
 	enum {
 		MCS96_PC = 1,
 		MCS96_PSW,
@@ -69,6 +72,8 @@ protected:
 	memory_access<16, 0, 0, ENDIANNESS_LITTLE>::cache m_cache8;
 	memory_access<16, 1, 0, ENDIANNESS_LITTLE>::cache m_cache16;
 	std::function<u8 (offs_t address)> m_pr8;
+	std::function<u8 (u16)> m_board_fetch;
+	u16 m_reset_pc = 0x2080;
 	required_shared_ptr<u16> register_file;
 
 	int icount, bcount, inst_state, cycles_scaling;
@@ -78,6 +83,11 @@ protected:
 	uint8_t OP2, OP3, OPI;
 	uint32_t TMP;
 	bool irq_requested;
+	bool m_kb_mode = false;
+	u8 m_pending1 = 0, m_mask1 = 0, m_wsr = 0;
+	void take_interrupt();
+	void kb_push_flags(bool all);
+	void kb_pop_flags(bool all);
 
 	virtual void do_exec_full() = 0;
 	virtual void do_exec_partial() = 0;
@@ -88,7 +98,14 @@ protected:
 	inline void next(int cycles) { icount -= cycles_scaling*cycles; inst_state = STATE_FETCH; }
 	inline void next_noirq(int cycles) { icount -= cycles_scaling*cycles; inst_state = STATE_FETCH_NOIRQ; }
 	void check_irq();
-	inline uint8_t read_pc() { return m_pr8(PC++); }
+	inline uint8_t read_pc() { u16 a = PC++; uint8_t b = m_board_fetch ? m_board_fetch(a) : m_pr8(a); s760_intent_log("FETCH", a, b); return b; }
+
+	// S-760 finding 48: env-gated (S760_INTENT_TRACE) observational logger for
+	// 0x8000-0xBFFF accesses with TRUE intent (FETCH vs DATA) and selector words.
+	void s760_intent_log(const char *kind, uint16_t adr, uint16_t val);
+	// S-760 finding 50: write-aware logger (selector words 0x0100-0x010F + the
+	// 0x2AAE edge-detector operands 0x23A0/0x8F98/0x2964).
+	void s760_write_log(const char *kind, uint16_t adr, uint16_t data);
 
 	void int_mask_w(u8 data);
 	u8 int_mask_r();

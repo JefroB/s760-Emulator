@@ -1,5 +1,5 @@
 // license:BSD-3-Clause
-// copyright-holders:Roland S-760 RE Team
+// copyright-holders:Roland S-760 RE Team, Wilbert Pol
 /***************************************************************************
 
     Roland S-760 Digital Sampler (1993)
@@ -18,12 +18,15 @@
 
 #include "emu.h"
 #include "cpu/mcs96/i8x9x.h"
+#include "machine/eepromser.h"
+#include "imagedev/midiin.h"
 #include "screen.h"
 #include "speaker.h"
 #include "emupal.h"
 #include "disound.h"
 #include <cmath>
 #include <fstream>
+#include <functional>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -57,6 +60,8 @@ public:
 	void note_on(int voice_idx, uint32_t wave_addr, uint32_t length, uint32_t loop_s, uint32_t loop_e, uint8_t loop_m, double sample_rate, int note, int root_key, float vel, float pan);
 	void note_off(int voice_idx);
 	void trigger_preview(int patch_idx, int note = 60);
+	void set_native_monitor(std::function<void(sound_stream &)> render) { m_native_monitor = std::move(render); }
+	void sync_native_monitor() { m_stream->update(); }
 	void mount_floppy_image(const std::string &path, const std::string &name);
 
 	// Fujitsu MB87422/23 & MB87424 DSP parameter streaming protocol (0xF006 / 0xF008)
@@ -74,6 +79,7 @@ protected:
 	virtual void sound_stream_update(sound_stream &stream) override;
 
 private:
+	std::function<void(sound_stream &)> m_native_monitor;
 	struct Voice
 	{
 		bool active;
@@ -722,6 +728,11 @@ void s760_sound_device::sound_stream_update(sound_stream &stream)
 {
 	stream.fill(0, 0.0f);
 	stream.fill(1, 0.0f);
+	if (m_native_monitor)
+	{
+		m_native_monitor(stream);
+		return;
+	}
 
 	for (int v = 0; v < 32; v++)
 	{
@@ -985,20 +996,31 @@ static const uint8_t *get_font_glyph(char c)
 // the dormant RFSC16A VDP rasterizer (crt_update) draw glyphs directly from VRAM via
 // get_font_glyph(), which is kept.
 
-class s760_state : public driver_device
+class s760_state : public driver_device, public device_serial_interface
 {
 public:
 	s760_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag)
+		, device_serial_interface(mconfig, *this)
 		, m_maincpu(*this, "maincpu")
 		, m_crt_screen(*this, "crt_screen")
 		, m_key_arrows(*this, "KEY_ARROWS")
+		, m_panel_rows(*this, "PANEL%u", 0U)
+		, m_mouse_x_port(*this, "NATIVE_MOUSE_X")
+		, m_mouse_y_port(*this, "NATIVE_MOUSE_Y")
+		, m_mouse_buttons(*this, "NATIVE_MOUSE_BUTTONS")
 		, m_gotek_ctrl(*this, "GOTEK_CTRL")
 		, m_sound(*this, "s760_sound")
 	{ }
 
 	void s760(machine_config &config);
 	void s760_palette(palette_device &palette) const;
+	DECLARE_INPUT_CHANGED_MEMBER(native_sample_media);
+	void native_midi_rx_w(int state) { if (m_native_midi_experiment) rx_w(state); }
+	virtual void rcv_complete() override;
+	bool m_native_midi_experiment = false;
+	bool m_native_midi_pending = false;
+	u8 m_native_midi_byte = 0;
 
 	// IRQ Sources handled by Gate Array (0xF001)
 	enum irq_source : uint8_t
@@ -1027,6 +1049,77 @@ protected:
 	void vdp_dump_vram_occupancy(); // verification-only VRAM occupancy dump (S760_VDP_TRACE)
 
 private:
+	bool m_banked_os = false;
+	std::vector<u8> m_boot_rom;
+	bool m_native_disk_changed = true;
+	std::vector<u8> m_banked_ram;
+	std::array<u8, 32> m_bank_regs{};
+	u16 m_mouse_packet = 0;
+	u16 m_mouse_last_x = 0, m_mouse_last_y = 0;
+	u8 m_mouse_phase = 3, m_mouse_select = 0;
+	attotime m_mouse_edge_time;
+	void native_mouse_w(u8 data);
+	u16 m_native_vdp_address = 0;
+	u8 m_native_vdp_high = 0;
+	u8 m_panel_scan_row = 0;
+	std::vector<u8> m_native_wave;
+	std::array<u8,16> m_native_wave_regs{};
+	// Observed Wave Custom write interface (finding66). These are register
+	// slots, not a claim of 32 playable voices. Synthesis/readback are pending.
+	std::array<u16, 0x400> m_native_wave_bus{};
+	// Observed envelope word pairs, indexed by the unmodified 101040 selector.
+	// Retain command bits and companion words until their DSP meaning is known.
+	std::array<u16, 4> m_native_envelope_bus{};
+	std::array<u16, 32 * 4> m_native_envelope_words{};
+	u16 m_native_envelope_select = 0;
+	void native_envelope_w(offs_t offset, u8 data);
+	// Findings77/78: resonance/mode and cutoff pairs share selector101040
+	// with the envelope words. Keep full control bits; no DSP law inferred.
+	std::array<u16, 4> m_native_filter_bus{};
+	std::array<u16, 32 * 4> m_native_filter_words{};
+	void native_filter_w(offs_t offset, u8 data);
+	// Finding80: global voice bitmap, independent of selector101040.
+	std::array<u16, 2> m_native_filter_activity_bus{};
+	u32 m_native_filter_activity = 0;
+	void native_filter_activity_w(offs_t offset, u8 data);
+	std::array<u16, 4> m_native_pan_bus{};
+	std::array<u16, 24 * 2> m_native_pan_words{};
+	void native_pan_w(offs_t offset, u8 data);
+	std::array<u16, 32*8> m_native_wave_parameters{};
+	std::array<u16, 32*8> m_native_wave_aux{};
+	std::array<u32, 32> m_native_wave_control{};
+	u32 m_native_wave_enable = 0;
+	u8 m_native_wave_parameter_select = 0, m_native_wave_aux_select = 0;
+	u8 m_native_wave_control_select = 0;
+	bool m_native_sound_trace = false;
+	bool m_native_wave_monitor = false;
+	bool m_native_envelope_monitor = false;
+	bool m_native_stereo_monitor = false;
+	bool m_native_lpf_monitor = false;
+	bool m_native_loop_monitor = false;
+	bool m_native_half_interpolation_monitor = false;
+	bool m_native_interpolation_monitor = false;
+	std::array<bool, 32> m_native_wave_reverse{}, m_native_wave_stopped{};
+	u32 m_native_wave_end_pending = 0;
+	u8 m_native_wave_end_slot = 0;
+	emu_timer *m_native_loop_timer = nullptr;
+	void native_loop_reschedule();
+	TIMER_CALLBACK_MEMBER(native_loop_tick);
+	std::array<double, 24> m_native_lpf_low{}, m_native_lpf_band{};
+	u8 m_native_clock_select = 0;
+	std::array<double, 32> m_native_wave_position{};
+	void native_wave_monitor_update(sound_stream &stream);
+	void native_audio_clock_w(u8 data);
+	void native_wave_control_w(offs_t offset, u8 data);
+	u8 native_wave_r(offs_t offset);
+	void native_wave_w(offs_t offset,u8 data);
+	u8 native_vdp_r(offs_t offset);
+	void native_vdp_w(offs_t offset, u8 data);
+	u8 banked_r(offs_t address);
+	void banked_w(offs_t address, u8 data);
+	u32 banked_address(u16 address, bool fetch) const;
+	u8 banked_physical_r(u32 address);
+	void banked_physical_w(u32 address, u8 data);
 	required_device<i8x9x_device> m_maincpu;
 	required_device<screen_device> m_crt_screen;
 
@@ -1055,7 +1148,9 @@ private:
 	memory_passthrough_handler m_page_read_tap;
 	memory_passthrough_handler m_page_write_tap;
 	memory_passthrough_handler m_map_write_tap; // finding 40: 0x0100-0x010F selector-word write tap
+	memory_passthrough_handler m_xlat_read_tap; // finding 43: discriminating 0x8000-0xBFFF translation
 	bool m_page_trace = false;
+	bool m_page_xlat = false;                   // finding 43: S760_PAGE_XLAT behavior-changing model
 	uint32_t m_page_log_count = 0;
 	void ic20_hle_install();
 	uint16_t ic20_ret_stub_r() { return 0xF0F0; } // both bytes = 0xF0 (MCS-96 RET)
@@ -1091,6 +1186,8 @@ private:
 	// Removed as a latent-bug fix; it was never read or written anywhere.
 
 	required_ioport m_key_arrows;
+	required_ioport_array<4> m_panel_rows;
+	required_ioport m_mouse_x_port, m_mouse_y_port, m_mouse_buttons;
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
 
@@ -1160,7 +1257,8 @@ private:
 	//   - IC15 0x3C38 decodes controller mode from bits 3-5 (0x28/0x10/0x00).
 	// So the first-pass 0xFF probe was WRONG: 0xFF has bit6=1 (fails the ==0x40
 	// CRT test) and bits3-5=0x38 (matches NO valid IC15 strap). The correct
-	// "OP-760 CRT + mouse/remote present" strap is bit7=1, bit6=0 => 0x80.
+	// Native OP-760-1 grounds SP6/SP7; machine_start selects raw00.
+	// The raw80 initializer below is retained only for historical flat mode.
 	// Overridable via S760_F00A=<hex> for experiments.
 	uint8_t m_board_config_f00a = 0x80;
 	uint16_t m_vdp_tile_base;
@@ -1275,6 +1373,59 @@ private:
 
 void s760_state::machine_start()
 {
+	save_item(NAME(m_panel_scan_row));
+	save_item(NAME(m_mouse_packet));
+	save_item(NAME(m_mouse_last_x));
+	save_item(NAME(m_mouse_last_y));
+	save_item(NAME(m_mouse_phase));
+	save_item(NAME(m_mouse_select));
+	save_item(NAME(m_mouse_edge_time));
+	save_item(NAME(m_native_disk_changed));
+	save_item(NAME(m_native_wave_bus));
+	save_item(NAME(m_native_envelope_bus));
+	save_item(NAME(m_native_envelope_words));
+	save_item(NAME(m_native_envelope_select));
+	save_item(NAME(m_native_filter_bus));
+	save_item(NAME(m_native_filter_words));
+	save_item(NAME(m_native_lpf_low));
+	save_item(NAME(m_native_lpf_band));
+	save_item(NAME(m_native_filter_activity_bus));
+	save_item(NAME(m_native_filter_activity));
+	save_item(NAME(m_native_pan_bus));
+	save_item(NAME(m_native_pan_words));
+	save_item(NAME(m_native_wave_parameters));
+	save_item(NAME(m_native_wave_aux));
+	save_item(NAME(m_native_wave_control));
+	save_item(NAME(m_native_wave_enable));
+	save_item(NAME(m_native_wave_parameter_select));
+	save_item(NAME(m_native_wave_aux_select));
+	save_item(NAME(m_native_wave_control_select));
+	m_native_sound_trace = getenv("S760_SOUND_TRACE") != nullptr;
+	save_item(NAME(m_native_clock_select));
+	save_item(NAME(m_native_wave_position));
+	save_item(NAME(m_native_wave_reverse));
+	save_item(NAME(m_native_wave_stopped));
+	save_item(NAME(m_native_wave_end_pending));
+	save_item(NAME(m_native_wave_end_slot));
+	m_banked_os = getenv("S760_BANKED_OS") != nullptr || getenv("S760_ROM_BOOT") != nullptr;
+	m_native_midi_experiment = m_banked_os && getenv("S760_IC4_MIDI_EXPERIMENT") != nullptr;
+	set_data_frame(1, 8, PARITY_NONE, STOP_BITS_1);
+	set_rcv_rate(31250);
+	save_item(NAME(m_native_midi_pending));
+	save_item(NAME(m_native_midi_byte));
+	m_native_wave_monitor = m_banked_os && getenv("S760_NATIVE_WAVE_MONITOR") != nullptr;
+	m_native_envelope_monitor = m_banked_os && getenv("S760_NATIVE_ENVELOPE_MONITOR") != nullptr;
+	m_native_stereo_monitor = m_banked_os && getenv("S760_NATIVE_STEREO_MONITOR") != nullptr;
+	m_native_lpf_monitor = m_banked_os && getenv("S760_NATIVE_LPF_MONITOR") != nullptr;
+	m_native_loop_monitor = m_banked_os && getenv("S760_NATIVE_LOOP_MONITOR") != nullptr;
+	m_native_half_interpolation_monitor = m_banked_os && getenv("S760_NATIVE_HALF_INTERPOLATION_MONITOR") != nullptr;
+	m_native_interpolation_monitor = m_banked_os && getenv("S760_NATIVE_INTERPOLATION_MONITOR") != nullptr;
+	m_native_half_interpolation_monitor |= m_native_interpolation_monitor;
+	m_native_loop_monitor |= m_native_half_interpolation_monitor;
+	m_native_envelope_monitor |= m_native_stereo_monitor || m_native_lpf_monitor || m_native_loop_monitor;
+	m_native_wave_monitor |= m_native_envelope_monitor;
+	if (m_native_wave_monitor)
+		m_sound->set_native_monitor([this](sound_stream &stream) { native_wave_monitor_update(stream); });
 	// Verification-only VDP transaction trace + VRAM occupancy dump, enabled by
 	// the S760_VDP_TRACE environment variable (off by default, zero cost in
 	// normal runs). The occupancy dump fires at emulator exit via a notifier.
@@ -1286,6 +1437,9 @@ void s760_state::machine_start()
 	// Board/controller config reported at 0xF00A (OP-760 video board + CRT
 	// controller). Override with S760_F00A=<hex> while decoding the exact bit
 	// layout (Gemini task 21); default 0xFF asserts all config straps.
+	// OP-760-1 CN1 pins49/50 ground SP6/SP7 (Service Notes p14).
+	// ROM3C68 complements the scan; ROM4143 recognizes C0 as present.
+	if (m_banked_os) m_board_config_f00a = 0;
 	if (const char *f = getenv("S760_F00A"))
 		m_board_config_f00a = (uint8_t)strtol(f, nullptr, 16);
 
@@ -1393,7 +1547,8 @@ void s760_state::machine_start()
 			write8sm_delegate(*this, FUNC(s760_state::fdc_w)));
 	}
 
-	ic20_hle_install();
+	if (!m_banked_os)
+		ic20_hle_install();
 
 	// --- 0x010C-paged window INSTRUMENTATION (findings 36/37/38, S760_PAGE_TRACE)
 	// Evidence-gathering only (no behavior change): log the first N accesses to
@@ -1465,6 +1620,56 @@ void s760_state::machine_start()
 			});
 	}
 
+	// --- DISCRIMINATING MAPPING EXPERIMENT (finding 43, S760_PAGE_XLAT) --------
+	// ChatGPT finding 43 correctly objected that finding 42's flat-vs-flat probe
+	// cannot distinguish "hardware is flat" from "emulator is missing a bank
+	// mapping" -- a passthrough tap over a flat handler is a self-consistency
+	// check. This experiment is DIFFERENT: when S760_PAGE_XLAT is set it CHANGES
+	// BEHAVIOR, substituting the byte returned for 0x8000-0xBFFF data reads with
+	// the one the ROM's own address-conversion routine (ic15 0x4F74-0x4FB0,
+	// ChatGPT finding 38) computes:
+	//     Q   = V >> 14                 (address quadrant; 0x8000-0xBFFF => 2)
+	//     S   = word at 0x0108 + 2*Q    (quadrant 2 => selector word 0x010C)
+	//     P   = (S << 10) + (V & 0x3FFF)
+	// and reads image[P]. If the paging model is REAL, translating these reads
+	// should let the OS progress FURTHER than the flat baseline (reach the
+	// enumeration result it wants, write the display shadows 0x2A8C/0x2A94, and
+	// ultimately 0xD010). If it is NOT the disk-OS data path, translating will
+	// make no positive difference (or derail). The ground-truth signal is the
+	// VDPDUMP line (vram_active / sed_active / display_enabled_ever), compared
+	// head-to-head against the flat run. This is EMULATOR EXECUTION of a
+	// candidate model, explicitly labelled as such (not a hardware observation).
+	m_page_xlat = (getenv("S760_PAGE_XLAT") != nullptr);
+	if (m_page_xlat)
+	{
+		address_space &prog = m_maincpu->space(AS_PROGRAM);
+		const uint8_t *img = memregion("maincpu")->base();
+		m_xlat_read_tap = prog.install_read_tap(0x8000, 0xBFFF, "xlat_r",
+			[this, &prog, img](offs_t off, u16 &data, u16 mem_mask)
+			{
+				// Translate per the ROM 0x4F74 conversion for THIS quadrant.
+				const uint32_t Q = (off >> 14) & 3;              // = 2 in this window
+				const uint16_t S = prog.read_word(0x0108 + 2 * Q); // selector 0x010C
+				const uint32_t P = ((uint32_t)S << 10) + (off & 0x3FFF);
+				if (P + 1 >= 0x168000)
+					return; // out of image range: leave flat byte, log nothing
+				const uint16_t xw = img[P] | (img[P + 1] << 8); // little-endian word
+				const uint16_t flat = data;
+				// Substitute the translated word under the active mask.
+				data = (data & ~mem_mask) | (xw & mem_mask);
+				if (m_page_log_count < 4000)
+				{
+					logerror("[XLAT] seq=%u PC=%04x addr=%04x sel=%04x P=%06x "
+						"flat=%04x xlat=%04x mask=%04x\n",
+						m_page_log_count, m_maincpu->pc(), off, S, P,
+						flat, xw, mem_mask);
+					m_page_log_count++;
+				}
+			});
+		logerror("[XLAT] ENABLED: 0x8000-0xBFFF data reads translated via "
+			"P=(word[0108+2*(V>>14)]<<10)+(V&3FFF)\n");
+	}
+
 	// --- Event-queue power-on state (finding 29) ------------------------------
 	// The disk-OS executive message pump at 0x54E8 uses runtime 0x21AC/0x21AE as
 	// the event-queue READ/WRITE pointers and 0x21B0.. as the 128-byte FIFO. On
@@ -1527,6 +1732,7 @@ void s760_state::machine_start()
 
 	// Timer & IRQ Subsystem
 	m_timer_60hz = timer_alloc(FUNC(s760_state::timer_60hz_tick), this);
+	m_native_loop_timer = timer_alloc(FUNC(s760_state::native_loop_tick), this);
 	m_irq_pending = 0;
 	m_irq_mask = 0x3B; // Unmask Bit 0 (Timer), Bit 1 (FDC), Bit 3 (SCSI), Bit 4 (VDP), Bit 5 (MIDI)
 	m_int_line_asserted = false;
@@ -1626,11 +1832,11 @@ void s760_state::machine_start()
 	m_fdc_selected_drive = 0;
 	m_fdc_motor_on[0] = false;
 	m_fdc_motor_on[1] = false;
-	m_fdc_disk_inserted = true;
+	m_fdc_disk_inserted = false;
 	m_fdc_data_byte_idx = 0;
 	m_fdc_data_byte_total = 0;
 	m_fdc_sector_offset = 0;
-	fdc_load_disk_image(m_gotek_paths[0]);
+	fdc_load_disk_image(getenv("S760_FLOPPY") ? getenv("S760_FLOPPY") : m_gotek_paths[0]);
 
 	// Initialize Fujitsu MB89352A SCSI SPC State Machine (0xF020 - 0xF02F)
 	m_scsi_bdid = 0x80; // Host ID 7 (Bit 7 = 1)
@@ -1653,10 +1859,785 @@ void s760_state::machine_start()
 	m_scsi_data_idx = 0;
 	m_scsi_target_status = 0x00;
 	scsi_init_devices();
+	if (m_banked_os)
+	{
+		// Experimental post-IC15 handoff: ROM4FBF loads cylinders1..56
+		// (file4800..1007FF) into physical0..FBFFF; ROM4755 enters C000.
+		m_banked_ram.assign(0x100000, 0);
+		if (const char *boot_path = getenv("S760_ROM_BOOT"))
+		{
+			std::ifstream boot(boot_path, std::ios::binary);
+			m_boot_rom.assign(std::istreambuf_iterator<char>(boot), std::istreambuf_iterator<char>());
+			if (m_boot_rom.size() != 0x8000) fatalerror("S760_ROM_BOOT must name the 32KB IC15 dump\n");
+		}
+		else
+			std::copy_n(memregion("maincpu")->base() + 0x4800, 0xfc000, m_banked_ram.begin());
+		m_bank_regs.fill(0);
+		m_native_wave.assign(0x200000,0);
+		// These handler-backed memories are not automatically saved by an
+		// address-map RAM entry. Restore them with the CPU and filter states.
+		save_item(NAME(m_banked_ram));
+		save_item(NAME(m_bank_regs));
+		save_item(NAME(m_native_wave));
+		save_item(NAME(m_native_wave_regs));
+		m_maincpu->space(AS_PROGRAM).install_readwrite_handler(0, 0xffff,
+			read8sm_delegate(*this, FUNC(s760_state::banked_r)),
+			write8sm_delegate(*this, FUNC(s760_state::banked_w)));
+		m_maincpu->set_board_fetch([this](u16 address) { return banked_physical_r(banked_address(address, true)); }, m_boot_rom.empty() ? 0xc000 : 0x2080);
+		logerror("[BANKED_OS] %s; separate fetch/data mapping, HLE disabled\n", m_boot_rom.empty() ? "disk handoff C000" : "IC15 reset experiment2080, no disk preload");
+	}
+}
+
+u32 s760_state::banked_address(u16 address, bool fetch) const
+{
+	const unsigned slot = (fetch ? 0 : 8) + 2 * (address >> 14);
+	const u16 page = m_bank_regs[slot] | (u16(m_bank_regs[slot + 1]) << 8);
+	return (u32(page) << 10) + (address & 0x3fff);
+}
+
+u8 s760_state::banked_r(offs_t address)
+{
+	if (m_native_midi_experiment)
+	{
+		// Experimental IC4 source2 route: OS stub0128 enters CBCF, reads
+		// C002 (slot in bits0..4, completion in bit5), and reads C016 to ack.
+		if (address == 0x203a && m_native_loop_monitor && m_native_wave_end_pending
+			&& BIT(m_bank_regs[0x15], 2)
+			&& !((m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0))
+			&& banked_physical_r(banked_address(0x203a, false)) == 0x20
+			&& banked_physical_r(banked_address(0x203b, false)) == 0x01)
+			return 0x28;
+		// Opt-in IC4 hypothesis: source6 selects stub0138 when reading the
+		// external vector. Do not modify guest RAM or CPU execution state.
+		// Concurrent-source priority and vector latching remain unverified.
+		if (address == 0x203a && m_native_midi_pending && BIT(m_bank_regs[0x15], 6)
+			&& !((m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0))
+			&& banked_physical_r(banked_address(0x203a, false)) == 0x20
+			&& banked_physical_r(banked_address(0x203b, false)) == 0x01)
+		{
+			if (!machine().side_effects_disabled()) logerror("[IC4MIDI] vector response=0138\n");
+			return 0x38;
+		}
+		if (address == 0x114) return (m_bank_regs[0x14] & 0xfe) | (m_native_midi_pending ? 1 : 0);
+		if (address == 0x116)
+		{
+			const u8 value = m_native_midi_byte;
+			if (!machine().side_effects_disabled())
+			{
+				m_native_midi_pending = false;
+				check_irq_state();
+				logerror("[IC4MIDI] read=%02x PC=%04x\n", value, m_maincpu->pc());
+			}
+			return value;
+		}
+	}
+	if (address >= 0x100 && address < 0x120)
+		return m_bank_regs[address - 0x100];
+	return banked_physical_r(banked_address(u16(address), false));
+}
+
+void s760_state::banked_w(offs_t address, u8 data)
+{
+	if (address >= 0x100 && address < 0x120)
+	{
+		m_bank_regs[address - 0x100] = data;
+		if (address == 0x115) check_irq_state();
+		if (address == 0x11d && data == 0xbc)
+		{
+			// OS bank005A:6A31..6A73 programs wave word address, RAM source,
+			// byte count and BC, then waits for count exhaustion. Implement this
+			// observed RAM-to-wave mode synchronously; bus arbitration is pending.
+			const u32 src = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b])<<8) | (u32(m_bank_regs[0x1c])<<16);
+			const u32 count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19])<<8);
+			const u32 wave = m_native_wave_regs[0xe] | (u32(m_native_wave_regs[0xf])<<8)
+				| (u32(m_native_wave_regs[0xc])<<16) | (u32(m_native_wave_regs[0xd])<<24);
+			if (count && !(count & 1) && u64(src)+count <= m_banked_ram.size()
+				&& u64(wave)*2+count <= m_native_wave.size())
+			{
+				std::copy_n(m_banked_ram.begin()+src, count, m_native_wave.begin()+u64(wave)*2);
+				const u32 next = src+count, wave_next = wave+count/2;
+				m_bank_regs[0x18] = m_bank_regs[0x19] = 0;
+				m_bank_regs[0x1a] = u8(next); m_bank_regs[0x1b] = u8(next>>8); m_bank_regs[0x1c] = u8(next>>16);
+				m_native_wave_regs[0xe] = u8(wave_next); m_native_wave_regs[0xf] = u8(wave_next>>8);
+				m_native_wave_regs[0xc] = u8(wave_next>>16); m_native_wave_regs[0xd] = u8(wave_next>>24);
+				logerror("[NATIVEWAVEDMA] RAM=%06x wave_byte=%08x count=%04x control=bc\n",src,wave*2,count);
+			}
+		}
+		return;
+	}
+	banked_physical_w(banked_address(u16(address), false), data);
+}
+
+u8 s760_state::banked_physical_r(u32 address)
+{
+	// IC17 Y7 selects BOOT; IC15 connects A0..A14. ROM2080 itself selects
+	// page0790 for fetch4000, confirming this high aperture and mirroring.
+	if (!m_boot_rom.empty() && address >= 0x1e0000 && address < 0x200000)
+		return m_boot_rom[address & 0x7fff];
+	if (address < m_banked_ram.size())
+		return m_banked_ram[address];
+	if (address >= 0x100000 && address <= 0x10000f) return native_wave_r(address - 0x100000);
+	if (m_native_loop_monitor && address >= 0x100016 && address <= 0x100017)
+		return native_wave_r(address - 0x100000);
+	// External I/O aperture selected by page0400. Remaining external decoding
+	// is deliberately unimplemented in this bounded handoff experiment.
+	if (address >= 0x102800 && address <= 0x1028ff) return native_vdp_r(address - 0x102800);
+	if (address >= 0x103800 && address <= 0x103803) return lcd_r(address - 0x103800);
+	if (address >= 0x103000 && address <= 0x10301f) return mmio_r(address - 0x103000);
+	if (address >= 0x102400 && address <= 0x10240f) return scsi_r(address - 0x102400);
+	if (address == 0x102000) return fdc_r(0);
+	if (address == 0x102002) return fdc_r(1);
+	return 0xff;
+}
+
+void s760_state::banked_physical_w(u32 address, u8 data)
+{
+	if (address < m_banked_ram.size()) { m_banked_ram[address] = data; return; }
+	if (address >= 0x100000 && address <= 0x1007ff)
+	{
+		const offs_t offset = address - 0x100000;
+		if (offset < 0x10) native_wave_w(offset, data);
+		native_wave_control_w(offset, data);
+		return;
+	}
+	if (address >= 0x102800 && address <= 0x1028ff) { native_vdp_w(address - 0x102800, data); return; }
+	if (address >= 0x101c00 && address <= 0x101c07) { native_pan_w(address - 0x101c00, data); return; }
+	if (address >= 0x101010 && address <= 0x101013) { native_filter_activity_w(address - 0x101010, data); return; }
+	if ((address >= 0x101008 && address <= 0x10100b)
+		|| (address >= 0x101030 && address <= 0x101033))
+	{
+		native_filter_w(address - 0x101000, data);
+		return;
+	}
+	if ((address >= 0x101024 && address <= 0x101027)
+		|| (address >= 0x101034 && address <= 0x101037)
+		|| (address >= 0x101040 && address <= 0x101041))
+	{
+		native_envelope_w(address - 0x101000, data);
+		return;
+	}
+	if (address >= 0x103800 && address <= 0x103803) { lcd_w((address - 0x103800) ^ 2, data); // ROM29C7: command F802, data F800.
+		return; }
+	if (address >= 0x103000 && address <= 0x10301f) { mmio_w(address - 0x103000, data); return; }
+	if (address >= 0x102400 && address <= 0x10240f) { scsi_w(address - 0x102400, data); return; }
+	if (address == 0x102002) { fdc_w(1, data); return; }
+	if (address == 0x102000)
+	{
+		// 7206x auxiliary command port, separate from FIFO at E002.
+		// Semantics follow upd72069_device::auxcmd_w in machine/upd765.cpp,
+		// which identifies these commands as also present on the 72068.
+		logerror("[NATIVEFDC] auxiliary=%02x PC=%04x\n", data, m_maincpu->pc());
+		if (data == 0x36)
+		{
+			m_fdc_phase = 0;
+			m_fdc_cmd_idx = 0;
+			m_fdc_msr = 0x80;
+		}
+		else if (data != 0x35)
+		{
+			// NEC FDC User's Manual4.3.14, pp4-43/44: undefined commands
+			// and ordinary auxiliary commands produce INVALID status80.
+			// ROM4A92 uses27, which is not START CLOCK47. Silently ignoring
+			// this invalid command prevented the ROM from draining its result.
+			if ((data & 0x0f) == 0x0b)
+			{
+				if ((data & 0xc0) == 0x00) m_fdc_ccr = 2; // 250 kbps
+				if ((data & 0xc0) == 0x40) m_fdc_ccr = 0; // 500 kbps
+				if ((data & 0xc0) == 0xc0) m_fdc_ccr = 1; // 300 kbps
+				// The existing backend cannot represent the 600 kbps mode.
+			}
+			if ((data & 0x0f) == 0x0e)
+			{
+				m_fdc_motor_on[0] = BIT(data, 4);
+				m_fdc_motor_on[1] = BIT(data, 5);
+			}
+			m_fdc_res_buffer[0] = 0x80;
+			// Auxiliary results in upd72069 do not assert the interrupt pin.
+			m_fdc_phase = 2;
+			m_fdc_res_idx = 0;
+			m_fdc_res_len = 1;
+			m_fdc_msr = 0xd0;
+		}
+		return;
+	}
+}
+
+void s760_state::native_wave_control_w(offs_t offset, u8 data)
+{
+	// Native CPU word stores arrive low byte first through the banked bus.
+	// Commit on the high byte; byte-only hardware semantics remain unverified.
+	u16 &word = m_native_wave_bus[offset >> 1];
+	if (!(offset & 1))
+	{
+		word = (word & 0xff00) | data;
+		return;
+	}
+	word = (word & 0x00ff) | (u16(data) << 8);
+	const offs_t reg = offset & ~1;
+	if (m_native_wave_monitor && (reg <= 2 || reg == 0x10 || reg == 0x12 || reg == 0x14))
+		m_sound->sync_native_monitor();
+	const char *kind = nullptr;
+	unsigned index = 0;
+	u32 value = word;
+	if (reg == 0 || reg == 2)
+	{
+		const u32 old_enable = m_native_wave_enable;
+		m_native_wave_enable = m_native_wave_bus[0] | (u32(m_native_wave_bus[1]) << 16);
+		for (unsigned slot = 0; slot < 32; ++slot)
+		{
+			if (BIT(m_native_wave_enable & ~old_enable, slot))
+			{
+				m_native_wave_position[slot] = (m_native_wave_control[slot] & 0x0fffffff) / 8.0;
+				m_native_wave_reverse[slot] = BIT(m_native_wave_parameters[slot * 8 + 1], 15);
+				m_native_wave_stopped[slot] = false;
+			}
+			// Audition lifecycle: clear on a real enable transition, even if
+			// disable/re-enable occurs without an intervening rendered sample.
+			// This does not identify the physical IC29 reset protocol.
+			if (m_native_lpf_monitor && BIT(m_native_wave_enable ^ old_enable, slot)
+				&& ((slot >= 4 && slot < 16) || slot >= 20))
+			{
+				const unsigned channel = slot - (slot < 16 ? 4 : 8);
+				if (m_native_sound_trace)
+					logerror("[NATIVELPFRESET] channel=%02x enabled=%u low=%.12g band=%.12g time=%.9f\n",
+						channel, unsigned(BIT(m_native_wave_enable, slot)), m_native_lpf_low[channel],
+						m_native_lpf_band[channel], machine().time().as_double());
+				m_native_lpf_low[channel] = m_native_lpf_band[channel] = 0.0;
+			}
+		}
+		kind = "enable"; value = m_native_wave_enable;
+	}
+	else if (reg >= 0x200 && reg < 0x400)
+		m_native_wave_control_select = (reg - 0x200) >> 4;
+	else if (reg >= 0x400 && reg < 0x600)
+		m_native_wave_parameter_select = (reg - 0x400) >> 1;
+	else if (reg >= 0x600 && reg < 0x800)
+		m_native_wave_aux_select = (reg - 0x600) >> 1;
+	else if (reg == 0x10 || reg == 0x12)
+	{
+		index = m_native_wave_control_select;
+		// Update only the written half, preserving this slot's other half.
+		u32 &control = m_native_wave_control[index];
+		control = reg == 0x10 ? (control & 0xffff0000) | word : (control & 0xffff) | (u32(word) << 16);
+		if (reg == 0x12)
+		{
+			m_native_wave_position[index] = (control & 0x0fffffff) / 8.0;
+			m_native_wave_reverse[index] = BIT(m_native_wave_parameters[index * 8 + 1], 15);
+			m_native_wave_stopped[index] = false;
+		}
+		kind = "control"; value = control;
+	}
+	else if (reg == 0x14)
+	{
+		index = m_native_wave_parameter_select;
+		m_native_wave_parameters[index] = word;
+		kind = "parameter";
+	}
+	else if (reg == 0x1a)
+	{
+		index = m_native_wave_aux_select;
+		m_native_wave_aux[index] = word;
+		kind = "aux";
+	}
+	if (kind && m_native_sound_trace)
+		logerror("[NATIVEVOICE] %s index=%02x value=%08x\n", kind, index, value);
+	if (m_native_loop_monitor) native_loop_reschedule();
+}
+
+void s760_state::native_loop_reschedule()
+{
+	if (!m_native_loop_timer) return;
+	double samples = 1.0e30;
+	if (m_native_loop_monitor && m_native_clock_select == 0)
+		for (unsigned slot = 0; slot < 32; ++slot)
+		{
+			if (!BIT(m_native_wave_enable, slot) || BIT(m_native_wave_end_pending, slot)
+				|| (m_native_wave_control[slot] >> 28) != 0
+				|| !((slot >= 4 && slot < 16) || slot >= 20)) continue;
+			const u16 *p = &m_native_wave_parameters[slot * 8];
+			if ((p[1] & 0xe000) || !p[2]) continue;
+			const double start = (p[3] | (u32(p[4]) << 16)) / 256.0;
+			const double end = (p[5] | (u32(p[6]) << 16)) / 256.0;
+			const double compare = p[0] | (u32(p[1] & 0x1fff) << 16);
+			if (end <= start || start < 0 || end > m_native_wave.size() / 2
+				|| compare >= end || compare < start) continue;
+			const double pos = m_native_wave_position[slot];
+			const double distance = pos <= compare ? compare - pos : end - pos + compare - start;
+			samples = std::min(samples, std::max(1.0, std::floor(distance / (p[2] / 16384.0)) + 1.0));
+		}
+	m_native_loop_timer->adjust(samples < 1.0e30 ? attotime::from_double(samples / 44100.0) : attotime::never);
+}
+
+TIMER_CALLBACK_MEMBER(s760_state::native_loop_tick)
+{
+	m_sound->sync_native_monitor();
+	native_loop_reschedule();
+}
+
+void s760_state::rcv_complete()
+{
+	receive_register_extract();
+	if (!m_native_midi_experiment) return;
+	const u8 data = get_received_char();
+	// Single-byte experimental latch. Real FIFO depth/overrun flags unknown.
+	if (m_native_midi_pending)
+	{
+		logerror("[IC4MIDI] unsupported overrun incoming=%02x\n", data);
+		return;
+	}
+	m_native_midi_byte = data;
+	m_native_midi_pending = true;
+	logerror("[IC4MIDI] receive=%02x time=%.9f mask=%02x\n", data, machine().time().as_double(), m_bank_regs[0x15]);
+	check_irq_state();
+}
+
+void s760_state::native_envelope_w(offs_t offset, u8 data)
+{
+	// Findings69/70: native ST words arrive low byte then high byte. This is
+	// write-side storage only; neither readback nor a hardware gain law is known.
+	const unsigned reg = offset & ~1;
+	if (reg == 0x40)
+	{
+		m_native_envelope_select = (offset & 1)
+			? (m_native_envelope_select & 0x00ff) | (u16(data) << 8)
+			: (m_native_envelope_select & 0xff00) | data;
+		return;
+	}
+	const unsigned field = reg < 0x30 ? (reg - 0x24) / 2 : 2 + (reg - 0x34) / 2;
+	u16 &word = m_native_envelope_bus[field];
+	if (!(offset & 1))
+	{
+		word = (word & 0xff00) | data;
+		return;
+	}
+	word = (word & 0x00ff) | (u16(data) << 8);
+	if (m_native_envelope_select >= 32) return; // no inferred selector aliasing
+	if (m_native_envelope_monitor && (reg == 0x34 || reg == 0x36))
+		m_sound->sync_native_monitor(); // render previous coefficient up to this write
+	m_native_envelope_words[m_native_envelope_select * 4 + field] = word;
+	if (m_native_sound_trace)
+		logerror("[NATIVEENV] channel=%02x reg=%02x value=%04x time=%.9f\n",
+			m_native_envelope_select, reg, m_native_envelope_words[m_native_envelope_select * 4 + field], machine().time().as_double());
+}
+
+void s760_state::native_filter_w(offs_t offset, u8 data)
+{
+	// As with the observed envelope interface, ST arrives low byte first.
+	// Store on the high byte without inventing readback or selector aliases.
+	const unsigned reg = offset & ~1;
+	const unsigned field = reg < 0x30 ? (reg - 8) / 2 : 2 + (reg - 0x30) / 2;
+	u16 &word = m_native_filter_bus[field];
+	word = (offset & 1) ? (word & 0x00ff) | (u16(data) << 8) : (word & 0xff00) | data;
+	if (!(offset & 1) || m_native_envelope_select >= 32) return;
+	if (m_native_lpf_monitor) m_sound->sync_native_monitor();
+	m_native_filter_words[m_native_envelope_select * 4 + field] = word;
+	if (m_native_sound_trace)
+		logerror("[NATIVEFILTER] channel=%02x reg=%02x value=%04x time=%.9f\n",
+			m_native_envelope_select, reg, word, machine().time().as_double());
+}
+
+void s760_state::native_filter_activity_w(offs_t offset, u8 data)
+{
+	// Firmware writes low16 at101012 then high16 at101010. Preserve both
+	// halves, including untested upper bits. No inferred atomic latch/gating.
+	u16 &word = m_native_filter_activity_bus[offset >> 1];
+	word = (offset & 1) ? (word & 0x00ff) | (u16(data) << 8) : (word & 0xff00) | data;
+	if (!(offset & 1)) return;
+	if (offset < 2)
+		m_native_filter_activity = (m_native_filter_activity & 0xffff) | (u32(word) << 16);
+	else
+		m_native_filter_activity = (m_native_filter_activity & 0xffff0000) | word;
+	if (m_native_sound_trace)
+		logerror("[NATIVEFILTERMASK] reg=%02x value=%04x bitmap=%08x\n",
+			0x10 + (offset & ~1), word, m_native_filter_activity);
+}
+
+void s760_state::native_pan_w(offs_t offset, u8 data)
+{
+	// Finding76: observed DC00 data followed by DC06 command. Preserve full
+	// words and match exact firmware tags; no inferred bit9/alias/readback law.
+	u16 &word = m_native_pan_bus[offset >> 1];
+	word = (offset & 1) ? (word & 0x00ff) | (u16(data) << 8) : (word & 0xff00) | data;
+	if (offset != 7) return;
+	static constexpr u8 left_tags[24] = {
+		0x25,0x2e,0x37,0x40,0x49,0x52,0x5b,0x60,0x69,0x72,0x78,0x7c,
+		0xa3,0xac,0x9a,0x9e,0xa7,0xb0,0xba,0xbe,0x08,0x11,0x1a,0x21 };
+	for (unsigned channel = 0; channel < 24; ++channel)
+		for (unsigned side = 0; side < 2; ++side)
+			if (word == 0x200 + left_tags[channel] + side)
+			{
+				if (m_native_stereo_monitor) m_sound->sync_native_monitor();
+				m_native_pan_words[channel * 2 + side] = m_native_pan_bus[0];
+				if (m_native_sound_trace)
+					logerror("[NATIVEPAN] channel=%02x side=%u command=%04x value=%04x time=%.9f\n",
+						channel, side, word, m_native_pan_bus[0], machine().time().as_double());
+				return;
+			}
+}
+
+void s760_state::native_audio_clock_w(u8 data)
+{
+	const u8 select = data >> 6;
+	if (select == m_native_clock_select) return;
+	if (m_native_wave_monitor) m_sound->sync_native_monitor();
+	m_native_clock_select = select;
+	if (m_native_loop_monitor) native_loop_reschedule();
+	if (m_native_sound_trace) logerror("[NATIVECLOCK] PORT1=%02x select=%u\n", data, select);
+}
+
+void s760_state::native_wave_monitor_update(sound_stream &stream)
+{
+	// Diagnostic raw PCM monitor, deliberately opt-in. Pitch/reference clock
+	// follow firmware tables and P1.6/P1.7 (finding67). Linear interpolation,
+	// legacy inclusive endpoint and fixed monitor gain are provisional.
+	// Separate switches enable envelope, pan, filter and measured loop models.
+	static constexpr unsigned rates[4] = { 44100, 0, 48000, 32000 };
+	const unsigned rate = rates[m_native_clock_select];
+	if (!rate) return; // external/unsupported clock, no fabricated rate
+	for (unsigned channel = 0; channel < 24; ++channel)
+	{
+		const unsigned slot = channel + (channel < 12 ? 4 : 8);
+		if (!BIT(m_native_wave_enable, slot))
+		{
+			// Audition lifecycle only; physical filter reset semantics are unknown.
+			m_native_lpf_low[channel] = m_native_lpf_band[channel] = 0.0;
+			continue;
+		}
+		const unsigned control_mode = m_native_wave_control[slot] >> 28;
+		if (control_mode != 4 && !(m_native_loop_monitor && control_mode == 0)) continue;
+		const u16 *p = &m_native_wave_parameters[slot*8];
+		const bool measured_loops = m_native_loop_monitor && rate == 44100;
+		const u16 loop_flags = p[1] & 0xe000;
+		if (!measured_loops && loop_flags) continue;
+		if (measured_loops && loop_flags != 0 && loop_flags != 0x2000
+			&& loop_flags != 0x4000 && loop_flags != 0x8000 && loop_flags != 0xa000) continue;
+		const bool reverse_loop = measured_loops && BIT(loop_flags, 15);
+		const bool alternate = measured_loops && loop_flags == 0x4000;
+		const bool oneshot = measured_loops && BIT(loop_flags, 13);
+		const double point_a = (p[3] | (u32(p[4]) << 16)) / 256.0;
+		const double point_b = (p[5] | (u32(p[6]) << 16)) / 256.0;
+		// Hardware capture103: forward end is exclusive; reverse bounds carry
+		// a four-sample offset. Alternate turns one sample above both points.
+		const double start = reverse_loop ? point_b - 4.0 : point_a + (alternate ? 1.0 : 0.0);
+		const double end = reverse_loop ? point_a - 4.0 : point_b + (alternate || !measured_loops ? 1.0 : 0.0);
+		const double length = end - start;
+		if (length <= 0 || end > m_native_wave.size()/2) continue;
+		const double step = (p[2] / 16384.0) * rate / 44100.0;
+		// Finding112: pulse-trained effective response, transferred to an
+		// independent noise capture. Finding114 validates two cascaded stages
+		// at quarter speed. This is not a general ASIC interpolator.
+		const bool measured_half = m_native_half_interpolation_monitor && measured_loops
+			&& control_mode == 4 && loop_flags == 0 && (p[2] == 0x2000 || p[2] == 0x1000)
+			&& start == std::floor(start) && end == std::floor(end) && length >= 2;
+		// Capture124: fixed pulse-derived cubic coefficients and 128 phases,
+		// independently checked on noise and the full-keyboard fixture. Remove
+		// the integer-phase response from the output so this is relative to the
+		// existing unity path, as are the measured half/quarter-speed kernels.
+		// This remains an audition model, not a claim about ASIC arithmetic.
+		const bool measured_pitch = m_native_interpolation_monitor && measured_loops
+			&& control_mode == 4 && loop_flags == 0 && p[2] >= 0x1000 && p[2] <= 0x8000
+			&& p[2] != 0x4000 && !measured_half
+			&& start == std::floor(start) && end == std::floor(end) && length >= 2;
+		// Optional coefficient audition, not MB87424 emulation: provisional Q15
+		// scaling, no command-bit action or smoothing, companion 1024 bypassed.
+		// Only the observed zero upper word is supported. Raw mode is unchanged.
+		const float envelope = !m_native_envelope_monitor ? 1.0f
+			: m_native_envelope_words[channel * 4 + 3] ? 0.0f
+			: (m_native_envelope_words[channel * 4 + 2] & 0x7fff) / 32768.0f;
+		// Diagnostic Q11 audition only. Firmware proves coefficient selection,
+		// not IC30 arithmetic or main/individual-output routing. Unknown words
+		// are silent in this mode rather than stripped of possible command bits.
+		const u16 left = m_native_pan_words[channel * 2], right = m_native_pan_words[channel * 2 + 1];
+		const float left_gain = !m_native_stereo_monitor ? 1.0f : left <= 0x7ff ? left / 2048.0f : 0.0f;
+		const float right_gain = !m_native_stereo_monitor ? 1.0f : right <= 0x7ff ? right / 2048.0f : 0.0f;
+		double &pos = m_native_wave_position[slot];
+		for (int i = 0; i < stream.samples(); ++i)
+		{
+			if (measured_loops && m_native_wave_stopped[slot]) break;
+			if (alternate)
+			{
+				if (!m_native_wave_reverse[slot] && pos > end)
+				{
+					const double phase = std::fmod(pos - start, 2.0 * length);
+					m_native_wave_reverse[slot] = phase > length;
+					pos = phase > length ? end - (phase - length) : start + phase;
+				}
+				if (m_native_wave_reverse[slot] && pos < start)
+				{
+					const double phase = std::fmod(start - pos, 2.0 * length);
+					m_native_wave_reverse[slot] = phase > length;
+					pos = phase > length ? end - (phase - length) : start + phase;
+				}
+			}
+			else if (reverse_loop ? pos < start : pos >= end)
+			{
+				if (oneshot) { m_native_wave_stopped[slot] = true; break; }
+				pos = reverse_loop ? start + std::fmod(std::fmod(pos - start, length) + length, length)
+					: start + std::fmod(pos - end, length);
+			}
+			if (pos < 0 || pos >= m_native_wave.size()/2) break;
+			const u32 a = u32(pos);
+			const u32 b = !reverse_loop && !alternate && a + 1 >= end ? u32(start) : a + 1;
+			if (b >= m_native_wave.size()/2) break;
+			const s16 va = s16(m_native_wave[a*2] | (u16(m_native_wave[a*2+1]) << 8));
+			const s16 vb = s16(m_native_wave[b*2] | (u16(m_native_wave[b*2+1]) << 8));
+			double pcm = (va + (vb-va)*(pos-a)) / 32768.0;
+			const double fraction = pos - a;
+			const bool quarter_speed = p[2] == 0x1000;
+			const bool half_interpolation = measured_half && pos >= start
+				&& fraction * (quarter_speed ? 4 : 2) == std::floor(fraction * (quarter_speed ? 4 : 2));
+			if (half_interpolation)
+			{
+				if (quarter_speed)
+				{
+					// Compose the measured half-speed kernel with a second stage
+					// at twice the spacing; no quarter-speed coefficients fitted.
+					static constexpr double h0 = 0.13419336120409645, h1 = 0.4967922730363543, h2 = 0.7354608482776455;
+					static constexpr double kernel[13] = {
+						h0*h0, h0*h1, h0*(h2+h1), h1*(h0+h1), h0*h0+h1*h2+h0*h2, h1*(h1+h2), 2*h0*h1+h2*h2,
+						h1*(h1+h2), h0*h0+h1*h2+h0*h2, h1*(h0+h1), h0*(h2+h1), h0*h1, h0*h0 };
+					pcm = 0.0;
+					for (int neighbor = -1; neighbor <= 2; ++neighbor)
+					{
+						const int tap = 6 + int(4 * fraction) - 4 * neighbor;
+						if (tap < 0 || tap >= 13) continue;
+						s64 address = s64(a) + neighbor;
+						if (address < s64(start)) address += s64(length);
+						if (address >= s64(end)) address -= s64(length);
+						const s16 value = s16(m_native_wave[address*2] | (u16(m_native_wave[address*2+1]) << 8));
+						pcm += kernel[tap] * value / 32768.0;
+					}
+				}
+				else if (fraction == 0.0)
+				{
+					const u32 previous = a == u32(start) ? u32(end) - 1 : a - 1;
+					const s16 vp = s16(m_native_wave[previous*2] | (u16(m_native_wave[previous*2+1]) << 8));
+					pcm = (0.7354608482776455 * va + 0.13419336120409645 * (double(vp) + vb)) / 32768.0;
+				}
+				else
+					pcm = 0.4967922730363543 * (double(va) + vb) / 32768.0;
+			}
+			const bool pitch_interpolation = measured_pitch && pos >= start;
+			if (pitch_interpolation)
+			{
+				constexpr double B = 1.042273935870565, C = -0.022841914081554338;
+				// Inverse of U(w)=1-B/3+B/3*cos(w). Its symmetric impulse
+				// response decays geometrically; +/-12 terms leave <1e-6 tail.
+				static const auto inverse = [] {
+					std::array<double, 13> taps{};
+					const double side = B / 6.0, center = 1.0 - B / 3.0;
+					const double scale = std::sqrt(center * center - 4.0 * side * side);
+					const double ratio = -(center - scale) / (2.0 * side);
+					taps[0] = 1.0 / scale;
+					for (unsigned j = 1; j < taps.size(); ++j) taps[j] = taps[j - 1] * ratio;
+					return taps;
+				}();
+				pcm = 0.0;
+				for (int output_neighbor = -12; output_neighbor <= 12; ++output_neighbor)
+				{
+					// Quantize each output position before reconstruction. Keep
+					// the full accumulator for advancement; do not quantize pitch.
+					const double q = std::floor((pos + output_neighbor * step) * 128.0) / 128.0;
+					const s64 base = s64(std::floor(q));
+					double reconstructed = 0.0;
+					for (int neighbor = -1; neighbor <= 2; ++neighbor)
+					{
+						const double x = std::abs(q - double(base + neighbor));
+						const double weight = x < 1.0
+							? ((12 - 9*B - 6*C)*x*x*x + (-18 + 12*B + 6*C)*x*x + 6 - 2*B) / 6.0
+							: x < 2.0 ? ((-B - 6*C)*x*x*x + (6*B + 30*C)*x*x + (-12*B - 48*C)*x + 8*B + 24*C) / 6.0 : 0.0;
+						s64 address = (base + neighbor - s64(start)) % s64(length);
+						if (address < 0) address += s64(length);
+						address += s64(start);
+						const s16 value = s16(m_native_wave[address*2] | (u16(m_native_wave[address*2+1]) << 8));
+						reconstructed += weight * value / 32768.0;
+					}
+					pcm += inverse[std::abs(output_neighbor)] * reconstructed;
+				}
+			}
+			const u16 *filter = &m_native_filter_words[channel * 4];
+			// Findings85/86/93: measured stationary LP candidate. This opt-in
+			// audition uses stepped writes, not guessed hardware interpolation.
+			// Findings98/106 support BP/HP outputs at resonance0 and64.
+			// Other clocks, modes and flagged commands retain the raw path.
+			const bool supported_mode = filter[1] == 0
+				|| ((filter[1] == 0x0400 || filter[1] == 0x0200)
+					&& (filter[0] == 0x0fff || filter[0] == 85));
+			if (m_native_lpf_monitor && rate == 44100 && supported_mode
+				&& filter[3] == 0 && filter[2] <= 0x3fff && filter[0] <= 0x0fff)
+			{
+				const double c = (filter[2] & ~3) / 16384.0;
+				const double damping = filter[0] / 4096.0;
+				double &low = m_native_lpf_low[channel], &band = m_native_lpf_band[channel];
+				low += c * band;
+				const double high = pcm - low - damping * band;
+				band += c * high;
+				pcm = filter[1] == 0 ? low : filter[1] == 0x0400 ? band : high;
+			}
+			else
+				m_native_lpf_low[channel] = m_native_lpf_band[channel] = 0.0;
+			const float sample = (m_native_lpf_monitor || half_interpolation || pitch_interpolation) ? envelope * float(pcm) / 24.0f
+				: envelope * float(va + (vb-va)*(pos-a)) / (32768.0f*24.0f);
+			stream.add(0, i, sample * left_gain);
+			stream.add(1, i, sample * right_gain);
+			const double advance = measured_loops && m_native_wave_reverse[slot] ? -step : step;
+			// In the measured forward-release configurations, firmware arms
+			// this integer comparator one sample before the new loop endpoint.
+			// Deliver an opt-in source2 event, leaving stop/release policy to OS.
+			const double compare = p[0] | (u32(p[1] & 0x1fff) << 16);
+			if (measured_loops && control_mode == 0 && advance > 0
+				&& pos <= compare && pos + advance > compare)
+			{
+				m_native_wave_end_pending |= u32(1) << slot;
+				if (m_native_sound_trace) logerror("[NATIVELOOPEND] slot=%02x pos=%.6f compare=%.6f time=%.9f\n",
+					slot, pos, compare, machine().time().as_double());
+				check_irq_state();
+			}
+			pos += advance;
+		}
+	}
+}
+
+u8 s760_state::native_wave_r(offs_t offset)
+{
+	if (m_native_loop_monitor && (offset == 2 || offset == 3))
+	{
+		unsigned slot = 0;
+		if (m_native_wave_end_pending)
+			while (!BIT(m_native_wave_end_pending, slot)) ++slot;
+		if (!machine().side_effects_disabled()) m_native_wave_end_slot = slot;
+		return offset == 2 ? u8(slot | (m_native_wave_end_pending ? 0x20 : 0)) : 0;
+	}
+	if (m_native_loop_monitor && (offset == 0x16 || offset == 0x17))
+	{
+		if (offset == 0x17 && !machine().side_effects_disabled())
+		{
+			m_native_wave_end_pending &= ~(u32(1) << m_native_wave_end_slot);
+			check_irq_state();
+			native_loop_reschedule();
+		}
+		return 0;
+	}
+	// Provisional synchronous host RAM port from native bank000F:3C78..3CD1.
+	if (offset == 0) return 2; // read complete (bit0 clear), write FIFO available (bit1)
+	if (offset == 0xa || offset == 0xb)
+	{
+		const u32 word_address = u32(m_native_wave_regs[0xe]) | (u32(m_native_wave_regs[0xf])<<8) |
+			(u32(m_native_wave_regs[0xc])<<16) | (u32(m_native_wave_regs[0xd])<<24);
+		const u64 byte_address = u64(word_address)*2 + (offset-0xa);
+		const u8 result = byte_address < m_native_wave.size() ? m_native_wave[byte_address] : 0xff;
+		// The reader programs address-1 and discards its first word. Advance
+		// after the high byte so the following word is the requested address.
+		if (offset == 0xb)
+		{
+			const u32 next = word_address + 1;
+			m_native_wave_regs[0xe] = u8(next);
+			m_native_wave_regs[0xf] = u8(next >> 8);
+			m_native_wave_regs[0xc] = u8(next >> 16);
+			m_native_wave_regs[0xd] = u8(next >> 24);
+		}
+		return result;
+	}
+	return m_native_wave_regs[offset];
+}
+
+void s760_state::native_wave_w(offs_t offset,u8 data)
+{
+	m_native_wave_regs[offset] = data;
+	if (offset == 9)
+	{
+		const u32 word_address = u32(m_native_wave_regs[0xe]) | (u32(m_native_wave_regs[0xf])<<8) |
+			(u32(m_native_wave_regs[0xc])<<16) | (u32(m_native_wave_regs[0xd])<<24);
+		const u64 byte_address = u64(word_address)*2;
+		if (byte_address+1 < m_native_wave.size())
+		{
+			m_native_wave[byte_address] = m_native_wave_regs[8];
+			m_native_wave[byte_address+1] = data;
+		}
+	}
+}
+
+u8 s760_state::native_vdp_r(offs_t offset)
+{
+	// Candidate native RFSC16A transaction interface from bank004B:45B4..4610.
+	// RAM transactions complete synchronously; bit1 reports completion rather
+	// than echoing the last command's bit1 (08 writes versus 0A reads).
+	if (offset == 8) return 2;
+	// ROM3736..3744 polls the live word address during sequential upload.
+	if (offset == 4) return u8(m_native_vdp_address);
+	if (offset == 6) return u8(m_native_vdp_address >> 8);
+	if (offset == 0)
+	{
+		const u8 data = m_vdp_vram[u32(m_native_vdp_address) * 2];
+		if (m_vdp_regs[8] == 0x0a) ++m_native_vdp_address;
+		return data;
+	}
+	if (offset == 2) return m_vdp_vram[u32(m_native_vdp_address) * 2 + 1];
+	return m_vdp_regs[offset & 0x7f];
+}
+
+void s760_state::native_vdp_w(offs_t offset, u8 data)
+{
+	if (m_vdp_trace)
+		logerror("[NATIVEVDP] PC=%04x reg=%02x value=%02x wordaddr=%04x\n", m_maincpu->pc(),offset,data,m_native_vdp_address);
+	m_vdp_regs[offset & 0x7f] = data;
+	if (offset == 4) m_native_vdp_address = (m_native_vdp_address & 0xff00) | data;
+	if (offset == 6) m_native_vdp_address = (m_native_vdp_address & 0x00ff) | (u16(data) << 8);
+	if (offset == 2) m_native_vdp_high = data;
+	if (offset == 0)
+	{
+		m_vdp_vram[u32(m_native_vdp_address) * 2] = data;
+		m_vdp_vram[u32(m_native_vdp_address) * 2 + 1] = m_native_vdp_high;
+		m_vdp_vram_active = true;
+		++m_native_vdp_address;
+	}
 }
 
 void s760_state::machine_reset()
 {
+	m_native_wave_bus.fill(0);
+	m_native_midi_pending = false;
+	m_native_midi_byte = 0;
+	receive_register_reset();
+	m_native_envelope_bus.fill(0);
+	m_native_envelope_words.fill(0);
+	m_native_envelope_select = 0;
+	m_native_filter_bus.fill(0);
+	m_native_filter_words.fill(0);
+	m_native_lpf_low.fill(0);
+	m_native_lpf_band.fill(0);
+	m_native_wave_reverse.fill(false);
+	m_native_wave_stopped.fill(false);
+	m_native_wave_end_pending = 0;
+	m_native_wave_end_slot = 0;
+	if (m_native_loop_timer) m_native_loop_timer->adjust(attotime::never);
+	m_native_filter_activity_bus.fill(0);
+	m_native_filter_activity = 0;
+	m_native_pan_bus.fill(0);
+	m_native_pan_words.fill(0);
+	m_native_wave_parameters.fill(0);
+	m_native_wave_aux.fill(0);
+	m_native_wave_control.fill(0);
+	m_native_wave_enable = 0;
+	m_native_wave_position.fill(0);
+	m_native_wave_parameter_select = m_native_wave_aux_select = m_native_wave_control_select = 0;
+	m_mouse_packet = m_mouse_last_x = m_mouse_last_y = 0;
+	m_mouse_phase = 3;
+	m_mouse_select = 0;
+	m_mouse_edge_time = attotime::zero;
+	if (!m_boot_rom.empty())
+	{
+		// Experimental CPU-gate reset decode: straight ROM mapping. The gate
+		// reset values are not documented; retain this opt-in until verified.
+		m_bank_regs.fill(0);
+		for (unsigned slot = 0; slot < 16; slot += 2)
+		{
+			const u16 page = 0x780 + ((slot & 7) >> 1) * 0x10;
+			m_bank_regs[slot] = u8(page);
+			m_bank_regs[slot + 1] = u8(page >> 8);
+		}
+	}
+	m_panel_scan_row = 0;
 	m_vdp_addr = 0;
 	m_ga_status = 0x04; // Bus Ready
 	m_irq_pending = 0;
@@ -1682,29 +2663,44 @@ void s760_state::machine_reset()
 	m_scsi_tc = 0;
 
 	m_peripherals_enabled = true;
-	m_sound->trigger_preview(m_selected_row);
+	// The host audition engine is not driven by the native Wave Custom bus.
+	// Do not mistake its automatic Akai preview for firmware sample playback.
+	if (!m_banked_os)
+		m_sound->trigger_preview(m_selected_row);
 
 }
 
 void s760_state::fdc_load_disk_image(const std::string &path)
 {
-	m_fdc_disk_image.clear();
 	std::ifstream file(path, std::ios::binary);
 	if (file.is_open())
 	{
 		file.seekg(0, std::ios::end);
 		size_t sz = file.tellg();
 		file.seekg(0, std::ios::beg);
-		m_fdc_disk_image.resize(sz);
-		file.read(reinterpret_cast<char *>(m_fdc_disk_image.data()), sz);
+		if (sz != 737280 && sz != 1474560)
+		{
+			logerror("[NATIVEMEDIA] rejected unsupported floppy size: %s\n",path.c_str());
+			return;
+		}
+		std::vector<u8> bytes(sz);
+		if (!file.read(reinterpret_cast<char *>(bytes.data()), sz)) return;
+		m_fdc_disk_image.swap(bytes);
 		m_fdc_disk_inserted = true;
+		m_native_disk_changed = true;
+		logerror("[NATIVEMEDIA] inserted %s bytes=%u\n",path.c_str(),unsigned(sz));
 	}
 	else
 	{
-		// Default to formatted 1.44MB floppy (80 tracks * 2 heads * 18 sectors * 512 bytes = 1,474,560 bytes)
-		m_fdc_disk_image.resize(1474560, 0x00);
-		m_fdc_disk_inserted = true;
+		logerror("[NATIVEMEDIA] cannot open floppy; current media retained: %s\n",path.c_str());
 	}
+}
+
+INPUT_CHANGED_MEMBER(s760_state::native_sample_media)
+{
+	// Host media insertion, not a front-panel switch or guest-state override.
+	if (m_banked_os && newval && m_fdc_phase == 0)
+		if (const char *path = getenv("S760_SAMPLE_FLOPPY")) fdc_load_disk_image(path);
 }
 
 uint8_t s760_state::fdc_r(offs_t offset)
@@ -1722,7 +2718,8 @@ uint8_t s760_state::fdc_r(offs_t offset)
 			{
 				if (m_fdc_res_idx < m_fdc_res_len)
 				{
-					val = m_fdc_res_buffer[m_fdc_res_idx++];
+					if (m_banked_os && m_fdc_res_idx == 0) clear_irq(IRQ_FDC);
+                    val = m_fdc_res_buffer[m_fdc_res_idx++];
 					if (m_fdc_res_idx >= m_fdc_res_len)
 					{
 						// Return to IDLE
@@ -1854,12 +2851,19 @@ void s760_state::fdc_start_result_phase(int length)
 	m_fdc_res_idx = 0;
 	m_fdc_res_len = length;
 	m_fdc_msr = 0xD0; // RQM=1, DIO=1, CB=1
-	trigger_irq(IRQ_FDC);
+	// Native sense/version/invalid commands return results without INT.
+	// Only the seven-byte read/write/format completion result asserts it.
+	if (!m_banked_os || length == 7) trigger_irq(IRQ_FDC);
 }
 
 void s760_state::fdc_execute_command()
 {
 	uint8_t opcode = m_fdc_cmd_buffer[0] & 0x1F;
+	if (m_banked_os && m_vdp_trace)
+		logerror("[NATIVEFDC CMD] PC=%04x bytes=%02x %02x %02x %02x %02x %02x %02x %02x %02x\n",
+			m_maincpu->pc(), m_fdc_cmd_buffer[0], m_fdc_cmd_buffer[1], m_fdc_cmd_buffer[2],
+			m_fdc_cmd_buffer[3], m_fdc_cmd_buffer[4], m_fdc_cmd_buffer[5], m_fdc_cmd_buffer[6],
+			m_fdc_cmd_buffer[7], m_fdc_cmd_buffer[8]);
 	switch (opcode)
 	{
 		case 0x03: // SPECIFY
@@ -1871,6 +2875,7 @@ void s760_state::fdc_execute_command()
 		case 0x07: // RECALIBRATE (Seek to Cyl 0)
 		{
 			int drv = m_fdc_cmd_buffer[1] & 0x03;
+			if (m_fdc_disk_inserted) m_native_disk_changed = false;
 			m_fdc_current_cyl[drv] = 0;
 			m_fdc_st0 = 0x20 | drv; // Seek Complete
 			m_fdc_phase = 0;
@@ -1884,6 +2889,8 @@ void s760_state::fdc_execute_command()
 		{
 			int drv = m_fdc_cmd_buffer[1] & 0x03;
 			int target_cyl = m_fdc_cmd_buffer[2];
+			if (m_fdc_disk_inserted && target_cyl != m_fdc_current_cyl[drv])
+				m_native_disk_changed = false;
 			m_fdc_current_cyl[drv] = std::clamp(target_cyl, 0, 79);
 			m_fdc_st0 = 0x20 | drv; // Seek Complete
 			m_fdc_phase = 0;
@@ -1955,6 +2962,31 @@ void s760_state::fdc_execute_command()
 
 			m_fdc_phase = 1; // Execution phase
 			m_fdc_msr = 0xF0; // RQM=1, DIO=1, NonDMA=1, CB=1
+
+			// IC4 ROM4F74/4FB1 program byte count, physical destination and D7.
+			// Implement only this observed disk-to-RAM mode; other control values
+			// and cycle-level DRQ/DACK arbitration remain unimplemented.
+			if (m_banked_os && m_bank_regs[0x1d] == 0xd7)
+			{
+				const u32 dest = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b]) << 8) | (u32(m_bank_regs[0x1c]) << 16);
+				const u32 count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19]) << 8);
+				const u32 available = (r >= 1 && r <= spt && n == 2 && m_fdc_cmd_buffer[6] >= r)
+					? (std::min<int>(m_fdc_cmd_buffer[6], spt) - r + 1) * 512 : 0;
+				if (count && count <= available && dest + count <= m_banked_ram.size()
+					&& m_fdc_sector_offset + count <= m_fdc_disk_image.size())
+				{
+					std::copy_n(m_fdc_disk_image.begin() + m_fdc_sector_offset, count, m_banked_ram.begin() + dest);
+					const u32 next = dest + count;
+					m_bank_regs[0x18] = m_bank_regs[0x19] = 0;
+					m_bank_regs[0x1a] = u8(next);
+					m_bank_regs[0x1b] = u8(next >> 8);
+					m_bank_regs[0x1c] = u8(next >> 16);
+					m_fdc_data_byte_idx = m_fdc_data_byte_total = count;
+					m_fdc_res_buffer[5] = u8(r + (count - 1) / 512);
+					logerror("[NATIVEDMA] disk=%06x RAM=%06x count=%04x control=d7\n", m_fdc_sector_offset, dest, count);
+					fdc_start_result_phase(7);
+				}
+			}
 			break;
 		}
 
@@ -2491,6 +3523,14 @@ void s760_state::clear_irq(uint8_t irq_mask)
 void s760_state::check_irq_state()
 {
 	bool should_assert = (m_irq_pending & m_irq_mask) != 0;
+	// Native board: IC24 INT connects to CPU gate INT0 (schematic p18).
+	// Firmware enables channel0 with 0115=11 for SEEK; 50 disables it.
+	// Only the verified FDC channel is connected in this experiment. The old
+	// synthetic 60 Hz/VDP sources are not physical CPU-gate inputs.
+	if (m_banked_os) should_assert = (m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0);
+	if (m_native_midi_experiment && m_native_midi_pending && BIT(m_bank_regs[0x15], 6)) should_assert = true;
+	if (m_native_midi_experiment && m_native_loop_monitor && m_native_wave_end_pending
+		&& BIT(m_bank_regs[0x15], 2)) should_assert = true;
 	if (should_assert != m_int_line_asserted)
 	{
 		m_int_line_asserted = should_assert;
@@ -2512,7 +3552,10 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			break;
 
 		case 0x02: // SIMM Memory Bank Selector (32MB address space)
-			val = m_simm_bank;
+			// Native IC20 PB0=DCHANGE, PB1=MODE, PB2=drive select (p18).
+			// Disk-change is active low and released by a step with media.
+			val = m_banked_os ? ((m_simm_bank & 0x24) | 0xd8 |
+				(m_native_disk_changed ? 0 : 1) | (m_fdc_disk_image.size() < 1474560 ? 2 : 0)) : m_simm_bank;
 			break;
 
 		case 0x03: // Front Panel Rotary Encoder & Switch Matrix
@@ -2527,21 +3570,22 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			val = m_sound ? m_sound->read_dsp_data() : m_dsp_cmd_latch;
 			break;
 
-		case 0x08: // DSP Address Latch
-			val = m_dsp_addr_latch;
+		case 0x08: // Native mouse bus; legacy DSP address latch
+			val = m_banked_os ? ((m_mouse_buttons->read() & 0x30) |
+				((m_mouse_packet >> (4 * (3 - m_mouse_phase))) & 0x0f) |
+				(m_mouse_select << 6)) : m_dsp_addr_latch;
 			break;
 
 		case 0x0E: // EEPROM Latch
 			val = m_eeprom_latch;
 			break;
 
-		case 0x0A: // Board/controller config strap (OP-760 video board + mode).
-			// The OS reads this at 0x249B and caches it at 0x2085 to choose the
-			// controller mode and gate the RFSC16A VDP/CRT. Report the user's
-			// real hardware config (CRT + mouse/remote) instead of 0 ("no board"
-			// → Panel+LCD → CRT never enabled). Independent of m_mmio so the
-			// OS's own strobe-write to 0xF00A at 0x2496 doesn't clobber it.
-			val = m_board_config_f00a;
+		case 0x0A: // IC20 active-low panel rows and option-board identification.
+			// SC0..3 select switch rows; OP-760-1 grounds SP6/SP7.
+			val = m_banked_os ? ((m_board_config_f00a & 0xc0) |
+				(m_panel_rows[m_panel_scan_row]->read() & 0x3f)) : m_board_config_f00a;
+			if (m_banked_os && !machine().side_effects_disabled())
+				m_panel_scan_row = (m_panel_scan_row + 1) & 3;
 			break;
 
 		case 0x10: // EEPROM Serial Data Out (DO)
@@ -2557,13 +3601,48 @@ uint8_t s760_state::mmio_r(offs_t offset)
 	return val;
 }
 
+// Four-nibble pin8 handshake follows bus/msx/ctrl/mouse.cpp (Wilbert Pol).
+// OS bank004F:87B4..880D selects MX6 and assembles/negates X then Y;
+// 8876..8880 reads active-low MX4/MX5 buttons. OP-760 CN1/JK1 wires MX6 to pin8.
+// The 3ms packet timeout is the shared MSX model, not a measured MU-1 timing.
+void s760_state::native_mouse_w(u8 data)
+{
+	const u8 select = BIT(data, 6);
+	if (select != m_mouse_select)
+	{
+		const attotime now = machine().time();
+		if (now - m_mouse_edge_time > attotime::from_msec(3)) m_mouse_phase = 3;
+		m_mouse_edge_time = now;
+		m_mouse_phase = (m_mouse_phase + 1) & 3;
+		if (!m_mouse_phase)
+		{
+			const u16 x = m_mouse_x_port->read(), y = m_mouse_y_port->read();
+			m_mouse_packet = (u16(u8(m_mouse_last_x - x)) << 8) | u8(m_mouse_last_y - y);
+			m_mouse_last_x = x;
+			m_mouse_last_y = y;
+			if (m_vdp_trace && m_mouse_packet)
+				logerror("[NATIVEMOUSE] packet=%04x PC=%04x\n", m_mouse_packet, m_maincpu->pc());
+		}
+	}
+	m_mouse_select = select;
+}
+
 void s760_state::mmio_w(offs_t offset, uint8_t data)
 {
+	if (m_banked_os && (offset & 0x1f) == 8)
+	{
+		native_mouse_w(data);
+		return;
+	}
 	logerror("[MMIO W] 0xF0%02X <= 0x%02X\n", offset, data);
 	m_mmio[offset & 0x0F] = data;
 
 	switch (offset & 0x1F)
 	{
+		case 0x0a: // Native scan restart; firmware writes zero before four reads.
+			if (m_banked_os && data == 0) m_panel_scan_row = 0;
+			break;
+
 		case 0x00: // Control & Reset latch
 			m_ga_ctrl = data;
 			if (data & 0x01)
@@ -2575,7 +3654,7 @@ void s760_state::mmio_w(offs_t offset, uint8_t data)
 			break;
 
 		case 0x02: // SIMM Bank switch (0..15)
-			m_simm_bank = data & 0x0F;
+			m_simm_bank = data & (m_banked_os ? 0x24 : 0x0f);
 			break;
 
 		case 0x04: // Peripheral Chip Select
@@ -2780,11 +3859,29 @@ uint8_t s760_state::vdp_r(offs_t offset)
 
 void s760_state::vdp_dump_vram_occupancy()
 {
+	if (m_banked_os)
+		if (const char *path = getenv("S760_WAVE_DUMP"))
+		{
+			std::ofstream dump(path, std::ios::binary);
+			dump.write(reinterpret_cast<const char *>(m_native_wave.data()), m_native_wave.size());
+		}
 	// Verification-only: dump a map of non-zero VDP VRAM ranges straight from
 	// m_vdp_vram (NOT via the 0xD018 port, which mutates the shared address
 	// pointer and produced misleading results). Shows whether the OS built
 	// recognizable matrix/attribute/font/bitmap structures (ChatGPT review
 	// step 4) and the final VDP control state.
+	if (getenv("S760_BOOT_PROBE"))
+	{
+		if (m_banked_os)
+			logerror("[BOOTBANKS] fetch=%02x%02x/%02x%02x/%02x%02x/%02x%02x data=%02x%02x/%02x%02x/%02x%02x/%02x%02x PCphysical=%06x dma_count=%02x%02x dma_addr=%02x%02x%02x dma_ctrl=%02x fdc_phase=%d msr=%02x\n",
+				m_bank_regs[1],m_bank_regs[0],m_bank_regs[3],m_bank_regs[2],m_bank_regs[5],m_bank_regs[4],m_bank_regs[7],m_bank_regs[6],
+				m_bank_regs[9],m_bank_regs[8],m_bank_regs[11],m_bank_regs[10],m_bank_regs[13],m_bank_regs[12],m_bank_regs[15],m_bank_regs[14],
+				banked_address(m_maincpu->pc(),true),m_bank_regs[0x19],m_bank_regs[0x18],m_bank_regs[0x1c],m_bank_regs[0x1b],m_bank_regs[0x1a],m_bank_regs[0x1d],m_fdc_phase,m_fdc_msr);
+		address_space &p = m_maincpu->space(AS_PROGRAM);
+		logerror("[BOOTSTOP] PC=%04x SP=%04x queue_read=%04x queue_write=%04x shadow2A8C=%04x\n",
+			m_maincpu->pc(), m_maincpu->space(AS_DATA).read_word(0x18),
+			p.read_word(0x21ac), p.read_word(0x21ae), p.read_word(0x2a8c));
+	}
 	logerror("[VDPDUMP] vram_active=%d sed_active=%d display_enabled_ever=%d "
 		"ctrl0(D010)=%02x addr=%05x matrix_base=%04x attr_base=%04x tile_base=%04x bitmap_base=%04x\n",
 		m_vdp_vram_active, m_sed_vram_active, m_vdp_display_enabled_ever,
@@ -2936,6 +4033,10 @@ void s760_state::s760_palette(palette_device &palette) const
 	palette.set_pen_color(7, rgb_t(0, 0, 96));        // 7: Dark Navy
 	palette.set_pen_color(8, rgb_t(0, 220, 220));     // 8: Cyan
 	palette.set_pen_color(9, rgb_t(24, 26, 30));      // 9: Dark Slate
+	// Native three-bit RGB output, separate from legacy UI pens. Full-scale
+	// levels are diagnostic; analogue output intensity has not been measured.
+	for (int rgb = 0; rgb < 8; ++rgb)
+		palette.set_pen_color(10+rgb, rgb_t(BIT(rgb,0)*255, BIT(rgb,1)*255, BIT(rgb,2)*255));
 }
 
 // Epson SED1335 (S1D13305) Front Panel LCD Controller Interface (0xE000 - 0xEFF7)
@@ -3111,6 +4212,67 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 	// Defined background: clear the full CRT surface to black (pen 0).
 	// This is the blank-screen baseline per Option 2 / F1 / F2.
 	bitmap.fill(0, cliprect);
+
+	if (m_banked_os)
+	{
+		// Native diagnostic composition, finding62: uploaded font and matrix,
+		// three graphics planes, and attribute-selected text colour/inversion.
+		// The observed OS uses E812=10, E814=00 and E816=14. Other display
+		// modes, the fourth graphics byte and alternate font plane are unresolved.
+		const u16 matrix_base = u16(m_vdp_regs[0x12]) << 8;
+		const u16 font_base = u16(m_vdp_regs[0x14]) << 8;
+		const u16 graphics_base = u16(m_vdp_regs[0x16]) << 8;
+		if (m_vdp_vram_active)
+			for (int y = 0; y < 200; ++y)
+				for (int cell = 0; cell < 40; ++cell)
+				{
+					const u32 text_addr = 2 * u16(matrix_base + (y/8)*40 + cell);
+					const u8 code = m_vdp_vram[text_addr], attr = m_vdp_vram[text_addr+1];
+					const u8 glyph = m_vdp_vram[2 * u16(font_base + u16(code)*8 + y%8)];
+					const u32 gfx_addr = 2 * u16(graphics_base + 2*(y*40 + cell));
+					// RGB plane order is supported by the keyboard's pink hover
+					// border. User hardware colour corrections (finding63) identify
+					// text RGB bits as 4,5,6; bit0 reverses the glyph coverage.
+					const u8 text_colour = BIT(attr,4) | (BIT(attr,5)<<1) | (BIT(attr,6)<<2);
+					for (int x = 0; x < 8; ++x)
+					{
+						u8 colour = BIT(m_vdp_vram[gfx_addr],7-x)
+							| (BIT(m_vdp_vram[gfx_addr+1],7-x)<<1)
+							| (BIT(m_vdp_vram[(gfx_addr+2)&0x1ffff],7-x)<<2);
+						if (BIT(attr,7) && (BIT(glyph,7-x) ^ BIT(attr,0))) colour = text_colour;
+						for (int dx = 0; dx < 2; ++dx)
+						{
+							const int px = (cell*8+x)*2 + dx;
+							if (cliprect.contains(px,y)) bitmap.pix(y,px) = 10 + colour;
+						}
+					}
+				}
+		// User hardware observation: crosshair over empty space; firmware
+		// hides it over options by moving X off-screen (004F:898B).
+		// Register position and hide behavior are verified. This 9-pixel
+		// shape and RGB inversion are provisional pending a hardware pixel capture.
+		const int cursor_x = m_vdp_regs[0x0c] | (int(m_vdp_regs[0x10]) << 8);
+		const int cursor_y = m_vdp_regs[0x0e];
+		if (m_vdp_vram_active && cursor_x < 320 && cursor_y < 200)
+		{
+			auto cursor_pixel = [&](int x, int y) {
+				if (x < 0 || x >= 320 || y < 0 || y >= 200) return;
+				for (int dx = 0; dx < 2; ++dx)
+					if (cliprect.contains(x*2 + dx, y))
+					{
+						u16 &pen = bitmap.pix(y, x*2 + dx);
+						pen = 10 + ((pen - 10) ^ 7);
+					}
+			};
+			for (int delta = -4; delta <= 4; ++delta)
+			{
+				cursor_pixel(cursor_x + delta, cursor_y);
+				if (delta) cursor_pixel(cursor_x, cursor_y + delta);
+			}
+		}
+
+		return 0;
+	}
 
 	// Determine whether the OS has written any genuine data into VDP VRAM.
 	// Until the IC20 BOOT ROM is dumped (F2) the OS never runs, so this stays
@@ -3373,6 +4535,39 @@ void s760_state::s760_mem(address_map &map)
 }
 
 static INPUT_PORTS_START( s760 )
+	PORT_START("NATIVE_MEDIA")
+	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Insert Sample Floppy") PORT_CODE(KEYCODE_F5) PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 0)
+	PORT_START("NATIVE_MOUSE_X")
+	PORT_BIT(0xffff, 0, IPT_MOUSE_X) PORT_SENSITIVITY(50) PORT_KEYDELTA(1)
+	PORT_START("NATIVE_MOUSE_Y")
+	PORT_BIT(0xffff, 0, IPT_MOUSE_Y) PORT_SENSITIVITY(50) PORT_KEYDELTA(1)
+	PORT_START("NATIVE_MOUSE_BUTTONS")
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON7) PORT_NAME("Mouse Left") PORT_CODE(MOUSECODE_BUTTON1)
+	PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON8) PORT_NAME("Mouse Right") PORT_CODE(MOUSECODE_BUTTON2)
+	PORT_BIT(0xcf, IP_ACTIVE_LOW, IPT_UNUSED)
+	// Service Notes p21: each port is one SC column, bits are SP inputs.
+	PORT_START("PANEL0")
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Command") PORT_CODE(KEYCODE_C)
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("S1") PORT_CODE(KEYCODE_Z)
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("S2") PORT_CODE(KEYCODE_X)
+	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel Right") PORT_CODE(KEYCODE_RIGHT)
+	PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED)
+	PORT_START("PANEL1")
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Mode") PORT_CODE(KEYCODE_M)
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Exit") PORT_CODE(KEYCODE_BACKSPACE)
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel Up") PORT_CODE(KEYCODE_UP)
+	PORT_BIT(0xf8, IP_ACTIVE_LOW, IPT_UNUSED)
+	PORT_START("PANEL2")
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel F1") PORT_CODE(KEYCODE_A)
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel F3") PORT_CODE(KEYCODE_D)
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel Left") PORT_CODE(KEYCODE_LEFT)
+	PORT_BIT(0xf8, IP_ACTIVE_LOW, IPT_UNUSED)
+	PORT_START("PANEL3")
+	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel F2") PORT_CODE(KEYCODE_S)
+	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel Shift") PORT_CODE(KEYCODE_LSHIFT)
+	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel Down") PORT_CODE(KEYCODE_DOWN)
+	PORT_BIT(0xf8, IP_ACTIVE_LOW, IPT_UNUSED)
+
 	PORT_START("KEY_ARROWS")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )  PORT_NAME("Cursor Left / Arrow Left")   PORT_CODE(KEYCODE_LEFT)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_NAME("Cursor Right / Arrow Right") PORT_CODE(KEYCODE_RIGHT)
@@ -3388,9 +4583,42 @@ INPUT_PORTS_END
 
 void s760_state::s760(machine_config &config)
 {
+	if (getenv("S760_IC4_MIDI_EXPERIMENT"))
+		MIDIIN(config, "midiin").input_callback().set(FUNC(s760_state::native_midi_rx_w));
 	// Main CPU: Intel 80C196 / 8096 derivative @ 16 MHz
-	N8097BH(config, m_maincpu, 16_MHz_XTAL);
+	if (getenv("S760_BANKED_OS") || getenv("S760_ROM_BOOT")) I80C196KB(config, m_maincpu, 16_MHz_XTAL);
+	else N8097BH(config, m_maincpu, 16_MHz_XTAL);
 	m_maincpu->set_addrmap(AS_PROGRAM, &s760_state::s760_mem);
+	if (getenv("S760_BANKED_OS") || getenv("S760_ROM_BOOT"))
+	{
+		m_maincpu->set_kb_mode(true);
+		// Service schematic p18: AK93C45 CS/SK/DI=P1.0/1/2, DO=P2.7.
+		eeprom_serial_93cxx_device &serial_eeprom(EEPROM_93C46_16BIT(config, "serial_eeprom"));
+		// Firmware-generated defaults from IC15 v1.11 + OS2.24 with OP-760-1.
+		// User-selected default: EEPROM byte8 (ROM4CB2) = 1, Mouse+CRT.
+		// Applied by nvram_default only; existing user NVRAM takes precedence.
+		static const u16 initial_eeprom[64] = {
+			0x0702, 0x0000, 0x0001, 0x0000, 0x0801, 0x0000, 0x2e31, 0x3030,
+			0x6f52, 0x616c, 0x646e, 0x6556, 0x2e72, 0x3120, 0x312e, 0x3631,
+			0x0100, 0x00ff, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+			0x0000, 0x0000, 0x0000, 0x0000, 0x0001, 0x0000, 0x0000, 0x0000,
+			0x7f08, 0x0000, 0x0001, 0x00ff, 0x0001, 0x3c3c, 0x3c3c, 0x7f7f,
+			0x7f7f, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+			0x1918, 0x1b1a, 0x1d1c, 0x1f1e, 0x4f4e, 0x5150, 0x5352, 0x5554,
+			0x1110, 0x1312, 0x1514, 0x1716, 0x4746, 0x4948, 0x4b4a, 0x4d4c,
+		};
+		serial_eeprom.default_data(initial_eeprom, sizeof(initial_eeprom));
+
+		m_maincpu->out_p1_cb().set([this, &serial_eeprom](u8 data) {
+			native_audio_clock_w(data);
+			serial_eeprom.di_write(BIT(data, 2));
+			serial_eeprom.cs_write(BIT(data, 0));
+			serial_eeprom.clk_write(BIT(data, 1));
+		});
+		m_maincpu->in_p2_cb().set([&serial_eeprom]() -> u8 {
+			return 0x42 | (serial_eeprom.do_read() ? 0x80 : 0);
+		});
+	}
 
 	// Sound: Dual Stereo Outputs (IC91/IC92 D/A DACs) + 32-Voice DSP ASIC
 	SPEAKER(config, "lspeaker").front_left();
@@ -3402,7 +4630,7 @@ void s760_state::s760(machine_config &config)
 
 	// 10 authentic Roland RFSC16A studio pens (0..9). Chrome-only pens 10..15
 	// were removed in ui-consolidation task 1.4 (R1.2, R2.2).
-	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 10));
+	palette_device &palette(PALETTE(config, "palette", FUNC(s760_state::s760_palette), 18));
 
 	// OP-760 Color CRT display surface only (RFSC16A VDP), CRT region = 640x240.
 	// ui-consolidation task 1.2 (R2.3): the former 120px rack strip (old 640x360)
@@ -3414,6 +4642,17 @@ void s760_state::s760(machine_config &config)
 	crt_screen.set_visarea(0, 639, 0, 239);
 	crt_screen.set_screen_update(FUNC(s760_state::crt_update));
 	crt_screen.set_palette(palette);
+	if (getenv("S760_BANKED_OS") || getenv("S760_ROM_BOOT"))
+	{
+		// The built-in panel remains usable when firmware selects Panel+LCD.
+		screen_device &lcd_screen(SCREEN(config, "lcd_screen"));
+		lcd_screen.set_refresh_hz(60);
+		lcd_screen.set_size(160, 64);
+		lcd_screen.set_visarea(0, 159, 0, 63);
+		lcd_screen.set_screen_update(FUNC(s760_state::lcd_update));
+		lcd_screen.set_palette(palette);
+	}
+
 }
 
 ROM_START( s760 )
