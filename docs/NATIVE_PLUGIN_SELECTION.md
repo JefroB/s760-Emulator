@@ -1,0 +1,69 @@
+# Native VST3 engine selection
+
+The exported `Roland_S760.vst3` factory creates the native MAME processor only.
+Its bridge, MIDI and PCM use the same child process. It does not consult the
+historical `S760_BACKEND` selector and never falls back to the buffer-only core
+when firmware or runtime startup fails. Direct historical constructors remain
+for diagnostic tests; VST2 and CLAP remain outside this milestone's release scope.
+
+## Development configuration
+
+Set these absolute paths in the environment inherited by the host before it
+loads the module. For a source checkout, for example:
+
+```powershell
+$env:S760_NATIVE_ROOT = 'D:\S-760'
+$env:S760_NATIVE_STATE_ROOT = 'D:\S-760\docs\ic20-hle-findings\chatGPT-work\plugin-instances'
+$env:S760_BOOT_ROM = 'D:\S-760\roms\BOOT\Roland_S-760_v1.11.BIN'
+$env:S760_SYSTEM_DISK = 'D:\S-760\roms\System\S760224.IMG'
+```
+
+The runtime root contains `mame-source/mames760.exe` and
+`scripts/s760_runtime.lua`. Firmware is user-supplied. Each component creation
+reserves a unique child directory under the state root, including when several
+instances share one host. The native client locks that directory and owns its
+child process. Instance files are retained for diagnosis; they are not complete
+host project state or an automatic recovery mechanism.
+
+Missing configuration/files, startup failure and unknown requested interfaces
+return a failure and null output pointer. Native configuration/startup errors
+are also written to the host process's stderr. No exception escapes component
+creation. This is a development configuration contract; graphical configuration,
+host-visible error presentation and distributable packaging remain unfinished.
+
+## Supported surface and compatibility
+
+The factory advertises the instrument class only. The former Live Sampler FX
+class is not advertised or instantiated until native sampling input exists.
+Existing projects referencing that FX class cannot instantiate it in this build;
+silently substituting the historical core would conceal the missing native path.
+The instrument class identifier is unchanged.
+
+Supported native processing is float32 stereo at 44.1/48/96 kHz with note-on/off;
+see the [timing contract](NATIVE_AUDIO_TIMING.md). Native audio input and complete
+state outside the supported floppy profile reject. Suspended native save/recall is
+now implemented; see the [state contract](NATIVE_PLUGIN_STATE.md). These operations
+do not use the historical core. Factory selection retirement therefore does not close the separate full
+project-state, sampling-input or DAW/editor objectives.
+
+## Acceptance
+
+```powershell
+cmake --build build --config Release
+./build/Release/s760_native_factory_tests.exe . docs/ic20-hle-findings/chatGPT-work/factory-acceptance --paced-var 48000 10
+```
+
+Use a fresh private state root for this test. It loads the actual module using
+`LoadLibrary`, resolves `GetPluginFactory`, checks missing-configuration failure,
+requests both component and processor interfaces, and verifies distinct native
+children. With the historical selector explicitly set to `core`, the exported
+component still boots native firmware, loads ROBOFULL through firmware controls,
+returns authentic converted CRT/LCD frames and renders exact offline-reference
+PCM at wall-clock pace. The test also checks note offsets/release, rejected
+native input and invalid state requests, suspend/resume and termination. The
+separate `--state` acceptance covers supported native save/recall.
+
+This is an exported-module harness using this repository's interface definitions,
+not a scan/load test in a real DAW or the user's SoundCheck host. Full VST3 SDK
+ABI, metadata, bus descriptions and actual editor/host behavior still need host
+acceptance. See the [evidence record](condensed/validation/native-factory-2026-10-11.json).

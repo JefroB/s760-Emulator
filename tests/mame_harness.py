@@ -105,6 +105,7 @@ end
             "-numscreens", "1",
             "-nothrottle",
             "-rompath", ROMS_DIR,
+            "-snapshot_directory", os.path.dirname(SNAP_DIR),
             "-snapname", f"s760/{self.snap_name}",
             "-autoboot_script", self.script_path,
             "-str", str(self.timeout_sec)

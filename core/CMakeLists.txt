@@ -30,6 +30,7 @@ add_library(s760_core STATIC
     src/s760_crt_normalize.cpp
     src/s760_lcd_raster.cpp
     src/s760_mame_host.cpp
+    src/s760_native_runtime.cpp
     src/s760_backend_selector.cpp
     src/s760_bridge.cpp
     src/s760_webview_host.cpp
@@ -41,6 +42,7 @@ add_library(s760_core STATIC
 # Compile-define the chosen backend token so the selector's build-option path
 # (S760_BACKEND_DEFAULT) resolves at compile time (Requirement 7.3).
 target_compile_definitions(s760_core PUBLIC S760_BACKEND_DEFAULT=${S760_BACKEND})
+target_include_directories(s760_core PRIVATE ../mame-source/3rdparty/rapidjson/include)
 
 target_include_directories(s760_core PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -114,6 +116,22 @@ add_executable(s760_plugin_tests
 )
 target_link_libraries(s760_plugin_tests PRIVATE s760_core)
 add_dependencies(s760_plugin_tests mock_core)
+
+add_executable(s760_native_audio_queue_tests tests/test_native_audio_queue.cpp)
+target_link_libraries(s760_native_audio_queue_tests PRIVATE Threads::Threads)
+add_executable(s760_native_runtime_tests tests/test_native_runtime.cpp)
+target_link_libraries(s760_native_runtime_tests PRIVATE s760_core)
+add_executable(s760_native_rate_converter_tests tests/test_native_rate_converter.cpp)
+add_executable(s760_native_stream_tests tests/test_native_stream.cpp)
+target_link_libraries(s760_native_stream_tests PRIVATE Threads::Threads)
+add_executable(s760_native_plugin_tests tests/test_native_plugin.cpp)
+target_link_libraries(s760_native_plugin_tests PRIVATE s760_core)
+if(WIN32)
+    add_executable(s760_native_factory_tests tests/test_native_plugin.cpp)
+    target_compile_definitions(s760_native_factory_tests PRIVATE S760_TEST_EXPORTED_FACTORY)
+    target_link_libraries(s760_native_factory_tests PRIVATE s760_core)
+    add_dependencies(s760_native_factory_tests s760_vst3)
+endif()
 
 # Bridge Loopback / Integration Test Executable (S760Bridge in-process API)
 add_executable(s760_bridge_tests

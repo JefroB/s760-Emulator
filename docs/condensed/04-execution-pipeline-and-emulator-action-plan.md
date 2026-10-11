@@ -4,7 +4,26 @@
 
 Native ROM boot, colour mouse interaction, sample loading and measured audio paths are established through finding124. The next product milestone is one live MAME engine connected to React and VST3; CPU/peripheral fidelity and IC4 arbitration remain separate open gates. Use the completion roadmap for current priorities and the native runbook for public launch instructions. Earlier private launchers and raw-only audio descriptions below are historical.
 
+Finding127 advances the standalone path: an isolated MAME runtime now drives live
+React CRT/LCD canvases in a packaged WebView2 player, with native controls,
+firmware floppy loading and MIDI audition. Finding128 verifies firmware Save
+and exported-disk reload. Finding132 adds an explicit native mode to the C++
+host: real CRT/LCD conversion, guarded media insertion, timed serial MIDI and
+worker PCM use one machine. Independent instances and parent-crash child cleanup
+pass. Finding133 connects an explicitly configured VST3 processor to that same
+machine for displays, timestamped note events and PCM. Ten-second fixed/varied
+wall-clock harness runs pass; callbacks do no native I/O. Unsupported native
+input rejects instead of using another core; floppy-profile plugin state now has exact cold replay acceptance. Production factory selection,
+DAW/editor acceptance, calibrated latency, sampling and full recall remain open. See [the C++ runtime](../NATIVE_CPP_RUNTIME.md)
+and [the standalone runbook](../STANDALONE_PLAYER.md).
+
 See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+
+Finding134 adds versioned native floppy-runtime checkpoints: a cold process
+replays active PCM exactly, restores refreshed CRT/LCD frames and preserves dirty
+controller media. Serial transmission in progress is covered by an additional
+replay test. This is a paused runtime boundary, not complete plugin project state.
+See [checkpoint scope](../NATIVE_CHECKPOINTS.md).
 
 ## Technical reference and dated milestone history
 
@@ -259,3 +278,14 @@ never trust "exit 0":
 - Parallel MSBuild can lose outputs via a failing shared `mspdbsrv` (C1902).
   Building SERIALLY with `/p:UseMultiToolTask=false /p:CL_MPCount=1
   /p:DebugInformationFormat=OldStyle /m:1` is the confirmed fix.
+
+Native plugin state now archives machine state, pending host MIDI/PCM, timing
+and FIR converter history together. Cold and repeated replay matches exactly at
+44.1/48/96 kHz; invalid native apply blocks processing until valid reload. This
+now includes the bounded SCSI snapshot profile: device metadata, partial
+commands/transfers and startup-sized media buffers. External SCSI files are
+limited to 64 MiB total and pinned to startup identities. Native cold audio and
+refreshed displays match; all-rate plugin replay passes. SCSI writeback remains
+broken (BUG-015), and actual DAW compatibility remains unqualified.
+See the [state contract](../NATIVE_PLUGIN_STATE.md) and
+[validation](validation/native-plugin-state-2026-10-11.json).

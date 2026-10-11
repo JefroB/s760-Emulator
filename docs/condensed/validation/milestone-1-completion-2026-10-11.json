@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-11",
+  "milestone": 1,
+  "status": "complete",
+  "scope": "Windows native-engine integration; later product requirements remain open",
+  "code_changes": false,
+  "current_state_identity_checks": {
+    "mame-source/mames760.exe": {
+      "sha256": "b45a19278d9f5958b0b9d5a4bfeff58a343d57db21e787dbc0eef1faf388f676",
+      "matches_accepted_state_evidence": true
+    },
+    "build/Release/Roland_S760.vst3": {
+      "sha256": "402e2c509f4a10ecf619dd94834b700c0c4052d431268c210ff9e5202da4ad55",
+      "matches_accepted_state_evidence": true
+    },
+    "scripts/s760_runtime.lua": {
+      "sha256": "c42bd668b11b5533f63f87ba50f425b8e6b284beb3e29f02510287a7e4672902",
+      "matches_accepted_state_evidence": true
+    },
+    "mame-source/src/mame/roland/s760.cpp": {
+      "sha256": "d775672da51ccc3c779d1431d2c649b6fcd9f2296c5b647101cbfd82a04edf08",
+      "matches_accepted_state_evidence": true
+    },
+    "core/src/s760_native_runtime.cpp": {
+      "sha256": "be8d5e3028996963145b756b9f7a57cd06abef37bf900cfed57e454fb9788b22",
+      "matches_accepted_state_evidence": true
+    },
+    "scripts/s760_runtime.py": {
+      "sha256": "5f1bd4e2b0b3d4318225fb1e347a69191d6c4a3538593ff26018d18c5e3bb130",
+      "matches_accepted_state_evidence": true
+    },
+    "roms/BOOT/Roland_S-760_v1.11.BIN": {
+      "sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "matches_accepted_state_evidence": true
+    },
+    "roms/System/S760224.IMG": {
+      "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "matches_accepted_state_evidence": true
+    },
+    "roms/FDD/ROBOFULL.IMG": {
+      "sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+      "matches_accepted_state_evidence": true
+    }
+  },
+  "factory_acceptance": {
+    "command": "./build/Release/s760_native_factory_tests.exe D:/S-760 D:/S-760/docs/ic20-hle-findings/chatGPT-work/milestone1-factory-146 --paced-var 48000 10",
+    "exit_code": 0,
+    "matched_row": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=480000 rate=48000 reference_exact=1 peak=0.0445375 tail=0 first_audible=13696 reported_latency=13393 paced=1 varied=1 max_callback_us=422.5 max_deadline_fraction=0.159685 missed_deadlines=0",
+    "log_sha256": "4180875edf7dec9aa8caf67836f18fdb50cfddb08a9b97f71693e596a1f63ab0",
+    "harness_sha256": "0b3cff66373719885bb9132e1be8f733c73e86c86ba2bfe2d11370b37b9b23e7"
+  },
+  "prior_evidence": {
+    "native-scsi-state-2026-10-11.json": "991926b48205ac3638430f48a284a80c8b05d58e395231b6f45a6174ac87f9d4",
+    "native-boundary-2026-10-11.json": "bbc6b604c09cd662e22315a089ac9968f5e16cb34d5863c0d0d8610ff31cbf2d",
+    "native-audio-timing-2026-10-11.json": "8bb10058675c8cdee945ae32e746ca829751650721bf2819a91bab060e092b3c",
+    "native-readiness-2026-10-11.json": "533cd74d24f9f45370989f8d8ae5737d1ba400a4d8c9b4b0e449d3ad9210863f",
+    "native-session-2026-10-11.json": "5f8b5367070caa85a2148881e05274568eb88ab2b218aa49274ba7cf5506fdbd",
+    "distribution-2026-10-11.json": "792fd23e690683f536c798b87e947a35d84d60b2eaaa3ce3074d045d4b180d91"
+  },
+  "latest_full_python_checkpoint": 241,
+  "full_suite_rerun_this_closure": false,
+  "moved_open_requirements": {
+    "2": [
+      "Shared graphical configuration and error presentation",
+      "Plugin editor transport/lifetime"
+    ],
+    "3": [
+      "Native ADC/capture device implementation and firmware sampling/save/reload",
+      "First-run persistent settings and missing-media recovery"
+    ],
+    "4": [
+      "Native host input buses",
+      "Actual SDK/ABI and DAW/editor acceptance",
+      "Host configuration and project portability"
+    ]
+  },
+  "closure_checks": {
+    "milestone_1_completed_objectives": 22,
+    "milestone_1_open_objectives": 0,
+    "moved_work_remains_unchecked": true,
+    "roadmap_and_closure_local_links": "pass",
+    "existing_distribution_release_ready": true
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "audio": [
+    {
+      "block_sizes": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "duration_seconds": 60,
+      "first_audible": 13019.0,
+      "frames": 2646000.0,
+      "max_callback_us": 1688.6,
+      "max_deadline_fraction": 0.0727219,
+      "missed_deadlines": 0.0,
+      "paced": 1.0,
+      "peak": 0.0445375,
+      "rate": 44100.0,
+      "reference_exact": 1.0,
+      "reported_latency": 12288.0,
+      "tail": 0.0,
+      "varied": 1.0
+    },
+    {
+      "block_sizes": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "duration_seconds": 60,
+      "first_audible": 14337.0,
+      "frames": 2880000.0,
+      "max_callback_us": 2105.7,
+      "max_deadline_fraction": 0.795855,
+      "missed_deadlines": 0.0,
+      "paced": 1.0,
+      "peak": 0.0445375,
+      "rate": 48000.0,
+      "reference_exact": 1.0,
+      "reported_latency": 13393.0,
+      "tail": 0.0,
+      "varied": 1.0
+    },
+    {
+      "block_sizes": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "duration_seconds": 60,
+      "first_audible": 27373.0,
+      "frames": 5760000.0,
+      "max_callback_us": 131.4,
+      "max_deadline_fraction": 0.0729,
+      "missed_deadlines": 0.0,
+      "paced": 1.0,
+      "peak": 0.0446113,
+      "rate": 96000.0,
+      "reference_exact": 1.0,
+      "reported_latency": 26785.0,
+      "tail": 0.0,
+      "varied": 1.0
+    }
+  ],
+  "date": "2026-10-11",
+  "decision": {
+    "compound_milestone1_objective_complete": false,
+    "local_development": "GO",
+    "public_distribution": "NO-GO"
+  },
+  "finding": 140,
+  "limits": [
+    "No complete plugin/SCSI snapshots, native ADC or actual DAW/editor acceptance.",
+    "Packaged desktop test is local WebView pixel readback, not clean-machine or audio-device qualification.",
+    "Dependency inventory is a build-environment superset, not complete binary attribution.",
+    "No project license was assigned and no artifact published."
+  ],
+  "logs": {
+    "boundary-session-140.log": "71dcc39358f30f0892dda4ba9957109e71def76f05bf0a7e1e99d86e6a2de4a2",
+    "package-build-140.log": "a0e9c92e7e4a8fc9bd0d5d899ebded2772b1813c16a83c522c1fcb756e8a349d",
+    "package-tests-140.log": "f2d0e821d4789a7e916426b0ab2fc648b04546a9167344ff378732976f3e3659",
+    "regression-140.log": "d34ee46e044d864d875479c4f665574d16b4e1e9cffee54867661616ee163b85"
+  },
+  "native": {
+    "commands": [
+      {
+        "command": [
+          "D:\\S-760\\build\\Release\\s760_native_runtime_tests.exe",
+          "D:\\S-760",
+          "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\boundary-native-140\\parent-crash",
+          "--crash-probe"
+        ],
+        "exit_code": 73,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "name": "parent-crash",
+        "output": ""
+      },
+      {
+        "command": [
+          "D:\\S-760\\build\\Release\\s760_native_runtime_tests.exe",
+          "D:\\S-760",
+          "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\boundary-native-140\\parent-crash"
+        ],
+        "exit_code": 0,
+        "log_sha256": "b7daa8ed1b88c86bdb850cfe1c987d4273fb1c0efd6852d07fdcc77561522d11",
+        "name": "reopen-after-crash",
+        "output": "C++ native boot/load/frames/scheduled MIDI/worker PCM passed; frames=88200 peak=0.0445375 tail=0 underruns=0\n"
+      },
+      {
+        "command": [
+          "D:\\S-760\\build\\Release\\s760_native_factory_tests.exe",
+          "D:\\S-760",
+          "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\boundary-native-140\\audio-44100",
+          "--paced-var",
+          "44100",
+          "60"
+        ],
+        "exit_code": 0,
+        "log_sha256": "abb0c6f475b2d7211a34ebc0ac63300a9b89c1e13a1c895840d6470106ae5ea3",
+        "name": "paced-44100",
+        "output": "[S760 native VST3] Set absolute S760_NATIVE_ROOT, S760_NATIVE_STATE_ROOT, S760_BOOT_ROM and S760_SYSTEM_DISK paths\nExported factory: native-only selection, independent children and requested interfaces passed\nExpected MIDI 4340613,6898419; status={\"midi_pending\":0,\"ok\":true,\"firmware_ready\":\"unknown\",\"audio_dropped\":0,\"state\":\"paused\",\"seconds\":158.33333333333,\"audio_enabled\":true,\"midi_delivered\":[{\"sample\":6898419,\"seconds\":156.42673469388}],\"midi_error\":\"\"}\nNative VST3 boot/load/display/offsets/audio/suspend passed; frames=2646000 rate=44100 reference_exact=1 peak=0.0445375 tail=0 first_audible=13019 reported_latency=12288 paced=1 varied=1 max_callback_us=1688.6 max_deadline_fraction=0.0727219 missed_deadlines=0\n"
+      },
+      {
+        "command": [
+          "D:\\S-760\\build\\Release\\s760_native_factory_tests.exe",
+          "D:\\S-760",
+          "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\boundary-native-140\\audio-48000",
+          "--paced-var",
+          "48000",
+          "60"
+        ],
+        "exit_code": 0,
+        "log_sha256": "33d025e492ba101fdaa48236057fcb54db02f4c4b3794b11d69dc1ebddd6016e",
+        "name": "paced-48000",
+        "output": "[S760 native VST3] Set absolute S760_NATIVE_ROOT, S760_NATIVE_STATE_ROOT, S760_BOOT_ROM and S760_SYSTEM_DISK paths\nExported factory: native-only selection, independent children and requested interfaces passed\nExpected MIDI 4339878,6897684; status={\"midi_delivered\":[{\"sample\":6897684,\"seconds\":156.41006802721}],\"ok\":true,\"midi_pending\":0,\"seconds\":158.26666666667,\"audio_enabled\":true,\"state\":\"paused\",\"firmware_ready\":\"unknown\",\"audio_dropped\":0,\"midi_error\":\"\"}\nNative VST3 boot/load/display/offsets/audio/suspend passed; frames=2880000 rate=48000 reference_exact=1 peak=0.0445375 tail=0 first_audible=14337 reported_latency=13393 paced=1 varied=1 max_callback_us=2105.7 max_deadline_fraction=0.795855 missed_deadlines=0\n"
+      },
+      {
+        "command": [
+          "D:\\S-760\\build\\Release\\s760_native_factory_tests.exe",
+          "D:\\S-760",
+          "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\boundary-native-140\\audio-96000",
+          "--paced-var",
+          "96000",
+          "60"
+        ],
+        "exit_code": 0,
+        "log_sha256": "e5bff086e72cc1534bbbe900fc71b7dbc686a23f6ac22e40f1645be2bb7e9b90",
+        "name": "paced-96000",
+        "output": "[S760 native VST3] Set absolute S760_NATIVE_ROOT, S760_NATIVE_STATE_ROOT, S760_BOOT_ROM and S760_SYSTEM_DISK paths\nExported factory: native-only selection, independent children and requested interfaces passed\nExpected MIDI 4320759,6878562; status={\"midi_error\":\"\",\"ok\":true,\"seconds\":157.86666666667,\"firmware_ready\":\"unknown\",\"state\":\"paused\",\"audio_enabled\":true,\"midi_pending\":0,\"midi_delivered\":[{\"sample\":6878562,\"seconds\":155.97646258503}],\"audio_dropped\":0}\nNative VST3 boot/load/display/offsets/audio/suspend passed; frames=5760000 rate=96000 reference_exact=1 peak=0.0446113 tail=0 first_audible=27373 reported_latency=26785 paced=1 varied=1 max_callback_us=131.4 max_deadline_fraction=0.0729 missed_deadlines=0\n"
+      }
+    ],
+    "parent_crash_child_cleanup": true,
+    "same_directory_reopen_after_crash": true,
+    "scope": "Repository module harness, not actual DAW or physical device qualification",
+    "sha256": {
+      "build/Release/Roland_S760.vst3": "ebe3e3464ab1756ae63fbe40ed9b0c749a96e57cbf7028390803943a2f20a12d",
+      "build/Release/s760_native_factory_tests.exe": "32380a47e293bc748d5f05242016c762dd5c3fc02382ba92c4b71141645b6fb4",
+      "build/Release/s760_native_runtime_tests.exe": "41eec23421d4d1c514cfb644fadb5694716f0e5794233a110341fe60ddd691d5",
+      "core/src/s760_native_runtime.cpp": "e5b49e504c632ff75e72a922b5ee23f06e237e45a21011ba41393bcaac74f981",
+      "core/src/s760_vst3_plugin.cpp": "b460fd92c8f9a16828da41683c7e9af8f1bf20f42c455dbd2cf37107788e16c3",
+      "mame-source/mames760.exe": "2827786b421631a80b1397718ea889dd0a675e467124cfe1bf7b52877f28e976",
+      "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+      "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "scripts/s760_runtime.lua": "03adc6c2813a5053478c42560f29db0223ade2accbf3b923fddcfb9b27a15d4a",
+      "scripts/s760_runtime.py": "339ffe721027c237e0af7e00032fc11771bc6d6ddc166750223fa633a0e1c8f9"
+    }
+  },
+  "package": {
+    "development_package_ok": true,
+    "executable_sha256": "d5ad0eda4de67c2c8a58a794d158ea2495774790f3a00906f644f9fe99cb52c5",
+    "full_mame_license_files": 8,
+    "release_blockers": [
+      "project_license_missing",
+      "corresponding_source_not_qualified",
+      "bundled_dependency_rights_not_qualified"
+    ],
+    "release_ready": false
+  },
+  "package_tests": 7,
+  "packaged_desktop": {
+    "height": 480,
+    "nonzero": 225776,
+    "status": "OS ready \u2014 Perform Play.",
+    "width": 640
+  },
+  "python_regressions": 227,
+  "sha256": {
+    "mame-source/COPYING": "9be1865192ca963b74efb47ef3b8b0b8860fee837d89be002fe2c71aef54e031",
+    "mame-source/docs/legal/GPL-2.0": "451337b1aa550e4dd838535c514a5e06f6a936887a3e7e7239e0d65a35a2772a",
+    "scripts/build_standalone.ps1": "4fd85ecb52366d74d62c1091833f1094de7215e62600d5660dde64b92d2a4a87",
+    "scripts/s760_package_audit.py": "32e3e530edcd18fd4358202157a6cde68798a97d71c265efd5bbf8ea7b9f1528",
+    "scripts/verify_native_boundary.py": "da685dd90a71824d9f5fe61faed42a93d7d5e20f9ecbf634608073710ef74996",
+    "tests/test_package_audit.py": "bd6c1d65bc835393a086adeacc1e252da7dff00d01b8eea82f84256f1e94b546"
+  },
+  "source_head": "f6c37813a062afad9f15dfc3d1bdea12fbfdffdc",
+  "standalone_recovery": {
+    "crash_recovery_new_process": true,
+    "displays_exact": true,
+    "firmware_ready_after_recovery": true,
+    "recovered_patch_play_release": true,
+    "saved_archive_preserved": true,
+    "standalone_pcm_frames_exact": 131072
+  },
+  "working_tree_changes": true
+}

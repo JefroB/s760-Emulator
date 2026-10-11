@@ -1,0 +1,30 @@
+{
+  "native_boot_frames": true,
+  "long_mouse_jump": [
+    300,
+    120
+  ],
+  "midi_note": 60,
+  "held_peak_pcm16": 1459.0,
+  "release_tail_peak_pcm16": 0,
+  "sample_rate": 44100,
+  "note_start": 79.783333333333,
+  "note_release": 82.016666666667,
+  "process_shutdown": "clean",
+  "runtime_contract": {
+    "pause_freezes_time": true,
+    "step_seconds": 0.016666666666999674,
+    "pcm_frames": 194040,
+    "pcm_dropped_frames": 0,
+    "overflow_reported_frames": 46746,
+    "pcm_wav_max_error_pcm16": 0.998046875
+  },
+  "command": "python scripts/verify_native_runtime.py --runtime-contract --state-dir <private-dir>",
+  "identities": {
+    "scripts\\s760_runtime.lua": "9c057b5fc612e62cde57746cc7fdebeed2321c12fd04130e5d9c5260aa2a8082",
+    "scripts\\s760_runtime.py": "341e8e9f37bcf36b1e14cf9431bdf68b33e7031540b003745bc95e14ef7e5e37",
+    "mame-source\\mames760.exe": "c463e93e5121c00b63ad4b659b57fa207e4a116e3016a6873a1b61a6ad4ab919",
+    "roms\\FDD\\ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "scope": "Accelerated native transport; no DAW clock/latency, snapshots, firmware readiness or complete VST3 integration claim."
+}

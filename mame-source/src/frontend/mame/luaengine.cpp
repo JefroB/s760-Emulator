@@ -18,6 +18,7 @@
 
 #include "imagedev/cassette.h"
 #include "imagedev/cdromimg.h"
+#include "imagedev/midiin.h"
 
 #include "debugger.h"
 #include "drivenum.h"
@@ -1024,6 +1025,14 @@ void lua_engine::initialize()
 			return 1;
 		};
 	emu["pause"] = [this] () { return machine().pause(); };
+	emu["midi_send"] = [this] (const std::string &tag, const std::string &bytes)
+	{
+		auto *input = dynamic_cast<midiin_device *>(machine().root_device().subdevice(tag.c_str()));
+		if (!input || bytes.empty() || bytes.size() > 256 || !input->can_write(bytes.size()))
+			return false;
+		for (unsigned char byte : bytes) input->write_byte(byte);
+		return true;
+	};
 	emu["unpause"] = [this] () { return machine().resume(); };
 	emu["step"] =
 		[this] ()

@@ -1,0 +1,187 @@
+{
+  "backend_tests_passed": 241,
+  "bootstrap_inputs": [
+    {
+      "kind": "PYMODULE",
+      "name": "struct",
+      "sha256": "dc46cdfab7ea5bfd78e20ce81838a7a17666060827028564b0a2de0198aca964"
+    },
+    {
+      "kind": "PYMODULE",
+      "name": "pyimod01_archive",
+      "sha256": "95bc75fb1815443c6a51c4470dc254f44e2de2b66bb7dfd0c13541ff789c69e1"
+    },
+    {
+      "kind": "PYMODULE",
+      "name": "pyimod02_importers",
+      "sha256": "75d3bb431fcd2acfc78977ce233ecea3d59bf929f96613e8e37a29f529f6495d"
+    },
+    {
+      "kind": "PYMODULE",
+      "name": "pyimod03_ctypes",
+      "sha256": "e6017d5cef7ecb021c243170082978de1d699d1d0c27d2bd1ef221a9a169c69e"
+    },
+    {
+      "kind": "PYMODULE",
+      "name": "pyimod04_pywin32",
+      "sha256": "832bca00460db020d12fd91cbf348f9e3869ee16af3b9f73fa52c1586780b037"
+    },
+    {
+      "kind": "PYSOURCE",
+      "name": "pyiboot01_bootstrap",
+      "sha256": "2fe74015fe2f794c02eb117da973ef0b1ba29820d56327ff7fc414e5c27cd370"
+    },
+    {
+      "kind": "PYSOURCE",
+      "name": "pyi_rth_pkgutil",
+      "sha256": "7d006a9675674b9cc7d8b11ea98ad037adea5dbdb6ebdf9b7a45c861501c4204"
+    },
+    {
+      "kind": "PYSOURCE",
+      "name": "pyi_rth_multiprocessing",
+      "sha256": "e9ad99a13215346287741f9a0007c6edd54de7a47db28339009574f83f53f988"
+    },
+    {
+      "kind": "PYSOURCE",
+      "name": "pyi_rth_inspect",
+      "sha256": "e9db311f97b750a30a422e0bf2bdcff7514da67cd35b0f6189ad786956ff1abc"
+    },
+    {
+      "kind": "PYSOURCE",
+      "name": "pyi_rth_setuptools",
+      "sha256": "aeb0dc75b5064ae52751e5c3451fc76a5c4cd7e821b4989614880ebce20830fa"
+    },
+    {
+      "kind": "PYSOURCE",
+      "name": "s760_standalone",
+      "sha256": "e48def594d0b483bbd58c009c2a973bf1121efa1d6b467f78fc71401b98cad24"
+    }
+  ],
+  "collected_inputs": 170,
+  "commands": {
+    "build": "MSBuild mames760.vcxproj /m:1 /p:Configuration=Release /p:Platform=x64 /v:minimal; CL=/Z7",
+    "desktop": "S760Studio.exe --boot-rom <authorized-ROM> --system-disk <authorized-system-image> --media-dir <authorized-media> --state-dir <fresh-directory> --verify-desktop --no-sound --fast",
+    "gate": "scripts/build_standalone.ps1 -Release -OutputDirectory <reviewed-output>",
+    "native": "python scripts/verify_native_runtime.py --executable <source-built-mames760.exe> --state-dir <fresh-directory> --pull-render --scheduled-midi",
+    "source": "python scripts/s760_native_source_bundle.py --output <source.zip> --extract <fresh-directory>"
+  },
+  "date": "2026-10-11",
+  "distribution_archive": {
+    "bytes": 222055645,
+    "filename": "S760Studio-windows-x64-qualified-2026-10-11.zip",
+    "sha256": "9f4c64ec438481bc624f71a5d44e2324c908bf3af8ed6ce1e80577e1a04406cc"
+  },
+  "distribution_zip_entry_integrity": "pass",
+  "excluded_windows_runtime_files": 42,
+  "fixture_sha256": {
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "frontend_build": "pass",
+  "frontend_runtime_components": [
+    {
+      "declared_license": "MIT",
+      "notices": [
+        "notices/npm/react/LICENSE"
+      ],
+      "path": "node_modules/react",
+      "version": "19.3.0"
+    },
+    {
+      "declared_license": "MIT",
+      "notices": [
+        "notices/npm/react-dom/LICENSE"
+      ],
+      "path": "node_modules/react-dom",
+      "version": "19.3.0"
+    },
+    {
+      "declared_license": "MIT",
+      "notices": [
+        "notices/npm/scheduler/LICENSE"
+      ],
+      "path": "node_modules/scheduler",
+      "version": "0.28.0"
+    },
+    {
+      "declared_license": "MIT",
+      "notices": [
+        "notices/npm/tailwindcss/LICENSE"
+      ],
+      "path": "node_modules/tailwindcss",
+      "version": "4.3.3"
+    }
+  ],
+  "frontend_typecheck": "pass",
+  "frozen_modules": 615,
+  "host_source_archive_sha256": "fa2fd7ec88055fb8f1c61eb4c562d8f9a0a431445d125eae3652767c25f19241",
+  "launcher_sha256": "68162adc638449db03e871ab0e7bc9b5fed1b684fb6e2fb4a12d890be9a83e88",
+  "limits": [
+    "Unsigned artifact tested on development Windows host, not clean-machine acceptance.",
+    "No Roland firmware, sample disk or saved session included.",
+    "Exact-hash qualification does not cover future builds or all repository files."
+  ],
+  "native_acceptance": {
+    "held_peak_pcm16": 1459.0,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "native_boot_frames": true,
+    "note_release": 80.483333333333,
+    "note_start": 78.333333333333,
+    "process_shutdown": "clean",
+    "pull_render": {
+      "dropped_frames": 0,
+      "frames": 122616,
+      "paused_between_requests": true,
+      "release_tail_silent": true,
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "wav_max_error_pcm16": 0.9999065399169922
+    },
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "scheduled_midi": [
+      {
+        "sample": 3645866,
+        "seconds": 82.672698412698
+      },
+      {
+        "sample": 3689966,
+        "seconds": 83.672698412698
+      }
+    ]
+  },
+  "native_binary_sha256": "0a3736070ed8ad67c4a316cbb7c0db692febac28dc37195dc57a3f18783903cd",
+  "native_source_archive_sha256": "9045c98f608b62a81958f331135d980aa950e6aa17de44c4cd63ea2835a10558",
+  "native_source_files": 27323,
+  "packaged_desktop_acceptance": {
+    "height": 480,
+    "nonzero": 225776,
+    "status": "OS ready \u2014 Perform Play.",
+    "width": 640
+  },
+  "qualification_gate": {
+    "errors": [],
+    "package_files": 601,
+    "powerShell_release_verification_exit_code": 0,
+    "release_ready": true
+  },
+  "schema": 1,
+  "scope": "Exact Windows x64 standalone distribution; no VST3/clean-machine/product-completion claim",
+  "source_clean_rebuild_exit_code": 0,
+  "source_git_head": "f6c37813a062afad9f15dfc3d1bdea12fbfdffdc; current modifications included",
+  "source_manifest_and_private_media_scan": "pass",
+  "unmapped_binaries": []
+}

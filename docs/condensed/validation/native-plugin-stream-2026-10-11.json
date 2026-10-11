@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-11",
+  "scope": "Explicit native processor class harness, not DAW or hardware parity",
+  "sha256": {
+    "core/include/s760/s760_native_stream.hpp": "2d29ad24f96ce165452194339f1dad44640627ed869d3ffc78ec9c1e699261d8",
+    "core/src/s760_vst3_plugin.cpp": "f2112b39ffb56f96e88a409157beb82e019a0e15e8e8bc10a62be8a773899ebc",
+    "core/src/s760_native_runtime.cpp": "e5b49e504c632ff75e72a922b5ee23f06e237e45a21011ba41393bcaac74f981",
+    "scripts/s760_runtime.lua": "3d15350db38ae7a17dd599c4a8af3335176f581f5dcc86390d54f1fd1533881c",
+    "core/tests/test_native_plugin.cpp": "e7f1dc9b44f8d5d08efbb4a11b77b9ea080f50ce9375b1bb4e8623590fed4b29",
+    "build/Release/s760_native_plugin_tests.exe": "948ab15366f87eb22215b18e7c1743ff5cb6a054f5725e04230ebb2bbc00066b",
+    "mame-source/mames760.exe": "717683cd3f991b3ce97cb8fb86fb08bcaf29ddc798f65ef582071bd3efb0e8e1",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "native_functional": {
+    "frames": 122880,
+    "peak": 0.0445375,
+    "tail": 0,
+    "suspend_resume": true,
+    "terminate_closes_child": true
+  },
+  "wall_clock": [
+    {
+      "block_sizes": [
+        256
+      ],
+      "frames": 441344,
+      "max_callback_us": 28.0,
+      "stream_faults": 0,
+      "first_audible_sample": 12872,
+      "log": "plugin-paced-final-133.log"
+    },
+    {
+      "block_sizes": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "frames": 441344,
+      "max_callback_us": 21.2,
+      "stream_faults": 0,
+      "first_audible_sample": 13313,
+      "log": "plugin-var-final-133.log"
+    }
+  ],
+  "software_latency_frames": 12288,
+  "sample_rate": 44100,
+  "total_audible_latency_calibrated": false,
+  "midi_queue": {
+    "delivered": 256,
+    "enqueue_error_samples": 9.094947017729282e-11,
+    "invalid_append_atomic": true,
+    "capacity": 256
+  },
+  "runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 79.183333333333,
+    "note_release": 81.366666666667,
+    "process_shutdown": "clean",
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999065399169922,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "sample": 3784045,
+        "seconds": 85.806009070295
+      },
+      {
+        "sample": 3828145,
+        "seconds": 86.806009070295
+      }
+    ],
+    "runtime_contract": {
+      "pause_freezes_time": true,
+      "step_seconds": 0.016666666666999674,
+      "pcm_frames": 193158,
+      "pcm_dropped_frames": 0,
+      "overflow_reported_frames": 48510,
+      "pcm_wav_max_error_pcm16": 0.998046875
+    }
+  },
+  "regressions": {
+    "python": 196,
+    "cpp_executables": 24
+  },
+  "commands": [
+    "cmake --build build --config Release",
+    "s760_native_stream_tests.exe",
+    "s760_native_plugin_tests.exe ROOT PRIVATE_STATE [--paced|--paced-var]",
+    "python scripts/verify_native_midi_queue.py --state-dir PRIVATE_STATE",
+    "python scripts/verify_native_runtime.py --runtime-contract --pull-render --scheduled-midi --state-dir PRIVATE_STATE"
+  ],
+  "limits": [
+    "Factory remains legacy unless explicit native constructor is used",
+    "Native project state and sampling input reject",
+    "Only note-on/off, fixed44100Hz float stereo",
+    "No DAW, SoundCheck or embedded editor acceptance",
+    "No complete snapshot, unsaved-work recovery or firmware readiness qualification"
+  ],
+  "packaged_desktop": {
+    "status": "Sampler running",
+    "width": 640,
+    "height": 480,
+    "nonzero": 225776
+  }
+}

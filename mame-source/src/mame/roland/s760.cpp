@@ -20,6 +20,7 @@
 #include "cpu/mcs96/i8x9x.h"
 #include "machine/eepromser.h"
 #include "imagedev/midiin.h"
+#include "fileio.h"
 #include "screen.h"
 #include "speaker.h"
 #include "emupal.h"
@@ -991,7 +992,7 @@ static const uint8_t *get_font_glyph(char c)
 
 // NOTE (ui-consolidation task 1.4): the draw_string() helper was removed (R1.2,
 // R2.2). After tasks 1.1-1.3 deleted the invented GUI renderers and the fabricated
-// LCD/CRT text fallbacks, draw_string had no remaining call sites — it only ever
+// LCD/CRT text fallbacks, draw_string had no remaining call sites â€” it only ever
 // painted invented chrome text. The genuine SED1335 LCD rasterizer (lcd_update) and
 // the dormant RFSC16A VDP rasterizer (crt_update) draw glyphs directly from VRAM via
 // get_font_glyph(), which is kept.
@@ -1016,6 +1017,9 @@ public:
 	void s760(machine_config &config);
 	void s760_palette(palette_device &palette) const;
 	DECLARE_INPUT_CHANGED_MEMBER(native_sample_media);
+	DECLARE_INPUT_CHANGED_MEMBER(native_export_media);
+	TIMER_CALLBACK_MEMBER(runtime_midi_poll);
+	std::unique_ptr<emu_file> m_runtime_midi;
 	void native_midi_rx_w(int state) { if (m_native_midi_experiment) rx_w(state); }
 	virtual void rcv_complete() override;
 	bool m_native_midi_experiment = false;
@@ -1164,7 +1168,7 @@ private:
 	// state flags back into it (e.g. the reset init subroutine at 0x219e writes
 	// 0x8f7e / 0x2476 and reads them back). Mapping it as read-only .rom()
 	// silently drops those writes, so the reset init's validation never settles
-	// and control derails into zeroed low RAM — the OS re-enters reset forever
+	// and control derails into zeroed low RAM â€” the OS re-enters reset forever
 	// and never reaches main init at 0x2831 (so the VDP/SED are never driven and
 	// the CRT stays black). Back it with RAM pre-loaded from the image instead.
 	std::unique_ptr<uint8_t[]> m_os_ram; // 0x2080-0xDFFF resident OS code+data RAM
@@ -1172,7 +1176,7 @@ private:
 	// Interrupt vector table + low work window (runtime 0x2000-0x207F). The
 	// MCS-96 fetches IRQ vectors from 0x2000 + 2*level; this region sits in the
 	// gap between the register/work RAM (ends 0x1FFF) and the OS code (starts
-	// 0x2080) and was previously UNMAPPED (reads returned 0 → any interrupt
+	// 0x2080) and was previously UNMAPPED (reads returned 0 â†’ any interrupt
 	// vectored to 0x0000 and derailed the OS once main init enabled interrupts).
 	// Back it with RAM so vectors can be installed/written. Pre-loaded from the
 	// image (file 0x4780) which also lets any image-resident vector bytes land.
@@ -1180,7 +1184,7 @@ private:
 
 	// Note: the genuine Epson SED1335 LCD VRAM is the m_sed_vram[4096] member below,
 	// accessed via lcd_r/lcd_w. A former required_shared_ptr<uint16_t> m_lcd_vram
-	// ("lcd_vram") was vestigial — it had no backing .share() in s760_mem (the LCD is
+	// ("lcd_vram") was vestigial â€” it had no backing .share() in s760_mem (the LCD is
 	// register/stream-mapped, not RAM-shared), so it aborted machine start with
 	// "Required shared pointer ':lcd_vram' not found" once the driver was rebuilt.
 	// Removed as a latent-bug fix; it was never read or written anywhere.
@@ -1313,6 +1317,14 @@ private:
 	bool m_fdc_motor_on[2];
 	bool m_fdc_disk_inserted;
 	std::vector<uint8_t> m_fdc_disk_image;
+	// Fixed save-manager storage: the live vector can resize during media swaps.
+	std::vector<u8> m_checkpoint_floppy;
+	u32 m_checkpoint_floppy_size = 0;
+	void checkpoint_presave();
+	void checkpoint_postload();
+	u64 m_media_generation = 0, m_media_revision = 0, m_media_saved_revision = 0;
+	u64 m_media_export_generation = 0, m_media_export_revision = 0;
+	bool m_media_export_valid = false;
 	int m_fdc_data_byte_idx;
 	int m_fdc_data_byte_total;
 	uint32_t m_fdc_sector_offset;
@@ -1339,6 +1351,10 @@ private:
 	int m_scsi_cdb_idx;
 	int m_scsi_cdb_len;
 	std::vector<uint8_t> m_scsi_data_buffer;
+	// Save registration requires stable storage. READ/WRITE(10)'s largest
+	// existing transfer is 65535 blocks at 2048 bytes (CD target).
+	std::vector<u8> m_checkpoint_scsi_transfer;
+	u32 m_checkpoint_scsi_transfer_size = 0;
 	size_t m_scsi_data_idx;
 	uint8_t m_scsi_target_status; // Good = 0x00, Check Condition = 0x02, Busy = 0x08
 
@@ -1356,7 +1372,8 @@ private:
 	void fdc_w(offs_t offset, uint8_t data);
 	void fdc_execute_command();
 	void fdc_start_result_phase(int length);
-	void fdc_load_disk_image(const std::string &path);
+	bool fdc_load_disk_image(const std::string &path);
+	void native_media_status(const std::string &error);
 
 	uint8_t scsi_r(offs_t offset);
 	void scsi_w(offs_t offset, uint8_t data);
@@ -1409,6 +1426,18 @@ void s760_state::machine_start()
 	save_item(NAME(m_native_wave_end_slot));
 	m_banked_os = getenv("S760_BANKED_OS") != nullptr || getenv("S760_ROM_BOOT") != nullptr;
 	m_native_midi_experiment = m_banked_os && getenv("S760_IC4_MIDI_EXPERIMENT") != nullptr;
+	if (m_native_midi_experiment)
+		if (const char *port = getenv("S760_RUNTIME_MIDI_PORT"))
+		{
+			m_runtime_midi = std::make_unique<emu_file>(OPEN_FLAG_READ | OPEN_FLAG_WRITE);
+			const std::string endpoint = std::string("socket.127.0.0.1:") + port;
+			if (auto error = m_runtime_midi->open(endpoint))
+				fatalerror("Cannot connect runtime MIDI: %s", error.message());
+			const char *token = getenv("S760_RUNTIME_TOKEN");
+			if (!token || m_runtime_midi->write(token, strlen(token)) != strlen(token))
+				fatalerror("Cannot authenticate runtime MIDI");
+			timer_alloc(FUNC(s760_state::runtime_midi_poll), this)->adjust(attotime::zero, 0, attotime::from_hz(1500));
+		}
 	set_data_frame(1, 8, PARITY_NONE, STOP_BITS_1);
 	set_rcv_rate(31250);
 	save_item(NAME(m_native_midi_pending));
@@ -1453,7 +1482,7 @@ void s760_state::machine_start()
 	{
 		// The resident OS image is a UNIFORM LINEAR 64KB load: file 0x4800 ==
 		// runtime 0x2080, contiguous all the way to runtime 0xFFFF (file
-		// 0x1277F). There is NO code banking for 0xE000-0xFFFF — the main
+		// 0x1277F). There is NO code banking for 0xE000-0xFFFF â€” the main
 		// executive loop and display routines (e.g. 0xE934, which writes the VDP
 		// VRAM port 0xD018) live in this same resident block (Gemini finding 13).
 		// So map the WHOLE 0x2080-0xFFFF as RAM pre-loaded from the image; the
@@ -1471,7 +1500,7 @@ void s760_state::machine_start()
 		// The OS calls three short bus-settle delay routines after programming
 		// VDP registers: 0x9B42 (20 callers), 0x9B51 (7), 0x9B71 (8). On the
 		// disk image the entire runtime 0x9954-0x9C7F region is 0x00 fill (812
-		// bytes) — these routines are NOT in the disk payload; on real hardware
+		// bytes) â€” these routines are NOT in the disk payload; on real hardware
 		// they are present at runtime (supplied by the IC15 BOOT ROM / resident
 		// setup). Without them LCALL 0x9B51 (from 0xDA52, mid-draw) sleds through
 		// the 0x00 (= MCS-96 SKIP) padding straight into the screen-BLANKING
@@ -1479,7 +1508,7 @@ void s760_state::machine_start()
 		// aborting the draw and disabling the display. Cross-verified two ways:
 		// Kiro's live CPU trace (RET from 0xE136 -> slide -> 0x9C80 blank) and
 		// Gemini's static analysis (finding 21). Model the missing delay stubs
-		// as a bare RET (0xF0) at each entry — a zero-length settle delay, which
+		// as a bare RET (0xF0) at each entry â€” a zero-length settle delay, which
 		// is correct for an instruction-accurate emulator with no real bus wait.
 		for (offs_t stub : { offs_t(0x9B42), offs_t(0x9B51), offs_t(0x9B71) })
 			m_os_ram[stub - os_start] = 0xF0; // MCS-96 RET
@@ -1489,7 +1518,7 @@ void s760_state::machine_start()
 		// Interrupt-vector + low-work window 0x2000-0x207F (file 0x4780). Map as
 		// RAM so IRQ vectors exist (and are writable). The image bytes here are
 		// 0x0F fill, so the vectors still need to be *installed* with real ISR
-		// targets (see ic20_install_irq_vectors) — RAM alone just prevents the
+		// targets (see ic20_install_irq_vectors) â€” RAM alone just prevents the
 		// open-bus 0x0000 vector that derailed the OS after EI.
 		constexpr offs_t vec_start = 0x2000;
 		constexpr offs_t vec_end   = 0x207F;
@@ -1502,7 +1531,7 @@ void s760_state::machine_start()
 		// IC20 supplies these; the disk image carries only 0x0F fill here, so
 		// after EI the first SOFT-timer interrupt (level 5) would fetch 0x200A =
 		// 0x0F0F and derail. Point every vector at a clean RET stub (0x2B22) and
-		// the genuine OS ISRs where known (Gemini finding 10 §2):
+		// the genuine OS ISRs where known (Gemini finding 10 Â§2):
 		//   level 5 (IRQ_SOFT, HSO software timer) -> 0x2B51 (re-arms the timer)
 		//   level 7 (IRQ_EXTINT)                   -> 0x2C4F
 		// These are stored into the vector RAM's initial contents so they
@@ -1525,7 +1554,7 @@ void s760_state::machine_start()
 	// installed (install_ram above overrode the static s760_mem peripheral maps
 	// for the overlapping ranges). Each is constrained to its ACTUAL register
 	// ports so the surrounding addresses remain executable OS code (Gemini
-	// finding 13): the SED1335 is only 0xE000/0xE002 — the former wide
+	// finding 13): the SED1335 is only 0xE000/0xE002 â€” the former wide
 	// 0xE000-0xEFF7 window was intercepting instruction fetches for main-loop
 	// routines like 0xE934.
 	{
@@ -1674,10 +1703,10 @@ void s760_state::machine_start()
 	// The disk-OS executive message pump at 0x54E8 uses runtime 0x21AC/0x21AE as
 	// the event-queue READ/WRITE pointers and 0x21B0.. as the 128-byte FIFO. On
 	// our boot those words still hold the disk image's bytes (0x21AC=0x0102,
-	// 0x21AE=0xEF1C) because the disk-OS reset only zero-clears 0x0120..0x111F —
+	// 0x21AE=0xEF1C) because the disk-OS reset only zero-clears 0x0120..0x111F â€”
 	// the 0x2000-0x2FFF work area is NOT cleared. (Those same bytes are also the
 	// operand of a reset-time instruction at 0x21AA `ST RW1C,0x102`, which runs
-	// ONCE at power-on and then that RAM is repurposed as the queue — code and
+	// ONCE at power-on and then that RAM is repurposed as the queue â€” code and
 	// data share the address on the real unified 80C196 space.) On real hardware
 	// the queue is empty at startup (read ptr == write ptr == 0); with the
 	// garbage pointers the pump sees read!=write forever, dispatches garbage, and
@@ -1690,8 +1719,8 @@ void s760_state::machine_start()
 	// no evidence the BOOT ROM leaves 0x21AC/0x21AE zero; and 0x21AC overlaps live
 	// startup CODE. The real open question is the loader/mapping lifecycle (when
 	// 0x21AC transitions from startup code to queue data). This tap only CONFIRMS
-	// the diagnosis — zeroing the queue pointers lets the pump return empty and the
-	// OS enters the executive fall-through (0x2891 -> 0x3F1C) — it does not model
+	// the diagnosis â€” zeroing the queue pointers lets the pump return empty and the
+	// OS enters the executive fall-through (0x2891 -> 0x3F1C) â€” it does not model
 	// the real power-on contract. Gated OFF by default so it never ships as a
 	// false fix; enable with S760_QUEUE_INIT=1 to reproduce the experiment.
 	//
@@ -1699,10 +1728,10 @@ void s760_state::machine_start()
 	// a one-shot read-tap on 0x21AC lazily zeroes the two pointer words the FIRST
 	// time the pump reads them (which is AFTER the 0x21Axx reset code has already
 	// executed), then removes itself. This is not forcing a draw and not injecting
-	// an event — it only establishes the documented empty-queue power-on state.
+	// an event â€” it only establishes the documented empty-queue power-on state.
 	// IMPORTANT: 0x21AC is ALSO the operand of a reset-time instruction at 0x21AA
 	// (`ST RW1C,0x102`) that executes during power-on; its operand fetch reads
-	// 0x21AC. So we must NOT touch 0x21AC until AFTER reset is done — only when
+	// 0x21AC. So we must NOT touch 0x21AC until AFTER reset is done â€” only when
 	// the executive message PUMP (PC=0x54E8) reads it. Gate the tap on the reading
 	// PC: fire exactly once, from the pump, which is reached only after reset and
 	// before any genuine event is consumed.
@@ -1859,6 +1888,127 @@ void s760_state::machine_start()
 	m_scsi_data_idx = 0;
 	m_scsi_target_status = 0x00;
 	scsi_init_devices();
+
+	// Checkpoint coverage for handler-backed peripherals (finding134).
+	save_item(NAME(m_native_vdp_address));
+	save_item(NAME(m_native_vdp_high));
+	save_item(NAME(m_sed_cmd));
+	save_item(NAME(m_sed_params));
+	save_item(NAME(m_sed_param_idx));
+	save_item(NAME(m_sed_param_len));
+	save_item(NAME(m_sed_cursor_addr));
+	save_item(NAME(m_sed_sad1));
+	save_item(NAME(m_sed_sad2));
+	save_item(NAME(m_sed_disp_mode));
+	save_item(NAME(m_sed_overlay_mode));
+	save_item(NAME(m_sed_vram));
+	save_item(NAME(m_sed_vram_active));
+	save_item(NAME(m_irq_pending));
+	save_item(NAME(m_irq_mask));
+	save_item(NAME(m_int_line_asserted));
+	save_item(NAME(m_mmio));
+	save_item(NAME(m_ga_ctrl));
+	save_item(NAME(m_ga_status));
+	save_item(NAME(m_simm_bank));
+	save_item(NAME(m_ga_chip_select));
+	save_item(NAME(m_dsp_cmd_latch));
+	save_item(NAME(m_dsp_addr_latch));
+	save_item(NAME(m_eeprom_latch));
+	save_item(NAME(m_eeprom_do));
+	save_item(NAME(m_peripherals_enabled));
+	save_item(NAME(m_eeprom_data));
+	save_item(NAME(m_eeprom_shift_reg));
+	save_item(NAME(m_eeprom_bit_count));
+	save_item(NAME(m_eeprom_state));
+	save_item(NAME(m_eeprom_cs));
+	save_item(NAME(m_eeprom_clk));
+	save_item(NAME(m_eeprom_di));
+	save_item(NAME(m_eeprom_ewen));
+	save_item(NAME(m_vdp_regs));
+	save_item(NAME(m_vdp_addr));
+	save_item(NAME(m_vdp_vram_active));
+	save_item(NAME(m_vdp_tile_base));
+	save_item(NAME(m_vdp_matrix_base));
+	save_item(NAME(m_vdp_attr_base));
+	save_item(NAME(m_vdp_bitmap_base));
+	save_item(NAME(m_vdp_mouse_x));
+	save_item(NAME(m_vdp_mouse_y));
+	save_item(NAME(m_vdp_mouse_ctrl));
+	save_item(NAME(m_vdp_status));
+	save_item(NAME(m_vdp_display_enable));
+	save_item(NAME(m_vdp_interlace));
+	save_item(NAME(m_vdp_tile_plane_enable));
+	save_item(NAME(m_vdp_bitmap_plane_enable));
+	save_item(NAME(m_selected_row));
+	save_item(NAME(m_gotek_selected_idx));
+	save_item(NAME(m_gotek_mounted_idx));
+	save_item(NAME(m_gotek_activity_timer));
+	save_item(NAME(m_gotek_encoder_angle));
+	save_item(NAME(m_last_gotek_prev));
+	save_item(NAME(m_last_gotek_next));
+	save_item(NAME(m_last_gotek_select));
+	save_item(NAME(m_fdc_msr));
+	save_item(NAME(m_fdc_dor));
+	save_item(NAME(m_fdc_ccr));
+	save_item(NAME(m_fdc_dir));
+	save_item(NAME(m_fdc_st0));
+	save_item(NAME(m_fdc_st1));
+	save_item(NAME(m_fdc_st2));
+	save_item(NAME(m_fdc_st3));
+	save_item(NAME(m_fdc_cmd_buffer));
+	save_item(NAME(m_fdc_cmd_idx));
+	save_item(NAME(m_fdc_cmd_len));
+	save_item(NAME(m_fdc_res_buffer));
+	save_item(NAME(m_fdc_res_idx));
+	save_item(NAME(m_fdc_res_len));
+	save_item(NAME(m_fdc_phase));
+	save_item(NAME(m_fdc_current_cyl));
+	save_item(NAME(m_fdc_current_head));
+	save_item(NAME(m_fdc_current_sector));
+	save_item(NAME(m_fdc_selected_drive));
+	save_item(NAME(m_fdc_motor_on));
+	save_item(NAME(m_fdc_disk_inserted));
+	save_item(NAME(m_fdc_data_byte_idx));
+	save_item(NAME(m_fdc_data_byte_total));
+	save_item(NAME(m_fdc_sector_offset));
+	save_item(NAME(m_media_generation));
+	save_item(NAME(m_media_revision));
+	save_item(NAME(m_media_saved_revision));
+	save_item(NAME(m_scsi_bdid));
+	save_item(NAME(m_scsi_sctl));
+	save_item(NAME(m_scsi_scmd));
+	save_item(NAME(m_scsi_tmod));
+	save_item(NAME(m_scsi_ints));
+	save_item(NAME(m_scsi_psns));
+	save_item(NAME(m_scsi_ssts));
+	save_item(NAME(m_scsi_serr));
+	save_item(NAME(m_scsi_pctl));
+	save_item(NAME(m_scsi_mbc));
+	save_item(NAME(m_scsi_dreg));
+	save_item(NAME(m_scsi_temp));
+	save_item(NAME(m_scsi_tc));
+	save_item(NAME(m_scsi_bus_phase));
+	save_item(NAME(m_scsi_target_id));
+	save_item(NAME(m_scsi_cdb));
+	save_item(NAME(m_scsi_cdb_idx));
+	save_item(NAME(m_scsi_cdb_len));
+	save_item(NAME(m_scsi_data_idx));
+	save_item(NAME(m_scsi_target_status));
+	save_item(NAME(m_scsi_device_present));
+	save_item(NAME(m_scsi_device_type));
+	m_checkpoint_scsi_transfer.assign(65535U * 2048U, 0);
+	save_item(NAME(m_checkpoint_scsi_transfer));
+	save_item(NAME(m_checkpoint_scsi_transfer_size));
+	// Images are loaded before registration and never resized during commands.
+	for (unsigned id = 0; id < 7; ++id)
+		if (!m_scsi_disk_images[id].empty())
+			save_item(NAME(m_scsi_disk_images[id]), id);
+	save_pointer(NAME(m_vdp_vram), 0x20000);
+	m_checkpoint_floppy.assign(1474560, 0);
+	save_item(NAME(m_checkpoint_floppy));
+	save_item(NAME(m_checkpoint_floppy_size));
+	machine().save().register_presave(save_prepost_delegate(FUNC(s760_state::checkpoint_presave), this));
+	machine().save().register_postload(save_prepost_delegate(FUNC(s760_state::checkpoint_postload), this));
 	if (m_banked_os)
 	{
 		// Experimental post-IC15 handoff: ROM4FBF loads cylinders1..56
@@ -1886,6 +2036,33 @@ void s760_state::machine_start()
 		m_maincpu->set_board_fetch([this](u16 address) { return banked_physical_r(banked_address(address, true)); }, m_boot_rom.empty() ? 0xc000 : 0x2080);
 		logerror("[BANKED_OS] %s; separate fetch/data mapping, HLE disabled\n", m_boot_rom.empty() ? "disk handoff C000" : "IC15 reset experiment2080, no disk preload");
 	}
+}
+
+void s760_state::checkpoint_presave()
+{
+	if (m_scsi_data_buffer.size() > m_checkpoint_scsi_transfer.size())
+		fatalerror("SCSI checkpoint transfer exceeds command maximum");
+	m_checkpoint_scsi_transfer_size = u32(m_scsi_data_buffer.size());
+	std::fill(m_checkpoint_scsi_transfer.begin(), m_checkpoint_scsi_transfer.end(), 0);
+	std::copy(m_scsi_data_buffer.begin(), m_scsi_data_buffer.end(), m_checkpoint_scsi_transfer.begin());
+	if (m_fdc_disk_image.size() > m_checkpoint_floppy.size())
+		fatalerror("Checkpoint floppy exceeds supported raw media size");
+	m_checkpoint_floppy_size = u32(m_fdc_disk_image.size());
+	std::fill(m_checkpoint_floppy.begin(), m_checkpoint_floppy.end(), 0);
+	std::copy(m_fdc_disk_image.begin(), m_fdc_disk_image.end(), m_checkpoint_floppy.begin());
+}
+
+void s760_state::checkpoint_postload()
+{
+	if (m_checkpoint_scsi_transfer_size > m_checkpoint_scsi_transfer.size())
+		fatalerror("Invalid checkpoint SCSI transfer size");
+	m_scsi_data_buffer.assign(m_checkpoint_scsi_transfer.begin(),
+		m_checkpoint_scsi_transfer.begin() + m_checkpoint_scsi_transfer_size);
+	if (m_checkpoint_floppy_size > m_checkpoint_floppy.size())
+		fatalerror("Invalid checkpoint floppy size");
+	m_fdc_disk_image.assign(m_checkpoint_floppy.begin(), m_checkpoint_floppy.begin() + m_checkpoint_floppy_size);
+	// An export file belongs to the host timeline, not to restored controller RAM.
+	m_media_export_valid = false;
 }
 
 u32 s760_state::banked_address(u16 address, bool fetch) const
@@ -2670,7 +2847,7 @@ void s760_state::machine_reset()
 
 }
 
-void s760_state::fdc_load_disk_image(const std::string &path)
+bool s760_state::fdc_load_disk_image(const std::string &path)
 {
 	std::ifstream file(path, std::ios::binary);
 	if (file.is_open())
@@ -2681,26 +2858,114 @@ void s760_state::fdc_load_disk_image(const std::string &path)
 		if (sz != 737280 && sz != 1474560)
 		{
 			logerror("[NATIVEMEDIA] rejected unsupported floppy size: %s\n",path.c_str());
-			return;
+			return false;
 		}
 		std::vector<u8> bytes(sz);
-		if (!file.read(reinterpret_cast<char *>(bytes.data()), sz)) return;
+		if (!file.read(reinterpret_cast<char *>(bytes.data()), sz)) return false;
 		m_fdc_disk_image.swap(bytes);
+		++m_media_generation;
+		m_media_revision = m_media_saved_revision = 0;
+		m_media_export_valid = false;
 		m_fdc_disk_inserted = true;
 		m_native_disk_changed = true;
 		logerror("[NATIVEMEDIA] inserted %s bytes=%u\n",path.c_str(),unsigned(sz));
+		return true;
 	}
 	else
 	{
 		logerror("[NATIVEMEDIA] cannot open floppy; current media retained: %s\n",path.c_str());
+	}
+	return false;
+}
+
+void s760_state::native_media_status(const std::string &error)
+{
+	if (const char *path = getenv("S760_MEDIA_STATUS"))
+	{
+		// Error strings are fixed host messages, not paths or guest text.
+		std::ofstream status(path, std::ios::trunc);
+		status << "{\"ok\":" << (error.empty() ? "true" : "false")
+			<< ",\"error\":\"" << error << "\",\"inserted\":" << (m_fdc_disk_inserted ? "true" : "false")
+			<< ",\"dirty\":" << (m_media_revision != m_media_saved_revision ? "true" : "false")
+			<< ",\"busy\":" << (m_fdc_phase != 0 || m_fdc_cmd_idx != 0 ? "true" : "false")
+			<< ",\"generation\":" << m_media_generation << ",\"revision\":" << m_media_revision << "}";
 	}
 }
 
 INPUT_CHANGED_MEMBER(s760_state::native_sample_media)
 {
 	// Host media insertion, not a front-panel switch or guest-state override.
-	if (m_banked_os && newval && m_fdc_phase == 0)
-		if (const char *path = getenv("S760_SAMPLE_FLOPPY")) fdc_load_disk_image(path);
+	if (!m_banked_os || !newval) return;
+	std::string error;
+	if (param == 3) // Host confirms durable publication of the exported snapshot.
+	{
+		if (!m_media_export_valid || m_media_export_generation != m_media_generation)
+			error = "No matching exported media snapshot";
+		else
+		{
+			m_media_saved_revision = m_media_export_revision;
+			m_media_export_valid = false;
+		}
+	}
+	else if (param != 2) // Status is read-only and allowed while the controller is busy.
+	{
+		if (m_fdc_phase != 0 || m_fdc_cmd_idx != 0) error = "Floppy controller is busy";
+		else if (m_media_revision != m_media_saved_revision) error = "Export disk changes before changing media";
+		else if (param == 1)
+		{
+			m_fdc_disk_inserted = false;
+			m_fdc_disk_image.clear();
+			m_native_disk_changed = true;
+			++m_media_generation;
+			m_media_revision = m_media_saved_revision = 0;
+			m_media_export_valid = false;
+		}
+		else
+		{
+			const char *path = getenv("S760_SAMPLE_FLOPPY");
+			if (!path || !fdc_load_disk_image(path)) error = "Cannot load floppy image";
+		}
+	}
+	native_media_status(error);
+}
+
+INPUT_CHANGED_MEMBER(s760_state::native_export_media)
+{
+	// Host snapshot of actual controller media; never synthesize guest sectors.
+	if (!m_banked_os || !newval) return;
+	const char *path = getenv("S760_MEDIA_EXPORT");
+	if (!path) return;
+	m_media_export_valid = false;
+	std::string result = "ok";
+	if (m_fdc_phase != 0 || m_fdc_cmd_idx != 0) result = "Floppy controller is busy";
+	else if (!m_fdc_disk_inserted) result = "No floppy is inserted";
+	else
+	{
+		std::ofstream image(path, std::ios::binary | std::ios::trunc);
+		image.write(reinterpret_cast<const char *>(m_fdc_disk_image.data()), m_fdc_disk_image.size());
+		image.flush();
+		if (!image) result = "Cannot export floppy image";
+		image.close();
+		if (image.fail()) result = "Cannot close exported floppy image";
+		if (result == "ok")
+		{
+			m_media_export_generation = m_media_generation;
+			m_media_export_revision = m_media_revision;
+			m_media_export_valid = true;
+		}
+	}
+	std::ofstream status(std::string(path) + ".status", std::ios::trunc);
+	status << result;
+}
+
+TIMER_CALLBACK_MEMBER(s760_state::runtime_midi_poll)
+{
+	// Bound ingress per tick and use the existing 31250-baud transmitter.
+	// Runtime/UI code never writes guest FIFO contents, vectors or IRQ flags.
+	u8 bytes[256];
+	const u32 count = m_runtime_midi->read(bytes, sizeof(bytes));
+	if (auto *input = subdevice<midiin_device>("midiin"))
+		for (u32 i = 0; i < count; ++i) input->write_byte(bytes[i]);
 }
 
 uint8_t s760_state::fdc_r(offs_t offset)
@@ -2803,6 +3068,7 @@ void s760_state::fdc_w(offs_t offset, uint8_t data)
 				if (m_fdc_data_byte_idx < m_fdc_data_byte_total && m_fdc_sector_offset + m_fdc_data_byte_idx < m_fdc_disk_image.size())
 				{
 					m_fdc_disk_image[m_fdc_sector_offset + m_fdc_data_byte_idx++] = data;
+					++m_media_revision;
 					if (m_fdc_data_byte_idx >= m_fdc_data_byte_total)
 					{
 						fdc_start_result_phase(7);
@@ -2859,6 +3125,11 @@ void s760_state::fdc_start_result_phase(int length)
 void s760_state::fdc_execute_command()
 {
 	uint8_t opcode = m_fdc_cmd_buffer[0] & 0x1F;
+	if (m_banked_os && getenv("S760_FDC_TRACE"))
+		logerror("[FDC DMA TRACE] pc=%04x physical=%06x op=%02x count=%02x%02x addr=%02x%02x%02x ctrl=%02x CHRN=%02x/%02x/%02x/%02x EOT=%02x\n",
+			m_maincpu->pc(), banked_address(m_maincpu->pc(), true), m_fdc_cmd_buffer[0],
+			m_bank_regs[0x19], m_bank_regs[0x18], m_bank_regs[0x1c], m_bank_regs[0x1b], m_bank_regs[0x1a], m_bank_regs[0x1d],
+			m_fdc_cmd_buffer[2], m_fdc_cmd_buffer[3], m_fdc_cmd_buffer[4], m_fdc_cmd_buffer[5], m_fdc_cmd_buffer[6]);
 	if (m_banked_os && m_vdp_trace)
 		logerror("[NATIVEFDC CMD] PC=%04x bytes=%02x %02x %02x %02x %02x %02x %02x %02x %02x\n",
 			m_maincpu->pc(), m_fdc_cmd_buffer[0], m_fdc_cmd_buffer[1], m_fdc_cmd_buffer[2],
@@ -3014,6 +3285,47 @@ void s760_state::fdc_execute_command()
 
 			m_fdc_phase = 1;
 			m_fdc_msr = 0xB0; // RQM=1, DIO=0, NonDMA=1, CB=1
+			// Observed native Disk/Save at physical0195C1 programs RAM source,
+			// byte count and FA before WRITE DATA. Like the D7 read model,
+			// this handles bounded transfers; cycle-level arbitration is pending.
+			if (m_banked_os && (m_bank_regs[0x1d] == 0xfa || m_bank_regs[0x1d] == 0xe2))
+			{
+				// OS005A:6C41 sets C00C/C00E, then 6CA1 programs E2 and
+				// count1200 for wave-to-disk. Its IC4 RAM address is zero.
+				const bool wave_source = m_bank_regs[0x1d] == 0xe2;
+				const u32 src = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b]) << 8) | (u32(m_bank_regs[0x1c]) << 16);
+				const u32 wave = m_native_wave_regs[0xe] | (u32(m_native_wave_regs[0xf]) << 8)
+					| (u32(m_native_wave_regs[0xc]) << 16) | (u32(m_native_wave_regs[0xd]) << 24);
+				const u32 count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19]) << 8);
+				const u32 available = (c < 80 && h < 2 && r >= 1 && r <= spt && n == 2 && m_fdc_cmd_buffer[6] >= r)
+					? (std::min<int>(m_fdc_cmd_buffer[6], spt) - r + 1) * 512 : 0;
+				const bool source_valid = wave_source ? (!(count & 1) && u64(wave) * 2 + count <= m_native_wave.size())
+					: src + count <= m_banked_ram.size();
+				if (m_fdc_disk_inserted && count && count <= available && source_valid
+					&& m_fdc_sector_offset + count <= m_fdc_disk_image.size())
+				{
+					if (wave_source)
+					{
+						std::copy_n(m_native_wave.begin() + u64(wave) * 2, count, m_fdc_disk_image.begin() + m_fdc_sector_offset);
+						const u32 next = wave + count / 2;
+						m_native_wave_regs[0xe] = u8(next); m_native_wave_regs[0xf] = u8(next >> 8);
+						m_native_wave_regs[0xc] = u8(next >> 16); m_native_wave_regs[0xd] = u8(next >> 24);
+					}
+					else
+					{
+						std::copy_n(m_banked_ram.begin() + src, count, m_fdc_disk_image.begin() + m_fdc_sector_offset);
+						const u32 next = src + count;
+						m_bank_regs[0x1a] = u8(next); m_bank_regs[0x1b] = u8(next >> 8); m_bank_regs[0x1c] = u8(next >> 16);
+					}
+					m_bank_regs[0x18] = m_bank_regs[0x19] = 0;
+					m_fdc_data_byte_idx = m_fdc_data_byte_total = count;
+					m_fdc_res_buffer[5] = u8(r + (count - 1) / 512);
+					logerror("[NATIVEFDCDMA WRITE] source=%s addr=%08x disk=%06x count=%04x control=%02x\n",
+						wave_source ? "wave" : "RAM", wave_source ? wave * 2 : src, m_fdc_sector_offset, count, m_bank_regs[0x1d]);
+					++m_media_revision;
+					fdc_start_result_phase(7);
+				}
+			}
 			break;
 		}
 
@@ -3841,8 +4153,8 @@ uint8_t s760_state::vdp_r(offs_t offset)
 			// perturbing the VDP VRAM address pointer (reading the 0x18 data port
 			// auto-increments it, which made the old scan-for-nonzero heuristic
 			// miss writes). bit0 = m_vdp_vram_active, bit1 = m_sed_vram_active,
-			// bit2 = m_vdp_display_enabled_ever (distinguishes a STATE problem —
-			// OS never enables display — from a RENDERING problem).
+			// bit2 = m_vdp_display_enabled_ever (distinguishes a STATE problem â€”
+			// OS never enables display â€” from a RENDERING problem).
 			// The OS never reads 0xD07E, so this is inert for emulation.
 			val = (m_vdp_vram_active ? 0x01 : 0x00)
 			    | (m_sed_vram_active ? 0x02 : 0x00)
@@ -3904,7 +4216,7 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 	m_vdp_regs[reg] = data;
 
 	// VDP transaction trace (verification-only, S760_VDP_TRACE): turn the running
-	// OS into an RFSC16A protocol analyzer — PC, register, value, and the current
+	// OS into an RFSC16A protocol analyzer â€” PC, register, value, and the current
 	// VRAM pointer. Lets us see exactly how the OS programs the VDP before
 	// touching crt_update() (ChatGPT review step 2).
 	if (m_vdp_trace)
@@ -3915,13 +4227,13 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 	{
 		// NOTE (Gemini finding "17-render-path"): the MCS-96 writes every VDP
 		// register as a 16-bit WORD store, but this is an 8-bit handler on a
-		// 16-bit bus — MAME delivers byte0 at the even offset and byte1 at the
+		// 16-bit bus â€” MAME delivers byte0 at the even offset and byte1 at the
 		// odd offset+1. The old model only handled the even byte of each pair, so
 		// VRAM data, the VRAM address pointer, and the tile base all silently
 		// dropped their high byte. Handle BOTH bytes of each 16-bit register.
 		case 0x10: // VDP Control 0 (low byte)
 			// Display is enabled when master-enable (bit0) OR a plane-enable
-			// (tile bit3 / bitmap bit4) is asserted — the OS activates via the
+			// (tile bit3 / bitmap bit4) is asserted â€” the OS activates via the
 			// plane bits, not bit0 alone (Gemini: condition is (data & 0x19)).
 			m_vdp_display_enable = (data & 0x19) != 0;
 			m_vdp_interlace = (data & 0x02) != 0;
@@ -3932,7 +4244,7 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 			break;
 
 		case 0x18: // VRAM Data Port, byte 0 (low)
-		case 0x19: // VRAM Data Port, byte 1 (high) — 16-bit stream, both bytes
+		case 0x19: // VRAM Data Port, byte 1 (high) â€” 16-bit stream, both bytes
 		{
 			m_vdp_vram[m_vdp_addr & 0x1FFFF] = data;
 			m_vdp_addr = (m_vdp_addr + 1) & 0x1FFFF;
@@ -3979,7 +4291,7 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 			m_vdp_tile_base = (m_vdp_tile_base & 0xFF00) | data;
 			break;
 
-		case 0x31: // Character Tile Base, byte 1 (high) — was dropped before
+		case 0x31: // Character Tile Base, byte 1 (high) â€” was dropped before
 			m_vdp_tile_base = (m_vdp_tile_base & 0x00FF) | ((uint16_t)data << 8);
 			break;
 
@@ -3987,7 +4299,7 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 			m_vdp_addr = (m_vdp_addr & 0x1FF00) | (uint32_t)data;
 			break;
 
-		case 0x35: // VRAM Address Pointer, byte 1 (bits 8..15) — was dropped
+		case 0x35: // VRAM Address Pointer, byte 1 (bits 8..15) â€” was dropped
 			m_vdp_addr = (m_vdp_addr & 0x100FF) | ((uint32_t)data << 8);
 			break;
 
@@ -4006,7 +4318,7 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 
 // Authentic OP-760 / Roland RFSC16A studio palette.
 //
-// Per docs/ROLAND_RFSC16A_VDP_AND_DISPLAY_ARCHITECTURE.md §5, the genuine Sony
+// Per docs/ROLAND_RFSC16A_VDP_AND_DISPLAY_ARCHITECTURE.md Â§5, the genuine Sony
 // CXA1145M RGB DAC outputs 10 fixed Roland studio pens (indices 0..9) selected
 // from an internal 16-color DAC table. The VDP character-attribute byte encodes
 // a 4-bit foreground pen and 4-bit background pen (both indexing this table).
@@ -4015,7 +4327,7 @@ void s760_state::vdp_w(offs_t offset, uint8_t data)
 // removed (R1.2, R2.2). They existed solely for the now-deleted invented GUI
 // (render_rack_panel / render_*_mode): 10 = 1U rack charcoal chassis, 11 = rack
 // bezel highlight/screws, 12/13 = the drawn LCD-in-CRT green (the genuine SED1335
-// path renders monochrome pens 0/1 only — the green backlight tint is the React
+// path renders monochrome pens 0/1 only â€” the green backlight tint is the React
 // shell's job per R6.2), 14 = the drawn Gotek OLED cyan, 15 = metallic knob gray.
 // None of these are referenced by the kept rasterizers (lcd_update uses pens 0/1;
 // crt_update's genuine VDP rasterizer defaults to fg=1/bg=2 and otherwise indexes
@@ -4043,7 +4355,7 @@ void s760_state::s760_palette(palette_device &palette) const
 uint8_t s760_state::lcd_r(offs_t offset)
 {
 	// SED1335 port decode (Gemini finding "17-render-path"): both ports are at
-	// EVEN addresses on the 16-bit bus — 0xE000 = command/status, 0xE002 = data.
+	// EVEN addresses on the 16-bit bus â€” 0xE000 = command/status, 0xE002 = data.
 	// The old `offset & 0x01` test routed BOTH to the data port (both even), so
 	// the OS's status polls at 0x2DE1 never saw "ready". Decode on bit 1.
 	if ((offset & 0x02) == 0) // Command/Status Port (0xE000)
@@ -4178,7 +4490,7 @@ uint32_t s760_state::lcd_update(screen_device &screen, bitmap_ind16 &bitmap, con
 	// ("ROLAND S-760" / mode name / "SYSTEM v2.24 OK" / "RAM: 32MB READY") via
 	// draw_string whenever the SED1335 VRAM was empty. That content was invented
 	// chrome, not genuine controller output, so it is gone. When VRAM holds no
-	// real data (e.g. until the OS runs — see F2) the LCD now stays a defined
+	// real data (e.g. until the OS runs â€” see F2) the LCD now stays a defined
 	// blank screen (the bitmap.fill(0) above). The genuine SED1335 160x64 VRAM
 	// rasterizer above is unchanged.
 	return 0;
@@ -4206,7 +4518,7 @@ uint32_t s760_state::lcd_update(screen_device &screen, bitmap_ind16 &bitmap, con
 //   are now owned by the React shell (google-ui/). Live interactive CRT content
 //   is deferred to the C++-core bridge path (see spec Phase 3).
 //
-// Authentic OP-760 (RFSC16A VDP) display surface — CRT region only (640x240).
+// Authentic OP-760 (RFSC16A VDP) display surface â€” CRT region only (640x240).
 uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	// Defined background: clear the full CRT surface to black (pen 0).
@@ -4357,7 +4669,7 @@ uint32_t s760_state::crt_update(screen_device &screen, bitmap_ind16 &bitmap, con
 		}
 	}
 
-	// Trigger RFSC16A VDP VBlank Interrupt (Bit 4) — genuine hardware timing,
+	// Trigger RFSC16A VDP VBlank Interrupt (Bit 4) â€” genuine hardware timing,
 	// kept intact regardless of the display path.
 	trigger_irq(IRQ_VDP_VBLANK);
 
@@ -4414,7 +4726,7 @@ void s760_state::ic20_hle_install()
 	// access at 0x4E hits WORK RAM, not the register. So register-file accesses
 	// MUST use space(AS_DATA); only the scratch buffer (>=0x100) uses AS_PROGRAM.
 	//
-	// Selector 0x4B — resource record enumeration/lookup (see
+	// Selector 0x4B â€” resource record enumeration/lookup (see
 	// docs/ic20-hle-findings/shared/02-selector-4b-record-enumeration.md):
 	//   inputs : R4A  (0x4A, byte)  = resource type (1..4)
 	//            RW4C (0x4C, word)  = record index
@@ -4452,7 +4764,7 @@ void s760_state::ic20_hle_install()
 
 			case 0x3B:
 			{
-				// CHS floppy sector read (Gemini finding 07 §2). Inputs: RF0=sector,
+				// CHS floppy sector read (Gemini finding 07 Â§2). Inputs: RF0=sector,
 				// RF1=cylinder, RF2=head (bit0), RW1E=dest buffer. Serve 512 bytes
 				// from the disk image at the computed LBA into the dest buffer.
 				const u8  sec  = data_space.read_byte(0xF0);        // RF0
@@ -4473,7 +4785,7 @@ void s760_state::ic20_hle_install()
 
 			case 0x1F:
 			{
-				// Bulk LBA sector transfer (Gemini finding 07 §3). Inputs:
+				// Bulk LBA sector transfer (Gemini finding 07 Â§3). Inputs:
 				// RW4C=sector count, RW48/RW4A=LBA lo/hi, RW1E=dest buffer.
 				const u16 count  = data_space.read_word(0x4C);  // RW4C
 				const u16 lba_lo = data_space.read_word(0x48);  // RW48
@@ -4509,13 +4821,13 @@ void s760_state::ic20_hle_install()
 
 	// Write-audit result (ChatGPT review, finding 16): over the upper region
 	// 0xD100-0xFFFF the OS writes ONLY to 0xD400-0xD41C (a peripheral register
-	// block it zero-clears at init, PC ~0x2AEC-0x2B1x) — it never writes into
+	// block it zero-clears at init, PC ~0x2AEC-0x2B1x) â€” it never writes into
 	// the executable code (0xE000-0xFFFF etc.). So that code is effectively
 	// read-only; the current RAM backing is functionally correct (zero-writes to
 	// 0xD400 land harmlessly and read back consistently) but a more hardware-
 	// faithful model would make the code ROM with a decoded hole at 0xD400-0xD41C
 	// (candidate: TVF/MEQ or VDP-companion register block). Deferred as non-
-	// blocking — the VDP VRAM write path (0xD018) is already exercised.
+	// blocking â€” the VDP VRAM write path (0xD018) is already exercised.
 }
 
 void s760_state::s760_mem(address_map &map)
@@ -4537,6 +4849,10 @@ void s760_state::s760_mem(address_map &map)
 static INPUT_PORTS_START( s760 )
 	PORT_START("NATIVE_MEDIA")
 	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Insert Sample Floppy") PORT_CODE(KEYCODE_F5) PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 0)
+	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Export Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_export_media), 0)
+	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Eject Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 1)
+	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Floppy Media Status") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 2)
+	PORT_BIT(0x10, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Acknowledge Floppy Export") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 3)
 	PORT_START("NATIVE_MOUSE_X")
 	PORT_BIT(0xffff, 0, IPT_MOUSE_X) PORT_SENSITIVITY(50) PORT_KEYDELTA(1)
 	PORT_START("NATIVE_MOUSE_Y")
@@ -4634,7 +4950,7 @@ void s760_state::s760(machine_config &config)
 
 	// OP-760 Color CRT display surface only (RFSC16A VDP), CRT region = 640x240.
 	// ui-consolidation task 1.2 (R2.3): the former 120px rack strip (old 640x360)
-	// is dropped — the 1U rack/LCD/OLED chrome is now the React shell's job.
+	// is dropped â€” the 1U rack/LCD/OLED chrome is now the React shell's job.
 	screen_device &crt_screen(SCREEN(config, "crt_screen"));
 	crt_screen.set_refresh_hz(60);
 	crt_screen.set_vblank_time(ATTOSECONDS_IN_USEC(2500));

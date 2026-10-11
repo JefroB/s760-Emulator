@@ -1,5 +1,8 @@
 #pragma once
 
+// configure_native() selects the real isolated runtime implementation. Historical
+// scaffold comments/tests below describe only the unconfigured buffer-only mode.
+
 // =============================================================================
 //  s760_mame_host.hpp
 //
@@ -50,6 +53,8 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <optional>
+#include "s760/s760_native_runtime.hpp"
 
 namespace s760 {
 
@@ -62,6 +67,14 @@ public:
     S760MameHost();
     explicit S760MameHost(std::string roms_dir);
     ~S760MameHost() override;
+    // Explicit production runtime path. Legacy buffer-only mode remains for
+    // historical seam tests and is not a native execution claim.
+    void configure_native(NativeRuntimeConfig config) { m_native_config=std::move(config); }
+    NativeRuntimeClient* native_runtime() { return m_native.get(); }
+    // Call only after workers and bridge users are quiescent.
+    void close_native() { m_native.reset(); m_initialized=false; }
+    const std::string& native_error() const { return m_native_error; }
+    bool render_native_audio(float* interleaved,std::size_t frames);
 
     S760MameHost(const S760MameHost&)            = delete;
     S760MameHost& operator=(const S760MameHost&) = delete;
@@ -399,6 +412,9 @@ public:
     const std::vector<uint8_t>& maincpu_region() const { return m_maincpu_region; }
 
 private:
+    std::optional<NativeRuntimeConfig> m_native_config;
+    std::unique_ptr<NativeRuntimeClient> m_native;
+    std::string m_native_error;
     // Reset the cached CRT raster to an authentic-blank 640x480 RGBA buffer and
     // the cached LCD raster to an all-zero (off) 160x64 MONO1 buffer. Called
     // from the constructor so the surfaces are protocol-correct before any

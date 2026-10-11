@@ -79,6 +79,10 @@ ioport_constructor midiin_device::device_input_ports() const
 
 void midiin_device::device_start()
 {
+	save_item(NAME(m_xmit_read));
+	save_item(NAME(m_xmit_write));
+	save_item(NAME(m_tx_busy));
+	save_item(NAME(m_xmitring));
 	m_timer = timer_alloc(FUNC(midiin_device::midi_update), this);
 	m_midi.reset();
 	m_timer->enable(false);

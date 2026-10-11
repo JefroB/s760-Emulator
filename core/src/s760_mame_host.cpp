@@ -1,3 +1,7 @@
+// Current native mode: configure_native() launches the real isolated MAME
+// runtime. Displays, MIDI, floppy insertion and worker PCM use that instance.
+// The historical buffer-only mode below is retained for seam regressions;
+// it is not a native execution backend. VST3 routing is still separate work.
 // =============================================================================
 //  s760_mame_host.cpp
 //
@@ -94,6 +98,13 @@ S760MameHost::S760MameHost(std::string roms_dir)
 
 S760MameHost::~S760MameHost() = default;
 
+bool S760MameHost::render_native_audio(float* output,std::size_t frames) {
+    if(!m_native) return false;
+    // Worker-only method. Renderer failure is returned to the worker's status.
+    try { return m_native->render(output,frames); }
+    catch(const std::exception&) { return false; }
+}
+
 void S760MameHost::reset_cached_surfaces() {
     // Authentic-blank CRT: a zero-filled RGBA8888 buffer of the exact protocol
     // payload size. Identical in content to crt_blank(); sized here directly so
@@ -140,6 +151,15 @@ std::string S760MameHost::resolve_image_path() const {
 }
 
 bool S760MameHost::init() {
+    if (m_native_config) {
+        m_native.reset(); m_initialized=false; m_native_error.clear();
+        reset_cached_surfaces();
+        try {
+            m_native=std::make_unique<NativeRuntimeClient>(*m_native_config);
+            m_initialized=true;
+            return true;
+        } catch(const std::exception& error) { m_native_error=error.what(); return false; }
+    }
     // Start from a clean, honest state: not initialized, surfaces blank.
     m_initialized = false;
     m_vdp_vram_active = false;
@@ -179,6 +199,25 @@ bool S760MameHost::init() {
 }
 
 bool S760MameHost::run_frame() {
+    if (m_native) {
+        // Native time is owned by MAME or the audio worker, never a UI tick.
+        try {
+            const auto reply=m_native->request("{\"op\":\"frames\"}");
+            std::vector<uint8_t> crt(640*480*4),lcd(1280,0);
+            for(std::size_t y=0;y<240;++y) for(std::size_t x=0;x<640;++x) {
+                auto src=(y*640+x)*4;
+                for(unsigned row=0;row<2;++row) {
+                    auto dst=((y*2+row)*640+x)*4;
+                    crt[dst]=reply.crt[src+2]; crt[dst+1]=reply.crt[src+1];
+                    crt[dst+2]=reply.crt[src]; crt[dst+3]=255;
+                }
+            }
+            for(std::size_t i=0;i<160*64;++i)
+                if(reply.lcd[i*4] || reply.lcd[i*4+1] || reply.lcd[i*4+2]) lcd[i/8]|=0x80>>(i%8);
+            m_crt_raster=std::move(crt); m_lcd_raster=std::move(lcd);
+            return true;
+        } catch(const std::exception& error) { m_native_error=error.what(); return false; }
+    }
     // -------------------------------------------------------------------------
     //  run_frame() — advance exactly one emulated video frame, then refresh the
     //  cached CRT + LCD rasters from the owned VRAM buffers (Requirements 1.3,
@@ -375,6 +414,11 @@ bool S760MameHost::get_lcd_surface(uint8_t* out, std::size_t len) const {
 }
 
 void S760MameHost::send_midi_message(const uint8_t* msg, size_t len) {
+    if(m_native) {
+        try { m_native->midi(msg,len); }
+        catch(const std::exception& error) { m_native_error=error.what(); }
+        return;
+    }
     // -------------------------------------------------------------------------
     //  send_midi_message() — task 7.9 (Requirement 6.8).
     //
@@ -399,6 +443,10 @@ void S760MameHost::send_midi_message(const uint8_t* msg, size_t len) {
 //  Disk mounting adapter seam (task 7.9, Requirements 6.6, 6.7)
 // ---------------------------------------------------------------------------
 bool S760MameHost::mount_disk(const std::string& path) {
+    if(m_native) {
+        try { m_native->insert_media(path); m_last_mount_ok=true; m_last_mount_error.clear(); return true; }
+        catch(const std::exception& error) { m_last_mount_ok=false; m_last_mount_error=error.what(); return false; }
+    }
     // Delegate to the owned drive manager's mount_floppy(), the SAME path the
     // Bridge already uses for MOUNT_DISK (Requirement 6.6). mount_floppy()
     // returns true on success and false on a path that cannot be opened/mounted,
@@ -480,6 +528,24 @@ const KeyMatrixBit* find_key_matrix_bit(const std::string& id) {
 } // namespace
 
 void S760MameHost::apply_button(const std::string& id, bool pressed) {
+    if(m_native) {
+        struct Mapping { const char* id; const char* port; const char* name; };
+        static const Mapping inputs[]={
+            {"COMMAND",":PANEL0","Command"},{"EXIT",":PANEL1","Exit"},
+            {"MODE",":PANEL1","Mode"},{"UP",":PANEL1","Panel Up"},
+            {"DOWN",":PANEL3","Panel Down"},{"LEFT",":PANEL2","Panel Left"},
+            {"RIGHT",":PANEL0","Panel Right"},{"F1",":PANEL2","Panel F1"},
+            {"F2",":PANEL3","Panel F2"},{"F3",":PANEL2","Panel F3"},
+            {"S1",":PANEL0","S1"},{"S2",":PANEL0","S2"},{"SHIFT",":PANEL3","Panel Shift"}};
+        for(const auto& input:inputs) if(id==input.id) {
+            try { m_native->request(std::string("{\"op\":\"button\",\"port\":\"")+input.port+
+                "\",\"name\":\""+input.name+"\",\"down\":"+(pressed?"true":"false")+"}"); }
+            catch(const std::exception& error) { m_native_error=error.what(); }
+            return;
+        }
+        m_native_error="Unsupported native panel control: "+id;
+        return;
+    }
     const KeyMatrixBit* entry = find_key_matrix_bit(id);
     if (entry == nullptr) {
         // Unknown id maps to no defined input -> ignore, no state change
@@ -587,6 +653,12 @@ void S760MameHost::apply_pointer(double x, double y) {
     const bool y_in_range = (y >= 0.0 && y <= 1.0);
     if (!x_in_range || !y_in_range) {
         return; // out-of-range / NaN -> no VDP write, no state change (R6.4)
+    }
+    if(m_native) {
+        try { m_native->request("{\"op\":\"pointer\",\"x\":"+std::to_string(std::lround(x*159))+
+            ",\"y\":"+std::to_string(std::lround(y*119))+"}"); }
+        catch(const std::exception& error) { m_native_error=error.what(); }
+        return;
     }
 
     // ABSOLUTE normalized->pixel scaling ONLY (Requirements 6.3, 6.5). There is

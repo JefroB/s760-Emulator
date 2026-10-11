@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-11",
+  "layer": "native exported-module harness, repository interface definitions",
+  "hardware_parity_claim": false,
+  "sha256": {
+    "mame-source/mames760.exe": "2827786b421631a80b1397718ea889dd0a675e467124cfe1bf7b52877f28e976",
+    "build/Release/Roland_S760.vst3": "e9c3f7c6ac27896e4d2e98d7ea39222dcf9ea41011a9e164cfe2782beacbf832",
+    "scripts/s760_runtime.lua": "03adc6c2813a5053478c42560f29db0223ade2accbf3b923fddcfb9b27a15d4a",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "rates": {
+    "44100": {
+      "exact_stereo_frames": 220500,
+      "matched_row": "Native plugin state passed rate=44100 exact_frames=220500 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1",
+      "failed_native_apply_blocks_processing": true,
+      "valid_reload_recovers": true
+    },
+    "48000": {
+      "exact_stereo_frames": 240000,
+      "matched_row": "Native plugin state passed rate=48000 exact_frames=240000 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1",
+      "failed_native_apply_blocks_processing": true,
+      "valid_reload_recovers": true
+    },
+    "96000": {
+      "exact_stereo_frames": 480000,
+      "matched_row": "Native plugin state passed rate=96000 exact_frames=480000 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1",
+      "failed_native_apply_blocks_processing": true,
+      "valid_reload_recovers": true
+    }
+  },
+  "regressions": {
+    "cpp_executables": 25,
+    "python_passed": 227
+  },
+  "excluded": [
+    "SCSI",
+    "real DAW/editor and SDK ABI",
+    "native ADC",
+    "cross-build migration",
+    "concurrent UI controls"
+  ]
+}

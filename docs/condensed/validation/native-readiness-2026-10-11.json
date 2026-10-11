@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-11",
+  "objective": "Milestone 1: expose explicit firmware boot/load readiness and recovery in the UI",
+  "status": "complete",
+  "base_revision": "f6c37813a062afad9f15dfc3d1bdea12fbfdffdc",
+  "working_tree_changes": true,
+  "sha256": {
+    "scripts/s760_readiness.py": "e94b87a910a712b8e906d36e300d1c3369c008a2889ff7d2fe078bcc5796ecf0",
+    "scripts/s760_standalone.py": "2d0119d4db61e270f170a5580a26449189f2213fac8a5a38740d2ac52c1f8166",
+    "scripts/s760_runtime.lua": "389f9f474cd7f66d22d2e3e7f17d5849674aafc858681c54dd644713fa57167e",
+    "scripts/verify_native_readiness.py": "91630dce608137f907c81f665ac4b79e5fbdb629cc74feebbfedde9bbbdbbaff",
+    "tests/test_firmware_readiness.py": "ff3a98e1b990ed330eba96be6ef832f8d255ee3fcd366831589049a2eb69a892",
+    "google-ui/src/NativeStudio.tsx": "a3cadb7a3a1642796d32d15fbc0ea551598a58e89cdd08e2db127619860d6b6e",
+    "google-ui/src/NativeStudio.test.tsx": "dacec5c0be2e8f17070cf364b7bad16dc9f57e56ff4cb86733a51bd12183218e",
+    "google-ui/e2e/native-runtime.spec.ts": "250842bbdbdb0b889f88cf7112ee74647f2cd40809dca95feb1558771237f54d",
+    "mame-source/mames760.exe": "2827786b421631a80b1397718ea889dd0a675e467124cfe1bf7b52877f28e976",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "native_normal_speed": {
+    "states": [
+      "booting",
+      "ready",
+      "disk_ready",
+      "loading",
+      "disk_ready",
+      "unknown",
+      "disk_ready",
+      "ready",
+      "failed",
+      "booting",
+      "ready"
+    ],
+    "normal_speed": true,
+    "loaded_audio_peak": 0.04453751817345619,
+    "note_off_silent": true,
+    "crash_recovered": true,
+    "replacement_pid": 9496,
+    "previous_pid": 5632
+  },
+  "existing_native_regression": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.566666666667,
+    "note_release": 80.766666666667,
+    "process_shutdown": "clean"
+  },
+  "browser": {
+    "native_tests_passed": 1,
+    "shell_tests_passed": 9,
+    "native_duration_seconds": 49.5,
+    "loaded_patch_table_fnv1a": 3384624565,
+    "reconnect_preserved_table": true,
+    "confirmed_restart_changed_table": true,
+    "readonly_title_sha256": "40ebee098ea2b92bfba2d7da412f2fd3c39b5a08cf56822c0a9b880f3bef7f36"
+  },
+  "packaged_webview": {
+    "status": "OS ready \u2014 Perform Play.",
+    "width": 640,
+    "height": 480,
+    "nonzero": 225776
+  },
+  "packaged_exe_sha256": "ea3ad7997ce182642a01fd66a1592cd10e8f5ecb969f36e6709fe49c46f13e91",
+  "regressions": {
+    "python": 211,
+    "react": 89,
+    "typescript": "passed"
+  },
+  "commands": [
+    "python scripts/verify_native_readiness.py --state-dir docs/ic20-hle-findings/chatGPT-work/readiness-live-136",
+    "python scripts/verify_native_runtime.py --state-dir docs/ic20-hle-findings/chatGPT-work/runtime-final-136",
+    "node node_modules/@playwright/test/cli.js test e2e/native-runtime.spec.ts --workers=1",
+    "node node_modules/@playwright/test/cli.js test --grep-invert \"native firmware\" --workers=2",
+    "npm run lint",
+    "node node_modules/vitest/vitest.mjs run --maxWorkers=4",
+    "scripts/build_standalone.ps1",
+    "S760Studio.exe --verify-desktop --no-sound --fast --boot-rom <user-ROM> --system-disk <user-OS> --media-dir <user-media> --state-dir <private-state>"
+  ],
+  "limitations": [
+    "Read-only OS 2.24 screen profile; unknown/occluded screens remain unknown",
+    "Disk Load idle does not establish successful loading of all requested data",
+    "Restart discards acknowledged unsaved RAM; it does not restore lost state after a crash",
+    "Live busy/dirty media blocks restart until exported; after child crash only exported disks are guaranteed",
+    "No clean-machine distribution, DAW or plugin-state claim",
+    "Five other Milestone 1 objectives remain open"
+  ]
+}

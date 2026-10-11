@@ -1,0 +1,83 @@
+{
+  "native_boot_frames": true,
+  "long_mouse_jump": [
+    300,
+    120
+  ],
+  "midi_note": 60,
+  "held_peak_pcm16": 1459.0,
+  "release_tail_peak_pcm16": 0,
+  "sample_rate": 44100,
+  "note_start": 78.283333333333,
+  "note_release": 80.416666666667,
+  "process_shutdown": "clean",
+  "pull_render": {
+    "sizes": [
+      1,
+      63,
+      127,
+      256,
+      511,
+      1024,
+      4096,
+      8192
+    ],
+    "frames": 122616,
+    "wav_max_error_pcm16": 0.9999065399169922,
+    "dropped_frames": 0,
+    "paused_between_requests": true,
+    "release_tail_silent": true
+  },
+  "scheduled_midi": [
+    {
+      "seconds": 84.822675736961,
+      "sample": 3740680
+    },
+    {
+      "seconds": 85.822675736961,
+      "sample": 3784780
+    }
+  ],
+  "runtime_contract": {
+    "pause_freezes_time": true,
+    "step_seconds": 0.016666666666999674,
+    "pcm_frames": 188748,
+    "pcm_dropped_frames": 0,
+    "overflow_reported_frames": 49392,
+    "pcm_wav_max_error_pcm16": 0.998046875
+  },
+  "identities": {
+    "mame-source/mames760.exe": "717683cd3f991b3ce97cb8fb86fb08bcaf29ddc798f65ef582071bd3efb0e8e1",
+    "mame-source/src/frontend/mame/luaengine.cpp": "952f8b08aca0d88816d13cd7585a208a77387a7fab4afb787c0d92ca38e86718",
+    "mame-source/src/devices/imagedev/midiin.h": "da26e769b05d3bc0ed53f712d83f09e63c462154f20f87e1a43bc7d216fe96e1",
+    "scripts/s760_runtime.lua": "40d633a9cfa966f0c9b09f47023b917ff4f4079e5b480e2bc9f67d1dfc819368",
+    "scripts/s760_runtime.py": "e4bb3b91af9bc5e1c660bdcaad5b97a69d4e40c7c9a1ce6d37cb0b07f158d61d",
+    "core/src/s760_native_runtime.cpp": "afb0b70cbd177d4e0c621d62f16b47c6378383f3d33cbbf923c66621e39ab560",
+    "core/src/s760_mame_host.cpp": "82fb4e82872982d7fae7fb35b1f25e48b0c673eececb8f2e7123b23e3a09b3e4",
+    "core/include/s760/s760_native_audio_queue.hpp": "83eb959a04ade2f0e75e8bb3e7a8f03faa4709a57b73e2a17319859b1b554515",
+    "core/include/s760/s760_native_audio_worker.hpp": "a0cb82447540690ee77f64a27774a849be9288c9148f076a93030e130ccc43bf",
+    "build/Release/s760_native_runtime_tests.exe": "518d41a21f9941cb26f7b70e463c304adb873b808d4f4f5bfff824536ea558ac",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "cpp_adapter": {
+    "frames": 88200,
+    "peak": 0.0445375,
+    "release_tail": 0,
+    "test_consumer_waits_for_prefill": true,
+    "observed_underruns": 0,
+    "independent_instance": true,
+    "duplicate_state_rejected": true,
+    "exact_crt_lcd_conversion": true,
+    "repeated_run": true,
+    "parent_crash_child_cleanup": true,
+    "state_reopen_after_crash": true
+  },
+  "regressions": {
+    "python_tests": 196,
+    "cpp_test_executables": 23,
+    "concurrent_queue_test_frames": 200000,
+    "native_pcm_queue_preserved_frames": 122616,
+    "packaged_desktop_nonblack_pixels": 225776
+  },
+  "scope": "Windows direct C++ native adapter and bounded worker; not unified VST3 routing, DAW latency, full snapshots, unsaved-work recovery, or complete hardware parity."
+}
