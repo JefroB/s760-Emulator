@@ -1,6 +1,17 @@
 # Hardware & Current Emulator Memory Map
 
-Latest: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
+## Current status — 2026-10-10 review
+
+Native ROM boot now reaches a colour, mouse-interactive Perform Play screen and loads samples. The banked physical map below is the native reference; flat/HLE mappings and bring-up workarounds are separate historical paths. Peripheral timing and full CPU fidelity remain incomplete.
+
+See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+
+## Technical reference and dated milestone history
+
+Milestone labels below apply to their cited finding, not to the present project status.
+
+
+At that checkpoint: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
 and reaches interactive Perform Play. Correct OP-760 identification and live VDP
 pointer readback remove the video blockers. New native EEPROM profiles default
 to Mouse+CRT at the user's request; existing profiles retain their setting.

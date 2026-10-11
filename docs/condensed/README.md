@@ -13,6 +13,8 @@ opt-in native interpolator passes all88 fixture notes; disabled output remains
 bit-identical. Hardware limits and distinctions between models and facts remain
 explicit in document06.
 
+For product completion and review gates, use the [completion roadmap](../COMPLETION_ROADMAP.md). Dated milestone histories in these references are subordinate to their current-status summaries.
+
 Start with [the native boot/audio runbook](11-native-boot-and-audio-runbook.md)
 for current launch flags, validation, limits and commit scope. MAME and core/plugin
 builds pass; both C++ suites and all152 Python tests pass locally. Original
@@ -24,7 +26,7 @@ contain the supported conclusions.
 | [01 Hardware and memory map](01-hardware-and-memory-map.md) | Primary-source chip identities/specs; current installed MAME windows |
 | [02 IC15 EPROM and HLE](02-ic15-boot-eprom-and-handoff.md) | Available ROM, actual preload path, implemented selector behavior and limits |
 | [03 VDP/display](03-rfsc16a-vdp-and-display-architecture.md) | Current register handling, pointer/layout defaults, palette, native/bridge geometry |
-| [04 Execution and next work](04-execution-pipeline-and-emulator-action-plan.md) | Stable-run evidence, CPU compatibility shims, D010 task, verification gates |
+| [04 Execution and next work](04-execution-pipeline-and-emulator-action-plan.md) | Current priorities and dated native/legacy bring-up evidence; CPU compatibility limits |
 | [05 Disk/forensics/patching](05-disk-format-forensics-and-patching.md) | Disk regions, address math, tools, patch results, catalogs/manuals |
 | [06 Audio and capture parity](06-audio-dsp-and-hardware-parity.md) | Actual software DSP contract, hardware identities, capture plan/tooling limits |
 | [07 UI and front panel](07-ui-architecture-and-front-panel.md) | Canonical shell, implemented bridge, SHIFT evidence rules, LCD commands |

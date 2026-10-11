@@ -71,6 +71,8 @@ Acceptance: scan and load in a real DAW; play and record MIDI, sample input, sav
 
 Can proceed alongside integration; required for the completion claim.
 
+- [ ] Inventory CPU compatibility behavior by execution mode: distinguish legacy flat/HLE shims from native 80C196KB semantics. Audit BMOVI applicability, SFR/window behavior and remaining timer/serial/DMA peripherals against primary specifications and isolated instruction/device tests.
+- [ ] Validate IC4 interrupt arbitration under simultaneous FDC, MIDI and voice-completion requests: priority, vector latching, masking, acknowledgement and return. Add MIDI burst/overrun tests; successful single-source firmware playback does not establish these rules.
 - [ ] Audit actual firmware workflows for perform/patch/partial/sample editing, voice allocation/polyphony, MIDI and output routing.
 - [ ] Validate interpolation beyond the current 44.1kHz forward-loop quarter-to-double-speed domain: other clocks, one-shots, reverse/alternate loops and pitch transitions.
 - [ ] Validate combined envelope, filter, stereo and interpolation behavior; resolve unsupported resonant/moving filter cases with evidence.
@@ -92,6 +94,18 @@ Depends on milestones 3–5.
 
 Acceptance: another user can follow the published instructions to run both products and complete the load/play/edit/sample/save/restore workflow without development tools.
 
+## Evidence required for review
+
+| Concern | Completion evidence | Gate |
+| --- | --- | --- |
+| CPU/peripherals | Mode-specific shim inventory, specification-backed semantics and isolated tests; native workflow regression after corrections | 5 |
+| MIDI arbitration | Concurrent-source traces/tests, mask/acknowledgement behavior, burst handling; inferred priority explicitly identified until verified | 5 |
+| Audio DSP | Held-out physical captures for claimed domains, plus combined-path native tests; dynamic resonance remains open | 5 |
+| Live integration | Actual native machine driving React frames and host audio/MIDI/state together | 1–4 |
+| Testing | Label each result as model/unit, native runtime, physical hardware comparison or packaged-product validation | 6 |
+| Documentation | Current status precedes dated history; superseded experiments never serve as current acceptance evidence | 6 |
+
+The existing 152-test checkpoint is regression evidence, not 152 hardware-parity tests. Native agreement with an independent mathematical reference verifies implementation of that model; only hardware comparisons assess the measured hardware behavior. Neither establishes complete product readiness.
 ## Working order and evidence
 
 Start with milestone 1, then demonstrate the milestone 2 live-screen/audio workflow before expanding packaging or plugin formats. Share engine/runtime fixes between standalone and VST3. Hardware work can proceed independently when it does not alter the runtime contract.

@@ -1,5 +1,16 @@
 # Audio DSP & Hardware Parity
 
+## Current status — 2026-10-10 review
+
+Finding124 establishes sub-1% normalized RMS agreement for the documented interpolation captures and settings, with an opt-in native implementation. Loop/envelope and filter audition work has progressed beyond the earlier raw monitor. Dynamic resonance, other playback domains and combined signal paths remain incomplete. Dated findings below preserve the investigation history; early claims that interpolation is unresolved or filters are absent are superseded within the tested domains by the later findings.
+
+See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+
+## Technical reference and dated milestone history
+
+Milestone labels below apply to their cited finding, not to the present project status.
+
+
 Condensed from the DSP architecture, recording methodology, testing guide, and
 LLE roadmap. Source descriptions mix implemented software models with claims
 about original silicon; keep those categories distinct.

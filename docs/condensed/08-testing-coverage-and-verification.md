@@ -1,13 +1,24 @@
 # Testing, Coverage & Verification
 
-Latest input update: finding59. Native F008 now supplies the four-nibble
+## Current status — 2026-10-10 review
+
+The finding124 checkpoint passed native/core/plugin builds, core/plugin executable checks and 152 Python tests. React was not retested for that checkpoint. Model and source-contract assertions are not hardware parity, and native executable validation is not packaged standalone/DAW validation. No tests were rerun for this documentation review.
+
+See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+
+## Technical reference and dated milestone history
+
+Milestone labels below apply to their cited finding, not to the present project status.
+
+
+Input checkpoint: finding59. Native F008 now supplies the four-nibble
 mouse movement packet and active-low buttons. A ROM-boot integration test
 verifies firmware coordinate changes in both directions and left-button press/
 release. The launcher enables host mouse input. Hardware cursor rendering,
 encoder, RC-100 and complete IC20 behavior remain unfinished.
 
 
-Latest: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
+At that checkpoint: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
 and reaches interactive Perform Play. Correct OP-760 identification and live VDP
 pointer readback remove the video blockers. New native EEPROM profiles default
 to Mouse+CRT at the user's request; existing profiles retain their setting.

@@ -1,6 +1,17 @@
 # IC15 BOOT EPROM & Current HLE
 
-Latest: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
+## Current status — 2026-10-10 review
+
+Original-ROM cold boot and sample loading are established in the tested native configuration. The older preloaded flat/HLE handoff is retained for comparison, not required evidence for the current boot milestone. See the native runbook for reproduction.
+
+See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+
+## Technical reference and dated milestone history
+
+Milestone labels below apply to their cited finding, not to the present project status.
+
+
+At that checkpoint: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
 and reaches interactive Perform Play. Correct OP-760 identification and live VDP
 pointer readback remove the video blockers. New native EEPROM profiles default
 to Mouse+CRT at the user's request; existing profiles retain their setting.
@@ -15,7 +26,7 @@ services timer interrupts and scans the panel, but its CRT remains blank.
 Reset bank defaults are experimental; DMA is synchronous and CPU/peripheral
 emulation remains partial. The older direct handoff still reaches Perform Play.
 
-Latest finding56: the opt-in banked native handoff now scans the 13-switch front
+Historical finding56: the opt-in banked native handoff now scans the 13-switch front
 panel and runs INTERACTIVE firmware menus — Command and Mode open and Exit
 returns to Perform Play (host keys via the real scan port; see document 07 for
 the SC/SP matrix). Finding55 before it: documented KB extended interrupts and
