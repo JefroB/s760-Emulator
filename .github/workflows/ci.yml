@@ -56,7 +56,8 @@ jobs:
           python -m pip install --upgrade pip
           # pybind11: required by core/CMakeLists.txt to build the s760_cpp module.
           # pytest + Pillow(PIL): the test suite imports pytest and PIL (mame_harness).
-          python -m pip install pybind11 pytest Pillow
+          # NumPy/SciPy: band-limited hardware-capture reference and alias tests.
+          python -m pip install pybind11 pytest Pillow numpy scipy
 
       - name: Configure CMake (Release)
         shell: pwsh

@@ -1,9 +1,23 @@
 # Roland S-760 Condensed Reference
 
-Current, reconciled documentation as of 2026-10-09. Physical hardware facts,
-implemented emulator behavior, and observed boot results are labeled separately.
-Unsupported claims are excluded from specifications and tracked as evidence
-requests in the team's shared folder. Original docs remain as the evidence trail.
+Current checkpoint: 2026-10-10, findings through124. Native original-ROM boot
+reaches the colour, mouse-interactive Perform Play screen, loads sample disks,
+and plays firmware-driven MIDI voices. Measured loop, envelope, filter and
+pitch audition paths are available; complete CPU/peripheral/ASIC fidelity is
+not claimed.
+
+The full88-key hardware capture resolves a measurement-resampling bug. With
+fixed coefficients,28 pulse rates match within0.697–0.926% normalized RMS error
+and four independent noise cases within0.380–0.538%, in100Hz–18kHz. The new
+opt-in native interpolator passes all88 fixture notes; disabled output remains
+bit-identical. Hardware limits and distinctions between models and facts remain
+explicit in document06.
+
+Start with [the native boot/audio runbook](11-native-boot-and-audio-runbook.md)
+for current launch flags, validation, limits and commit scope. MAME and core/plugin
+builds pass; both C++ suites and all152 Python tests pass locally. Original
+firmware, captures and private research remain local; committed references
+contain the supported conclusions.
 
 | Document | Contents |
 | --- | --- |
@@ -17,8 +31,5 @@ requests in the team's shared folder. Original docs remain as the evidence trail
 | [08 Testing and coverage](08-testing-coverage-and-verification.md) | Real layer ownership, assertion limits, stale matrix claims, verification |
 | [09 Hardware screens](09-hardware-screens-and-layout-evidence.md) | 37-photo catalog, visual patterns, candidate descriptors and capture priorities |
 | [10 Deployment and roadmap](10-hardware-deployment-and-development-roadmap.md) | Gotek/SCSI workflow, unfinished fidelity work, proposed future features |
+| [11 Native boot/audio runbook](11-native-boot-and-audio-runbook.md) | Current launch, supported pitch domain, validation and commit scope |
 | [Source map](SOURCE_MAP.md) | Every public source document, resolution evidence, shared requests |
-
-Read 01–04 for boot engineering; 07–09 for frontend/display work; 05–06 and 10
-for disk/audio/hardware experiments. No fresh regression pass is claimed by this
-documentation-only update.

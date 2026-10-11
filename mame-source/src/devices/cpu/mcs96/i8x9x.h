@@ -110,6 +110,10 @@ protected:
 	void pwm_control_w(u8 data);
 
 private:
+	u8 kb_sfr_r(offs_t offset);
+	void kb_sfr_w(offs_t offset, u8 data);
+	u16 m_kb_t1_offset = 0, m_kb_t2_capture = 0, m_kb_hsi_hold = 0;
+	u8 m_kb_ioc2 = 0, m_kb_ios2 = 0;
 	enum {
 		IRQ_TIMER  = 0x01,
 		IRQ_AD     = 0x02,
@@ -181,6 +185,11 @@ protected:
 	virtual u8 i8x9x_p2_mask() const noexcept override { return 0x27; }
 };
 
+class i80c196kb_device : public i8x9x_device {
+public:
+	i80c196kb_device(const machine_config &mconfig, const char *tag, device_t *owner, u32 clock);
+};
+
 class n8097bh_device : public i8x9x_device {
 public:
 	n8097bh_device(const machine_config &mconfig, const char *tag, device_t *owner, u32 clock);
@@ -207,6 +216,7 @@ protected:
 };
 
 DECLARE_DEVICE_TYPE(C8095_90, c8095_90_device)
+DECLARE_DEVICE_TYPE(I80C196KB, i80c196kb_device)
 DECLARE_DEVICE_TYPE(N8097BH, n8097bh_device)
 DECLARE_DEVICE_TYPE(P8098, p8098_device)
 DECLARE_DEVICE_TYPE(P8798, p8798_device)

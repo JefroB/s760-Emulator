@@ -151,7 +151,11 @@ def test_vdp_driver_implementation_present():
         src = f.read()
 
     # Verify VDP address map mapping
-    assert "map(0xD000, 0xD0FF).rw(FUNC(s760_state::vdp_r), FUNC(s760_state::vdp_w));" in src
+    import re
+    assert re.search(r"install_readwrite_handler\(0xD000,\s*0xD0FF,\s*"
+                     r"read8sm_delegate\(\*this, FUNC\(s760_state::vdp_r\)\),\s*"
+                     r"write8sm_delegate\(\*this, FUNC\(s760_state::vdp_w\)\)\)", src)
+    assert "address >= 0x102800 && address <= 0x1028ff" in src
     # Verify VDP registers and VRAM buffers
     assert "m_vdp_vram" in src
     assert "m_vdp_regs" in src

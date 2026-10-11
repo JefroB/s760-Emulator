@@ -1,20 +1,7 @@
 # license:BSD-3-Clause
 # copyright-holders:Olivier Galibert
 fetch
-	if(irq_requested) {
-		int level;
-		for(level = 7; level >= 0 && !(PSW & pending_irq & (1<<level)); level--);
-		if(level != 7)
-			pending_irq &= ~(1<<level);
-		OP1 = level;
-		standard_irq_callback(OP1, PC);
-		TMP = reg_r16(0x18);
-		TMP -= 2;
-		reg_w16(0x18, TMP);
-		any_w16(TMP, PC);
-		PC = any_r16(0x2000+2*OP1);
-		check_irq();
-	}
+	if(irq_requested) take_interrupt();
 	PPC = PC;
 	if(debugger_enabled())
 		debugger_instruction_hook(PC);
@@ -1604,21 +1591,24 @@ c0    st    direct_2w
 	next(4);
 
 c1    bmov  direct_2w 196
-	OP1 = read_pc();
-	OP2 = read_pc();
 	{
+		// direct_2w has already fetched both operands. BMOV is three bytes.
 		uint16_t cnt = reg_r16(OP1);
 		uint16_t src = reg_r16(OP2 & 0xfe);
 		uint16_t dst = reg_r16((OP2 & 0xfe) + 2);
-		while(cnt--) {
+		int cycles = 6;
+		while(cnt) {
 			any_w16(dst, any_r16(src));
+			cycles += 8 + (src >= 0x200 ? 3 : 0) + (dst >= 0x200 ? 3 : 0);
 			src += 2;
 			dst += 2;
+			--cnt;
 		}
 		reg_w16(OP2 & 0xfe, src);
 		reg_w16((OP2 & 0xfe) + 2, dst);
+		reg_w16(OP1, 0);
+		next(cycles);
 	}
-	next(8);
 
 c2    st    indirect_2w
 	any_w16(OP1, reg_r16(OP2));
@@ -1633,8 +1623,7 @@ c4    stb   direct_2b
 	next(4);
 
 c5    cmpl  direct_2w 196
-	OP1 = read_pc();
-	OP2 = read_pc();
+	// direct_2w has already fetched both operands (CMPL is three bytes).
 	{
 		uint32_t a = reg_r16(OP2 & 0xfe) | (uint32_t(reg_r16((OP2 & 0xfe) + 2)) << 16);
 		uint32_t b = reg_r16(OP1 & 0xfe) | (uint32_t(reg_r16((OP1 & 0xfe) + 2)) << 16);
@@ -1645,7 +1634,7 @@ c5    cmpl  direct_2w 196
 		else if(int32_t(diff) < 0)
 			PSW |= F_N;
 		if((a^b) & (a^diff) & 0x80000000)
-			PSW |= F_V;
+			PSW |= F_V|F_VT;
 		if(a >= b)
 			PSW |= F_C;
 	}
@@ -1925,49 +1914,22 @@ f0    ret   none
 	next(12); // +4 for external sp
 
 f2    pushf none
-	// PUSHF is STACK-NEUTRAL for the S-760 OS (same discipline as PUSHA/POPA —
-	// finding 23). Evidence: the OS routine at 0xE080 (a UI-record sort/relink)
-	// does PUSHF at entry (0xE086) and exits via a plain RET at 0xE136 with NO
-	// matching POPF on the taken path; its caller at 0x28E1 does `LCALL 0xE080`
-	// and the instruction AFTER the call (0x28E4) is a normal STB — NO
-	// compensating POP. A real two-byte PUSHF makes the E136 RET pop the pushed
-	// PSW instead of the return address 0x28E4 and derail to 0x0224 (observed on
-	// EVERY completion of this routine). Across the whole 279k-instruction boot
-	// trace there are exactly 2 PUSHF and 0 POPF, and the timer ISR (0x2B51) uses
-	// PUSHA (also net-zero), not PUSHF — so nothing depends on PUSHF actually
-	// saving PSW. Keep PSW cleared (interrupts off during the "pushf" region) but
-	// do NOT touch SP. (If a genuinely-paired PUSHF/POPF user appears later with
-	// real stack dependence, revisit — but this OS does not have one.)
-	PSW = 0x0000;
-	check_irq();
-	next_noirq(8);
+ if (m_kb_mode) kb_push_flags(false);
+ else { PSW = 0; check_irq(); } // historical flat bring-up workaround
+ next_noirq(8);
 
-f3    popf  none
-	// Net-zero counterpart to the stack-neutral PUSHF above (finding 23). No SP
-	// change; PSW is left as-is (the OS does not rely on PUSHF/POPF to actually
-	// round-trip PSW — see the PUSHF note).
-	check_irq();
-	next_noirq(9);
+f3    popf none
+ if (m_kb_mode) kb_pop_flags(false);
+ else check_irq();
+ next_noirq(9);
 
 f4    pusha none 196
-	// PUSHA/POPA are implemented STACK-NEUTRAL (no SP change, no PSW save) for
-	// the S-760 OS. This is NOT a simplification to revisit lightly — it is the
-	// model this OS's code requires. Evidence (finding 23):
-	//   * 0xB93A does PUSHA at entry and exits via a plain RET with NO matching
-	//     POPA on either branch (verified disasm B93A..B979). Its caller at
-	//     0x2286 does `LCALL 0xB93A; POP 0x10C`. A real two-word PUSHA makes the
-	//     B979 RET pop the pushed mask word instead of the return address and
-	//     derail to 0x0000 — observed directly when PUSHA was made a real push.
-	//   * Treating PUSHA/POPA as net-zero keeps 0xB93A (and the many other
-	//     PUSHA-entry / RET-no-POPA routines) balanced, which is what lets the
-	//     boot reach the main loop and drive the VDP (blue CRT).
-	// The only thing not modeled is actually saving/restoring PSW+INT_MASK1
-	// across the pair; no interrupt-nesting corruption has been observed from
-	// that. Do NOT convert to a real push without re-proving the 0xB93A path.
-	next_noirq(8);
+ if (m_kb_mode) kb_push_flags(true);
+ next_noirq(18);
 
-f5    popa  none 196
-	next_noirq(8);
+f5    popa none 196
+ if (m_kb_mode) kb_pop_flags(true);
+ next_noirq(18);
 
 f6    idlpd none 196
 	next_noirq(8);

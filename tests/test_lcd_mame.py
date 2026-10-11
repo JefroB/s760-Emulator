@@ -138,7 +138,14 @@ def test_lcd_driver_implementation_present():
     assert "s760_state::lcd_update" in src
     assert "m_sed_vram" in src
     assert "m_sed_cursor_addr" in src
-    assert "map(0xE000, 0xEFF7).rw(FUNC(s760_state::lcd_r), FUNC(s760_state::lcd_w));" in src
+    # Legacy flat mode installs only the two even-addressed ports. Mapping
+    # through EFF7 intercepted executable OS bytes (including E934).
+    import re
+    assert re.search(r"install_readwrite_handler\(0xE000,\s*0xE003,\s*"
+                     r"read8sm_delegate\(\*this, FUNC\(s760_state::lcd_r\)\),\s*"
+                     r"write8sm_delegate\(\*this, FUNC\(s760_state::lcd_w\)\)\)", src)
+    assert not re.search(r"(?:map|install_readwrite_handler)\(0xE000,\s*0xEFF7", src)
+    assert "address >= 0x103800 && address <= 0x103803" in src
 
 
 def test_lcd_system_set_and_cursor_addressing():

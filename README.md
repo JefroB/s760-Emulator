@@ -1,5 +1,7 @@
 # Roland S-760 Digital Sampler — MAME Emulator Driver
 
+> **Current status (2026-10-10):** Native MAME boots the original OS and has hardware-validated playback work. The React standalone/VST integration is still in progress; historical coverage tables below do not establish end-to-end product readiness. Follow the **[completion roadmap](docs/COMPLETION_ROADMAP.md)** for remaining work and acceptance gates, and the [native runbook](docs/condensed/11-native-boot-and-audio-runbook.md) for the tested checkpoint.
+
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-127%20Passing-brightgreen.svg)](tests/)

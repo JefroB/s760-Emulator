@@ -4,6 +4,7 @@
 CPUS["MCS96"] = true
 SOUNDS["SAMPLES"] = true
 MACHINES["WATCHDOG"] = true
+MACHINES["EEPROMDEV"] = true
 
 function createProjects_mame_s760(_target, _subtarget)
 	project ("mame_s760")

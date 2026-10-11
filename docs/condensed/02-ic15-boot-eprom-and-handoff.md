@@ -1,5 +1,121 @@
 # IC15 BOOT EPROM & Current HLE
 
+Latest: finding58. The experimental IC15 ROM boot now loads all112 OS tracks
+and reaches interactive Perform Play. Correct OP-760 identification and live VDP
+pointer readback remove the video blockers. New native EEPROM profiles default
+to Mouse+CRT at the user's request; existing profiles retain their setting.
+Native LCD writes and its screen surface are restored. Rendering, mouse input,
+complete chip behavior and power-on bank defaults still need work.
+
+
+Previous result: finding57. Original IC15 now reads the system disk through the
+native FDC/observed IC4 DMA mode, loads all112 tracks (disk4800..1007FF to
+RAM0..FBFFF), and enters the disk OS without payload preloading. The ROM path
+services timer interrupts and scans the panel, but its CRT remains blank.
+Reset bank defaults are experimental; DMA is synchronous and CPU/peripheral
+emulation remains partial. The older direct handoff still reaches Perform Play.
+
+Latest finding56: the opt-in banked native handoff now scans the 13-switch front
+panel and runs INTERACTIVE firmware menus — Command and Mode open and Exit
+returns to Perform Play (host keys via the real scan port; see document 07 for
+the SC/SP matrix). Finding55 before it: documented KB extended interrupts and
+real flag-stack operations let firmware service the FDC SEEK and reach its main
+loop, writing the Perform Play screen to guest VRAM (MAME renders it through a
+diagnostic ASCII raster). This is the reconstructed disk handoff, not a full ROM
+cold boot or complete CPU/peripheral/IC20 emulation. See
+finding55
+and finding56
+for evidence and the complete-chip implementation gaps.
+
+**Banked handoff map (findings53/54) supersedes the flat placement below.** ROM4FBF
+loads disk cylinders1..56 (file4800..1007FF) to physical0..FBFFF;
+ROM4750 clears0106 and4755 jumpsC000. Separate instruction/data selectors
+resolve native EEPROM services and remove the former operand-entry conflict.
+Opt-in banked execution skips HLE service stubs, passes a provisional sample
+RAM test (producer6FE1 tests three F000 bank configs; fatal spin at003B:7193 if
+all size candidates75FC/75FE/7600 are zero — fixed by advancing the discarded-word
+read address), and initializes the NEC FDC with the corrected port map
+(E000=MSR/auxiliary, E002=FIFO — NOT the old generic765 at F040). Finding54's
+SEEK-completion stop at005A:5DEB (flag[1D0E]) is now superseded by finding55's
+interrupt servicing. The N8097BH core lacked the196KB SFR12/13 interrupt
+registers; native mode adds INT_MASK1/INT_PEND1. No completed/validated OS boot
+is claimed. See
+finding54.
+
+Independent native trace52 resolves review51: BA01 loads004B and BA09 calls
+2A94 directly, intentionally skipping the default0166 load at2A90. Live bytes
+are unchanged. A30-second run has the same132413 calls to4B as finding50's
+six-second run, while0166 increases to8682; enumeration is not a permanent
+stall. Later execution samples are predominantly DFxx/E09x relinking work.
+Display remains disabled and queue words remain0102/EF1C. Initial21C8→BA40
+enters an operand of the original flat slice, reinforcing the unresolved loaded
+code/mapping contract. See52 for traces and limits; no behavioral fix is claimed.
+
+**FDC SEEK interrupt chain that unblocks the boot (finding55).** Service Notes
+p18 wires IC24(FDC) INT → IC4(CPU gate) INT0 (visually checked). The firmware's
+FDC completion handler: disk55BB writes flag byte[1D0E]=1; its handler at CD5D
+senses FDC status, issues SENSE INTERRUPT STATUS (0x08) at E002, drains results
+to1B6C, sets the flag and returns via POPF/RET. The interrupt vector is NOT
+injected — guest data203A (disk8783A) holds0120; fetch at0120 (bank000F, file
+8520) is `PUSHF; LJMP CD5D`. Native mode resolves EXTINT1 (level13, vector203A)
+from guest memory, saves/restores flags on the real guest stack, and routes FDC
+pending through CPU-gate channel0 (firmware writes0115=11 around SEEK vs50 at
+init). After SEEK servicing, real HSO/software-timer interrupts run via
+200A→CAD1 and the main loop executes C807/C8A3 + banked UI routines with a
+bounded stack. This REQUIRES real 196KB interrupt semantics; the old
+stack-neutral PUSHF/PUSHA/POPA workarounds are confined to the flat baseline.
+
+**Write-aware CPU-seam trace (findings 48/50, both reviewed).** Instrumentation
+at the real MCS-96 seams — `read_pc`/`m_pr8` for fetches, `any_r8/r16` for
+operand reads, `any_w8/w16` for writes — captured these results on a normal
+stable boot (`vram_active=1 addr=074ba`), within a 4000-access cap per channel:
+
+- The 0x8000–0xBFFF window is overwhelmingly CODE: **3907 instruction fetches
+  vs 93 operand-byte reads** in the first 4000 window accesses. The sole in-window
+  data read is the compare at PC≈2AAE of byte[8F98].
+- Selector word **010C is written repeatedly and ALWAYS to 0x0299** (1996 writes,
+  zero distinct values) — redundant RE-selection of the same value, exactly as
+  review 49 predicted from the disk bytes `PUSH[010C]; LD RW1C,#0299; ST[010C]`.
+  The other three data selectors 0108/010A/010E are written once at init only.
+  This corrects finding 48's earlier "no runtime selector banking" wording: a
+  constant re-selected value is compatible with a fixed-value bank; mapping stays
+  open, but there IS active selection.
+- The routine at ~2AAE is a **conditional one-shot edge-detector, not a wait
+  loop**: byte[8F98] is written exactly once (first pass), after which
+  byte[23A0]==byte[8F98] and the equal-branch is always taken.
+- IC20 selector **00B1 dispatches once** in the run (right after that single
+  8F98 write); the executive then spins almost entirely on selector **4B**
+  (uncapped dispatch count 132,413 of 132,859).
+
+Sampling qualification (reviews 49/51): "once" means once within the capped
+trace / that bounded run, not provably once for all inputs or forever.
+
+**Live-vs-image discrepancy RESOLVED (finding 52, native fetch trace).** Finding
+50 attributed the 0104=4B store to PC 2A94, while the image slice there loads
+`#0166`. Finding 52's fetch history shows the 4B path does NOT execute 2A90 — it
+enters the dispatcher at 2A94 **directly**, called from BA09 with RW1C already set
+to 0x004B at BA01 (`B9FB LDB R4A,#3; BA01 LD RW1C,#004B; BA05 LD RW1E,#6A26;
+BA09 LCALL 2A94`). So PC 2A94 storing 0x4B is intentional reuse of the dispatcher
+entry below the default 0166 load — not changed/broken code. The 0166 immediate
+belongs to a different entry (2A90) not taken on this path.
+
+**The "permanent 4B enumeration stall" is DISPROVEN (finding 52).** A 30-second
+run (same baseline, translation/queue-init OFF, exit 0) gives 4B calls = 132,413
+— **identical to the 6-second total** — while 0166 keeps climbing (8,682). The OS
+therefore gets PAST the expensive 4B burst rather than spinning on it forever;
+instruction samples move on to DFxx/E09x relinking work. High 4B frequency was a
+bounded burst, not a termination failure. Do NOT change the 7F record stub to
+force a shorter enumeration — that is not an established repair.
+
+Finding 46's whole-window substitution suppresses VRAM progress. Its first
+logged replacement at B906 changes only the low byte F8→0B (mask00FF).
+This rejects the combined implementation: data selection applied to all reads
+plus assumed physical-to-image backing. It does not disprove hardware paging.
+Kiro's appended correction accepts review 47 and withdraws the PC-based access
+classifier and earlier claims that queue/record hypotheses were ruled out.
+Explicit CPU fetch/data tracing with substitution off is the next experiment;
+fetch selection and physical backing remain open.
+
 Kiro's corrected probe (42) reports steady 010C=0299, agreeing with reset
 initialization; the wrong-space issue described below was fixed for that run.
 Its flat-byte match percentages describe an unchanged flat emulator. They

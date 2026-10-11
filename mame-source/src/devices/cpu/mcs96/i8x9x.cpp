@@ -42,7 +42,7 @@ std::unique_ptr<util::disasm_interface> i8x9x_device::create_disassembler()
 void i8x9x_device::device_start()
 {
 	mcs96_device::device_start();
-	cycles_scaling = 3;
+	cycles_scaling = m_kb_mode ? 2 : 3;
 
 	state_add(I8X9X_HSI_MODE,    "HSI_MODE",    hsi_mode);
 	state_add<u8>(I8X9X_HSI_STATUS, "HSI_STATUS",
@@ -71,6 +71,12 @@ void i8x9x_device::device_start()
 	save_item(NAME(hso_cam_hold.command));
 	save_item(NAME(hso_cam_hold.time));
 
+	save_item(NAME(m_kb_t1_offset));
+	save_item(NAME(m_kb_t2_capture));
+	save_item(NAME(m_kb_hsi_hold));
+	save_item(NAME(m_kb_ioc2));
+	save_item(NAME(m_kb_ios2));
+	save_item(STRUCT_MEMBER(hso_info, fire_at));
 	save_item(NAME(base_timer2));
 	save_item(NAME(ad_done));
 	save_item(NAME(hsi_mode));
@@ -100,6 +106,9 @@ void i8x9x_device::device_start()
 void i8x9x_device::device_reset()
 {
 	mcs96_device::device_reset();
+	m_kb_t1_offset = m_kb_t2_capture = m_kb_hsi_hold = 0;
+	m_kb_ioc2 = m_kb_ios2 = 0;
+	if (m_kb_mode) pending_irq = 0;
 	hso_active = 0;
 	hso_command = 0;
 	hso_time = 0;
@@ -190,7 +199,130 @@ void i8x9x_device::internal_regs(address_map &map)
 	map(0x15, 0x15).rw(FUNC(i8x9x_device::ios0_r), FUNC(i8x9x_device::ioc0_w));
 	map(0x16, 0x16).rw(FUNC(i8x9x_device::ios1_r), FUNC(i8x9x_device::ioc1_w));
 	map(0x17, 0x17).w(FUNC(i8x9x_device::pwm_control_w));
-	map(0x18, 0xff).ram().share("register_file");
+	if (m_kb_mode)
+		map(0x00, 0x17).rw(FUNC(i8x9x_device::kb_sfr_r), FUNC(i8x9x_device::kb_sfr_w));
+ map(0x18, 0xff).ram().share("register_file");
+}
+
+// Intel270651-003, sections2.2 and7. Window15 reverses asymmetric SFRs.
+// Window14 programming controls and unspecified windows remain reserved.
+u8 i8x9x_device::kb_sfr_r(offs_t a)
+{
+ switch (a) {
+ case 0: case 1: return 0;
+ case 8: return int_mask_r();
+ case 9: return int_pending_r();
+ case 0x12: return m_pending1;
+ case 0x13: return m_mask1;
+ case 0x14: return m_wsr;
+ }
+ const u8 window = m_wsr & 0x0f;
+ if ((window == 14 || window == 15) && (a == 12 || a == 13))
+  return m_kb_t2_capture >> (8 * (a & 1));
+ if (window == 15) {
+  switch (a) {
+  case 2: return ad_command;
+  case 3: return hsi_mode;
+  case 4: case 5: return hso_time >> (8 * (a & 1));
+  case 6: return hso_command;
+  case 7: return serial_send_buf;
+  case 0x0b: return m_kb_ioc2 | 0x80;
+  case 0x11: return sp_con;
+  case 0x15: return ioc0 | 2;
+  case 0x16: return ioc1;
+  case 0x17: return pwm_control;
+  default: return 0;
+  }
+ }
+ if (window != 0) return 0;
+ switch (a) {
+ case 2: case 3: return ad_result >> (8 * (a & 1));
+ case 4: case 5: return m_kb_hsi_hold >> (8 * (a & 1));
+ case 6: return hsi_status_r();
+ case 7: return sbuf_r();
+ case 10: case 11: return timer1_r() >> (8 * (a & 1));
+ case 12: case 13: return timer2_r() >> (8 * (a & 1));
+ case 14: return port0_r();
+ case 15: return port1_r();
+ case 16: return port2_r();
+ case 17: return sp_stat_r();
+ case 21: return ios0_r();
+ case 22: return ios1_r();
+ case 23: {
+  const u8 result = m_kb_ios2;
+  if (!machine().side_effects_disabled()) m_kb_ios2 = 0;
+  return result;
+ }
+ default: return 0;
+ }
+}
+
+void i8x9x_device::kb_sfr_w(offs_t a, u8 data)
+{
+ switch (a) {
+ case 0: case 1: return;
+ case 8: int_mask_w(data); return;
+ case 9: int_pending_w(data); return;
+ case 0x12: m_pending1 = data; check_irq(); return;
+ case 0x13: m_mask1 = data; check_irq(); return;
+ case 0x14: m_wsr = data; return;
+ }
+ const u8 window = m_wsr & 0x0f;
+ const auto merge = [a, data](u16 value) -> u16 {
+  return (a & 1) ? (value & 0xff) | (u16(data) << 8) : (value & 0xff00) | data;
+ };
+ if ((window == 14 || window == 15) && (a == 12 || a == 13)) {
+  m_kb_t2_capture = merge(m_kb_t2_capture); return;
+ }
+ if (window == 15) {
+  switch (a) {
+  case 2: case 3: ad_result = merge(ad_result); break;
+  case 4: case 5: m_kb_hsi_hold = merge(m_kb_hsi_hold); break;
+  case 6: hsi_status = (hsi_status & 0xaa) | (data & 0x55); break;
+  case 7: sbuf = data; break;
+  case 10: case 11:
+   m_kb_t1_offset = merge(timer1_r()) - u16(total_cycles() / (8 * cycles_scaling));
+   for (int i=0; i<8; ++i)
+    if (BIT(hso_active,i) && !BIT(hso_info[i].command,6))
+     hso_info[i].fire_at = timer_time_until(1,total_cycles(),hso_info[i].time);
+   internal_update(total_cycles());
+   break;
+  case 17: sp_stat = data; break; // Status writes do not generate IRQs.
+  case 21: ios0_w(data); break;
+  case 22: ios1 = (ios1 & 0xc0) | (data & 0x3f); break;
+  case 23: m_kb_ios2 = data; break;
+  }
+  return;
+ }
+ if (window != 0) return;
+ switch (a) {
+ case 2: ad_command_w(data); break;
+ case 3: hsi_mode_w(data); break;
+ case 4: hso_time = merge(hso_time); break;
+ case 5: hso_time_w(merge(hso_time)); break;
+ case 6: hso_command_w(data); break;
+ case 7: sbuf_w(data); break;
+ case 10: watchdog_w(data); break;
+ case 11:
+  m_kb_ioc2 = data & 0x7f;
+  if (BIT(data,7)) { hso_active = 0; ios0 &= 0x3f; }
+  internal_update(total_cycles());
+  break;
+ case 12: case 13:
+  base_timer2 = total_cycles() - u64(merge(timer2_r())) * (8 * cycles_scaling);
+  for (int i=0; i<8; ++i)
+   if (BIT(hso_active,i) && BIT(hso_info[i].command,6))
+    hso_info[i].fire_at = timer_time_until(2,total_cycles(),hso_info[i].time);
+  internal_update(total_cycles());
+  break;
+ case 14: baud_rate_w(data); break;
+ case 15: port1_w(data); break;
+ case 16: port2_w(data); break;
+ case 17: sp_con_w(data); break;
+ case 21: ioc0_w(data); break;
+ case 22: ioc1_w(data); break;
+ case 23: pwm_control_w(data); break;
+ }
 }
 
 void i8x9x_device::ad_command_w(u8 data)
@@ -390,23 +522,25 @@ void i8x9x_device::serial_w(u8 val)
 
 // Timer 1 increments once every eight state times, and a state time is three
 // oscillator periods on this family, so the divisor is 8 * 3 = 24.
-static constexpr u32 TIMER_DIVISOR = 24;
+// KB state time is two oscillator clocks (Intel270651-003 section1.3).
 
 u16 i8x9x_device::timer_value(int timer, u64 current_time) const
 {
 	if(timer == 2)
 		current_time -= base_timer2;
-	return u16(current_time / TIMER_DIVISOR);
+	return u16(current_time / (8 * cycles_scaling)) + (timer == 1 ? m_kb_t1_offset : 0);
 }
 
 u64 i8x9x_device::timer_time_until(int timer, u64 current_time, u16 timer_value) const
 {
 	u64 timer_base = timer == 2 ? base_timer2 : 0;
-	u64 delta = (current_time - timer_base) / TIMER_DIVISOR;
+	const u32 divisor = 8 * cycles_scaling;
+	u64 delta = (current_time - timer_base) / divisor;
+	if (timer == 1) timer_value -= m_kb_t1_offset;
 	u32 tdelta = u16(timer_value - delta);
 	if(!tdelta)
 		tdelta = 0x10000;
-	return timer_base + ((delta + tdelta) * TIMER_DIVISOR);
+	return timer_base + ((delta + tdelta) * divisor);
 }
 
 void i8x9x_device::timer2_reset(u64 current_time)
@@ -544,6 +678,7 @@ void i8x9x_device::execute_set_input(int linenum, int state)
 {
 	switch(linenum) {
 	case EXTINT_LINE:
+		if (m_kb_mode && !extint && state) { m_pending1 |= 0x20; check_irq(); }
 		if(!extint && state && !BIT(ioc1, 1)) {
 			pending_irq |= IRQ_EXTINT;
 			check_irq();
@@ -574,6 +709,12 @@ c8095_90_device::c8095_90_device(const machine_config &mconfig, const char *tag,
 {
 }
 
+i80c196kb_device::i80c196kb_device(const machine_config &mconfig, const char *tag, device_t *owner, u32 clock) :
+ i8x9x_device(mconfig, I80C196KB, tag, owner, clock, 16)
+{
+ set_kb_mode(true);
+}
+
 n8097bh_device::n8097bh_device(const machine_config &mconfig, const char *tag, device_t *owner, u32 clock) :
 	i8x9x_device(mconfig, N8097BH, tag, owner, clock, 16)
 {
@@ -590,6 +731,7 @@ p8798_device::p8798_device(const machine_config &mconfig, const char *tag, devic
 }
 
 DEFINE_DEVICE_TYPE(C8095_90, c8095_90_device, "c8095_90", "Intel C8095-90")
+DEFINE_DEVICE_TYPE(I80C196KB, i80c196kb_device, "i80c196kb", "Intel 80C196KB")
 DEFINE_DEVICE_TYPE(N8097BH, n8097bh_device, "n8097bh", "Intel N8097BH")
 DEFINE_DEVICE_TYPE(P8098, p8098_device, "p8098", "Intel P8098")
 DEFINE_DEVICE_TYPE(P8798, p8798_device, "p8798", "Intel P8798")

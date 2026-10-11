@@ -1,0 +1,199 @@
+{
+  "date": "2026-10-10",
+  "capture_sha256": "5b874feb2644bca8a2dfaf4c01bd186c8215ea3dd5ba19296da1053fe42371de",
+  "capture_notes": 88,
+  "unclipped": true,
+  "band_hz": [
+    100,
+    18000
+  ],
+  "training_seconds": [
+    1,
+    2.5
+  ],
+  "validation_seconds": [
+    3,
+    4.5
+  ],
+  "pulse_clock_hz_relative_to_recorder": 44100.952,
+  "sine_clock_range_hz": [
+    44100.95179131289,
+    44100.9522217581
+  ],
+  "cubic_B": 1.042273935870565,
+  "cubic_C": -0.022841914081554338,
+  "phase_steps": 128,
+  "pulse_errors": [
+    {
+      "note": 81,
+      "rate": 0.25,
+      "error_percent": 0.9185119783253124
+    },
+    {
+      "note": 82,
+      "rate": 0.353515625,
+      "error_percent": 0.8684765316580816
+    },
+    {
+      "note": 83,
+      "rate": 0.42041015625,
+      "error_percent": 0.8549902394927266
+    },
+    {
+      "note": 84,
+      "rate": 0.5,
+      "error_percent": 0.7347109088259587
+    },
+    {
+      "note": 85,
+      "rate": 0.52972412109375,
+      "error_percent": 0.8063684191109066
+    },
+    {
+      "note": 86,
+      "rate": 0.56121826171875,
+      "error_percent": 0.8065805094812966
+    },
+    {
+      "note": 87,
+      "rate": 0.59454345703125,
+      "error_percent": 0.8053957394688912
+    },
+    {
+      "note": 88,
+      "rate": 0.62994384765625,
+      "error_percent": 0.9264481837726398
+    },
+    {
+      "note": 89,
+      "rate": 0.66741943359375,
+      "error_percent": 0.9072612592729494
+    },
+    {
+      "note": 90,
+      "rate": 0.70709228515625,
+      "error_percent": 0.8479552158898571
+    },
+    {
+      "note": 91,
+      "rate": 0.7491455078125,
+      "error_percent": 0.8216315264018182
+    },
+    {
+      "note": 92,
+      "rate": 0.79364013671875,
+      "error_percent": 0.7862667086716207
+    },
+    {
+      "note": 93,
+      "rate": 0.84088134765625,
+      "error_percent": 0.7837076027149423
+    },
+    {
+      "note": 94,
+      "rate": 0.890869140625,
+      "error_percent": 0.7937666370451438
+    },
+    {
+      "note": 95,
+      "rate": 0.94384765625,
+      "error_percent": 0.7622243159500937
+    },
+    {
+      "note": 96,
+      "rate": 1.0,
+      "error_percent": 0.697062506855519
+    },
+    {
+      "note": 97,
+      "rate": 1.0594482421875,
+      "error_percent": 0.7904989696290246
+    },
+    {
+      "note": 98,
+      "rate": 1.1224365234375,
+      "error_percent": 0.7860095624565198
+    },
+    {
+      "note": 99,
+      "rate": 1.18914794921875,
+      "error_percent": 0.8202222256324903
+    },
+    {
+      "note": 100,
+      "rate": 1.2598876953125,
+      "error_percent": 0.8258457212468163
+    },
+    {
+      "note": 101,
+      "rate": 1.3348388671875,
+      "error_percent": 0.8424905511933263
+    },
+    {
+      "note": 102,
+      "rate": 1.4141845703125,
+      "error_percent": 0.8715504987160163
+    },
+    {
+      "note": 103,
+      "rate": 1.498291015625,
+      "error_percent": 0.8706437808370292
+    },
+    {
+      "note": 104,
+      "rate": 1.58734130859375,
+      "error_percent": 0.8905440249784836
+    },
+    {
+      "note": 105,
+      "rate": 1.6817626953125,
+      "error_percent": 0.8647004654101431
+    },
+    {
+      "note": 106,
+      "rate": 1.78173828125,
+      "error_percent": 0.8795393339032712
+    },
+    {
+      "note": 107,
+      "rate": 1.8876953125,
+      "error_percent": 0.9190437943606303
+    },
+    {
+      "note": 108,
+      "rate": 2.0,
+      "error_percent": 0.7817622466338258
+    }
+  ],
+  "independent_noise_errors": [
+    {
+      "case": "strict-noise-116",
+      "error_percent": 0.5079565949338319
+    },
+    {
+      "case": "strict-noise-116_up",
+      "error_percent": 0.5375685339781914
+    },
+    {
+      "case": "strict-noise-118",
+      "error_percent": 0.37948840396333794
+    },
+    {
+      "case": "strict-noise-118_up",
+      "error_percent": 0.40770627917140556
+    }
+  ],
+  "native": {
+    "exe_sha256": "888bcf69c105969ac614a1061a2bfff7014b213742b869ecb6305a018fde3947",
+    "notes_verified": 88,
+    "disabled_frames_bit_identical": 12700801,
+    "maximum_pcm_lsb_error": 1.37733071841717,
+    "tail_silent": true
+  },
+  "limitations": [
+    "Forward unflagged integer-bound loops at44100Hz; audition model only.",
+    "Hardware validation100Hz\u201318kHz; no full-band or bit-exact ASIC claim.",
+    "Phase-origin alignment fitted on training windows; phase rounding rule is not independently identified.",
+    "Filter/pitch combinations, other clocks, reverse/alternate/one-shot interpolation and pitch transitions are outside this capture."
+  ]
+}
