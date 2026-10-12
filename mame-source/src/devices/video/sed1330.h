@@ -48,49 +48,51 @@ protected:
 	virtual const tiny_rom_entry *device_rom_region() const override ATTR_COLD;
 
 private:
-	int m_bf;                   // busy flag
+	// Deterministic pre-configuration state: keep display off until programmed.
+	// Geometry defaults are safe storage values, not measured power-on registers.
+	int m_bf = 0;                   // busy flag
 
-	uint8_t m_ir;                 // instruction register
-	uint8_t m_dor;                // data output register
-	int m_pbc;                  // parameter byte counter
+	uint8_t m_ir = 0;                 // instruction register
+	uint8_t m_dor = 0;                // data output register
+	int m_pbc = 0;                  // parameter byte counter
 
-	int m_d;                    // display enabled
-	int m_sleep;                // sleep mode
+	int m_d = 0;                    // display enabled
+	int m_sleep = 0;                // sleep mode
 
-	uint16_t m_sag;               // character generator RAM start address
-	int m_m0;                   // character generator ROM (0=internal, 1=external)
-	int m_m1;                   // character generator RAM D6 correction (0=no, 1=yes)
-	int m_m2;                   // height of character bitmaps (0=8, 1=16 pixels)
-	int m_ws;                   // LCD drive method (0=single, 1=dual panel)
-	int m_iv;                   // screen origin compensation for inverse display (0=yes, 1=no)
-	int m_wf;                   // AC frame drive waveform period (0=16-line, 1=2-frame)
+	uint16_t m_sag = 0;               // character generator RAM start address
+	int m_m0 = 0;                   // character generator ROM (0=internal, 1=external)
+	int m_m1 = 0;                   // character generator RAM D6 correction (0=no, 1=yes)
+	int m_m2 = 0;                   // height of character bitmaps (0=8, 1=16 pixels)
+	int m_ws = 0;                   // LCD drive method (0=single, 1=dual panel)
+	int m_iv = 0;                   // screen origin compensation for inverse display (0=yes, 1=no)
+	int m_wf = 0;                   // AC frame drive waveform period (0=16-line, 1=2-frame)
 
-	int m_fx;                   // character width in pixels
-	int m_fy;                   // character height in pixels
-	int m_cr;                   // visible line width in characters
-	int m_tcr;                  // total line width in characters (including horizontal blanking)
-	int m_lf;                   // frame height in lines
-	uint16_t m_ap;                // virtual screen line width in characters
+	int m_fx = 1;                   // character width in pixels
+	int m_fy = 1;                   // character height in pixels
+	int m_cr = 0;                   // visible line width in characters
+	int m_tcr = 0;                  // total line width in characters (including horizontal blanking)
+	int m_lf = 0;                   // frame height in lines
+	uint16_t m_ap = 0;                // virtual screen line width in characters
 
-	uint16_t m_sad1;              // display page 1 start address
-	uint16_t m_sad2;              // display page 2 start address
-	uint16_t m_sad3;              // display page 3 start address
-	uint16_t m_sad4;              // display page 4 start address
-	int m_sl1;                  // display block 1 height in lines
-	int m_sl2;                  // display block 2 height in lines
-	int m_hdotscr;              // horizontal dot scroll in pixels
-	int m_fp;                   // display page flash control
+	uint16_t m_sad1 = 0;              // display page 1 start address
+	uint16_t m_sad2 = 0;              // display page 2 start address
+	uint16_t m_sad3 = 0;              // display page 3 start address
+	uint16_t m_sad4 = 0;              // display page 4 start address
+	int m_sl1 = 0;                  // display block 1 height in lines
+	int m_sl2 = 0;                  // display block 2 height in lines
+	int m_hdotscr = 0;              // horizontal dot scroll in pixels
+	int m_fp = 0;                   // display page flash control
 
-	uint16_t m_csr;               // cursor address register
-	int m_cd;                   // cursor increment direction
-	int m_crx;                  // cursor width
-	int m_cry;                  // cursor height or location
-	int m_cm;                   // cursor shape (0=underscore, 1=block)
-	int m_fc;                   // cursor flash control
+	uint16_t m_csr = 0;               // cursor address register
+	int m_cd = 0;                   // cursor increment direction
+	int m_crx = 0;                  // cursor width
+	int m_cry = 0;                  // cursor height or location
+	int m_cm = 0;                   // cursor shape (0=underscore, 1=block)
+	int m_fc = 0;                   // cursor flash control
 
-	int m_mx;                   // screen layer composition method
-	int m_dm;                   // display mode for pages 1, 3
-	int m_ov;                   // graphics mode layer composition
+	int m_mx = 0;                   // screen layer composition method
+	int m_dm = 0;                   // display mode for pages 1, 3
+	int m_ov = 0;                   // graphics mode layer composition
 
 	// address space configurations
 	const address_space_config      m_space_config;

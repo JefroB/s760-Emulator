@@ -23,13 +23,13 @@ follow the schema so entries stay machine-greppable.
 
 | ID | Status | Sev | Area | Summary | Opened | Resolved |
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| BUG-001 | OPEN | S2 | cpu | MCS-96 PUSHA/POPA/PUSHF/POPF are stack-neutral no-ops (don't save PSW/regs) — boot workaround, not real semantics | 2026-10-11 | |
-| BUG-002 | OPEN | S2 | cpu | BMOVI (0xCD) still has the duplicate operand-fetch bug (same class as fixed BMOV/CMPL); unaudited | 2026-10-11 | |
-| BUG-003 | OPEN | S2 | dsp-audio | Unrecognized sample loop/direction mode flags are silently dropped → valid patches can play silent | 2026-10-11 | |
-| BUG-004 | OPEN | S2 | midi | IC4 MIDI vector response is an inferred/forced model; no real arbitration/FIFO, overrun bytes dropped | 2026-10-11 | |
+| BUG-001 | FIXED | S2 | cpu | Native flag-stack behavior verified; stack-neutral stubs are confined to legacy flat mode | 2026-10-11 | 2026-10-11 |
+| BUG-002 | FIXED | S2 | cpu | BMOVI (0xCD) duplicate operand fetch fixed; interrupt semantics remain unaudited | 2026-10-11 | 2026-10-11 |
+| BUG-003 | FIXED | S2 | dsp-audio | Seven loop modes verified in the supported 44.1 kHz native profile | 2026-10-11 | 2026-10-11 |
+| BUG-004 | OPEN | S2 | midi | IC4 MIDI vector arbitration and buffering remain inferred; latch overruns drop bytes | 2026-10-11 | |
 | BUG-005 | OPEN | S3 | dsp-audio | Static HP filter fails the 1% accuracy target (1.59%); moving/sweep filter response unmatched | 2026-10-11 | |
 | BUG-006 | OPEN | S3 | disk | Native floppy save/export: whole-wave-RAM compare differs by 347 name/high-mem bytes | 2026-10-11 | |
-| BUG-007 | OPEN | S2 | tests | Generated coverage matrices claim OS/UI coverage from tests that don't exercise that layer (false provenance) | 2026-10-11 | |
+| BUG-007 | FIXED | S2 | tests | Generated coverage matrices now separate unverified inventory from scoped test evidence | 2026-10-11 | 2026-10-11 |
 | BUG-008 | OPEN | S3 | build | core/CMakeLists.txt omits s760_core.cpp — the "shared DSP engine" is not actually compiled/linked | 2026-10-11 | |
 | BUG-009 | FIXED | S2 | core | Checkpoint save/load executed inside an emulated-timer callback → restored empty patch table | 2026-10-11 | 2026-10-11 |
 | BUG-010 | FIXED | S3 | build | Desktop package omitted MAME full license texts and had no development/release audit gate | 2026-10-11 | 2026-10-11 |
@@ -37,16 +37,383 @@ follow the schema so entries stay machine-greppable.
 | BUG-012 | FIXED | S3 | docs | Boot-ROM setup asserted unsupported download permissions and described verified boot as unqualified | 2026-10-11 | 2026-10-11 |
 | BUG-013 | FIXED | S2 | core | Failed native plugin restore allowed a fresh instance to resume an uncertain timeline | 2026-10-11 | 2026-10-11 |
 | BUG-014 | FIXED | S2 | mame-driver | SCSI checkpoint omits transfer buffer and media state | 2026-10-11 | 2026-10-11 |
-| BUG-015 | OPEN | S2 | disk | SCSI WRITE accepts payload but does not modify target media | 2026-10-11 | |
+| BUG-015 | FIXED | S2 | disk | SCSI WRITE now updates private media; protection, ranges and checkpoint recall tested | 2026-10-11 | 2026-10-11 |
 | BUG-016 | FIXED | S3 | build | Package notice inventory omits actual frozen dependencies and nested vendor DLL attribution | 2026-10-11 | 2026-10-11 |
 | BUG-017 | FIXED | S3 | build | Native source archive filter misses forbidden upstream test-media extensions | 2026-10-11 | 2026-10-11 |
 | BUG-018 | FIXED | S3 | build | Package audit skips nested files named PACKAGE-AUDIT.json | 2026-10-11 | 2026-10-11 |
+| BUG-019 | FIXED | S3 | ui | Malformed native session JSON escapes the display event handler | 2026-10-11 | 2026-10-11 |
+| BUG-020 | FIXED | S2 | ui | Gated C++ WebView2 backend reports success without creating an editor | 2026-10-11 | 2026-10-11 |
+| BUG-021 | FIXED | S2 | ui | VST3 view exposes a private tick but installs no UI frame timer | 2026-10-11 | 2026-10-11 |
+| BUG-022 | FIXED | S2 | bridge | Live editor frame polling starves native plugin audio | 2026-10-11 | 2026-10-11 |
+| BUG-023 | FIXED | S2 | bridge | C++ bridge accepts panel/pointer controls without routing them | 2026-10-11 | 2026-10-11 |
+| BUG-024 | FIXED | S1 | bridge | VST3 local interfaces are ABI-incompatible with SDK hosts | 2026-10-11 | 2026-10-11 |
+| BUG-025 | FIXED | S2 | ui | Embedded live CRT clicks hit demo handlers; native held mouse input missing | 2026-10-11 | 2026-10-11 |
+| BUG-026 | FIXED | S2 | ui | SoundCheck editor clips the rack and shows unused native CRT rows | 2026-10-11 | 2026-10-11 |
+| BUG-027 | FIXED | S2 | ui | Embedded rack uses demo controls and empty Gotek display; Shift chords inaccessible | 2026-10-11 | 2026-10-11 |
+| BUG-028 | FIXED | S2 | mame-driver | Native LCD stays blank despite firmware status-message writes | 2026-10-11 | 2026-10-11 |
+| BUG-029 | FIXED | S2 | bridge | Native plugin media pulse released before driver acknowledgement | 2026-10-11 | 2026-10-11 |
+| BUG-030 | FIXED | S2 | bridge | Absolute mouse position drifts after firmware Menu/Exit interaction | 2026-10-11 | 2026-10-11 |
+| BUG-031 | FIXED | S2 | bridge | Plugin checkpoints omit media browser state and retain stale insertion labels | 2026-10-11 | 2026-10-11 |
+| BUG-032 | FIXED | S3 | ui | Plugin editor discovery ignores configured native root | 2026-10-11 | 2026-10-11 |
+| BUG-033 | FIXED | S2 | bridge | Uninitialized LCD registers stall fresh runtime startup and cold restoration | 2026-10-11 | 2026-10-11 |
+| BUG-034 | FIXED | S3 | tests | Shift synchronous-dispatch test incorrectly measures wall-clock host scheduling | 2026-10-11 | 2026-10-11 |
+| BUG-035 | FIXED | S2 | bridge | Initial output knob used digital override API for a MAME adjuster | 2026-10-11 | 2026-10-11 |
+| BUG-036 | FIXED | S3 | bridge | Worker display cache omits output-level metadata | 2026-10-11 | 2026-10-11 |
+| BUG-037 | FIXED | S3 | tests | Rack recall test reused monotonic WAV offsets after guest-time rewind | 2026-10-11 | 2026-10-11 |
 
-<!-- NEXT-ID: BUG-019 -->
+<!-- NEXT-ID: BUG-038 -->
 
 ## Details
 
 <!-- Add one "### BUG-NNN" block per bug, newest at the top of this section. -->
+
+### BUG-037 — WAV timeline assertion after checkpoint rewind
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-11
+- **Reported by:** Extended native rack recall acceptance
+
+**Summary:** Adding repeated checkpoint recalls to the existing native smoke test invalidated its assumption that external WAV offsets equal guest emulated time.
+**Repro:** Combine `--rack-dials --pull-render --scheduled-midi` in the extended test.
+**Expected:** Test note-off at the actual captured interval.
+**Actual:** Gain/recall checks pass, then a wrong WAV interval produces a false sounding-tail failure. The external writer continues forward across guest rewind.
+**Evidence:** native156-final.log in private scratch; original native156-dials3.log passed with fewer rewinds, illustrating why that pass was insufficient.
+**Progress:** Separate the recall qualification from monotonic WAV qualification. Dial test verifies note-off directly through native float PCM and rejects incompatible flags; final separate runs pass.
+
+**Resolution:** Recall and monotonic-WAV qualification now run separately. The final dial test verifies direct PCM release, exact non-unity replay and restored encoder position; the independent baseline passes WAV alignment and scheduled MIDI.
+
+### BUG-036 — Worker display cache omits output level
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S3
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Reported by:** SoundCheck rack-knob acceptance
+
+**Summary:** Native gain changes reach MAME, but audio-streaming display snapshots only copy pixel buffers and time, leaving output level at its default 100.
+**Repro:** Set Output to 50% in the actual plugin editor while audio is streaming.
+**Expected:** Telemetry and knob indicator report 50%, including editor reopen.
+**Actual:** SoundCheck readback assertion fails. Native C++ regression reproduces: `Worker display cache lost output level`.
+**Evidence:** Finding 156; audio156-dials.log and native156-cache-before.log in private scratch.
+**Progress:** Copy level into the worker-owned display snapshot; native and real-host regression now pass.
+
+**Resolution:** Worker snapshots now retain output_level. The new native C++ regression passes, and SoundCheck confirms 50% telemetry/indicator before and after editor reopen.
+
+### BUG-035 — Output adjuster used digital override
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** Native rack-dial acceptance
+
+**Summary:** Initial in-development output routing called `set_value` on PORT_ADJUSTER, which MAME treats as a digital override.
+**Repro:** `verify_native_runtime.py --rack-dials` on the initial knob implementation.
+**Expected:** 50% gives half amplitude; 0% is silent.
+**Actual:** Peak 0.069033 at requested half level, 0.044538 at minimum; comparison failed.
+**Evidence:** Finding 156; native156-dials2.log and dial-audio.npz in private scratch.
+**Resolution:** Use `ioport_field.user_value` for adjusters; initialize from the actual saved setting and restore it explicitly. Native comparison now gives zero half-gain error and exact silence. This tests software gain, not analog potentiometer taper.
+
+### BUG-034 — Synchronous UI test measured host scheduling
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** React regression during concurrent compilation
+
+**Summary:** A test inferred synchronous emission from an asynchronous user-event gesture taking under 100ms wall time.
+**Repro:** Full Vitest run while native/C++ builds execute.
+**Expected:** Verify event emission happens inside the dispatch.
+**Actual:** Gesture took 118ms and failed despite exactly one synchronous emission.
+**Evidence:** ui156-tests.log in private scratch.
+**Resolution:** Dispatch a click synchronously and require the event before dispatch returns, without advancing timers. This is a functional ordering test; it makes no measured latency claim.
+
+### BUG-033 — Intermittent cold restoration connection failure
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Reported by:** Final native plugin state acceptance
+
+**Summary:** Cold restore can fail before publishing its checkpoint file, despite earlier passing runs. Added exception diagnostics distinguish this from an identity or checksum rejection.
+**Repro:** build/Release/s760_native_plugin_tests.exe D:/S-760 docs/ic20-hle-findings/chatGPT-work/native157-state-diagnostic --state 48000 3 (use a fresh state directory for each run).
+**Expected:** Fresh pending-note and active-note instances restore and replay exact PCM.
+**Actual:** First final run failed pending restore; instrumented repeat passed pending restore but failed active cold restore with Native runtime disconnected or timed out. No checkpoint file in the failing cold instance.
+**Evidence:** chatGPT-work/native157-final-state.log; native157-state-diagnostic.log; associated private cold runtime.log files.
+**Notes:** Earlier native157-state.log passed. Root cause remains under investigation; do not treat the timeout as proven hardware or firmware failure.
+
+
+**Follow-up:** Diagnostic stage run and three consecutive repeats pass exact cold PCM at48kHz. Root cause of the two earlier failures is still unknown. Operation-specific exception diagnostics are retained.
+
+**Investigation (finding 159):** Reproduced at the pause stage before checkpoint load, and then without any checkpoint in the smaller C++ `--startup-repeats` test. After 35 successful fresh instances, the next timed out with Winsock 10060 waiting for the four-byte response header. A second run with another instance active also timed out. The frozen instance's flushed diagnostic trace recorded no frame/pause callback; a different child continued servicing controls. This narrows the failure to fresh runtime/control startup, not archive decoding. Root cause remains unproven. Thirty immediate and eight delayed Python startup/pause cycles passed; several complete C++ cold-state repeats also passed. These passes do not close the failure. Socket errors now distinguish EOF from the Winsock code and remaining byte count. Temporary Lua traces were removed. New repro: `build/Release/s760_native_runtime_tests.exe D:/S-760 <fresh-private-dir> --startup-repeats`. See [validation](condensed/validation/s2-loops-and-restore-2026-10-11.json).
+
+**Resolution (finding 160):** A read-only stack capture from the stalled test child identified `sed1330_device::draw_graphics_scanline`, called by `update_text` before the first frame hook. The device constructor initialized only its busy flag; display enable, dimensions and other register storage were indeterminate. All scalar register fields now have deterministic initial values, with display off and character pitch 1. These are safe pre-configuration storage values, not claims about measured power-on registers. No firmware, vector, timing or timeout changes. The old binary failed twice during this investigation; the corrected binary passed two 40-launch stress runs alongside a running instance (80 fresh children), exact 240000-frame cold replay at48kHz, original-firmware boot/display/controls/audio/MIDI acceptance, 266 Python tests and six C++ suites. Temporary tracing was removed. See [validation](condensed/validation/s2-startup-lcd-2026-10-11.json).
+
+### BUG-032 — Plugin editor discovery ignores configured native root
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-11
+- **Reported by:** Plugin configuration qualification
+
+**Summary:** The native root locates the machine but editor discovery previously searched only four module ancestors and the host working directory. A plugin stored deeper in the tree required a separate S760_UI_URL override.
+**Repro:** Load the concrete plugin from chatGPT-work/m2-webview-build/Release with an unrelated host CWD and no S760_UI_URL; set the native root to D:/S-760.
+**Expected:** The editor loads from the configured runtime root.
+**Actual:** The old resolver falls back to a relative file URL.
+**Evidence:** resolve_frontend_url in core/src/s760_webview_host.cpp; existing SoundCheck runs supplied an explicit URL override.
+**Implementation:** Per-instance percent-encoded editor URL follows the native configuration; existing explicit development override remains supported.
+
+**Resolution:** The native constructor supplies a per-instance percent-encoded file URL from its configured root. Settings-only SoundCheck boot/editor/load/play/reopen passes with unrelated host CWD and no S760_UI_URL. See docs/condensed/validation/milestone-2-audio-config-2026-10-11.json.
+
+
+### BUG-031 — Plugin recall loses media metadata
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Reported by:** Milestone 2 session serialization review
+
+**Summary:** Version-1 native plugin state captures mounted bytes but omits library folder, inventory, browse selection and source-path label. Restoring into another machine leaves its startup labels unrelated to restored media.
+**Repro:** Insert a sample, choose another browse item, save plugin state and restore into a fresh instance. Inspect the Gotek metadata.
+**Expected:** Restored selection, configured library and insertion label correspond to the saved session; missing source files do not replace captured media bytes.
+**Actual:** The old state contains no media metadata and the cold instance reports its own boot disk.
+**Evidence:** NativePluginState v1 schema; new media-library round-trip and cold native replay regressions.
+**Resolution:** Version-2 archive includes validated metadata; old states restore an explicitly unknown label. Native checkpoint bytes remain authoritative. Recursive scans and failed folder changes are transactional.
+
+
+**Validation:** Recursive discovery, rejected scans without mutation, independent selection and old-state compatibility pass. Real SoundCheck retains uninserted selection across reopening. Cold native VST recall restores media metadata and 240,000 exact stereo frames at48kHz with private source/library relocated, including note-off and corruption rejection. Finding154 and docs/NATIVE_MEDIA_LIBRARY.md record scope. One pre-load timeout on the extended native test was followed by a fresh-directory passing retry; both logs are retained.
+
+### BUG-030 — Absolute mouse coordinates drift after Menu/Exit
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Reported by:** Native Menu integration regression
+
+**Summary:** Host pointer transport assumes fixed accumulated mouse motion. After firmware Menu/Exit, the requested screen position no longer agrees with the observed guest cursor. The new Menu switch exposed this limitation.
+**Repro:** `python scripts/verify_native_runtime.py --panel-menu --state-dir docs/ic20-hle-findings/chatGPT-work/native155-menu-repro` with original firmware and current native binary.
+**Expected:** Pointer request (150,60) reaches diagnostic CRT coordinate (300,120), as on fresh boot.
+**Actual:** (237,160). Subsequent requests also drift; motion is delivered but the fixed absolute mapping is invalid after this panel interaction.
+**Evidence:** chatGPT-work/native155-regression.log; probe155.log records five successive request/cursor pairs; fresh-boot baseline passes boot/load/MIDI/release.
+**Notes:** Read-only guest diagnostics and physical input only. ROM disassembly establishes context-dependent sensitivity and cursor bounds; the adapter now observes these and current cursor position. Do not force guest coordinates to conceal this defect. Menu opening itself is verified in MAME and SoundCheck.
+
+
+**Resolution:** Read-only OS 2.24 cursor/bounds/sensitivity translation sends normal bounded MU-1 input; no RAM/PC writes. Free-running and paused-render regressions, corner/reversal checks, loaded audio and native state replay pass. See docs/condensed/validation/milestone-2-audio-config-2026-10-11.json.
+
+
+### BUG-029 — Native media input pulse too short
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Reported by:** SoundCheck native drive UI acceptance
+
+**Summary:** NativeRuntimeClient released media controls immediately after the socket acknowledged setting an input, before MAME sampled the input on a frame.
+**Repro:** Through the embedded drive dialog, insert valid ROBOFULL.IMG while SoundCheck processes audio.
+**Expected:** Native driver acknowledges insertion and the drive displays its filename.
+**Actual:** No media-status.json was produced; UI correctly reported failure, but the error was "Invalid native JSON response".
+**Evidence:** Private soundcheck/152-rack/failed-ui.json includes exact requests and returned error.
+**Resolution in progress:** Hold the input until driver acknowledgement, with bounded timeout and release. Never force emulated time or firmware state.
+
+**Resolution:** Hold the media control until the driver writes its acknowledgement, then release, with a bounded timeout. Actual SoundCheck rejects a nonexistent path and confirms ROBOFULL.IMG insertion; no forced firmware state (finding 151).
+
+### BUG-028 — Firmware-driven LCD status missing in CRT mode
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** mame-driver
+- **Opened:** 2026-10-11
+- **Reported by:** Hardware owner; read-only native bus trace
+
+**Summary:** Owner confirms the real LCD retains content in Mouse+CRT mode. Earlier explanation that blankness was expected was incorrect.
+**Repro:** Boot original ROM/system disk in native Mouse+CRT mode; inspect LCD frames.
+**Expected:** Display firmware-authored LCD pixels, including the CRT-mode status.
+**Actual:** Blank. Native F800/F802 trace records SYSTEM SET 31 85 07 1a 40 3f 20 00, SCROLL, external font writes, cursor-direction changes, DISP OFF parameter54, and final bare DISP ON59. Provisional handler loses display attributes and requires a new parameter on59; also wraps memory at4KB, assumes20-byte pitch, ignores cursor direction and external fonts.
+**Evidence:** Private lcd152-trace.txt and lcd152/1.png; driver lcd_w/lcd_update; Epson SED1335 technical manual.
+
+**Resolution:** Native LCD now uses the SED1330 device with matching data readback and corrected mixed-layer rendering. Original firmware boot LCD matches the independent bus replay pixel-for-pixel (zero differences); real SoundCheck shows Mouse+CRT status. This qualifies the observed boot path, not every LCD mode (finding 151).
+
+### BUG-027 — Embedded rack controls and drive display
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-11
+- **Reported by:** User
+
+**Summary:** Embedded rack still exposes demonstration mode buttons and F1–F6; native matrix has Command, Mode, Exit, Shift, S1/S2, F1–F3 and arrows. Seeded Shift map is empty. Gotek receives blank placeholder pixels.
+**Repro:** Open plugin in SoundCheck; inspect rack and attempt a Shift combination with a single pointer.
+**Expected:** Native panel input, usable chord controls and truthful drive status.
+**Actual:** Demo-only controls, no Shift shortcuts, blank OLED. LCD blankness is BUG-028; Mouse+CRT mode still has a firmware LCD status message.
+**Evidence:** S760FrontPanel.tsx, shiftButtonMap.ts; native driver panel input definitions.
+
+**Progress (2026-10-11):** Manual-verified native layout replaces demo controls. F1–F6 under LCD; original six-position navigation cluster; dedicated Home/Mark/Jump. Value and Output routing is qualified by native and actual SoundCheck acceptance in finding 156. Input remains disabled until the native ADC path in Milestone 3 exists. Menu now routes the schematic-confirmed SC0/SP4 switch and opens the real firmware menu; mixed panel/mouse coordinates are tracked separately as BUG-030. Gotek Up/Down/encoder browse session-entered paths; Select opens the prefilled insertion dialog. The bay is centered, and redundant Insert image text and rack-ear 1U labels are removed. Native SoundCheck validates F4 chord and rejected/accepted media requests; the later Value/Output qualification below completes the playback rack scope.
+
+**Resolution:** The approved native playback rack now has functional Value/Output controls, Menu, F1–F6 and Shift actions, LCD and acknowledged Gotek media. Original-firmware edits, native gain/state and actual SoundCheck reopen/play/release pass. Input Level is retained explicitly as a Milestone 3 recording feature; it is disabled and not claimed implemented.
+
+### BUG-026 — Embedded studio viewport and CRT active area
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-11
+- **Reported by:** User, SoundCheck screenshot review
+
+**Summary:** Default 1024x640 plugin client clips the 1440px rack below the fixed monitor. Native renderer draws200 rows in a240-row surface; doubling all240 exposes80 unused black display rows.
+**Repro:** Open plugin in SoundCheck at default size; rack is below viewport and black band appears beneath firmware softkeys.
+**Expected:** Full rack and monitor visible together; verified native active area fills the monitor.
+**Actual:** Overflow requires scrolling and unused native rows fill the bottom of the CRT.
+**Evidence:** User screenshot observation; crt_update native loop y<200 and screen size640x240 in mame-source/src/mame/roland/s760.cpp.
+**Notes:** Preserve wire pixels and legacy240-line modes; qualify pointer mapping after presentation crop.
+
+
+**Resolution:** 1480x900 embedded editor and fitted studio layout keep the full rack visible. CRT presentation crops the native unused rows while preserving wire pixels. Real SoundCheck screenshots before/after editor reopen confirm the result (finding 151).
+
+### BUG-025 — Embedded live CRT mouse input missing
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-11
+- **Reported by:** ChatGPT SoundCheck load-workflow audit
+
+**Summary:** App's live CRT is pointer-transparent over demo click handlers; C++ accepts no explicit held native mouse message. Real frames therefore cannot be operated using the embedded CRT.
+**Repro:** Open the plugin in SoundCheck, then inspect OP760Monitor and the C++ message enum; legacy MOUSE_CLICK is rejected in native mode.
+**Expected:** Live CRT pointer movement and held left/right buttons operate the firmware, with release on blur/cancel/close.
+**Actual:** Demo handlers receive clicks; firmware mouse button ports are not driven.
+**Evidence:** Source audit; new frontend and bridge regressions plus native firmware load acceptance will verify the fix.
+
+
+**Resolution:** Explicit native pointer/button handlers operate the real Disk/Load workflow in SoundCheck; loaded-sample playback, Menu/Exit handoff and editor reopening pass. Existing pointer-release unit coverage remains applicable. See docs/condensed/validation/milestone-2-audio-config-2026-10-11.json.
+
+
+### BUG-024 — VST3 SDK ABI mismatch
+
+- **Status:** FIXED
+- **Severity:** S1
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** ChatGPT SoundCheck preparation
+
+**Summary:** Local VST3 interfaces prepend a virtual destructor, use virtual inheritance and encode incorrect interface IDs. Factory queries claim unsupported interfaces, metadata and bus outputs are uninitialized, and the class category is not the SDK audio-effect category.
+**Repro:** Compare core/include/s760/vst3_defs.h and the factory with the local Steinberg SDK; exercise exported factory from an independently SDK-compiled process.
+**Expected:** SDK hosts can discover, instantiate and query the native plugin.
+**Actual:** Repository tests share the faulty definitions and cannot establish SDK compatibility.
+**Evidence:** Independent SDK probe under development; this is initially source evidence, not a SoundCheck runtime result.
+**Notes:** Correct ABI before claiming real-host editor acceptance.
+
+
+**Resolution:** Corrected Windows x64 GUID encoding, actual SDK interface IDs, nonvirtual inheritance and FUnknown method order; initialized factory/bus metadata and audio class category, rejected unsupported factory interfaces, and validated stereo negotiation. Independent SDK probe and SoundCheck native loading pass. Exported native factory/audio regression passes with exact 48kHz PCM. Full host playback/editor UX remains separately qualified; old malformed class IDs are not migrated. See [host checkpoint](MILESTONE_2_PROGRESS.md).
+
+### BUG-023 — Accepted panel and pointer messages are no-ops
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** ChatGPT editor integration audit
+
+**Summary:** C++ `S760Bridge::apply_message` groups panel/dial/pointer commands into a no-op case, although the MAME adapter has native input methods.
+**Repro:** Inspect the switch in `core/src/s760_bridge.cpp`; accepted BUTTON_PRESS does not call the host.
+**Expected:** Supported native controls route to the live machine; unsupported controls are reported.
+**Actual:** Parsing succeeds without performing the input.
+**Evidence:** Source audit; standalone uses a separate working Python route.
+**Notes:** Embedded editor control qualification remains open until corrected and exercised.
+
+**Resolution:** Native panel and normalized pointer commands now route to the host; mount returns its actual result. Invalid IDs/coordinates and unsupported legacy click/dial reject. Real firmware Mode-menu change passes through the bridge; complete React controls and host-visible errors remain open. See [native editor evidence](condensed/validation/milestone-2-native-editor-2026-10-11.json).
+
+### BUG-022 — Editor frame requests compete with native audio
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** ChatGPT native editor acceptance
+
+**Summary:** The concrete WebView2 editor polls native frames on the same serialized control connection as audio rendering.
+**Repro:** `s760_native_editor_tests ROOT PRIVATE_STATE --paced-var 48000 12`, concrete WebView2 build, original firmware and ROBOFULL fixture.
+**Expected:** PCM remains identical to the reference across editor open/close/reopen with no underrun.
+**Actual:** Output underrun (fault 3) at block 374, started 142704 / completed 139698 frames.
+**Evidence:** Local `chatGPT-work/editor-149-native.log`; real MAME, WebView2 and React, not a mock.
+**Notes:** Investigating display snapshots delivered with worker render replies, avoiding separate UI control requests during processing. No delay increase or fabricated audio is proposed.
+
+**Resolution:** Audio render replies optionally carry display snapshots; the UI reads a separate cached snapshot during processing instead of issuing competing frame requests. Native editor close/reopen passes at 44.1/48/96 kHz with exact reference PCM and zero drops. A run during a concurrent C++ build still underruns: arbitrary load robustness is not established. See [native editor evidence](condensed/validation/milestone-2-native-editor-2026-10-11.json).
+
+### BUG-021 — VST3 editor does not schedule frame updates
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** ChatGPT Milestone 2 integration audit
+
+**Summary:** `S760Vst3PlugView::attached` opens the editor and `tick()` can pump it, but the view installs no UI timer and tick is not part of IPlugView.
+**Repro:** Inspect attached/removed/tick in `core/src/s760_vst3_plugin.cpp`; only initial bridge frames are requested by controller open.
+**Expected:** Periodic UI-thread frame delivery for the lifetime of an attached view, detached without stopping audio.
+**Actual:** A generic host using only IPlugView has no frame-pump entry point. Initial frames can also precede asynchronous page readiness.
+**Evidence:** Source audit, not a DAW observation. The WebView2 harness explicitly posts test messages; it does not test plugin scheduling.
+**Notes:** Native-plugin editor integration remains open in Milestone 2. Any fix must keep UI transport outside realtime callbacks and qualify close/reopen with continuing audio.
+
+**Resolution:** The concrete Windows editor controller installs a UI-thread timer at about 15Hz, waits for page readiness, and removes its registration before closing. The real WebView2 harness receives multiple automatically scheduled CRT frames, verifies no callbacks after close, and repeats after reopen. Native audio/DAW continuity remains a separate qualification gate.
+
+### BUG-020 — WebView2 backend is a success-reporting outline
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** ChatGPT source audit
+
+**Summary:** The gated C++ backend sets `m_created=true` without creating a WebView environment/controller, and discards outbound frames/messages.
+**Repro:** Inspect `WebView2WebViewHost::create` and `post_frame_to_js` in `core/src/s760_webview_host.cpp` under `S760_HAVE_WEBVIEW2`.
+**Expected:** A functioning embedded page, or explicit creation failure.
+**Actual:** Success with no page. The default stub is separately identified as a test backend.
+**Evidence:** Source inspection; no real C++ editor acceptance claimed.
+**Notes:** Milestone 2 tracks implementation. Standalone uses a separate working Python host; the React embedded channel alone does not fix this backend.
+
+**Resolution:** Concrete environment/controller, local asset mapping, bounded messaging, resize and cancellation implemented. `s760_webview2_tests` passes against the installed runtime for two open/close cycles. Actual native VST3 editor/audio host acceptance remains a separate gate.
+
+### BUG-019 — Malformed native session JSON escapes the event handler
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-11
+- **Reported by:** ChatGPT NativeStudio regression
+
+**Summary:** NativeStudio parsed incoming text without exception handling or checking the media list shape.
+**Repro:** Deliver `{bad` to the NativeStudio WebSocket message handler (mock transport).
+**Expected:** Actionable error while allowing subsequent valid messages.
+**Actual:** Uncaught JSON parsing exception before the fix.
+**Evidence:** `google-ui/src/NativeStudio.test.tsx`, malformed session regression.
+**Resolution:** Guard JSON parsing and session media shape; report invalid response and retain the message handler. No firmware behavior changed.
 
 ### BUG-018 — Audit report exclusion applies to nested files
 
@@ -107,7 +474,8 @@ follow the schema so entries stay machine-greppable.
 
 ### BUG-015 — SCSI WRITE discards completed payload
 
-- **Status:** OPEN
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
 - **Severity:** S2
 - **Area:** disk
 - **Opened:** 2026-10-11
@@ -123,6 +491,8 @@ follow the schema so entries stay machine-greppable.
 **Evidence:** [SCSI state validation](condensed/validation/native-scsi-state-2026-10-11.json); finding 144. Source: `scsi_w` DATA_OUT completion and `scsi_execute_cdb` WRITE cases.
 
 **Notes:** Separate media-writeback objective; snapshot tests establish restoration of implemented state, not working firmware SCSI Save or hardware protocol fidelity. Needs range/read-only/sense handling and firmware save/reload acceptance.
+
+**Resolution:** Completed WRITE(6)/WRITE(10) payloads now update the private emulated image at the requested LBA. Range errors return CHECK CONDITION with per-target sense; CD-ROM writes are rejected. Zero-count 10-byte commands complete without a data phase; WRITE(6) zero means 256 blocks. Incomplete/reset writes leave media intact. Pending offsets, sense and written image bytes survive warm/cold checkpoints. Generated-media device tests pass, including unchanged source files. This fixes discarded device payloads, not firmware Save/export-to-host qualification; that remains in Milestone 3. See [validation](condensed/validation/s2-scsi-and-stack-2026-10-11.json), `scripts/verify_scsi_checkpoint.py`, and finding 158.
 
 ### BUG-014 — SCSI checkpoint loses in-flight response
 
@@ -318,7 +688,8 @@ correctness/architecture-claim defect.
 
 ### BUG-007 — Generated coverage matrices claim coverage from tests that don't exercise that layer
 
-- **Status:** OPEN
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
 - **Severity:** S2
 - **Area:** tests
 - **Reported by:** UI consolidation plan/assessment (condensed 07/08)
@@ -339,6 +710,8 @@ untested elements marked "⚪ Untested."
 **Notes:** This is the project's recurring "honesty about layers" hazard; the UI
 test automation roadmap (`docs/UI_TEST_AUTOMATION_ROADMAP.md`) is designed to fix
 it by asserting per-layer. Fix the generators + regenerate, downgrade false rows.
+
+**Resolution:** All four generators now use a shared evidence policy and were regenerated. Historical rows are explicitly unverified inventory, with no coverage percentage, invented owner/source-line claims or passing badges. Reviewed assertion examples distinguish image bytes, static source and mocked React controls; native/hardware qualification links to dated validation instead. Five report regressions check determinism, committed output freshness, removal of false claims and resolvable scoped selectors. The full Python suite passes 266 tests. Evidence: [S2 validation](condensed/validation/s2-bugs-2026-10-11.json); finding 157.
 
 ### BUG-006 — Native floppy save/export: whole-wave-RAM compare differs by 347 bytes
 
@@ -400,10 +773,12 @@ reassertion under concurrent sources, FIFO depth and MIDI-out are unestablished.
 **Repro:** `S760_IC4_MIDI_EXPERIMENT=1`, send MIDI faster than the firmware
 consumes it → dropped bytes; concurrent FDC + MIDI interrupts → unverified
 arbitration.
-**Expected:** faithful IC4 receive/interrupt behaviour (proper FIFO/overrun,
-real vector/arbitration).
-**Actual:** inferred vector substitution + single-byte latch with silent overrun
-drop; disabled by default so default build cannot receive MIDI at all.
+**Expected:** faithful IC4 receive/interrupt behaviour, including measured buffering,
+overrun and vector/arbitration semantics. A FIFO must not be presumed without evidence.
+**Actual:** inferred vector substitution + single-byte latch with logged overrun
+drop. The raw driver flag is off by default; supported native launchers explicitly
+enable this experimental profile, so standalone/plugin MIDI receive does work.
+This does not establish hardware arbitration or FIFO depth.
 
 **Notes:** three-voice and 24-voice polyphony were demonstrated through this
 experimental path. Do NOT promote to default emulation until real IC4
@@ -411,7 +786,8 @@ arbitration/buffering is resolved. Related: BUG-009.
 
 ### BUG-003 — Unrecognized sample loop/direction mode flags are silently dropped
 
-- **Status:** OPEN
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
 - **Severity:** S2
 - **Area:** dsp-audio
 - **Reported by:** findings 101/102/104
@@ -434,9 +810,12 @@ Reverse One Shot, Reverse Loop; boundaries end-exclusive, reverse −4 offset).
 (opt-in); the default monitor still skips them. Physical interrupt timing/ack and
 fractional-pitch coverage remain provisional.
 
+**Resolution:** The supported Python and C++ runtime launchers already enable interpolation, which enables the existing loop implementation. Added a firmware-driven `--loop-modes` acceptance against the identified ROBOLOOP fixture. All seven modes produce PCM; five repeating modes match the expected forward/reverse/alternate sign sequence exactly, the two one-shots stop while held, and all modes end in silence after note-off. This closes the stale default-profile silence report at 44.1 kHz/unity pitch, not complete-chip parity or other clocks/flag combinations. No new DSP behavior was introduced. See [validation](condensed/validation/s2-loops-and-restore-2026-10-11.json); finding 159.
+
 ### BUG-002 — BMOVI (0xCD) retains the duplicate operand-fetch bug; unaudited
 
-- **Status:** OPEN
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
 - **Severity:** S2
 - **Area:** cpu
 - **Reported by:** findings 64/65 (BMOV/CMPL audit)
@@ -455,9 +834,12 @@ load path) → operand over-fetch corrupts the following instruction.
 **Notes:** audit separately with an isolated CPU fixture before any path uses it.
 Fixed siblings: BMOV, CMPL (verified by fixtures).
 
+**Resolution:** Removed the two opcode-body read_pc calls already performed by direct_2w. The rebuilt MAME passes the isolated zero/one/three-word fixture, bounds, pointers and following-instruction sentinel; the pre-fix binary aborts with Unhandled 10 (feb6). Original-firmware boot/load/audio/pull-render/scheduled-MIDI acceptance also passes. This closes the operand-fetch defect only: interrupt restart, timing, count semantics and physical KB applicability remain unaudited. Evidence: [S2 validation](condensed/validation/s2-bugs-2026-10-11.json); `scripts/verify_bmovi_fetch.py`; finding 157.
+
 ### BUG-001 — MCS-96 PUSHA/POPA/PUSHF/POPF are stack-neutral no-ops
 
-- **Status:** OPEN
+- **Status:** FIXED
+- **Resolved:** 2026-10-11
 - **Severity:** S2
 - **Area:** cpu
 - **Reported by:** findings 23/25 (boot bring-up)
@@ -478,3 +860,5 @@ boot (RET returns to a PSW-as-address). Current workaround = net-zero stack.
 interrupt work added INT_MASK1/INT_PEND1 but the stack-op stubs remain. Do NOT
 "correct" without re-proving the 0xB93A / 0xE080 paths. Any instruction audit
 (see BUG-002) should cover these.
+
+**Resolution:** Native mode already delegates to kb_push_flags/kb_pop_flags; the original report incorrectly generalized the legacy flat-mode workaround. Added an isolated I80C196KB execution test for PUSHF/POPF and PUSHA/POPA: exact SP deltas, saved PSW and INT_MASK1/WSR words, clearing/restoration, and stack guards pass. No CPU semantics changed in this closure. The unsupported flat bring-up profile retains its documented stubs; broader interrupt/timing fidelity remains unqualified. Native original-firmware acceptance passes. See [validation](condensed/validation/s2-scsi-and-stack-2026-10-11.json), `scripts/verify_native_cpu_flags.py`, and finding 158.

@@ -122,9 +122,8 @@ function renderFrontPanel(
 describe('S760FrontPanel chassis + embedded LCD + Gotek bay (replaces MAME test_rack_panel_and_embedded_lcd_rendering)', () => {
   it('renders the 1U rack chassis with both rack ears (chassis present)', () => {
     renderFrontPanel(makeState(), frontPanelHandlers());
-    // The 1U chassis is flanked by two rack ears, each carrying a "1U" marker
-    // (RackEar). Two ears == a mounted 1U chassis.
-    const unitMarkers = screen.getAllByText('1U');
+    // Chassis retains both ears without decorative text.
+    const unitMarkers = screen.getAllByLabelText(/^(left|right) rack ear$/);
     expect(unitMarkers.length).toBe(2);
     // The hardware silkscreen model block identifies the real chassis.
     expect(screen.getByText('S-760')).toBeInTheDocument();

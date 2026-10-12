@@ -12,9 +12,10 @@ import {render, screen} from '@testing-library/react';
 import {RackEar} from './RackEars';
 
 describe('RackEar', () => {
-  it('renders the 1U rack-unit marker', () => {
+  it('renders the ear without a rack-unit label', () => {
     render(<RackEar side="left" />);
-    expect(screen.getByText('1U')).toBeInTheDocument();
+    expect(screen.queryByText('1U')).toBeNull();
+    expect(screen.getByLabelText('left rack ear')).toBeInTheDocument();
   });
 
   it('applies a right border on the left ear', () => {

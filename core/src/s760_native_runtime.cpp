@@ -1,6 +1,7 @@
 #include "s760/s760_native_runtime.hpp"
 #include <stdexcept>
 #include <mutex>
+#include <atomic>
 #include <cstring>
 #include <map>
 #include <random>
@@ -94,7 +95,9 @@ void transfer(SOCKET socket,void* data,std::size_t size,bool write) {
     auto* p=static_cast<char*>(data);
     while(size) {
         const int count=write ? send(socket,p,int(size),0) : recv(socket,p,int(size),0);
-        if(count<=0) throw std::runtime_error("Native runtime disconnected or timed out");
+        if(count<=0) throw std::runtime_error(std::string("Native ")+(write ? "send" : "receive")+
+            (count==0 ? " EOF" : " socket error "+std::to_string(WSAGetLastError()))+
+            " with "+std::to_string(size)+" bytes remaining");
         p+=count; size-=count;
     }
 }
@@ -129,6 +132,9 @@ void accept_local(Socket& result,Socket& listener,HANDLE process) {
 struct NativeRuntimeClient::Impl {
     std::array<std::uint8_t,32> scsi_hash{};
     std::mutex mutex;
+    std::mutex display_mutex;
+    std::atomic<bool> audio_streaming{false}, display_requested{false};
+    NativeRuntimeReply display_cache;
     std::mutex media_mutex;
     std::filesystem::path state;
     NativeRuntimeConfig config;
@@ -203,6 +209,7 @@ NativeRuntimeClient::NativeRuntimeClient(const NativeRuntimeConfig& supplied) : 
     env[L"S760_MEDIA_EXPORT"]=(cfg.state/"media-export.img").wstring();
     env[L"S760_MEDIA_STATUS"]=(cfg.state/"media-status.json").wstring();
     env[L"S760_F00A"]=L"00"; env[L"S760_IC4_MIDI_EXPERIMENT"]=L"1"; env[L"S760_NATIVE_INTERPOLATION_MONITOR"]=L"1";
+    env[L"S760_NATIVE_VALUE_ENCODER"]=L"1";
     std::vector<wchar_t> environment;
     for(const auto& item:env) { auto entry=item.first+L"="+item.second; environment.insert(environment.end(),entry.begin(),entry.end()); environment.push_back(0); }
     environment.push_back(0);
@@ -310,6 +317,7 @@ NativeRuntimeReply NativeRuntimeClient::request(const std::string& command) {
     if(!d.HasMember("ok") || !d["ok"].IsBool() || !d["ok"].GetBool())
         throw std::runtime_error(d.HasMember("error") && d["error"].IsString() ? d["error"].GetString():"Native request failed");
     if(d.HasMember("seconds") && d["seconds"].IsNumber()) result.seconds=d["seconds"].GetDouble();
+    if(d.HasMember("output_level") && d["output_level"].IsInt()) result.output_level=d["output_level"].GetInt();
     if(d.HasMember("audio")) {
         const auto& a=d["audio"];
         if(!a.IsObject() || !a.HasMember("frames") || !a["frames"].IsUint() || a["frames"].GetUint()>44100
@@ -328,6 +336,10 @@ NativeRuntimeReply NativeRuntimeClient::request(const std::string& command) {
                 throw std::runtime_error("Invalid native surface geometry");
             auto& bytes=i?result.lcd:result.crt; bytes.resize(w*h*4); transfer(impl_->control.value,bytes.data(),bytes.size(),false);
         }
+        std::lock_guard<std::mutex> display_lock(impl_->display_mutex);
+        impl_->display_cache.crt=result.crt;impl_->display_cache.lcd=result.lcd;
+        impl_->display_cache.seconds=result.seconds;
+        impl_->display_cache.output_level=result.output_level;
     }
 #else
     throw std::runtime_error("Native process client currently requires Windows");
@@ -336,9 +348,18 @@ NativeRuntimeReply NativeRuntimeClient::request(const std::string& command) {
 }
 bool NativeRuntimeClient::render(float* output,std::size_t frames) {
     if(!frames || frames>8192) return false;
-    auto response=request("{\"op\":\"render\",\"frames\":"+std::to_string(frames)+"}");
+    const bool display=impl_->display_requested.exchange(false);
+    auto response=request("{\"op\":\"render\",\"frames\":"+std::to_string(frames)+
+        (display?",\"display\":true}":"}"));
     if(response.pcm.size()!=frames*8) return false;
     std::memcpy(output,response.pcm.data(),response.pcm.size()); return true;
+}
+void NativeRuntimeClient::set_audio_streaming(bool enabled) {impl_->audio_streaming=enabled;}
+NativeRuntimeReply NativeRuntimeClient::display_frames() {
+    if(!impl_->audio_streaming) return request("{\"op\":\"frames\"}");
+    impl_->display_requested=true;
+    std::lock_guard<std::mutex> lock(impl_->display_mutex);
+    return impl_->display_cache;
 }
 void NativeRuntimeClient::midi(const std::uint8_t* bytes,std::size_t count) {
     if(!bytes || !count || count>256) throw std::runtime_error("Invalid native MIDI packet");
@@ -358,8 +379,23 @@ void NativeRuntimeClient::insert_media(const std::filesystem::path& source) {
         std::filesystem::remove(status);
         const auto base="{\"op\":\"button\",\"port\":\":NATIVE_MEDIA\",\"name\":\""+name+"\",\"down\":";
         try { request(base+"true}"); } catch(...) { try { request(base+"false}"); } catch(...) {} throw; }
+        // set_value is sampled by MAME's input frame, not by the socket reply.
+        // Hold the control until its driver callback has written an acknowledgement.
+        // The render worker advances the machine normally; never step guest time here.
+        std::string text;
+        const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(2);
+        bool acknowledged=false;
+        while(std::chrono::steady_clock::now()<deadline) {
+            std::ifstream file(status); text.assign(std::istreambuf_iterator<char>(file),{});
+            if(!text.empty()) {
+                try { auto reply=parse(text); acknowledged=reply.HasMember("ok") && reply["ok"].IsBool(); }
+                catch(const std::exception&) {} // Writer may still be completing its JSON.
+                if(acknowledged) break;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        }
         request(base+"false}");
-        std::ifstream file(status); std::string text((std::istreambuf_iterator<char>(file)),{});
+        if(!acknowledged) throw std::runtime_error("Native media acknowledgement timed out; start host playback and retry");
         auto result=parse(text);
         if(!result.HasMember("ok") || !result["ok"].IsBool() || !result["ok"].GetBool())
             throw std::runtime_error("Native media operation rejected");

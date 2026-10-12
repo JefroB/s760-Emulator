@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-11",
+  "sha256": {
+    "mame-source/mames760.exe": "907a6347bbb076537de3989b724d3bb1892631853ef866a8a6f10d7646553e2b",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "32dfa2bd1f516236b04bd230d36ab594bc6766d8cca92f0d9eac6535bc083f7a",
+    "mame-source/src/mame/roland/s760.cpp": "05f3118027fb47d2c847543a651deed66f777dd2bfbf358ca7ee04b74d601c40",
+    "core/src/s760_mame_host.cpp": "8825872033f97f275c7ead49245869933bfd4da051d535d6a31099abda49727f",
+    "core/src/s760_bridge.cpp": "ea4f17715e28c26481bf354a51c4452c3f50f05bdcd7af92c7dd4b062738a552",
+    "google-ui/src/components/NativePanelControls.tsx": "9dd61545ec6e4b724528329b781db3b33dba566abff7010e5492cf763979935f",
+    "google-ui/src/components/NativeDriveBay.tsx": "a7e22c944a6e712737289d5b9f28d7d34741ccad64a4406d41811deeb1cf9f71",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "nativeMenu": {
+    "before": "Unknown input field",
+    "after": "Perform MENU visible",
+    "wiring": "SC0/SP4, Service Notes p18"
+  },
+  "soundcheck": {
+    "selectedPathAfterReopen": "D:/S-760/roms/FDD/ROBOFULL.IMG",
+    "nativeMenuInput": true,
+    "startupMediaList": true
+  },
+  "nativeBaseline": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.666666666667,
+    "note_release": 80.75,
+    "process_shutdown": "clean"
+  },
+  "tests": {
+    "pytest": 246,
+    "reactFull": 108,
+    "reactMediaAfterAdditionalTest": 4,
+    "cppSuites": 6
+  },
+  "knownFailure": {
+    "bug": "BUG-030",
+    "requested": [
+      150,
+      60
+    ],
+    "expected": [
+      300,
+      120
+    ],
+    "observed": [
+      237,
+      160
+    ],
+    "after": "Menu/Exit"
+  }
+}

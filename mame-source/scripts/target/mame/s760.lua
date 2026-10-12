@@ -27,6 +27,7 @@ function createProjects_mame_s760(_target, _subtarget)
 
 	files {
 		MAME_DIR .. "src/mame/roland/s760.cpp",
+        MAME_DIR .. "src/devices/video/sed1330.cpp",
 	}
 end
 

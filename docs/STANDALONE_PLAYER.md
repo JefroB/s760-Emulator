@@ -26,6 +26,25 @@ The default firmware paths are `roms/BOOT/Roland_S-760_v1.11.BIN` and
 required for the desktop window. `--browser` uses an external browser instead;
 `--no-browser` starts only the local service for automated tests.
 
+## Runtime settings and startup recovery
+
+**Runtime settings** in React accepts the boot ROM (32KB), system disk (1.44MB),
+media directory and MAME audio-output enablement. Use your own files; no firmware
+is downloaded. A missing path or failed startup leaves the interface available
+with the settings form open. Correct the paths, confirm replacement of current
+sampler memory, then apply. Dirty/busy media must be exported/finished first.
+
+Validation occurs before closing a live machine. Successful startup atomically
+publishes `settings.json` in the profile's `--state-dir`; failed startup preserves
+the previous saved settings. Applying settings reboots and loses unsaved memory,
+as the confirmation states. Save a session/export disks before applying.
+
+The next launch reads the saved settings. Explicit `--boot-rom`, `--system-disk`
+and `--media-dir` arguments override saved paths; `--no-sound` forces initial
+muting. A corrupt settings file is reported in the setup UI and can be replaced
+by applying valid settings. Runtime executable and state-directory selection stay
+with the launcher. The plugin configuration adapter is still pending.
+
 Choose a raw 720KB/1.44MB sample image, press **Insert disk**, then use the
 firmware's **Disk → Load** menu to select and load its performance. Allow the
 firmware to finish listing/loading the disk before the next action. Hold the

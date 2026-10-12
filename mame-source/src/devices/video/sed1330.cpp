@@ -749,14 +749,14 @@ void sed1330_device::update_text(bitmap_ind16 &bitmap, const rectangle &cliprect
 				uint16_t sad4 = m_sad4 + ((y - m_sl2) * m_ap);
 
 				// draw graphics display page 4 scanline
-				draw_graphics_scanline(bitmap, cliprect, y, sad4);
+				draw_graphics_scanline(bitmap, cliprect, y, sad4, attr3 != FP_OFF ? m_mx : LAYER_REPLACE);
 			}
 			else
 			{
 				uint16_t sad2 = m_sad2 + (y * m_ap);
 
 				// draw graphics display page 2 scanline
-				draw_graphics_scanline(bitmap, cliprect, y, sad2);
+				draw_graphics_scanline(bitmap, cliprect, y, sad2, (y < m_sl1 ? attr1 : attr3) != FP_OFF ? m_mx : LAYER_REPLACE);
 			}
 		}
 	}
@@ -772,7 +772,7 @@ uint32_t sed1330_device::screen_update(screen_device &screen, bitmap_ind16 &bitm
 	bitmap.fill(0, cliprect);
 	if (m_d)
 	{
-		if (m_dm)
+		if (BIT(m_dm, 0))
 		{
 			update_graphics(bitmap, cliprect);
 		}

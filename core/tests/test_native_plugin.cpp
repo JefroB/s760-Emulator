@@ -25,6 +25,9 @@ public:
 };
 static void check(bool ok,const char* text) { if(!ok) throw std::runtime_error(text); }
 #include "native_state_acceptance.hpp"
+#ifdef S760_TEST_NATIVE_EDITOR
+#include "native_editor_acceptance.hpp"
+#endif
 int main(int argc,char** argv) {
     try {
         if(argc<3 || argc>6) throw std::runtime_error("Usage: s760_native_runtime_tests ROOT PRIVATE_STATE [--paced|--paced-var] [44100|48000|96000] [seconds]");
@@ -43,7 +46,7 @@ int main(int argc,char** argv) {
         check(factory->countClasses()==1,"Factory advertises unimplemented ADC/FX");
         Steinberg::PClassInfo info{};
         check(factory->getClassInfo(0,&info)==kResultOk,"Missing instrument class");
-        TUID iid=INLINE_UID(0xE8318227,0x79A447F6,0x8E6AEF5D,0xDC202293);
+        TUID iid=INLINE_UID(0xE831FF31,0xF2D54301,0x928EBBEE,0x25697802);
         void* object=reinterpret_cast<void*>(1);
         _wputenv_s(L"S760_NATIVE_ROOT",L"");
         check(factory->createInstance(reinterpret_cast<char*>(info.cid),reinterpret_cast<char*>(iid),&object)==kResultFalse && !object,"Missing configuration fell through to legacy core");
@@ -65,7 +68,7 @@ int main(int argc,char** argv) {
             if(entry.is_directory()) {cfg.state=entry.path();++directories;}
         check(directories==1,"Factory test requires a fresh private state root");
         object=nullptr;
-        TUID processor_iid=INLINE_UID(0x420423E5,0x12DA4541,0xA6190EB9,0x99615A3B);
+        TUID processor_iid=INLINE_UID(0x42043F99,0xB7DA453C,0xA569E79D,0x9AAEC33D);
         check(factory->createInstance(reinterpret_cast<char*>(info.cid),reinterpret_cast<char*>(processor_iid),&object)==kResultOk && object,"Factory processor IID failed");
         auto* second=static_cast<Steinberg::IAudioProcessor*>(object);
         auto* second_plugin=dynamic_cast<s760::S760Vst3Plugin*>(second);
@@ -111,6 +114,23 @@ int main(int argc,char** argv) {
             button(":NATIVE_MOUSE_BUTTONS","Mouse Left",false); wait(.2);
         };
         wait(20);
+#ifdef S760_TEST_NATIVE_EDITOR
+        // Exercise the embedded bridge route, not the Python standalone route.
+        check(!plugin.get_bridge().on_input(R"({"type":"DIAL_DELTA","payload":{"id":"VALUE","delta":1}})"),"Unverified native dial accepted");
+        check(!plugin.get_bridge().on_input(R"({"type":"MOUSE_CLICK","payload":{"x":0.5,"y":0.5,"button":0}})"),"Legacy click pulse accepted for native mode");
+        check(!plugin.get_bridge().on_input(R"({"type":"BUTTON_PRESS","payload":{"id":"UNKNOWN"}})"),"Unknown native panel control accepted");
+        check(!plugin.get_bridge().on_input(R"({"type":"MOUSE_MOVE","payload":{"x":2,"y":0.5}})"),"Invalid native pointer accepted");
+        check(plugin.get_bridge().on_input(R"({"type":"MOUSE_MOVE","payload":{"x":0.5,"y":0.5}})"),"Native pointer rejected");
+        wait(.3);
+        const auto before_panel=native.request("{\"op\":\"frames\"}").crt;
+        check(plugin.get_bridge().on_input(R"({"type":"BUTTON_PRESS","payload":{"id":"MODE"}})"),"Bridge rejected MODE");
+        wait(.2);
+        plugin.get_bridge().on_input(R"({"type":"BUTTON_RELEASE","payload":{"id":"MODE"}})");
+        check(native.request("{\"op\":\"frames\"}").crt!=before_panel,"Bridge MODE did not change firmware pixels");
+        plugin.get_bridge().on_input(R"({"type":"BUTTON_PRESS","payload":{"id":"EXIT"}})");
+        wait(.2);
+        plugin.get_bridge().on_input(R"({"type":"BUTTON_RELEASE","payload":{"id":"EXIT"}})");
+#endif
         auto screens=native.request("{\"op\":\"frames\"}");
         check(screens.crt.size()==640*240*4 && screens.lcd.size()==160*64*4,"Missing native frames");
         bool pixels=false;
@@ -119,7 +139,12 @@ int main(int argc,char** argv) {
         check(host.run_frame(),"Native adapter display refresh failed");
         check(host.get_latest_video_frame().rgba_pixels.size()==640*480,"Native adapter CRT geometry");
         std::uint8_t lcd[1280]; check(host.get_lcd_surface(lcd,sizeof(lcd)),"Native adapter LCD");
-        check(host.mount_disk(cfg.sample_disk.string()),"Native adapter floppy insertion failed");
+        auto mount_source=cfg.sample_disk;
+        if(state_test) {
+            mount_source=std::filesystem::absolute(cfg.state/"mounted-source.img");
+            std::filesystem::copy_file(cfg.sample_disk,mount_source,std::filesystem::copy_options::overwrite_existing);
+        }
+        check(host.mount_disk(mount_source.u8string()),"Native adapter floppy insertion failed");
         click(118,5); wait(2); click(80,22); wait(8); click(50,34); wait(2); click(76,98); wait(35);
         click(10,5); click(15,22); wait(3);
         auto now=native.request("{\"op\":\"pause\"}").seconds;
@@ -145,7 +170,7 @@ int main(int argc,char** argv) {
         check(plugin.getState(nullptr)==kResultFalse && plugin.setState(nullptr)==kResultFalse,"Legacy state used for native machine");
         if(state_test) {
             unsigned instance=0;
-            state_acceptance(plugin,setup,[&]() -> std::shared_ptr<s760::S760Vst3Plugin> {
+            state_acceptance(plugin,setup,cfg.state/"media-library-fixture",[&]() -> std::shared_ptr<s760::S760Vst3Plugin> {
 #ifdef S760_TEST_EXPORTED_FACTORY
                 void* result=nullptr;
                 check(factory->createInstance(reinterpret_cast<char*>(info.cid),reinterpret_cast<char*>(iid),&result)==kResultOk,"Fresh factory state instance failed");
@@ -197,6 +222,11 @@ int main(int argc,char** argv) {
         std::size_t consumed=0,first_audible=0;
         bool note_on_verified=false;
         auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(90);
+#ifdef S760_TEST_NATIVE_EDITOR
+        check(paced && seconds>=10,"Editor acceptance requires paced playback >=10 seconds");
+        const auto editor_pid=native.process_id();
+        NativeEditorAcceptance editor(plugin.get_bridge(),root,cfg.state);
+#endif
         auto clock_start=std::chrono::steady_clock::now();
         double max_callback_us=0,max_deadline_fraction=0;
         unsigned missed_deadlines=0;
@@ -232,6 +262,10 @@ int main(int argc,char** argv) {
                 } else check(left[i]==0 && right[i]==0,"Initial padding differs");
             }
             consumed+=count;
+#ifdef S760_TEST_NATIVE_EDITOR
+            editor.phase=consumed<total/3?0:consumed<total/2?1:2;
+            check(!editor.failed,"Native editor could not open");
+#endif
             if(!note_on_verified && consumed>=host_rate/2) {
                 auto status=native.request("{\"op\":\"status\"}").json;
                 check(status.find(std::to_string(event_time(17)))!=std::string::npos,"Native note-on offset differs");
@@ -252,6 +286,13 @@ int main(int argc,char** argv) {
             }
             if(paced) std::this_thread::sleep_until(clock_start+std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::duration<double>(double(consumed)/host_rate)));
         }
+#ifdef S760_TEST_NATIVE_EDITOR
+        editor.finish();
+        check(editor.verified==3,"React did not paint native pixels before and after reopen");
+        check(native.process_id()==editor_pid,"Editor lifecycle replaced native child");
+        check(native.display_frames().seconds>now+seconds/2,"Editor display cache stopped advancing during audio");
+        std::cout<<"Native editor: React pixel agreement before/after reopen, same child, concurrent exact PCM\n";
+#endif
         auto delivered=native.request("{\"op\":\"status\"}").json;
         std::cout << "Expected MIDI " << event_time(17) << "," << event_time(note_off) << "; status=" << delivered << "\n";
         check(note_on_verified && delivered.find(std::to_string(event_time(note_off)))!=std::string::npos,"Native note-off offset differs");

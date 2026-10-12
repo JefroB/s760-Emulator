@@ -1,4 +1,5 @@
 #include "s760/s760_bridge.hpp"
+#include "s760/s760_mame_host.hpp"
 
 // =============================================================================
 //  s760_bridge.cpp — in-process C++ UI bridge + optional loopback WS server.
@@ -134,6 +135,11 @@ public:
             }
         }
         return false; // unterminated
+    }
+
+    bool read_bool(bool& out) {
+        skip_ws(); if(peek()=='t' && skip_literal("true")) {out=true;return true;}
+        if(peek()=='f' && skip_literal("false")) {out=false;return true;} return false;
     }
 
     bool read_number(double& out) {
@@ -620,7 +626,8 @@ bool S760Bridge::decode_client_message(const std::string& json,
                 if (pk == "delta")    { double d; if (pv.read_number(d)) { p.has_delta = true; p.delta = d; } return true; }
                 if (pk == "x")        { double d; if (pv.read_number(d)) { p.has_x = true; p.x = d; } return true; }
                 if (pk == "y")        { double d; if (pv.read_number(d)) { p.has_y = true; p.y = d; } return true; }
-                if (pk == "button")   { double d; if (pv.read_number(d)) { p.has_button = true; p.button = static_cast<int>(d); } return true; }
+                if (pk == "down") { bool b; if(pv.read_bool(b)) {p.has_down=true;p.down=b;} return true; }
+                if (pk == "button")   { double d; if (pv.read_number(d) && std::isfinite(d) && d==std::floor(d) && d>=0 && d<=2) { p.has_button = true; p.button = static_cast<int>(d); } return true; }
                 if (pk == "note")     { double d; if (pv.read_number(d)) { p.has_note = true; p.note = static_cast<int>(d); } return true; }
                 if (pk == "velocity") { double d; if (pv.read_number(d)) { p.has_velocity = true; p.velocity = static_cast<int>(d); } return true; }
                 return false; // unknown payload key -> let reader skip it
@@ -641,15 +648,64 @@ bool S760Bridge::on_input(const std::string& json) {
     if (!decode_client_message(json, msg)) {
         return false; // malformed / unknown => ignored per design error handling
     }
+    if(msg.type==bridge::ClientMessageType::MOUSE_BUTTON &&
+       (!msg.payload.has_button || !msg.payload.has_down || (msg.payload.button!=0 && msg.payload.button!=2))) return false;
     std::lock_guard<std::mutex> lock(m_mutex);
+    if(auto* native=dynamic_cast<S760MameHost*>(m_host);native && native->native_runtime()) {
+        using T=bridge::ClientMessageType;
+        const auto& p=msg.payload;
+        if(msg.type==T::MOUSE_BUTTON) {
+            if(!native->apply_mouse_button(p.button,p.down)) return false;
+            m_mouse_held[p.button]=p.down; return true;
+        }
+        if(msg.type==T::DIAL_DELTA) return p.has_id && p.has_delta && std::isfinite(p.delta) &&
+            p.delta>=-32 && p.delta<=32 && std::floor(p.delta)==p.delta && native->apply_native_dial(p.id,static_cast<int>(p.delta));
+        if(msg.type==T::MOUSE_CLICK) return false;
+        if(msg.type==T::BUTTON_PRESS || msg.type==T::BUTTON_RELEASE) {
+            static const std::array<const char*,14> ids{{"MENU","COMMAND","MODE","EXIT","UP","DOWN","LEFT","RIGHT","F1","F2","F3","S1","S2","SHIFT"}};
+            if(!p.has_id || std::none_of(ids.begin(),ids.end(),[&](const char* id){return p.id==id;})) return false;
+        }
+        if(msg.type==T::MOUSE_MOVE && (!p.has_x || !p.has_y || !std::isfinite(p.x) || !std::isfinite(p.y) ||
+            p.x<0 || p.x>1 || p.y<0 || p.y>1)) return false;
+        if(msg.type==T::CONFIGURE_MEDIA_LIBRARY) return p.has_diskPath && native->media_library().configure(p.diskPath);
+        if(msg.type==T::SELECT_MEDIA) return p.has_diskPath && native->media_library().select(p.diskPath);
+        if(msg.type==T::MOUNT_DISK) return p.has_diskPath && native->mount_disk(p.diskPath);
+    }
+    if(msg.type==bridge::ClientMessageType::CONFIGURE_MEDIA_LIBRARY || msg.type==bridge::ClientMessageType::SELECT_MEDIA) return false;
     apply_message(msg);
     return true;
+}
+
+void S760Bridge::release_held_inputs() {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    if(auto* native=dynamic_cast<S760MameHost*>(m_host);native && native->native_runtime())
+        {
+        for(int button:{0,2}) if(m_mouse_held[button] && native->apply_mouse_button(button,false)) m_mouse_held[button]=false;
+        for(auto it=m_panel_held.rbegin();it!=m_panel_held.rend();++it) native->apply_button(*it,false);
+        m_panel_held.clear();
+    }
 }
 
 void S760Bridge::apply_message(const bridge::ClientMessage& msg) {
     using T = bridge::ClientMessageType;
     if (!m_host) return;
     const bridge::ClientPayload& p = msg.payload;
+
+    if(auto* native=dynamic_cast<S760MameHost*>(m_host);native && native->native_runtime()) {
+        if(msg.type==T::BUTTON_PRESS || msg.type==T::BUTTON_RELEASE) {
+            if(p.has_id) {
+                native->apply_button(p.id,msg.type==T::BUTTON_PRESS);
+                auto it=std::find(m_panel_held.begin(),m_panel_held.end(),p.id);
+                if(msg.type==T::BUTTON_PRESS && it==m_panel_held.end()) m_panel_held.push_back(p.id);
+                else if(msg.type==T::BUTTON_RELEASE && it!=m_panel_held.end()) m_panel_held.erase(it);
+            }
+            return;
+        }
+        if(msg.type==T::MOUSE_MOVE) {
+            if(p.has_x && p.has_y) native->apply_pointer(p.x,p.y);
+            return;
+        }
+    }
 
     switch (msg.type) {
         case T::NOTE_ON: {
@@ -680,6 +736,7 @@ void S760Bridge::apply_message(const bridge::ClientMessage& msg) {
         case T::BUTTON_RELEASE:
         case T::DIAL_DELTA:
         case T::MOUSE_MOVE:
+        case T::MOUSE_BUTTON:
         case T::MOUSE_CLICK:
             // Front-panel buttons, encoders and the pointer are consumed by the
             // emulated input map once the OS runs. The host's input surface
@@ -868,6 +925,15 @@ bridge::ServerTelemetry S760Bridge::current_telemetry_locked() const {
     // string. m_current_mode defaults to "" and is only written from genuine
     // OS/display state, so no invented mode content is ever reported (R5.4).
     t.currentMode = m_current_mode;
+    if (auto* native=dynamic_cast<S760MameHost*>(m_host)) {
+        const auto media=native->media_library().state();
+        t.lastInsertedDisk=std::filesystem::u8path(media.inserted).filename().u8string();
+        t.mediaError=native->last_mount_error();
+        t.mediaPaths=media.paths;t.lastInsertedPath=media.inserted;
+        t.mediaFolder=media.folder;t.selectedMediaPath=media.selected;
+        t.libraryError=native->media_library().error();
+        t.outputLevel=native->native_output_level();
+    }
 
     if (m_host) {
         // Output peaks: the recorder tracks input/live peaks; use them as the
@@ -929,6 +995,16 @@ std::string S760Bridge::encode_telemetry(const bridge::ServerTelemetry& t) {
        << "\"peakL\":"        << num(t.peakL) << ','
        << "\"peakR\":"        << num(t.peakR) << ','
        << "\"activeVoices\":" << t.activeVoices << ','
+       << "\"lastInsertedDisk\":" << jstr(t.lastInsertedDisk) << ','
+       << "\"lastInsertedPath\":" << jstr(t.lastInsertedPath) << ','
+       << "\"mediaFolder\":" << jstr(t.mediaFolder) << ','
+       << "\"selectedMediaPath\":" << jstr(t.selectedMediaPath) << ','
+       << "\"libraryError\":" << jstr(t.libraryError) << ','
+       << "\"outputLevel\":" << t.outputLevel << ','
+       << "\"mediaPaths\":[";
+    for(std::size_t i=0;i<t.mediaPaths.size();++i) { if(i) os << ','; os << jstr(t.mediaPaths[i]); }
+    os << "],"
+       << "\"mediaError\":" << jstr(t.mediaError) << ','
        << "\"currentMode\":"  << jstr(t.currentMode)
        << '}';
     return os.str();

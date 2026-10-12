@@ -6,6 +6,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from s760_standalone import validate_input
 
 
+@pytest.mark.parametrize('id', ['ALPHA', 'VOLUME'])
+def test_native_dials_accept_bounded_signed_steps(id):
+    for delta in (-32, -1, 0, 1, 32):
+        assert validate_input({'type': 'DIAL_DELTA', 'payload': {'id': id, 'delta': delta}})[0] == 'DIAL_DELTA'
+
+
+@pytest.mark.parametrize('payload', [
+    {'id': 'INPUT', 'delta': 1}, {'id': 'ALPHA', 'delta': True},
+    {'id': 'ALPHA', 'delta': 1.5}, {'id': 'VOLUME', 'delta': 33},
+    {'id': 'ALPHA', 'delta': -33}, {'id': 'ALPHA'},
+])
+def test_native_dials_reject_unknown_or_unbounded_input(payload):
+    with pytest.raises(ValueError):
+        validate_input({'type': 'DIAL_DELTA', 'payload': payload})
+
+
 def test_missing_midi_backend_keeps_audition_available(tmp_path, monkeypatch):
     from types import SimpleNamespace
     import subprocess

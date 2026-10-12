@@ -8,6 +8,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <chrono>
+#include <fstream>
+#include <rapidjson/document.h>
 
 #if defined(_WIN32)
 #define VST3_EXPORT __declspec(dllexport)
@@ -31,6 +33,18 @@ S760Vst3Plugin::S760Vst3Plugin(const NativeRuntimeConfig& config)
     auto* host=native_host();
     host->configure_native(config);
     if(!host->init()) throw std::runtime_error(host->native_error());
+    // Per-instance URL: do not mutate process-wide environment or depend on
+    // the DAW working directory. Percent-encode UTF-8 file path bytes.
+    if(const auto* override_url=std::getenv("S760_UI_URL");override_url && *override_url)
+        m_native_ui_url=override_url;
+    else {
+        m_native_ui_url="file:///";
+        for(unsigned char c:(config.root/"google-ui/dist/index.html").generic_u8string()) {
+            if((c>='a'&&c<='z') || (c>='A'&&c<='Z') || (c>='0'&&c<='9') ||
+               c=='/' || c==':' || c=='-' || c=='_' || c=='.' || c=='~') m_native_ui_url+=char(c);
+            else {m_native_ui_url+='%';m_native_ui_url+="0123456789ABCDEF"[c>>4];m_native_ui_url+="0123456789ABCDEF"[c&15];}
+        }
+    }
     m_scratch_left.resize(NativeStream::max_frames);
     m_scratch_right.resize(NativeStream::max_frames);
 }
@@ -67,16 +81,16 @@ S760Vst3Plugin::~S760Vst3Plugin() {
 //  plugin's in-process S760Bridge via S760EditorController.
 // -----------------------------------------------------------------------------
 static const TUID FUnknown_iid       = INLINE_UID(0x00000000, 0x00000000, 0xC0000000, 0x00000046);
-static const TUID IComponent_iid     = INLINE_UID(0xE8318227, 0x79A447F6, 0x8E6AEF5D, 0xDC202293);
-static const TUID IAudioProcessor_iid= INLINE_UID(0x420423E5, 0x12DA4541, 0xA6190EB9, 0x99615A3B);
+static const TUID IComponent_iid     = INLINE_UID(0xE831FF31, 0xF2D54301, 0x928EBBEE, 0x25697802);
+static const TUID IAudioProcessor_iid= INLINE_UID(0x42043F99, 0xB7DA453C, 0xA569E79D, 0x9AAEC33D);
 static const TUID IEditController_iid = INLINE_UID(0xDCD7BBE3, 0x7742448D, 0xA874AACC, 0x979C759E);
 static const TUID IPlugView_iid       = INLINE_UID(0x5BC32507, 0xD06049EA, 0xA6151B52, 0x2B755B29);
 
 class S760Vst3PlugView : public Steinberg::IPlugView {
 public:
-    explicit S760Vst3PlugView(S760Bridge* bridge)
-        : m_controller(bridge) {}
-    ~S760Vst3PlugView() override { m_controller.close(); }
+    explicit S760Vst3PlugView(S760Bridge* bridge, const std::string& url)
+        : m_controller(bridge) { m_controller.set_frontend_url(url); }
+    ~S760Vst3PlugView() { m_controller.close(); }
 
     // FUnknown
     tresult queryInterface(const TUID _iid, void** obj) override {
@@ -224,13 +238,17 @@ tresult S760Vst3Plugin::getBusCount(int32_t type, int32_t dir) {
 }
 
 tresult S760Vst3Plugin::getBusInfo(int32_t type, int32_t dir, int32_t index, void* bus) {
-    (void)type; (void)dir; (void)index; (void)bus;
-    return kResultOk;
+    if(!bus || index!=0 || (dir!=kInput && dir!=kOutput) || !getBusCount(type,dir)) return kInvalidArgument;
+    auto& info=*static_cast<Steinberg::BusInfo*>(bus); info={};
+    info.mediaType=type; info.direction=dir; info.channelCount=type==kAudio?2:16;
+    const char16_t* name=type==kEvent?u"MIDI Input":dir==kOutput?u"Stereo Output":u"Stereo Input";
+    std::copy(name,name+std::char_traits<char16_t>::length(name),info.name);
+    info.busType=kMain; info.flags=1; return kResultOk;
 }
 
 tresult S760Vst3Plugin::getRoutingInfo(void* inInfo, void* outInfo) {
     (void)inInfo; (void)outInfo;
-    return kResultOk;
+    return kNotImplemented;
 }
 
 tresult S760Vst3Plugin::activateBus(int32_t type, int32_t dir, int32_t index, bool state) {
@@ -248,13 +266,14 @@ tresult S760Vst3Plugin::setActive(bool state) {
 }
 
 tresult S760Vst3Plugin::setBusArrangements(void* inputs, int32_t numIns, void* outputs, int32_t numOuts) {
-    (void)inputs; (void)numIns; (void)outputs; (void)numOuts;
+    if(numIns!=getBusCount(kAudio,kInput) || numOuts!=1 || !outputs ||
+       *static_cast<uint64_t*>(outputs)!=3 || (numIns && (!inputs || *static_cast<uint64_t*>(inputs)!=3))) return kResultFalse;
     return kResultOk;
 }
 
 tresult S760Vst3Plugin::getBusArrangement(int32_t dir, int32_t index, void* arr) {
-    (void)dir; (void)index; (void)arr;
-    return kResultOk;
+    if(!arr || index!=0 || (dir!=kInput && dir!=kOutput) || !getBusCount(kAudio,dir)) return kInvalidArgument;
+    *static_cast<uint64_t*>(arr)=3; return kResultOk;
 }
 
 tresult S760Vst3Plugin::canProcessSampleSize(int32_t symbolicSampleSize) {
@@ -324,6 +343,7 @@ tresult S760Vst3Plugin::setProcessing(bool state) {
         }
         // Suspension retains queued PCM, pending serial events and the clock.
         // With no callback input the worker finishes its finite backlog and idles.
+        native_host()->native_runtime()->set_audio_streaming(state);
         m_is_processing=state;
         return kResultOk;
     }
@@ -497,6 +517,7 @@ tresult S760Vst3Plugin::get_native_state(Steinberg::IBStream* state) {
         } else was_running=native->request("{\"op\":\"status\"}").json.find("\"running\"")!=std::string::npos;
         native->request("{\"op\":\"pause\"}");
         saved.identity=native->checkpoint_identity();saved.machine=native->save_checkpoint();
+        saved.media=native_host()->media_library().state();
         auto bytes=saved.encode();
         if(captured_stream) {rebuild_native_stream(&saved.stream);captured_stream=false;}
         if(was_running) {native->request("{\"op\":\"resume\"}");was_running=false;}
@@ -511,6 +532,7 @@ tresult S760Vst3Plugin::set_native_state(Steinberg::IBStream* state) {
     if(!state || m_is_processing || !native_host()->native_runtime()) return kResultFalse;
     auto* native=native_host()->native_runtime();
     bool applying=false;
+    const char* stage="decode/identity";
     try {
         std::uint32_t size=0;
         if(!state_transfer(state,&size,4,false) || size>NativePluginState::max_bytes || size<40) return kResultFalse;
@@ -524,12 +546,20 @@ tresult S760Vst3Plugin::set_native_state(Steinberg::IBStream* state) {
         applying=true; // Any failure after stopping the worker requires a successful reload.
         m_native_state_failed=true;
         if(m_native_stream) m_native_stream->stop();
+        stage="pause";
         native->request("{\"op\":\"pause\"}");
+        stage="load checkpoint";
         native->load_checkpoint(saved.machine);
+        stage="restore host state";
+        native_host()->restore_media(std::move(saved.media));
         m_native_stream.reset();m_native_converter=std::move(converter);m_native_origin=saved.origin;
         if(saved.has_stream) rebuild_native_stream(&saved.stream);
         m_native_state_failed=false;
         return kResultOk;
+    } catch(const std::exception& error) {
+        std::cerr<<"[S760 native state restore: "<<stage<<"] "<<error.what()<<'\n';
+        if(applying && m_native_stream) m_native_stream->fail(NativeStream::Fault::renderer_failed);
+        return kResultFalse;
     } catch(...) {
         // An apply failure must never run a partially restored timeline.
         if(applying && m_native_stream) m_native_stream->fail(NativeStream::Fault::renderer_failed);
@@ -699,7 +729,7 @@ Steinberg::IPlugView* S760Vst3Plugin::createView(FIDString name) {
     if (!name || std::strcmp(name, ViewType_kEditor) != 0) {
         return nullptr;
     }
-    return new S760Vst3PlugView(&m_bridge);
+    return new S760Vst3PlugView(&m_bridge,m_native_ui_url);
 }
 
 // -----------------------------------------------------------------------------
@@ -716,19 +746,79 @@ static std::filesystem::path native_environment_path(const char* key) {
     return value ? std::filesystem::path(value) : std::filesystem::path{};
 }
 
+static std::filesystem::path native_settings_path() {
+    auto explicit_path=native_environment_path("S760_PLUGIN_CONFIG");
+    if(!explicit_path.empty()) {
+        if(!explicit_path.is_absolute()) throw std::runtime_error("S760_PLUGIN_CONFIG must be an absolute path");
+        return explicit_path;
+    }
+    auto appdata=native_environment_path("LOCALAPPDATA");
+    return appdata.is_absolute()?appdata/"S760"/"plugin-settings.json":std::filesystem::path{};
+}
+
+static void report_native_startup_error(const std::string& reason) noexcept {
+    try {
+        std::string message="S-760 plugin startup failed: "+reason+
+            "\nRun python scripts/configure_vst3.py --help from the S-760 installation to validate and save paths; then reload the plugin.\n";
+        const auto settings=native_settings_path();
+        if(!settings.empty()) {
+            message+="Settings: "+settings.u8string()+"\n";
+            std::filesystem::create_directories(settings.parent_path());
+            // Best-effort last failure, separate from configuration/session data.
+            auto diagnostic=settings; diagnostic += ".last-error.txt";
+            std::ofstream file(diagnostic,std::ios::trunc|std::ios::binary);
+            file<<message;
+            message+="Diagnostic: "+diagnostic.u8string()+"\n";
+        }
+        std::cerr<<message;
+    } catch(...) { std::cerr<<"S-760 plugin startup failed: "<<reason<<'\n'; }
+}
+
 static NativeRuntimeConfig native_factory_config() {
     NativeRuntimeConfig config;
     config.root=native_environment_path("S760_NATIVE_ROOT");
     auto state_root=native_environment_path("S760_NATIVE_STATE_ROOT");
     config.boot_rom=native_environment_path("S760_BOOT_ROM");
     config.system_disk=native_environment_path("S760_SYSTEM_DISK");
+    // Complete explicit environment configuration remains supported for hosts
+    // and isolated tests. Otherwise fill missing values from persistent UTF-8 JSON.
+    if(config.root.empty() || state_root.empty() || config.boot_rom.empty() || config.system_disk.empty()) {
+        auto settings=native_settings_path();
+        if(!settings.empty() && std::filesystem::exists(settings)) {
+            if(std::filesystem::file_size(settings)>32768) throw std::runtime_error("Plugin settings exceed 32KB");
+            std::ifstream file(settings,std::ios::binary);
+            if(!file) throw std::runtime_error("Cannot read plugin settings: "+settings.u8string());
+            std::string bytes((std::istreambuf_iterator<char>(file)),{});
+            rapidjson::Document document;
+            document.Parse<rapidjson::kParseValidateEncodingFlag>(bytes.data(),bytes.size());
+            if(document.HasParseError() || !document.IsObject() || !document.HasMember("version") ||
+               !document["version"].IsInt() || document["version"].GetInt()!=1)
+                throw std::runtime_error("Invalid plugin settings JSON/version");
+            auto fill=[&](std::filesystem::path& path,const char* key) {
+                if(!path.empty()) return;
+                if(!document.HasMember(key) || !document[key].IsString())
+                    throw std::runtime_error(std::string("Missing plugin setting: ")+key);
+                const auto& value=document[key];
+                std::string text(value.GetString(),value.GetStringLength());
+                if(text.empty() || text.size()>4096 || text.find('\0')!=std::string::npos)
+                    throw std::runtime_error(std::string("Invalid plugin setting: ")+key);
+                path=std::filesystem::u8path(text);
+            };
+            fill(config.root,"root"); fill(state_root,"stateRoot");
+            fill(config.boot_rom,"bootRom"); fill(config.system_disk,"systemDisk");
+        }
+    }
     // Explicit paths make scanner/host working directories irrelevant. Firmware
     // is user supplied; never fall back to the historical emulation backend.
     if(!config.root.is_absolute() || !state_root.is_absolute() ||
        !config.boot_rom.is_absolute() || !config.system_disk.is_absolute())
-        throw std::runtime_error("Set absolute S760_NATIVE_ROOT, S760_NATIVE_STATE_ROOT, S760_BOOT_ROM and S760_SYSTEM_DISK paths");
+        throw std::runtime_error("Configure absolute root, stateRoot, bootRom and systemDisk paths (or the four S760 runtime environment overrides)");
     for(const auto& path:{config.root/"mame-source/mames760.exe",config.root/"scripts/s760_runtime.lua",config.boot_rom,config.system_disk})
         if(!std::filesystem::is_regular_file(path)) throw std::runtime_error("Missing native runtime or firmware file: "+path.string());
+    if(!std::getenv("S760_UI_URL") && !std::filesystem::is_regular_file(config.root/"google-ui/dist/index.html"))
+        throw std::runtime_error("Build the React editor with npm run build in google-ui before loading the plugin");
+    if(std::filesystem::file_size(config.boot_rom)!=32768 || std::filesystem::file_size(config.system_disk)!=1474560)
+        throw std::runtime_error("Boot ROM must be 32768 bytes and system disk must be 1474560 bytes");
     std::filesystem::create_directories(state_root);
     static std::atomic<unsigned long long> next{0};
     for(unsigned retry=0;retry<100;++retry) {
@@ -741,16 +831,20 @@ static NativeRuntimeConfig native_factory_config() {
 class S760Vst3Factory : public Steinberg::IPluginFactory {
 public:
     tresult queryInterface(const TUID _iid, void** obj) override {
-        (void)_iid;
         if (!obj) return kInvalidArgument;
-        *obj = this;
-        return kResultOk;
+        *obj=nullptr;
+        static const TUID factoryId=INLINE_UID(0x7A4D811C,0x52114A1F,0xAED9D2EE,0x0B43BF9F);
+        if(std::memcmp(_iid,FUnknown_iid,16) && std::memcmp(_iid,factoryId,16)) return kResultFalse;
+        *obj=static_cast<Steinberg::IPluginFactory*>(this); addRef(); return kResultOk;
     }
     uint32_t addRef() override { return 1; }
     uint32_t release() override { return 1; }
 
     tresult getFactoryInfo(void* info) override {
-        (void)info;
+        if(!info) return kInvalidArgument;
+        auto& value=*static_cast<Steinberg::PFactoryInfo*>(info); value={};
+        std::strcpy(value.vendor,"S-760 Emulator Contributors");
+        std::strcpy(value.url,"https://github.com/JefroB/s760-Emulator");
         return kResultOk;
     }
 
@@ -762,8 +856,8 @@ public:
         if (!info) return kInvalidArgument;
         if (index == 0) {
             std::memcpy(info->cid, S760ProcessorUID, 16);
-            info->cardinality = 0;
-            std::strncpy(info->category, "Instrument|Synth", sizeof(info->category) - 1);
+            info->cardinality = 0x7fffffff;
+            std::strncpy(info->category, "Audio Module Class", sizeof(info->category) - 1);
             std::strncpy(info->name, "Roland S-760 Sampler", sizeof(info->name) - 1);
             return kResultOk;
         }
@@ -782,7 +876,7 @@ public:
             plugin->release(); // queryInterface owns the returned reference.
             return result;
         } catch(const std::exception& error) {
-            std::cerr << "[S760 native VST3] " << error.what() << std::endl;
+            report_native_startup_error(error.what());
             return kResultFalse;
         } catch(...) {
             return kInternalError; // Never unwind through a host/plugin ABI.

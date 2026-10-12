@@ -17,6 +17,7 @@
 ***************************************************************************/
 
 #include "emu.h"
+#include "video/sed1330.h"
 #include "cpu/mcs96/i8x9x.h"
 #include "machine/eepromser.h"
 #include "imagedev/midiin.h"
@@ -1004,12 +1005,15 @@ public:
 		: driver_device(mconfig, type, tag)
 		, device_serial_interface(mconfig, *this)
 		, m_maincpu(*this, "maincpu")
+		, m_lcd_controller(*this, "lcd_controller")
 		, m_crt_screen(*this, "crt_screen")
 		, m_key_arrows(*this, "KEY_ARROWS")
 		, m_panel_rows(*this, "PANEL%u", 0U)
 		, m_mouse_x_port(*this, "NATIVE_MOUSE_X")
 		, m_mouse_y_port(*this, "NATIVE_MOUSE_Y")
 		, m_mouse_buttons(*this, "NATIVE_MOUSE_BUTTONS")
+		, m_value_port(*this, "NATIVE_VALUE")
+		, m_output_level_port(*this, "NATIVE_OUTPUT")
 		, m_gotek_ctrl(*this, "GOTEK_CTRL")
 		, m_sound(*this, "s760_sound")
 	{ }
@@ -1062,6 +1066,10 @@ private:
 	u16 m_mouse_last_x = 0, m_mouse_last_y = 0;
 	u8 m_mouse_phase = 3, m_mouse_select = 0;
 	attotime m_mouse_edge_time;
+	bool m_native_value_encoder = false;
+	u16 m_value_last = 0;
+	u8 m_value_latch = 0;
+	attotime m_value_next;
 	void native_mouse_w(u8 data);
 	u16 m_native_vdp_address = 0;
 	u8 m_native_vdp_high = 0;
@@ -1125,6 +1133,7 @@ private:
 	u8 banked_physical_r(u32 address);
 	void banked_physical_w(u32 address, u8 data);
 	required_device<i8x9x_device> m_maincpu;
+	optional_device<sed1330_device> m_lcd_controller;
 	required_device<screen_device> m_crt_screen;
 
 	// IC20 BOOT ROM HLE: the OS makes hardcoded LCALLs into low memory
@@ -1192,6 +1201,8 @@ private:
 	required_ioport m_key_arrows;
 	required_ioport_array<4> m_panel_rows;
 	required_ioport m_mouse_x_port, m_mouse_y_port, m_mouse_buttons;
+	required_ioport m_value_port;
+	required_ioport m_output_level_port;
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
 
@@ -1356,6 +1367,9 @@ private:
 	std::vector<u8> m_checkpoint_scsi_transfer;
 	u32 m_checkpoint_scsi_transfer_size = 0;
 	size_t m_scsi_data_idx;
+	u64 m_scsi_write_offset = 0;
+	u8 m_scsi_sense_key[7] = {};
+	u8 m_scsi_sense_asc[7] = {};
 	uint8_t m_scsi_target_status; // Good = 0x00, Check Condition = 0x02, Busy = 0x08
 
 	// SCSI Media Files / Images
@@ -1397,6 +1411,9 @@ void s760_state::machine_start()
 	save_item(NAME(m_mouse_phase));
 	save_item(NAME(m_mouse_select));
 	save_item(NAME(m_mouse_edge_time));
+	save_item(NAME(m_value_last));
+	save_item(NAME(m_value_latch));
+	save_item(NAME(m_value_next));
 	save_item(NAME(m_native_disk_changed));
 	save_item(NAME(m_native_wave_bus));
 	save_item(NAME(m_native_envelope_bus));
@@ -1425,6 +1442,7 @@ void s760_state::machine_start()
 	save_item(NAME(m_native_wave_end_pending));
 	save_item(NAME(m_native_wave_end_slot));
 	m_banked_os = getenv("S760_BANKED_OS") != nullptr || getenv("S760_ROM_BOOT") != nullptr;
+	m_native_value_encoder = m_banked_os && getenv("S760_NATIVE_VALUE_ENCODER") != nullptr;
 	m_native_midi_experiment = m_banked_os && getenv("S760_IC4_MIDI_EXPERIMENT") != nullptr;
 	if (m_native_midi_experiment)
 		if (const char *port = getenv("S760_RUNTIME_MIDI_PORT"))
@@ -1994,6 +2012,9 @@ void s760_state::machine_start()
 	save_item(NAME(m_scsi_cdb_len));
 	save_item(NAME(m_scsi_data_idx));
 	save_item(NAME(m_scsi_target_status));
+	save_item(NAME(m_scsi_write_offset));
+	save_item(NAME(m_scsi_sense_key));
+	save_item(NAME(m_scsi_sense_asc));
 	save_item(NAME(m_scsi_device_present));
 	save_item(NAME(m_scsi_device_type));
 	m_checkpoint_scsi_transfer.assign(65535U * 2048U, 0);
@@ -2159,7 +2180,10 @@ u8 s760_state::banked_physical_r(u32 address)
 	// External I/O aperture selected by page0400. Remaining external decoding
 	// is deliberately unimplemented in this bounded handoff experiment.
 	if (address >= 0x102800 && address <= 0x1028ff) return native_vdp_r(address - 0x102800);
-	if (address >= 0x103800 && address <= 0x103803) return lcd_r(address - 0x103800);
+	if (address >= 0x103800 && address <= 0x103803) {
+        if (m_lcd_controller && (address & 2)) return m_lcd_controller->data_r();
+        return lcd_r(address - 0x103800); // Preserve the existing native status handshake.
+    }
 	if (address >= 0x103000 && address <= 0x10301f) return mmio_r(address - 0x103000);
 	if (address >= 0x102400 && address <= 0x10240f) return scsi_r(address - 0x102400);
 	if (address == 0x102000) return fdc_r(0);
@@ -2193,7 +2217,13 @@ void s760_state::banked_physical_w(u32 address, u8 data)
 		native_envelope_w(address - 0x101000, data);
 		return;
 	}
-	if (address >= 0x103800 && address <= 0x103803) { lcd_w((address - 0x103800) ^ 2, data); // ROM29C7: command F802, data F800.
+	if (address >= 0x103800 && address <= 0x103803) {
+        // Native ROM29C7: command F802, data F800. The external font RAM,
+        // cursor direction, row pitch and display attributes belong to the device.
+        if (m_lcd_controller) {
+            if (address & 2) m_lcd_controller->command_w(data);
+            else m_lcd_controller->data_w(data);
+        } else lcd_w((address - 0x103800) ^ 2, data);
 		return; }
 	if (address >= 0x103000 && address <= 0x10301f) { mmio_w(address - 0x103000, data); return; }
 	if (address >= 0x102400 && address <= 0x10240f) { scsi_w(address - 0x102400, data); return; }
@@ -2464,6 +2494,10 @@ void s760_state::native_audio_clock_w(u8 data)
 
 void s760_state::native_wave_monitor_update(sound_stream &stream)
 {
+	// Service Notes p20: VR1 attenuates Stereo Out A / headphones after
+	// the DAC. Software linear amplitude control; physical pot taper and
+	// analog distortion are not calibrated. Unity preserves prior PCM.
+	const float output_level = m_output_level_port->read() / 100.0f;
 	// Diagnostic raw PCM monitor, deliberately opt-in. Pitch/reference clock
 	// follow firmware tables and P1.6/P1.7 (finding67). Linear interpolation,
 	// legacy inclusive endpoint and fixed monitor gain are provisional.
@@ -2655,8 +2689,8 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 				m_native_lpf_low[channel] = m_native_lpf_band[channel] = 0.0;
 			const float sample = (m_native_lpf_monitor || half_interpolation || pitch_interpolation) ? envelope * float(pcm) / 24.0f
 				: envelope * float(va + (vb-va)*(pos-a)) / (32768.0f*24.0f);
-			stream.add(0, i, sample * left_gain);
-			stream.add(1, i, sample * right_gain);
+			stream.add(0, i, sample * left_gain * output_level);
+			stream.add(1, i, sample * right_gain * output_level);
 			const double advance = measured_loops && m_native_wave_reverse[slot] ? -step : step;
 			// In the measured forward-release configurations, firmware arms
 			// this integer comparator one sample before the new loop endpoint.
@@ -2802,6 +2836,9 @@ void s760_state::machine_reset()
 	m_mouse_phase = 3;
 	m_mouse_select = 0;
 	m_mouse_edge_time = attotime::zero;
+	m_value_last = 0;
+	m_value_latch = 0;
+	m_value_next = attotime::zero;
 	if (!m_boot_rom.empty())
 	{
 		// Experimental CPU-gate reset decode: straight ROM mapping. The gate
@@ -3639,7 +3676,17 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 					m_scsi_data_buffer[m_scsi_data_idx++] = data;
 					if (m_scsi_data_idx >= m_scsi_data_buffer.size())
 					{
-						// Finished writing payload
+						// Commit only a complete command into the private, checkpointed image.
+						// Library files are never overwritten by a guest WRITE.
+						auto &image = m_scsi_disk_images[m_scsi_target_id];
+						if (m_scsi_write_offset <= image.size()
+							&& m_scsi_data_buffer.size() <= image.size() - m_scsi_write_offset)
+							std::copy(m_scsi_data_buffer.begin(), m_scsi_data_buffer.end(), image.begin() + m_scsi_write_offset);
+						else {
+							m_scsi_target_status = 2;
+							m_scsi_sense_key[m_scsi_target_id] = 5;
+							m_scsi_sense_asc[m_scsi_target_id] = 0x21;
+						}
 						m_scsi_bus_phase = 6; // STATUS phase
 						m_scsi_psns = 0x8B;
 						m_scsi_ints = 0x08;
@@ -3677,6 +3724,14 @@ void s760_state::scsi_execute_cdb()
 	int target = m_scsi_target_id;
 	uint8_t dev_type = m_scsi_device_type[target];
 	m_scsi_target_status = 0x00; // Good status
+	auto status = [&](u8 key = 0, u8 asc = 0) {
+		m_scsi_target_status = key ? 0x02 : 0x00;
+		if (key) { m_scsi_sense_key[target] = key; m_scsi_sense_asc[target] = asc; }
+		m_scsi_bus_phase = 6;
+		m_scsi_psns = 0x8b;
+		m_scsi_ints = 0x08;
+		trigger_irq(IRQ_SCSI);
+	};
 
 	switch (opcode)
 	{
@@ -3716,14 +3771,18 @@ void s760_state::scsi_execute_cdb()
 			break;
 		}
 
-		case 0x03: // REQUEST SENSE
+		case 0x03: // REQUEST SENSE (fixed format, per target)
 		{
-			m_scsi_data_buffer.resize(18, 0);
-			m_scsi_data_buffer[0] = 0x70; // Current error
-			m_scsi_data_buffer[2] = 0x00; // Sense Key: No Error
-			m_scsi_data_buffer[7] = 10;   // Additional sense length
+			m_scsi_data_buffer.assign(18, 0);
+			m_scsi_data_buffer[0] = 0x70;
+			m_scsi_data_buffer[2] = m_scsi_sense_key[target];
+			m_scsi_data_buffer[7] = 10;
+			m_scsi_data_buffer[12] = m_scsi_sense_asc[target];
+			m_scsi_sense_key[target] = m_scsi_sense_asc[target] = 0;
+			m_scsi_data_buffer.resize(std::min<size_t>(18, m_scsi_cdb[4]));
 			m_scsi_data_idx = 0;
-			m_scsi_bus_phase = 4; // DATA_IN
+			if (m_scsi_data_buffer.empty()) { status(); break; }
+			m_scsi_bus_phase = 4;
 			m_scsi_psns = 0x89;
 			m_scsi_ints = 0x08;
 			trigger_irq(IRQ_SCSI);
@@ -3757,48 +3816,32 @@ void s760_state::scsi_execute_cdb()
 
 		case 0x08: // READ (6)
 		case 0x28: // READ (10)
+		case 0x0a: // WRITE (6)
+		case 0x2a: // WRITE (10)
 		{
-			uint32_t lba = 0;
-			uint32_t count = 0;
-			if (opcode == 0x08)
-			{
-				lba = ((m_scsi_cdb[1] & 0x1F) << 16) | (m_scsi_cdb[2] << 8) | m_scsi_cdb[3];
-				count = m_scsi_cdb[4];
-				if (count == 0) count = 256;
+			const bool write = opcode == 0x0a || opcode == 0x2a;
+			const bool short_cdb = opcode == 0x08 || opcode == 0x0a;
+			const u32 lba = short_cdb
+				? (u32(m_scsi_cdb[1] & 0x1f) << 16) | (u32(m_scsi_cdb[2]) << 8) | m_scsi_cdb[3]
+				: (u32(m_scsi_cdb[2]) << 24) | (u32(m_scsi_cdb[3]) << 16) | (u32(m_scsi_cdb[4]) << 8) | m_scsi_cdb[5];
+			const u32 count = short_cdb ? (m_scsi_cdb[4] ? m_scsi_cdb[4] : 256)
+				: (u32(m_scsi_cdb[7]) << 8) | m_scsi_cdb[8];
+			const u32 block_size = dev_type == 5 ? 2048 : 512;
+			const u64 offset = u64(lba) * block_size;
+			const u64 bytes = u64(count) * block_size;
+			// WRITE(10)/READ(10) count zero is a no-op, never a stuck data phase.
+			if (!count) { status(); break; }
+			if (write && dev_type == 5) { status(7, 0x27); break; } // DATA PROTECT
+			const auto &image = m_scsi_disk_images[target];
+			if (offset > image.size() || bytes > image.size() - offset) {
+				status(5, 0x21); break; // ILLEGAL REQUEST: LBA out of range
 			}
-			else
-			{
-				lba = (m_scsi_cdb[2] << 24) | (m_scsi_cdb[3] << 16) | (m_scsi_cdb[4] << 8) | m_scsi_cdb[5];
-				count = (m_scsi_cdb[7] << 8) | m_scsi_cdb[8];
-			}
-
-			uint32_t block_size = (dev_type == 5) ? 2048 : 512;
-			size_t byte_offset = (size_t)lba * block_size;
-			size_t byte_count = (size_t)count * block_size;
-
-			m_scsi_data_buffer.resize(byte_count, 0);
-			if (byte_offset + byte_count <= m_scsi_disk_images[target].size())
-			{
-				memcpy(m_scsi_data_buffer.data(), &m_scsi_disk_images[target][byte_offset], byte_count);
-			}
-
+			m_scsi_data_buffer.assign(size_t(bytes), 0);
+			if (!write) std::copy_n(image.begin() + offset, size_t(bytes), m_scsi_data_buffer.begin());
+			m_scsi_write_offset = offset;
 			m_scsi_data_idx = 0;
-			m_scsi_bus_phase = 4; // DATA_IN
-			m_scsi_psns = 0x89;
-			m_scsi_ints = 0x08;
-			trigger_irq(IRQ_SCSI);
-			break;
-		}
-
-		case 0x0A: // WRITE (6)
-		case 0x2A: // WRITE (10)
-		{
-			uint32_t count = (opcode == 0x0A) ? (m_scsi_cdb[4] == 0 ? 256 : m_scsi_cdb[4]) : ((m_scsi_cdb[7] << 8) | m_scsi_cdb[8]);
-			uint32_t block_size = (dev_type == 5) ? 2048 : 512;
-			m_scsi_data_buffer.resize((size_t)count * block_size, 0);
-			m_scsi_data_idx = 0;
-			m_scsi_bus_phase = 5; // DATA_OUT
-			m_scsi_psns = 0x88;   // BSY=1, REQ=1, Data Out (000)
+			m_scsi_bus_phase = write ? 5 : 4;
+			m_scsi_psns = write ? 0x88 : 0x89;
 			m_scsi_ints = 0x08;
 			trigger_irq(IRQ_SCSI);
 			break;
@@ -3904,6 +3947,25 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			val = m_eeprom_do & 0x01;
 			break;
 
+		case 0x12:
+			// OS 2.24 bank003B:452D reads/clears IC20's encoder latch.
+			// Bit1 qualifies bit0 (0 -> event31, 1 -> event30). This
+			// opt-in model covers one relative Value input, not every IC20
+			// quadrature mode. 20ms is conservative host detent pacing,
+			// not a measured hardware scan period.
+			if (!m_native_value_encoder) { val = m_mmio[2]; break; }
+			if (!machine().side_effects_disabled() && !m_value_latch && machine().time() >= m_value_next)
+			{
+				const s16 delta = s16(u16(m_value_port->read()) - m_value_last);
+				if (delta)
+				{
+					m_value_latch = delta > 0 ? 2 : 3;
+					m_value_last += delta > 0 ? 1 : -1;
+				}
+			}
+			val = m_value_latch;
+			break;
+
 		default:
 			val = m_mmio[offset & 0x0F];
 			break;
@@ -3941,6 +4003,15 @@ void s760_state::native_mouse_w(u8 data)
 
 void s760_state::mmio_w(offs_t offset, uint8_t data)
 {
+	if (m_native_value_encoder && (offset & 0x1f) == 0x12)
+	{
+		if (!data && m_value_latch)
+		{
+			m_value_latch = 0;
+			m_value_next = machine().time() + attotime::from_msec(20);
+		}
+		return;
+	}
 	if (m_banked_os && (offset & 0x1f) == 8)
 	{
 		native_mouse_w(data);
@@ -4432,6 +4503,7 @@ void s760_state::lcd_w(offs_t offset, uint8_t data)
 // 1. Built-in Front Panel LCD Display (Epson SED1335: 160x64 monochrome)
 uint32_t s760_state::lcd_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
+    if (m_lcd_controller) return m_lcd_controller->screen_update(screen, bitmap, cliprect);
 	bool vram_has_data = m_sed_vram_active;
 	if (!vram_has_data)
 	{
@@ -4853,6 +4925,10 @@ static INPUT_PORTS_START( s760 )
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Eject Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 1)
 	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Floppy Media Status") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 2)
 	PORT_BIT(0x10, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Acknowledge Floppy Export") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 3)
+	PORT_START("NATIVE_VALUE")
+	PORT_BIT(0xffff, 0, IPT_DIAL) PORT_NAME("Value Encoder") PORT_SENSITIVITY(100) PORT_KEYDELTA(1)
+	PORT_START("NATIVE_OUTPUT")
+	PORT_ADJUSTER(100, "Output Level")
 	PORT_START("NATIVE_MOUSE_X")
 	PORT_BIT(0xffff, 0, IPT_MOUSE_X) PORT_SENSITIVITY(50) PORT_KEYDELTA(1)
 	PORT_START("NATIVE_MOUSE_Y")
@@ -4867,7 +4943,9 @@ static INPUT_PORTS_START( s760 )
 	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("S1") PORT_CODE(KEYCODE_Z)
 	PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("S2") PORT_CODE(KEYCODE_X)
 	PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Panel Right") PORT_CODE(KEYCODE_RIGHT)
-	PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED)
+	// Service Notes p18, CN10: encoder push connects SC0 to SP4.
+	PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Value Menu") PORT_CODE(KEYCODE_ENTER)
+	PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED)
 	PORT_START("PANEL1")
 	PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Mode") PORT_CODE(KEYCODE_M)
 	PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_KEYPAD) PORT_NAME("Exit") PORT_CODE(KEYCODE_BACKSPACE)
@@ -4961,6 +5039,7 @@ void s760_state::s760(machine_config &config)
 	if (getenv("S760_BANKED_OS") || getenv("S760_ROM_BOOT"))
 	{
 		// The built-in panel remains usable when firmware selects Panel+LCD.
+		SED1330(config, m_lcd_controller, 0).set_screen("lcd_screen");
 		screen_device &lcd_screen(SCREEN(config, "lcd_screen"));
 		lcd_screen.set_refresh_hz(60);
 		lcd_screen.set_size(160, 64);

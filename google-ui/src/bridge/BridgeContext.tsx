@@ -30,6 +30,7 @@ import React, {
 } from 'react';
 import {
   S760BridgeClient,
+  detectEmbeddedTransport,
   S760BridgeClientOptions,
   ConnectionStatus,
   S760ServerTelemetry,
@@ -68,7 +69,7 @@ export const BridgeProvider: React.FC<BridgeProviderProps> = ({
   // Construct exactly once; the client lives for the provider's lifetime.
   const clientRef = useRef<S760BridgeClient | null>(client ?? null);
   if (clientRef.current === null) {
-    clientRef.current = new S760BridgeClient({ autoSubscribeInput: true, ...options });
+    clientRef.current = new S760BridgeClient({ autoSubscribeInput: true, embeddedTransport: detectEmbeddedTransport(), ...options });
   }
 
   useEffect(() => {

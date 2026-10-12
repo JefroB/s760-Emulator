@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-11",
+  "base_revision": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "uncommitted_changes": true,
+  "sha256": {
+    "core/src/s760_webview2_host.cpp": "9408e18592f401379e87048f8f45ff4424de19d96cee79cfa33011dcc8eab025",
+    "core/tests/test_webview2.cpp": "f56693c2731f0850a8b3965130b99061a6fdfbffed071721aacc409cb3f8b398",
+    "google-ui/src/NativeStudio.tsx": "0c8fc621ef4f256c48a92eabd67d89f832620ddfb27dbb5ebc92dd61be3ca429",
+    "google-ui/src/nativeKeyboard.ts": "e36e3e04aaab640e07c66c0a055ab736e83f2e68b10c1c6f8946d2d2648db016",
+    "google-ui/src/components/NativeRack.tsx": "b444206ab5a41f9c808c1b099228232282e33230a304d450dc6f9d999a5ba936",
+    "google-ui/src/bridge/S760BridgeClient.ts": "5647490d785a79a3953dd6b0ef5839151d60d9039059551148ef4dd237a7dd99",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/s760_webview2_tests.exe": "ed4d13ba870666f1e552575f38e775a402113f6fc890f11d2e5b23bbfd0ea2c6"
+  },
+  "results": {
+    "react": {
+      "files": 18,
+      "tests_passed": 96,
+      "transport": "mock/jsdom"
+    },
+    "typescript": "pass",
+    "vite": "pass",
+    "python_tests": 241,
+    "cpp_suites": [
+      "s760_core_tests",
+      "s760_plugin_tests",
+      "s760_plugin_editor_tests"
+    ],
+    "native_browser": {
+      "passed": 1,
+      "fixture": "ROBOFULL.IMG",
+      "flows": [
+        "boot",
+        "load",
+        "save session",
+        "reconnect",
+        "export",
+        "restart",
+        "restore",
+        "keyboard MODE changes firmware CRT"
+      ]
+    },
+    "webview2_runtime": {
+      "passed": true,
+      "sdk": "1.0.3856.49",
+      "flows": [
+        "invalid parent rejected",
+        "pending creation canceled",
+        "text roundtrip",
+        "canonical frame roundtrip",
+        "800x600 resize",
+        "two reopen cycles"
+      ]
+    }
+  },
+  "limits": [
+    "No real VST3/DAW editor acceptance",
+    "No native alpha dial semantics claimed",
+    "Full historical App remains a demo",
+    "Shared graphical configuration and startup recovery remain open",
+    "No new hardware fidelity claim",
+    "Sealed M1 distribution artifact unchanged; new build is unqualified for distribution"
+  ]
+}

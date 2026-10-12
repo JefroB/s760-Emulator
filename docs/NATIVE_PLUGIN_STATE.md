@@ -17,7 +17,7 @@ can restore without loading the sample floppy again.
 The current format is a four-byte little-endian archive length followed by
 `S760NPS1`, SHA-256 of the payload, and versioned little-endian fields. Counts,
 clock consistency, finite decoded PCM, converter history, queue continuity and
-section sizes are validated. The archive is bounded to 260 MiB. Identity pins
+section sizes are validated. The archive is bounded to 266 MiB. Identity pins
 native executable, boot ROM, system disk, Lua protocol, host module bytes and
 external SCSI filenames/content. The media identity is folded into the module
 identity slot.
@@ -74,11 +74,50 @@ exported-plugin recall still passes. See [current evidence](condensed/validation
 
 ## Remaining scope
 
-SCSI WRITE currently acknowledges data without updating disk contents (BUG-015).
-Snapshot preservation does not qualify firmware disk Save or hardware SCSI
-fidelity. Larger media configurations are outside this initial snapshot profile.
+WRITE(6)/WRITE(10) now commit completed payloads to private emulated disk memory
+(BUG-015). Incomplete transfers do not change sectors; CD-ROM writes and
+out-of-range commands return CHECK CONDITION with per-target sense. Pending
+write offsets, sense and modified sectors are checkpointed. Warm and cold
+partial WRITE(10) at a nonzero LBA resume correctly. Generated source images
+remain byte-identical during guest writes. See
+[SCSI/stack validation](condensed/validation/s2-scsi-and-stack-2026-10-11.json).
+
+These device-level tests do not qualify the original firmware's SCSI Save/load
+workflow, explicit host-image export, autosave or hardware bus fidelity. Those
+remain open. Larger media configurations remain outside the snapshot profile.
 
 Actual DAW state-call ordering, differing host block sizes/rates, simultaneous
 editor controls, native ADC, autosave and cross-build migration remain unqualified.
 The Milestone 1 snapshot objective is complete for this quiescent, same-build,
 same-rate/block-size profile. Actual DAW/editor and sampling objectives remain open.
+
+
+## Media browser metadata (state version2)
+
+Version2 preserves library folder/inventory, uncommitted browse selection and
+inserted-source label as separately validated fields. The `S760NPS1` envelope
+magic remains unchanged; its internal payload version selects the schema.
+Version1 still decodes, with explicitly unknown media metadata. Metadata never
+remounts a source file during recall: captured native media bytes are authoritative.
+A cold native instance reproduces exact PCM with both the private library and
+original source image relocated. See [media library qualification](NATIVE_MEDIA_LIBRARY.md).
+
+
+### Cold-restore startup fix (2026-10-11)
+
+BUG-033 is fixed. Its intermittent pre-checkpoint timeout came from uninitialized
+SED1330 LCD register storage: a fresh child could enter the renderer with garbage
+geometry before its first frame/control callback. Initializing the controller's
+scalar fields, with display off until programmed, removes that undefined behavior.
+The checkpoint format and socket deadlines are unchanged.
+
+Two startup stress runs passed all80 fresh launches alongside a running instance.
+Cold pending-note/active-note restoration, repeated recall, silent release and
+240000-frame exact replay at48kHz also passed. Original-firmware boot, display,
+controls and scheduled MIDI/audio acceptance passed. These are software regression
+results, not new hardware-fidelity claims. See the [validation](condensed/validation/s2-startup-lcd-2026-10-11.json).
+
+Keep `s760_native_runtime_tests ROOT PRIVATE_STATE --startup-repeats` as the
+targeted lifecycle regression. Earlier failing artifacts remain recorded in
+the backlog and finding159; exception diagnostics retain the operation stage,
+socket error and remaining byte count.

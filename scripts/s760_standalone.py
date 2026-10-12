@@ -4,13 +4,14 @@ Usage: python scripts/s760_standalone.py
 Dependencies: websockets>=14,<17. Build google-ui first (npm run build).
 """
 import argparse
+from contextlib import closing
+from dataclasses import replace
 import hashlib
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 import secrets
-import shutil
 import subprocess
 import queue
 import threading
@@ -39,6 +40,7 @@ BUTTONS = {
     'F2': (':PANEL3', 'Panel F2'), 'F3': (':PANEL2', 'Panel F3'),
     'S1': (':PANEL0', 'S1'), 'S2': (':PANEL0', 'S2'),
     'SHIFT': (':PANEL3', 'Panel Shift'),
+    'MENU': (':PANEL0', 'Value Menu'),
 }
 
 
@@ -52,6 +54,9 @@ def validate_input(message):
     if kind in ('BUTTON_PRESS', 'BUTTON_RELEASE'):
         if p.get('id') not in BUTTONS:
             raise ValueError('Unsupported panel button')
+    elif kind == 'DIAL_DELTA':
+        if p.get('id') not in ('ALPHA', 'VOLUME') or type(p.get('delta')) is not int or abs(p['delta']) > 32:
+            raise ValueError('Invalid native dial input')
     elif kind == 'MOUSE_MOVE':
         if any(type(p.get(k)) not in (int, float) or not 0 <= p[k] <= 1 for k in ('x', 'y')):
             raise ValueError('Pointer coordinates must be normalized')
@@ -67,6 +72,13 @@ def validate_input(message):
     elif kind == 'MIDI_DEVICE':
         if not isinstance(p.get('name'), str):
             raise ValueError('Expected MIDI device name')
+    elif kind == 'CONFIGURE_RUNTIME':
+        if set(p) != {'bootRom','systemDisk','mediaDirectory','sound','discard'} or p.get('discard') is not True:
+            raise ValueError('Confirm replacement of the current sampler before applying settings')
+        for key in ('bootRom','systemDisk','mediaDirectory'):
+            if not isinstance(p[key],str) or not p[key].strip() or len(p[key])>2048 or '\0' in p[key]:
+                raise ValueError(f'Invalid path: {key}')
+        if type(p['sound']) is not bool: raise ValueError('Sound must be a boolean')
     elif kind in ('RESTART_RUNTIME', 'RESTORE_SESSION'):
         if set(p) != {'discard'} or p['discard'] is not True:
             raise ValueError('Restart requires explicit discard confirmation')
@@ -78,11 +90,31 @@ def validate_input(message):
     return kind, p
 
 
+def load_settings(state_dir):
+    path = state_dir / 'settings.json'
+    if not path.exists(): return {}
+    if path.stat().st_size > 16384: raise ValueError('Settings file is too large')
+    data = json.loads(path.read_text(encoding='utf-8'))
+    if not isinstance(data, dict) or data.get('version') != 1:
+        raise ValueError('Unsupported settings format')
+    for key in ('bootRom', 'systemDisk', 'mediaDirectory'):
+        if not isinstance(data.get(key), str): raise ValueError(f'Invalid setting: {key}')
+    if type(data.get('sound')) is not bool: raise ValueError('Invalid sound setting')
+    return data
+
+
+def media_index(folder):
+    if not folder.is_dir(): raise ValueError(f'Media directory does not exist: {folder}')
+    return {p.name: p.resolve() for p in folder.iterdir()
+            if p.is_file() and p.suffix.lower() in ('.img', '.dsk')}
+
+
 class StandaloneSession:
-    def __init__(self, runtime, media_dir):
+    def __init__(self, runtime, media_dir, startup_error=None):
         self.runtime = runtime
-        self.media = {p.name: p.resolve() for p in media_dir.iterdir()
-                      if p.is_file() and p.suffix.lower() in ('.img', '.dsk')}
+        self.media_dir = media_dir
+        self.startup_error = startup_error
+        self.media = media_index(media_dir) if media_dir.is_dir() else {}
         self.clients = {}
         self.client_lock = threading.Lock()
         self.stop = threading.Event()
@@ -97,6 +129,48 @@ class StandaloneSession:
             self.midi_devices = []
             self.midi_warning = f'MIDI input discovery failed; on-screen audition is available. {error}'
 
+    def configuration(self):
+        cfg = self.runtime.config
+        return {'bootRom':str(cfg.boot_rom),'systemDisk':str(cfg.system_disk),
+                'mediaDirectory':str(self.media_dir),'sound':cfg.sound}
+
+    def configure(self, payload):
+        r = self.runtime
+        boot, disk, folder = (Path(payload[key]).expanduser().resolve()
+                              for key in ('bootRom','systemDisk','mediaDirectory'))
+        if not boot.is_file() or boot.stat().st_size != 32768:
+            raise ValueError('Boot ROM must be a readable 32KB IC15 image')
+        if not disk.is_file() or disk.stat().st_size != 1474560:
+            raise ValueError('System disk must be a readable 1.44MB image')
+        media = media_index(folder)
+        slot = r.config.state_dir/'inserted-floppy.img'
+        candidate = replace(r.config, boot_rom=boot, system_disk=disk, sound=payload['sound'],
+                            sample_disk=slot if slot.exists() else disk)
+        candidate.validate()
+        if r.process is not None and r.process.poll() is None:
+            status = r.media_status()
+            if status['dirty'] or status['busy']:
+                raise RuntimeError('Export disk writes and wait for disk activity before applying settings')
+        r.close()
+        r.config = candidate
+        self.media_dir = folder
+        self.media = media
+        self.readiness = None
+        try:
+            r.start()
+        except (OSError, RuntimeError, ValueError) as error:
+            self.startup_error = str(error)
+            raise
+        self.startup_error = None
+        self.firmware_status = {'type':'FIRMWARE_STATUS','state':'booting','message':'Settings applied; booting firmware…'}
+        # Publish only after successful native startup; preserve the previous file on failure.
+        settings = {'version':1, **self.configuration()}
+        target = r.config.state_dir/'settings.json'
+        temporary = target.with_suffix('.json.tmp')
+        temporary.write_text(json.dumps(settings,indent=2),encoding='utf-8')
+        temporary.replace(target)
+        return {'type':'CONFIGURATION_APPLIED','configuration':self.configuration(),'media':sorted(media)}
+
     @property
     def session_path(self):
         return self.runtime.config.state_dir/'sessions'/'latest.s760state'
@@ -108,6 +182,9 @@ class StandaloneSession:
     def _input(self, message):
         kind, p = validate_input(message)
         r = self.runtime
+        if kind == 'CONFIGURE_RUNTIME': return self.configure(p)
+        if self.startup_error:
+            raise RuntimeError('Open Runtime settings, correct the paths, and apply to start the sampler')
         if kind == 'SAVE_SESSION':
             running = r.request('status')[0]['state'] == 'running'
             r.request('pause')
@@ -161,6 +238,8 @@ class StandaloneSession:
         if kind in ('BUTTON_PRESS', 'BUTTON_RELEASE'):
             port, name = BUTTONS[p['id']]
             r.request('button', port=port, name=name, down=kind == 'BUTTON_PRESS')
+        elif kind == 'DIAL_DELTA':
+            r.request('dial', id=p['id'], delta=p['delta'])
         elif kind == 'MOUSE_MOVE':
             # Default firmware mouse scale; live smoke tests cover this mapping.
             r.request('pointer', x=round(p['x'] * 159), y=round(p['y'] * 119))
@@ -188,12 +267,17 @@ class StandaloneSession:
 
     def poll(self):
         with self.runtime_lock:
+            if self.startup_error:
+                self.firmware_status = {'type':'FIRMWARE_STATUS','state':'configuration',
+                    'message':f'Sampler needs configuration: {self.startup_error}. Open Runtime settings to retry.'}
+                return []
             try:
                 info, frames = self.runtime.request('frames')
                 if self.readiness is None:
                     supported = hashlib.sha256(self.runtime.config.system_disk.read_bytes()).hexdigest() == SYSTEM_SHA256
                     self.readiness = FirmwareReadiness(supported)
                 self.firmware_status = self.readiness.observe(frames[0], info['seconds'], info.get('paused',False))
+                self.firmware_status['outputLevel'] = info.get('output_level', 100)
                 return frames
             except (OSError, RuntimeError) as error:
                 self.firmware_status = {'type':'FIRMWARE_STATUS','state':'failed',
@@ -239,6 +323,7 @@ class StandaloneSession:
         try:
             connection.send(json.dumps({'type': 'SESSION', 'media': sorted(self.media),
                                         'midiDevices': self.midi_devices, 'warning': self.midi_warning,
+                                        'configuration':self.configuration(), 'needsConfiguration':bool(self.startup_error),
                                         'savedSession': self.session_path.is_file(),
                                         'status': 'running', 'audio': 'MAME output'}))
             for raw in connection:
@@ -271,9 +356,9 @@ class StandaloneSession:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--state-dir', type=Path, default=ROOT / 'docs/ic20-hle-findings/chatGPT-work/standalone-state')
-    parser.add_argument('--media-dir', type=Path, default=ROOT / 'roms/FDD')
-    parser.add_argument('--boot-rom', type=Path, default=ROOT / 'roms/BOOT/Roland_S-760_v1.11.BIN')
-    parser.add_argument('--system-disk', type=Path, default=ROOT / 'roms/System/S760224.IMG')
+    parser.add_argument('--media-dir', type=Path, default=None)
+    parser.add_argument('--boot-rom', type=Path, default=None)
+    parser.add_argument('--system-disk', type=Path, default=None)
     parser.add_argument('--no-browser', action='store_true')
     parser.add_argument('--browser', action='store_true', help='Use an external browser instead of the desktop window')
     parser.add_argument('--no-sound', action='store_true')
@@ -285,20 +370,33 @@ def main():
     if not (assets / 'index.html').is_file():
         parser.error('Build the React UI first: cd google-ui; npm run build')
     args.state_dir.mkdir(parents=True, exist_ok=True)
+    settings_warning = None
+    try:
+        settings = load_settings(args.state_dir)
+    except (OSError, ValueError) as error:
+        settings, settings_warning = {}, f'Could not read saved settings: {error}'
+    args.boot_rom = args.boot_rom or Path(settings.get('bootRom',ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN'))
+    args.system_disk = args.system_disk or Path(settings.get('systemDisk',ROOT/'roms/System/S760224.IMG'))
+    args.media_dir = args.media_dir or Path(settings.get('mediaDirectory',ROOT/'roms/FDD'))
     media_slot = args.state_dir / 'inserted-floppy.img'
-    if not media_slot.exists():
-        # The system disk is a valid initial slot; insertion remains a user action.
-        shutil.copyfile(args.system_disk, media_slot)
     cfg = RuntimeConfig(ROOT / 'mame-source/mames760.exe', args.boot_rom, args.system_disk,
-                        args.state_dir, media_slot, not args.no_sound, not args.fast)
+                        args.state_dir, media_slot if media_slot.exists() else args.system_disk,
+                        False if args.no_sound else settings.get('sound',True), not args.fast)
     token = secrets.token_urlsafe(32)
     http = ThreadingHTTPServer(('127.0.0.1', 0), partial(AssetHandler, directory=str(assets)))
     origin = f'http://127.0.0.1:{http.server_port}'
     def authorize(connection, request):
         if parse_qs(urlsplit(request.path).query).get('token') != [token]:
             return connection.respond(403, 'Invalid session token\n')
-    with NativeRuntime(cfg) as runtime:
-        session = StandaloneSession(runtime, args.media_dir)
+    with closing(NativeRuntime(cfg)) as runtime:
+        startup_error = settings_warning
+        try:
+            if startup_error: raise ValueError(startup_error)
+            media_index(args.media_dir)
+            runtime.start()
+        except (OSError, RuntimeError, ValueError) as error:
+            startup_error = str(error)
+        session = StandaloneSession(runtime, args.media_dir, startup_error)
         with serve(session.connect, '127.0.0.1', 0, origins=[origin], process_request=authorize,
                    max_size=4096, max_queue=16, compression=None) as ws:
             port = ws.socket.getsockname()[1]

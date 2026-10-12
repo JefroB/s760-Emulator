@@ -1,8 +1,8 @@
 # UI Architecture & Front Panel
 
-## Current status — 2026-10-10 review
+## Current status — 2026-10-11 review
 
-Native MAME provides the tested colour display, mouse interaction and firmware UI. React has display consumers, but the MAME host adapter and WebView implementation are still scaffolds; there is no demonstrated end-to-end native engine in the React/plugin product. Milestones1–4 in the completion roadmap cover that work.
+Native MAME supplies real CRT/LCD frames and firmware controls to the standalone and concrete WebView2 plugin editor. SoundCheck qualifies firmware sample loading and audio during editor operation/reopening. Persistent plugin paths and startup diagnostics are available; in-plugin graphical recovery remains Milestone 4 work. Value and Output controls complete Milestone 2 playback/UI integration; Input Level remains explicitly deferred to Milestone 3 native recording. The current qualification does not establish analog pot taper or full IC20 quadrature behavior. Earlier scaffold descriptions below are historical architecture context.
 
 See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
@@ -82,7 +82,9 @@ without a fresh run. The old ROM-undumpable dependency is also obsolete.
 
 The S-760 OS supports three controller/display modes (Owner's Manual Advanced
 3-92): **Panel+LCD**, **Mouse+CRT**, and **RC100+CRT**. Selecting either CRT mode
-routes display to the CRT and stops using the LCD ("Please see my CRT/LCD"). The
+routes the main interface to the CRT; the LCD still shows the firmware logo, version,
+controller mode and "Please see your CRT" status (owner observation and native bus
+replay, finding151). Blank LCD output was a controller emulation defect. The
 selection is a persisted preference in EEPROM **byte 8** (loaded by ROM532F..5346
 into RAM 4CAA+, so byte 8 = RAM 4CB2): ROM5194 validates the range 0..2 and 51C4
 clears it when no option board is present (byte8=1 = Mouse+CRT). Finding57's
@@ -178,3 +180,95 @@ use the narrow **`0xE000–0xE003`** window, **`E000=command/status`,
 `E002=data`** (shared finding 13). Widening the window consumes resident code.
 Consult controller documentation/implementation for exact parameter counts and
 status semantics rather than treating this abbreviated table as a datasheet.
+
+
+## Native interface checkpoint (2026-10-11)
+
+Native Studio now renders a rack with authentic LCD frames, native panel buttons
+and acknowledgment-based drive status. Panel keyboard bindings match the driver;
+text inputs/dialogs suppress shortcuts and held keys release on blur. Real MAME
+browser acceptance includes keyboard Mode-menu navigation, load, reconnect and
+session restore. Full historical demo-shell integration and native dial semantics
+remain unfinished.
+
+The optional Windows C++ WebView2 backend is now concrete: environment/controller,
+resize, bounded text/frame channel, cancellation and reopen pass against the real
+runtime. React supports that channel through its existing frame decoder. Native plugin/React controller lifetime is now qualified below; actual
+DAW hosting and plugin configuration remain unqualified. See the
+[checkpoint and limits](../MILESTONE_2_PROGRESS.md) and
+[validation](validation/milestone-2-editor-2026-10-11.json).
+
+
+The reusable runtime settings form is now connected to standalone startup,
+including missing-firmware recovery, pre-shutdown validation, explicit memory
+replacement confirmation, dirty/busy media protection and persisted settings.
+Real MAME boot after GUI correction and relaunch using those settings pass.
+The concrete embedded editor also schedules frames on a UI-thread timer and
+cleans it up on close; automatic delivery/reopen pass with a diagnostic bridge.
+Plugin configuration, actual DAW-host audio continuity and updated packaged acceptance
+remain open. See [settings evidence](validation/milestone-2-settings-2026-10-11.json).
+
+
+Native editor-controller close/reopen with built React and concurrent native PCM
+passes at 44.1/48/96 kHz, using worker-delivered display snapshots to avoid UI
+frame-request starvation. Sampled CRT canvas agreement, fresh cache timestamps
+and an unchanged MAME child are asserted. C++ panel/pointer routing now applies
+to the live host; unsupported legacy click/dial rejects. These are native harness
+results, not SDK/DAW acceptance or complete demo-shell replacement. Concurrent
+compilation still exposed an underrun; arbitrary system-load robustness remains
+unqualified. See [evidence](validation/milestone-2-native-editor-2026-10-11.json).
+
+
+SoundCheck 1.0.0 now discovers the Windows x64 native instrument and hosts the
+concrete React/WebView2 editor: firmware Perform Play capture, close/reopen and
+plugin removal pass. Independent Steinberg-SDK interface tests exposed and
+verified corrections to local vtables, GUIDs and metadata. This advances actual
+host editor acceptance. Loaded-sample SoundCheck audio and persistent configuration
+with actionable diagnostics now also pass; in-plugin graphical recovery remains open. See [host evidence](../MILESTONE_2_PROGRESS.md).
+
+
+### Verified embedded rack arrangement (2026-10-11)
+
+The manual and owner's photograph confirm the navigation grid: S1/Dec, Up,
+S2/Inc above Left, Down, Right. There are only two S buttons. F1–F6 appear
+beneath the LCD; F4–F6 and Home/Mark/Jump each send their actual Shift chord.
+See [the corrected manual mapping](../front-panel-button-mapping.md).
+Input and output levels are separate knobs, and Value has a separate Menu
+button. Value and Output are enabled and qualified; Input remains disabled pending native recording. Menu drives SC0/SP4 and opens the native
+firmware menu. The OS 2.24 pointer adapter now accounts for firmware cursor
+relocation and sensitivity using read-only feedback and normal MU-1 deltas;
+Menu/Exit, reversal and paused-render tests close BUG-030.
+The Gotek's own encoder and Up/Down buttons browse the host-owned inventory;
+Select opens the image dialog, prefilled with the selected path, for confirmed native insertion. Confirmed insertion and browsing selection
+are separate. The existing Select dialog configures recursive folders (up to1024 images,
+with explicit scan bounds and transactional errors). Independent browse selection
+and inserted identity survive editor recreation and native plugin-state recall.
+Version2 metadata restores alongside checkpoint bytes, without remounting a source
+file. Cold replay with relocated sources matches PCM exactly. See the
+[media library contract and qualification](../NATIVE_MEDIA_LIBRARY.md).
+
+SoundCheck screenshots show the whole rack at 1480x900, an active CRT without
+unused bottom rows, and firmware LCD status in Mouse+CRT mode. Original LCD
+bus replay and native pixels agree exactly for the boot status screen. These
+results do not establish all-mode LCD hardware parity. Separate loaded-sample
+SoundCheck acceptance now passes. BUG-026/027/028/029 are fixed for the delivered playback rack; recording Input Level is a separate Milestone 3 requirement.
+
+SoundCheck audio qualification uses ROBOFULL through actual React Disk/Load,
+MIDI 60/velocity 127, 44.1 kHz/512-frame callbacks and editor reopening while held.
+The fixed-frequency fixture gives 20,004 Hz and 0.0445375 peak, with no silent
+steady blocks and zero release tail. Settings-only startup and failure recovery
+pass from an unrelated host working directory. See [configuration contract](../NATIVE_PLUGIN_CONFIGURATION.md)
+and [validation](validation/milestone-2-audio-config-2026-10-11.json).
+
+
+The Value knob uses native IC20 F012, consumed and cleared by OS2.24
+bank003B:452D–45A9 (image01392D). Flag1 qualifies direction bit0; native values2/3
+produce increasing/decreasing edits. Conservative20ms detent pacing is a host
+input policy, not measured ASIC timing. The runtime stores the relative position
+and MAME stores the latch/pacing state; native recall and reversal are verified.
+Output Level is analog VR1 attenuation according to Service Notes p20, outside
+firmware parameter editing. The native stereo implementation supplies linear
+software gain: exact half amplitude at50%, silence at0%, with UI readback and
+same-build recall. Input Level precedes analog conversion and awaits native ADC.
+See the [control contract](../NATIVE_RACK_CONTROLS.md) and
+[validation](validation/milestone-2-rack-controls-2026-10-11.json) for scope and limits.

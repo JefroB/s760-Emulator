@@ -79,8 +79,8 @@ using NativeWindowHandle = void*;
 //  resize; the host forwards the new size to the webview.
 // -----------------------------------------------------------------------------
 struct WebViewSize {
-    uint32_t width  = 1024;
-    uint32_t height = 640;
+    uint32_t width  = 1480;
+    uint32_t height = 900;
 };
 
 // -----------------------------------------------------------------------------
@@ -99,7 +99,9 @@ public:
 
     // Create the native webview as a child of `parent`, sized to `size`, and
     // load `url` (an absolute file:// URL to google-ui/dist/index.html or an
-    // http(s) dev URL). Returns true on success. Must be called on the UI
+    // http(s) dev URL). Returns true when creation is accepted; the asynchronous
+    // WebView2 backend becomes is_created() only after navigation succeeds.
+    // Must be called on the UI
     // thread. On an unsupported/headless backend the stub returns true and
     // records the url without opening a window.
     virtual bool create(NativeWindowHandle parent, const WebViewSize& size,
@@ -108,7 +110,7 @@ public:
     // Tear down the native webview (idempotent).
     virtual void destroy() = 0;
 
-    // True between a successful create() and destroy().
+    // True when the page is ready. False during asynchronous startup or failure.
     virtual bool is_created() const = 0;
 
     // Resize the webview content area.
@@ -174,6 +176,7 @@ public:
     // C++->JS bindings on the bridge, and pushes one initial frame. Returns true
     // on success. Safe no-op (returns true) if already open.
     bool open(NativeWindowHandle parent, const WebViewSize& size);
+    void set_frontend_url(std::string url) { m_frontend_url=std::move(url); }
 
     // Close the editor: detaches the bridge callbacks and destroys the webview.
     // Idempotent.
@@ -206,6 +209,8 @@ private:
     S760Bridge*                  m_bridge = nullptr;
     std::unique_ptr<IWebViewHost> m_host;
     bool                         m_open = false;
+    std::string                  m_frontend_url;
+    std::uintptr_t               m_timer = 0;
     WebViewSize                  m_size;
 };
 

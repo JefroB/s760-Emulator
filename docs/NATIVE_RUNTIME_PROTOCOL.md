@@ -33,7 +33,8 @@ The parent serializes requests; there are no concurrent outstanding commands.
 | --- | --- |
 | `frames` | Metadata includes `surfaces`, emulated `seconds` and diagnostic guest cursor coordinates. Each surface is followed by exactly width×height×4 native little-endian ARGB bytes. CRT640×240; LCD160×64. |
 | `button` | `port`, `name`, boolean `down`; invokes MAME input fields. The public standalone server permits only the known panel/mouse controls. |
-| `pointer` | Raw host mouse counter targets `x`,`y`. Lua splits long movements into signed-byte-safe increments before later button commands. Default firmware sensitivity is covered by the native regression. |
+| `dial` | `id` ALPHA or VOLUME, integer `delta` -32..32; relative Value input or clamped 0–100% output level. Direct and worker display responses include `output_level`. See [rack control contract](NATIVE_RACK_CONTROLS.md). |
+| `pointer` | Absolute target in the legacy half-resolution coordinate space (`x` 0..320, `y` 0..120). The OS 2.24 adapter reads cursor position, bounds and sensitivity, then sends bounded ordinary MU-1 deltas. No guest state is written. |
 | `midi_device` | A device `name` opens MAME's existing MIDI input image/backend; an empty name disconnects physical input. The public server restricts names to MAME's enumerated input list. |
 | `quit` | Acknowledge then request normal machine exit. |
 | `status` | Returns running/paused, emulated seconds, capture enabled and dropped-frame count. `firmware_ready` is explicitly `unknown`; this is not a boot-complete signal. |
@@ -131,10 +132,10 @@ a claim that every requested sample loaded successfully.
 
 ## Remaining VST3 boundary work
 
-Add host-scheduled MIDI, bounded PCM exchange, explicit sample-clock advancement,
-latency/underrun reporting, complete versioned machine/media state and a C++
-client. Keep those separate from the HTTP/WebView layer. Existing plugin builds
-do not automatically use this runtime. See [completion gates](COMPLETION_ROADMAP.md).
+The C++ native client, scheduled MIDI, bounded PCM, sample-clock advancement,
+latency/fault reporting and bounded same-build state are implemented. Actual
+SDK/DAW acceptance, portable project state, graphical plugin configuration and
+native sampling input remain open. See [completion gates](COMPLETION_ROADMAP.md).
 
 ## Native checkpoints
 
@@ -155,3 +156,53 @@ dirty live media, and reports `SESSION_RESTORED` only after native load. A faile
 child is replaced before loading. `SESSION.savedSession` reports slot presence;
 it does not bypass restore-time validation. Clients cannot supply archive paths.
 See [standalone session recovery](NATIVE_SESSIONS.md).
+
+
+## Standalone graphical configuration messages
+
+The authenticated standalone WebSocket accepts `CONFIGURE_RUNTIME` with exactly
+`bootRom`, `systemDisk`, `mediaDirectory` (path strings), `sound` (boolean), and
+`discard:true`. These are host settings, not native Lua opcodes. Paths and image
+sizes are checked before stopping the existing machine; dirty/busy media rejects
+the request. Startup failures return `ERROR` and keep configuration available.
+Successful startup returns `CONFIGURATION_APPLIED` with configuration/media and
+publishes version-1 settings in the state profile. `SESSION` supplies current
+configuration plus `needsConfiguration`. A configured transport is not proof that
+the firmware booted; readiness remains independently observed.
+
+
+## Render display snapshots
+
+`render` accepts an optional boolean `display` (default false). When true, its
+reply advertises CRT/LCD surface sizes and sends the existing stereo float PCM
+first, followed by CRT then LCD pixel bytes. Non-display clients retain the
+existing payload. The C++ audio worker consumes a coalesced display request and
+caches the returned surfaces separately from PCM. During processing, editor
+frame reads return that cache and request a future update, without a competing
+control request. Outside processing, normal synchronous `frames` reads remain.
+This changes the runtime source identity used by same-build snapshots. See
+[native editor qualification](MILESTONE_2_PROGRESS.md).
+
+
+Menu push is `BUTTON_PRESS/RELEASE` with id `MENU`, mapped to `:PANEL0`,
+field `Value Menu` (active-low SP4 on SC0, Service Notes p18). The raw runtime
+button operation accepts that same field. BUG-030 is corrected: firmware can
+relocate the cursor and select 1x/2x sensitivity, so accumulated host counters
+cannot represent its absolute position. Read-only OS 2.24 registers D0/D2 and
+program memory 2138..213F,2140,272E guide bounded relative input. At most16
+corrections are attempted; each packet is limited to63 counts with two settling
+frames. At 2x sensitivity the nearest reachable pixel may differ by one pixel.
+The adapter stops after convergence and does not fight later firmware cursor
+relocation. Paused renders service movement as emulated frames advance;
+checkpoint metadata retains pending work. `verify_native_runtime.py --panel-menu
+--pull-render --scheduled-midi` covers both scheduling modes. Other OS versions
+need independent mapping qualification.
+
+C++ embedded telemetry carries `mediaPaths` (up to1024), `mediaFolder`,
+`selectedMediaPath`, `lastInsertedPath` and `libraryError`. These are host-owned
+browser metadata; insertion and selection are independent. `CONFIGURE_MEDIA_LIBRARY`
+uses `{diskPath: folder}` for an explicit recursive scan; `SELECT_MEDIA` uses
+`{diskPath: image}` to select an existing inventory item without inserting it.
+Unsupported backends reject these operations. Scans are bounded and transactional;
+see [limits and state semantics](NATIVE_MEDIA_LIBRARY.md). Native VST state v2
+captures this metadata alongside the actual mounted checkpoint bytes.

@@ -1687,8 +1687,8 @@ cc    pop   direct_1w
 	next(12); // +2 when external sp
 
 cd    bmovi direct_2w 196
-	OP1 = read_pc();
-	OP2 = read_pc();
+	// direct_2w already fetched both operands. Do not consume the next opcode.
+	// This fixes decoding only; interruptible restart/timing remain unaudited.
 	{
 		uint16_t cnt = reg_r16(OP1);
 		uint16_t src = reg_r16(OP2 & 0xfe);

@@ -1,0 +1,135 @@
+{
+  "date": "2026-10-11",
+  "revision": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "dirtyWorkingTree": true,
+  "profile": "Windows x64; SoundCheck 1.0.0 private SDK host; concrete WebView2; original OS2.24",
+  "sha256": {
+    "mame-source/mames760.exe": "907a6347bbb076537de3989b724d3bb1892631853ef866a8a6f10d7646553e2b",
+    "scripts/s760_runtime.lua": "082448ca51a77165850b37838933ba7436294d9ee927da5a7e35a6583d9470cc",
+    "scripts/verify_native_runtime.py": "2b3a2924d6745c303bd7536012137c95d9711a896f7701dd5d3120d8618907e4",
+    "scripts/configure_vst3.py": "72f9730f50f9b3641a9d7f6f6d894b279e3f27d438efa11ef379ab83b53e4a7a",
+    "core/src/s760_vst3_plugin.cpp": "07ead865403a864d1d420f44a6f88e1ce69124ff02914899fca13332ed3d93de",
+    "core/src/s760_webview_host.cpp": "2e1460f51a01f4225e3d69e6bb3cd7bc6ed54df7e8f7f96daa985a999db6159a",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "38a1ef3a38ac10d4007cbe7833c58ee93395f5a57ca4583f309c8a8680fc4acf",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "471b7a353beb88590e4994a294f4d4f53f1907f32afc6ad367785fd4c7c33cb2",
+    "build/Release/s760_native_plugin_tests.exe": "eaf22f691d8927ee77da762e6d185c5a91cef3e815601acf39b1e47c5a38bd08",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "soundcheck": {
+    "rate": 44100.0,
+    "peak": 0.04453751817345619,
+    "frequency": 20004.0,
+    "tailPeak": 0.0,
+    "editorReopenedWhileHeld": true,
+    "steadyRmsMin": 0.03145579839655541,
+    "steadyRmsMax": 0.031529781268748086,
+    "silentSteadyBlocks": 0,
+    "note": 60,
+    "velocity": 127,
+    "blockFrames": 512,
+    "noteBlocks": 350,
+    "reopenAtBlock": 150,
+    "silenceBeforeNote": true
+  },
+  "nativePointerAndRender": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 81.966666666667,
+    "note_release": 84.066666666667,
+    "process_shutdown": "clean",
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999065399169922,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "sample": 3803890,
+        "seconds": 86.256009070295
+      },
+      {
+        "sample": 3847990,
+        "seconds": 87.256009070295
+      }
+    ]
+  },
+  "configurationCases": [
+    {
+      "case": "malformed",
+      "exit": 1,
+      "diagnostic": "S-760 plugin startup failed: Invalid plugin settings JSON/version\nRun python scripts/configure_vst3.py --help from the S-760 installation to validate and save paths; then reload the plugin.\nSettings: D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\config157\\plugin-settings.json\n"
+    },
+    {
+      "case": "missing",
+      "exit": 1,
+      "diagnostic": "S-760 plugin startup failed: Missing native runtime or firmware file: D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\config157\\missing.bin\nRun python scripts/configure_vst3.py --help from the S-760 installation to validate and save paths; then reload the plugin.\nSettings: D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\config157\\plugin-settings.json\n"
+    },
+    {
+      "case": "repaired-file-only",
+      "exit": 0,
+      "output": "Independent SDK factory/component/bus/controller ABI passed\n"
+    }
+  ],
+  "tests": {
+    "pythonPassed": 253,
+    "cppSuites": [
+      "core",
+      "plugin",
+      "bridge",
+      "plugin_editor",
+      "prop_telemetry",
+      "native_stream"
+    ]
+  },
+  "coldState": {
+    "rate": 48000,
+    "exactFramesPerPassingRun": 240000,
+    "finalDiagnosticPassingRuns": 4,
+    "earlierFailures": 2,
+    "unresolvedBug": "BUG-033",
+    "failure": "Native runtime disconnected or timed out before a cold checkpoint file was published"
+  },
+  "limits": [
+    "CLI persistent configuration and diagnostics; graphical in-plugin setup remains Milestone4",
+    "44.1kHz/512-frame paced SoundCheck acceptance; not arbitrary workload or every DAW",
+    "Read-only OS2.24-specific pointer translation, normal MU-1 deltas; not a generic firmware-independent absolute mouse",
+    "No hardware-parity claim",
+    "Value/input/output knobs remain unqualified",
+    "Two cold-restore failures retained; subsequent passes do not close BUG-033"
+  ],
+  "artifacts": [
+    "soundcheck/157-final-audio/loaded.png",
+    "soundcheck/157-final-audio/play.png",
+    "soundcheck/157-final-audio/reopened.png",
+    "audio157-final.log",
+    "native157-final.log",
+    "pytest157-final.log",
+    "native157-final-state.log",
+    "native157-state-diagnostic.log",
+    "native157-state-stage.log",
+    "native157-state-repeat-1.log",
+    "native157-state-repeat-2.log",
+    "native157-state-repeat-3.log"
+  ]
+}

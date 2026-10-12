@@ -52,7 +52,10 @@ export type S760ClientMessageType =
   | 'DIAL_DELTA'
   | 'MOUSE_MOVE'
   | 'MOUSE_CLICK'
+  | 'MOUSE_BUTTON'
   | 'MOUNT_DISK'
+  | 'CONFIGURE_MEDIA_LIBRARY'
+  | 'SELECT_MEDIA'
   | 'NOTE_ON'
   | 'NOTE_OFF';
 
@@ -74,6 +77,7 @@ export interface S760ClientPayload {
   x?: number;
   y?: number;
   button?: number;
+  down?: boolean;
   diskPath?: string;
   note?: number;
   velocity?: number;
@@ -108,6 +112,14 @@ export interface S760ServerTelemetry {
   peakR: number;
   activeVoices: number;
   currentMode: string;
+  lastInsertedDisk?: string;
+  lastInsertedPath?: string;
+  mediaPaths?: string[];
+  outputLevel?: number;
+  mediaFolder?: string;
+  selectedMediaPath?: string;
+  libraryError?: string;
+  mediaError?: string;
 }
 
 // --- Binary frame framing (Server -> Client) ---------------------------------
@@ -203,7 +215,25 @@ export interface S760InputEventDetail {
 
 export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected';
 
+/** WebView2's page-side channel. Text uses JSON strings; frames use a bounded
+ * {type:"S760_FRAME",base64:string} envelope containing the canonical bytes. */
+export interface EmbeddedBridgeTransport {
+  postMessage(message: string): void;
+  addEventListener(type: 'message', listener: (event: {data: unknown}) => void): void;
+  removeEventListener(type: 'message', listener: (event: {data: unknown}) => void): void;
+}
+
+/** Detect the page channel only; availability does not assert engine readiness. */
+export function detectEmbeddedTransport(): EmbeddedBridgeTransport | undefined {
+  if (typeof window === 'undefined') return undefined;
+  const channel = (window as Window & {chrome?: {webview?: EmbeddedBridgeTransport}}).chrome?.webview;
+  return channel && typeof channel.postMessage === 'function' &&
+    typeof channel.addEventListener === 'function' && typeof channel.removeEventListener === 'function'
+    ? channel : undefined;
+}
+
 export interface S760BridgeClientOptions {
+  embeddedTransport?: EmbeddedBridgeTransport;
   /** WebSocket URL for the standalone transport. Defaults to DEFAULT_BRIDGE_URL. */
   url?: string;
   /** Auto-subscribe to window `s760_input` CustomEvents and forward them. */
@@ -237,6 +267,21 @@ export class S760BridgeClient {
   private readonly wsFactory: (url: string) => WebSocket;
 
   private ws: WebSocket | null = null;
+  private embeddedListening = false;
+  private readonly embeddedListener = (event: {data: unknown}) => {
+    if (!this.embeddedListening) return;
+    const data = event.data;
+    if (typeof data === 'string') {this.handleTextMessage(data); return;}
+    if (!data || typeof data !== 'object') return;
+    const frame = data as {type?: unknown; base64?: unknown};
+    // Largest supported surface is the 640x480 RGBA CRT plus its six-byte header.
+    if (frame.type !== 'S760_FRAME' || typeof frame.base64 !== 'string' ||
+        frame.base64.length > 1638408) return;
+    try {
+      const bytes = Uint8Array.from(atob(frame.base64), c => c.charCodeAt(0));
+      this.handleBinaryMessage(bytes.buffer);
+    } catch { /* Reject malformed frame envelopes without interrupting the page. */ }
+  };
   private status: ConnectionStatus = 'disconnected';
   private reconnectAttempts = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
@@ -276,12 +321,25 @@ export class S760BridgeClient {
   /** Open the WebSocket transport and begin the reconnect lifecycle. */
   connect(): void {
     this.closedByUser = false;
+    if (this.options.embeddedTransport) {
+      if (!this.embeddedListening) {
+        this.embeddedListening = true;
+        this.options.embeddedTransport.addEventListener('message', this.embeddedListener);
+      }
+      this.setStatus('connected');
+      return;
+    }
+    if (this.ws) return;
     this.openSocket();
   }
 
   /** Close the transport and stop reconnecting. Degrades to offline/local. */
   disconnect(): void {
     this.closedByUser = true;
+    if (this.embeddedListening) {
+      this.embeddedListening = false;
+      this.options.embeddedTransport?.removeEventListener('message', this.embeddedListener);
+    }
     this.clearReconnectTimer();
     if (this.ws) {
       try {
@@ -469,6 +527,14 @@ export class S760BridgeClient {
       peakR: numberOr(o.peakR, 0),
       activeVoices: numberOr(o.activeVoices, 0),
       currentMode: typeof o.currentMode === 'string' ? o.currentMode : '',
+      lastInsertedDisk: typeof o.lastInsertedDisk === 'string' ? o.lastInsertedDisk : '',
+      mediaFolder: typeof o.mediaFolder === 'string' ? o.mediaFolder : '',
+      selectedMediaPath: typeof o.selectedMediaPath === 'string' ? o.selectedMediaPath : '',
+      libraryError: typeof o.libraryError === 'string' ? o.libraryError : '',
+      lastInsertedPath: typeof o.lastInsertedPath === 'string' ? o.lastInsertedPath : '',
+      mediaPaths: Array.isArray(o.mediaPaths) ? o.mediaPaths.filter((p): p is string=>typeof p==='string').slice(0,1024) : [],
+      outputLevel: typeof o.outputLevel==='number' && Number.isFinite(o.outputLevel) ? Math.max(0,Math.min(100,o.outputLevel)) : 100,
+      mediaError: typeof o.mediaError === 'string' ? o.mediaError : '',
     };
   }
 
@@ -481,9 +547,10 @@ export class S760BridgeClient {
    * offline/local degradation per R5.7 — the UI keeps working locally).
    */
   send(message: S760ClientMessage): void {
-    if (!this.ws || this.status !== 'connected') return;
+    if (this.status !== 'connected') return;
     try {
-      this.ws.send(JSON.stringify(message));
+      if (this.options.embeddedTransport) this.options.embeddedTransport.postMessage(JSON.stringify(message));
+      else this.ws?.send(JSON.stringify(message));
     } catch {
       console.warn('[S760BridgeClient] send failed; dropping message');
     }

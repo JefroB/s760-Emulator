@@ -1,6 +1,7 @@
 #include "s760/s760_native_runtime.hpp"
 #include "s760/s760_native_audio_worker.hpp"
 #include "s760/s760_mame_host.hpp"
+#include "s760/s760_bridge.hpp"
 #include <iostream>
 #include <cmath>
 #include <thread>
@@ -11,10 +12,22 @@
 static void check(bool ok,const char* text) { if(!ok) throw std::runtime_error(text); }
 int main(int argc,char** argv) {
     try {
-        if(argc!=3 && argc!=4) throw std::runtime_error("Usage: s760_native_runtime_tests ROOT PRIVATE_STATE [--crash-probe]");
+        if(argc!=3 && argc!=4) throw std::runtime_error("Usage: s760_native_runtime_tests ROOT PRIVATE_STATE [--crash-probe|--startup-repeats]");
         std::filesystem::path root=std::filesystem::absolute(argv[1]);
         s760::NativeRuntimeConfig cfg{root,argv[2],root/"roms/BOOT/Roland_S-760_v1.11.BIN",
             root/"roms/System/S760224.IMG",root/"roms/FDD/ROBOFULL.IMG"};
+        if(argc==4 && std::string(argv[3])=="--startup-repeats") {
+            s760::NativeRuntimeClient background(cfg);
+            for(unsigned i=0;i<40;++i) {
+                auto test=cfg;test.state=cfg.state.string()+"-"+std::to_string(i);
+                s760::NativeRuntimeClient fresh(test);
+                check(fresh.request("{\"op\":\"pause\"}").json.find("paused")!=std::string::npos,"Fresh pause failed");
+                check(fresh.request("{\"op\":\"status\"}").json.find("paused")!=std::string::npos,"Fresh status failed");
+                check(background.request("{\"op\":\"status\"}").json.find("running")!=std::string::npos,"Background instance paused");
+                std::cout<<"Fresh startup/pause "<<i<<" passed"<<std::endl;
+            }
+            return 0;
+        }
         s760::S760MameHost host;
         host.configure_native(cfg);
         check(host.init(),host.native_error().c_str());
@@ -103,6 +116,19 @@ int main(int argc,char** argv) {
         }
         worker.stop();
         check(peak>.001f && tail==0 && !worker.failed(),"Native note/release failed");
+        s760::S760Bridge bridge(&host);
+        check(!bridge.on_input(R"({"type":"DIAL_DELTA","payload":{"id":"ALPHA","delta":1.5}})"),"Fractional dial accepted");
+        check(!bridge.on_input(R"({"type":"DIAL_DELTA","payload":{"id":"INPUT","delta":1}})"),"Unavailable input gain accepted");
+        check(!bridge.on_input(R"({"type":"DIAL_DELTA","payload":{"id":"VOLUME","delta":33}})"),"Oversized dial accepted");
+        check(bridge.on_input(R"({"type":"DIAL_DELTA","payload":{"id":"VOLUME","delta":-25}})"),"Output dial rejected");
+        check(bridge.on_input(R"({"type":"DIAL_DELTA","payload":{"id":"VOLUME","delta":-25}})"),"Output dial rejected");
+        native.set_audio_streaming(true);
+        native.display_frames(); // request a worker snapshot, not synchronous UI I/O
+        float snapshot_pcm[1024];
+        check(native.render(snapshot_pcm,512),"Display snapshot render failed");
+        check(host.run_frame(),"Cached dial display failed");
+        check(bridge.current_telemetry().outputLevel==50,"Worker display cache lost output level");
+        std::cout << "Native bridge dial validation and cached 50% output telemetry passed\n";
         std::cout << "C++ native boot/load/frames/scheduled MIDI/worker PCM passed; frames=" << consumed
                   << " peak=" << peak << " tail=" << tail << " underruns=" << worker.underrun_frames() << "\n";
         return 0;

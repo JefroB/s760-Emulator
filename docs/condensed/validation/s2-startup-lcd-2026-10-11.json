@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-11",
+  "revision": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "worktree": "dirty; hashes identify tested state",
+  "identities_sha256": {
+    "mame-source/mames760.exe": "a6cb649a50a795d396dd166af506f718533b8868cbd30e6fc7d3b9616f058908",
+    "mame-source/src/devices/video/sed1330.h": "3d37d2ae4419c5de5e462cfa5a1b61bdce3a3746607e8c733f1c2b349d3fa735",
+    "mame-source/src/devices/video/sed1330.cpp": "9ae877c8c445185870c3365e731bd1210075e6a13f3eaaef1114a7cab021a6d4",
+    "core/tests/test_native_runtime.cpp": "7b4dd24a032e08cfc827432454d8177a9325b030690dec0a1023b1fbc0ae0015",
+    "core/src/s760_native_runtime.cpp": "28efb74baa22d1b122d62212db9f441d43b68f4c0c98fef0ef3274051d1f4b62",
+    "scripts/s760_runtime.lua": "4cf01531c258027090c9f39d2e3f4d7ff3beb329f783741ab1fa32eb915ff917",
+    "build/Release/s760_native_runtime_tests.exe": "999b096c05e180cc12455cfff5c337fff5b9c63dbe1521d232caddfc9a7d6e76",
+    "build/Release/s760_native_plugin_tests.exe": "987b3aa7a696aa9ecd2a3b26a14693c9a8ac0363c6ee97f9f074e962b58c0fec",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "BUG-033": {
+    "status": "FIXED",
+    "cause": "Uninitialized SED1330 scalar registers used by first frame rendering",
+    "before": {
+      "start160.log": "25 successful fresh iterations, then receive 10060; Lua registration completed, no first frame",
+      "stackrun160.err": "Receive 10060, after 21 successful iterations",
+      "stack160-manual.log": [
+        "sed1330_device::draw_graphics_scanline + 136",
+        "sed1330_device::update_text + 460",
+        "sed1330_device::screen_update + 240",
+        "screen_device::update_partial + 510",
+        "video_manager::finish_screen_updates + 266",
+        "video_manager::frame_update + 118"
+      ]
+    },
+    "after": {
+      "fixed160-a.log": 40,
+      "fixed160-b.log": 40,
+      "state160.log": [
+        "[S760 native state restore: load checkpoint] D:\\S-760\\scripts/s760_runtime.lua:142: bad argument #2 to 'unpack' (data string too short)",
+        "[S760 native state restore: decode/identity] Plugin state checksum mismatch",
+        "Native plugin state passed rate=48000 exact_frames=240000 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1"
+      ],
+      "native_acceptance": {
+        "native_boot_frames": true,
+        "long_mouse_jump": [
+          300,
+          120
+        ],
+        "midi_note": 60,
+        "held_peak_pcm16": 1459.0,
+        "release_tail_peak_pcm16": 0,
+        "sample_rate": 44100,
+        "note_start": 82.0,
+        "note_release": 84.133333333333,
+        "process_shutdown": "clean",
+        "pull_render": {
+          "sizes": [
+            1,
+            63,
+            127,
+            256,
+            511,
+            1024,
+            4096,
+            8192
+          ],
+          "frames": 122616,
+          "wav_max_error_pcm16": 0.9999065399169922,
+          "dropped_frames": 0,
+          "paused_between_requests": true,
+          "release_tail_silent": true
+        },
+        "scheduled_midi": [
+          {
+            "seconds": 86.289365079365,
+            "sample": 3805361
+          },
+          {
+            "seconds": 87.289365079365,
+            "sample": 3849461
+          }
+        ]
+      },
+      "python": "266 passed in 38.09s",
+      "cpp_suites": [
+        "s760_core_tests",
+        "s760_plugin_tests",
+        "s760_bridge_tests",
+        "s760_plugin_editor_tests",
+        "s760_prop_telemetry_tests",
+        "s760_native_stream_tests"
+      ]
+    }
+  },
+  "BUG-004": {
+    "status": "OPEN",
+    "reason": "No new hardware evidence for IC4 arbitration/latch/FIFO semantics; do not invent a FIFO. Supported launchers enable the existing experimental MIDI path."
+  },
+  "limitations": [
+    "Windows Release native development profile, unthrottled headless tests",
+    "Register initial values are safe storage defaults, not hardware power-on measurements",
+    "No changes to firmware bytes, timeout durations or guest execution state",
+    "Old checkpoint migration and complete hardware parity are not qualified"
+  ],
+  "private_artifacts_root": "docs/ic20-hle-findings/chatGPT-work"
+}

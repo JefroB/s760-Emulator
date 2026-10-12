@@ -11,21 +11,30 @@ extern "C" {
 typedef int32_t tresult;
 #define kResultOk 0
 #define kResultFalse 1
+#if defined(_WIN32)
+#define kNoInterface ((tresult)0x80004002L)
+#define kInvalidArgument ((tresult)0x80070057L)
+#define kNotImplemented ((tresult)0x80004001L)
+#define kInternalError ((tresult)0x80004005L)
+#define kNotInitialized ((tresult)0x8000FFFFL)
+#else
+#define kNoInterface -1
 #define kInvalidArgument 2
 #define kNotImplemented 3
 #define kInternalError 4
 #define kNotInitialized 5
+#endif
 
 typedef char FIDString[128];
 typedef uint8_t TUID[16];
 
-#define INLINE_UID(l1, l2, l3, l4) \
-    { \
-        (uint8_t)((l1 >> 24) & 0xFF), (uint8_t)((l1 >> 16) & 0xFF), (uint8_t)((l1 >> 8) & 0xFF), (uint8_t)(l1 & 0xFF), \
-        (uint8_t)((l2 >> 8) & 0xFF), (uint8_t)(l2 & 0xFF), (uint8_t)((l3 >> 8) & 0xFF), (uint8_t)(l3 & 0xFF), \
-        (uint8_t)((l4 >> 24) & 0xFF), (uint8_t)((l4 >> 16) & 0xFF), (uint8_t)((l4 >> 8) & 0xFF), (uint8_t)(l4 & 0xFF), \
-        0x53, 0x37, 0x36, 0x30 \
-    }
+// SDK GUID byte layout: COM ordering on Windows, network order elsewhere.
+#define S760_UID_BE(v) (uint8_t)((v)>>24), (uint8_t)((v)>>16), (uint8_t)((v)>>8), (uint8_t)(v)
+#if defined(_WIN32)
+#define INLINE_UID(a,b,c,d) { (uint8_t)(a), (uint8_t)((a)>>8), (uint8_t)((a)>>16), (uint8_t)((a)>>24), (uint8_t)((b)>>16), (uint8_t)((b)>>24), (uint8_t)(b), (uint8_t)((b)>>8), S760_UID_BE(c), S760_UID_BE(d) }
+#else
+#define INLINE_UID(a,b,c,d) { S760_UID_BE(a), S760_UID_BE(b), S760_UID_BE(c), S760_UID_BE(d) }
+#endif
 
 // Media types
 enum MediaTypes {
@@ -123,13 +132,12 @@ using AudioBusBuffers = ::AudioBusBuffers;
 
 class FUnknown {
 public:
-    virtual ~FUnknown() = default;
     virtual tresult queryInterface(const TUID _iid, void** obj) = 0;
     virtual uint32_t addRef() = 0;
     virtual uint32_t release() = 0;
 };
 
-class IBStream : virtual public FUnknown {
+class IBStream : public FUnknown {
 public:
     virtual tresult read(void* buffer, int32_t numBytes, int32_t* numBytesRead) = 0;
     virtual tresult write(void* buffer, int32_t numBytes, int32_t* numBytesWritten) = 0;
@@ -137,7 +145,7 @@ public:
     virtual tresult tell(int64_t* result) = 0;
 };
 
-class IEventList : virtual public FUnknown {
+class IEventList : public FUnknown {
 public:
     virtual int32_t getEventCount() = 0;
     virtual tresult getEvent(int32_t index, Event& e) = 0;
@@ -159,13 +167,13 @@ struct ProcessData {
     void* processContext;
 };
 
-class IPluginBase : virtual public FUnknown {
+class IPluginBase : public FUnknown {
 public:
     virtual tresult initialize(FUnknown* context) = 0;
     virtual tresult terminate() = 0;
 };
 
-class IComponent : virtual public IPluginBase {
+class IComponent : public IPluginBase {
 public:
     virtual tresult getControllerClassId(TUID classId) = 0;
     virtual tresult setIoMode(int32_t mode) = 0;
@@ -178,7 +186,7 @@ public:
     virtual tresult getState(IBStream* state) = 0;
 };
 
-class IAudioProcessor : virtual public FUnknown {
+class IAudioProcessor : public FUnknown {
 public:
     virtual tresult setBusArrangements(void* inputs, int32_t numIns, void* outputs, int32_t numOuts) = 0;
     virtual tresult getBusArrangement(int32_t dir, int32_t index, void* arr) = 0;
@@ -213,7 +221,7 @@ struct ViewRect {
 class IPlugFrame; // fwd
 
 // IPlugView — the editor view the host attaches to its window (VST3 SDK).
-class IPlugView : virtual public FUnknown {
+class IPlugView : public FUnknown {
 public:
     // Return kResultTrue (==kResultOk here) if the given platform type is
     // supported (e.g. "HWND" on Windows).
@@ -238,7 +246,7 @@ public:
 };
 
 // IPlugFrame — host-provided callback for view-initiated resize.
-class IPlugFrame : virtual public FUnknown {
+class IPlugFrame : public FUnknown {
 public:
     virtual tresult resizeView(IPlugView* view, ViewRect* newSize) = 0;
 };
@@ -247,7 +255,7 @@ public:
 // enough to vend the editor view via createView(ViewType::kEditor).
 #define ViewType_kEditor "editor"
 
-class IEditController : virtual public IPluginBase {
+class IEditController : public IPluginBase {
 public:
     virtual tresult setComponentState(IBStream* state) = 0;
     virtual tresult setState(IBStream* state) = 0;
@@ -264,6 +272,9 @@ public:
     // Create a named view; for "editor" this returns our WebView-backed IPlugView.
     virtual IPlugView* createView(FIDString name) = 0;
 };
+
+struct PFactoryInfo { char vendor[64]; char url[256]; char email[128]; int32_t flags; };
+struct BusInfo { int32_t mediaType, direction, channelCount; char16_t name[128]; int32_t busType; uint32_t flags; };
 
 struct PClassInfo {
     TUID cid;

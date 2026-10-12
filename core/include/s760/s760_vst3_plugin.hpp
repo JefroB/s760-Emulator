@@ -101,6 +101,7 @@ private:
     tresult set_native_state(Steinberg::IBStream*);
     bool m_native_mode = false;
     bool m_native_state_failed = false;
+    std::string m_native_ui_url;
 
     double m_sample_rate = 44100.0;
     int32_t m_max_block_size = 512;

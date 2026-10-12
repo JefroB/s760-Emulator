@@ -150,6 +150,15 @@ void test_bridge_on_input_contract() {
     std::cout << "[TEST] S760Bridge on_input() message contract..." << std::endl;
 
     S760Bridge bridge(nullptr);
+    assert(!bridge.on_input(R"({"type":"CONFIGURE_MEDIA_LIBRARY","payload":{"diskPath":"missing"}})"));
+    assert(!bridge.on_input(R"({"type":"SELECT_MEDIA","payload":{"diskPath":"missing.img"}})"));
+    bridge::ClientMessage mouse{};
+    assert(S760Bridge::decode_client_message(R"({"type":"MOUSE_BUTTON","payload":{"button":0,"down":false}})",mouse));
+    assert(mouse.payload.has_down && !mouse.payload.down && mouse.payload.has_button);
+    assert(!bridge.on_input(R"({"type":"MOUSE_BUTTON","payload":{"button":0}})"));
+    assert(!bridge.on_input(R"({"type":"MOUSE_BUTTON","payload":{"button":0.5,"down":true}})"));
+    assert(!bridge.on_input(R"({"type":"MOUSE_BUTTON","payload":{"button":0,"down":1}})"));
+
 
     // Valid messages across the full S760ClientMessage type set -> true.
     assert(bridge.on_input(R"({"type":"BUTTON_PRESS","payload":{"id":"F1"}})") == true);

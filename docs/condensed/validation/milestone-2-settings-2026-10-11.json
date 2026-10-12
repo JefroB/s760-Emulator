@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-11",
+  "base_revision": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "uncommitted": true,
+  "sha256": {
+    "scripts/s760_standalone.py": "c485deca539c4f6c7b99fb7d59f5838d1c04a26a6f8351bba295afec6dd428a6",
+    "google-ui/src/components/RuntimeSettings.tsx": "d8194077c2c21daac0ebf41d8f9fb0c6873952472e68877fd0d48ef92cb51f4d",
+    "google-ui/src/NativeStudio.tsx": "151e8fe8c89df6982bc141303d5df0f54c289143ffcd69f06efe32d3de17e6de",
+    "core/src/s760_webview_host.cpp": "e9235f23df3677228609753ce45ceb097aafc5f92e3b8b92c275fc0b949c403a",
+    "core/include/s760/s760_webview_host.hpp": "c0aed3cfb9777226c381a1b3be13e1a1ed4854514dc8cff3dbaa5ca14327d3df",
+    "core/tests/test_webview2.cpp": "9c1bb1df051076a7104fb3f896b9cfb76b38f82512c3af83ae2527262a529d4a",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/s760_webview2_tests.exe": "116c660468d1bdd4a70f2264fd47821087d790413b44569ac929f3276e18ad2b",
+    "mame-source/mames760.exe": "b45a19278d9f5958b0b9d5a4bfeff58a343d57db21e787dbc0eef1faf388f676",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "tests": {
+    "react": {
+      "files": 19,
+      "passed": 99,
+      "environment": "jsdom/mock sockets"
+    },
+    "python": {
+      "passed": 246
+    },
+    "cpp": [
+      "core passed",
+      "plugin passed",
+      "portable editor passed",
+      "full Release build passed"
+    ],
+    "native_settings_browser": {
+      "passed": true,
+      "missing_rom_ui_recovery": true,
+      "invalid_replacement_preserves_running_machine": true
+    },
+    "native_relaunch_browser": {
+      "passed": true,
+      "firmware_arguments_omitted": true,
+      "flows": [
+        "load",
+        "save session",
+        "reconnect",
+        "export",
+        "restart",
+        "restore",
+        "panel keyboard"
+      ]
+    },
+    "webview2_runtime": {
+      "passed": true,
+      "automatic_frames_without_manual_tick": true,
+      "close_stops_callbacks": true,
+      "reopen_cycles": 2
+    }
+  },
+  "native_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.3,
+    "note_release": 80.383333333333,
+    "process_shutdown": "clean"
+  },
+  "limits": [
+    "Standalone source-profile acceptance, not rebuilt packaged/clean-machine acceptance",
+    "Transport-independent React form; plugin configuration adapter pending",
+    "Automatic WebView2 timer test uses diagnostic bridge, not native audio",
+    "Real plugin/React/DAW and editor/audio continuity remain open",
+    "No firmware or hardware emulation changes"
+  ]
+}

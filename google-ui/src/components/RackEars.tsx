@@ -7,6 +7,7 @@ interface RackEarProps {
 export const RackEar: React.FC<RackEarProps> = ({ side }) => {
   return (
     <div
+      aria-label={`${side} rack ear`}
       className={`relative flex flex-col justify-between items-center py-2 h-full select-none ${
         side === 'left'
           ? 'border-r border-neutral-700/80 shadow-[1px_0_3px_rgba(0,0,0,0.8)]'
@@ -20,15 +21,6 @@ export const RackEar: React.FC<RackEarProps> = ({ side }) => {
     >
       {/* Top Rack Screw Cutout */}
       <RackScrewSlot />
-
-      {/* Center 1U Stamping / Ear Seam Marker */}
-      <div className="flex flex-col items-center gap-0.5 opacity-60">
-        <div className="w-4 h-[1px] bg-neutral-400" />
-        <span className="text-[7px] font-mono text-neutral-400 font-bold tracking-tighter">
-          1U
-        </span>
-        <div className="w-4 h-[1px] bg-neutral-400" />
-      </div>
 
       {/* Bottom Rack Screw Cutout */}
       <RackScrewSlot />

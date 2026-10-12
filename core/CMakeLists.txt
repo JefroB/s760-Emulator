@@ -39,6 +39,26 @@ add_library(s760_core STATIC
     src/s760_vst3_plugin.cpp
 )
 
+option(S760_HAVE_WEBVIEW2 "Build the concrete Windows embedded editor" OFF)
+set(S760_WEBVIEW2_SDK "" CACHE PATH "Extracted Microsoft.Web.WebView2 NuGet directory")
+if(S760_HAVE_WEBVIEW2)
+    if(NOT WIN32 OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+        message(FATAL_ERROR "WebView2 currently requires Windows x64")
+    endif()
+    if(NOT EXISTS "${S760_WEBVIEW2_SDK}/build/native/include/WebView2.h")
+        message(FATAL_ERROR "Set S760_WEBVIEW2_SDK to the extracted WebView2 SDK")
+    endif()
+    target_sources(s760_core PRIVATE src/s760_webview2_host.cpp)
+    target_compile_definitions(s760_core PRIVATE S760_HAVE_WEBVIEW2)
+    target_include_directories(s760_core PRIVATE "${S760_WEBVIEW2_SDK}/build/native/include")
+    target_link_libraries(s760_core PUBLIC "${S760_WEBVIEW2_SDK}/build/native/x64/WebView2LoaderStatic.lib" ole32 oleaut32 shlwapi version)
+    add_executable(s760_webview2_tests tests/test_webview2.cpp)
+    target_link_libraries(s760_webview2_tests PRIVATE s760_core)
+    add_executable(s760_native_editor_tests tests/test_native_plugin.cpp)
+    target_compile_definitions(s760_native_editor_tests PRIVATE S760_TEST_NATIVE_EDITOR)
+    target_link_libraries(s760_native_editor_tests PRIVATE s760_core)
+endif()
+
 # Compile-define the chosen backend token so the selector's build-option path
 # (S760_BACKEND_DEFAULT) resolves at compile time (Requirement 7.3).
 target_compile_definitions(s760_core PUBLIC S760_BACKEND_DEFAULT=${S760_BACKEND})
@@ -62,6 +82,7 @@ add_library(s760_vst3 MODULE
     src/s760_vst3_plugin.cpp
 )
 target_link_libraries(s760_vst3 PRIVATE s760_core)
+target_include_directories(s760_vst3 PRIVATE ../mame-source/3rdparty/rapidjson/include)
 set_target_properties(s760_vst3 PROPERTIES
     OUTPUT_NAME "Roland_S760"
     SUFFIX ".vst3"
@@ -335,6 +356,16 @@ target_compile_definitions(s760_smoke_build_tests
     PRIVATE S760_CORE_SRC_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 
 # Python Bindings Module
+set(S760_VST3_SDK_PATH "" CACHE PATH "Optional local Steinberg SDK for independent ABI verification")
+if(WIN32 AND S760_VST3_SDK_PATH)
+    if(NOT EXISTS "${S760_VST3_SDK_PATH}/pluginterfaces/base/ipluginbase.h")
+        message(FATAL_ERROR "S760_VST3_SDK_PATH must contain the Steinberg pluginterfaces directory")
+    endif()
+    add_executable(s760_vst3_sdk_tests tests/test_vst3_sdk.cpp)
+    target_include_directories(s760_vst3_sdk_tests PRIVATE "${S760_VST3_SDK_PATH}")
+endif()
+
+# Python Bindings Module
 find_package(Python 3.13 COMPONENTS Interpreter Development REQUIRED)
 if (Python_FOUND)
     execute_process(
@@ -353,3 +384,6 @@ if (Python_FOUND)
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../tests"
     )
 endif()
+
+add_executable(s760_media_library_tests tests/test_media_library.cpp)
+target_link_libraries(s760_media_library_tests PRIVATE s760_core)

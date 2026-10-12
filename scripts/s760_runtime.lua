@@ -6,6 +6,8 @@ assert(not error, tostring(error))
 local machine = manager.machine
 local incoming = ''
 local mouse_x, mouse_y, target_x, target_y = 0, 0, 0, 0
+local pointer_pending = 0
+local value_position, output_level = 0, 100
 local settle = 0
 local step_pending = nil
 local render_pending = nil
@@ -63,8 +65,15 @@ local function field(port, name)
     local p = assert(machine.ioport.ports[port], 'Unknown input port')
     return assert(p.fields[name], 'Unknown input field')
 end
-local function send_audio(count)
-    reply({ok=true, audio={frames=count, channels=2, rate=44100,
+output_level = field(':NATIVE_OUTPUT','Output Level').user_value
+local function send_audio(count, display)
+    local crt, w, h, lcd, lw, lh
+    if display then
+        crt, w, h = machine.screens[':crt_screen']:pixels()
+        lcd, lw, lh = machine.screens[':lcd_screen']:pixels()
+    end
+    reply({ok=true, surfaces=display and {{0,w,h},{1,lw,lh}} or nil, output_level=output_level,
+           audio={frames=count, channels=2, rate=44100,
            first_sample=audio_total-audio_frames, dropped_frames=audio_dropped},
            seconds=machine.time:as_double(), buffered_frames=audio_frames-count})
     local remaining = count
@@ -80,6 +89,7 @@ local function send_audio(count)
         remaining = remaining-take
     end
     audio_frames = audio_frames-count
+    if display then write_all(crt); write_all(lcd) end
 end
 local function run_midi_queue()
     coroutine.wrap(function()
@@ -114,6 +124,7 @@ local function execute(command)
         end
         local meta = json.stringify({version=2, seconds=machine.time:as_double(),
             midi=events, delivered=midi_delivered, midi_error=midi_error, mouse={mouse_x,mouse_y,target_x,target_y,settle},
+            pointer_pending=pointer_pending, value_position=value_position, output_level=output_level,
             buttons=button_states, enabled=audio_enabled, frames=audio_frames,
             total=audio_total, dropped=audio_dropped})
         local chunks = {}
@@ -137,6 +148,13 @@ local function execute(command)
                'Invalid checkpoint metadata')
         assert(type(meta.mouse) == 'table' and #meta.mouse == 5 and type(meta.buttons) == 'table',
                'Invalid checkpoint input metadata')
+        local restored_value, restored_level = meta.value_position or 0, meta.output_level or 100
+        assert(type(restored_value) == 'number' and restored_value % 1 == 0 and restored_value >= 0 and restored_value <= 65535
+               and type(restored_level) == 'number' and restored_level % 1 == 0 and restored_level >= 0 and restored_level <= 100,
+               'Invalid checkpoint dial metadata')
+        assert(meta.pointer_pending == nil or (type(meta.pointer_pending) == 'number'
+               and meta.pointer_pending % 1 == 0 and meta.pointer_pending >= 0 and meta.pointer_pending <= 16),
+               'Invalid checkpoint pointer metadata')
         assert(type(meta.seconds) == 'number' and meta.seconds >= 0
                and type(meta.midi) == 'table' and #meta.midi <= 256
                and type(meta.delivered) == 'table' and #meta.delivered <= 256
@@ -163,6 +181,10 @@ local function execute(command)
         button_states = meta.buttons
         for _, input in ipairs(button_states) do field(input.port,input.name):set_value(input.down and 1 or 0) end
         mouse_x,mouse_y,target_x,target_y,settle = table.unpack(meta.mouse)
+        pointer_pending = meta.pointer_pending or 0
+        value_position, output_level = restored_value, restored_level
+        field(':NATIVE_VALUE','Value Encoder'):set_value(value_position)
+        field(':NATIVE_OUTPUT','Output Level').user_value = output_level
         for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_X'].fields) do f:set_value(mouse_x) end
         for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_Y'].fields) do f:set_value(mouse_y) end
         audio_enabled,audio_frames,audio_total,audio_dropped = meta.enabled,meta.frames,meta.total,meta.dropped
@@ -234,12 +256,13 @@ local function execute(command)
         assert(type(command.frames) == 'number' and command.frames % 1 == 0
                and command.frames >= 1 and command.frames <= 8192, 'Invalid render frame count')
         assert(audio_dropped == 0, 'Restart capture after an audio discontinuity')
-        render_pending = {frames=command.frames, steps=0}
+        assert(command.display == nil or type(command.display) == 'boolean', 'Invalid display request')
+        render_pending = {frames=command.frames, steps=0, display=command.display}
     elseif command.op == 'frames' then
         local crt, w, h = machine.screens[':crt_screen']:pixels()
         local lcd, lw, lh = machine.screens[':lcd_screen']:pixels()
         local registers = machine.devices[':maincpu'].spaces['register']
-        reply({ok=true, surfaces={{0,w,h},{1,lw,lh}}, seconds=machine.time:as_double(), paused=machine.paused,
+        reply({ok=true, surfaces={{0,w,h},{1,lw,lh}}, seconds=machine.time:as_double(), paused=machine.paused, output_level=output_level,
                cursor={registers:read_u16(0xd0), registers:read_u8(0xd2)}})
         write_all(crt)
         write_all(lcd)
@@ -251,10 +274,22 @@ local function execute(command)
         end
         if not found then button_states[#button_states+1] = {port=command.port,name=command.name,down=command.down} end
         reply({ok=true})
+    elseif command.op == 'dial' then
+        assert((command.id == 'ALPHA' or command.id == 'VOLUME') and type(command.delta) == 'number'
+               and command.delta % 1 == 0 and math.abs(command.delta) <= 32, 'Invalid native dial input')
+        if command.id == 'ALPHA' then
+            value_position = (value_position + command.delta) % 65536
+            field(':NATIVE_VALUE','Value Encoder'):set_value(value_position)
+        else
+            output_level = math.max(0, math.min(100, output_level + command.delta))
+            field(':NATIVE_OUTPUT','Output Level').user_value = output_level
+        end
+        reply({ok=true, value_position=value_position, output_level=output_level})
     elseif command.op == 'pointer' then
         assert(type(command.x) == 'number' and command.x >= 0 and command.x <= 320, 'Invalid pointer X')
         assert(type(command.y) == 'number' and command.y >= 0 and command.y <= 120, 'Invalid pointer Y')
         target_x, target_y = command.x, command.y
+        pointer_pending = 16
         reply({ok=true})
     elseif command.op == 'quit' then
         reply({ok=true})
@@ -277,7 +312,38 @@ local function execute(command)
         reply({ok=false, error='Unsupported runtime operation'})
     end
 end
+local function update_pointer()
+    -- OS 2.24 bank004F:88AB..892F moves/clamps the cursor and selects 1x
+    -- or 2x sensitivity. Panel operations can also relocate it. Translate
+    -- absolute host coordinates using read-only guest position/sensitivity;
+    -- all movement still goes through ordinary MU-1 relative input packets.
+    -- Never keep chasing an old target after the request has settled.
+    if settle > 0 and not machine.paused then
+        settle = settle - 1
+    elseif pointer_pending > 0 and not machine.paused then
+        local registers = machine.devices[':maincpu'].spaces['register']
+        local program = machine.devices[':maincpu'].spaces['program']
+        local scale = (program:read_u8(0x2140) == 0 and program:read_u8(0x272e) == 0) and 2 or 1
+        local function delta(target, current, low, high)
+            local distance = math.max(low, math.min(high, target * 2)) - current
+            -- At 2x sensitivity the guest may be on the opposite pixel parity.
+            -- Truncate toward zero: nearest reachable pixel without oscillation.
+            local amount = distance / scale
+            amount = amount < 0 and math.ceil(amount) or math.floor(amount)
+            return math.max(-63, math.min(63, amount))
+        end
+        local dx = delta(target_x, registers:read_u16(0xd0), program:read_u16(0x213a), program:read_u16(0x2138))
+        local dy = delta(target_y, registers:read_u8(0xd2), program:read_u16(0x213e), program:read_u16(0x213c))
+        pointer_pending = (dx == 0 and dy == 0) and 0 or pointer_pending - 1
+        mouse_x = (mouse_x + dx) & 0xffff
+        mouse_y = (mouse_y + dy) & 0xffff
+        for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_X'].fields) do f:set_value(mouse_x) end
+        for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_Y'].fields) do f:set_value(mouse_y) end
+        settle = (dx == 0 and dy == 0) and 0 or 2
+    end
+end
 local function pump(outside_timeslice)
+    update_pointer()
     if render_pending then
         if audio_dropped > 0 then
             emu.pause()
@@ -285,9 +351,9 @@ local function pump(outside_timeslice)
             reply({ok=false, error='Audio overflow during render'})
         elseif audio_frames >= render_pending.frames then
             emu.pause()
-            local count = render_pending.frames
+            local count, display = render_pending.frames, render_pending.display
             render_pending = nil
-            send_audio(count)
+            send_audio(count, display)
         elseif render_pending.steps >= 60 then
             emu.pause()
             render_pending = nil
@@ -308,20 +374,11 @@ local function pump(outside_timeslice)
         end
         return
     end
-    -- MU-1 packets contain signed eight-bit deltas. Split long host jumps so
-    -- crossing the screen cannot wrap the guest delta and move backwards.
-    if mouse_x ~= target_x or mouse_y ~= target_y then
-        mouse_x = mouse_x + math.max(-63, math.min(63, target_x - mouse_x))
-        mouse_y = mouse_y + math.max(-63, math.min(63, target_y - mouse_y))
-        for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_X'].fields) do f:set_value(mouse_x) end
-        for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_Y'].fields) do f:set_value(mouse_y) end
-        settle = 2
-    elseif settle > 0 then settle = settle - 1 end
     incoming = incoming .. channel:read(4096)
     if #incoming > 65536 then machine:exit(); return end
     local newline = incoming:find('\n', 1, true)
     -- At most one command per frame: bounded work, no unbounded input drain.
-    if newline and (settle == 0 or machine.paused) then
+    if newline and ((settle == 0 and pointer_pending == 0) or machine.paused) then
         local text = incoming:sub(1, newline - 1)
         local command = json.parse(text)
         -- frame_done may run inside an emulated timer callback. Loading there

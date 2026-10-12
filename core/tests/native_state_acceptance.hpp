@@ -24,9 +24,23 @@ public:
     tresult tell(int64_t* result) override{*result=offset;return kResultOk;}
 };
 
-static void state_acceptance(s760::S760Vst3Plugin& plugin,Steinberg::ProcessSetup setup,
+static void state_acceptance(s760::S760Vst3Plugin& plugin,Steinberg::ProcessSetup setup,const std::filesystem::path& fixture,
         const std::function<std::shared_ptr<s760::S760Vst3Plugin>()>& create) {
     unsigned rate=unsigned(setup.sampleRate);
+    auto& library=plugin.native_host()->media_library();
+    auto mounted=library.state().inserted;
+    check(!mounted.empty(),"Native media identity missing before save");
+    // Browse a different image without changing the disk whose bytes are captured.
+    auto source=std::filesystem::u8path(mounted);
+    auto configured=std::filesystem::absolute(fixture);
+    std::filesystem::create_directories(configured/"nested");
+    std::filesystem::copy_file(source,configured/"first.img",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(source,configured/"nested"/"second.img",std::filesystem::copy_options::overwrite_existing);
+    check(library.configure(configured.u8string()),"Recursive native media configure failed");
+    auto paths=library.state().paths;
+    auto other=std::find_if(paths.begin(),paths.end(),[&](const auto& p){return p!=mounted;});
+    check(other!=paths.end() && library.select(*other),"Distinct browse selection unavailable");
+    const auto media=library.state();
     const auto padding=s760::NativeRateConverter::host_samples(s760::NativeStream::output_delay,rate);
     auto render=[&](s760::S760Vst3Plugin& p,std::uint64_t first,unsigned frames,bool on,bool off) {
         std::vector<float> result;float left[1024],right[1024];float* channels[]{left,right};
@@ -61,6 +75,13 @@ static void state_acceptance(s760::S760Vst3Plugin& plugin,Steinberg::ProcessSetu
     check(plugin.setProcessing(true)==kResultOk,"State resume failed");
     auto expected=render(plugin,64,rate,false,false);
     check(plugin.setProcessing(false)==kResultOk,"State reference suspend failed");
+    // Restore must use captured media bytes even when the browse library has moved.
+    auto relocated=configured;relocated+="-relocated";
+    check(configured.parent_path()==relocated.parent_path(),"Fixture move escaped private parent");
+    std::filesystem::rename(configured,relocated);
+    check(source.parent_path()==configured.parent_path(),"Mounted fixture source is not private");
+    auto moved_source=source;moved_source+=".relocated";
+    std::filesystem::rename(source,moved_source);
     auto cold=create();check(cold->setupProcessing(setup)==kResultOk,"Cold state setup failed");
     auto invalid=inspect;invalid.machine={0};auto invalid_bytes=invalid.encode();
     StateMemory invalid_state;auto invalid_size=std::uint32_t(invalid_bytes.size());
@@ -69,6 +90,8 @@ static void state_acceptance(s760::S760Vst3Plugin& plugin,Steinberg::ProcessSetu
     check(cold->setState(&invalid_state)==kResultFalse,"Invalid native checkpoint accepted");
     check(cold->setProcessing(true)==kResultFalse,"Failed native restore allowed processing");
     early.offset=0;check(cold->setState(&early)==kResultOk,"Fresh-instance pending state restore failed");
+    auto restored_media=cold->native_host()->media_library().state();
+    check(restored_media.folder==media.folder && restored_media.selected==media.selected && restored_media.inserted==media.inserted && restored_media.paths==media.paths,"Cold state lost media metadata");
     check(cold->setActive(true)==kResultOk && cold->setProcessing(true)==kResultOk,"Cold state start failed");
     check(render(*cold,64,rate,false,false)==expected,"Cold pending-event PCM differs");
     check(cold->setProcessing(false)==kResultOk,"Cold suspend failed");
