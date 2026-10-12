@@ -3,13 +3,15 @@
 #include "s760_native_stream.hpp"
 #include "s760_native_rate_converter.hpp"
 #include <cstring>
+#include "s760_media_library.hpp"
 
 namespace s760 {
 // Explicit little-endian encoding; never serialize C++ structs/pointers/padding.
 // All allocation and validation take place off the realtime callback.
 struct NativePluginState {
-    static constexpr std::size_t max_bytes=260u*1024*1024;
-    unsigned rate=44100,max_block=512;
+    static constexpr std::size_t max_bytes=266u*1024*1024;
+    unsigned version=2,rate=44100,max_block=512;
+    MediaLibrary::Snapshot media;
     bool has_stream=false;
     std::uint64_t origin=0;
     std::vector<std::uint8_t> identity,machine;
@@ -19,6 +21,7 @@ struct NativePluginState {
     struct Writer {
         std::vector<std::uint8_t> bytes;
         void integer(std::uint64_t value,unsigned count=4) {for(unsigned i=0;i<count;++i) bytes.push_back(std::uint8_t(value>>(i*8)));}
+        void text(const std::string& value) {blob({value.begin(),value.end()});}
         void pcm(float value) {std::uint32_t bits;std::memcpy(&bits,&value,4);integer(bits);}
         void blob(const std::vector<std::uint8_t>& value) {integer(value.size());bytes.insert(bytes.end(),value.begin(),value.end());}
     };
@@ -28,6 +31,7 @@ struct NativePluginState {
             if(count>bytes.size()-offset) throw std::invalid_argument("Truncated plugin state");
             std::uint64_t value=0;for(unsigned i=0;i<count;++i) value|=std::uint64_t(bytes[offset++])<<(i*8);return value;
         }
+        std::string text() {auto b=blob(MediaLibrary::max_path);return {b.begin(),b.end()};}
         float pcm() {std::uint32_t bits=std::uint32_t(integer());float value;std::memcpy(&value,&bits,4);
             if(!std::isfinite(value)) throw std::invalid_argument("Nonfinite plugin state PCM");return value;}
         std::vector<std::uint8_t> blob(std::size_t limit) {
@@ -39,6 +43,8 @@ struct NativePluginState {
         if(!NativeRateConverter::supported(rate) || !max_block || max_block>1024 || identity.size()!=160 ||
            machine.empty() || machine.size()>257u*1024*1024 || origin>9007199254740991ULL)
             throw std::invalid_argument("Invalid plugin state profile");
+        if(version!=1 && version!=2) throw std::invalid_argument("Invalid state version");
+        if(version>=2) media.validate();
         if(!has_stream) return;
         if(converter.rate!=rate || converter.host_cursor!=stream.completed ||
            stream.delay_frames!=NativeRateConverter::host_samples(NativeStream::output_delay,rate) ||
@@ -48,7 +54,7 @@ struct NativePluginState {
         NativeStream check_stream([](const NativeStream::Block&,float*){return false;},stream);
     }
     std::vector<std::uint8_t> encode() const {
-        validate();Writer w;w.integer(1);w.integer(rate);w.integer(max_block);w.integer(has_stream);w.integer(origin,8);w.blob(identity);w.blob(machine);
+        validate();Writer w;w.integer(version);w.integer(rate);w.integer(max_block);w.integer(has_stream);w.integer(origin,8);w.blob(identity);w.blob(machine);
         if(has_stream) {
             w.integer(converter.version);w.integer(converter.rate);w.integer(converter.host_cursor,8);w.integer(converter.native_cursor,8);
             for(auto value:converter.history) w.pcm(value);
@@ -60,6 +66,7 @@ struct NativePluginState {
             }
             w.integer(stream.pcm.size());for(auto value:stream.pcm) w.pcm(value);
         }
+        if(version>=2) {w.text(media.folder);w.text(media.selected);w.text(media.inserted);w.integer(media.paths.size());for(const auto& path:media.paths) w.text(path);}
         auto sum=native_digest(w.bytes);
         std::vector<std::uint8_t> out{'S','7','6','0','N','P','S','1'};
         out.insert(out.end(),sum.begin(),sum.end());out.insert(out.end(),w.bytes.begin(),w.bytes.end());return out;
@@ -69,7 +76,7 @@ struct NativePluginState {
         std::vector<std::uint8_t> payload(archive.begin()+40,archive.end());auto sum=native_digest(payload);
         if(!std::equal(sum.begin(),sum.end(),archive.begin()+8)) throw std::invalid_argument("Plugin state checksum mismatch");
         Reader r{payload};NativePluginState s;
-        if(r.integer()!=1) throw std::invalid_argument("Unsupported plugin state version");
+        s.version=unsigned(r.integer());if(s.version!=1 && s.version!=2) throw std::invalid_argument("Unsupported plugin state version");
         s.rate=unsigned(r.integer());s.max_block=unsigned(r.integer());auto has=r.integer();
         if(has>1) throw std::invalid_argument("Invalid stream marker");s.has_stream=has!=0;s.origin=r.integer(8);s.identity=r.blob(160);s.machine=r.blob(257u*1024*1024);
         if(s.has_stream) {
@@ -85,6 +92,7 @@ struct NativePluginState {
             }
             count=r.integer();if(count>65536) throw std::invalid_argument("Too much queued PCM");q.pcm.resize(std::size_t(count));for(auto& value:q.pcm)value=r.pcm();
         }
+        if(s.version>=2) {s.media.folder=r.text();s.media.selected=r.text();s.media.inserted=r.text();auto n=r.integer();if(n>MediaLibrary::max_entries) throw std::invalid_argument("Too many media entries");for(unsigned i=0;i<n;++i)s.media.paths.push_back(r.text());}
         if(r.offset!=payload.size()) throw std::invalid_argument("Trailing plugin state data");s.validate();return s;
     }
 };

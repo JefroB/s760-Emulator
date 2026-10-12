@@ -135,19 +135,28 @@ Acceptance met: native and exported-module harnesses boot, load ROBOFULL through
 
 ## Milestone 2 — Live React displays and controls
 
+**Complete for the qualified Windows development profile (2026-10-11).** Native controls, original firmware displays, media loading, audio and editor reopening pass in SoundCheck. The Input Level control is explicitly assigned to the existing native recording dependency in Milestone 3 below; it remains disabled, not implemented. Analog knob taper/full IC20 fidelity, packaged release and broader DAW acceptance are not claimed. [Rack contract and evidence](NATIVE_RACK_CONTROLS.md).
+
 Depends on milestone 1.
 
 - [x] Deliver native CRT and LCD frames to the existing React canvas consumers, with correct geometry, palette and scaling. Native player and conversion tests; remaining hardware display-mode fidelity is tracked separately.
 - [x] Connect mouse movement/buttons, 13 panel buttons, raw floppy insertion and MIDI audition to the live native machine; preserve Mouse+CRT defaults for new profiles.
-- [ ] Complete dial and keyboard controls and integrate the native transport into the full existing rack shell. The development player currently uses a smaller React control surface.
+- [x] Connect native panel keyboard shortcuts, suppress repeat/text-field/dialog input and release held controls on blur. Real MAME Mode-menu navigation passes.
+- [x] Wire the separate Menu button to the schematic-confirmed encoder push switch (SC0/SP4). Original firmware Perform menu opens in native MAME and through the SoundCheck React editor; releases on blur. Mixed panel/mouse positioning is now verified after the BUG-030 correction.
+- [x] Complete Value and Output controls in the approved rack shell. Value rotation reaches the IC20 register and edits the original firmware in both directions, without S1/S2 substitution; the separate Menu push, navigation/F1–F6/Shift controls, LCD and Gotek remain intact. Output has exact software attenuation/mute, confirmed readback across editor reopen and native checkpoint recall. SoundCheck verifies the real controls and expected PCM. Input recording gain is explicitly retained in Milestone 3; physical pot taper and full quadrature timing remain fidelity work. [Contract and qualification](NATIVE_RACK_CONTROLS.md).
 - [x] Host the standalone React player in WebView2 with live frames and controls; closing its window shuts down its machine.
-- [ ] Implement the plugin WebView2 environment/controller, lifetime, resize and message/frame transport. The existing C++ gated implementation remains an outline. The standalone now uses a working pywebview/WebView2 host with local WebSocket transport; that does not complete the plugin host.
-- [ ] Implement matching embedded transport in the React bridge client, which currently uses WebSocket.
-- [ ] Deliver shared graphical firmware/media/runtime configuration and actionable startup errors in the React interface. Standalone first-run persistence is accepted in Milestone 3; plugin host/editor delivery in Milestone 4. This is the configuration work split from Milestone 1.
+- [x] Implement the concrete C++ WebView2 environment/controller, lifetime, resize and message/frame transport. Real runtime harness passes text/frame round trips, resize, pending-create cancellation and reopen. Opt-in Windows x64 build; [evidence and limitations](MILESTONE_2_PROGRESS.md).
+- [x] Qualify Windows x64 plugin discovery and concrete React editor boot, screenshot capture, close/reopen and removal in SoundCheck 1.0.0 using its native SDK host. Independent SDK interface tests also pass; see [host evidence](MILESTONE_2_PROGRESS.md).
+- [x] Qualify loaded-sample audio alongside editor operation in SoundCheck and deliver actionable plugin configuration/failure reporting. Actual firmware Disk/Load, expected 20,004Hz fixture playback/level, editor reopening during the held note and silent release pass at 44.1 kHz. Persistent settings, setup/check/diagnose commands, malformed/missing-path diagnostics and successful repair pass without runtime/UI environment overrides. [Configuration workflow](NATIVE_PLUGIN_CONFIGURATION.md). In-plugin graphical setup remains the existing Milestone 4 gate; this is development-host qualification.
+- [x] Implement matching embedded transport in the React bridge client: detect WebView2, canonical control JSON, bounded frame envelope, shared decoder and listener cleanup. Mock-channel tests complement the real C++ runtime harness; integrated plugin acceptance remains above.
+- [x] Deliver a transport-independent React firmware/media/runtime settings form and actionable startup errors, connected to the standalone host. Missing firmware can be corrected without exiting; paths validate before replacing a machine, dirty/busy media blocks replacement, and successful settings persist. Real native setup/relaunch tests pass. The plugin adapter and host-visible errors remain part of plugin integration above and Milestone 4.
+- [x] Schedule concrete embedded-editor frames on the UI thread and remove the timer on close. Real WebView2 automatic-frame/reopen acceptance passes; native audio continuity remains below.
 - [x] Populate the native player's floppy selector from the configured media folder and insert a private working copy; load through firmware Disk/Load.
 - [x] Report acknowledged insertion/export results and rejected media changes in the native player.
-- [ ] Replace demonstration media actions in the full rack shell.
-- [ ] Ensure closing/reopening the plugin editor leaves audio and the emulated machine running correctly. Standalone window closure intentionally ends its session.
+- [x] Discover the embedded host's default floppy inventory and retain confirmed media across editor recreation. Bounded startup scan of `roms/FDD/*.IMG`, host-owned list and confirmed full path, Gotek controls, rejected insertion and SoundCheck close/reopen checks pass.
+- [x] Complete configurable/recursive full-rack media libraries and session serialization. The existing Select dialog configures recursive folders; the host preserves independent browse/inserted identities across editor reopening and version-2 plugin-state recall. SoundCheck UI acceptance and native cold restore with relocated source files and exact PCM pass. Explicit scan limits and v1 compatibility are documented in [Native media library](NATIVE_MEDIA_LIBRARY.md).
+- [x] Verify concrete editor-controller close/reopen with built React and the native plugin engine: same MAME process, advancing displays and exact reference PCM at 44.1/48/96 kHz. This is a native harness, not actual SDK/DAW hosting; that gate remains above. Standalone window closure intentionally ends its session.
+- [x] Route supported C++ embedded panel/pointer commands to the native machine and reject unsupported legacy clicks and unknown dial IDs; bounded Value/Output commands use the native path. Firmware Mode-menu navigation passes through the bridge; complete rack controls and host-visible error UX remain above.
 
 Acceptance: from React, observe firmware boot, insert/load a sample disk, navigate and edit via real controls, then play MIDI and hear audio. Screens must agree with native MAME, including cursor and highlight behavior.
 
@@ -159,11 +168,12 @@ Depends on milestones 1–2.
 - [ ] Verify physical MIDI playing and device disconnect/reconnect; add audio device configuration, sample-rate conversion, buffering and reported latency.
 - [x] Package built React assets locally; launch without Vite, a terminal or a manually started bridge service. Development Windows package verified through WebView canvas readback; clean-machine release qualification remains open.
 - [x] Accept explicit firmware/media/state paths, stage selected system firmware per instance and verify clean desktop shutdown. Firmware and samples are excluded from the package.
-- [ ] Add first-run firmware/media location setup and persistent settings, with recovery from missing paths and actionable UI errors.
+- [x] Add first-run firmware/media location setup and persistent settings, with recovery from missing paths and actionable UI errors. The source standalone recovers from a missing ROM through React and relaunches from saved settings; changed packaged-build and clean-machine acceptance remain release gates.
 - [x] Complete the observed firmware floppy Save path and explicit export to a new image; verify fresh-machine sample reload and audio while preserving library originals.
 - [x] Reject busy/dirty controller media replacement and ejection; clear dirty state only after publication of the captured revision. Verify native Save/export/reinsert and fresh reload.
 - [ ] Qualify firmware empty-drive behavior before exposing ejection in the UI; implement shutdown/crash recovery, formatting and firmware write-protection/error behavior.
 - [ ] Implement native ADC/input transport into the existing machine, with negotiated capture format/rate and bounded buffering; expose standalone recording-device selection. Unsupported native input currently rejects. This is the sampling implementation split from Milestone 1.
+- [ ] Enable and qualify the separate rack Input Level control with the native ADC path. Service Notes p20 identifies analog recording gain before conversion, not an IC20 encoder. Preserve gain in session recall and verify recorded level changes. This recording-dependent part of the former Milestone 2 knob objective is deferred here explicitly; the UI remains disabled until it works.
 - [ ] Verify external audio input reaches the firmware sampling workflow and saved samples reload correctly, using that native ADC path; record device, rate, timing and overflow/error behavior.
 - [x] Implement bounded same-build standalone saved-session recall through the native engine; cold PCM/display replay and explicit recovery of the last save pass. [Contract](NATIVE_SESSIONS.md).
 - [ ] Complete product session handling: relocated/missing-media recovery, clear identity/version mismatch UX and recovery policy for edits after the last explicit save. The bounded engine snapshot does not complete these workflows.
@@ -230,7 +240,7 @@ The latest distribution checkpoint has 241 Python passes; the recorded React/bro
 
 Prioritize the standalone while preserving the runtime boundary for VST3. The initial boot/load/play and live-screen path is working; the next implementation order is:
 
-**Milestone 1 is closed. Next: Milestone 2 interface delivery, then Milestone 3
+**Milestones 1 and 2 are closed for their qualified development profiles. Next: Milestone 3
 standalone product acceptance.** Native processing, selection, bounded state,
 recovery and the reviewed distribution artifact have evidence. Keep the
 approximately279ms software delay and same-build snapshot limits explicit.
@@ -240,8 +250,8 @@ in their assigned milestones; no requirement was dropped by the scope split.
 1. Finish media lifecycle handling: firmware empty-drive behavior and shutdown/crash recovery. Controller-level dirty protection and acknowledged insertion/export are verified. The observed firmware Save/export/fresh-reload path now passes; formatting and write-protection remain unqualified.
 2. Extend the completed bounded session recall with missing/relocated-media handling and user-facing recovery of saved sessions; define treatment of unsaved edits.
 3. Add audio device/input configuration and prove the firmware sampling → save → reload workflow; qualify physical MIDI and latency.
-4. Finish the full React rack controls, first-run setup, persistent settings and recovery flows.
-5. Run sustained and clean-machine standalone acceptance, then qualify the already connected C++ VST3 client against the actual SDK/host/editor. Defer actual DAW/framework validation until that framework is available; standalone work need not wait for it.
+4. Qualify recording Input Level with native sampling; complete standalone recovery flows and packaged settings acceptance. The playback rack controls and development configuration are qualified.
+5. Run sustained and clean-machine standalone acceptance, then qualify the already connected C++ VST3 client against the actual SDK/host/editor. Use the available SoundCheck native host for automated acceptance; compatibility with other DAWs remains separately scoped.
 
 For each item, add a failing regression or acceptance test, implement the behavior, verify it against the native machine and refine it before marking completion. Keep blocking transport, UI and disk operations outside future realtime callbacks. Hardware work can proceed independently when it does not alter the runtime contract.
 

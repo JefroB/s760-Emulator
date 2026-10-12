@@ -14,9 +14,12 @@ import {
 import { OP760Monitor } from './components/OP760Monitor';
 import { S760FrontPanel } from './components/S760FrontPanel';
 import { soundFx } from './audio/soundFx';
+import { StudioLayout } from './components/StudioLayout';
+import { detectEmbeddedTransport } from './bridge/S760BridgeClient';
 import { BridgeProvider } from './bridge/BridgeContext';
 
 export default function App() {
+  const embedded = !!detectEmbeddedTransport();
   const [diskList, setDiskList] = useState<DiskImage[]>(DEFAULT_DISK_IMAGES);
 
   const [state, setState] = useState<SamplerState>({
@@ -344,6 +347,7 @@ export default function App() {
   // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if(embedded)return;
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
       if (e.code === 'Space') {
@@ -391,7 +395,7 @@ export default function App() {
 
   return (
     <BridgeProvider>
-    <div className="min-h-screen bg-[#0a0c0f] text-neutral-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div style={embedded?{height:"100vh",overflow:"hidden"}:undefined} className="min-h-screen bg-[#0a0c0f] text-neutral-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
       {/* Top Header Bar */}
       <header className="flex items-center justify-between px-6 py-2.5 border-b border-neutral-800 bg-[#101216] shrink-0">
         <div className="flex items-center gap-3">
@@ -403,7 +407,7 @@ export default function App() {
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        {!embedded && <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={triggerAudition}
@@ -412,11 +416,11 @@ export default function App() {
             <span className={`w-2 h-2 rounded-full ${state.midiRx ? 'bg-emerald-300 animate-ping' : 'bg-emerald-500'}`} />
             Audition Patch [Space]
           </button>
-        </div>
+        </div>}
       </header>
 
       {/* Main Studio Stack: OP-760 Color CRT Monitor on Top + 1U Rack Faceplate Below */}
-      <main className="flex-1 flex flex-col items-center justify-center p-4 lg:p-6 gap-5 overflow-x-hidden">
+      <StudioLayout embedded={embedded}>
         {/* Top: OP-760 Color CRT Monitor */}
         <OP760Monitor
           state={state}
@@ -451,7 +455,7 @@ export default function App() {
             onTriggerAudition={triggerAudition}
           />
         </div>
-      </main>
+      </StudioLayout>
     </div>
     </BridgeProvider>
   );

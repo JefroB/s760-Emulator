@@ -67,19 +67,26 @@ current source:
 
 ## Correct treatment of the matrices
 
-`OS_TEST_COVERAGE_MATRIX.md`, `OS_EXHAUSTIVE_CODE_MATRIX.md`, and
-`UI_TEST_COVERAGE_MATRIX.md` are generated ownership/coverage inventories.
-Their totals are snapshots, and old no-React-tests statements are superseded by
-the existing suites. `MANUAL_FUNCTION_TEST_COVERAGE.md`'s 63/63 claim is not
-supported by its broad/reused citations; it even assigns modern Gotek workflows
-to original manual pages. Do not use its page ranges or percentages as verified
-manual coverage without checking the scanned pages and actual assertions.
+All four generated reports (`OS_TEST_COVERAGE_MATRIX.md`,
+`OS_EXHAUSTIVE_CODE_MATRIX.md`, `UI_TEST_COVERAGE_MATRIX.md`, and
+`MANUAL_FUNCTION_TEST_COVERAGE.md`) now publish **unverified historical
+inventories**, not measured coverage (BUG-007). Broad feature claims, binary
+addresses, manual page ranges and ownership mappings in the old inputs were
+not individually validated. They must not become coverage merely because a
+related test file exists. No whole-project coverage percentage is asserted.
+
+The shared generator policy separates reviewed test selectors and their actual
+assertions from the inventory: image-byte checks, static source checks and React
+controls with mocked transport have different scopes. React Vitest/Playwright
+suites exist; native acceptance and hardware parity require their own dated
+validation. Five regression checks enforce reproducible committed output and
+prevent unsupported badges from returning. See
+[S2 validation](validation/s2-bugs-2026-10-11.json).
 
 For any promoted coverage claim record owner, specific test, assertion,
-execution result, and scope. Separate identified feature, implemented model,
-tested behavior, and physical parity. Keep generated tables reproducible through
-`scripts/generate_{coverage,exhaustive,ui_coverage,manual_coverage}_matrix.py`;
-repair their inputs before publishing stronger claims.
+execution result and scope. Separate identified feature, implemented model,
+tested behavior and physical parity. Regenerate tables through
+`scripts/generate_{coverage,exhaustive,ui_coverage,manual_coverage}_matrix.py`.
 
 ## Functional inventory and gaps
 

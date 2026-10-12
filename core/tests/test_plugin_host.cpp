@@ -319,7 +319,7 @@ void test_vst3_plugin_lifecycle_and_audio() {
     void* plugin_obj = nullptr;
     assert(factory->createInstance(nullptr, nullptr, &plugin_obj) == kInvalidArgument);
     assert(plugin_obj == nullptr);
-    TUID component_iid = INLINE_UID(0xE8318227, 0x79A447F6, 0x8E6AEF5D, 0xDC202293);
+    TUID component_iid = INLINE_UID(0xE831FF31, 0xF2D54301, 0x928EBBEE, 0x25697802);
     TUID unknown_iid{};
     TUID retired_fx = INLINE_UID(0x53373630, 0x56535433, 0x46585052, 0x30303032);
     plugin_obj = reinterpret_cast<void*>(1);

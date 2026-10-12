@@ -1,4 +1,5 @@
 #pragma once
+#include "s760_media_library.hpp"
 
 // configure_native() selects the real isolated runtime implementation. Historical
 // scaffold comments/tests below describe only the unconfigured buffer-only mode.
@@ -192,6 +193,7 @@ public:
     //      "gotek_next"    -> bit 0x02  (IPT_BUTTON5, "Gotek Next Image")
     //      "gotek_select"  -> bit 0x04  (IPT_BUTTON6, "Gotek Select / Push")
     //  Any other id is ignored.
+    bool apply_mouse_button(int button, bool down);
     void apply_button(const std::string& id, bool pressed);
 
     // -- Dial-delta encoder application (task 7.3, Requirement 6.2) ---------
@@ -226,6 +228,8 @@ public:
     //  behavior is unambiguous and directly testable (task 7.4's property test
     //  reads it via encoder_detents()).
     void apply_dial_delta(int delta);
+    bool apply_native_dial(const std::string& id, int delta);
+    int native_output_level() const { return m_output_level; }
 
     // -- id-aware DIAL_DELTA (task 7.7, Requirements 6.2, 6.4) --------------
     //
@@ -388,6 +392,11 @@ public:
     // false (no attempt made yet). last_mount_error() holds the path of the
     // last failed mount (empty when the last attempt succeeded or none was
     // made). Const so tests observe the outcome without mutating state.
+    MediaLibrary& media_library() {return m_media;}
+    void restore_media(MediaLibrary::Snapshot state) {state.validate();auto name=std::filesystem::u8path(state.inserted).filename().u8string();m_media.commit(std::move(state));m_last_inserted_disk=std::move(name);m_last_mount_error.clear();}
+    std::vector<std::string> media_paths() const { return m_media.state().paths; }
+    std::string last_inserted_path() const { return m_media.state().inserted; }
+    std::string last_inserted_disk() const { return std::filesystem::u8path(m_media.state().inserted).filename().u8string(); }
     bool last_mount_ok() const { return m_last_mount_ok; }
     const std::string& last_mount_error() const { return m_last_mount_error; }
 
@@ -412,6 +421,7 @@ public:
     const std::vector<uint8_t>& maincpu_region() const { return m_maincpu_region; }
 
 private:
+    int m_output_level=100;
     std::optional<NativeRuntimeConfig> m_native_config;
     std::unique_ptr<NativeRuntimeClient> m_native;
     std::string m_native_error;
@@ -493,6 +503,8 @@ private:
     // mount m_last_mount_error records the offending path (empty on success).
     bool        m_last_mount_ok = false;
     std::string m_last_mount_error;
+    std::string m_last_inserted_disk;
+    MediaLibrary m_media;
 
     // --- Cached display rasters (protocol-shaped) --------------------------
     // m_crt_raster : 640x480 RGBA8888 payload (payload_size(RGBA8888,640,480)).

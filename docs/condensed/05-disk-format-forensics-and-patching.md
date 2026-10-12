@@ -21,6 +21,21 @@ after host publication; subsequent writes remain dirty. Native regression covers
 Firmware empty-drive behavior, shutdown/crash recovery, formatting, firmware
 write protection, SCSI saves and full recall remain open.
 
+## SCSI device write contract
+
+WRITE(6)/WRITE(10) commit a complete payload to private target memory at the
+requested LBA. The original library image is unchanged. Incomplete or reset
+transfers leave sectors unchanged. CD-ROM writes reject with DATA PROTECT
+(7/27); out-of-range reads/writes reject with ILLEGAL REQUEST (5/21). Sense is
+per-target and included in checkpoints. Zero count in a ten-byte command
+completes immediately; WRITE(6) count zero transfers 256 blocks.
+
+The generated-media device probe verifies readback, neighboring sectors,
+protection, range failures, reset interruption, and warm/cold recovery of a
+partial nonzero-LBA write. This fixes BUG-015's discarded-payload defect, not
+firmware SCSI Save/reload or host-file export qualification. Those workflows
+remain open. See [validation](validation/s2-scsi-and-stack-2026-10-11.json).
+
 ## Earlier format research
 
 Updated mapping evidence (findings53/54): ROM loader copies file4800..1007FF

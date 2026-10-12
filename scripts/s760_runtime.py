@@ -154,6 +154,7 @@ class NativeRuntime:
                        S760_MEDIA_EXPORT=str((cfg.state_dir / 'media-export.img').resolve()),
                        S760_MEDIA_STATUS=str((cfg.state_dir / 'media-status.json').resolve()),
                        S760_F00A='00', S760_IC4_MIDI_EXPERIMENT='1', S760_NATIVE_INTERPOLATION_MONITOR='1',
+                       S760_NATIVE_VALUE_ENCODER='1',
                        S760_RUNTIME_PORT=str(listener.getsockname()[1]), S760_RUNTIME_TOKEN=token,
                        S760_RUNTIME_MIDI_PORT=str(midi_listener.getsockname()[1]))
             slot = cfg.state_dir / 'inserted-floppy.img'

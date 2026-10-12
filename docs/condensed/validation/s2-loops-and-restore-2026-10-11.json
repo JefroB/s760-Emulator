@@ -1,0 +1,320 @@
+{
+  "date": "2026-10-11",
+  "revision": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "worktree": "dirty; hashes identify tested state",
+  "identities_sha256": {
+    "core/src/s760_native_runtime.cpp": "28efb74baa22d1b122d62212db9f441d43b68f4c0c98fef0ef3274051d1f4b62",
+    "core/tests/test_native_runtime.cpp": "7b4dd24a032e08cfc827432454d8177a9325b030690dec0a1023b1fbc0ae0015",
+    "scripts/verify_native_runtime.py": "d28dccefbe08287062e66f47de6febef7c2b3f13bb04400ed860c01b8ee7b97e",
+    "scripts/s760_runtime.lua": "4cf01531c258027090c9f39d2e3f4d7ff3beb329f783741ab1fa32eb915ff917",
+    "scripts/s760_runtime.py": "7a7bad853f4908c3335b7eeb7f6361707b5fbe2990574f5a7b770b6fbe6d3bd7",
+    "mame-source/src/mame/roland/s760.cpp": "751ff50e6d4d7f3608cdb7c6ec090e33b40166a59561c71dfdb79c4644bba2cb",
+    "mame-source/mames760.exe": "4be1a31191d11354f49f78337f316d6dd150fac5f8142ac188cd9934f4d018a1",
+    "build/Release/s760_native_runtime_tests.exe": "999b096c05e180cc12455cfff5c337fff5b9c63dbe1521d232caddfc9a7d6e76",
+    "build/Release/s760_native_plugin_tests.exe": "987b3aa7a696aa9ecd2a3b26a14693c9a8ac0363c6ee97f9f074e962b58c0fec",
+    "roms/FDD/ROBOLOOP.IMG": "65f8a8353d4e5bedfa1cc0f0d600012cf6946cda0129ec96363f49a91cb43060",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "BUG-003": {
+    "status": "FIXED for supported 44.1 kHz native profile; pre-existing loop implementation now acceptance tested",
+    "result": {
+      "passed": true,
+      "rate": 44100,
+      "rows": [
+        {
+          "mode": 0,
+          "note": 60,
+          "sign_match": 1.0,
+          "peak": 0.002532482147216797,
+          "held_peak": 0.002532482147216797,
+          "first_nonzero": 2326,
+          "last_nonzero": 147843
+        },
+        {
+          "mode": 1,
+          "note": 61,
+          "sign_match": 1.0,
+          "peak": 0.002532482147216797,
+          "held_peak": 0.002532482147216797,
+          "first_nonzero": 2321,
+          "last_nonzero": 148031
+        },
+        {
+          "mode": 2,
+          "note": 62,
+          "sign_match": null,
+          "peak": 0.002532482147216797,
+          "held_peak": 0.0,
+          "first_nonzero": 2321,
+          "last_nonzero": 4367
+        },
+        {
+          "mode": 3,
+          "note": 63,
+          "sign_match": 1.0,
+          "peak": 0.002532482147216797,
+          "held_peak": 0.002532482147216797,
+          "first_nonzero": 2321,
+          "last_nonzero": 137360
+        },
+        {
+          "mode": 4,
+          "note": 64,
+          "sign_match": 1.0,
+          "peak": 0.002532482147216797,
+          "held_peak": 0.002532482147216797,
+          "first_nonzero": 2321,
+          "last_nonzero": 148662
+        },
+        {
+          "mode": 5,
+          "note": 65,
+          "sign_match": null,
+          "peak": 0.002532482147216797,
+          "held_peak": 0.0,
+          "first_nonzero": 2321,
+          "last_nonzero": 4368
+        },
+        {
+          "mode": 6,
+          "note": 66,
+          "sign_match": 1.0,
+          "peak": 0.002532482147216797,
+          "held_peak": 0.002532482147216797,
+          "first_nonzero": 2322,
+          "last_nonzero": 148234
+        }
+      ],
+      "scope": "Current default native profile, ROBOLOOP firmware load; not hardware parity"
+    },
+    "command": "python scripts/verify_native_runtime.py --loop-modes --sample-disk roms/FDD/ROBOLOOP.IMG --state-dir <fresh-private-dir>",
+    "limits": "Unity-pitch fixture; no new hardware captures, other clock/flag combinations or full chip parity"
+  },
+  "BUG-033": {
+    "status": "OPEN",
+    "failure_logs": [
+      "state159-repeat-1.log",
+      "state159-trace-repeat-5.log",
+      "cpp-start159.log",
+      "cpp-multi159.log"
+    ],
+    "failure": "Pause-stage restore timeout also occurs without checkpoints. Winsock 10060 awaiting four-byte response header. Single-runtime probe succeeded 35 times before failure. Multi-instance probe also failed.",
+    "python_immediate": [
+      {
+        "i": 0,
+        "ok": true,
+        "seconds": 0.7559111000155099
+      },
+      {
+        "i": 1,
+        "ok": true,
+        "seconds": 0.626575700007379
+      },
+      {
+        "i": 2,
+        "ok": true,
+        "seconds": 0.5928640000056475
+      },
+      {
+        "i": 3,
+        "ok": true,
+        "seconds": 0.6384437000378966
+      },
+      {
+        "i": 4,
+        "ok": true,
+        "seconds": 0.6009297000127845
+      },
+      {
+        "i": 5,
+        "ok": true,
+        "seconds": 0.592908599996008
+      },
+      {
+        "i": 6,
+        "ok": true,
+        "seconds": 0.5901795999961905
+      },
+      {
+        "i": 7,
+        "ok": true,
+        "seconds": 0.602629299974069
+      },
+      {
+        "i": 8,
+        "ok": true,
+        "seconds": 0.5912206000066362
+      },
+      {
+        "i": 9,
+        "ok": true,
+        "seconds": 0.5912455000216141
+      },
+      {
+        "i": 10,
+        "ok": true,
+        "seconds": 0.591919099970255
+      },
+      {
+        "i": 11,
+        "ok": true,
+        "seconds": 0.5905048999702558
+      },
+      {
+        "i": 12,
+        "ok": true,
+        "seconds": 0.6386083000106737
+      },
+      {
+        "i": 13,
+        "ok": true,
+        "seconds": 0.6176357999793254
+      },
+      {
+        "i": 14,
+        "ok": true,
+        "seconds": 0.6122131999582052
+      },
+      {
+        "i": 15,
+        "ok": true,
+        "seconds": 0.6059679999598302
+      },
+      {
+        "i": 16,
+        "ok": true,
+        "seconds": 0.5953137999749742
+      },
+      {
+        "i": 17,
+        "ok": true,
+        "seconds": 0.5920409000245854
+      },
+      {
+        "i": 18,
+        "ok": true,
+        "seconds": 0.5895094000152312
+      },
+      {
+        "i": 19,
+        "ok": true,
+        "seconds": 0.5941616000491194
+      },
+      {
+        "i": 20,
+        "ok": true,
+        "seconds": 0.5937918999698013
+      },
+      {
+        "i": 21,
+        "ok": true,
+        "seconds": 0.6007149000070058
+      },
+      {
+        "i": 22,
+        "ok": true,
+        "seconds": 0.5940553999971598
+      },
+      {
+        "i": 23,
+        "ok": true,
+        "seconds": 0.5895409000222571
+      },
+      {
+        "i": 24,
+        "ok": true,
+        "seconds": 0.5912477999809198
+      },
+      {
+        "i": 25,
+        "ok": true,
+        "seconds": 0.6370417000143789
+      },
+      {
+        "i": 26,
+        "ok": true,
+        "seconds": 0.5879531999817118
+      },
+      {
+        "i": 27,
+        "ok": true,
+        "seconds": 0.5935091000283137
+      },
+      {
+        "i": 28,
+        "ok": true,
+        "seconds": 0.7051602000137791
+      },
+      {
+        "i": 29,
+        "ok": true,
+        "seconds": 0.6171164999832399
+      }
+    ],
+    "python_delayed": [
+      {
+        "i": 0,
+        "ok": true,
+        "seconds": 3.706150999991223
+      },
+      {
+        "i": 1,
+        "ok": true,
+        "seconds": 3.684105599997565
+      },
+      {
+        "i": 2,
+        "ok": true,
+        "seconds": 3.6588299000286497
+      },
+      {
+        "i": 3,
+        "ok": true,
+        "seconds": 3.661789499979932
+      },
+      {
+        "i": 4,
+        "ok": true,
+        "seconds": 3.683756100013852
+      },
+      {
+        "i": 5,
+        "ok": true,
+        "seconds": 3.6931827000225894
+      },
+      {
+        "i": 6,
+        "ok": true,
+        "seconds": 3.691259999992326
+      },
+      {
+        "i": 7,
+        "ok": true,
+        "seconds": 3.748230000026524
+      }
+    ],
+    "passing_full_state_logs": [
+      "state159-before.log",
+      "state159-traced.log",
+      "state159-trace-repeat-1.log",
+      "state159-trace-repeat-2.log",
+      "state159-trace-repeat-3.log",
+      "state159-trace-repeat-4.log"
+    ],
+    "reproducer": "build/Release/s760_native_runtime_tests.exe D:/S-760 <fresh-private-dir> --startup-repeats",
+    "diagnostics": "Socket exceptions distinguish EOF, Winsock code and byte count. Temporary flushed Lua control/frame trace removed; original Lua SHA256 restored. Root cause not established."
+  },
+  "BUG-004": "OPEN; no invented FIFO/vector arbitration changes",
+  "checks": {
+    "python": "266 passed in 36.00s",
+    "cpp": "Six suites passed: core, plugin, bridge, plugin editor, telemetry, native stream",
+    "build": "Full CMake Release /Z7 /m:1 exit 0; build159-final.log",
+    "whitespace": "git diff --check passed for changed files"
+  },
+  "limitations": [
+    "No runtime behavior or timeout changed to hide the intermittent failure.",
+    "Existing binary/package and same-build state compatibility constraints apply.",
+    "No UI layout changes or firmware modifications."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-11",
+  "base_commit": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "source": "uncommitted working tree identified by file hashes",
+  "host": "SoundCheck 1.0.0 Windows x64, native Steinberg SDK backend, private rebuild; sole host source change binds listener to 127.0.0.1",
+  "sdk_path": "D:/BreakJob/third_party/vst3sdk",
+  "sdk_header_sha256": "c451aa3cbb6047d6b296e81ac3d654ff2c68ccec228d50fe00d7378ae9504c57",
+  "sha256": {
+    "core/include/s760/vst3_defs.h": "9c19a8c7abc30972487d6a4543fc4e391ccab96f88a2e3c2fc005b658d6d344b",
+    "core/src/s760_vst3_plugin.cpp": "fd2d7a2b676e9942a3544375d0e74b55ce3650984172f962749198541ac7e62b",
+    "core/tests/test_vst3_sdk.cpp": "3e29551042637c2b4bba9c01b6fe480a4d8331a4da3e3fb2892d8909b5d7cb69",
+    "core/tests/test_native_plugin.cpp": "1702235b9455124d310d300dd9d3b7fb69bd2bc4a9918cb16a62cb1fb11c43c8",
+    "build/Release/Roland_S760.vst3": "ea436f755deb91b249e85eed4779839f8e8a2e100a219001db8ae86485db8106",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "3e825930c3e9bd7fc5f4d64a1c7ec514410b2f50065e61f171c9d81a2ba6e826",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "0d10e2e04d8bbeb0aa13f49924e664526341623097c63cd6c64119ec4fd8f9a7",
+    "mame-source/mames760.exe": "b45a19278d9f5958b0b9d5a4bfeff58a343d57db21e787dbc0eef1faf388f676",
+    "scripts/s760_runtime.lua": "a8acc139b18a72687d2a9a587b5d10f573146e772b56728a611aa217223146fc",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "sdk_test": "s760_vst3_sdk_tests PLUGIN; configure S760_VST3_SDK_PATH to a local SDK. Needs absolute S760_NATIVE_ROOT, S760_NATIVE_STATE_ROOT, S760_BOOT_ROM and S760_SYSTEM_DISK. Original module failed factory metadata; corrected module passes.",
+  "soundcheck_commands": [
+    "load_plugin path=concrete-WebView2-plugin",
+    "process_test_chunk instanceId=loadedId numBlocks=1, repeated 3500 times with 12ms delay",
+    "capture_editor until rendered content (bounded retry)",
+    "close_editor; open_editor; repeat capture",
+    "remove_plugin"
+  ],
+  "soundcheck_log": [
+    "{\"data\": {\"instanceId\": \"vst_973385_1\", \"name\": \"Roland S-760 Sampler\", \"parameters\": [], \"subcategories\": \"\", \"type\": \"instrument\", \"vendor\": \"S-760 Emulator Contributors\", \"version\": \"\"}, \"id\": \"\", \"type\": \"plugin_loaded\"}",
+    "blocks 0",
+    "blocks 1000",
+    "blocks 2000",
+    "blocks 3000",
+    "before rendered at attempt 0",
+    "after rendered at attempt 1",
+    "{\"data\": {\"instanceId\": \"vst_973385_1\"}, \"type\": \"plugin_removed\"}"
+  ],
+  "captures": {
+    "before": "08449e1eb8cbdcb95da2a19f0afd3e9c1c0eaa0489c708e26ae4609fafaddff1",
+    "after": "c74637577e90276a8f6b3e349bd1dac8d26f0a55623a2dd9e3ca3068b2e55016"
+  },
+  "factory_audio": [
+    "Exported factory: native-only selection, independent children and requested interfaces passed",
+    "Expected MIDI 4359723,4800729; status={\"audio_dropped\":0,\"midi_error\":\"\",\"state\":\"paused\",\"midi_pending\":0,\"seconds\":110.76666666667,\"midi_delivered\":[{\"sample\":4800729,\"seconds\":108.86006802721}],\"ok\":true,\"firmware_ready\":\"unknown\",\"audio_enabled\":true}",
+    "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=576000 rate=48000 reference_exact=1 peak=0.0451473 tail=0 first_audible=13857 reported_latency=13393 paced=1 varied=1 max_callback_us=895.2 max_deadline_fraction=0.0840892 missed_deadlines=0"
+  ],
+  "regressions": {
+    "python": "246 passed in 38.63s",
+    "cpp": "core, plugin, plugin editor, bridge, native stream passed"
+  },
+  "limits": [
+    "SoundCheck audio metrics reflect silence without sample loaded, not playback acceptance",
+    "Host process_test_chunk ignores processor return codes and labels silence as dropout",
+    "Reopen screenshot at fixed 2 seconds was white; bounded actual-content check replaces acknowledgment-only criterion",
+    "SDK probe tests actual foreign interfaces; other DAWs and 32-bit ABI not qualified",
+    "Demo chrome, plugin settings/failure UX and SoundCheck loaded-sample audio remain open",
+    "Old malformed class IDs not migrated; sealed distribution unchanged"
+  ]
+}

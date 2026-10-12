@@ -156,6 +156,9 @@ bool S760MameHost::init() {
         reset_cached_surfaces();
         try {
             m_native=std::make_unique<NativeRuntimeClient>(*m_native_config);
+            m_last_inserted_disk=m_native_config->system_disk.filename().u8string();
+            m_media.inserted(m_native_config->system_disk.u8string());
+            m_media.configure((m_native_config->root/"roms"/"FDD").u8string());
             m_initialized=true;
             return true;
         } catch(const std::exception& error) { m_native_error=error.what(); return false; }
@@ -202,7 +205,9 @@ bool S760MameHost::run_frame() {
     if (m_native) {
         // Native time is owned by MAME or the audio worker, never a UI tick.
         try {
-            const auto reply=m_native->request("{\"op\":\"frames\"}");
+            const auto reply=m_native->display_frames();
+            m_output_level=reply.output_level;
+            if(reply.crt.size()!=640*240*4 || reply.lcd.size()!=160*64*4) return false;
             std::vector<uint8_t> crt(640*480*4),lcd(1280,0);
             for(std::size_t y=0;y<240;++y) for(std::size_t x=0;x<640;++x) {
                 auto src=(y*640+x)*4;
@@ -444,7 +449,10 @@ void S760MameHost::send_midi_message(const uint8_t* msg, size_t len) {
 // ---------------------------------------------------------------------------
 bool S760MameHost::mount_disk(const std::string& path) {
     if(m_native) {
-        try { m_native->insert_media(path); m_last_mount_ok=true; m_last_mount_error.clear(); return true; }
+        try { auto metadata=m_media.with_inserted(path);
+            auto name=std::filesystem::u8path(path).filename().u8string();
+            m_native->insert_media(std::filesystem::u8path(path));m_media.commit(std::move(metadata));m_last_inserted_disk=std::move(name);
+            m_last_mount_ok=true; m_last_mount_error.clear(); return true; }
         catch(const std::exception& error) { m_last_mount_ok=false; m_last_mount_error=error.what(); return false; }
     }
     // Delegate to the owned drive manager's mount_floppy(), the SAME path the
@@ -527,11 +535,20 @@ const KeyMatrixBit* find_key_matrix_bit(const std::string& id) {
 
 } // namespace
 
+bool S760MameHost::apply_mouse_button(int button, bool down) {
+    if(!m_native || (button!=0 && button!=2)) return false;
+    try {
+        m_native->request(std::string("{\"op\":\"button\",\"port\":\":NATIVE_MOUSE_BUTTONS\",\"name\":\"")+
+            (button==0?"Mouse Left":"Mouse Right")+"\",\"down\":"+(down?"true":"false")+"}");
+        return true;
+    } catch(const std::exception& error) {m_native_error=error.what();return false;}
+}
+
 void S760MameHost::apply_button(const std::string& id, bool pressed) {
     if(m_native) {
         struct Mapping { const char* id; const char* port; const char* name; };
         static const Mapping inputs[]={
-            {"COMMAND",":PANEL0","Command"},{"EXIT",":PANEL1","Exit"},
+            {"MENU",":PANEL0","Value Menu"},{"COMMAND",":PANEL0","Command"},{"EXIT",":PANEL1","Exit"},
             {"MODE",":PANEL1","Mode"},{"UP",":PANEL1","Panel Up"},
             {"DOWN",":PANEL3","Panel Down"},{"LEFT",":PANEL2","Panel Left"},
             {"RIGHT",":PANEL0","Panel Right"},{"F1",":PANEL2","Panel F1"},
@@ -577,6 +594,14 @@ void S760MameHost::apply_dial_delta(int delta) {
     // deltas. After a frame-boundary reset, a single apply_dial_delta(d) yields
     // encoder_detents() == d (Property 10). A zero delta is a harmless no-op.
     m_encoder_detents += delta;
+}
+
+bool S760MameHost::apply_native_dial(const std::string& id, int delta) {
+    if (!m_native || (id != "ALPHA" && id != "VOLUME") || delta < -32 || delta > 32) return false;
+    try {
+        m_native->request("{\"op\":\"dial\",\"id\":\"" + id + "\",\"delta\":" + std::to_string(delta) + "}");
+        return true;
+    } catch (...) { return false; }
 }
 
 namespace {

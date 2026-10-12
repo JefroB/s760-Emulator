@@ -49,6 +49,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 namespace s760 {
 namespace bridge {
@@ -114,7 +115,10 @@ enum class ClientMessageType : uint8_t {
     DIAL_DELTA,
     MOUSE_MOVE,
     MOUSE_CLICK,
+    MOUSE_BUTTON,
     MOUNT_DISK,
+    CONFIGURE_MEDIA_LIBRARY,
+    SELECT_MEDIA,
     NOTE_ON,
     NOTE_OFF,
 };
@@ -127,7 +131,10 @@ inline const char* to_string(ClientMessageType t) {
         case ClientMessageType::BUTTON_RELEASE: return "BUTTON_RELEASE";
         case ClientMessageType::DIAL_DELTA:     return "DIAL_DELTA";
         case ClientMessageType::MOUSE_MOVE:     return "MOUSE_MOVE";
+        case ClientMessageType::MOUSE_BUTTON: return "MOUSE_BUTTON";
         case ClientMessageType::MOUSE_CLICK:    return "MOUSE_CLICK";
+        case ClientMessageType::CONFIGURE_MEDIA_LIBRARY: return "CONFIGURE_MEDIA_LIBRARY";
+        case ClientMessageType::SELECT_MEDIA: return "SELECT_MEDIA";
         case ClientMessageType::MOUNT_DISK:     return "MOUNT_DISK";
         case ClientMessageType::NOTE_ON:        return "NOTE_ON";
         case ClientMessageType::NOTE_OFF:       return "NOTE_OFF";
@@ -141,7 +148,10 @@ inline bool parse_client_message_type(const std::string& s, ClientMessageType& o
     if (s == "BUTTON_RELEASE") { out = ClientMessageType::BUTTON_RELEASE; return true; }
     if (s == "DIAL_DELTA")     { out = ClientMessageType::DIAL_DELTA;     return true; }
     if (s == "MOUSE_MOVE")     { out = ClientMessageType::MOUSE_MOVE;     return true; }
+    if (s == "MOUSE_BUTTON") { out = ClientMessageType::MOUSE_BUTTON; return true; }
     if (s == "MOUSE_CLICK")    { out = ClientMessageType::MOUSE_CLICK;    return true; }
+    if (s == "CONFIGURE_MEDIA_LIBRARY") {out=ClientMessageType::CONFIGURE_MEDIA_LIBRARY;return true;}
+    if (s == "SELECT_MEDIA") {out=ClientMessageType::SELECT_MEDIA;return true;}
     if (s == "MOUNT_DISK")     { out = ClientMessageType::MOUNT_DISK;     return true; }
     if (s == "NOTE_ON")        { out = ClientMessageType::NOTE_ON;        return true; }
     if (s == "NOTE_OFF")       { out = ClientMessageType::NOTE_OFF;       return true; }
@@ -154,6 +164,7 @@ inline bool parse_client_message_type(const std::string& s, ClientMessageType& o
 // This struct is a convenience for the C++ bridge; the authoritative wire form
 // is JSON. (The bridge in task 3.2 chooses its own JSON library to populate it.)
 struct ClientPayload {
+    bool has_down = false; bool down = false; // explicit held mouse state
     bool        has_id       = false;  std::string id;        // button/encoder id
     bool        has_delta    = false;  double      delta = 0; // dial detents (signed)
     bool        has_x        = false;  double      x = 0;     // normalized [0,1]
@@ -212,6 +223,10 @@ struct ServerTelemetry {
     double      peakL        = 0.0;  // 0..1 output peak, left
     double      peakR        = 0.0;  // 0..1 output peak, right
     int         activeVoices = 0;    // currently sounding voices
+    std::string lastInsertedDisk;   // Last confirmed insertion, not checkpoint media identity.
+    std::string mediaError, lastInsertedPath, mediaFolder, selectedMediaPath, libraryError;
+    int outputLevel=100;
+    std::vector<std::string> mediaPaths;
     std::string currentMode;         // e.g. "PERFORM", "PATCH", "SAMPLE", ...
 };
 

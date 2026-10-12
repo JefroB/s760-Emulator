@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { SamplerState, SamplerMode, DiskImage } from '../types/sampler';
-import { useSurfaceCanvas } from '../bridge/BridgeContext';
-import { SurfaceId, CRT_WIDTH, CRT_HEIGHT } from '../bridge/S760BridgeClient';
+import { useBridgeClient, useBridgeStatus, useSurfaceCanvas } from '../bridge/BridgeContext';
+import { useNativePointer } from '../bridge/useNativePointer';
+import { detectEmbeddedTransport, SurfaceId, CRT_WIDTH, CRT_HEIGHT } from '../bridge/S760BridgeClient';
 
 interface OP760MonitorProps {
   state: SamplerState;
@@ -232,6 +233,9 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
   // Overlays the offline canvas; transparent until the first frame arrives, so
   // the local render shows through while disconnected.
   const crtLiveRef = useSurfaceCanvas(SurfaceId.CRT);
+  const embedded = !!detectEmbeddedTransport();
+  const live = useBridgeStatus() === 'connected';
+  const {release: releaseMouse, ...mouseHandlers} = useNativePointer(useBridgeClient(),live);
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 320, y: 120 });
   const [subPage, setSubPage] = useState<number>(0);
   const [activeModal, setActiveModal] = useState<'NONE' | 'MARK' | 'JUMP' | 'COM' | 'MENU' | 'CONFIRM' | 'VOLINFO' | 'WORKING'>('NONE');
@@ -2069,10 +2073,14 @@ export const OP760Monitor: React.FC<OP760MonitorProps> = ({
                 so the offline canvas above shows through when disconnected. */}
             <canvas
               ref={crtLiveRef}
+              {...mouseHandlers}
+              onContextMenu={e => e.preventDefault()}
               width={CRT_WIDTH}
               height={CRT_HEIGHT}
-              className="absolute inset-0 w-full h-full pointer-events-none block"
-              style={{ imageRendering: 'pixelated' }}
+              className="absolute inset-0 w-full h-full block cursor-crosshair"
+              // Native firmware renders200 of240 transport rows. Preserve pixels,
+              // expand the live canvas and clip unused rows in the CRT viewport.
+              style={{ imageRendering: 'pixelated', height:embedded?'120%':undefined, pointerEvents:live?'auto':'none' }}
             />
 
             {/* Subtle CRT Phosphor Scanline Mesh */}

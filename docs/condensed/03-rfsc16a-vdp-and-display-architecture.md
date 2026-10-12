@@ -1,5 +1,15 @@
 # VDP & Display Implementation
 
+Native LCD startup correction (2026-10-11, finding160): SED1330 scalar register
+storage is initialized deterministically, with display off until programmed and
+character pitch 1. Previously only the busy flag was initialized; a stalled
+fresh child's stack was inside the LCD renderer before its first frame callback.
+This caused host control timeouts and intermittent cold-restore failure (BUG-033).
+The defaults prevent undefined pre-configuration rendering; they are not measured
+hardware power-on values. Eighty fresh startups, cold exact PCM replay and native
+firmware display/audio acceptance pass. [Validation](validation/s2-startup-lcd-2026-10-11.json).
+
+
 User hardware observation (2026-10-10): hovered options have a white background with inverted text; hovering the Perform Play keyboard turns its surrounding border pink. Finding62 implements and checks both effects against guest VRAM and runtime screenshots. Exact analogue colours remain unmeasured.
 
 Latest display update: finding63, correcting finding62's text colours. Text RGB uses attribute bits4/5/6: the active Perform tab is red, B0/B1 labels yellow, E0 labels cyan. Native original-ROM boot now composes the guest graphics planes and uploaded text font. Perform hover reverses red/white text, keyboard hover turns its border pink, and Command/Exit remains functional. The colour/attribute model matches these observed transitions; exact output intensity, mask/alternate-font behavior, cursor pixels and other display modes remain provisional or unresolved.

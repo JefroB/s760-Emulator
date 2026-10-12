@@ -1,28 +1,15 @@
-"""
-Script to generate the complete, exhaustive Roland S-760 OS v2.24 Code & Subsystem Matrix.
-Covers the S760224.IMG binary layout, disassembly blocks, data structures, UI layouts,
-emulator implementation lines, and automated test coverage.
+"""Historical research catalogue; claims require individual revalidation.
 
-PROVENANCE POLICY (ui-consolidation spec, F4 / R3.1 / R3.2):
-- UI shell/chrome rows are owned by the React app in `google-ui/` and attributed to their real
-  owning component (OP760Monitor for CRT content; S760FrontPanel / RolandLCD / GotekBay for
-  physical shell). `google-ui/` has no automated test tooling yet (F5), so these rows are marked
-  "⚪ Untested" with no test reference. The old `tests/test_interactive_ui.py` only drives the
-  MAME driver via Lua and never loads the React components; it is NOT a valid test citation for
-  any React source line.
-- Hardware display controllers (Epson SED1335 LCD, Roland RFSC16A VDP) are the only display code
-  owned by `mame-source/src/mame/roland/s760.cpp`; they are covered by the real MAME unit tests
-  in `tests/test_lcd_mame.py` / `tests/test_vdp_mame.py`.
-- Every "✅ Tested" row cites a `tests/<file>.py` that actually exists. No synthetic test files or
-  `::test_*` IDs are emitted. Metrics are computed from the data, not hard-coded.
+See coverage_report.py for the shared evidence policy. Legacy tuple fields are
+retained as research input only; they do not drive coverage or ownership claims.
 """
 
 import os
 
 OUTPUT_PATH = "docs/OS_EXHAUSTIVE_CODE_MATRIX.md"
 
-TESTED = "✅ Tested"
-UNTESTED = "⚪ Untested"
+TESTED = "Unverified"
+UNTESTED = "Unverified"
 
 # Row tuple shape:
 # (offset, func, known, desc, tested, testable, difficulty, source_line, test_file)
@@ -117,7 +104,7 @@ EXHAUSTIVE_SECTIONS = [
     },
     {
         "section_title": "8. Complete UI Page State Machine (React shell — google-ui)",
-        "description": "Full UI page layouts, parameter fields, and mode screens. These are owned by the React app in google-ui/. Per F5, google-ui has no automated test tooling yet, so every page row is honestly '⚪ Untested' until the React Vitest/Playwright suite lands (spec Phase 4). The old test_interactive_ui.py drove only the MAME driver and never loaded these components.",
+        "description": "Historical UI page mappings, not verified component ownership or per-page test coverage. Existing React suites do not automatically qualify firmware-page behavior.",
         "rows": [
             ("0x08D818 - 0x08D89F", "PERFORM Play 1 (01)", "Yes", "Volume, Pan, Output Assign, Mode (Normal/Mono), Level Meter Stack, Part Assignment", UNTESTED, "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:590", ""),
             ("0x08D8A0 - 0x08D91F", "PERFORM EQ (02)", "Yes", "Bass Freq/Gain, Treble Freq/Gain, Output Routing, Master EQ Curves", UNTESTED, "Yes", "Low", "google-ui/src/components/OP760Monitor.tsx:610", ""),
@@ -173,62 +160,13 @@ EXHAUSTIVE_SECTIONS = [
 
 
 def generate_markdown():
-    total_entries = sum(len(sec["rows"]) for sec in EXHAUSTIVE_SECTIONS)
-    known_entries = sum(1 for sec in EXHAUSTIVE_SECTIONS for r in sec["rows"] if r[2] == "Yes")
-    tested_entries = sum(1 for sec in EXHAUSTIVE_SECTIONS for r in sec["rows"] if "✅" in r[4])
-    testable_entries = sum(1 for sec in EXHAUSTIVE_SECTIONS for r in sec["rows"] if r[5] == "Yes")
-
-    pct_known = (known_entries / total_entries * 100.0) if total_entries else 0.0
-    pct_tested = (tested_entries / total_entries * 100.0) if total_entries else 0.0
-    pct_testable = (testable_entries / total_entries * 100.0) if total_entries else 0.0
-
-    md = []
-    md.append("# Roland S-760 OS v2.24 — Exhaustive Code, Routine & Subsystem Matrix\n")
-    md.append("This document maps the Roland S-760 OS v2.24 binary (`S760224.IMG`) memory ranges and "
-              "subsystems to their real owning implementation — the C++ core (`core/`), the MAME driver "
-              "(`mame-source/`), or the React shell (`google-ui/`) — with honest automated-test status.\n")
-    md.append("---\n")
-    md.append("## Provenance Notes\n")
-    md.append("- **UI shell/chrome** rows are owned by the React app in `google-ui/` and attributed to their "
-              "real owning component. `google-ui/` has no automated test tooling yet, so those rows are marked "
-              "**⚪ Untested**. The former `tests/test_interactive_ui.py` only drove the MAME driver via Lua and "
-              "never loaded the React components, so it is not cited for any React source line.\n")
-    md.append("- **Hardware display controllers** (Epson SED1335 LCD, Roland RFSC16A VDP) are the only display "
-              "code owned by `s760.cpp`; they are covered by the MAME unit tests in `tests/test_lcd_mame.py` / "
-              "`tests/test_vdp_mame.py`.\n")
-    md.append("- Every **✅ Tested** row cites a `tests/<file>.py` that actually exists.\n")
-    md.append("---\n")
-    md.append("## Executive Metrics\n")
-    md.append(f"- **Total Distinct OS Blocks / Modules Mapped:** {total_entries}")
-    md.append(f"- **Reverse-Engineered Functionality Known:** {known_entries} / {total_entries} (**{pct_known:.1f}%**)")
-    md.append(f"- **Automated Test Coverage:** {tested_entries} / {total_entries} (**{pct_tested:.1f}%**)")
-    md.append(f"- **Headless Automation Testability:** {testable_entries} / {total_entries} (**{pct_testable:.1f}%**)\n")
-    md.append("---\n")
-
-    for section in EXHAUSTIVE_SECTIONS:
-        md.append(f"## {section['section_title']}\n")
-        md.append(f"> {section['description']}\n")
-        md.append("| Line of Code / ROM Offset | Subsystem / Function | Known? | What Does It Do? (Function / Subsystem Context) | Tested? | Testable? | Test Difficulty | Owning Source Line | Test Reference File |")
-        md.append("| :--- | :--- | :---: | :--- | :---: | :---: | :---: | :--- | :--- |")
-        for r in section["rows"]:
-            offset, func, known, desc, tested, testable, diff, src, test_file = r
-            test_cell = f"[`{test_file}`]({test_file})" if test_file else "—"
-            md.append(f"| `{offset}` | **{func}** | {known} | {desc} | {tested} | {testable} | `{diff}` | [`{src}`]({src}) | {test_cell} |")
-        md.append("\n---\n")
-
-    md.append("## Verification & Quality Assurance Policy\n")
-    md.append("1. **Honest provenance:** every row is attributed to the file that actually implements it, and "
-              "every '✅ Tested' row points to a real, existing test function in `tests/`.\n")
-    md.append("2. **Parity Testing:** C++ DSP/disk implementations are byte-tested against the Python reference "
-              "in `tests/test_cpp_parity.py`.\n")
-    md.append("3. **Pending React tests:** `google-ui/` shell rows become testable once the Vitest/Playwright "
-              "suite is added (ui-consolidation spec Phase 4).\n")
-
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
-        f.write("\n".join(md))
-
-    print(f"Exhaustive matrix successfully written to {OUTPUT_PATH}")
+    if __package__:
+        from .coverage_report import write_report
+    else:
+        from coverage_report import write_report
+    sections = [(s['section_title'], [(r[1], r[0]) for r in s['rows']]) for s in EXHAUSTIVE_SECTIONS]
+    write_report(OUTPUT_PATH, 'OS code research inventory', sections)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     generate_markdown()

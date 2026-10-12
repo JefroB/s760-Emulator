@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-11",
+  "source_base": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "source_state": "uncommitted working tree; file hashes identify tested sources",
+  "sha256": {
+    "core/src/s760_native_runtime.cpp": "6cf3902bf4bce708cbec8bde7161b9a440dd490b8c1859c817ade516f0028a48",
+    "core/src/s760_bridge.cpp": "5ce461615b6e550175987041b937958a230a336d065300fffd63c3d93d52090e",
+    "core/src/s760_mame_host.cpp": "268d38c42e16861f28ec5986a7d131ea6a657646cfcaccbc8562bafa4b8055b7",
+    "core/src/s760_vst3_plugin.cpp": "868cd1ae13101af81748dce849aca56f098c245513f909c50f18958f352d6d9b",
+    "core/tests/test_native_plugin.cpp": "bfbb8d7823131a09cf4c94504bb3c7d0522481f8c262976d4d286e5447eaa0c2",
+    "core/tests/native_editor_acceptance.hpp": "61adcbaae56a51f1a5ddc45032bafd83b485d92ff4380e34c0f82c6a30352ec9",
+    "scripts/s760_runtime.lua": "a8acc139b18a72687d2a9a587b5d10f573146e772b56728a611aa217223146fc",
+    "mame-source/mames760.exe": "b45a19278d9f5958b0b9d5a4bfeff58a343d57db21e787dbc0eef1faf388f676",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "google-ui/dist/index.html": "5a80860472bafe707c307b5ac8a8ab859e1e8b1b20693ee6d48bd9b2dfdd123e",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/s760_native_editor_tests.exe": "08269308923a3eb5b977b76113c12bd7f521c43f370c136874fd2b0799830459"
+  },
+  "command": "s760_native_editor_tests.exe D:/S-760 PRIVATE_STATE --paced-var RATE 12",
+  "prerequisites": "Windows x64, WebView2 runtime, opt-in SDK build, built google-ui/dist, user-supplied boot/system firmware and ROBOFULL fixture",
+  "results": {
+    "44100": [
+      "Native editor: React pixel agreement before/after reopen, same child, concurrent exact PCM",
+      "Expected MIDI 3951063,4392069; status={\"midi_pending\":0,\"audio_dropped\":0,\"ok\":true,\"firmware_ready\":\"unknown\",\"seconds\":101.45,\"state\":\"paused\",\"midi_delivered\":[{\"sample\":4392069,\"seconds\":99.593401360544}],\"midi_error\":\"\",\"audio_enabled\":true}",
+      "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=529200 rate=44100 reference_exact=1 peak=0.0445375 tail=0 first_audible=13320 reported_latency=12288 paced=1 varied=1 max_callback_us=118.4 max_deadline_fraction=0.02205 missed_deadlines=0"
+    ],
+    "48000": [
+      "Native editor: React pixel agreement before/after reopen, same child, concurrent exact PCM",
+      "Expected MIDI 3926072,4367078; status={\"audio_enabled\":true,\"state\":\"paused\",\"seconds\":100.93333333333,\"ok\":true,\"midi_pending\":0,\"audio_dropped\":0,\"midi_error\":\"\",\"firmware_ready\":\"unknown\",\"midi_delivered\":[{\"seconds\":99.026712018141,\"sample\":4367078}]}",
+      "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=576000 rate=48000 reference_exact=1 peak=0.0445375 tail=0 first_audible=14176 reported_latency=13393 paced=1 varied=1 max_callback_us=600.9 max_deadline_fraction=0.130425 missed_deadlines=0"
+    ],
+    "96000": [
+      "Native editor: React pixel agreement before/after reopen, same child, concurrent exact PCM",
+      "Expected MIDI 3926799,4367802; status={\"midi_error\":\"\",\"ok\":true,\"state\":\"paused\",\"audio_enabled\":true,\"seconds\":100.93333333333,\"midi_pending\":0,\"audio_dropped\":0,\"midi_delivered\":[{\"seconds\":99.043129251701,\"sample\":4367802}],\"firmware_ready\":\"unknown\"}",
+      "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=1152000 rate=96000 reference_exact=1 peak=0.0446113 tail=0 first_audible=28013 reported_latency=26785 paced=1 varied=1 max_callback_us=24.9 max_deadline_fraction=0.0273 missed_deadlines=0"
+    ]
+  },
+  "assertions": [
+    "sampled React CRT canvas/wire agreement before and after reopen",
+    "same native child PID",
+    "display cache emulation time advances",
+    "all PCM frames exactly equal offline reference",
+    "zero dropped frames and missed callback deadlines",
+    "supported bridge Mode button changes firmware display",
+    "invalid panel/pointer and unsupported dial/click reject"
+  ],
+  "regressions": {
+    "cpp": "core, plugin, plugin-editor (stub), bridge, native stream, rate converter, audio queue passed",
+    "pytest": "246 passed",
+    "runtime": {
+      "native_boot_frames": true,
+      "long_mouse_jump": [
+        300,
+        120
+      ],
+      "midi_note": 60,
+      "held_peak_pcm16": 1459.0,
+      "release_tail_peak_pcm16": 0,
+      "sample_rate": 44100,
+      "note_start": 78.483333333333,
+      "note_release": 80.633333333333,
+      "process_shutdown": "clean",
+      "pull_render": {
+        "sizes": [
+          1,
+          63,
+          127,
+          256,
+          511,
+          1024,
+          4096,
+          8192
+        ],
+        "frames": 122616,
+        "wav_max_error_pcm16": 0.9999065399169922,
+        "dropped_frames": 0,
+        "paused_between_requests": true,
+        "release_tail_silent": true
+      },
+      "scheduled_midi": [
+        {
+          "sample": 3656155,
+          "seconds": 82.906009070295
+        },
+        {
+          "sample": 3700255,
+          "seconds": 83.906009070295
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Direct native plugin and common editor controller; not exported SDK/DAW IPlugView acceptance",
+    "12 second paced audio per rate, not sustained stress qualification",
+    "App demo chrome remains; full rack controls and error UX incomplete",
+    "Original separate-frame-request test failed fault 3 at block 374",
+    "Concurrent full C++ rebuild test at 44100 failed fault 3 block 389; final rate tests run after build",
+    "Reference PCM agreement is not additional physical hardware parity",
+    "Sealed distribution artifact unchanged"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-11",
+  "objective": "Configurable recursive full-rack media libraries and session serialization",
+  "result": "passed",
+  "sha256": {
+    "core/include/s760/s760_media_library.hpp": "dd86f89e29d37a496e0d0e99cc982eeb2f4a946ea7f12eabe17069743c8e8f23",
+    "core/include/s760/s760_native_plugin_state.hpp": "1dd25669f9c0f075262e64c66be650c5edfefc061aeb779f0a4cef03f3fd5870",
+    "core/src/s760_mame_host.cpp": "a47326b4ec0a36866667805dd4977ba194166c85d53fc1009e297f0ac6ae092b",
+    "core/src/s760_bridge.cpp": "77d702b169214789dce7b27062e9f0eab8f88910cc4364490c2bee15c8a1676a",
+    "core/src/s760_vst3_plugin.cpp": "6b6fd8e5f925ad1ce10ea60564ad324de22bb9cd740f72a5d8493e7dd0feeec4",
+    "core/tests/native_state_acceptance.hpp": "7babfcfdb6d48429a08a28ef1f85b5a34a486c1eb2927caee74c2c7ffc705047",
+    "core/tests/test_native_plugin.cpp": "f7cd448c81b8876e72612ae3c0193a3dc40772dbe2c58817b3ee0fb6511be159",
+    "core/tests/test_media_library.cpp": "78eab8324947b63b0b1776b385d86a274d183b368ab2b6f79ac9ccaef83f0d76",
+    "google-ui/src/components/NativeDriveBay.tsx": "d3f5eccde48415bc65bafbb179dc118624e68bab9ef0adcd080590db59cf4539",
+    "google-ui/src/bridge/S760BridgeClient.ts": "c72ad84c673c429def93f93eeaaa5065309a4086fe4c226ddb36e7ea8c01ee6b",
+    "build/Release/s760_native_plugin_tests.exe": "3b6ba594a756b81a77fa8256b43d164849a61808a579d109a3d5f8e72b4e8a98",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "9e4208da7570fa838eb67d7ade7b54f9fac6554db2c1df9ede1d3519c58c9b53",
+    "mame-source/mames760.exe": "907a6347bbb076537de3989b724d3bb1892631853ef866a8a6f10d7646553e2b",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "unit": {
+    "mediaLibrary": "recursive .img, transactionality, selection, malformed metadata, v1/v2 compatibility passed",
+    "cppSuites": 6,
+    "reactFull": 110,
+    "reactFocusedFinal": 5,
+    "pytest": 246,
+    "typecheck": "passed"
+  },
+  "native": {
+    "command": "build/Release/s760_native_plugin_tests.exe D:/S-760 <private-state> --state 48000 3",
+    "fixture": "ROBOFULL.IMG loaded through original firmware",
+    "result": "Native plugin state passed rate=48000 exact_frames=240000 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1",
+    "mediaMetadataEquality": true,
+    "libraryAndMountedSourceRelocatedBeforeColdRestore": true,
+    "originalFilesUntouched": true
+  },
+  "soundcheck": {
+    "selectedPathAfterReopen": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\media156-soundcheck\\nested\\Z.img",
+    "nativeMenuInput": true,
+    "startupMediaList": true,
+    "recursiveConfiguredLibrary": true,
+    "rejectedMissingFolderWithoutMutation": true,
+    "uninsertedSelectionRestored": true
+  },
+  "retainedFailure": {
+    "path": "chatGPT-work/native156-missing-source.log",
+    "message": "Native runtime disconnected or timed out",
+    "stage": "Before sample loading; no mounted-source fixture created",
+    "retry": "Fresh private directory passed"
+  },
+  "limits": {
+    "images": 1024,
+    "directoryEntries": 100000,
+    "depth": 32,
+    "pathBytes": 4096,
+    "symlinks": "not followed",
+    "stateArchiveMiB": 266,
+    "legacyState": "v1 decoded with unknown media identity"
+  },
+  "remainingMilestone2": [
+    "Native dial/full rack integration, including BUG-030",
+    "Loaded-sample SoundCheck audio and plugin configuration/failure reporting"
+  ]
+}

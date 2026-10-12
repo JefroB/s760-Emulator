@@ -379,6 +379,18 @@ C016 read; per-channel type at 1ECA: type1 = continuing release, else clear wave
 enable). All seven implemented in the opt-in `S760_NATIVE_LOOP_MONITOR`; electrical
 timing, ack edge, source priority and fractional-pitch cases remain provisional.
 
+The current supported Python/C++ runtime profiles enable interpolation, which
+also enables this loop path. Fresh original-firmware load/playback with the
+identified ROBOLOOP disk verifies all seven modes at 44.1 kHz/unity pitch:
+forward/reverse/alternate sign sequences, one-shot completion while held, and
+note-off silence. BUG-003's assertion that the supported default still drops
+all non-forward modes was stale. This is a regression qualification of existing
+code, not a new hardware comparison or support claim for other sample clocks,
+flags or fractional pitches. Use `verify_native_runtime.py --loop-modes
+--sample-disk roms/FDD/ROBOLOOP.IMG --state-dir <fresh-private-dir>`.
+See [validation](validation/s2-loops-and-restore-2026-10-11.json).
+
+
 ## Three-stage hardware measurement plan
 
 | Stage | Stimulus / capture | Measurement and isolation |

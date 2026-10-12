@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-11",
+  "revision": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "worktree": "dirty; hashes identify tested sources and binary",
+  "bugs": {
+    "BUG-015": "fixed device payload discard; firmware Save/host export not qualified",
+    "BUG-001": "closed stale native report after execution qualification; no CPU semantics changed; flat compatibility stubs remain"
+  },
+  "identities_sha256": {
+    "mame-source/src/mame/roland/s760.cpp": "751ff50e6d4d7f3608cdb7c6ec090e33b40166a59561c71dfdb79c4644bba2cb",
+    "mame-source/src/devices/cpu/mcs96/mcs96ops.lst": "acac8260af59ed844beac3cbafff10419e2dd02fd3cfab881312881644ad0abb",
+    "mame-source/src/devices/cpu/mcs96/mcs96.cpp": "a95c71da1987f805950c92eedf13687dd9b6c39372c6e6c32b5d4ffcccc3cb30",
+    "mame-source/mames760.exe": "4be1a31191d11354f49f78337f316d6dd150fac5f8142ac188cd9934f4d018a1",
+    "scripts/verify_scsi_checkpoint.py": "21ea90915721c90fa4bfa033d6a571e65b78ebea2de4e028a6f45b65606e8ebd",
+    "scripts/verify_native_cpu_flags.py": "620623502a5fbd1903df0d3a8aab1a954c9e9eef43e8d4b104027efb8c326662",
+    "scripts/verify_bmovi_fetch.py": "cb2dd14119f39b5e1e59ab7fe4ff9f2766b15977f0ad1b03a44a4e9a47b94548",
+    "scripts/s760_runtime.lua": "4cf01531c258027090c9f39d2e3f4d7ff3beb329f783741ab1fa32eb915ff917",
+    "scripts/verify_native_runtime.py": "53a66243dac7792ba55fb2aa5b76b98c26dd357c8b4778f05f07c3514395d40d",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "scsi_before": {
+    "passed": false,
+    "error": "...\\ic20-hle-findings\\chatGPT-work\\scsi158-before\\probe.lua:52: WRITE(6) acknowledged but discarded payload"
+  },
+  "scsi_after": {
+    "passed": true,
+    "range_sense": true,
+    "sense_recall": true,
+    "remaining_bytes": 28,
+    "zero_counts": true,
+    "writeback_supported": true,
+    "cd_protection": true,
+    "aborted_write": true,
+    "partial_cdb": true,
+    "write10": true,
+    "partial_data_out": true
+  },
+  "scsi_cold": {
+    "partial_write10": true,
+    "media_bytes": 512,
+    "passed": true,
+    "written_media": true,
+    "response_bytes": 28
+  },
+  "native_flags": {
+    "error": "",
+    "passed": true,
+    "interrupts": false,
+    "pushf_popf": true,
+    "pusha_popa": true,
+    "cpu": "I80C196KB"
+  },
+  "native_acceptance": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 82.583333333333,
+    "note_release": 84.7,
+    "process_shutdown": "clean",
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999065399169922,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "seconds": 86.972675736961,
+        "sample": 3835495
+      },
+      {
+        "seconds": 87.972675736961,
+        "sample": 3879595
+      }
+    ]
+  },
+  "regressions": "266 passed in 37.00s, pytest158-full.log",
+  "build": "mame_s760.vcxproj then mames760.vcxproj, Release x64 /Z7 /m:1, exit 0; build158-driver.log/build158-link.log",
+  "commands": [
+    "python scripts/verify_scsi_checkpoint.py --state-dir <fresh-private-dir>",
+    "python scripts/verify_native_cpu_flags.py --state-dir <fresh-private-dir>",
+    "python scripts/verify_native_runtime.py --panel-menu --pull-render --scheduled-midi --state-dir <fresh-private-dir>",
+    "python docs/ic20-hle-findings/chatGPT-work/m2_pytest_runner.py"
+  ],
+  "scope": [
+    "SCSI probe operates compiled driver registers on generated HD/CD images, not firmware Save.",
+    "Source HD image remains byte-exact during writes. Cold device fixture deliberately replaces only its generated host image to prove memory recall. Public identity checks remain stricter.",
+    "Isolated native CPU fixture sets scratch RAM/PC with interrupts disabled; original firmware acceptance is a separate unmodified run.",
+    "CPU timing/interrupt arbitration, host SCSI export, hardware parity and clean-machine packaging remain unqualified.",
+    "Native MAME rebuild intentionally invalidates older same-build checkpoints; package binaries were not repackaged."
+  ]
+}

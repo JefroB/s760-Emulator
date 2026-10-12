@@ -1,0 +1,168 @@
+{
+  "date": "2026-10-11",
+  "revision": "4c6395786055e284f334b32ee840c298a8fe4869",
+  "worktree": "dirty; these source hashes identify the qualified work, not HEAD alone",
+  "identities_sha256": {
+    "mame-source/src/mame/roland/s760.cpp": "4e7e963e9b33bed0038ee58dfc8cb6b933fae5b70a08a0fd6840abe039376521",
+    "mame-source/mames760.exe": "75da5175cb21d4494d27f2efa67f61f4974f7a54fed7cc41fd86218e3bbe3ecc",
+    "scripts/s760_runtime.lua": "4cf01531c258027090c9f39d2e3f4d7ff3beb329f783741ab1fa32eb915ff917",
+    "scripts/s760_runtime.py": "7a7bad853f4908c3335b7eeb7f6361707b5fbe2990574f5a7b770b6fbe6d3bd7",
+    "scripts/s760_standalone.py": "e26268addba88cf4a3db0039073b9ab408eec3df0cbb5775892b09a89755df43",
+    "scripts/verify_native_runtime.py": "53a66243dac7792ba55fb2aa5b76b98c26dd357c8b4778f05f07c3514395d40d",
+    "core/src/s760_native_runtime.cpp": "16adad3058ac73723348d6eeeed64fe618e6ef83039c4044fdb36238686a51d2",
+    "core/src/s760_mame_host.cpp": "0aaa002f9ea71addd5d3bd02aee16f6ec0c1765a32368f015463a8f27edceab4",
+    "core/src/s760_bridge.cpp": "212e24e671f7a5a2eb3dce8b96e5b677480a88fae3200eee8ebaad631cea285f",
+    "core/tests/test_native_runtime.cpp": "3391717900e387d884805278f3658319c863ec9db68eea1fa1b45885a8db2b39",
+    "google-ui/src/components/RackKnob.tsx": "0faf36a7414ae6a840682a6f4cf3ff0629f2b9f0cdf7f70efc666a87c96bf3b0",
+    "google-ui/src/components/NativePanelControls.tsx": "7cf5a739df9d079ccf21ce7c1e689da7f6962c43c7345eaeb4ca2e49275f8aa5",
+    "google-ui/src/components/S760FrontPanel.tsx": "b865cf27fb2118e2407edc847161bfd3f38ce954de3ae49572c01a60a94d3059",
+    "google-ui/dist/index.html": "ba9696f99f933daf794850230d5cdf121ce0214e9aaa312716889ff5d8eab968",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "6ab86596487de9ebfed3eb035d77dc25238619f552712824bbdf9e3a379fb1a7",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "471b7a353beb88590e4994a294f4d4f53f1907f32afc6ad367785fd4c7c33cb2",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "Manuals/ROLAND_S-760_SERVICE_NOTES.pdf": "9657ce49efe297d04ffe0ab57ae47aab19cde3f72c7e38162c1208081b66a4a5",
+    "Manuals/S-760_OM.pdf": "0cd22a130b1241381b5ebf88d0f23283a3ffc84cd0d8618c95ce211679027cdc"
+  },
+  "firmware_bytes": [
+    {
+      "bank": "003B",
+      "address": "452D",
+      "image_offset": "01392D",
+      "bytes": "b3 01 12 f0 d4 c7 01 12 f0 00"
+    },
+    {
+      "bank": "003B",
+      "address": "4577",
+      "image_offset": "013977",
+      "bytes": "30 d4 05 b1 30 e0 20 03 b1 31 e0 b1 04 da c7 01 64 20 da"
+    }
+  ],
+  "native_dials": {
+    "value": [
+      127,
+      126,
+      124,
+      127
+    ],
+    "half_gain_max_error": 0.0,
+    "muted_nonzero_samples": 0,
+    "restored_output_level": 100,
+    "non_unity_replay_exact": true,
+    "value_recall": true,
+    "release_silent": true
+  },
+  "native_audio_peaks": {
+    "dial_audio_peaks": [
+      0.04453751817345619,
+      0.022268759086728096,
+      0.0
+    ],
+    "gain_error": 0.0
+  },
+  "native_baseline": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 82.066666666667,
+    "note_release": 84.183333333333,
+    "process_shutdown": "clean",
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999065399169922,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "seconds": 86.439365079365,
+        "sample": 3811976
+      },
+      {
+        "seconds": 87.439365079365,
+        "sample": 3856076
+      }
+    ]
+  },
+  "soundcheck": {
+    "rate": 44100.0,
+    "peak": 0.04453751817345619,
+    "frequency": 20004.0,
+    "tailPeak": 0.0,
+    "editorReopenedWhileHeld": true,
+    "output_peaks": {
+      "50": 0.022268759086728096,
+      "0": 0.0,
+      "100": 0.04453751817345619
+    },
+    "value_display": [
+      127,
+      124,
+      127
+    ],
+    "output_half_readback_after_reopen": true,
+    "plugin_removed": true,
+    "actual_sdk_host": true,
+    "block_size": 512
+  },
+  "regressions": {
+    "python": 261,
+    "react": 111,
+    "cpp_suites": [
+      "s760_core_tests",
+      "s760_plugin_tests",
+      "s760_bridge_tests",
+      "s760_plugin_editor_tests",
+      "s760_prop_telemetry_tests",
+      "s760_native_stream_tests"
+    ],
+    "native_cpp_frames": 88200,
+    "native_cpp_underruns": 0,
+    "native_bridge_cached_output_level": 50,
+    "react_typecheck": "passed"
+  },
+  "commands": [
+    "python scripts/verify_native_runtime.py --rack-dials --panel-menu --state-dir <fresh private>",
+    "python scripts/verify_native_runtime.py --panel-menu --pull-render --scheduled-midi --state-dir <different fresh private>",
+    "build/Release/s760_native_runtime_tests.exe D:/S-760 <fresh private>",
+    "python docs/ic20-hle-findings/chatGPT-work/audio156-final.py",
+    "python docs/ic20-hle-findings/chatGPT-work/m2_pytest_runner.py",
+    "node node_modules/vitest/vitest.mjs run --maxWorkers=4",
+    "npm run lint",
+    "npm run build"
+  ],
+  "limitations": [
+    "Input Level remains disabled; native recording ADC/gain is an explicit unchecked Milestone3 requirement.",
+    "Linear software output gain is not measured physical pot taper/noise/distortion.",
+    "20ms host detent pacing and one latch channel do not establish all IC20 quadrature behavior.",
+    "Windows development/SoundCheck qualification, not clean-machine packaged release or every DAW.",
+    "BUG-033 intermittent cold state-restore connection failure remains open.",
+    "Existing same-build snapshot limits remain."
+  ],
+  "failures_retained": [
+    "Initial native ADJUSTER set_value API misuse (BUG-035), fixed and retested.",
+    "Initial worker cached level omission (BUG-036), reproduced in native C++ before fix and passed afterward.",
+    "Shift wall-clock scheduling assertion (BUG-034), replaced with synchronous dispatch ordering test.",
+    "WAV offsets after guest checkpoint rewind (BUG-037), separated recall and monotonic timeline tests.",
+    "Initial restricted pytest run had failures/stalled and was stopped; permitted full run passed."
+  ],
+  "private_artifacts": "docs/ic20-hle-findings/chatGPT-work: native156-rack-qualified, native156-baseline, native156-cache-{before,after}.log, soundcheck/156-rack-dials-final, *156* test/build logs"
+}

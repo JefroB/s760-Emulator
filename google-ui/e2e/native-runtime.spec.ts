@@ -72,4 +72,17 @@ test('native firmware readiness, loading, reconnect and confirmed restart', asyn
   await expect.poll(pixels).toBe(before);
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.screenshot({path:test.info().outputPath('ready-after-session-restore.png'),fullPage:true});
+  await expect(page.getByLabel('Native sampler rack')).toBeVisible();
+  // A real keyboard panel edge must change firmware pixels, not React mode state.
+  await page.locator('body').click({position:{x:5,y:5}});
+  const panelPixels=()=>crt.evaluate((c:HTMLCanvasElement)=> {
+    let hash=2166136261;
+    for(const byte of c.getContext('2d')!.getImageData(0,0,640,480).data) hash=Math.imul(hash^byte,16777619);
+    return hash>>>0;
+  });
+  await page.waitForTimeout(300);
+  const beforeKey=await panelPixels();
+  await page.keyboard.down('m');await page.waitForTimeout(150);await page.keyboard.up('m');
+  await expect.poll(panelPixels).not.toBe(beforeKey);
+  await page.screenshot({path:test.info().outputPath('keyboard-mode-rack.png'),fullPage:true});
 });

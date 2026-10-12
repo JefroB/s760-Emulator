@@ -24,7 +24,7 @@
  * Validates: Requirements 2.5, 3.5, 4.2, 4.3, 4.4, 5.2, 6.1, 6.2, 7.1, 7.4, 7.5
  */
 import {describe, it, expect, vi, beforeAll} from 'vitest';
-import {render, screen, within} from '@testing-library/react';
+import {render, screen, within, fireEvent} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {S760FrontPanel} from './S760FrontPanel';
 import {soundFx} from '../audio/soundFx';
@@ -404,8 +404,7 @@ describe('SHIFT activation routes through the single onEventEmit channel (R5.2)'
 //  R3.5, R7.1, R7.5 — synchronous emission + native title tooltip
 // -----------------------------------------------------------------------------
 describe('SHIFT emission is synchronous and the button carries a native title tooltip (R3.5, R7.1, R7.5)', () => {
-  it('emits synchronously within the click gesture (well under 100ms)', async () => {
-    const user = userEvent.setup();
+  it('emits before the click dispatch returns', () => {
     const handlers = frontPanelHandlers();
     const mapping = [verifiedShiftEntry()];
     const {container} = renderFrontPanel(makeState(), handlers, mapping);
@@ -414,14 +413,12 @@ describe('SHIFT emission is synchronous and the button carries a native title to
       '[data-shift-button="PATCH"]',
     ) as HTMLButtonElement;
 
-    const start = performance.now();
-    await user.click(shiftBtn);
-    const elapsed = performance.now() - start;
+    fireEvent.click(shiftBtn);
 
     // Emission already happened synchronously inside the click handler.
     expect(handlers.onEventEmit).toHaveBeenCalledTimes(1);
-    // The whole gesture (incl. emission) completes well within the 100ms bound.
-    expect(elapsed).toBeLessThan(100);
+    // No event loop/timer advancement: a deferred handler would fail this.
+    // Wall-clock scheduling under build load is not UI latency evidence.
   });
 
   it('exposes the tooltip text via the native title attribute (R7.1, R7.5)', () => {

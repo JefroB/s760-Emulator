@@ -155,9 +155,15 @@ bring-up setting, not a complete board-strap specification.
 
 ## CPU workaround status
 
-PUSHA/POPA are stack-neutral in `mcs96ops.lst`. PUSHF is stack-neutral but clears
-PSW and checks IRQ; POPF leaves PSW/SP. These are **boot compatibility workarounds**,
-not proved Intel architectural semantics. Do not change them in unrelated work.
+The stack-neutral PUSHA/POPA/PUSHF/POPF workarounds apply only to the legacy
+flat bring-up profile. Native KB mode calls `kb_push_flags` / `kb_pop_flags`:
+PUSHF saves PSW in one word; PUSHA additionally saves INT_MASK1/WSR in a second
+word, then clears the saved state. The matching POP restores it. An isolated
+I80C196KB fixture verifies exact stack deltas, word order, clearing/restoration
+and guard words for both pairs (finding 158, BUG-001). The earlier blanket
+statement about stubs was stale; no CPU behavior changed in this qualification.
+This does not establish interrupt arbitration or cycle fidelity. See
+[validation](validation/s2-scsi-and-stack-2026-10-11.json).
 
 **Block-op over-fetch corrections (findings 64/65, native mode).** `BMOV` (0xC1)
 and `CMPL` (0xC5) each had duplicate operand fetches in the generated core: after
@@ -165,9 +171,15 @@ and `CMPL` (0xC5) each had duplicate operand fetches in the generated core: afte
 consuming the following instruction and corrupting block copies / comparisons.
 Both were corrected per the 80C196KB User's Guide (BMOV: 3-byte, 6 setup + 8/11/14
 states per word, count exhausted; CMPL: 3-byte, 32-bit subtract, 7 states, sticky
-VT on overflow). Each verified by isolated CPU fixtures. **BMOVI (0xCD) still has
-the same duplicate-fetch pattern and is UNaudited** — its KB applicability/interrupt
-semantics must not be assumed from later 196 variants; audit separately before use.
+VT on overflow). Each verified by isolated CPU fixtures. **BMOVI (0xCD) operand
+over-fetch is also corrected** (finding 157, BUG-002): `direct_2w` fetches both
+operands once; the opcode body no longer consumes the following opcode. The
+isolated MAME fixture passes zero/one/three-word copy bounds, pointer progression
+and a following-instruction sentinel; the old executable aborted. This is a
+decode fix, not a full BMOVI implementation audit. Interrupt restart, timing,
+count semantics and physical KB applicability remain unverified. Original
+firmware boot/load/playback and scheduled MIDI still pass. See
+[S2 validation](validation/s2-bugs-2026-10-11.json).
 
 Finding 25 traced the derail to PUSHF E086 followed by RET E136 popping PSW as
 an address. With the workaround Kiro reports six seconds, exit zero, no derail.

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { SamplerState, SamplerMode, DiskImage } from '../types/sampler';
 import { RolandLCD } from './RolandLCD';
 import { GotekBay } from './GotekBay';
@@ -6,6 +6,12 @@ import { RackEar } from './RackEars';
 import { ShiftButton } from './ShiftButton';
 import { BUTTON_MAPPING, type ButtonMappingEntry } from '../data/shiftButtonMap';
 import { verifiedShiftButtons } from '../data/shiftButtonSelectors';
+import {useBridgeClient,useBridgeStatus,useBridgeTelemetry} from '../bridge/BridgeContext';
+import {detectEmbeddedTransport} from '../bridge/S760BridgeClient';
+import type {S760ClientMessage} from '../bridge/S760BridgeClient';
+import {NativePanelControls} from './NativePanelControls';
+import {RackKnob} from './RackKnob';
+import {NativeDriveBay} from './NativeDriveBay';
 import { soundFx } from '../audio/soundFx';
 
 interface S760FrontPanelProps {
@@ -53,6 +59,10 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
   onTriggerAudition,
   shiftButtonMapping = BUTTON_MAPPING,
 }) => {
+  const native=!!detectEmbeddedTransport();
+  const client=useBridgeClient(), connection=useBridgeStatus();
+  const telemetry=useBridgeTelemetry();
+  const send=useCallback((type:string,payload:Record<string,unknown>)=>client?.send({type,payload} as S760ClientMessage),[client]);
   const [pressedBtn, setPressedBtn] = useState<string | null>(null);
 
   // The exact set of dedicated SHIFT buttons to render: one descriptor per
@@ -187,6 +197,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
             </span>
             <div
               onClick={() => {
+                if(native)return;
                 soundFx.playClick('power');
                 onTogglePower();
                 onEventEmit('POWER_SWITCH', { powerOn: !state.powerOn });
@@ -227,7 +238,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
             </span>
             {/* Hexagonal Chrome Ferrule & Center Jack Hole */}
             <div
-              onClick={onTriggerAudition}
+              onClick={native?undefined:onTriggerAudition}
               title="1/4' Stereo Phones Jack (Click to Audition Headphone Sound)"
               className="relative w-8 h-8 rounded-full bg-gradient-to-tr from-neutral-400 via-neutral-200 to-neutral-500 border border-neutral-500 shadow-[0_2px_4px_rgba(0,0,0,0.8)] flex items-center justify-center cursor-pointer hover:brightness-110 active:scale-95"
             >
@@ -243,7 +254,10 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
           </div>
 
           {/* Hardware Silkscreen Model Block */}
-          <div className="flex flex-col justify-center ml-1 pr-2">
+          {native ? <div className="flex items-center gap-3" aria-label="Audio levels">
+            <RackKnob label="INPUT LEVEL" disabled title="Native input gain routing is not yet implemented"/>
+            <RackKnob label="OUTPUT LEVEL" value={telemetry?.outputLevel??100} disabled={connection!=='connected'} onStep={delta=>send('DIAL_DELTA',{id:'VOLUME',delta})} title="Stereo Out 1 and headphone level"/>
+          </div> : <div className="flex flex-col justify-center ml-1 pr-2">
             <div className="flex items-baseline gap-1.5">
               <span className="text-[11px] font-black tracking-tight text-neutral-300 uppercase font-sans">
                 DIGITAL SAMPLER
@@ -261,7 +275,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
                 24-BIT INTERNAL PROCESSING
               </span>
             </div>
-          </div>
+          </div>}
 
           {/* Roland 160x64 Backlit Graphic LCD Display & Soft Function Keys Below */}
           <div className="flex flex-col items-center">
@@ -281,7 +295,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
             />
 
             {/* Row of 6 Soft Function Buttons directly under LCD: [F1] to [F6] */}
-            <div className="flex items-center justify-between w-[240px] mt-1.5 px-0.5">
+            {!native && <div className="flex items-center justify-between w-[240px] mt-1.5 px-0.5">
               {[
                 { label: 'F1', sub: 'PLAY' },
                 { label: 'F2', sub: 'ZOOM' },
@@ -307,7 +321,8 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
                   </button>
                 </div>
               ))}
-            </div>
+            </div>}
+            {native && <NativePanelControls send={send} enabled={connection==='connected'} functionsOnly/>}
           </div>
         </div>
 
@@ -334,7 +349,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
           classifies it as a fabrication. The rendered-button-id set is
           therefore consistent with the authoritative mapping.
         */}
-        <div className="flex items-center px-4 gap-5 border-r border-neutral-700/60">
+        {native ? <NativePanelControls send={send} enabled={connection==='connected'}/> : <div className="flex items-center px-4 gap-5 border-r border-neutral-700/60">
           {/* Master Volume Potentiometer */}
           <div className="flex flex-col items-center">
             <span className="text-[7px] font-mono text-neutral-400 font-bold uppercase tracking-wider mb-1">
@@ -600,11 +615,11 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
               ))}
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* ================= SECTION C: RIGHT FLANK (GOTEK BAY) ================= */}
-        <div className="flex items-center flex-1 justify-end pr-2">
-          <GotekBay
+        <div className="flex items-center flex-1 justify-center px-2">
+          {native ? <NativeDriveBay/> : <GotekBay
             powerOn={state.powerOn}
             selectedDisk={selectedDisk}
             mountedDisk={mountedDisk}
@@ -617,7 +632,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
             onMountDisk={onMountDisk}
             onToggleUsb={onToggleUsb}
             onEventEmit={onEventEmit}
-          />
+          />}
         </div>
 
         {/* RIGHT RACK EAR */}

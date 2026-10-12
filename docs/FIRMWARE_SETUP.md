@@ -75,3 +75,5 @@ Native VST3 development currently uses explicit environment variables rather
 than these CLI options; see [plugin configuration](NATIVE_PLUGIN_SELECTION.md).
 The standalone floppy picker does not imply working native SCSI mounting or
 complete SCSI session recall.
+
+For the native Windows VST3, use the [persistent plugin configuration and startup diagnostic workflow](NATIVE_PLUGIN_CONFIGURATION.md). Settings contain paths, not firmware bytes.

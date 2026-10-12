@@ -1,113 +1,62 @@
-# Roland S-760 Front-Panel Button Mapping
+# Roland S-760 front-panel controls
 
-Authoritative, human-readable `Button_Mapping` for the Roland S-760 front panel.
+## Verified physical controls
 
-## Purpose
+Source: visually inspected Owner's Manual (`Manuals/S-760_OM.pdf`), Basic
+0-6/0-7 (PDF pages 222–223), About SHIFT (Basic 7-9, PDF page 287),
+and Value knob (Basic 7-10, PDF page 288). The owner's rack photograph
+provided on 2026-10-11 independently confirms the labels and arrangement.
+OCR is not required to read a scanned page.
 
-This document is the **canonical, human-readable source of truth** for the
-S-760 Hardware_Panel buttons, their primary functions, and their secondary
-(SHIFT) functions. It is the artifact required by Requirement 1 of the
-`front-panel-shift-buttons` spec: a single mapping document, stored under
-`docs/`, that enumerates every documented hardware front-panel button and records
-a per-entry `Verification_Status`.
+| Physical button | Dedicated Shift action | Native input chord |
+| --- | --- | --- |
+| Mode | None documented | MODE |
+| Command | None documented | COMMAND |
+| Exit | None documented | EXIT |
+| F1 | F4 | SHIFT + F1 |
+| F2 | F5 | SHIFT + F2 |
+| F3 | F6 | SHIFT + F3 |
+| S1/Dec | None documented | S1 |
+| Up | None documented | UP |
+| S2/Inc | None documented | S2 |
+| Left | Home | SHIFT + LEFT |
+| Down | Mark | SHIFT + DOWN |
+| Right | Jump | SHIFT + RIGHT |
+| Shift | Modifier | SHIFT |
 
-## Canonical / mirror relationship
+The physical navigation cluster is two rows, in this exact order:
 
-- **This markdown is canonical for humans.** It carries the full enumeration,
-  the reason each entry is unverified, and (once confirmed) the owner's-manual
-  page references.
-- **`google-ui/src/data/shiftButtonMap.ts` is the machine-readable mirror** the
-  React UI imports at build time to render dedicated SHIFT buttons. The `.ts`
-  module mirrors the **`Verified`** content of this document: it only ever
-  produces a rendered `Shift_Button` for an entry whose SHIFT function is
-  `Verified`, has a recorded chord event, and is not Gotek-owned.
-- The two representations MUST be kept **in lockstep**. The 23 enumerated
-  hardware controls below match, one-for-one by `buttonId`, the
-  `BUTTON_MAPPING` array exported from `shiftButtonMap.ts`.
+| Left column | Middle column | Right column |
+| --- | --- | --- |
+| S1/DEC | Up | S2/INC |
+| Left | Down | Right |
 
-## Golden rule — evidence over invention
+There are two S buttons and four arrows, not six S buttons. There are 13
+matrix buttons including Shift, plus the Value/Menu knob's push switch.
+The six documented Shift functions are F4, F5, F6, Home, Mark and Jump.
+S1/S2 functions are context dependent; they are not substitutes for encoder
+rotation. Basic 7-10 limits Value operation to Dec/Inc or -100/+100 contexts.
 
-Per the project's reverse-engineering steering (golden rule #3, "evidence over
-assumption"): the real-hardware front-panel button layout and its SHIFT
-(secondary) function mapping are **not yet OCR-confirmed**. The owner's manual
-(`Manuals/S-760_OM.pdf`) is a scanned image PDF with no text layer, and no OCR of
-the front-panel button section exists yet.
+## Embedded rack presentation
 
-Therefore:
+F1–F6 sit beneath the LCD. F4–F6, Home, Mark and Jump send their native
+Shift chords, releasing the target before Shift. Mode/Command/Exit remain
+separate. The six navigation controls retain the physical arrangement above;
+Home/Mark/Jump sit beneath Left/Down/Right.
 
-- **Every entry below defaults to `Unverified`** with a recorded reason it could
-  not be confirmed.
-- **No `Verified` entries are invented**, and **no owner's-manual page references
-  are invented**.
-- **No SHIFT functions, silkscreen labels, or chord events are invented.** Because
-  every entry's SHIFT function is unconfirmed, the SHIFT Function, SHIFT
-  Silkscreen, Chord Event (type), and Chord Event (payload) columns are empty for
-  all seeded entries.
-- An entry is promoted to `Verified` **only** when a specific manual page confirms
-  it, at which point the SHIFT function, silkscreen label, chord event, and manual
-  page are filled in here and mirrored into `shiftButtonMap.ts` — lighting up the
-  corresponding UI button with no code change.
+Input Level and Output Level are separate knobs left of the LCD, per the
+owner's description of the concentric hardware control. Value has a separate
+Menu button. The three knobs remain disabled pending verified routing. Menu is wired to the
+SC0/SP4 push switch documented on Service Notes p18 and opens the firmware menu.
+Absolute mouse positioning after Menu/Exit remains BUG-030.
 
-## Invariants
+The Gotek has its own encoder and Up/Down/Select buttons. They browse the host-owned default floppy inventory and successfully inserted
+paths; Select opens the image dialog, prefilled with the selected path, for confirmation or choosing another image. Its display
+separates selection from the last backend-confirmed inserted filename. This is
+an emulator media UI, not FlashFloppy firmware emulation or automatic USB scanning. The host starts with `roms/FDD`; Select offers recursive folder configuration.
+Independent selection and inserted-source metadata survive editor recreation and
+version-2 native plugin-state recall. See [media limits and qualification](NATIVE_MEDIA_LIBRARY.md).
 
-The schema and the mirroring selectors enforce the following (Property 1 of the
-design):
-
-- `Verification = Verified` ⇒ a non-empty **Manual Page** reference exists
-  (R1.5). Contrapositive: an empty **Manual Page** ⇒ `Verification = Unverified`
-  (R1.6).
-- `Verification = Unverified` ⇒ a non-empty **Reason Unverified** is recorded
-  (R1.4).
-- A SHIFT function is renderable as a `Shift_Button` **iff** its `Verification`
-  is `Verified`, it has a recorded Chord Event, and **Owned by Gotek** is false
-  (R2.4, R3.1, R5.5, R6.3).
-- **Owned by Gotek** entries are excluded from Front_Panel button changes and
-  recorded as out of scope (R6.3). None of the seeded front-panel-matrix controls
-  are Gotek-owned.
-
-## Button mapping table
-
-Columns match the design's `Button_Mapping` document schema exactly: Button,
-Primary Function, SHIFT Function, SHIFT Silkscreen, Verification, Manual Page,
-Reason Unverified, Owned by Gotek, Chord Event (type), Chord Event (payload).
-
-Empty cells are shown as `—`. All SHIFT-related columns are empty because no SHIFT
-function has been confirmed against the manual yet (evidence over invention).
-
-| Button | Primary Function | SHIFT Function | SHIFT Silkscreen | Verification | Manual Page | Reason Unverified | Owned by Gotek | Chord Event (type) | Chord Event (payload) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| POWER | Power rocker switch (toggles device power on/off). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| PERF | Select PERFORMANCE mode. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| PATCH | Select PATCH mode. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| PART | Select PARTIAL mode. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| SAMPLE | Select SAMPLE mode. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| SYSTEM | Select SYSTEM mode. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| DISK | Select DISK mode. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| NAV_LEFT | Move cursor left. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| NAV_RIGHT | Move cursor right. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| NAV_UP | Move cursor up. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| NAV_DOWN | Move cursor down. | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| DEC | Decrement the selected value (DEC / -). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| INC | Increment the selected value (INC / +). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| ENTER | Confirm / execute the current command (ENTER). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| EXIT | Return / escape from the current screen (EXIT). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| F1 | Soft-function key F1 (context-dependent LCD function). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| F2 | Soft-function key F2 (context-dependent LCD function). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| F3 | Soft-function key F3 (context-dependent LCD function). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| F4 | Soft-function key F4 (context-dependent LCD function). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| F5 | Soft-function key F5 (context-dependent LCD function). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| F6 | Soft-function key F6 (context-dependent LCD function). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| VOLUME | Master volume potentiometer (analog output level). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-| VALUE_DATA | VALUE / DATA alpha-dial (continuous value entry). | — | — | Unverified | — | Front-panel button section of Manuals/S-760_OM.pdf not yet OCR-confirmed; entry awaits manual page verification. | No | — | — |
-
-## How to promote an entry to `Verified`
-
-1. OCR / read the relevant front-panel page(s) of `Manuals/S-760_OM.pdf`.
-2. Record the exact owner's-manual **Manual Page** reference in this document.
-3. Fill in the confirmed **SHIFT Function**, **SHIFT Silkscreen** (leave empty if
-   the manual shows no silkscreen label), and the **Chord Event (type)** /
-   **Chord Event (payload)** the hardware SHIFT-plus-target chord emits.
-4. Set **Verification** to `Verified` and clear **Reason Unverified**.
-5. Mirror the same change into `google-ui/src/data/shiftButtonMap.ts` so the UI
-   renders the corresponding `Shift_Button`. Keep the two representations in
-   lockstep.
+This mapping supersedes the earlier 23-entry unverified demonstration inventory.
+`NativePanelControls.tsx` implements the verified native mapping. The old
+`shiftButtonMap.ts` remains a legacy demo/spec fixture and is not hardware evidence.

@@ -101,6 +101,7 @@ public:
     // mount -> drive manager). Returns true if the message parsed and was a
     // recognized type; false on malformed JSON or unknown type (the message is
     // then ignored, per the design's error handling).
+    void release_held_inputs();
     bool on_input(const std::string& json);
 
     // Register the sinks that pump() (and the WS server) push to. Either may be
@@ -186,6 +187,8 @@ private:
     static std::vector<uint8_t> blank_mono1(uint16_t width, uint16_t height);
 
     IS760Host* m_host = nullptr;
+    bool m_mouse_held[3]{};
+    std::vector<std::string> m_panel_held;
 
     mutable std::mutex m_mutex;
     FrameCallback      m_frame_cb;

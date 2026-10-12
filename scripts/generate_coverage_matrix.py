@@ -1,28 +1,16 @@
-"""
-generate_coverage_matrix.py — Generates a comprehensive OS Code Test Coverage & Understanding Matrix.
-Evaluates every subsystem, ROM offset, implementation file, test status, testability, and test difficulty.
+"""Historical research catalogue; claims require individual revalidation.
 
-PROVENANCE POLICY (ui-consolidation spec, F4 / R3.1 / R3.2):
-- UI shell/chrome elements are owned by the React app in `google-ui/` and attributed to their
-  real owning component. React has no automated test tooling yet (F5), so shell/chrome rows are
-  marked "⚪ Untested" with no test reference. The old `tests/test_interactive_ui.py` only drives
-  the MAME driver via Lua and never loads the React components, so it CANNOT be cited as a test
-  for any React source line.
-- Hardware display controllers (Epson SED1335 LCD, Roland RFSC16A VDP) are emulated in
-  `mame-source/src/mame/roland/s760.cpp` and are the ONLY display-surface code that `s760.cpp`
-  owns. They are exercised by the real MAME unit tests in `tests/test_lcd_mame.py` /
-  `tests/test_vdp_mame.py`.
-- Every "✅ Tested" row references a test function that actually exists in `tests/`. No synthetic
-  `::test_*` IDs are emitted.
+See coverage_report.py for the shared evidence policy. Legacy tuple fields are
+retained as research input only; they do not drive coverage or ownership claims.
 """
 
 import os
 
 OUTPUT_MD_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs", "OS_TEST_COVERAGE_MATRIX.md"))
 
-# Marker for UI/shell rows that have no automated test yet (React tooling pending — F5).
-UNTESTED = "⚪ Untested"
-TESTED = "✅ Tested"
+# Legacy status fields are never used as coverage evidence.
+UNTESTED = "Unverified"
+TESTED = "Unverified"
 
 MATRIX_DATA = [
     # --- 1. BOOTLOADER & SYSTEM INITIALIZATION ---
@@ -300,9 +288,8 @@ MATRIX_DATA = [
     },
 
     # --- 5. INTERACTIVE UI MODES & STATE MACHINE (React shell — google-ui) ---
-    # Per F5: google-ui has no automated test tooling yet. The old test_interactive_ui.py only
-    # drove the MAME driver via Lua and never loaded these React components, so these rows are
-    # honestly "⚪ Untested" until the React Vitest/Playwright suite lands (spec Phase 4).
+    # Historical mappings only. Existing React suites do not automatically
+    # qualify these broad firmware-page claims.
     {
         "address": "0x08D818",
         "file_loc": "google-ui/src/components/OP760Monitor.tsx:590",
@@ -410,62 +397,13 @@ MATRIX_DATA = [
 
 
 def generate_markdown():
-    os.makedirs(os.path.dirname(OUTPUT_MD_PATH), exist_ok=True)
-    with open(OUTPUT_MD_PATH, "w", encoding="utf-8") as f:
-        f.write("# Roland S-760 OS v2.24 — Comprehensive Test Coverage & Understanding Matrix\n\n")
-        f.write("This matrix maps Roland S-760 OS firmware routines and ROM offsets to their real owning "
-                "implementation (C++ core, MAME driver, or the React `google-ui/` shell), with honest test "
-                "verification status. UI shell/chrome rows are attributed to their React component and are "
-                "marked untested until the React test suite lands; hardware display controllers (SED1335 LCD, "
-                "RFSC16A VDP) live in `s760.cpp` and are covered by the MAME unit tests.\n\n")
-        f.write("---\n\n")
-
-        # Summary Metrics
-        total_subsystems = len(MATRIX_DATA)
-        known_count = sum(1 for item in MATRIX_DATA if item["known"] == "Yes")
-        tested_count = sum(1 for item in MATRIX_DATA if "✅" in item["tested"])
-        pct_tested = (tested_count / total_subsystems * 100.0) if total_subsystems else 0.0
-
-        f.write("## Executive Summary\n\n")
-        f.write(f"- **Total Subsystems & ROM Modules Mapped**: {total_subsystems}\n")
-        f.write(f"- **Functionality Documented & Known**: {known_count} / {total_subsystems}\n")
-        f.write(f"- **Automated Test Coverage**: {tested_count} / {total_subsystems} (**{pct_tested:.1f}%**)\n")
-        f.write(f"- **Testable Status**: {total_subsystems} / {total_subsystems} (**100% Testable**)\n\n")
-        f.write("> UI shell/chrome rows (React `google-ui/`) are intentionally marked **⚪ Untested**: "
-                "`google-ui/` has no automated test tooling yet and no existing test exercises the React "
-                "components. They will become tested once the Vitest/Playwright suite is added.\n\n")
-        f.write("---\n\n")
-
-        # Main Table
-        f.write("## Subsystem Coverage Table\n\n")
-        f.write("| ROM Offset / Code Line | Subsystem / Function | Known? | What Does It Do? (Function / Subsystem Context) | Tested? | Testable? | Test Difficulty | Test Reference |\n")
-        f.write("| :--- | :--- | :---: | :--- | :---: | :---: | :---: | :--- |\n")
-
-        for item in MATRIX_DATA:
-            loc = f"[`{item['address']}`]({item['file_loc']})"
-            test_ref = item["test_file"]
-            if test_ref:
-                test_file_only = test_ref.split("::")[0]
-                test_cell = f"[`{test_ref}`]({test_file_only})"
-            else:
-                test_cell = "—"
-            f.write(f"| {loc} | **{item['subsystem']}** | {item['known']} | {item['functionality']} | {item['tested']} | {item['testable']} | `{item['difficulty']}` | {test_cell} |\n")
-
-        f.write("\n---\n\n")
-        f.write("## Field Definitions & Criteria\n\n")
-        f.write("1. **ROM Offset / Code Line**: Byte offset inside `S760224.IMG` and the corresponding real "
-                "owning source file in `core/`, `mame-source/`, or `google-ui/`.\n")
-        f.write("2. **Subsystem / Function**: Roland S-760 hardware or software domain.\n")
-        f.write("3. **Known?**: `Yes` indicates reverse-engineering understanding of inputs, outputs, memory mutations, and behavior.\n")
-        f.write("4. **What Does It Do?**: Concise description of the algorithm, model, or hardware operation.\n")
-        f.write("5. **Tested?**: `✅ Tested` means a real, existing automated test in `tests/` exercises the row; "
-                "`⚪ Untested` means no automated test currently covers it.\n")
-        f.write("6. **Testable?**: `Yes` indicates the routine can be stimulated and validated headlessly.\n")
-        f.write("7. **Test Difficulty**: Complexity to mock hardware peripherals or stimulate DSP timing (`Low`, `Medium`, `High`).\n")
-        f.write("8. **Test Reference**: The exact `tests/<file>.py::<function>` that verifies the row, or `—` when none exists yet.\n")
-
-    print(f"Coverage matrix generated successfully at {OUTPUT_MD_PATH}")
+    if __package__:
+        from .coverage_report import write_report
+    else:
+        from coverage_report import write_report
+    sections = [('Subsystems', [(r['subsystem'], r['address']) for r in MATRIX_DATA])]
+    write_report(OUTPUT_MD_PATH, 'OS subsystem research inventory', sections)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     generate_markdown()
