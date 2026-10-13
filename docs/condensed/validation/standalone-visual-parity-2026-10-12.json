@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-12",
+  "bug": "BUG-044",
+  "severity": "S1 (user assigned)",
+  "scope": "Standalone visual parity with approved native VST rack and CRT housing; optional keyboard and clean chrome",
+  "reference": "Private SoundCheck 156-rack-dials-final/loaded.png",
+  "changes": [
+    "Shared S760FrontPanel renderer and NativePanelControls/NativeDriveBay",
+    "Shared OP760Housing; VST 120% canvas crop clips unused bottom transport rows",
+    "61-key C2-C7 keyboard matches rack width and scales with it",
+    "No explanatory text or media controls between rack and keyboard",
+    "Removed visible header/status text and disk dropdown; Gotek owns image selection",
+    "Gear opens Configuration, including session/recovery/export actions; no visible header or footer text and main content ends after keyboard"
+  ],
+  "checks": {
+    "typescript": "pass",
+    "react": {
+      "passed": 118,
+      "files": 23
+    },
+    "shell_visual_baseline": {
+      "passed": 5,
+      "baseline_updated": false
+    },
+    "packaged_configuration_e2e": {
+      "passed": 1,
+      "mocked": false
+    },
+    "packaged_webview": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 225776
+    },
+    "packaged_capture": {
+      "mocked": false,
+      "firmware": "OS 2.24",
+      "media": "ROBOFULL.IMG",
+      "keyboard_keys": 61,
+      "alignment_widths": [
+        1100,
+        1536
+      ],
+      "black_bar_absent": "visually inspected"
+    },
+    "package_audit": {
+      "development_package_ok": true,
+      "errors": []
+    },
+    "native_runtime_e2e": {
+      "passed": 1,
+      "mocked": false,
+      "covered": [
+        "boot",
+        "Gotek insertion",
+        "firmware Load",
+        "write protection",
+        "session save/restore",
+        "export",
+        "reconnect",
+        "restart",
+        "panel key changes real pixels"
+      ]
+    }
+  },
+  "sha256": {
+    "google-ui/src/NativeStudio.tsx": "d9299fe7c06e412309f28511bf64f0d4f473b7feeb0a81abed401dd015e1df40",
+    "google-ui/src/components/NativeRack.tsx": "4320d8007f3aeb72f6ad0ef4a3971f17b190ff16523c7af06082305dcaa26bb0",
+    "google-ui/src/components/S760FrontPanel.tsx": "76a0d5336b0a5634af7dffaf33d94d09e750e38fdb7f6985a5b127494a2ae1da",
+    "google-ui/src/components/NativeDriveBay.tsx": "81f92810b82b649e714fe0c3632b2427297200720e2de81a6d9c460ffc4eadb7",
+    "google-ui/src/components/OP760Housing.tsx": "50720a6c05e5a12abb911f7c7457d79afe56110a2eccf2bd1edaba8884dfbc3a",
+    "google-ui/src/components/OP760Monitor.tsx": "90360bdaa3830a6855c3479944c1db3a66361228b66c86a81eb20025d3481dc0",
+    "google-ui/src/components/StandaloneKeyboard.tsx": "e784a0b32fd29eac4324067d37eb1c9393ab10dcda1eba8a5e967b66114cd1e3",
+    "docs/images/standalone-keyboard.png": "da9230ac02f4f7ce0054ff7a21a07acf5ff22f66df6de572abc15c7facb59800"
+  },
+  "limitations": [
+    "Development package; no new physical audio/MIDI, ADC or hardware-parity qualification."
+  ],
+  "package": "Private bug044-final-package/dist/S760Studio"
+}

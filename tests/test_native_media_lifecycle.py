@@ -59,3 +59,14 @@ def test_invalid_disk_never_reaches_controller(tmp_path):
     source = tmp_path / 'invalid.img'; source.write_bytes(b'bad')
     with pytest.raises(ValueError): r.insert_media(source)
     assert not (tmp_path / 'media-status.json').exists()
+
+
+def test_write_protection_uses_acknowledged_native_controls(tmp_path):
+    r = NativeRuntime(SimpleNamespace(state_dir=tmp_path))
+    calls = []
+    r._media_control = lambda name: calls.append(name) or {'writeProtected': name == 'Protect Sample Floppy'}
+    assert r.set_media_write_protect(True)['writeProtected'] is True
+    assert r.set_media_write_protect(False)['writeProtected'] is False
+    assert calls == ['Protect Sample Floppy', 'Unprotect Sample Floppy']
+    with pytest.raises(ValueError): r.set_media_write_protect(1)
+    assert len(calls) == 2

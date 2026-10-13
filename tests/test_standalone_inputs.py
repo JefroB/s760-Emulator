@@ -13,7 +13,7 @@ def test_native_dials_accept_bounded_signed_steps(id):
 
 
 @pytest.mark.parametrize('payload', [
-    {'id': 'INPUT', 'delta': 1}, {'id': 'ALPHA', 'delta': True},
+    {'id': 'UNKNOWN', 'delta': 1}, {'id': 'ALPHA', 'delta': True},
     {'id': 'ALPHA', 'delta': 1.5}, {'id': 'VOLUME', 'delta': 33},
     {'id': 'ALPHA', 'delta': -33}, {'id': 'ALPHA'},
 ])
@@ -29,7 +29,7 @@ def test_missing_midi_backend_keeps_audition_available(tmp_path, monkeypatch):
     def unavailable(_):
         raise subprocess.CalledProcessError(1, 'mame -listmidi')
     monkeypatch.setattr(standalone, 'midi_inputs', unavailable)
-    runtime = SimpleNamespace(config=SimpleNamespace(executable='mame'))
+    runtime = SimpleNamespace(config=SimpleNamespace(executable='mame',state_dir=tmp_path))
     session = standalone.StandaloneSession(runtime, tmp_path)
     assert session.midi_devices == []
     assert session.midi_warning
@@ -61,3 +61,12 @@ def test_export_has_no_client_supplied_output_path():
     assert validate_input({'type': 'EXPORT_DISK', 'payload': {}})[0] == 'EXPORT_DISK'
     with pytest.raises(ValueError):
         validate_input({'type': 'EXPORT_DISK', 'payload': {'path': 'library.img'}})
+
+
+
+def test_input_level_is_a_bounded_native_rack_dial():
+    message = {'type': 'DIAL_DELTA', 'payload': {'id': 'INPUT', 'delta': -20}}
+    assert validate_input(message) == ('DIAL_DELTA', message['payload'])
+    for delta in (33, -33, True, 0.5):
+        with pytest.raises(ValueError):
+            validate_input({'type': 'DIAL_DELTA', 'payload': {'id': 'INPUT', 'delta': delta}})

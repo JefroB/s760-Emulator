@@ -17,6 +17,16 @@ about original silicon; keep those categories distinct.
 
 ## Audio path and software model
 
+The Windows standalone exposes persistent MAME output-backend selection
+(Automatic/WASAPI/XAudio2) and a requested 0–1000 ms buffer target. Zero uses the
+backend default; WASAPI/XAudio2 use 30 ms for zero and clamp nonzero values to
+10–1000 ms. Native transport stays stereo 44.1 kHz. Normal-speed WASAPI with a
+60 ms target passes original-firmware boot/load/play/release and shutdown;
+this checks native WAV PCM, not physical loopback or audible latency. Device
+selection, negotiated rate/conversion, sustained dropout and measured latency
+qualification remain open. See
+[exact configuration evidence](validation/standalone-audio-settings-2026-10-12.json).
+
 The physical path uses MB87422/MB87423 wave ASICs (IC27/28), MB87424 TVF (IC29),
 TC24SC220 MEQ mixer (IC30), and AK4328VS-E DACs (IC91/92). The ADC is
 **CS5339-K (IC58)**, not AK5339. These identities are visually confirmed in
@@ -504,3 +514,112 @@ The apparent1–3% residual in earlier waveform diagnostics was substantially ca
 S760_NATIVE_INTERPOLATION_MONITOR extends the opt-in native wave path over quarter-to-double speed at44100Hz, control4, unflagged integer-bound forward loops. It retains the measured half/quarter kernels and leaves unity unchanged. General rates use the fixed128-phase cubic followed by a25-tap symmetric inverse of U(w)=1-B/3+B/3*cos(w), yielding a response relative to the existing unity path. All88 native notes agree with an independent frequency-domain reference within1.378 16-bit PCM units. Disabled output is bit-identical to the preceding build. No new persistent filter state is introduced.
 
 This is practical sub1% waveform agreement in the specified pulse/noise domain, not bit-exact full-chip emulation. Absolute phase rounding, other clocks/loop directions, pitch transitions, combined filter/pitch parity and full-band20kHz behavior remain unvalidated. [Committed per-case results and hashes](validation/audio-pitch-2026-10-10.json); local shared finding124 contains the full evidence trail.
+
+
+## Native sampling postprocessing checkpoint (2026-10-12)
+
+BUG-043 is fixed for the observed OS2.24 synchronous IC4 A7 wave-to-RAM
+transfer. Start now exhausts the count and reaches waveform review; the preserved
+previous executable fails the same native regression. The inverse BC transfer
+validates both full byte ranges and even count, copies, advances addresses and
+clears count. Read-only diagnostic taps preserve exact131072-frame native PCM
+and both displays; independent load/play/release and307 backend tests pass.
+ADC capture remains open: input meter0x10001C and recording-position0x100010/12
+return unmapped values. Arming observes slots4/20 with mode8, which is a constraint
+rather than a qualified input model. No captured signal, recorded PCM integrity,
+physical timing, packaged acceptance or full sampling workflow is claimed.
+See [sampling contract](../NATIVE_SAMPLING.md) and
+[validation](validation/native-sampling-dma-2026-10-12.json).
+
+
+## Offline native sampling input
+
+The opt-in44.1kHz stereo PCM16 profile now records known independent channel
+patterns through OS2.24 Sampling controls, then Sample Save/export and fresh
+Sample Load.56,661 frames/channel match every input value, and239,616 allocation
+bytes including padding remain exact across wave RAM, disk and cold reload.
+The16,384-frame FIFO rejects unsupported formats/overflow atomically; recording
+reported zero underruns. This is native offline workflow evidence, not physical
+capture or hardware parity. Default launches keep ADC disabled. Capture-device
+selection, analog gain calibration, alternate capture clocks, hardware meter/interrupt
+semantics and realtime timing remain open. See
+[validation](validation/native-sampling-input-2026-10-12.json) and
+[sampling contract](../NATIVE_SAMPLING.md).
+
+
+Standalone Input Level now controls0–100% linear recording gain separately from
+Output Level. Unity/half/mute after cold armed-session restore match every
+injected stereo PCM sample and survive Sample Save/cold Load with zero input
+underruns. Source/packaged browser acknowledgement, saved-gain recall and
+reconnect pass; default-off playback/displays remain bit-identical. This closes
+the standalone gain objective for the documented software profile, not analog
+pot calibration, physical capture or VST host input routing.
+[Evidence](validation/native-input-level-2026-10-12.json).
+
+Physical standalone sampling now passes for the explicit MOTU Windows MME
+44.1 kHz stereo PCM16 profile. ASIO fixture outputs 3/4 looped to inputs 1/2
+produce unclipped 440/880 Hz signals. Both 65,514-frame firmware recordings
+match contiguous captured device PCM exactly at the same source offset;
+all 276,480 allocated bytes match native wave RAM, saved floppy and fresh Load.
+Native input underruns remain zero. The complete workflow reports 18,432
+discarded frames, including outside the recorded interval; physical driver
+loss accounting, measured latency, alternate rates and analog calibration
+remain open. Default launches have no input device; explicit selection opts
+into the native ADC profile. [Evidence](validation/native-physical-sampling-2026-10-12.json).
+## Standalone ASIO option
+
+Standalone Configuration now offers ASIO driver, stereo input/output pair and
+buffer selection. A native PortAudio ASIO callback copies bounded preallocated
+SPSC rings without Python, sockets, UI, disk, allocations or mutexes. MAME owns
+sampler execution and PCM; the device owns its callback clock. Normal-speed
+44.1 kHz duplex is qualified on MOTU Pro Audio v2 outputs3/4 and inputs1/2 at
+128/512/1024-frame buffers. Native ROBOFULL playback/release passes with zero
+output underruns/discards/driver flags, including display streaming. ASIO
+firmware recording matches64754 captured frames per channel exactly; all276480
+allocated bytes survive Sample Save/fresh Load. The full sampling workflow
+reports61440 discarded input frames outside the exact recorded interval.
+
+Driver-reported latency at512 frames is12.4ms input /13.6ms output, excluding
+transport/rings. This is not measured round-trip latency or indefinite clock
+drift/dropout qualification.341 backend/121 React tests, source/package browser
+settings and actual WebView boot/close pass. Alternate rates, hotplug, analog
+calibration and release redistribution qualification remain separate.
+[Evidence](validation/standalone-asio-2026-10-12.json).
+
+## Physical standalone MIDI acceptance
+
+The Windows standalone's micro lite Port 5 input is qualified with its physical
+output cabled back to the input. Original-firmware ROBOFULL playback responds to
+physical note-on, releases to silence, ignores notes while the input is detached
+in software and resumes after reselecting it. A 180-second run contains all 90
+native note pulses and finite PCM; MOTU outputs 3/4 looped to inputs 1/2 confirm
+physical audio. This is not USB hotplug or every MIDI controller/channel test.
+Sustained audio loss counters are evaluated separately from note delivery.
+
+## Standalone device qualification update
+
+Windows output selection now uses stable render endpoint IDs with MAME's required
+`o:` node prefix. Native44.1kHz audio reaches Realtek Digital Output's48kHz shared
+mix with the expected20004.5Hz fixture peak, finite PCM and silent note-off;
+packaged apply/reconnect persists the endpoint. This is digital output conversion
+evidence, not analog parity.
+
+ASIO binary PCM ingress preserves newline/NUL/signed samples and atomic overflow
+rejection. A full live input queue discards the complete packet while continuing
+output delivery and bounded wall-time clock feedback. Native PCM clocks remain
+unchanged. An8192-frame output prime and16384-frame target provide scheduling
+headroom; the target371.52ms and queued duration are displayed separately from
+driver latency. Five minutes/150 physical MIDI notes produce every native pulse
+with a silent release and zero output underruns/discards/native drops/driver
+flags.2048 input frames are discarded during this playback workload.
+
+Closed-stream failure pauses the same native machine. Reopening the real MOTU
+driver re-primes selected input, resumes native time and preserves PID/media.
+Physical audio/MIDI unplug tests are removed from Milestone3 by user direction.
+Physical bridge write-to-input upper bounds10.45–88.43ms include2048-frame input
+completion and worker delivery, excluding MAME/MIDI transport. Firmware sampling
+through the revised ASIO path records66245 exact captured frames/channel, with
+zero native input underruns and276480 allocated bytes surviving Save/cold Load.
+4096 input frames are discarded over the full workflow. Alternate ADC clocks,
+unreported physical driver losses and hardware register/meter fidelity remain
+open. [Evidence](validation/standalone-audio-devices-2026-10-12.json).

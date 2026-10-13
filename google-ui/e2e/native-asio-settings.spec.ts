@@ -1,0 +1,31 @@
+import {expect,test} from '@playwright/test';
+
+test('standalone ASIO driver, pairs and buffer survive apply and reconnect',async({page})=>{
+  test.skip(!process.env.S760_NATIVE_ASIO_URL,'Requires private standalone with MOTU ASIO');
+  test.setTimeout(120000);
+  await page.goto(process.env.S760_NATIVE_ASIO_URL!);
+  await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
+  await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await page.getByLabel('Audio output backend').selectOption('asio');
+  await expect(page.getByLabel('ASIO driver').locator('option').filter({hasText:'MOTU Pro Audio v2'})).toHaveCount(1,{timeout:15000});
+  await page.getByLabel('ASIO driver').selectOption('MOTU Pro Audio v2');
+  await page.getByLabel('ASIO output pair').selectOption('3');
+  await page.getByLabel('ASIO input pair').selectOption('1');
+  await page.getByLabel('ASIO buffer (frames)').selectOption('512');
+  await page.getByLabel('Enable audio output').check();
+  await expect(page.getByText('Apply settings and start')).toBeDisabled();
+  await page.getByLabel('Replace current sampler memory and restart').check();
+  await page.getByText('Apply settings and start').click();
+  await expect(page.getByRole('dialog')).toHaveCount(0,{timeout:20000});
+  await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
+  await page.reload();
+  await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await expect(page.getByLabel('ASIO driver')).toHaveValue('MOTU Pro Audio v2');
+  await expect(page.getByLabel('ASIO output pair')).toHaveValue('3');
+  await expect(page.getByLabel('ASIO input pair')).toHaveValue('1');
+  await expect(page.getByLabel('ASIO buffer (frames)')).toHaveValue('512');
+  await expect(page.getByLabel('Recording input status')).toContainText('ASIO: MOTU Pro Audio v2');
+  await expect(page.getByLabel('ASIO audio status')).toContainText('Driver-reported latency:');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.screenshot({path:test.info().outputPath('asio-settings.png'),fullPage:true});
+});

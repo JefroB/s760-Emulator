@@ -34,13 +34,26 @@ def test_load_timeout_and_restart_clear_observation(monkeypatch):
     replacement=readiness.FirmwareReadiness(clock=lambda:now[0])
     assert replacement.observe(set(),0)['state']=='booting'
 
+
+def test_empty_drive_is_actionable_and_clears_load_timeout(monkeypatch):
+    monkeypatch.setattr(readiness, 'labels', lambda frame: frame)
+    now = [0.0]
+    monitor = readiness.FirmwareReadiness(clock=lambda: now[0])
+    monitor.observe({'disk','load'}, 1)
+    now[0] = 121
+    reply = monitor.observe({'disk','load','empty_drive'}, 2)
+    assert reply['state'] == 'no_media'
+    assert 'Insert a sample disk' in reply['message']
+    assert monitor.loading_since is None
+    assert monitor.observe({'disk','idle'}, 3)['state'] == 'disk_ready'
+
 def test_restart_requires_confirmation_and_protects_dirty_media(tmp_path, monkeypatch):
     from types import SimpleNamespace
     from unittest.mock import Mock
     import s760_standalone as standalone
     import pytest
     monkeypatch.setattr(standalone,'midi_inputs',lambda _: [])
-    r=SimpleNamespace(config=SimpleNamespace(executable='mame'),process=Mock(),close=Mock(),start=Mock(),media_status=Mock(return_value={'dirty':True,'busy':False}))
+    r=SimpleNamespace(config=SimpleNamespace(executable='mame',state_dir=tmp_path),process=Mock(),close=Mock(),start=Mock(),media_status=Mock(return_value={'dirty':True,'busy':False}))
     r.process.poll.return_value=None
     session=standalone.StandaloneSession(r,tmp_path)
     with pytest.raises(ValueError): session.input({'type':'RESTART_RUNTIME','payload':{}})
@@ -55,7 +68,7 @@ def test_dead_child_restart_does_not_require_a_dead_transport(tmp_path, monkeypa
     from unittest.mock import Mock
     import s760_standalone as standalone
     monkeypatch.setattr(standalone,'midi_inputs',lambda _: [])
-    r=SimpleNamespace(config=SimpleNamespace(executable='mame'),process=Mock(),close=Mock(),start=Mock(),media_status=Mock())
+    r=SimpleNamespace(config=SimpleNamespace(executable='mame',state_dir=tmp_path),process=Mock(),close=Mock(),start=Mock(),media_status=Mock())
     r.process.poll.return_value=1
     session=standalone.StandaloneSession(r,tmp_path)
     assert session.input({'type':'RESTART_RUNTIME','payload':{'discard':True}})['state']=='booting'

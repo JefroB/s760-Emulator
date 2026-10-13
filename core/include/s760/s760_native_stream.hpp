@@ -8,8 +8,8 @@
 namespace s760 {
 // Single callback producer/consumer and one worker. Fixed input/output clocks:
 // on a missed deadline, latch a fault rather than replaying stale audio later.
-// Lifecycle calls require the callback to be quiescent. Renderer may block only
-// on the worker. No speculative rendering before input blocks arrive.
+// Lifecycle calls require the callback to be quiescent. Rendering stays on the
+// worker; only explicitly offline callers may wait. No speculative rendering.
 class NativeStream {
 public:
     static constexpr unsigned max_frames=1024, max_events=64, queue_blocks=128;
@@ -77,7 +77,7 @@ public:
     }
     std::uint64_t completed_frames() const noexcept { return completed_.load(std::memory_order_acquire); }
     std::uint64_t started_frames() const noexcept { return started_frames_.load(std::memory_order_acquire); }
-    bool process(float* left,float* right,unsigned frames,const Midi* midi,unsigned events) noexcept {
+    bool process(float* left,float* right,unsigned frames,const Midi* midi,unsigned events,bool offline=false) noexcept {
         // The plugin validates writable output buffers before entering here.
         std::fill_n(left,frames,0.f); std::fill_n(right,frames,0.f);
         if(fault()!=Fault::none) return false;
@@ -88,6 +88,17 @@ public:
             fail(Fault::invalid_block); return false;
         }
         auto head=head_.load(std::memory_order_relaxed);
+        if(offline && head-tail_.load(std::memory_order_acquire)==queue_blocks) {
+            // Tiny blocks may fill the packet queue before reaching a render
+            // batch. Request a partial batch before waiting for producer space.
+            flush_until_.store(clock_,std::memory_order_release);
+            const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(10);
+            while(head-tail_.load(std::memory_order_acquire)==queue_blocks) {
+                if(fault()!=Fault::none || stop_.load()) return false;
+                if(std::chrono::steady_clock::now()>=deadline) {fail(Fault::input_overflow);return false;}
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        }
         if(head-tail_.load(std::memory_order_acquire)==queue_blocks) {
             fail(Fault::input_overflow); return false;
         }
@@ -96,6 +107,18 @@ public:
         head_.store(head+1,std::memory_order_release);
         auto silence=unsigned(std::min<std::uint64_t>(frames,clock_<delay_frames_ ? delay_frames_-clock_ : 0));
         clock_+=frames;
+        // Offline hosts need not observe wall-clock callback pacing. Wait only
+        // on that explicitly negotiated path; realtime remains nonblocking.
+        if(offline && silence<frames) {
+            const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(10);
+            while(pcm_.buffered_frames()<frames-silence) {
+                if(fault()!=Fault::none || stop_.load()) return false;
+                if(std::chrono::steady_clock::now()>=deadline) {
+                    fail(Fault::output_underrun); return false;
+                }
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        }
         if(silence<frames && pcm_.read(left+silence,right+silence,frames-silence)!=frames-silence) {
             fail(Fault::output_underrun);
             std::fill_n(left,frames,0.f); std::fill_n(right,frames,0.f); return false;
@@ -124,7 +147,7 @@ private:
                     }
                     b.frames+=next.frames; ++end;
                 }
-                if(b.frames<batch_frames_ && end==head && b.events<max_events) {
+                if(b.frames<batch_frames_ && end==head && b.events<max_events && b.first>=flush_until_.load(std::memory_order_acquire)) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(1)); continue;
                 }
                 started_frames_.store(b.first+b.frames,std::memory_order_release);
@@ -143,6 +166,7 @@ private:
     alignas(64) std::atomic<std::uint64_t> head_{0},tail_{0};
     std::atomic<std::uint64_t> completed_{0};
     std::atomic<std::uint64_t> started_frames_{0};
+    std::atomic<std::uint64_t> flush_until_{0};
     std::atomic<Fault> fault_{Fault::none};
     std::atomic<bool> stop_{false};
     std::uint64_t clock_=0;

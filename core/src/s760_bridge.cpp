@@ -644,6 +644,10 @@ bool S760Bridge::decode_client_message(const std::string& json,
 //  on_input
 // ----------------------------------------------------------------------------
 bool S760Bridge::on_input(const std::string& json) {
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        if(m_configuration_input && m_configuration_input(json)) return true;
+    }
     bridge::ClientMessage msg;
     if (!decode_client_message(json, msg)) {
         return false; // malformed / unknown => ignored per design error handling
@@ -759,6 +763,12 @@ void S760Bridge::set_frame_callback(FrameCallback cb) {
 void S760Bridge::set_telemetry_callback(TelemetryCallback cb) {
     std::lock_guard<std::mutex> lock(m_mutex);
     m_telemetry_cb = std::move(cb);
+}
+
+void S760Bridge::set_configuration_callbacks(std::function<bool(const std::string&)> input,
+                                            std::function<std::string()> snapshot) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_configuration_input=std::move(input);m_configuration_snapshot=std::move(snapshot);
 }
 
 void S760Bridge::emit_frame(const std::vector<uint8_t>& framed) {
@@ -913,6 +923,7 @@ bridge::ServerTelemetry S760Bridge::current_telemetry_locked() const {
     // LCD 160x64, OLED/Gotek 128x32) via ServerTelemetry's member initializers,
     // so they are reported fixed and unchanged here (mame-live-backend R5.3).
     bridge::ServerTelemetry t;
+    if(m_configuration_snapshot) t.pluginConfiguration=m_configuration_snapshot();
 
     // Monotonic-ish timestamp derived from the frame counter at ~60fps. A real
     // wall clock is not required by the contract (it only needs to be a
@@ -985,6 +996,7 @@ std::string S760Bridge::encode_telemetry(const bridge::ServerTelemetry& t) {
     std::ostringstream os;
     os << '{'
        << "\"timestamp\":"    << num(t.timestamp) << ','
+       << "\"pluginConfiguration\":" << t.pluginConfiguration << ','
        << "\"fps\":"          << num(t.fps) << ','
        << "\"crtWidth\":"     << t.crtWidth << ','
        << "\"crtHeight\":"    << t.crtHeight << ','

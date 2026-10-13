@@ -13,6 +13,7 @@ SIGNATURES = {
     'load': ((16,64,144,80), '9b7bf714631a660e3e863138e2f5b449cd8f3061a7a3db25cc8840accc2b2457'),
     'working': ((32,32,224,48), '959bd14b37057bc8be93ff3f0d9927a7e4896b8b948b56752828593824e0cf65'),
     'idle': ((16,64,144,80), 'ca4debcf4c6d755535ff093bd4a4042f690b76c866d9acd6e0dc846d47f0c69b'),
+    'empty_drive': ((32,32,336,48), '5daf699b0f584b28208ff887b34a1089df67d426526f45f71c625cc7c780b4ba'),
 }
 
 def labels(frame):
@@ -50,6 +51,9 @@ class FirmwareReadiness:
             state,message='stalled','Emulator clock stalled. Reconnect or restart the sampler.'
         elif not self.supported:
             state,message='unknown','Firmware profile unrecognized. Check the sampler display.'
+        elif 'empty_drive' in seen:
+            self.loading_since=None
+            state,message='no_media','Firmware requests a disk. Insert a sample disk to continue.'
         elif 'load' in seen or 'working' in seen:
             if self.loading_since is None: self.loading_since=now
             if now-self.loading_since>120:

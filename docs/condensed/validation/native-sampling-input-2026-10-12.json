@@ -1,0 +1,78 @@
+{
+  "profile": "experimental offline 44100Hz stereo PCM16",
+  "samples": [
+    {
+      "channel": 0,
+      "frames": 56661,
+      "allocation_bytes": 119808,
+      "pcm_sha256": "62607fbeb1c202abb163c7427aed1ac58f498a84f239f6b7f8ed02ac45f2feeb",
+      "metadata_hex": "4e45573a556e6e616d65642020207f4c00000000000000000054dd0000f8e90000fce9000200000005000d00013c0000",
+      "exact_input_pattern": true,
+      "wave_disk_cold_reload_equal": true
+    },
+    {
+      "channel": 1,
+      "frames": 56661,
+      "allocation_bytes": 119808,
+      "pcm_sha256": "c02cad97c721f1c8ba50a51650248a4e12c9b697d82aae7c30d78f9446062da1",
+      "metadata_hex": "4e45573a556e6e616d65642020207f5200000000000000000054dd0000f8e90000fce9000200000012000d00013c0000",
+      "exact_input_pattern": true,
+      "wave_disk_cold_reload_equal": true
+    }
+  ],
+  "input_underruns": 0,
+  "invalid_format_and_atomic_overflow_rejection": true,
+  "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b",
+  "source_preserved": true,
+  "saved_sha256": "6a4be2ac6a6bca1c7871f14ca5885a91d8d991d2593469b052625e2028cd55e5",
+  "identities": {
+    "mame-source\\mames760.exe": "63cfd798fa34acad08256bf0ee57255964bc480538fcc04f56187f67e8ad44f3",
+    "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "e06a8e3bf10163a57410774aef57285aa1e0781bd2f16675e463aa1ba4eab5c1",
+    "scripts\\s760_runtime.lua": "c06fa55ac3f9847132aba851d8a128a141ec3759749f8c6499ff6eb98bb93cf0",
+    "scripts\\s760_runtime.py": "f7a1f1f367a67c2952c92b7b9da61601b615127be8c0c0be193b25fc74ccbc7d"
+  },
+  "limitations": [
+    "No physical input device or realtime timing qualification",
+    "Input Level, other recording rates and hardware register semantics remain open",
+    "Experimental ADC remains disabled by default"
+  ],
+  "date": "2026-10-12",
+  "command": "python scripts/verify_native_sampling_input.py --blank-disk docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img --state-dir docs/ic20-hle-findings/chatGPT-work/m3-adc-acceptance-final",
+  "prerequisites": [
+    "Local IC15 v1.11 boot ROM and immutable OS2.24 disk",
+    "Built native MAME Release/x64",
+    "Empty firmware-formatted 720KB floppy; hash recorded below"
+  ],
+  "verifier_sha256": "a01ca8dd56594b222615b797367a2fb9ddf67a3c048f0e5babab2867d1ffa9a7",
+  "native_build": {
+    "configuration": "Release/x64",
+    "projects": [
+      "mame_s760.vcxproj",
+      "mames760.vcxproj"
+    ],
+    "result": "success"
+  },
+  "default_off_comparison": {
+    "frames": 132300,
+    "pcm_and_both_displays_bit_identical": true,
+    "pcm_sha256": "49b1a00c63f105edacdc97681f56968e17f6a083e89d6540ff86743159aced1c",
+    "prior_binary_sha256": "ead9bc3aa72347fee0b40dac185d4fdd3db6b2647b027f562bbb36a099e1f1d1",
+    "method": "Both binaries use the same original firmware, ROBOFULL and Lua transport, with an additional initial emu.pause(). Ordinary pointer/media/MIDI controls and exact render-frame waits drive independent boot/load/play/release; no guest-state overrides.",
+    "command": "python docs/ic20-hle-findings/chatGPT-work/compare_adc_disabled.py"
+  },
+  "regressions": {
+    "backend_pytest": {
+      "passed": 321,
+      "failed": 0,
+      "command": "python docs/ic20-hle-findings/chatGPT-work/m3_pytest_runner.py",
+      "seconds": 35.86
+    },
+    "cmake_release_build": "passed",
+    "core_executable": "passed",
+    "plugin_executable": "passed",
+    "normal_native_boot_load_play_release": "passed",
+    "pull_render_current_and_prior": "passed"
+  }
+}

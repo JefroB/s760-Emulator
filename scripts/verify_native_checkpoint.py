@@ -3,6 +3,7 @@ import argparse
 import json
 import math
 import time
+import shutil
 from dataclasses import replace
 from pathlib import Path
 from s760_runtime import NativeRuntime, RuntimeConfig
@@ -45,7 +46,11 @@ def main():
             runtime.request('button', port=':NATIVE_MOUSE_BUTTONS', name='Mouse Left', down=False); wait(.2)
         wait(20)
         if args.standalone_session:
-            runtime.insert_media(ROOT/'roms/FDD/ROBOFULL.IMG')
+            library = work/'source-library'
+            library.mkdir(exist_ok=True)
+            source_sample = library/'ROBOFULL.IMG'
+            shutil.copyfile(ROOT/'roms/FDD/ROBOFULL.IMG', source_sample)
+            runtime.insert_media(source_sample)
         else:
             runtime.request('button', port=':NATIVE_MEDIA', name='Insert Sample Floppy', down=True)
             runtime.request('button', port=':NATIVE_MEDIA', name='Insert Sample Floppy', down=False)
@@ -97,6 +102,46 @@ def main():
             result={'standalone_pcm_frames_exact':len(reference)//8,'displays_exact':True,
                     'crash_recovery_new_process':True,'recovered_patch_play_release':True,
                     'saved_archive_preserved':True,'firmware_ready_after_recovery':True}
+            # All floppy bytes must come from the archive, with no original
+            # source library or private insertion slot in the new instance.
+            source_sample.unlink()
+            library.rmdir()
+            relocated = work/'relocated'
+            relocated.mkdir(exist_ok=True)
+            boot, system = relocated/'moved-boot.bin', relocated/'moved-system.img'
+            shutil.copyfile(runtime.config.boot_rom, boot)
+            shutil.copyfile(runtime.config.system_disk, system)
+            recovered = NativeRuntime(replace(runtime.config, state_dir=relocated,
+                boot_rom=boot, system_disk=system, sample_disk=source_sample))
+            try:
+                try:
+                    recovered.start()
+                except FileNotFoundError as error:
+                    startup_error = str(error)
+                else:
+                    raise AssertionError('Missing source sample unexpectedly started')
+                moved_session = StandaloneSession(recovered, library, startup_error)
+                moved_session.session_path.parent.mkdir(parents=True, exist_ok=True)
+                moved_session.session_path.write_bytes(saved)
+                moved_session.input({'type':'RESTORE_SESSION','payload':{'discard':True}})
+                assert moved_session.startup_error is None
+                recovered.request('pause')
+                # Rewind directly for byte-exact replay independent of the
+                # standalone policy that resumes a recovered stopped child.
+                recovered.load_checkpoint(moved_session.session_path)
+                recovered.request('audio_capture', enabled=True)
+                recovered.schedule_midi([{'sample':timestamp,'bytes':[144,60,127]},
+                                         {'sample':timestamp+44100,'bytes':[128,60,0]}])
+                moved_pcm = b''.join(recovered.render_audio(8192)[1] for _ in range(16))
+                assert moved_pcm == reference, 'Relocated session PCM differs'
+                assert recovered.request('frames')[1] == expected, 'Relocated displays differ'
+                assert moved_session.session_path.read_bytes() == saved
+                assert not (relocated/'inserted-floppy.img').exists()
+                result.update(relocated_firmware_paths=True, missing_source_library=True,
+                              missing_initial_sample_recovered=True, relocated_pcm_frames_exact=len(reference)//8,
+                              relocated_displays_exact=True)
+            finally:
+                recovered.close()
             (work/'result.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
             print(json.dumps(result,indent=2))
             return

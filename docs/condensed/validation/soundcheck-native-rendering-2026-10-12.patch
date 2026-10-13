@@ -1,0 +1,176 @@
+--- a/main.cpp
++++ b/main.cpp
+@@ -42,6 +42,7 @@
+ #include "pluginterfaces/vst/ivstcomponent.h"
+ #include "pluginterfaces/vst/ivstevents.h"
+ #include "pluginterfaces/vst/ivstparameterchanges.h"
++#include "public.sdk/source/vst/hosting/parameterchanges.h"
+ #include "pluginterfaces/vst/ivstmessage.h"       // IMessage, IConnectionPoint, IAttributeList
+ #include "pluginterfaces/base/funknown.h"
+ #include "pluginterfaces/base/ibstream.h"
+@@ -408,6 +409,8 @@
+     bool isProcessing = false;
+     double sampleRate = 44100.0;
+     int32 blockSize = 512;
++    int32 processMode = Vst::kRealtime;
++    IPtr<SimpleMemoryStream> qaState;
+     // For sustained notes during testing
+     std::vector<int16> activeNotes;
+     // Pending parameter changes to send to processor
+@@ -636,7 +639,7 @@
+         try {
+             g_wsServer = &m_server;  // Set global pointer for UI thread access
+             g_host = this;           // Set global host pointer for UI-thread plugin removal
+-            m_server.listen(m_port);
++            m_server.listen(asio::ip::tcp::endpoint(asio::ip::address::from_string("127.0.0.1"), m_port));
+             m_server.start_accept();
+             std::cout << "[C++ Host] WebSocket server running on ws://localhost:" << m_port << std::endl;
+             std::cout << "[C++ Host] VST3 SDK integrated - native plugin hosting enabled" << std::endl;
+@@ -1382,6 +1385,34 @@
+                 std::cout << "[C++ Host] MIDI: " << status << " " << note << " " << velocity << std::endl;
+                 response["type"] = "midi_processed";
+             }
++            else if (command == "qa_processing") {
++                auto it=m_plugins.find(request.value("instanceId", ""));
++                if(it==m_plugins.end() || !it->second.processor) throw std::runtime_error("Missing native processor");
++                auto& plugin=it->second;
++                const auto action=request.value("action", "report");
++                if(action=="suspend" || action=="resume") {
++                    if(plugin.processor->setProcessing(action=="resume")!=kResultOk) throw std::runtime_error("Processing transition rejected");
++                } else if(action=="mode") {
++                    const int mode=request.at("mode").get<int>();
++                    if(plugin.processor->setProcessing(false)!=kResultOk) throw std::runtime_error("Suspend rejected");
++                    Vst::ProcessSetup setup{};setup.processMode=mode;setup.sampleRate=plugin.sampleRate;setup.maxSamplesPerBlock=plugin.blockSize;setup.symbolicSampleSize=Vst::kSample32;
++                    if(plugin.processor->setupProcessing(setup)!=kResultOk || plugin.processor->setProcessing(true)!=kResultOk) throw std::runtime_error("Mode setup rejected");
++                    plugin.processMode=mode;
++                } else if(action=="save" || action=="restore") {
++                    if(plugin.processor->setProcessing(false)!=kResultOk) throw std::runtime_error("State suspend rejected");
++                    if(action=="save") {
++                        plugin.qaState=IPtr<SimpleMemoryStream>(new SimpleMemoryStream(),false);
++                        if(plugin.component->getState(plugin.qaState)!=kResultOk) throw std::runtime_error("State save rejected");
++                    } else {
++                        if(!plugin.qaState) throw std::runtime_error("No QA snapshot");
++                        plugin.qaState->seek(0,IBStream::kIBSeekSet,nullptr);
++                        if(plugin.component->setState(plugin.qaState)!=kResultOk) throw std::runtime_error("State restore rejected");
++                    }
++                    if(plugin.processor->setProcessing(true)!=kResultOk) throw std::runtime_error("State resume rejected");
++                }
++                response["type"]="qa_processing";
++                response["data"]={{"latencySamples",plugin.processor->getLatencySamples()},{"tailSamples",plugin.processor->getTailSamples()},{"audioInputs",plugin.component->getBusCount(Vst::kAudio,Vst::kInput)},{"audioOutputs",plugin.component->getBusCount(Vst::kAudio,Vst::kOutput)},{"mode",plugin.processMode}};
++            }
+             else if (command == "process_test_chunk") {
+                 std::string instanceId = request.value("instanceId", "");
+                 int midiNote = request.value("midiNote", -1);  // -1 = no note, just process
+@@ -1467,6 +1498,8 @@
+                         std::cout << "[C++ Host] Sending MIDI Note On: " << midiNote << " vel=" << midiVelocity << std::endl;
+                     }
+ 
++                    if (request.value("midiNoteOff", -1) >= 0)
++                        eventList.addNoteOff(0, static_cast<int16>(request["midiNoteOff"].get<int>()), 0.0f, 0);
+                     // Process multiple blocks
+                     for (int block = 0; block < numBlocks; block++) {
+                         // Clear outputs
+@@ -1493,14 +1526,23 @@
+                         }
+ 
+                         Vst::ProcessData processData;
+-                        processData.processMode = Vst::kRealtime;
++                        processData.processMode = plugin.processMode;
+                         processData.symbolicSampleSize = Vst::kSample32;
+                         processData.numSamples = blockSize;
+                         processData.numInputs = isInstrument ? 0 : 1;
+                         processData.numOutputs = 1;
+                         processData.inputs = isInstrument ? nullptr : &inputBus;
+                         processData.outputs = &outputBus;
+-                        processData.inputParameterChanges = nullptr;
++                        Vst::ParameterChanges parameterChanges;
++                        if(block==0) {
++                            for(const auto& pending:plugin.pendingParamChanges) {
++                                int32 queueIndex=0,pointIndex=0;
++                                auto* queue=parameterChanges.addParameterData(pending.first,queueIndex);
++                                if(!queue || queue->addPoint(0,pending.second,pointIndex)!=kResultOk) throw std::runtime_error("Unable to queue host automation");
++                            }
++                            plugin.pendingParamChanges.clear();
++                        }
++                        processData.inputParameterChanges = &parameterChanges;
+                         processData.outputParameterChanges = nullptr;
+ 
+                         // Only send events on first block (note-on), then clear
+@@ -1513,7 +1555,7 @@
+                         processData.processContext = nullptr;
+ 
+                         // Process audio
+-                        plugin.processor->process(processData);
++                        if(plugin.processor->process(processData)!=kResultOk) throw std::runtime_error("Plugin rejected audio block");
+ 
+                         // Clear events after first block
+                         if (block == 0) {
+@@ -1564,7 +1606,7 @@
+                     }
+ 
+                     // Send note-off if we sent a note-on
+-                    if (sentNoteOn && midiNote >= 0) {
++                    if (sentNoteOn && midiNote >= 0 && request.value("autoNoteOff", true)) {
+                         eventList.clear();
+                         eventList.addNoteOff(0, static_cast<int16>(midiNote), 0.0f, 0);
+ 
+@@ -1573,7 +1615,7 @@
+                         std::fill(outputR.begin(), outputR.end(), 0.0f);
+ 
+                         Vst::ProcessData noteOffData;
+-                        noteOffData.processMode = Vst::kRealtime;
++                        noteOffData.processMode = plugin.processMode;
+                         noteOffData.symbolicSampleSize = Vst::kSample32;
+                         noteOffData.numSamples = blockSize;
+                         noteOffData.numInputs = 0;
+@@ -1586,7 +1628,7 @@
+                         noteOffData.outputEvents = nullptr;
+                         noteOffData.processContext = nullptr;
+ 
+-                        plugin.processor->process(noteOffData);
++                        if(plugin.processor->process(noteOffData)!=kResultOk) throw std::runtime_error("Plugin rejected note-off block");
+                         std::cout << "[C++ Host] Sent MIDI Note Off: " << midiNote << std::endl;
+                     }
+ 
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,7 +31,7 @@
+ # resolves to <repo>/third_party/vst3sdk — the one SDK the whole project builds
+ # against. The SDK is NOT required at any other path.
+ # ---------------------------------------------------------------------------
+-set(VENDORED_SDK_PATH "${CMAKE_SOURCE_DIR}/../../third_party/vst3sdk" CACHE PATH
++set(VENDORED_SDK_PATH "D:/BreakJob/third_party/vst3sdk" CACHE PATH
+     "Path to the single vendored VST3 SDK (repo third_party/vst3sdk)")
+ get_filename_component(VENDORED_SDK_PATH "${VENDORED_SDK_PATH}" ABSOLUTE)
+ 
+@@ -64,7 +64,7 @@
+ #   server/third_party/json/         -> nlohmann/json
+ #       (header: single_include/nlohmann/json.hpp)
+ # ---------------------------------------------------------------------------
+-set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/third_party")
++set(VENDOR_DIR "D:/S-760/.soundcheck/server/third_party")
+ 
+ set(WEBSOCKETPP_DIR "${VENDOR_DIR}/websocketpp")
+ set(ASIO_DIR        "${VENDOR_DIR}/asio")
+@@ -129,7 +129,7 @@
+ # library and pluginterfaces/vst/vsttypes.h (already on the VST3 include path),
+ # so pulling them in requires no extra link dependency.
+ # ---------------------------------------------------------------------------
+-set(BREAKJOB_NATIVE_ROOT "${CMAKE_SOURCE_DIR}/../../native" CACHE PATH
++set(BREAKJOB_NATIVE_ROOT "D:/BreakJob/native" CACHE PATH
+     "Path to the BreakJob native/ tree (repo root native/)")
+ get_filename_component(BREAKJOB_NATIVE_ROOT "${BREAKJOB_NATIVE_ROOT}" ABSOLUTE)
+ 
+@@ -162,6 +162,7 @@
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/module_win32.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/plugprovider.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/hostclasses.cpp
++    ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/parameterchanges.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/connectionproxy.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/pluginterfacesupport.cpp
+     # VST Interface IIDs
+@@ -200,3 +201,4 @@
+ else()
+     target_link_libraries(SoundCheckServer pthread dl)
+ endif()
++target_include_directories(SoundCheckServer PRIVATE D:/S-760/.soundcheck/server)

@@ -60,12 +60,407 @@ follow the schema so entries stay machine-greppable.
 | BUG-035 | FIXED | S2 | bridge | Initial output knob used digital override API for a MAME adjuster | 2026-10-11 | 2026-10-11 |
 | BUG-036 | FIXED | S3 | bridge | Worker display cache omits output-level metadata | 2026-10-11 | 2026-10-11 |
 | BUG-037 | FIXED | S3 | tests | Rack recall test reused monotonic WAV offsets after guest-time rewind | 2026-10-11 | 2026-10-11 |
+| BUG-038 | FIXED | S3 | tests | Native verifier gives normal-speed 35-second wait only 30 seconds | 2026-10-12 | 2026-10-12 |
+| BUG-039 | FIXED | S3 | bridge | Missing source sample path or startup error blocks self-contained session recovery | 2026-10-12 | 2026-10-12 |
+| BUG-040 | FIXED | S2 | disk | Floppy protection, firmware Save rejection and cold recall qualified | 2026-10-12 | 2026-10-12 |
+| BUG-041 | FIXED | S2 | disk | Native 720KB firmware formatting, protected rejection and Save/reload qualified | 2026-10-12 | 2026-10-12 |
+| BUG-042 | FIXED | S2 | bridge | Standalone periodic/normal-close recovery preserves dirty media and manual saves | 2026-10-12 | 2026-10-12 |
+| BUG-043 | FIXED | S2 | mame-driver | Observed A7 wave-to-RAM DMA completes firmware sampling postprocessing | 2026-10-12 | 2026-10-12 |
+| BUG-044 | FIXED | S1 | ui | Standalone shares approved rack/CRT, restores Gotek and removes UI clutter | 2026-10-12 | 2026-10-12 |
+| BUG-045 | FIXED | S2 | dsp-audio | Bounded control ingress now sustains physical standalone stereo recording | 2026-10-12 | 2026-10-12 |
+| BUG-046 | FIXED | S3 | dsp-audio | Output-only ASIO detects an active driver that stops consuming queued PCM | 2026-10-12 | 2026-10-12 |
+| BUG-047 | FIXED | S3 | dsp-audio | Five-minute supported ASIO playback passes with explicit transport buffering | 2026-10-12 | 2026-10-12 |
+| BUG-048 | FIXED | S2 | dsp-audio | ASIO counts all missing frames while waiting to re-prime output | 2026-10-12 | 2026-10-12 |
+| BUG-049 | FIXED | S2 | dsp-audio | Audio errors pause native time; actual driver reopening preserves the machine | 2026-10-12 | 2026-10-12 |
+| BUG-050 | FIXED | S2 | dsp-audio | Windows endpoint mappings require MAME's output-node prefix | 2026-10-12 | 2026-10-12 |
+| BUG-051 | CANNOT-REPRODUCE | S3 | build | One initial windowed test-package launch failed before session publication | 2026-10-12 | 2026-10-12 |
+| BUG-052 | FIXED | S2 | midi | Native VST3 lacks controller mapping and ignores host controller queues | 2026-10-12 | 2026-10-12 |
+| BUG-053 | FIXED | S3 | tests | Private SoundCheck test processor drops pending parameter automation | 2026-10-12 | 2026-10-12 |
+| BUG-054 | CANNOT-REPRODUCE | S3 | ui | Knob indicator visual defect; fix required before shipping, shared frontend impact suspected | 2026-10-12 | |
+| BUG-055 | FIXED | S3 | bridge | Native VST3 now reports potentially infinite sustained-voice tail | 2026-10-12 | 2026-10-12 |
 
-<!-- NEXT-ID: BUG-038 -->
+<!-- NEXT-ID: BUG-056 -->
 
 ## Details
 
+### BUG-055 — Native sampler reports zero tail
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** bridge
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Milestone 4 SDK host qualification
+
+**Repro:** Run the independent Steinberg SDK probe with valid native configuration. The new `getTailSamples()==kInfiniteTail` assertion fails on the existing module.
+
+**Expected:** Report a potentially infinite tail because looped or sustained voices may continue indefinitely.
+
+**Actual:** Native `getTailSamples()` returns zero, potentially allowing a host to truncate active voices during tail rendering.
+
+**Evidence:** SDK probe failure: `sampler must report potentially infinite voice tail`; core/src/s760_vst3_plugin.cpp returns zero unconditionally.
+
+**Resolution:** Native instrument returns SDK kInfiniteTail. Independent SDK regression and actual SoundCheck report pass; sustained playback and note-off release remain functional. See [rendering qualification](NATIVE_VST3_RENDERING.md). The historical core's tail behavior is unchanged.
+
+### BUG-054 — Knob indicator visual defect
+
+- **Status:** CANNOT-REPRODUCE
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-12
+- **Reported by:** User
+
+**Summary:** User reports a visual defect in the knob indicators. Functionality is unaffected. A fix is required before shipping; impact on both VST3 and standalone is suspected, not yet verified.
+
+**Repro:** Pending the exact visual symptom, affected knob(s), and position or interaction that reveals it. No independent reproduction yet.
+
+**Expected:** Knob indicators render correctly throughout their travel in both applications.
+
+**Actual:** Indicator appearance is incorrect according to the user report; precise appearance has not yet been described.
+
+**Evidence:** User report on 2026-10-12; no screenshot or measured reproduction attached.
+
+**Notes:** S3 per user classification. CANNOT-REPRODUCE records missing reproduction details, not dismissal or release acceptance. Keep this unresolved as a pre-shipping requirement; verify both frontends when fixing.
+
+### BUG-053 — Private SoundCheck automation never reaches processor
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-12
+- **Closed:** 2026-10-12
+- **Reported by:** Native VST3 controller qualification
+
+**Repro:** Send `set_param`, then `process_test_chunk` in the private native SDK QA backend. Pending changes were stored, but the test call supplied null `inputParameterChanges`.
+
+**Expected:** Real SDK parameter queues reach the processor once, on the next block.
+
+**Resolution:** Private host uses SDK ParameterChanges and consumes pending updates on block0. Original independent SoundCheck checkout unchanged. Measured CC7/64/123 audio effects pass. The [reproduction patch](condensed/validation/soundcheck-native-automation-2026-10-12.patch) and [evidence](condensed/validation/milestone-4-midi-2026-10-12.json) preserve the supported QA profile.
+
+### BUG-052 — Native VST3 drops host MIDI controllers
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** midi
+- **Opened:** 2026-10-12
+- **Closed:** 2026-10-12
+- **Reported by:** Independent SDK MIDI mapping regression
+
+**Summary:** Native VST3 exposes no IMidiMapping and ignores inputParameterChanges, so host sustain, pitch bend and panic cannot reach original firmware. Notes alone are delivered.
+
+**Repro:** Build/run s760_vst3_sdk_tests against the concrete native module with valid firmware configuration. Query controller for the actual SDK IMidiMapping IID.
+
+**Expected:** Stable channel-specific assignments and bounded sample-offset controller delivery.
+
+**Actual:** Query fails at `native MIDI mapping interface`; process_native only handles note events.
+
+**Evidence:** Independent Steinberg-header probe and core/src/s760_vst3_plugin.cpp inspection.
+
+**Resolution:** Added actual SDK-compatible IMidiMapping, hidden channel-specific CC/bend aliases and bounded queue-point merging into the native worker clock. SDK ABI/queue/overflow checks pass; paced varying-block controller PCM matches independent MIDI bytes exactly; SoundCheck volume/sustain/CC123 release effects pass. Fixed for the documented nonzero-block transport profile. Configured audible bend, reset semantics and CC120 behavior are explicitly not inferred. [Contract and limits](NATIVE_VST3_MIDI.md).
+
+### BUG-051 — Initial windowed package startup exception
+
+- **Status:** CANNOT-REPRODUCE
+- **Severity:** S3
+- **Area:** build
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Packaged Windows endpoint acceptance
+
+**Summary:** The first newly built windowed package run created native runtime files but never published `session.json`. Its test process displayed an unhandled-script exception; the original exception text was not captured. A diagnostic console build and subsequent instrumented windowed/browser and actual desktop starts succeeded.
+
+**Repro:** Private `m3-device-final-package/dist/S760Studio/S760Studio.exe --no-browser --no-sound --seconds 95 --state-dir .../windows-output-package-browser` with explicit boot/system/media paths. Concurrent bounded ASIO test was running. No repeatable trigger established.
+
+**Expected:** Publish the session URL or an actionable startup diagnostic.
+
+**Actual:** Initial session publication was absent; an unhandled exception window remained after the native child exited.
+
+**Evidence:** Private `windows-output-package-browser/`, `windows-output-console-debug.log`, `windows-output-package-e2e-final.log` (one passed) and `device-final-desktop/desktop-verification.json` (OS ready,225776 nonblack CRT pixels).
+
+**Resolution:** Cannot reproduce on the subsequent console, instrumented windowed and final desktop starts; no root-cause fix claimed. Frozen launches with an explicit `--state-dir` now preserve exceptions in `startup-error.log` for a recurrence. This is not clean-machine or indefinite startup reliability qualification.
+
+### BUG-050 — Explicit Windows output endpoint produces no audio
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** dsp-audio
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Native Windows endpoint qualification
+
+**Summary:** The new Windows endpoint selector initially wrote a raw endpoint ID into MAME's sound mapping. MAME identifies output nodes as `o:` plus the endpoint ID and removed the unresolved mappings, leaving no stream on the selected endpoint.
+
+**Repro:** Select Realtek Digital Output, boot original OS2.24, load ROBOFULL and hold a native note while capturing that endpoint's WASAPI loopback. The initial mapping produces zero captured packets despite nonzero native PCM.
+
+**Expected:** Native left/right audio reaches the selected Windows endpoint.
+
+**Actual:** The unprefixed mapping is removed and digital loopback is empty.
+
+**Evidence:** Private `windows-output-48000.log` reproduces the failure. `windows-output-48000-fixed/result.json` reports575520 stereo frames at48000Hz, expected20004.5Hz fixture peak, finite output and silent note-off. The corrected mapping survives MAME shutdown. `tests/test_native_runtime.py` covers the required node prefix, stereo channel mapping, escaping and restoring default output.
+
+**Resolution:** Prefix render endpoint IDs with `o:` when staging private MAME sound mappings. Persisted configuration keeps the original Windows endpoint ID. This is digital shared-mode output qualification, not analog converter parity.
+
+### BUG-049 — Device loss leaves native sampling running without input
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** dsp-audio
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Standalone audio acceptance review
+
+**Summary:** A failed or stalled recording stream previously closed the device and reported an error while native time continued. An active recording could consume missing input, and recovery required restarting the sampler.
+
+**Repro:** In the standalone capture worker, make the device read/status operation report a driver failure while a native machine is running. See `tests/test_audio_recovery.py`.
+
+**Expected:** Pause the same native machine, show an actionable failure, and reopen the device with input re-priming before resuming. Preserve RAM, media and controls.
+
+**Actual:** Before the change, the device closed without a native pause or a reopen operation.
+
+**Evidence:** Four backend recovery tests cover pause, same-machine resume, failed reopen and preserving existing queued input while re-priming. React acknowledgement/error handling has a focused regression. Actual MOTU stream reopening after an injected closed-stream failure preserves the native PID and media, freezes native time while failed and resumes successfully. Physical unplug testing is excluded by user direction.
+
+**Notes:** Live MIDI unplug is excluded from Milestone3 acceptance by user direction. This defect concerns audio capture and output devices.
+
+**Resolution:** Pause on stream failure, preserve reported loss counters, offer acknowledged Reopen audio, re-prime input without overwriting queued samples, and resume the existing native machine. See [qualification](condensed/validation/standalone-audio-devices-2026-10-12.json).
+
+### BUG-048 — ASIO underrun counter omits refill-wait silence
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** dsp-audio
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Sustained audio acceptance review
+
+**Summary:** After output underflow, the callback zero-fills until the ring reaches its prime watermark. The counter previously counted only the initial short read, omitting subsequent silent callbacks during refill.
+
+**Repro:** Prime a real MOTU ASIO output with4096 silent frames, stop supplying PCM, allow initial consumption, then compare missing-frame counters over another0.2 seconds. The preserved package DLL reports zero additional missing frames despite continued callbacks.
+
+**Expected:** Count every missing output frame after playback starts, including re-prime waits; exclude initial startup silence and explicitly disabled output.
+
+**Actual:** Old counter freezes while the device continues receiving zeros.
+
+**Resolution:** Track whether playback has started. Count silent refill callbacks after that point, preserving explicit zero-fill/re-prime policy. The real driver probe reports8704 additional missing frames with the corrected DLL versus0 with the preserved DLL. Native callback regression covers initial prime, short read and a subsequent refill-wait callback.
+
+**Evidence:** Private `reprime-old.log` / `reprime-new.log` under `docs/ic20-hle-findings/chatGPT-work`; source regression in `core/tests/test_asio.cpp`. Earlier sustained records retain their original counters and therefore undercount total refill silence.
+
+### BUG-047 — Sustained ASIO playback output underruns
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** dsp-audio
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Physical micro lite MIDI/MOTU ASIO sustained acceptance
+
+**Summary:** Physical MIDI loopback playback exposes native ASIO output underruns after the short smoke-test window.
+
+**Repro:** Original firmware ROBOFULL, normal-speed standalone, MOTU ASIO outputs 3/4 to inputs 1/2 at 44100 Hz/512 frames; micro lite Port 5 physical out-to-in note-on/off cycles, with display and capture workers active. Initial test overlaps backend tests and a package build; resource contention is not isolated as the cause.
+
+**Expected:** Sustained playback without unreported loss; bounded explicit recovery if a queue underruns.
+
+**Actual:** Counter reaches 826 missing output frames by 122 seconds, with zero native output drops or driver status flags. The existing callback zero-fills and reprimes, and the UI reports the loss. This does not establish a driver-level dropout.
+
+**Evidence:** Private `docs/ic20-hle-findings/chatGPT-work/m3-midi-sustained.log` and adjacent raw native/physical PCM.
+
+**Notes:** Earlier native output draining below the prime watermark passes its regression, but the full physical retest still reports 102 missing output frames and8192 discarded input frames. The baseline ends at1610 missing output frames and22528 discarded input frames. Both runs produce all90 native note pulses and a silent release tail. Concurrent host load differs, so the counter difference does not isolate causation. At that stage this bug remained open pending controlled native/device clock and scheduling qualification; the later resolution is recorded below. [Durable evidence](condensed/validation/standalone-midi-sustained-2026-10-12.json).
+
+**Resolution:** Binary input transport, output delivery even when the input FIFO is full, bounded wall-clock feedback and an explicitly displayed16384-frame output target pass five minutes/150 physical MIDI note cycles with zero output underruns/discards/native drops/driver flags. All150 native pulses and silent release are independently checked.2048 input frames are discarded; no zero-loss recording claim. The target adds371.52ms transport buffering, separate from driver latency. Earlier counts omitted refill-wait silence (BUG-048); they are lower bounds. This closes the documented finite profile, not indefinite or arbitrary-load qualification. [Evidence](condensed/validation/standalone-audio-devices-2026-10-12.json).
+
+### BUG-046 — Output-only ASIO can silently stall while reporting active
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** dsp-audio
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Roadmap device-failure regression test
+
+**Summary:** ASIO progress monitoring checked captured input only. With input disabled, a driver that remained active but stopped consuming output could leave the standalone silent indefinitely.
+
+**Repro:** `tests/test_asio.py::test_output_only_driver_stall_is_visible_even_if_driver_reports_active` models an active driver with 8192 queued frames, unchanged played counter and more than two seconds elapsed. This is a deterministic driver model, not a physical unplug test.
+
+**Expected:** Report the stopped output stream and provide reconnect/apply guidance.
+
+**Actual:** Before the fix, status continued to succeed; the regression failed with `DID NOT RAISE OSError`.
+
+**Resolution:** Track the existing native played-frame counter. If enabled output remains primed with queued PCM but makes no progress for two seconds, raise an actionable error through the existing stream failure/close path. Empty queues and progressing output do not trigger the check. Six focused ASIO tests pass; physical unplug qualification remains separate.
+
+**Evidence:** Regression tests in `tests/test_asio.py`; native counter implementation in `core/src/s760_asio.cpp` is unchanged.
+
+### BUG-045 — Live capture delivery underruns during firmware recording
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-12
+- **Severity:** S2
+- **Area:** dsp-audio
+- **Opened:** 2026-10-12
+- **Reported by:** Native MOTU physical loopback acceptance
+
+**Summary:** Initial standalone capture delivery shared the 15 Hz display polling schedule and failed to sustain firmware recording.
+
+**Repro:** Normal-speed native S-760 v2.24, opt-in recording device Windows MME MOTU Stereo In 1-2 at 44100 Hz stereo PCM16; ASIO outputs 3/4 looped physically to inputs 1/2. Arm and start using the firmware sampling screen, then stop and save.
+
+**Expected:** Bounded capture transport sustains recording without native input underruns.
+
+**Actual:** 51587 underruns by the recording screenshot and 55428 after stopping; both physical tones reach saved sample PCM, but continuity is unqualified.
+
+**Evidence:** Private `docs/ic20-hle-findings/chatGPT-work/motu-live-sampling-34.log` and its adjacent capture/session evidence directory.
+
+**Resolution:** Root cause was 4KB/frame JSON ingress, below the bandwidth required by stereo PCM packets. Ingress now reads at most 64KB/frame and executes at most one command; live PCM bypasses pointer-settle waits. A separate 5ms capture worker primes a bounded 8192-frame buffer. Checkpoint save/restore reopens hardware buffers and reports a discontinuity. MOTU physical recording now has zero native underruns; both 65514-frame channels match captured device PCM exactly and all 276480 allocated bytes survive firmware Save/export/fresh Load.329 backend/120 React tests and native source/package browser recording settings pass. Alternate rates, driver-level loss counts and long-term drift remain separate. See [physical sampling evidence](condensed/validation/native-physical-sampling-2026-10-12.json).
+
+### BUG-044 — Standalone diverges from approved native VST interface
+
+- **Status:** FIXED
+- **Severity:** S1
+- **Area:** ui
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** User; S1 explicitly requested by user
+
+**Summary:** Standalone uses a separate simplified rack instead of the approved native VST panel. It omits completed button groups, Shift functions, input/output knob layout and Gotek browse/select controls. Its CRT housing also differs and exposes unused black transport rows.
+
+**Repro:** Compare the native standalone README screenshot with the native SoundCheck VST screenshot captured on 2026-10-11.
+
+**Expected:** Both native entrypoints share the approved visual hardware layout, with standalone settings and optional keyboard.
+
+**Actual:** Generic button rows and a disk-status box; instructional text and media controls separate rack and keyboard.
+
+**Evidence:** `docs/images/standalone-keyboard.png`; private reference `docs/ic20-hle-findings/chatGPT-work/soundcheck/156-rack-dials-final/loaded.png`.
+
+**Notes:** Separate `NativeRack` and `S760FrontPanel` render paths. Verify shared rendering and real firmware inputs before closure.
+
+**Resolution:** Shared front-panel and CRT-housing renderers; restored native Gotek browse/select and Shift controls; matched VST crop; 61-key keyboard scales with rack. Removed header, dropdown, footer and empty content area; all utilities are in Configuration.118 React tests,5 unchanged shell/visual checks, real native load/reconnect/restart/session recall and packaged configuration/WebView checks pass. See [validation](condensed/validation/standalone-visual-parity-2026-10-12.json).
+
+### BUG-043 — Sampling postprocessing stalls on A7 wave-to-RAM DMA
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** mame-driver
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** ChatGPT native sampling bus probe
+
+**Summary:** OS 2.24 Sampling → Ready → name confirmation → Start enters postprocessing and polls IC4 DMA count forever. BC RAM-to-wave is implemented; inverse A7 is missing.
+
+**Repro:** Native IC15/OS 2.24, accelerated muted machine, Sample → Sampling → Ready → Yes → Start. Read-only trace observes wave word 8, RAM destination 0x0ED712, byte count 0x2400 and command A7 at CPU 740B. Reads at CPU 7410 retain count 0x2400.
+
+**Expected:** Copy the bounded byte range, advance addresses and exhaust count.
+
+**Actual:** Now Working remains; over 1.9 million reads retain count 0x2400 in the initial probe. ADC input and recording-position reads are independently unsupported; DMA completion alone does not qualify recording.
+
+**Evidence:** Private m3-sampling-discovery/trace.json and started.png; native verifier accompanies closure.
+
+**Resolution:** Implemented the observed synchronous A7 inverse of BC with complete range/even-count validation and pointer/count advancement. `verify_native_sampling_dma.py` fails on the preserved prior binary and passes on the rebuilt driver, reaching waveform review and End. Normal native playback/release, exact131072-frame/display traced replay and307 backend tests pass. This closes the DMA stall only; live ADC, recording-position reads and physical timing remain open. See [qualified sampling profile](NATIVE_SAMPLING.md).
+
+### BUG-042 — Closing standalone discards dirty media without recovery
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** bridge
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Codex Milestone 3 lifecycle audit
+
+**Summary:** Closing the standalone after firmware Save but before export discards controller changes unless the user separately saved a session. Native child failure also recovers only the last explicit save.
+
+**Repro:** Complete a firmware Save (dirty revision134), close/reopen the standalone without export or Save session. The prior close path only stopped transports and destroyed the runtime.
+
+**Expected:** Periodic separate recovery and a close checkpoint retain sampler/dirty media; failures are visible and normal desktop close is cancelled rather than losing work silently.
+**Actual:** Pre-change no periodic or close checkpoint existed.
+
+**Evidence:** Five new lifecycle tests fail before implementation with missing recovery API. Final native dirty revision134 replay compares131072 stereo frames and both displays exactly; child-failure and normal-close/reopen exports match, and injected close-save failure retains the previous archive/running dirty state.307 backend/115 React tests pass. Two actual packaged browser workflows verify the production60-second timer, startup preservation for61 seconds, confirmed restore and explicit quit. Actual WebView close writes a recovery checkpoint and exits0. Durable evidence: `docs/condensed/validation/standalone-auto-recovery-2026-10-12.json`.
+
+**Resolution:** Added separate recovery checkpoint scheduling and normal-close capture, visible timestamps/errors, preserved startup/restart/settings/manual-restore history, explicit restore/new-history/quit actions and close cancellation on save failure. Manual saves and library originals remain independent.
+
+**Notes:** Recovery is bounded by its last successful checkpoint, not lossless recovery of a killed process. Busy disks/connected external MIDI can defer snapshots; audio pauses during capture. Power-loss/zero-loss journaling, plugin autosave and SCSI workflow qualification are not claimed.
+
+### BUG-041 — Format Track success without media mutation
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Codex Milestone 3 source audit
+
+**Summary:** The native FDC FORMAT TRACK case prepares a successful result but consumes no track IDs, fills no sectors and changes no media revision.
+
+**Repro:** Inspect `fdc_execute_command`, case `0x0D`, in `mame-source/src/mame/roland/s760.cpp`. The writable inserted-media path immediately calls `fdc_start_result_phase(7)`.
+
+**Expected:** Validate and transfer format descriptors, format controller-owned media, and expose failures and dirty state.
+**Actual:** Before the fix, success with no formatting. Write-protect/no-media rejection was fixed separately in BUG-040.
+
+**Evidence:** `python scripts/verify_native_media.py --format --checkpoint` fails before implementation: Format did not fill every sample/data sector. Native OS 2.24 trace at physical0188E4 supplies command4D, FA RAM DMA count0024 from083E0E, SC09 and fill0F. Final native run `media-verification-20261012-065549` verifies protected Format leaves bytes unchanged; writable formatting reaches revision161 with 733184 exact fill bytes, formatted dirty cold recall is exact, and subsequent Save/export/fresh reload preserves 119808 sample bytes plus peak1459/silent release.
+
+**Resolution:** Validate whole CHRN sets and DMA/media bounds before track fill; advance native DMA and dirty revision on success, reject malformed/unsupported transfers without mutation. 294 backend tests, native builds, lint/build, actual packaged Format/export/reconnect/restart/restore and desktop readback pass. Durable evidence: `docs/condensed/validation/standalone-formatting-2026-10-12.json`.
+
+**Notes:** Closed for OS 2.24 standard720KB native DMA formatting. HD/foreign layouts, PIO and physical controller timing are not qualified. Recovery beyond explicit saved sessions remains open.
+
+### BUG-040 — Native floppy write protection missing
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Codex Milestone 3 media qualification
+
+**Summary:** The native floppy controller had no write-protect state, ST3 always reported ready/writable, and WRITE DATA never rejected a protected disk.
+
+**Repro:** Before this change, `test_write_protection_uses_acknowledged_native_controls` fails because the runtime has no protection API. Driver source had no write-protect member or status bit.
+
+**Expected:** Protected firmware Save reports Write Protected without mutating controller bytes; protection survives cold session recall and standalone displays acknowledged state.
+**Actual:** Pre-change there was no way to protect inserted media.
+
+**Evidence:** Private native acceptance `media-verification-20261012-063112`: firmware error screenshot, unchanged protected export, cold protection recall, then unprotected Save/export/fresh reload with 119808 exact sample bytes and peak PCM16 1459.
+**Resolution:** Added controller protection state, ST3 WP/ready reporting, protected/no-media WRITE DATA/FORMAT rejection, native acknowledged controls, checkpoint serialization and standalone checkbox/readback. Final native acceptance includes the exact firmware error-region hash; packaged browser verifies protect/reconnect/restart/recall/unprotect. 294 backend and 114 React tests pass, as do native compilation, lint/build, development package audit and WebView readback. Durable evidence: `docs/condensed/validation/standalone-write-protection-2026-10-12.json`.
+
+**Notes:** Protection is logical media state for the private controller copy; source filesystem permissions are independent. Writable formatting remains BUG-041. No physical timing or clean-machine release claim.
+
 <!-- Add one "### BUG-NNN" block per bug, newest at the top of this section. -->
+
+### BUG-039 — Missing source sample blocks saved-session recovery
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** bridge
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Codex, `test_restore_after_failed_start_does_not_require_source_sample_disk`
+
+**Summary:** Restore is blocked by the generic startup-error guard and by native startup validating an obsolete sample source, despite the checkpoint containing the floppy bytes.
+
+**Repro:** Save a standalone session, remove/relocate its configured sample image, let the child stop, then restore with that old sample path and a startup error.
+
+**Expected:** Preflight firmware/build identity, launch without the source sample image, and restore embedded media.
+
+**Actual:** Generic Runtime settings error or missing-file startup rejection prevents restore.
+
+**Evidence:** Regression in `tests/test_standalone_sessions.py`; native relocated-session acceptance reproduces 131072 stereo frames and both displays exactly. Real browser restores from missing-library startup and rejects incompatible archives without changing the live patch.
+
+**Resolution:** Restore bypasses the startup-error guard, clears the obsolete initial sample path after archive preflight, and clears startup error only after successful state load. Firmware and SCSI prerequisites remain validated. 287 backend and 113 React tests pass.
+
+### BUG-038 — Normal-speed native acceptance deadline shorter than wait
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-12
+- **Resolved:** 2026-10-12
+- **Reported by:** Codex, Milestone 3 system-audio acceptance
+
+**Summary:** The verifier's accelerated-time helper always allowed 30 wall-clock seconds, including a 35-emulated-second load wait. Normal-speed output necessarily exhausted that deadline.
+
+**Repro:** `python scripts/verify_native_runtime.py --system-audio --audio-backend wasapi --audio-latency-ms 60 --state-dir docs/ic20-hle-findings/chatGPT-work/m3-wasapi-60ms` with local OS 2.24, IC15 ROM and ROBOFULL fixture.
+
+**Expected:** Normal-speed waits allow their requested duration plus bounded overhead.
+
+**Actual:** `TimeoutError: Machine stopped advancing` during the 35-second wait, despite advancing emulated time.
+
+**Evidence:** Private `m3-wasapi-60ms/runtime.log`; corrected run in `m3-wasapi-60ms-final`.
+
+**Resolution:** Deadline includes requested duration for system-audio runs. Normal-speed WASAPI firmware load/play/release and clean shutdown pass; accelerated regression remains unchanged.
 
 ### BUG-037 — WAV timeline assertion after checkpoint rewind
 

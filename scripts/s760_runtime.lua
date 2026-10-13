@@ -7,7 +7,7 @@ local machine = manager.machine
 local incoming = ''
 local mouse_x, mouse_y, target_x, target_y = 0, 0, 0, 0
 local pointer_pending = 0
-local value_position, output_level = 0, 100
+local value_position, output_level, input_level = 0, 100, 100
 local settle = 0
 local step_pending = nil
 local render_pending = nil
@@ -18,6 +18,47 @@ local midi_pending, midi_delivered, midi_error = 0, {}, ''
 local midi_queue = {}
 local button_states, external_midi = {}, ''
 local checkpoint_pause = {grace=0}
+-- Opt-in diagnostic observer. Callbacks return nil and never change bus data.
+-- Only the authenticated native client exposes this; it is not a browser action.
+local bus_trace = nil
+local function start_bus_trace(first, last_address)
+    local cpu = machine.devices[':maincpu']
+    local space, banks = cpu.spaces['program'], {}
+    for i=0,31 do banks[i] = space:read_u8(0x100+i) end
+    local trace = {rows={}, dropped=0, accesses=0, polls={}}
+    local function observe(kind, address, data, mask)
+        if address >= 0x100 and address < 0x120 then
+            if kind == 'w' then
+                if (mask & 0xff) ~= 0 then banks[address-0x100] = data & 0xff end
+                if mask > 0xff and address < 0x11f then banks[address-0xff] = (data >> 8) & 0xff end
+            end
+            if address < 0x118 then return end
+        else
+            local slot = 8 + 2*(address >> 14)
+            address = ((banks[slot] | (banks[slot+1] << 8)) << 10) + (address & 0x3fff)
+            if address < first or address > last_address then return end
+        end
+        trace.accesses = trace.accesses + 1
+        -- Aggregate read polls by address/value/PC. Writes retain their order.
+        local pc = cpu.state['PC'].value
+        local key = kind == 'r' and string.format('%x:%x:%x:%x',address,data,pc,mask) or nil
+        local last = key and trace.polls[key] or nil
+        if last then
+            last.count = last.count + 1
+            last.last_seconds = machine.time:as_double()
+        elseif #trace.rows < 256 then
+            local row = {kind=kind, address=address, data=data, mask=mask,
+                pc=pc, seconds=machine.time:as_double(), count=1}
+            trace.rows[#trace.rows+1] = row
+            if key then trace.polls[key] = row end
+        else
+            trace.dropped = trace.dropped + 1
+        end
+    end
+    trace.read = space:install_read_tap(0,0xffff,'s760-diagnostic-read',function(a,d,m) observe('r',a,d,m) end)
+    trace.write = space:install_write_tap(0,0xffff,'s760-diagnostic-write',function(a,d,m) observe('w',a,d,m) end)
+    return trace
+end
 checkpoint_pause.notifier = emu.add_machine_pause_notifier(function()
     -- The frame hook can pause inside a timer before the same frame's
     -- periodic hook runs. Skip that first periodic hook; the next one runs
@@ -66,16 +107,19 @@ local function field(port, name)
     return assert(p.fields[name], 'Unknown input field')
 end
 output_level = field(':NATIVE_OUTPUT','Output Level').user_value
-local function send_audio(count, display)
+input_level = field(':NATIVE_INPUT','Input Level').user_value
+local function send_audio(count, display, input_status)
     local crt, w, h, lcd, lw, lh
     if display then
         crt, w, h = machine.screens[':crt_screen']:pixels()
         lcd, lw, lh = machine.screens[':lcd_screen']:pixels()
     end
-    reply({ok=true, surfaces=display and {{0,w,h},{1,lw,lh}} or nil, output_level=output_level,
+    local response = {ok=true, surfaces=display and {{0,w,h},{1,lw,lh}} or nil, output_level=output_level, input_level=input_level,
            audio={frames=count, channels=2, rate=44100,
            first_sample=audio_total-audio_frames, dropped_frames=audio_dropped},
-           seconds=machine.time:as_double(), buffered_frames=audio_frames-count})
+           seconds=machine.time:as_double(), buffered_frames=audio_frames-count}
+    if input_status then for key,value in pairs(input_status) do response[key]=value end end
+    reply(response)
     local remaining = count
     while remaining > 0 do
         local chunk = audio_chunks[1]
@@ -111,8 +155,18 @@ local function run_midi_queue()
             end
     end)()
 end
+local function validate_device_clock(rate)
+    if rate == nil then return end
+    assert(os.getenv('S760_ASIO_CLOCK'), 'Device clock pacing requires ASIO')
+    assert(type(rate)=='number' and rate>=0.97 and rate<=1.03, 'Invalid device clock pacing')
+end
+local function apply_device_clock(rate)
+    if rate ~= nil then machine.video.throttle_rate=rate end
+end
 local function execute(command)
+    validate_device_clock(command.clock_rate)
     if command.op == 'checkpoint_save' then
+        assert(not bus_trace, 'Stop diagnostic tracing before checkpointing')
         assert(machine.paused and external_midi == '',
                'Checkpoint requires paused machine and disconnected external MIDI')
         local state = machine:buffer_save()
@@ -124,7 +178,7 @@ local function execute(command)
         end
         local meta = json.stringify({version=2, seconds=machine.time:as_double(),
             midi=events, delivered=midi_delivered, midi_error=midi_error, mouse={mouse_x,mouse_y,target_x,target_y,settle},
-            pointer_pending=pointer_pending, value_position=value_position, output_level=output_level,
+            pointer_pending=pointer_pending, value_position=value_position, output_level=output_level, input_level=input_level,
             buttons=button_states, enabled=audio_enabled, frames=audio_frames,
             total=audio_total, dropped=audio_dropped})
         local chunks = {}
@@ -135,6 +189,7 @@ local function execute(command)
         assert(file:close())
         reply({ok=true, bytes=12+#meta+#state+#pcm})
     elseif command.op == 'checkpoint_load' then
+        assert(not bus_trace, 'Stop diagnostic tracing before checkpointing')
         assert(machine.paused and external_midi == '',
                'Restore requires paused machine and disconnected external MIDI')
         local file = assert(io.open('runtime-checkpoint.bin', 'rb'))
@@ -152,6 +207,9 @@ local function execute(command)
         assert(type(restored_value) == 'number' and restored_value % 1 == 0 and restored_value >= 0 and restored_value <= 65535
                and type(restored_level) == 'number' and restored_level % 1 == 0 and restored_level >= 0 and restored_level <= 100,
                'Invalid checkpoint dial metadata')
+        local restored_input = meta.input_level or 100
+        assert(type(restored_input) == 'number' and restored_input % 1 == 0
+               and restored_input >= 0 and restored_input <= 100, 'Invalid checkpoint input gain')
         assert(meta.pointer_pending == nil or (type(meta.pointer_pending) == 'number'
                and meta.pointer_pending % 1 == 0 and meta.pointer_pending >= 0 and meta.pointer_pending <= 16),
                'Invalid checkpoint pointer metadata')
@@ -185,6 +243,8 @@ local function execute(command)
         value_position, output_level = restored_value, restored_level
         field(':NATIVE_VALUE','Value Encoder'):set_value(value_position)
         field(':NATIVE_OUTPUT','Output Level').user_value = output_level
+        input_level = restored_input
+        field(':NATIVE_INPUT','Input Level').user_value = input_level
         for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_X'].fields) do f:set_value(mouse_x) end
         for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_Y'].fields) do f:set_value(mouse_y) end
         audio_enabled,audio_frames,audio_total,audio_dropped = meta.enabled,meta.frames,meta.total,meta.dropped
@@ -197,6 +257,75 @@ local function execute(command)
         midi_delivered,midi_error = meta.delivered,meta.midi_error
         if midi_pending > 0 then run_midi_queue() end
         reply({ok=true, seconds=machine.time:as_double()})
+    elseif command.op == 'bus_trace' then
+        assert(machine.paused, 'Pause before changing diagnostic tracing')
+        assert(type(command.enabled) == 'boolean', 'Expected diagnostic enabled boolean')
+        if command.enabled then
+            assert(not bus_trace, 'Diagnostic trace is already active')
+            local first = command.first == nil and 0x100000 or command.first
+            local last = command.last == nil and 0x101fff or command.last
+            assert(type(first) == 'number' and first % 1 == 0 and first >= 0x100000
+                and type(last) == 'number' and last % 1 == 0 and last <= 0x103fff
+                and first <= last, 'Expected inclusive external I/O trace range')
+            bus_trace = start_bus_trace(first, last)
+            reply({ok=true, capacity=256})
+        else
+            assert(bus_trace, 'Diagnostic trace is not active')
+            bus_trace.read:remove()
+            bus_trace.write:remove()
+            reply({ok=true, rows=bus_trace.rows, dropped=bus_trace.dropped, accesses=bus_trace.accesses})
+            bus_trace = nil
+        end
+    elseif command.op == 'input_audio' or command.op == 'input_audio_binary' then
+        local binary=command.op=='input_audio_binary'
+        assert(os.getenv('S760_NATIVE_ADC'), 'Native ADC input is not enabled')
+        assert(command.live == nil or type(command.live) == 'boolean', 'Invalid live input mode')
+        assert(command.output == nil or (type(command.output)=='boolean' and command.live==true), 'Invalid duplex input mode')
+        assert(machine.paused or command.live == true, 'Pause before queuing offline input PCM')
+        assert(command.rate == 44100 and command.channels == 2, 'Input requires 44100Hz stereo PCM16')
+        local count
+        if binary then
+            assert(os.getenv('S760_ASIO_CLOCK'), 'Binary PCM requires ASIO')
+            assert(type(command.frames)=='number' and command.frames%1==0 and command.frames>=1 and command.frames<=2048
+                and type(command.pcm)=='string' and #command.pcm==command.frames*4, 'Invalid binary PCM packet')
+            count=command.frames
+        else
+            assert(type(command.samples)=='table' and #command.samples > 0
+                and #command.samples <= 4096 and #command.samples % 2 == 0, 'Expected 1 to 2048 input frames')
+            for _,sample in ipairs(command.samples) do
+                assert(type(sample)=='number' and sample % 1 == 0 and sample >= -32768 and sample <= 32767, 'Invalid PCM16 sample')
+            end
+            count=#command.samples/2
+        end
+        local depth = machine.ioport.ports[':NATIVE_PCM_DEPTH']:read()
+        if command.live and machine.paused then
+            reply({ok=true, queued=depth, discarded=count, paused=true})
+            return
+        end
+        if depth + count > 16384 and command.live and command.output then
+            -- A full ADC queue must not block draining native output or clock
+            -- feedback. Reject the complete input packet, preserving the FIFO.
+            apply_device_clock(command.clock_rate)
+            send_audio(audio_frames,false,{ok=true,queued=depth,discarded=count,
+                underruns=machine.ioport.ports[':NATIVE_PCM_LOSSES']:read()})
+            return
+        end
+        assert(depth + count <= 16384, 'Input PCM queue is full')
+        -- Explicit host-only peripheral endpoint, never CPU RAM/wave RAM.
+        local ingress = assert(machine.memory.shares[':native_pcm_ingress'])
+        for i=1,count*2 do
+            local sample=binary and string.unpack('<I2',command.pcm,(i-1)*2+1) or command.samples[i]
+            ingress:write_u16(i*2,sample & 0xffff)
+        end
+        ingress:write_u16(0,count) -- publish only after complete validation/write
+        local queued = machine.ioport.ports[':NATIVE_PCM_DEPTH']:read()
+        assert(queued == depth + count, 'Native ADC input is not enabled')
+        local status={ok=true, queued=queued, underruns=machine.ioport.ports[':NATIVE_PCM_LOSSES']:read()}
+        apply_device_clock(command.clock_rate)
+        if command.output then send_audio(audio_frames,false,status) else reply(status) end
+    elseif command.op == 'input_status' then
+        reply({ok=true, queued=machine.ioport.ports[':NATIVE_PCM_DEPTH']:read(),
+            underruns=machine.ioport.ports[':NATIVE_PCM_LOSSES']:read()})
     elseif command.op == 'status' then
         reply({ok=true, state=machine.paused and 'paused' or 'running',
                seconds=machine.time:as_double(), firmware_ready='unknown',
@@ -250,7 +379,12 @@ local function execute(command)
         reply({ok=true})
     elseif command.op == 'audio' then
         assert(audio_enabled, 'Enable audio capture first')
+        apply_device_clock(command.clock_rate)
         send_audio(audio_frames)
+    elseif command.op == 'device_clock' then
+        assert(command.clock_rate ~= nil, 'Missing device clock pacing')
+        apply_device_clock(command.clock_rate)
+        reply({ok=true, clock_rate=machine.video.throttle_rate})
     elseif command.op == 'render' then
         assert(machine.paused and audio_enabled, 'Render requires paused machine and enabled capture')
         assert(type(command.frames) == 'number' and command.frames % 1 == 0
@@ -262,7 +396,7 @@ local function execute(command)
         local crt, w, h = machine.screens[':crt_screen']:pixels()
         local lcd, lw, lh = machine.screens[':lcd_screen']:pixels()
         local registers = machine.devices[':maincpu'].spaces['register']
-        reply({ok=true, surfaces={{0,w,h},{1,lw,lh}}, seconds=machine.time:as_double(), paused=machine.paused, output_level=output_level,
+        reply({ok=true, surfaces={{0,w,h},{1,lw,lh}}, seconds=machine.time:as_double(), paused=machine.paused, output_level=output_level, input_level=input_level,
                cursor={registers:read_u16(0xd0), registers:read_u8(0xd2)}})
         write_all(crt)
         write_all(lcd)
@@ -275,16 +409,19 @@ local function execute(command)
         if not found then button_states[#button_states+1] = {port=command.port,name=command.name,down=command.down} end
         reply({ok=true})
     elseif command.op == 'dial' then
-        assert((command.id == 'ALPHA' or command.id == 'VOLUME') and type(command.delta) == 'number'
+        assert((command.id == 'ALPHA' or command.id == 'VOLUME' or command.id == 'INPUT') and type(command.delta) == 'number'
                and command.delta % 1 == 0 and math.abs(command.delta) <= 32, 'Invalid native dial input')
         if command.id == 'ALPHA' then
             value_position = (value_position + command.delta) % 65536
             field(':NATIVE_VALUE','Value Encoder'):set_value(value_position)
+        elseif command.id == 'INPUT' then
+            input_level = math.max(0, math.min(100, input_level + command.delta))
+            field(':NATIVE_INPUT','Input Level').user_value = input_level
         else
             output_level = math.max(0, math.min(100, output_level + command.delta))
             field(':NATIVE_OUTPUT','Output Level').user_value = output_level
         end
-        reply({ok=true, value_position=value_position, output_level=output_level})
+        reply({ok=true, value_position=value_position, output_level=output_level, input_level=input_level})
     elseif command.op == 'pointer' then
         assert(type(command.x) == 'number' and command.x >= 0 and command.x <= 320, 'Invalid pointer X')
         assert(type(command.y) == 'number' and command.y >= 0 and command.y <= 120, 'Invalid pointer Y')
@@ -374,20 +511,37 @@ local function pump(outside_timeslice)
         end
         return
     end
-    incoming = incoming .. channel:read(4096)
+    -- A 2048-frame stereo PCM16 JSON packet can exceed 24KB. Reading only
+    -- 4KB/frame caps transport below 44.1kHz even when the host keeps up.
+    -- One bounded packet per frame remains the execution limit.
+    incoming = incoming .. channel:read(65536)
     if #incoming > 65536 then machine:exit(); return end
     local newline = incoming:find('\n', 1, true)
     -- At most one command per frame: bounded work, no unbounded input drain.
-    if newline and ((settle == 0 and pointer_pending == 0) or machine.paused) then
+    if newline then
         local text = incoming:sub(1, newline - 1)
         local command = json.parse(text)
+        local consumed=newline
+        if command and command.op=='input_audio_binary' then
+            local frames=command.frames
+            if type(frames)~='number' or frames%1~=0 or frames<1 or frames>2048 then
+                reply({ok=false,error='Invalid binary PCM framing'});machine:exit();return
+            end
+            if #incoming<newline+frames*4 then return end
+            command.pcm=incoming:sub(newline+1,newline+frames*4)
+            consumed=newline+frames*4
+        end
+        -- Peripheral PCM delivery must continue while ordinary mouse packets
+        -- settle. Keep the existing serialization for all other commands.
+        if not ((settle == 0 and pointer_pending == 0) or machine.paused
+            or (command and (command.op=='audio' or ((command.op == 'input_audio' or command.op=='input_audio_binary') and command.live == true)))) then return end
         -- frame_done may run inside an emulated timer callback. Loading there
         -- lets the old callback's return path overwrite restored timer state;
         -- saving there can capture a timer before it has been rescheduled.
         -- Service buffer checkpoints only from the paused wall-time callback.
         if command and (command.op == 'checkpoint_save' or command.op == 'checkpoint_load')
            and machine.paused and not outside_timeslice then return end
-        incoming = incoming:sub(newline + 1)
+        incoming = incoming:sub(consumed + 1)
         local ok, failure = pcall(function() execute(assert(command)) end)
         if not ok then reply({ok=false, error=tostring(failure)}) end
     end

@@ -56,6 +56,7 @@ export type S760ClientMessageType =
   | 'MOUNT_DISK'
   | 'CONFIGURE_MEDIA_LIBRARY'
   | 'SELECT_MEDIA'
+  | 'CONFIGURE_PLUGIN'
   | 'NOTE_ON'
   | 'NOTE_OFF';
 
@@ -72,6 +73,7 @@ export type S760ClientMessageType =
  *  NOTE_OFF                      : { note, velocity? }
  */
 export interface S760ClientPayload {
+  root?: string;stateRoot?: string;bootRom?: string;systemDisk?: string;mediaDirectory?: string;confirmReload?: boolean;
   id?: string;
   delta?: number;
   x?: number;
@@ -100,6 +102,7 @@ export const GOTEK_HEIGHT = 32;
 
 /** Mirrors the C++ ServerTelemetry struct / TS S760ServerTelemetry shape. */
 export interface S760ServerTelemetry {
+  pluginConfiguration?: PluginConfigurationState;
   timestamp: number;
   fps: number;
   crtWidth: number;
@@ -120,6 +123,19 @@ export interface S760ServerTelemetry {
   selectedMediaPath?: string;
   libraryError?: string;
   mediaError?: string;
+}
+
+export interface PluginConfigurationState {
+  root:string;stateRoot:string;bootRom:string;systemDisk:string;mediaDirectory:string;
+  needsConfiguration:boolean;saved:boolean;revision:number;error:string;startupError:string;
+}
+
+function pluginConfiguration(value:unknown):PluginConfigurationState|undefined {
+  if(!value || typeof value!=='object')return undefined;
+  const v=value as Record<string,unknown>;
+  if(!['root','stateRoot','bootRom','systemDisk','mediaDirectory','error','startupError'].every(k=>typeof v[k]==='string') ||
+     typeof v.revision!=='number' || !Number.isFinite(v.revision) || typeof v.needsConfiguration!=='boolean' || typeof v.saved!=='boolean')return undefined;
+  return v as unknown as PluginConfigurationState;
 }
 
 // --- Binary frame framing (Server -> Client) ---------------------------------
@@ -516,6 +532,7 @@ export class S760BridgeClient {
     if (typeof o.fps !== 'number' || typeof o.timestamp !== 'number') return null;
     return {
       timestamp: o.timestamp,
+      pluginConfiguration:pluginConfiguration(o.pluginConfiguration),
       fps: o.fps,
       crtWidth: numberOr(o.crtWidth, CRT_WIDTH),
       crtHeight: numberOr(o.crtHeight, CRT_HEIGHT),

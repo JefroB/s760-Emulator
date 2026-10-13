@@ -14,6 +14,24 @@ See the [closure review](../MILESTONE_1_COMPLETION.md) and
 
 ## Physical deployment
 
+The native VST3 output-rendering profile now supports unpaced offline processing
+through its worker, with bounded waits and packet backpressure. SoundCheck's
+offline bounce exactly matches realtime playback with held-note suspend/resume;
+independent native reference replay passes at44.1/48/96kHz. Actual SDK latency
+reports and potentially infinite voice-tail reporting are qualified. This closes
+the scoped Milestone4 output-rendering gate; host sampling input, graphical
+plugin configuration, broader controller semantics and DAW project portability
+remain separately scoped. See the [rendering contract](../NATIVE_VST3_RENDERING.md).
+
+Graphical native VST3 configuration now shares the firmware/media form and shows
+startup errors in a silent native recovery instance. SoundCheck verifies invalid
+change preservation, UTF-8 media paths, editor reopen, corrected host reload and
+loaded playback/release. Saving settings does not replace a processing machine;
+the host must reload to apply. Installed editor assets are required for recovery.
+This closes the scoped Milestone4 configuration gate; full MIDI semantics, host
+sampling input and DAW project portability remain open. See the
+[configuration contract](../NATIVE_VST3_CONFIGURATION.md).
+
 The Windows native boundary passes crash cleanup/reopen, saved-session recovery
 and host-clocked module audio acceptance. The exact Windows standalone package
 now has a [distribution qualification](../DISTRIBUTION_QUALIFICATION.md): actual
@@ -89,13 +107,24 @@ release**:
   media generation/write-revision and **rejects dirty/busy insert or eject**
   until an atomic no-clobber export. LIMITS: whole-wave-RAM compare still differs
   by 347 name/high-mem bytes (sample bytes unchanged); no library writeback,
-  formatting, write-protect/error, or SCSI-save; "dirty" = controller writes, not
+  SCSI-save; "dirty" = controller writes, not
   firmware Save completion.
+  Findings163/164 extend this with acknowledged floppy protection, protected
+  firmware Save, and OS2.24 standard720KB Format/Save/export/reload qualification.
+  HD/foreign formatting and physical FDC timing remain unqualified. See
+  [format evidence](validation/standalone-formatting-2026-10-12.json).
 - **Standalone dev player (finding127, supersedes finding125's "no working host"):**
   a desktop player boots an isolated native MAME process, shows the real CRT/LCD
   in React, accepts mouse/panel, inserts a private floppy copy, and plays MIDI
   through the serial receiver (note60 peak 1459 PCM16, zero release tail). Two
   independent runtime processes work; duplicate state dir rejected.
+  Finding165 adds separate60-host-second and normal-close recovery for this
+  standalone floppy profile. Dirty media and sampler RAM survive the last
+  successful recovery; manual saves stay separate. Restart/startup preserve an
+  existing recovery until explicit restore/replacement. Save failure cancels
+  desktop close, with confirmed quit-without-recovery available. Native exact
+  replay and packaged timer/restore/close pass. Later edits, physical-MIDI/busy
+  delays and power-loss guarantees remain limits. [Evidence](validation/standalone-auto-recovery-2026-10-12.json).
 - **Native C++ runtime + VST3 (findings130–133):** the shared runtime exposes
   pause/resume/step, demand-driven PCM render (1–8192 frames, exact block sizes,
   ≤0.9999 PCM16 vs MAME WAV), a direct Windows C++ client (no Python/React,
@@ -163,3 +192,112 @@ refreshed displays match; all-rate plugin replay passes. SCSI writeback remains
 broken (BUG-015), and actual DAW compatibility remains unqualified.
 See the [state contract](../NATIVE_PLUGIN_STATE.md) and
 [validation](validation/native-plugin-state-2026-10-11.json).
+
+
+## Native sampling postprocessing checkpoint (2026-10-12)
+
+BUG-043 is fixed for the observed OS2.24 synchronous IC4 A7 wave-to-RAM
+transfer. Start now exhausts the count and reaches waveform review; the preserved
+previous executable fails the same native regression. The inverse BC transfer
+validates both full byte ranges and even count, copies, advances addresses and
+clears count. Read-only diagnostic taps preserve exact131072-frame native PCM
+and both displays; independent load/play/release and307 backend tests pass.
+ADC capture remains open: input meter0x10001C and recording-position0x100010/12
+return unmapped values. Arming observes slots4/20 with mode8, which is a constraint
+rather than a qualified input model. No captured signal, recorded PCM integrity,
+physical timing, packaged acceptance or full sampling workflow is claimed.
+See [sampling contract](../NATIVE_SAMPLING.md) and
+[validation](validation/native-sampling-dma-2026-10-12.json).
+
+
+The standalone native entry point now has a Configuration screen for live MIDI
+selection and existing output/backend/buffer settings, with firmware/media
+configuration below. Its 61-key keyboard is hidden by default and persists its
+visibility per instance; note holds release on blur/hide/teardown.312 backend,
+117 React, packaged native browser preference/audio-restart and actual WebView
+boot checks pass. The VST editor remains host-driven. Subsequent physical sampling
+qualification below leaves two Milestone3 objectives: device qualification and
+production ADC semantics/rates. See [standalone configuration](../STANDALONE_PLAYER.md) and
+[validation](validation/standalone-configuration-2026-10-12.json).
+
+
+Standalone Input Level is now qualified for the experimental native44.1kHz
+recording profile: unity/half/mute PCM after cold session recall, independent of
+Output Level, survives firmware Sample Save/fresh Load exactly.322 backend,
+119 React, source/packaged browser gain/restore/reconnect and actual WebView boot
+checks pass. The gain objective is complete; physical capture-device selection,
+negotiated capture and realtime external sampling remain open. See
+[qualification](validation/native-input-level-2026-10-12.json).
+
+Physical external sampling is now complete for the supported MOTU Windows MME
+44.1 kHz stereo profile: outputs 3/4 to inputs 1/2, exact captured PCM through
+original firmware Sampling, zero native underruns and exact Sample Save/fresh
+Load. Recording selection, restart/readback and reconnect pass in source and
+packaged browsers;329 backend/120 React tests pass. Two Milestone3 objectives
+remain: broader playback/MIDI device qualification and production ADC
+semantics/rate/driver qualification. [Physical sampling evidence](validation/native-physical-sampling-2026-10-12.json).
+## Standalone ASIO delivery
+
+ASIO is now a selectable standalone backend, with persistent driver, stereo
+input/output pairs and buffer controls. MOTU128/512/1024-frame duplex, native
+patch playback/release and physical-input firmware Sampling/Save/fresh Load
+pass.341 backend/121 React tests, native core/plugin/ASIO queues, source and
+packaged browser configuration and actual desktop boot/close pass. The two
+broader Milestone3 qualification gates remain open; measured physical latency,
+indefinite clock drift, other rates/drivers and hotplug are not inferred from
+this supported profile. [Evidence](validation/standalone-asio-2026-10-12.json).
+
+The standalone device objective is now complete for the documented finite
+profiles: selected Windows48kHz output conversion from native44.1kHz PCM,
+packaged settings persistence, actual MOTU software reopen after a closed-stream
+error, five-minute/150-note playback without reported output losses, and measured
+physical bridge arrival upper bounds with explicit limits. Larger transport
+buffering trades latency for scheduling headroom; its371.52ms target is visible
+separately from driver latency.354 backend/123 React tests and native queue tests
+pass. Production ADC alternate clocks, driver-level loss coverage and hardware
+register/meter semantics remain the one open Milestone3 objective. Physical
+unplug/replug tests were removed by user direction.
+[Device evidence](validation/standalone-audio-devices-2026-10-12.json).
+
+Milestone4 SDK/discovery/bus/scan-load acceptance is complete for SoundCheck1.0.0
+Windows x64 native QA hosting. The current concrete WebView2 module passes an
+independent Steinberg-header ABI probe, including stereo output,16-channel MIDI
+input and rejection of nonexistent buses; native ADC input remains hidden.
+SoundCheck loads the current instrument. Its response leaves extended version
+and subcategory fields empty. The extended playback rerun was stopped at an
+obsolete disk-name UI selector, so earlier loaded-sample qualification is retained
+without claiming a new playback pass. Other DAWs, lifecycle isolation, project
+portability, full MIDI control, variable rates/blocks and host input remain open.
+[SDK/host evidence](validation/milestone-4-sdk-host-2026-10-12.json).
+
+Milestone4 processing and lifecycle qualification now passes for the documented
+Windows x64 native QA profile. At44.1/48/96kHz,12-second paced processor runs
+with64/127/256/511/1024-frame callbacks reproduce independent native checkpoint
+renders exactly, with silent release and zero missed callback deadlines. Callback
+queues are bounded; unsupported rates, block limits and float64 buffers reject.
+Started streams reject rate changes rather than discarding queued state.
+SoundCheck1.0.0 at44.1kHz/512 frames loads ROBOFULL through original firmware,
+plays the expected20,004Hz fixture, preserves held audio through editor reopen,
+and verifies separate media/gain for two instances and survivor behavior after
+removal. Actual SDK editor attachment verifies size readback at1200x900,
+1600x1200 and1440x1100. Removal followed by host exit leaves no native children.
+The earlier stale-selector playback limitation is superseded by this passing run.
+Sustain/bend/controllers/panic, host sampling input/offline acceptance, graphical
+setup and project portability remain open. Other DAWs, indefinite soak, hardware
+parity and shutdown with active instances/crash recovery are not inferred.
+[Processing/lifecycle evidence](validation/milestone-4-processing-lifecycle-2026-10-12.json).
+
+Native VST3 controller transport now implements actual SDK MIDI mapping and
+bounded parameter queues for16-channel CC0–127 and14-bit bend. A12-second paced
+varying-block render matches independently scheduled native MIDI exactly,
+including effective channel15 CC123 while channel0 plays. SoundCheck automation
+measures CC7 scaling, CC64 held/released notes and CC123 silence on original
+OS2.24/ROBOFULL.354 backend tests, C++ core/plugin and actual SDK queue/metadata/
+overflow checks pass. The private SoundCheck QA adapter was repaired to forward
+stored automation through real SDK queues; its independent checkout is unchanged.
+The full MIDI gate remains open: configured audible bend and other controller
+effects/reset semantics are unqualified, CC120 did not silence this fixture,
+and an already-silent reset trial is not evidence of reset behavior. Firmware
+bytes are unchanged. See the [controller contract](../NATIVE_VST3_MIDI.md),
+[text/audio report](validation/milestone-4-midi-automation-2026-10-12.txt) and
+[source/binary evidence](validation/milestone-4-midi-2026-10-12.json).

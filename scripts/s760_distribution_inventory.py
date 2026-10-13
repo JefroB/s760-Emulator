@@ -70,6 +70,7 @@ def inventory(package, build, search_paths=None):
         key=owners.get(str(source.resolve()).casefold())
         low=source.name.lower()
         if source.is_relative_to(Path(__file__).resolve().parent): key='s760-project'
+        if source==Path(__file__).resolve().parents[1]/'build/Release/s760_asio.dll': key='s760-project'
         if low=='base_library.zip' and source.parent==build: key='cpython-and-vendored-libraries'
         if 'webview2' in low: key='microsoft-webview2-sdk'
         elif low.startswith(('api-ms-win-','vcruntime','ucrtbase')): key='microsoft-windows-runtime'

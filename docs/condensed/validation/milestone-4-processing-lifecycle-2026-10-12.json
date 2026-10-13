@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-12",
+  "nativeProfile": "Original ROM/OS2.24 with ROBOFULL; native plugin processor, paced wall-clock callbacks; independent checkpoint render compared exactly",
+  "nativeCommand": "s760_native_plugin_tests.exe D:/S-760 PRIVATE_STATE --paced-var RATE 12",
+  "rates": [
+    {
+      "rate": 44100,
+      "blocks": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=529200 rate=44100 reference_exact=1 peak=0.0445375 tail=0 first_audible=12726 reported_latency=12288 paced=1 varied=1 max_callback_us=29 max_deadline_fraction=0.01029 missed_deadlines=0"
+    },
+    {
+      "rate": 48000,
+      "blocks": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=576000 rate=48000 reference_exact=1 peak=0.0445375 tail=0 first_audible=14176 reported_latency=13393 paced=1 varied=1 max_callback_us=20.7 max_deadline_fraction=0.0123 missed_deadlines=0"
+    },
+    {
+      "rate": 96000,
+      "blocks": [
+        64,
+        127,
+        256,
+        511,
+        1024
+      ],
+      "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=1152000 rate=96000 reference_exact=1 peak=0.0446113 tail=0 first_audible=28973 reported_latency=26785 paced=1 varied=1 max_callback_us=167.5 max_deadline_fraction=0.03915 missed_deadlines=0"
+    }
+  ],
+  "soundcheck": {
+    "rate": 44100.0,
+    "peak": 0.04453751817345619,
+    "frequency": 20004.0,
+    "tailPeak": 0.0,
+    "editorReopenedWhileHeld": true
+  },
+  "soundcheckLevels": {
+    "50": 0.022268759086728096,
+    "0": 0.0,
+    "100": 0.04453751817345619
+  },
+  "editorSdk": [
+    "Independent SDK editor attach/resize/readback/reopen passed",
+    "Independent SDK factory/component/bus/controller ABI passed"
+  ],
+  "regressions": "354 Python tests; plugin, native stream and native rate converter suites passed",
+  "configurationRejection": "32000 Hz, max block 1025, max block 0, float64 rejected; valid 44100 setup then exact paced playback passed",
+  "callbackAudit": "process_native and NativeStream::process use stack/fixed arrays, bounded queues and atomics; rendering/socket/disk work is on worker/lifecycle paths. Supported float32 stereo output, 1..1024 frames, at most64 events/block. Overflow/underrun faults latch and clear output.",
+  "artifacts": {
+    "scripts/s760_runtime.lua": "5ee465c4e011217c7d635df28f820285e36b1ab126711745acba2859b6ec52d1",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "core/src/s760_vst3_plugin.cpp": "07ead865403a864d1d420f44a6f88e1ce69124ff02914899fca13332ed3d93de",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "471b7a353beb88590e4994a294f4d4f53f1907f32afc6ad367785fd4c7c33cb2",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/s760_vst3_sdk_tests.exe": "8c0f8671895b25b05def1a5d0884c56031289016ccfe3281361a8de5e88c464e",
+    "core/include/s760/s760_native_stream.hpp": "4f8aad922eb14ec78074d751e389d2541897a1775b740997b07ef0d41721d25f",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "8577bad005bac6e0880c40415e2773e930dc54f9be81c9b6b4148fc5b58d538f",
+    "core/tests/test_vst3_sdk.cpp": "f8bace07c93cee20fba801893c4e3db80cbcc1b6fb6465b64e6e3ac37131ae0c",
+    "core/tests/test_native_plugin.cpp": "2ee9a87359d9d15a2f6e6c857ff1aab8ea34dfa7f3443f3021ce9e5ddb6bf495",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd"
+  },
+  "limits": [
+    "12-second native paced profiles are finite qualification, not indefinite soak or hardware fidelity.",
+    "SoundCheck native SDK host version1.0.0 Windows x64 uses44100/512. Rate matrix uses repository native processor harness, not multiple DAWs.",
+    "Host rate changes on a started stream are rejected to preserve queued state; a fresh stream is required.",
+    "SDK editor resize verifies attached view size readback1200x900/1600x1200/1440x1100, not visual layout at all possible sizes.",
+    "MIDI sustain, pitch bend, controllers/panic, host input, portability and offline actual-host rendering remain open."
+  ],
+  "twoInstances": {
+    "ids": [
+      "vst_870132_1",
+      "vst_870132_2"
+    ],
+    "independentGain": true,
+    "independentMedia": true,
+    "removeFirstPreservesSecond": true,
+    "reopenPreservesSecond": true
+  },
+  "cleanup": "After removal of both plugins and test-host exit, Get-CimInstance found no SoundCheckServer.exe or mames760.exe processes. Shutdown qualified after explicit plugin removal; shutdown with active instances/crash recovery not inferred.",
+  "automationCorrections": [
+    "Removed obsolete OS disk-name selector; current SoundCheck fixture test passes.",
+    "Initial dual-instance control test did not service callbacks; corrected run verifies independent gain/media.",
+    "Initial reopen check reused old browser connection; closing last editor restarts WebView2; bounded CDP reconnect passes."
+  ]
+}

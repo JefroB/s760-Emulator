@@ -1,0 +1,141 @@
+{
+  "date": "2026-10-12",
+  "completed_gate": "Bounded standalone periodic and normal-close recovery of sampler/dirty floppy state beyond explicit manual saves",
+  "source_sha256": {
+    "scripts/s760_standalone.py": "3062853dce652b48e55235fca03bacb0c0305a82381dc46828a4a0832000173f",
+    "scripts/s760_runtime.py": "5bdf0ec2b42b3654c71bea7511ae6e6882e8007df04a594b10b50eb84a5f4e92",
+    "scripts/s760_runtime.lua": "4cf01531c258027090c9f39d2e3f4d7ff3beb329f783741ab1fa32eb915ff917",
+    "scripts/verify_standalone_recovery.py": "47a569b7fd065a73e1d10bb2a6161461c227724c9a122cd257544992107c4bef",
+    "google-ui/src/NativeStudio.tsx": "eb3b746b368272f8eaadb0f97293638da05cfc2c4c0fd6b306f2d0696e53c4b9",
+    "google-ui/src/NativeStudio.test.tsx": "cd12129cde12263492041b0ac20587d73f0e4eaae490e430771f76d390616b10",
+    "google-ui/e2e/native-auto-recovery.spec.ts": "43575c815a80ece82fc258fa94ce9b61b8120e75142cb2f71fa62916ea54177f",
+    "tests/test_standalone_sessions.py": "fad122cc90578db7a2654d3eebba7403bab4b8e3afad288b822e7aa9376b4124",
+    "tests/test_standalone_inputs.py": "4047af0bf5377e407cbe4844ceb9b3e6c2ddec07efa0b3b01f580766c3d81433",
+    "tests/test_firmware_readiness.py": "09540630ec339f3b40d08a921cca78de5c619f8b9a6f1119f1ccad7a8807de95"
+  },
+  "binary_fixture_sha256": {
+    "mame-source/mames760.exe": "cd0d7d9cbeb0e737b520cdf16b9aa667c972a6813300463894f5e4145d3eb35d",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "prerequisites": "Existing Windows x64 workstation, supplied IC15/OS2.24/ROBOFULL, native MAME, Node/Chromium and private desktop dependencies; private state/media only",
+  "policy": {
+    "manual_slot": "sessions/latest.s760state",
+    "recovery_slot": "sessions/recovery.s760state",
+    "interval_host_seconds": 60,
+    "after_observed_boot": true,
+    "atomic_replace_and_file_fsync": true,
+    "dirty_flag_not_cleared": true,
+    "normal_close_save_or_cancel": true,
+    "explicit_quit_without_recovery": true,
+    "startup_restart_settings_manual_restore_hold_previous_recovery": true
+  },
+  "native": {
+    "command": "python scripts/verify_standalone_recovery.py --state-dir docs/ic20-hle-findings/chatGPT-work/m3-recovery-native-delivery",
+    "result": {
+      "dirty_revision": 134,
+      "automatic_recovery_pcm_frames_exact": 131072,
+      "displays_exact": true,
+      "child_failure_new_process": true,
+      "normal_close_reopen_dirty_bytes_exact": true,
+      "manual_save_preserved": true,
+      "startup_recovery_preserved": true,
+      "original_media_preserved": true,
+      "failed_close_preserves_running_dirty_state_and_previous_archive": true,
+      "recovered_play_release": true,
+      "export_sha256": "c9ebd38b829c345e83ffbd0dd4a63832afe434f6ea5fda7fcfc726d4824fca76",
+      "timer": "expedited host deadline; production interval tested separately in browser"
+    },
+    "private_evidence_directory": "docs\\ic20-hle-findings\\chatGPT-work\\m3-recovery-native-delivery",
+    "reference_export_sha256": "c9ebd38b829c345e83ffbd0dd4a63832afe434f6ea5fda7fcfc726d4824fca76",
+    "crash_export_sha256": "c9ebd38b829c345e83ffbd0dd4a63832afe434f6ea5fda7fcfc726d4824fca76",
+    "normal_close_export_sha256": "c9ebd38b829c345e83ffbd0dd4a63832afe434f6ea5fda7fcfc726d4824fca76"
+  },
+  "runtime_regression": {
+    "command": "python scripts/verify_native_runtime.py --state-dir docs/ic20-hle-findings/chatGPT-work/m3-recovery-runtime-regression",
+    "result": {
+      "native_boot_frames": true,
+      "long_mouse_jump": [
+        300,
+        120
+      ],
+      "midi_note": 60,
+      "held_peak_pcm16": 1459.0,
+      "release_tail_peak_pcm16": 0,
+      "sample_rate": 44100,
+      "note_start": 79.55,
+      "note_release": 81.766666666667,
+      "process_shutdown": "clean",
+      "system_audio": {
+        "enabled": false,
+        "backend_requested": "auto",
+        "buffer_target_ms": 0,
+        "throttled": false,
+        "device_latency_measured": false
+      }
+    }
+  },
+  "regressions": {
+    "backend": {
+      "command": "python docs/ic20-hle-findings/chatGPT-work/m3_pytest_runner.py",
+      "passed": 307,
+      "skipped": 0,
+      "seconds": 36.42
+    },
+    "react": {
+      "command": "node node_modules/vitest/vitest.mjs run --maxWorkers=4",
+      "passed": 115,
+      "files": 22,
+      "seconds": 8.22
+    },
+    "typescript_lint": "npm run lint: exit0",
+    "frontend_build": "npm run build: exit0 (package build)",
+    "baseline": "Five new lifecycle tests fail before implementation: missing recovery API"
+  },
+  "packaged": {
+    "build_command": "scripts/build_standalone.ps1 -OutputDirectory docs/ic20-hle-findings/chatGPT-work/m3-recovery-delivery-package",
+    "executable_sha256": "50acf3893f13bec4a9c3e6431af36b896f897994e14d74b975b40d91fa86cfd5",
+    "native_sha256": "cd0d7d9cbeb0e737b520cdf16b9aa667c972a6813300463894f5e4145d3eb35d",
+    "development_package_ok": true,
+    "release_ready": false,
+    "errors": [],
+    "browser": {
+      "command": "S760_AUTO_RECOVERY_URL=<fresh packaged URL> S760_AUTO_PENDING_URL=<copied recovery URL> S760_AUTO_PENDING_ARCHIVE=<private path> S760_AUTO_ARCHIVE=<private path> node node_modules/@playwright/test/cli.js test e2e/native-auto-recovery.spec.ts --workers=2",
+      "passed": 2,
+      "elapsed_report": "1.1m",
+      "real_production_interval_waited": true,
+      "startup_archive_unchanged_after_seconds": 61,
+      "checks": [
+        "loaded firmware patch captured by automatic timer without explicit save",
+        "confirmed restore after restart restores known patch pixels",
+        "manual save stays unavailable/independent",
+        "startup existing recovery preserved",
+        "explicit quit disconnects and retains archive"
+      ]
+    },
+    "desktop": {
+      "command": "S760Studio.exe --verify-desktop --no-sound --fast --seconds 60 --state-dir <private> --boot-rom <external> --system-disk <external> --media-dir <external>",
+      "exit_code": 0,
+      "result": {
+        "status": "OS ready \u2014 Perform Play.",
+        "width": 640,
+        "height": 480,
+        "nonzero": 225776
+      },
+      "normal_close_recovery_bytes": 160513285,
+      "normal_close_recovery_sha256": "8f953136f5a08b2b1fd1fa6e185e0bf816bc508c93bc3366d5a9efa2d647f430"
+    }
+  },
+  "limitations": [
+    "Only the last successful recovery is retained; edits after it or before the first snapshot may be lost on forced termination.",
+    "Busy controller, external MIDI, failed storage or identity errors can delay/prevent snapshots; UI reports these conditions.",
+    "Checkpoint capture pauses audio and uses roughly160MB per archive plus temporary replacement storage.",
+    "Headless/bounded termination reports failed capture but cannot cancel an external forced termination.",
+    "No power-loss/filesystem directory-durability guarantee or instantaneous journaling.",
+    "Supported same-build standalone floppy profile only; no plugin autosave or new SCSI workflow qualification.",
+    "No physical audio-input/MIDI/device timing or clean-machine/public-release acceptance.",
+    "Native test expedites the host recovery deadline; separate packaged browser test waits the production interval.",
+    "Failed-close native test injects an OSError at checkpoint publication; actual disk exhaustion was not induced."
+  ]
+}

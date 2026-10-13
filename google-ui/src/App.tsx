@@ -17,6 +17,7 @@ import { soundFx } from './audio/soundFx';
 import { StudioLayout } from './components/StudioLayout';
 import { detectEmbeddedTransport } from './bridge/S760BridgeClient';
 import { BridgeProvider } from './bridge/BridgeContext';
+import {PluginConfiguration} from './components/PluginConfiguration';
 
 export default function App() {
   const embedded = !!detectEmbeddedTransport();
@@ -395,6 +396,7 @@ export default function App() {
 
   return (
     <BridgeProvider>
+    {embedded && <PluginConfiguration/>}
     <div style={embedded?{height:"100vh",overflow:"hidden"}:undefined} className="min-h-screen bg-[#0a0c0f] text-neutral-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
       {/* Top Header Bar */}
       <header className="flex items-center justify-between px-6 py-2.5 border-b border-neutral-800 bg-[#101216] shrink-0">

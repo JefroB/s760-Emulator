@@ -3,8 +3,9 @@
 The Value knob edits the parameter under the firmware cursor. Output Level
 attenuates the current Stereo Out 1 signal. Both use the same native runtime
 in the standalone and VST3; the approved embedded rack layout is preserved.
-Input Level remains disabled until the native recording path in Milestone 3
-is implemented and qualified.
+Standalone Input Level now controls native recording gain with acknowledged
+readback and same-build session recall. The VST knob remains disabled pending
+host input routing; physical capture-device selection remains open.
 
 ## Evidence and routing
 
@@ -13,7 +14,7 @@ is implemented and qualified.
 | Value rotation | Owner's Manual Basic 0-6 and 7-10; Service Notes p18 CN10; OS 2.24 bank003B:452D–45A9 | Relative MAME input, read/clear latch at F012; firmware performs the edit |
 | Menu | Service Notes p18 CN10 SC0/SP4 | Separate momentary panel switch |
 | Output Level | Owner's Manual Basic 0-6; Service Notes p20 VR1 Volume, IC65 phones and IC66 Stereo Out A | Linear software attenuation on the native stereo monitor output, 0–100%; default unity |
-| Input Level | Service Notes p20 VR1 Rec Level preceding IC61/IC58 analog conversion | Deferred with the native ADC/input path; not a firmware parameter or a second Value encoder |
+| Input Level | Service Notes p20 VR1 Rec Level preceding IC61/IC58 analog conversion | Standalone linear recording gain0–100% before native ADC meter/wave writes; not a firmware parameter or a second Value encoder |
 
 The output control does not change patch/TVA data. The physical manual says it
 affects Stereo Out 1 and headphones, not the other outputs. The implementation
@@ -86,4 +87,35 @@ output peaks0.04453751817345619 /0.022268759086728096 /0 at100% /50% /0%,
 50% readback after editor recreation, restored full-level playback at20,004Hz,
 and silent release. See the [qualification record](condensed/validation/milestone-2-rack-controls-2026-10-11.json).
 This completes Milestone2 playback/UI acceptance for the Windows development
-profile; Input Level remains explicitly unimplemented in Milestone3.
+profile. Standalone Input Level is qualified separately below; VST host input
+routing remains open.
+
+
+## Standalone Input Level acceptance
+
+The enabled rack knob sends bounded `DIAL_DELTA` commands with ID `INPUT`.
+The native adjuster owns the0–100% value and reports it through firmware-status
+packets; React waits for acknowledgement before moving its value indicator.
+Input and Output levels are independent. Recording gain is applied when queued
+stereo PCM is consumed, before meter values and recording wave-memory writes.
+Each signed input sample becomes `s16(s32(sample) * level / 100)`, with integer
+division toward zero. Default100% preserves PCM;50% halves it;0% mutes recording.
+The callback uses bounded existing storage and performs no new allocation or I/O.
+This is linear software gain, not a calibrated analog potentiometer/ADC model.
+
+Checkpoint metadata preserves input gain independently of output volume and
+restores the native adjuster before rendering resumes. Native tests cold-restore
+an armed sampler after deliberately setting the replacement process's gain to
+zero, then record at the restored value. Both independent channel patterns match
+every expected sample at100%,50% and0%, with Output Level muted. The resulting
+firmware Sample Save/export and fresh Sample Load preserve all allocation bytes;
+all three runs report zero recording underruns. Source and packaged browser
+checks verify knob readback, reconnect and saved-session restoration.322 backend
+and119 React tests plus five shared-shell checks pass; default-off native replay
+is bit-identical to the prior binary for132,300 stereo frames and both displays.
+[Input Level qualification](condensed/validation/native-input-level-2026-10-12.json).
+
+Physical recording-device selection, negotiated capture rates, realtime input
+timing/dropouts, analog pot taper/headroom and VST host input routing remain open.
+The experimental offline ADC profile remains disabled by default. The standalone
+knob retains a valid gain setting even when no input source is connected.

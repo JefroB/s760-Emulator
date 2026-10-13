@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-12",
+  "source_revision": "871bfa52bdb72e44dbeffa628ce04f35b2185dd6",
+  "working_tree_dirty": true,
+  "identities": {
+    "core/src/s760_vst3_plugin.cpp": "e358b87993111c44f963b7cda2175a78872fad1a7ce3c01d77c8aee92bd28e2b",
+    "core/src/s760_bridge.cpp": "7d526caec5115fba1ff01c870d72e4bb6a0e594dd69c934609d4bce046c0b684",
+    "core/include/s760/s760_native_runtime.hpp": "3f01e154a8710d04858ef0552b90eda3e2a9823e4e8519f1740a1f93a4a9631e",
+    "core/tests/test_native_plugin.cpp": "6d7f5e0975aa85a2dad994adf3b7d3b82216f5557020cbdb8779d868c0d71f0a",
+    "google-ui/src/components/PluginConfiguration.tsx": "0c55172e458e85c5ea7db75900e0ecd41578eb9648516bc8076639d04aa2bfb5",
+    "google-ui/src/components/RuntimeSettings.tsx": "2b5f93d217b4a2ce58bbf119957bf8b5cb53686066bd5786b3d4d52873519e52",
+    "google-ui/src/bridge/S760BridgeClient.ts": "9aca0744357ff1fccfc2e9bdabaf38d76521e7dc6449b5b41afff10d34ee6c27",
+    "google-ui/dist/index.html": "2c894021ca967443a40e8ba077f484060e35f72fe081e5eba55496d6cca01c1e",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe",
+    "build/Release/Roland_S760.vst3": "88a59e75d7f2ede78e84f851e9267e85933e3c839467071a7a7bb70e028aab35",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "soundcheck": {
+    "host": "SoundCheck1.0.0 private native SDK host",
+    "module_sha256": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe",
+    "initial_missing_firmware_visible": true,
+    "pending_silent": true,
+    "invalid_preserves_settings": true,
+    "valid_saved": true,
+    "reopen_editor_persists": true,
+    "host_reload_boots": true,
+    "media_directory_persists": true,
+    "peak": 0.04453751817345619,
+    "frequency": 20004.0,
+    "release_peak": 0.0
+  },
+  "exported_factory": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=529200 rate=44100 reference_exact=1 peak=0.0445375 tail=0 first_audible=12578 offline=0 reported_tail=4294967295 reported_latency=12288 paced=1 varied=1 max_callback_us=18.4 max_deadline_fraction=0.01029 missed_deadlines=0",
+  "tests": {
+    "backend": "354 passed in43.06s",
+    "frontend": "125 passed",
+    "sdk": "Independent Steinberg-header probe passed",
+    "build": "Release default and WebView module passed",
+    "core": "C++ core and plugin tests passed"
+  },
+  "commands": [
+    "cmake --build build --config Release",
+    "s760_native_factory_tests.exe ROOT PRIVATE_STATE --paced-var 44100 12",
+    "npm run lint",
+    "vitest run --maxWorkers=4",
+    "npm run build"
+  ],
+  "limitations": [
+    "Windows x64 SoundCheck1.0.0 private native SDK host; other DAWs not inferred",
+    "Settings apply after host reload; no live machine replacement",
+    "Missing editor installation still requires repair",
+    "Unconfigured instances cannot save machine checkpoints",
+    "Host environment overrides retain precedence",
+    "No DAW project portability or host ADC/input qualification implied"
+  ]
+}

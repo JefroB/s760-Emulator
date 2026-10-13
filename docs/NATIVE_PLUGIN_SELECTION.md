@@ -25,11 +25,13 @@ instances share one host. The native client locks that directory and owns its
 child process. Instance files are retained for diagnosis; they are not complete
 host project state or an automatic recovery mechanism.
 
-Missing configuration/files, startup failure and unknown requested interfaces
-return a failure and null output pointer. Native configuration/startup errors
-are also written to the host process's stderr. No exception escapes component
-creation. This is a development configuration contract; graphical configuration,
-host-visible error presentation and distributable packaging remain unfinished.
+Missing configuration/files and runtime startup failures now create a silent
+native configuration instance with the startup reason displayed in its editor.
+Correct and save paths there, then reload through the host. No historical engine
+is substituted. Unknown requested interfaces still fail with a null pointer;
+missing installed editor assets require installation repair. Errors are also
+written to stderr and the settings-side diagnostic file. No exception escapes
+component creation. See [graphical setup and recovery](NATIVE_VST3_CONFIGURATION.md).
 
 ## Supported surface and compatibility
 
@@ -54,7 +56,7 @@ cmake --build build --config Release
 ```
 
 Use a fresh private state root for this test. It loads the actual module using
-`LoadLibrary`, resolves `GetPluginFactory`, checks missing-configuration failure,
+`LoadLibrary`, resolves `GetPluginFactory`, checks silent missing-configuration recovery,
 requests both component and processor interfaces, and verifies distinct native
 children. With the historical selector explicitly set to `core`, the exported
 component still boots native firmware, loads ROBOFULL through firmware controls,
@@ -63,7 +65,8 @@ PCM at wall-clock pace. The test also checks note offsets/release, rejected
 native input and invalid state requests, suspend/resume and termination. The
 separate `--state` acceptance covers supported native save/recall.
 
-This is an exported-module harness using this repository's interface definitions,
-not a scan/load test in a real DAW or the user's SoundCheck host. Full VST3 SDK
-ABI, metadata, bus descriptions and actual editor/host behavior still need host
-acceptance. See the [evidence record](condensed/validation/native-factory-2026-10-11.json).
+This exported-module harness uses this repository's interface definitions.
+Independent SDK ABI and actual SoundCheck host/editor qualification are recorded
+separately in the [roadmap](COMPLETION_ROADMAP.md); other DAWs remain unqualified.
+The [original factory record](condensed/validation/native-factory-2026-10-11.json)
+is historical and predates graphical recovery.

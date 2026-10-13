@@ -1,0 +1,133 @@
+{
+  "profile": "MOTU ASIO outputs 3/4 to Windows MME inputs 1/2 44100Hz stereo PCM16",
+  "samples": [
+    {
+      "channel": 0,
+      "frames": 65514,
+      "allocation_bytes": 138240,
+      "pcm_sha256": "0a50ccd1db9f3a72994c0e3adeede5a2925b890c36bfa870086048579b50eb2a",
+      "metadata_hex": "4e45573a556e6e616d65642020207f4c000000000000000000e9ff0000f80d0100fc0d010200000005000f00013c0000",
+      "known_physical_tone_hz": 440.268811514446,
+      "wave_disk_cold_reload_equal": true,
+      "exact_captured_input_pcm": true,
+      "captured_input_offset_frames": 1522246
+    },
+    {
+      "channel": 1,
+      "frames": 65514,
+      "allocation_bytes": 138240,
+      "pcm_sha256": "b776f9fcc6363988aa1a0c54490b387c4ac9a6ee5599ef724f6114de66364d33",
+      "metadata_hex": "4e45573a556e6e616d65642020207f52000000000000000000e9ff0000f80d0100fc0d010200000014000f00013c0000",
+      "known_physical_tone_hz": 879.759762937877,
+      "wave_disk_cold_reload_equal": true,
+      "exact_captured_input_pcm": true,
+      "captured_input_offset_frames": 1522246
+    }
+  ],
+  "input_level": 100,
+  "output_level_during_recording": 0,
+  "cold_gain_recall": false,
+  "capture": {
+    "state": "active",
+    "message": "Recording: Stereo In 1-2 (MOTU Pro Audio v \u2014 44.1 kHz stereo PCM16.",
+    "device": "Stereo In 1-2 (MOTU Pro Audio v",
+    "rate": 44100,
+    "channels": 2,
+    "format": "PCM16",
+    "receivedFrames": 4544512,
+    "discardedFrames": 18432.0,
+    "bufferCapacityFrames": 16384,
+    "driverLossMeasurement": "unavailable",
+    "nativeUnderruns": 0,
+    "discontinuities": 0
+  },
+  "native_input": {
+    "queued": 12004,
+    "underruns": 0,
+    "ok": true
+  },
+  "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b",
+  "source_preserved": true,
+  "saved_sha256": "cad7b09dec3c84f8356f26259de142f9d8eed199af9786b7aacdc1de48f42920",
+  "identities": {
+    "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "scripts\\s760_runtime.lua": "98f387f36bd8c122e79b2715f673c71da48dced3876018295c6933eb79c7c194",
+    "scripts\\s760_runtime.py": "b26a7d6c2c2f794b253b09db2f45b68407e2fe4b13fcc2ce79fcceee75f8cce2",
+    "scripts/s760_capture.py": "ad794bede82d0c7ad0f24e2adf42c97f7bbce842135fd6e9c63f4546a5efeea0",
+    "scripts/s760_standalone.py": "6c13c941a5175bee9b844289cfee86f05ed443a66db0bd712e52c1a78d6cf21d",
+    "google-ui/src/NativeStudio.tsx": "7ede955701309b8798154f90e4d621d5659cb3f65a2754f7123321047c1b99b1",
+    "google-ui/src/components/RuntimeSettings.tsx": "4c61931ec36da429e82bcc80d87aef46bc5cc67e653ffc59a6819b070f91b21b",
+    "docs/ic20-hle-findings/chatGPT-work/motu_live_sampling.py": "4d60efba5cad8934dc730fce2e1349b5dfb8c710aed04ca8905c172a45df2361",
+    "docs/ic20-hle-findings/chatGPT-work/motu_loopback.py": "b0b4d3fbf1fcd20f13b5ee6a1fbfdd0d9d97a6c71d758fdf09c17fa31ae9d597",
+    "docs\\ic20-hle-findings\\chatGPT-work\\capture-package-final\\dist\\S760Studio\\S760Studio.exe": "4e7bd8e2732b91563dd4e71768becba3ce779a4f92adede44a9abba2880df3a4",
+    "docs\\ic20-hle-findings\\chatGPT-work\\capture-package-final\\dist\\S760Studio\\scripts\\s760_runtime.lua": "98f387f36bd8c122e79b2715f673c71da48dced3876018295c6933eb79c7c194"
+  },
+  "limitations": [
+    "Physical driver losses are not measurable through Windows MME; OS format conversion may occur",
+    "Analog gain taper/headroom, other recording rates and hardware register semantics remain open",
+    "Experimental ADC remains disabled by default",
+    "18432 discarded frames are reported across the complete workflow, including non-recording/paused phases; both recorded channels match a contiguous captured PCM interval exactly",
+    "Production ADC register/meter semantics, alternate rates, physical disconnect/reconnect and long-term clock drift remain open",
+    "MOTU ASIO is used only by the private tone fixture; standalone production input currently uses Windows MME",
+    "Development package acceptance does not qualify clean-machine redistribution"
+  ],
+  "date": "2026-10-12",
+  "gate": "Milestone 3 external audio sampling / firmware Save / fresh Load",
+  "command": "python docs/ic20-hle-findings/chatGPT-work/motu_live_sampling.py --blank-disk docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img --state-dir docs/ic20-hle-findings/chatGPT-work/motu-live-sampling-34-transport",
+  "prerequisites": [
+    "User connected physical MOTU outputs 3/4 to inputs 1/2",
+    "MOTU Pro Audio v2 ASIO test source selects zero-based channels 2/3",
+    "Original S-760 v1.11 boot ROM and v2.24 system disk",
+    "Empty firmware-formatted 720KB floppy fixture"
+  ],
+  "fixture": {
+    "tones_hz": [
+      440,
+      880
+    ],
+    "generator_amplitude_pcm16": 256,
+    "observed_device_peak_pcm16": [
+      2299,
+      2298
+    ],
+    "observed_device_rms_pcm16": [
+      1622.8548369925493,
+      1619.2103270063158
+    ]
+  },
+  "timing": {
+    "throttle": true,
+    "capture_interface_hz": 44100,
+    "native_input_fifo_frames": 16384,
+    "windows_buffers": 8,
+    "windows_buffer_frames": 2048,
+    "startup_prime_frames": 8192,
+    "captured_frames_over_workflow": 4544512,
+    "recorded_frames_per_channel": 65514,
+    "recorded_seconds_per_channel": 1.485578231292517,
+    "native_underruns": 0,
+    "whole_workflow_discarded_frames": 18432,
+    "measured_physical_latency_ms": null
+  },
+  "validation": {
+    "backend_tests_passed": 329,
+    "react_tests_passed": 120,
+    "source_browser_recording_selection_apply_reconnect": "passed",
+    "default_native_firmware_playback": "passed",
+    "unsupported_format_missing_device_timeout_partial_frame_and_checkpoint_failure": "unit tests passed",
+    "packaged_browser_recording_selection_apply_reconnect": "passed",
+    "actual_webview": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 225776
+    },
+    "package_audit_errors": [],
+    "desktop_clean_shutdown": true
+  },
+  "raw_evidence_private": "docs/ic20-hle-findings/chatGPT-work/motu-live-sampling-34-transport",
+  "regression": "BUG-045: 4KB/frame JSON ingress could not sustain stereo PCM; now at most 64KB and one command per frame, live PCM allowed during pointer settling"
+}

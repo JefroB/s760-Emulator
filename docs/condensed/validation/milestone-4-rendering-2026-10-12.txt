@@ -1,0 +1,32 @@
+SoundCheck native output rendering acceptance
+{
+  "module_sha256": "b4843e855d4f8f0fbb5ba162c756cee36c8810af50111dd9f2ac56c04de5f5fe",
+  "host": "SoundCheck 1.0.0 private SDK QA adapter",
+  "sampleRate": 44100,
+  "blockSize": 512,
+  "frames": 221184,
+  "metadata": {
+    "audioInputs": 0,
+    "audioOutputs": 1,
+    "latencySamples": 12288,
+    "mode": 0,
+    "tailSamples": 4294967295
+  },
+  "exact_pcm": true,
+  "realtime_seconds": 8.329107400000794,
+  "offline_seconds": 4.017366199994285,
+  "peak": 0.04453751817345619,
+  "tail_peak": 0.0,
+  "suspend_wall_seconds": 1.5,
+  "pcm_sha256": "a542acc6a19b890885053388e0fbab87cb56df825ace33962a5a52433f4c8b0d",
+  "first_audible_frame": 13296,
+  "steady_frequency_hz": 20004
+}
+
+Independent native processor reports
+Native VST3 boot/load/display/offsets/audio/suspend passed; frames=132300 rate=44100 reference_exact=1 peak=0.0445375 tail=0 first_audible=13167 offline=1 reported_tail=4294967295 reported_latency=12288 paced=0 varied=1 max_callback_us=76588 max_deadline_fraction=13.1935 missed_deadlines=50
+Native VST3 boot/load/display/offsets/audio/suspend passed; frames=144000 rate=48000 reference_exact=1 peak=0.0445352 tail=0 first_audible=14176 offline=1 reported_tail=4294967295 reported_latency=13393 paced=0 varied=1 max_callback_us=76821 max_deadline_fraction=3.60098 missed_deadlines=49
+Native VST3 boot/load/display/offsets/audio/suspend passed; frames=288000 rate=96000 reference_exact=1 peak=0.0446113 tail=0 first_audible=27373 offline=1 reported_tail=4294967295 reported_latency=26785 paced=0 varied=1 max_callback_us=80684.2 max_deadline_fraction=11.8216 missed_deadlines=54
+Native VST3 boot/load/display/offsets/audio/suspend passed; frames=529200 rate=44100 reference_exact=1 peak=0.0445375 tail=0 first_audible=13167 offline=0 reported_tail=4294967295 reported_latency=12288 paced=1 varied=1 max_callback_us=1411.4 max_deadline_fraction=0.252335 missed_deadlines=0
+
+354 backend tests passed. Offline realtime-deadline counters are not losses.
