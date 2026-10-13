@@ -212,6 +212,7 @@ inline constexpr uint16_t GOTEK_WIDTH  = 128;
 inline constexpr uint16_t GOTEK_HEIGHT = 32;
 
 struct ServerTelemetry {
+    std::string pluginConfiguration="null";
     double      timestamp    = 0.0;  // monotonic milliseconds (server clock)
     double      fps          = 0.0;  // frames/sec the backend is producing
     uint16_t    crtWidth     = CRT_WIDTH;

@@ -1,0 +1,268 @@
+{
+  "date": "2026-10-12",
+  "completed_gates": [
+    "OS 2.24 empty-drive behavior and acknowledged standalone Eject",
+    "same-build floppy session missing-source/relocation recovery and actionable mismatch UX"
+  ],
+  "source_sha256": {
+    "scripts/s760_runtime.py": "37aacf6871649dd46394bc51fd68a14720b3c7632b3e49a2c363c4ebd2b2668d",
+    "scripts/s760_standalone.py": "1aad0ed48cea5587800ce65eca66f39a0e499a819fd86a0520d31ea485c09957",
+    "scripts/s760_readiness.py": "63f190ea4ce98ba210a7e7f87c442376aef08701e90ac681028971d07af358ca",
+    "scripts/s760_runtime.lua": "4cf01531c258027090c9f39d2e3f4d7ff3beb329f783741ab1fa32eb915ff917",
+    "scripts/verify_native_runtime.py": "b783106348f1c10a6f1e1b660445a854ed99e6b2b47828e417318df64d73e7a0",
+    "scripts/verify_native_checkpoint.py": "f63c3277620999706a686e5258a2b74c7fb38b891d85c85233d4ef02d0a10f2b",
+    "scripts/verify_native_media.py": "fc2cf9e94ba08542e217d44914c7f4cf94931548126926fde99253d89e615e94",
+    "google-ui/src/NativeStudio.tsx": "786804e4e2654f3524442b607180d6e9b53197e007e83a3a3a7789098175ebe5",
+    "google-ui/e2e/native-runtime.spec.ts": "c9198bc74fc1857f7477ef4d6a1bcbdac8ee4d75a4e39172282a9f63c5c930ab",
+    "google-ui/e2e/native-session-recovery.spec.ts": "7b1acc0a3212360e111fc91e3a9df86611208dd784457f0c97ef5a570e025b44"
+  },
+  "binary_fixture_sha256": {
+    "mame-source/mames760.exe": "a6cb649a50a795d396dd166af506f718533b8868cbd30e6fc7d3b9616f058908",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "prerequisites": "Local Windows x64, supplied IC15/OS 2.24/ROBOFULL, built MAME, Node/browser and private desktop Python dependencies. No physical hardware or clean machine used.",
+  "native_empty_drive": {
+    "command": "python scripts/verify_native_runtime.py --empty-drive --state-dir docs/ic20-hle-findings/chatGPT-work/m3-empty-drive-final",
+    "result": {
+      "native_boot_frames": true,
+      "long_mouse_jump": [
+        300,
+        120
+      ],
+      "midi_note": 60,
+      "held_peak_pcm16": 1459.0,
+      "release_tail_peak_pcm16": 0,
+      "sample_rate": 44100,
+      "note_start": 113.03333333333,
+      "note_release": 115.13333333333,
+      "process_shutdown": "clean",
+      "system_audio": {
+        "enabled": false,
+        "backend_requested": "auto",
+        "buffer_target_ms": 0,
+        "throttled": false,
+        "device_latency_measured": false
+      },
+      "empty_drive": {
+        "firmware_insert_disk_message": true,
+        "clock_advances": true,
+        "empty_export_rejected": true,
+        "reinsert_load": true,
+        "loaded_playback_after_ejection": true
+      }
+    },
+    "display_observation": "Please Insert Disk, confirmed by visual inspection and exact RGB region signature",
+    "empty_message_region": [
+      32,
+      32,
+      336,
+      48
+    ],
+    "empty_message_rgb_sha256": "5daf699b0f584b28208ff887b34a1089df67d426526f45f71c625cc7c780b4ba"
+  },
+  "native_relocated_session": {
+    "command": "python scripts/verify_native_checkpoint.py --standalone-session --state-dir docs/ic20-hle-findings/chatGPT-work/m3-relocated-session",
+    "result": {
+      "standalone_pcm_frames_exact": 131072,
+      "displays_exact": true,
+      "crash_recovery_new_process": true,
+      "recovered_patch_play_release": true,
+      "saved_archive_preserved": true,
+      "firmware_ready_after_recovery": true,
+      "relocated_firmware_paths": true,
+      "missing_source_library": true,
+      "missing_initial_sample_recovered": true,
+      "relocated_pcm_frames_exact": 131072,
+      "relocated_displays_exact": true
+    },
+    "archive_sha256": "47cd2e6e8e7d57e60b80215d79ae34d9f2301b59714f124e31c251b05efffcc6",
+    "method": "Remove private source library; copy identical firmware under new names; fail initial launch with nonexistent sample path; restore archive into new state dir; direct paused rewind then compare 131072 stereo frames and refreshed displays exactly."
+  },
+  "native_dirty_media": {
+    "command": "python scripts/verify_native_media.py --checkpoint",
+    "result": {
+      "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+      "saved_sha256": "570222d8c53e93bbbceccfaf88bebc4eb61c192b988fab138c8d02af2628ab46",
+      "sample_payloads": [
+        {
+          "sample": 0,
+          "wave_offset": 16,
+          "bytes": 9216,
+          "sha256": "e1d5a5ee84d35434b8f798cc5c2f382f0f6750fc337260e40c66d55b43a88860"
+        },
+        {
+          "sample": 1,
+          "wave_offset": 9232,
+          "bytes": 9216,
+          "sha256": "4e639d66d25f21253fa0d7a7605065a793b0d1c8950b6a05ab6e9f34fd4ed2a4"
+        },
+        {
+          "sample": 2,
+          "wave_offset": 18448,
+          "bytes": 9216,
+          "sha256": "cd318a52be42a5d2976ec80314a3835080b949328c9d138ebdc1e9f1665a7c96"
+        },
+        {
+          "sample": 3,
+          "wave_offset": 27664,
+          "bytes": 9216,
+          "sha256": "3df2bdce5eb49359fdc566eefad4b31a3234b4a55dc1ae391dec3c18837a6c52"
+        },
+        {
+          "sample": 4,
+          "wave_offset": 36880,
+          "bytes": 9216,
+          "sha256": "1690e0745040f188fefa735c70dd380555578db41513fb58a99906a13387f935"
+        },
+        {
+          "sample": 5,
+          "wave_offset": 46096,
+          "bytes": 9216,
+          "sha256": "d397b6d17c0c0d873ca29d03e259c40b83cd202b225a611544dcdcb9512c275e"
+        },
+        {
+          "sample": 6,
+          "wave_offset": 55312,
+          "bytes": 9216,
+          "sha256": "bc916213148290c733bcbe396392b734f23668a22cc9d3ce96197957252d2a83"
+        },
+        {
+          "sample": 7,
+          "wave_offset": 64528,
+          "bytes": 9216,
+          "sha256": "e3de9fbb0b4cf7d8eff0b669d92c6bccb42a8ee093bae282b8ba607baf0b3e80"
+        },
+        {
+          "sample": 8,
+          "wave_offset": 73744,
+          "bytes": 9216,
+          "sha256": "ef770fcc95f494f012a25d5e22af5a02a2a185556e3a428067cd9e4fcac7c631"
+        },
+        {
+          "sample": 9,
+          "wave_offset": 82960,
+          "bytes": 9216,
+          "sha256": "3a289ec864084557aff759fab52f88d93b04c5265f551ff5339c4612690b37f9"
+        },
+        {
+          "sample": 10,
+          "wave_offset": 92176,
+          "bytes": 9216,
+          "sha256": "0ca38978098afdac3077684d15f9d81bfe6aa27c5a6ec52d1ec634e19bfa7f32"
+        },
+        {
+          "sample": 11,
+          "wave_offset": 101392,
+          "bytes": 9216,
+          "sha256": "d6be9f1eed7108334710591954eb2886556c206e1be58a2025dc47909bdd269c"
+        },
+        {
+          "sample": 12,
+          "wave_offset": 110608,
+          "bytes": 9216,
+          "sha256": "ffe782ebff0068c007d26b569fb94e5902ea9956f3bf798589c13d71827f90d4"
+        }
+      ],
+      "sample_bytes_compared": 119808,
+      "whole_wave_ram_equal": false,
+      "original_preserved": true,
+      "dirty_media_protection": true,
+      "before_export": {
+        "ok": true,
+        "error": "",
+        "inserted": true,
+        "dirty": true,
+        "busy": false,
+        "generation": 2,
+        "revision": 134
+      },
+      "after_export": {
+        "ok": true,
+        "error": "",
+        "inserted": true,
+        "dirty": false,
+        "busy": false,
+        "generation": 2,
+        "revision": 134
+      },
+      "fresh_machine_audio": {
+        "native_boot_frames": true,
+        "long_mouse_jump": [
+          300,
+          120
+        ],
+        "midi_note": 60,
+        "held_peak_pcm16": 1459.0,
+        "release_tail_peak_pcm16": 0,
+        "sample_rate": 44100,
+        "note_start": 78.95,
+        "note_release": 81.133333333333,
+        "process_shutdown": "clean",
+        "system_audio": {
+          "enabled": false,
+          "backend_requested": "auto",
+          "buffer_target_ms": 0,
+          "throttled": false,
+          "device_latency_measured": false
+        }
+      },
+      "dirty_checkpoint_cold_restore": true
+    },
+    "artifact_directory": "docs\\ic20-hle-findings\\chatGPT-work\\media-verification-20261012-061144"
+  },
+  "regressions": {
+    "backend": "287 passed",
+    "react": "113 passed",
+    "typescript": "passed",
+    "vite_build": "passed",
+    "git_diff_check": "passed"
+  },
+  "source_browser": {
+    "tests": [
+      "e2e/native-runtime.spec.ts",
+      "e2e/native-session-recovery.spec.ts"
+    ],
+    "results": "Both pass on separate private native source services; empty-drive/reinsert/load, save/restart/restore, missing-library launch/restore, rejected version/build preserves live patch, successful retry.",
+    "native_url_source": "session.json from bounded --no-browser --no-sound --fast standalone instances",
+    "recovery_archive": "Private copied sessions/latest.s760state. Browser test edits only this private archive, restores original bytes in finally, and compares via Buffer.equals.",
+    "screenshots_visually_inspected": true
+  },
+  "packaged": {
+    "build_command": "$env:PYTHONPATH='D:/S-760/docs/ic20-hle-findings/chatGPT-work/desktop-deps'; ./scripts/build_standalone.ps1 -OutputDirectory D:/S-760/docs/ic20-hle-findings/chatGPT-work/m3-media-session-package",
+    "executable_sha256": "db15dabb52f014dd2fd7d01db4ab8a0a712c1b9a385478c8c76aad43a2c17b59",
+    "mame_sha256": "a6cb649a50a795d396dd166af506f718533b8868cbd30e6fc7d3b9616f058908",
+    "package_audit_sha256": "03cd5b62425afda54dc5be0acf336731ba90669aebf3a620a6e06540fe294700",
+    "development_package_ok": true,
+    "release_ready": false,
+    "firmware_and_samples_excluded": true,
+    "desktop_command": "S760Studio.exe --verify-desktop --no-sound --fast --seconds 60 --boot-rom D:/S-760/roms/BOOT/Roland_S-760_v1.11.BIN --system-disk D:/S-760/roms/System/S760224.IMG --media-dir D:/S-760/roms/FDD --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m3-packaged-desktop",
+    "desktop_exit_code": 0,
+    "desktop_result": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 225776
+    },
+    "browser_command": "node node_modules/@playwright/test/cli.js test e2e/native-runtime.spec.ts e2e/native-session-recovery.spec.ts --output=../docs/ic20-hle-findings/chatGPT-work/m3-packaged-browser-results",
+    "browser_result": "2 passed; both services are S760Studio.exe --no-browser --no-sound --fast --seconds 120 with external firmware/media and separate state directories",
+    "recovery_media_directory": "Nonexistent private source library; supplied copied session slot and matching external firmware",
+    "ui_assets_sha256": {
+      "google-ui\\dist\\assets\\index-DfYPFXjx.css": "aa952aa16e1031855f3afb3af40452bbd6c620ac328ceda9c75c6e0b7af10232",
+      "google-ui\\dist\\assets\\index-DoVtx9g-.js": "bc11ede174b5c1b7658f591094f06e853a43998e4b9aeb1360ba2052f7c6cd18",
+      "google-ui\\dist\\BUNDLED-MODULES.json": "253d8d692d4a59e28197262e057b7e282cc9eecee8b0dfda9257332c6641fcf2",
+      "google-ui\\dist\\index.html": "4ddf84cb740143d825b71d6201fe7f41321e3207eb9f43b77f65e8754df786c1"
+    }
+  },
+  "bug_fixed": "BUG-039: source-path/startup-error gate blocks self-contained archive restore",
+  "limitations": [
+    "Same-build/format/firmware identity required; no migration",
+    "External SCSI backing files require matching names/content; no automatic SCSI relocation discovery",
+    "Recovery returns to last explicit save; later edits lost; no autosave",
+    "Formatting, firmware write protection and broader media error behavior unqualified",
+    "Native and browser tests use accelerated muted emulation; no physical MIDI/ADC/device latency claim",
+    "Packaged development checks run on existing workstation; clean-machine installation and redistribution review remain separate"
+  ],
+  "build_environment_note": "First package attempt used system Python without pywebview metadata; rebuild succeeded with existing desktop-deps. No new dependencies installed."
+}

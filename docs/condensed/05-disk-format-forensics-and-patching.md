@@ -18,8 +18,53 @@ See [reproducible evidence](validation/native-media-2026-10-11.json) and
 now rejects replacement/ejection. Export acknowledges only its captured revision
 after host publication; subsequent writes remain dirty. Native regression covers
 134 writes, rejected changes, export, ejection/reinsertion and fresh reload.
-Firmware empty-drive behavior, shutdown/crash recovery, formatting, firmware
-write protection, SCSI saves and full recall remain open.
+OS 2.24 empty-drive behavior is now qualified: Disk/Load requests insertion,
+emulated time advances, empty export fails, and reinsertion loads ROBOFULL.
+Standalone Eject waits for controller acknowledgement and preserves busy/dirty
+protection. Loaded sample playback/release survives ejection. The supported
+same-build standalone session profile restores embedded floppy/sample memory
+after source-library removal and firmware-path relocation, with 131072 exact
+stereo frames and refreshed CRT/LCD bytes. Browser version/build diagnostics
+preserve the live patch on rejection. See
+[current media/session evidence](validation/standalone-media-session-2026-10-12.json).
+Standalone now also maintains a separate automatic recovery checkpoint every60
+host seconds after observed boot, plus a checkpoint on normal desktop close.
+Dirty media and sampler RAM are retained independently of manual saves/exports.
+Startup/restart hold existing recovery until explicit restore or replacement;
+save failure cancels normal close and retains the old archive. Native dirty
+revision134 child-failure/close replay reproduces131072 stereo frames/both
+displays and exact disk bytes. Production timer/restore/explicit quit and desktop
+close pass in the updated package. Recovery ends at the last successful
+checkpoint; later edits, forced termination, physical-MIDI/busy/error delays,
+broader formatting profiles and firmware SCSI saves remain limitations. See
+[automatic recovery evidence](validation/standalone-auto-recovery-2026-10-12.json).
+External SCSI backing filenames/content remain prerequisites.
+
+Floppy write protection is now controller state: ST3 WP is reported, protected
+WRITE DATA/FORMAT returns ST0 abnormal termination with ST1 not-writable, and
+absent-media writes return not-ready. Host protection changes reject busy/empty
+controllers; insert/eject resets protection. The bit is serialized in native
+checkpoints. OS 2.24 Save visibly reports Write Protected, with an exact unchanged
+export and revision zero. Cold process recall preserves protection. Turning it
+off permits 134 write revisions, export, fresh reload of all 119808 sample bytes
+and native note60 playback/release. The actual packaged browser verifies control
+acknowledgement, reconnect, reset and recalled protection. This is a Windows
+development/OS 2.24 qualification, not physical FDC timing or a clean-machine
+release. See [write-protection evidence](validation/standalone-write-protection-2026-10-12.json).
+BUG-041 is now fixed for OS 2.24 standard 720KB native formatting. Firmware at
+physical0188E4 supplies 4D with SC09, fill0F and FA RAM DMA count0024 from083E0E.
+The driver validates a complete CHRN descriptor set (cylinder/head, unique sector
+IDs, size, source/count and media bounds) before filling a track and advancing
+DMA. Unsupported transfers return an error without mutation; PIO and nonstandard
+sector layouts are unsupported. All160 tracks plus the firmware header write
+produce revision161. Protected Format leaves the original bytes unchanged;
+dirty formatted bytes/revision recall exactly in a fresh process. The exported
+formatted image contains the firmware's S-760 Formatted Disk Ver. 2.24 header
+and733184 verified fill bytes beyond the first4096 bytes. Save afterward reaches
+revision295, then export/fresh reload preserves all13 sample payloads and audio.
+The actual packaged browser verifies Format/export fill and retained sampler
+memory before reconnect/restart/recall. HD/foreign media and physical FDC timing
+remain unqualified. See [format evidence](validation/standalone-formatting-2026-10-12.json).
 
 ## SCSI device write contract
 

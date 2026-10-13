@@ -6,6 +6,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
 
+if(WIN32)
+    add_library(s760_asio SHARED src/s760_asio.cpp)
+    target_include_directories(s760_asio PRIVATE ../mame-source/3rdparty/portaudio/include)
+    target_link_libraries(s760_asio PRIVATE ole32 uuid)
+    add_executable(s760_asio_tests tests/test_asio.cpp)
+    target_include_directories(s760_asio_tests PRIVATE ../mame-source/3rdparty/portaudio/include)
+    target_compile_options(s760_asio_tests PRIVATE /UNDEBUG)
+    target_link_libraries(s760_asio_tests PRIVATE ole32 uuid)
+endif()
+
 # Backend selection build option (spec `mame-live-backend`, task 9.1 /
 # Requirement 7.3). Chooses the backend the selector defaults to when no runtime
 # config value is supplied. Allowed values: core | mame (default core). The

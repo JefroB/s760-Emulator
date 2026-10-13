@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-12",
+  "host": "SoundCheck 1.0.0 Windows x64 native Steinberg SDK host; private loopback-only rebuild",
+  "sdk": "D:/BreakJob/third_party/vst3sdk",
+  "build": "cmake --build docs/ic20-hle-findings/chatGPT-work/m2-webview-build --config Release --target s760_vst3_sdk_tests s760_vst3",
+  "probe": "s760_vst3_sdk_tests.exe Roland_S760.vst3 with S760_NATIVE_ROOT, S760_NATIVE_STATE_ROOT, S760_BOOT_ROM, S760_SYSTEM_DISK",
+  "result": "PASS independent SDK factory/component/controller ABI, class discovery, stereo output metadata/arrangement, 16-channel MIDI input, nonexistent bus rejection, unqualified ADC input hidden; SoundCheck load_plugin returned plugin_loaded",
+  "rate": 44100,
+  "blockFrames": 512,
+  "artifacts": {
+    "core/tests/test_vst3_sdk.cpp": "8d2b07f0258a8a24b392871c9a3dbc73749562d50d85262fed75680b1fd276c2",
+    "scripts/s760_runtime.lua": "5ee465c4e011217c7d635df28f820285e36b1ab126711745acba2859b6ec52d1",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/s760_vst3_sdk_tests.exe": "8305bdcdb9c4c72d9fa580111d3c4a32d6aed355c4b654bb28a93ea5f7f94982",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "471b7a353beb88590e4994a294f4d4f53f1907f32afc6ad367785fd4c7c33cb2",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "8577bad005bac6e0880c40415e2773e930dc54f9be81c9b6b4148fc5b58d538f"
+  },
+  "limitations": [
+    "Native QA host, not another DAW or architecture.",
+    "Current extended playback rerun stopped at obsolete S760224.IMG text selector after UI cleanup; no new playback claim. Earlier loaded-sample results remain in milestone-2-audio-config-2026-10-11.json.",
+    "SoundCheck response version/subcategories are empty; factory basic class/vendor/name discovery is qualified, no extended factory metadata claim.",
+    "Initial sandbox native startup failed; permitted SDK run passed.",
+    "Multi-instance isolation, project portability, variable rates/blocks, full MIDI controls, host sampling input and offline rendering remain open."
+  ]
+}

@@ -18,7 +18,7 @@ PRIVATE_SUFFIXES = {'.bin', '.rom', '.hex', '.img', '.iso', '.chd', '.hda',
 QUALIFICATION = 'docs/distribution/windows-standalone-2026-10-11.json'
 PYTHON_COMPONENTS = ('pywebview', 'websockets', 'pythonnet', 'clr_loader',
                      'cffi', 'pycparser', 'proxy_tools', 'bottle',
-                     'typing_extensions', 'packaging', 'pyinstaller')
+                     'typing_extensions', 'packaging', 'pyinstaller', 'sounddevice')
 
 
 def digest(path: Path) -> str:

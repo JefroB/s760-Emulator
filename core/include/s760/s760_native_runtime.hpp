@@ -10,6 +10,7 @@ namespace s760 {
 std::array<std::uint8_t,32> native_digest(const std::vector<std::uint8_t>& data);
 struct NativeRuntimeConfig {
     std::filesystem::path root, state, boot_rom, system_disk, sample_disk;
+    std::filesystem::path media_directory;
 };
 struct NativeRuntimeReply {
     std::string json;

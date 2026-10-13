@@ -4,7 +4,7 @@ Usage: python scripts/s760_standalone.py
 Dependencies: websockets>=14,<17. Build google-ui first (npm run build).
 """
 import argparse
-from contextlib import closing
+from contextlib import closing, contextmanager
 from dataclasses import replace
 import hashlib
 from functools import partial
@@ -24,6 +24,11 @@ from websockets.exceptions import ConnectionClosed
 from s760_runtime import NativeRuntime, RuntimeConfig, application_root, midi_inputs
 
 from s760_readiness import FirmwareReadiness, SYSTEM_SHA256
+from s760_capture import WaveInput, devices as recording_devices
+from s760_asio import AsioHost, devices as asio_devices, windows_outputs
+
+ASIO_SETTINGS = {'asioDriver':'asio_driver','asioOutputChannel':'asio_output_channel',
+                 'asioInputChannel':'asio_input_channel','asioBufferFrames':'asio_buffer_frames'}
 
 ROOT = application_root()
 
@@ -55,7 +60,7 @@ def validate_input(message):
         if p.get('id') not in BUTTONS:
             raise ValueError('Unsupported panel button')
     elif kind == 'DIAL_DELTA':
-        if p.get('id') not in ('ALPHA', 'VOLUME') or type(p.get('delta')) is not int or abs(p['delta']) > 32:
+        if p.get('id') not in ('ALPHA', 'VOLUME', 'INPUT') or type(p.get('delta')) is not int or abs(p['delta']) > 32:
             raise ValueError('Invalid native dial input')
     elif kind == 'MOUSE_MOVE':
         if any(type(p.get(k)) not in (int, float) or not 0 <= p[k] <= 1 for k in ('x', 'y')):
@@ -72,17 +77,30 @@ def validate_input(message):
     elif kind == 'MIDI_DEVICE':
         if not isinstance(p.get('name'), str):
             raise ValueError('Expected MIDI device name')
+    elif kind == 'SET_STANDALONE_PREFERENCES':
+        if set(p) != {'showKeyboard'} or type(p['showKeyboard']) is not bool:
+            raise ValueError('Expected boolean showKeyboard preference')
+    elif kind == 'MEDIA_WRITE_PROTECT':
+        if set(p) != {'enabled'} or type(p['enabled']) is not bool:
+            raise ValueError('Write protection requires a boolean enabled value')
     elif kind == 'CONFIGURE_RUNTIME':
-        if set(p) != {'bootRom','systemDisk','mediaDirectory','sound','discard'} or p.get('discard') is not True:
+        required = {'bootRom','systemDisk','mediaDirectory','sound','discard'}
+        if not required <= set(p) or set(p) - required - {'audioBackend','audioLatencyMs','audioOutputDevice','recordingDevice'} - set(ASIO_SETTINGS) or p.get('discard') is not True:
             raise ValueError('Confirm replacement of the current sampler before applying settings')
         for key in ('bootRom','systemDisk','mediaDirectory'):
             if not isinstance(p[key],str) or not p[key].strip() or len(p[key])>2048 or '\0' in p[key]:
                 raise ValueError(f'Invalid path: {key}')
         if type(p['sound']) is not bool: raise ValueError('Sound must be a boolean')
-    elif kind in ('RESTART_RUNTIME', 'RESTORE_SESSION'):
+        if 'recordingDevice' in p and (not isinstance(p['recordingDevice'],str) or len(p['recordingDevice'])>256 or '\0' in p['recordingDevice']):
+            raise ValueError('Invalid recording device')
+        RuntimeConfig(None, None, None, None, audio_backend=p.get('audioBackend', 'auto'),
+                      audio_latency_ms=p.get('audioLatencyMs', 0),
+                      audio_output_device=p.get('audioOutputDevice',''),
+                      **{field:p[key] for key,field in ASIO_SETTINGS.items() if key in p}).audio_arguments()
+    elif kind in ('RESTART_RUNTIME', 'RESTORE_SESSION', 'RESTORE_RECOVERY', 'START_RECOVERY', 'QUIT_WITHOUT_RECOVERY'):
         if set(p) != {'discard'} or p['discard'] is not True:
             raise ValueError('Restart requires explicit discard confirmation')
-    elif kind in ('EXPORT_DISK', 'SAVE_SESSION'):
+    elif kind in ('EXPORT_DISK', 'SAVE_SESSION', 'EJECT_DISK', 'MEDIA_STATUS', 'SAVE_RECOVERY', 'RECORDING_DEVICES', 'ASIO_DEVICES','AUDIO_OUTPUT_DEVICES','REOPEN_AUDIO'):
         if p:
             raise ValueError('Export does not accept a client output path')
     else:
@@ -100,6 +118,14 @@ def load_settings(state_dir):
     for key in ('bootRom', 'systemDisk', 'mediaDirectory'):
         if not isinstance(data.get(key), str): raise ValueError(f'Invalid setting: {key}')
     if type(data.get('sound')) is not bool: raise ValueError('Invalid sound setting')
+    data.setdefault('audioBackend', 'auto')
+    data.setdefault('audioLatencyMs', 0)
+    if not isinstance(data.get('recordingDevice',''),str) or len(data.get('recordingDevice',''))>256:
+        raise ValueError('Invalid recording device setting')
+    RuntimeConfig(None, None, None, state_dir, audio_backend=data['audioBackend'],
+                  audio_latency_ms=data['audioLatencyMs'],
+                  audio_output_device=data.get('audioOutputDevice',''),
+                  **{field:data[key] for key,field in ASIO_SETTINGS.items() if key in data}).audio_arguments()
     return data
 
 
@@ -120,9 +146,37 @@ class StandaloneSession:
         self.stop = threading.Event()
         self.failure = None
         self.runtime_lock = threading.RLock()
+        self.recovery_pending = self.recovery_path.is_file()
+        self.recovery_message = 'Existing recovery preserved. Restore it or start a new recovery history.' if self.recovery_pending else 'Automatic recovery every 60 seconds and on normal close; saving briefly pauses audio.'
+        self.next_recovery = time.monotonic() + 60
+        self.closing = False
         self.readiness = None
         self.firmware_status = {'type':'FIRMWARE_STATUS','state':'booting','message':'Connected; checking firmware…'}
         self.midi_warning = None
+        self.midi_input = ''
+        self.capture = None
+        self.capture_status = {'state':'disabled','message':'No recording device selected.'}
+        self.capture_discontinuities = 0
+        self.asio_devices = []
+        self.audio_output_devices = []
+        try:
+            self.recording_devices = recording_devices()
+        except OSError:
+            self.recording_devices = []
+        if not startup_error:
+            self.start_capture()
+        self.preferences = {'showKeyboard': False}
+        preference_path = runtime.config.state_dir / 'standalone-ui.json'
+        try:
+            if preference_path.is_file():
+                if preference_path.stat().st_size > 1024:
+                    raise ValueError('Standalone preferences are too large')
+                stored = json.loads(preference_path.read_text(encoding='utf-8'))
+                if not isinstance(stored, dict) or type(stored.get('showKeyboard')) is not bool:
+                    raise ValueError('Invalid standalone preferences')
+                self.preferences = {'showKeyboard': stored['showKeyboard']}
+        except (OSError, ValueError) as error:
+            self.midi_warning = f'Could not read standalone preferences; keyboard hidden. {error}'
         try:
             self.midi_devices = midi_inputs(runtime.config.executable)
         except (OSError, subprocess.SubprocessError) as error:
@@ -132,7 +186,138 @@ class StandaloneSession:
     def configuration(self):
         cfg = self.runtime.config
         return {'bootRom':str(cfg.boot_rom),'systemDisk':str(cfg.system_disk),
-                'mediaDirectory':str(self.media_dir),'sound':cfg.sound}
+                'mediaDirectory':str(self.media_dir),'sound':cfg.sound,
+                'audioBackend':cfg.audio_backend,'audioLatencyMs':cfg.audio_latency_ms,
+                'audioOutputDevice':getattr(cfg,'audio_output_device',''),
+                'recordingDevice':getattr(cfg,'recording_device',''),
+                **{key:getattr(cfg,field,getattr(RuntimeConfig,field)) for key,field in ASIO_SETTINGS.items()}}
+
+    def close_capture(self):
+        if self.capture is not None:
+            asio=isinstance(self.capture,AsioHost)
+            self.capture.close()
+            self.capture = None
+            if asio:
+                try:self.runtime.request('device_clock',clock_rate=1.0)
+                except (OSError,RuntimeError):pass
+
+    @contextmanager
+    def capture_transaction(self):
+        """Device buffers belong to wall time and cannot survive a checkpoint pause."""
+        active = self.capture is not None
+        if active:
+            self.close_capture()
+            self.capture_discontinuities += 1
+        try:
+            yield
+        finally:
+            if active:
+                self.start_capture()
+
+    def capture_worker(self):
+        while not self.stop.is_set():
+            with self.runtime_lock:
+                self.poll_capture()
+            self.stop.wait(.005)
+
+    def start_capture(self):
+        self.close_capture()
+        self.capture_pending = []
+        self.capture_primed = False
+        device = getattr(self.runtime.config, 'recording_device', '')
+        if not device and getattr(self.runtime.config,'audio_backend','auto')!='asio':
+            self.capture_status = {'state':'disabled','message':'No recording device selected.'}
+            return
+        try:
+            cfg=self.runtime.config
+            if getattr(cfg,'audio_backend','auto')=='asio':
+                self.capture = AsioHost(cfg)
+                self.runtime.request('audio_capture',enabled=cfg.sound)
+                message=f'ASIO: {cfg.asio_driver} — 44.1 kHz stereo. Output {cfg.asio_output_channel}/{cfg.asio_output_channel+1}; input '+(f'{cfg.asio_input_channel}/{cfg.asio_input_channel+1}.' if cfg.asio_input_channel else 'disabled.')
+            else:
+                self.capture = WaveInput(device)
+                message=f"Recording: {self.capture.device['name']} — 44.1 kHz stereo PCM16."
+            self.capture_status = {'state':'active','message':message, **self.capture.status()}
+        except (OSError, ValueError) as error:
+            self.capture_status = {'state':'failed','message':f'Recording unavailable: {error}'}
+
+    def poll_capture(self):
+        source = self.capture
+        if source is None:
+            return
+        try:
+            duplex=isinstance(source,AsioHost) and self.runtime.config.sound
+            if duplex and time.monotonic()>=source.next_output:
+                meta,pcm=self.runtime.read_audio(clock_rate=source.clock_rate)
+                source.write(pcm)
+                self.capture_status['nativeOutputDroppedFrames']=meta['dropped_frames']
+            blocks = source.read()
+            if not self.capture_primed:
+                self.capture_pending.extend(blocks)
+                if sum(map(len, self.capture_pending)) < 8192 * 4:
+                    self.capture_status.update(source.status(), discontinuities=self.capture_discontinuities)
+                    return
+                blocks = self.capture_pending
+                self.capture_pending = []
+                self.capture_primed = True
+            for pcm in blocks:
+                try:
+                    clock={'clock_rate':source.clock_rate,'binary':True} if isinstance(source,AsioHost) else {}
+                    reply = self.runtime.queue_input_pcm(pcm, live=True, **({'duplex':True} if duplex else {}),**clock)
+                    if isinstance(source,AsioHost) and not duplex:
+                        source.clock_rate=max(.97,min(1.03,1+(reply.get('queued',8192)-8192)/44100*.15))
+                    if duplex and 'pcm' in reply:
+                        source.write(reply['pcm'])
+                        self.capture_status['nativeOutputDroppedFrames']=reply['audio']['dropped_frames']
+                    source.discarded_frames += reply.get('discarded', 0)
+                    if 'underruns' in reply:
+                        self.capture_status['nativeUnderruns'] = reply['underruns']
+                except RuntimeError as error:
+                    if 'queue is full' not in str(error):
+                        raise
+                    source.discarded_frames += len(pcm)//4
+            self.capture_status.update(source.status(), discontinuities=self.capture_discontinuities)
+        except (OSError, RuntimeError, ValueError) as error:
+            self.close_capture()
+            try:
+                self.runtime.request('pause')
+                message=f'Audio device unavailable: {error}. Sampler paused; reconnect and choose Reopen audio.'
+            except (OSError,RuntimeError):
+                message=f'Audio device unavailable: {error}. Emulator could not be paused; restart or restore recovery.'
+            self.capture_status = {**self.capture_status,'state':'failed','message':message}
+
+    def reopen_audio(self):
+        """Recover hardware without replacing native RAM, media or controls."""
+        with self.runtime_lock:
+            if self.capture_status.get('state')!='failed':raise ValueError('Audio is not in a failed state')
+            self.runtime.request('pause')
+            self.capture_discontinuities+=1
+            self.start_capture()
+            if self.capture is None:raise RuntimeError(self.capture_status['message'])
+            source=self.capture
+            try:
+                has_input=bool(source.config.asio_input_channel) if isinstance(source,AsioHost) else bool(self.runtime.config.recording_device)
+                if has_input:
+                    queued=self.runtime.request('input_status')[0]['queued']
+                    received=0;deadline=time.monotonic()+2
+                    while received<8192:
+                        source.status()
+                        for pcm in source.read():
+                            frames=len(pcm)//4;received+=frames
+                            if queued+frames<=16384:
+                                reply=self.runtime.queue_input_pcm(pcm,binary=True) if isinstance(source,AsioHost) else self.runtime.queue_input_pcm(pcm)
+                                queued=reply['queued']
+                            else:source.discarded_frames+=frames
+                        if time.monotonic()>deadline:raise OSError('Audio input did not re-prime; sampler remains paused')
+                        if received<8192:time.sleep(.005)
+                    self.capture_pending=[];self.capture_primed=True
+                self.runtime.request('resume')
+                self.capture_status.update(discontinuities=self.capture_discontinuities)
+                return {'type':'AUDIO_REOPENED','recordingStatus':dict(self.capture_status)}
+            except (OSError,RuntimeError,ValueError) as error:
+                self.close_capture()
+                self.capture_status={'state':'failed','message':f'Audio reopen failed: {error}. Sampler remains paused.'}
+                raise RuntimeError(self.capture_status['message']) from error
 
     def configure(self, payload):
         r = self.runtime
@@ -145,13 +330,31 @@ class StandaloneSession:
         media = media_index(folder)
         slot = r.config.state_dir/'inserted-floppy.img'
         candidate = replace(r.config, boot_rom=boot, system_disk=disk, sound=payload['sound'],
+                            audio_backend=payload.get('audioBackend', r.config.audio_backend),
+                            audio_latency_ms=payload.get('audioLatencyMs', r.config.audio_latency_ms),
+                            audio_output_device=payload.get('audioOutputDevice',getattr(r.config,'audio_output_device','')),
+                            recording_device=payload.get('recordingDevice',getattr(r.config,'recording_device','')),
                             sample_disk=slot if slot.exists() else disk)
+        candidate = replace(candidate, **{field:payload[key] for key,field in ASIO_SETTINGS.items() if key in payload})
         candidate.validate()
+        if candidate.audio_backend in ('auto','wasapi') and candidate.audio_output_device:
+            if not any(d['id']==candidate.audio_output_device for d in windows_outputs()):
+                raise ValueError('Selected Windows output endpoint is unavailable')
+        if candidate.audio_backend=='asio':
+            inventory=asio_devices()
+            driver=next((d for d in inventory if d['name']==candidate.asio_driver),None)
+            if not driver:raise ValueError('Selected ASIO driver is unavailable')
+            if candidate.asio_output_channel+1>driver['outputs'] or (candidate.asio_input_channel and candidate.asio_input_channel+1>driver['inputs']):
+                raise ValueError('Selected ASIO stereo channel pair is unavailable')
+        elif candidate.recording_device and not any(d['id']==candidate.recording_device for d in recording_devices()):
+            raise ValueError('Recording device is unavailable; refresh devices and select it again')
         if r.process is not None and r.process.poll() is None:
             status = r.media_status()
             if status['dirty'] or status['busy']:
                 raise RuntimeError('Export disk writes and wait for disk activity before applying settings')
+        self.close_capture()
         r.close()
+        self.midi_input = ''
         r.config = candidate
         self.media_dir = folder
         self.media = media
@@ -162,6 +365,8 @@ class StandaloneSession:
             self.startup_error = str(error)
             raise
         self.startup_error = None
+        self.start_capture()
+        self.hold_recovery()
         self.firmware_status = {'type':'FIRMWARE_STATUS','state':'booting','message':'Settings applied; booting firmware…'}
         # Publish only after successful native startup; preserve the previous file on failure.
         settings = {'version':1, **self.configuration()}
@@ -175,29 +380,136 @@ class StandaloneSession:
     def session_path(self):
         return self.runtime.config.state_dir/'sessions'/'latest.s760state'
 
+    @property
+    def recovery_path(self):
+        return self.runtime.config.state_dir/'sessions'/'recovery.s760state'
+
+    def recovery_status(self):
+        path = self.recovery_path
+        return {'available':path.is_file(), 'pending':self.recovery_pending,
+                'savedAt':path.stat().st_mtime if path.is_file() else None,
+                'message':self.recovery_message}
+
+    def hold_recovery(self):
+        if self.recovery_path.is_file():
+            self.recovery_pending = True
+            self.recovery_message = 'Existing recovery preserved. Restore it or start a new recovery history.'
+
+    def save_recovery(self):
+        with self.runtime_lock:
+            if self.recovery_pending:
+                raise RuntimeError('Existing recovery preserved. Restore it or start a new recovery history first.')
+            r = self.runtime
+            running = r.request('status')[0]['state'] == 'running'
+            if not running: r.request('resume')
+            try:
+                if r.media_status()['busy']:
+                    raise RuntimeError('Floppy controller is busy; recovery deferred until the disk operation finishes')
+            finally:
+                if not running: r.request('pause')
+            with self.capture_transaction():
+                r.request('pause')
+                try:
+                    self.recovery_path.parent.mkdir(parents=True, exist_ok=True)
+                    r.save_checkpoint(self.recovery_path)
+                finally:
+                    if running: r.request('resume')
+            self.recovery_message = 'Recovery saved. Changes after this checkpoint can still be lost on failure.'
+            self.next_recovery = time.monotonic() + 60
+            return self.recovery_status()
+
+    def automatic_recovery(self):
+        with self.runtime_lock:
+            if self.recovery_pending or self.startup_error or self.closing or not self.firmware_status.get('booted') or time.monotonic() < self.next_recovery:
+                return
+            self.next_recovery = time.monotonic() + 60
+            try:
+                self.save_recovery()
+            except (OSError, RuntimeError, ValueError) as error:
+                self.recovery_message = f'Recovery not saved: {error}. Previous recovery retained; save or export work before closing.'
+
+    def prepare_close(self):
+        with self.runtime_lock:
+            if self.closing: return True
+            r = self.runtime
+            if self.startup_error or r.process is None or r.process.poll() is not None:
+                return True # A dead/unstarted child cannot produce a newer checkpoint.
+            try:
+                if self.recovery_pending:
+                    raise RuntimeError('Restore existing recovery or start a new recovery history first')
+                self.release_controls()
+                self.save_recovery()
+            except (OSError, RuntimeError, ValueError) as error:
+                self.recovery_message = f'Close cancelled: recovery not saved: {error}. Resolve this before closing.'
+                return False
+            self.closing = True
+            self.stop.set()
+            return True
+
+    def release_controls(self):
+        self.runtime.request('midi', bytes=[0xb0, 123, 0])
+        for port, name in BUTTONS.values():
+            self.runtime.request('button', port=port, name=name, down=False)
+        for name in ('Mouse Left', 'Mouse Right'):
+            self.runtime.request('button', port=':NATIVE_MOUSE_BUTTONS', name=name, down=False)
+
     def input(self, message):
         with self.runtime_lock:
             return self._input(message)
 
     def _input(self, message):
         kind, p = validate_input(message)
+        if self.closing: raise RuntimeError('Sampler is closing')
+        if kind == 'RECORDING_DEVICES':
+            self.recording_devices = recording_devices()
+            return {'type':'RECORDING_DEVICES','recordingDevices':self.recording_devices}
+        if kind == 'ASIO_DEVICES':
+            self.asio_devices=asio_devices()
+            return {'type':'ASIO_DEVICES','asioDevices':self.asio_devices}
+        if kind == 'AUDIO_OUTPUT_DEVICES':
+            self.audio_output_devices=windows_outputs()
+            return {'type':'AUDIO_OUTPUT_DEVICES','audioOutputDevices':self.audio_output_devices}
+        if kind == 'REOPEN_AUDIO':return self.reopen_audio()
         r = self.runtime
+        if kind == 'QUIT_WITHOUT_RECOVERY':
+            self.closing = True
+            self.stop.set()
+            return {'type':'CLOSING'}
         if kind == 'CONFIGURE_RUNTIME': return self.configure(p)
-        if self.startup_error:
+        if kind == 'SET_STANDALONE_PREFERENCES':
+            path = r.config.state_dir / 'standalone-ui.json'
+            path.parent.mkdir(parents=True, exist_ok=True)
+            temporary = path.with_suffix('.tmp')
+            temporary.write_text(json.dumps(p), encoding='utf-8')
+            temporary.replace(path)
+            self.preferences = dict(p)
+            return {'type':'STANDALONE_PREFERENCES', 'preferences':self.preferences}
+        if self.startup_error and kind not in ('RESTORE_SESSION', 'RESTORE_RECOVERY'):
             raise RuntimeError('Open Runtime settings, correct the paths, and apply to start the sampler')
         if kind == 'SAVE_SESSION':
             running = r.request('status')[0]['state'] == 'running'
-            r.request('pause')
-            try:
-                self.session_path.parent.mkdir(parents=True, exist_ok=True)
-                r.save_checkpoint(self.session_path)
-            finally:
-                if running: r.request('resume')
+            with self.capture_transaction():
+                r.request('pause')
+                try:
+                    self.session_path.parent.mkdir(parents=True, exist_ok=True)
+                    r.save_checkpoint(self.session_path)
+                finally:
+                    if running: r.request('resume')
             return {'type':'SESSION_SAVED', 'path':str(self.session_path.resolve())}
-        if kind == 'RESTORE_SESSION':
+        if kind in ('SAVE_RECOVERY', 'START_RECOVERY'):
+            pending = self.recovery_pending
+            if kind == 'START_RECOVERY': self.recovery_pending = False
+            try:
+                result = self.save_recovery()
+            except (OSError, RuntimeError, ValueError):
+                self.recovery_pending = pending
+                raise
+            return {'type':'RECOVERY_STATUS','recovery':result}
+        if kind in ('RESTORE_SESSION', 'RESTORE_RECOVERY'):
+            source = self.recovery_path if kind == 'RESTORE_RECOVERY' else self.session_path
             # Validate before pausing/closing any live machine. The native load
             # validates again before mutation; no client-supplied path is used.
-            r.validate_checkpoint(self.session_path)
+            r.validate_checkpoint(source)
             alive = r.process is not None and r.process.poll() is None
             running = True
             if alive:
@@ -213,24 +525,42 @@ class StandaloneSession:
                     raise RuntimeError('Export disk writes and wait for the disk operation before restoring')
             else:
                 r.close()
+                # The checkpoint owns floppy bytes; a missing/relocated source
+                # image must not prevent launching the replacement machine.
+                if getattr(r.config, 'sample_disk', None) is not None:
+                    r.config = replace(r.config, sample_disk=None)
                 r.start()
-            r.request('pause')
-            # If native application fails, leave execution paused for diagnosis.
-            r.load_checkpoint(self.session_path)
+            with self.capture_transaction():
+                r.request('pause')
+                # If native application fails, leave execution paused for diagnosis.
+                r.load_checkpoint(source)
+            if kind == 'RESTORE_RECOVERY':
+                self.recovery_pending = False
+                self.recovery_message = 'Recovery restored. Automatic recovery resumes in 60 seconds.'
+                self.next_recovery = time.monotonic() + 60
+            else:
+                self.hold_recovery()
+            self.startup_error = None
             self.readiness = None
             if running: r.request('resume')
             self.firmware_status = {'type':'FIRMWARE_STATUS','state':'booting','message':'Session restored; checking firmware…'}
-            return {'type':'SESSION_RESTORED','path':str(self.session_path.resolve())}
+            return {'type':'RECOVERY_RESTORED' if kind == 'RESTORE_RECOVERY' else 'SESSION_RESTORED',
+                    'path':str(source.resolve()), 'recovery':self.recovery_status()}
         if kind == 'RESTART_RUNTIME':
             if r.process is not None and r.process.poll() is None:
                 status = r.media_status()
                 if status['dirty'] or status['busy']:
                     raise RuntimeError('Export disk writes and wait for the disk operation before restarting')
+            self.close_capture()
+            self.capture_discontinuities += 1
             r.close()
+            self.midi_input = ''
             self.readiness = None
-            self.firmware_status = {'type':'FIRMWARE_STATUS','state':'booting','message':'Restarting firmware…'}
+            self.firmware_status = {'type':'FIRMWARE_STATUS','state':'booting','message':'Restarting firmware…','midiInput':''}
             try:
                 r.start()
+                self.start_capture()
+                self.hold_recovery()
             except Exception as error:
                 self.firmware_status = {'type':'FIRMWARE_STATUS','state':'failed','message':f'Restart failed: {error}'}
                 raise
@@ -252,12 +582,27 @@ class StandaloneSession:
             if p['name'] and p['name'] not in self.midi_devices:
                 raise ValueError('MIDI device is not in the available input list')
             r.request('midi_device', name=p['name'])
+            self.midi_input = p['name']
+            return {'type':'MIDI_DEVICE_SELECTED', 'name':self.midi_input}
         elif kind == 'MOUNT_DISK':
             source = self.media.get(p['diskPath'])
             if source is None:
                 raise ValueError('Disk is not in the configured media library')
-            r.insert_media(source)
-            return {'type': 'MEDIA_INSERTED', 'name': source.name}
+            media = r.insert_media(source)
+            return {'type': 'MEDIA_INSERTED', 'name': source.name, 'mediaStatus': media}
+        elif kind == 'MEDIA_STATUS':
+            running = r.request('status')[0]['state'] == 'running'
+            if not running: r.request('resume')
+            try:
+                media = r.media_status()
+            finally:
+                if not running: r.request('pause')
+            return {'type': 'MEDIA_STATUS', 'mediaStatus': media}
+        elif kind == 'MEDIA_WRITE_PROTECT':
+            return {'type': 'MEDIA_PROTECTION', 'mediaStatus': r.set_media_write_protect(p['enabled'])}
+        elif kind == 'EJECT_DISK':
+            r.eject_media()
+            return {'type': 'MEDIA_EJECTED'}
         elif kind == 'EXPORT_DISK':
             folder = r.config.state_dir / 'exports'
             folder.mkdir(exist_ok=True)
@@ -278,6 +623,8 @@ class StandaloneSession:
                     self.readiness = FirmwareReadiness(supported)
                 self.firmware_status = self.readiness.observe(frames[0], info['seconds'], info.get('paused',False))
                 self.firmware_status['outputLevel'] = info.get('output_level', 100)
+                self.firmware_status['inputLevel'] = info.get('input_level', 100)
+                self.firmware_status['recordingStatus'] = dict(self.capture_status)
                 return frames
             except (OSError, RuntimeError) as error:
                 self.firmware_status = {'type':'FIRMWARE_STATUS','state':'failed',
@@ -289,6 +636,8 @@ class StandaloneSession:
             start = time.monotonic()
             with self.runtime_lock:
                 frames = self.poll()
+                self.automatic_recovery()
+                self.firmware_status['recovery'] = self.recovery_status()
                 update = (frames, dict(self.firmware_status))
             with self.client_lock:
                 clients = list(self.clients.values())
@@ -322,9 +671,11 @@ class StandaloneSession:
         sender.start()
         try:
             connection.send(json.dumps({'type': 'SESSION', 'media': sorted(self.media),
-                                        'midiDevices': self.midi_devices, 'warning': self.midi_warning,
+                                        'midiDevices': self.midi_devices, 'recordingDevices':self.recording_devices, 'asioDevices':self.asio_devices, 'audioOutputDevices':self.audio_output_devices,'warning': self.midi_warning,
+                                        'midiInput':self.midi_input, 'preferences':self.preferences,
                                         'configuration':self.configuration(), 'needsConfiguration':bool(self.startup_error),
                                         'savedSession': self.session_path.is_file(),
+                                        'recovery':self.recovery_status(),
                                         'status': 'running', 'audio': 'MAME output'}))
             for raw in connection:
                 try:
@@ -344,11 +695,7 @@ class StandaloneSession:
             # Avoid stuck notes and panel/mouse buttons when a browser closes.
             with self.runtime_lock:
                 try:
-                    self.runtime.request('midi', bytes=[0xb0, 123, 0])
-                    for port, name in BUTTONS.values():
-                        self.runtime.request('button', port=port, name=name, down=False)
-                    for name in ('Mouse Left', 'Mouse Right'):
-                        self.runtime.request('button', port=':NATIVE_MOUSE_BUTTONS', name=name, down=False)
+                    self.release_controls()
                 except (OSError, RuntimeError):
                     pass
 
@@ -362,6 +709,15 @@ def main():
     parser.add_argument('--no-browser', action='store_true')
     parser.add_argument('--browser', action='store_true', help='Use an external browser instead of the desktop window')
     parser.add_argument('--no-sound', action='store_true')
+    parser.add_argument('--recording-device',default=None,help='Exact Windows recording device ID from Configuration')
+    parser.add_argument('--audio-backend', choices=('auto', 'wasapi', 'xaudio2', 'asio'),
+                        help='Windows MAME output backend (default: saved setting or auto)')
+    parser.add_argument('--audio-latency-ms', type=float,
+                        help='Output buffer target, 0 for backend default, up to 1000 ms; not measured latency')
+    parser.add_argument('--asio-driver')
+    parser.add_argument('--asio-output-channel',type=int)
+    parser.add_argument('--asio-input-channel',type=int)
+    parser.add_argument('--asio-buffer-frames',type=int)
     parser.add_argument('--fast', action='store_true', help='Unthrottled integration testing only')
     parser.add_argument('--seconds', type=float, default=0, help='Stop after a bounded test duration')
     parser.add_argument('--verify-desktop', action='store_true', help='Record live WebView canvas evidence, then exit')
@@ -381,7 +737,18 @@ def main():
     media_slot = args.state_dir / 'inserted-floppy.img'
     cfg = RuntimeConfig(ROOT / 'mame-source/mames760.exe', args.boot_rom, args.system_disk,
                         args.state_dir, media_slot if media_slot.exists() else args.system_disk,
-                        False if args.no_sound else settings.get('sound',True), not args.fast)
+                        False if args.no_sound else settings.get('sound',True), not args.fast,
+                        audio_backend=args.audio_backend or settings.get('audioBackend', 'auto'),
+                        audio_output_device=settings.get('audioOutputDevice',''),
+                        audio_latency_ms=args.audio_latency_ms if args.audio_latency_ms is not None
+                            else settings.get('audioLatencyMs', 0),
+                        recording_device=args.recording_device if args.recording_device is not None else settings.get('recordingDevice',''))
+    cfg=replace(cfg,**{field:settings[key] for key,field in ASIO_SETTINGS.items() if key in settings})
+    cfg=replace(cfg,**{field:getattr(args,field) for field in ASIO_SETTINGS.values() if getattr(args,field) is not None})
+    try:
+        cfg.audio_arguments()
+    except ValueError as error:
+        parser.error(str(error))
     token = secrets.token_urlsafe(32)
     http = ThreadingHTTPServer(('127.0.0.1', 0), partial(AssetHandler, directory=str(assets)))
     origin = f'http://127.0.0.1:{http.server_port}'
@@ -402,7 +769,7 @@ def main():
             port = ws.socket.getsockname()[1]
             url = f'{origin}/?native=1&port={port}&token={token}'
             threads = [threading.Thread(target=target, daemon=True) for target in
-                       (http.serve_forever, ws.serve_forever, session.stream)]
+                       (http.serve_forever, ws.serve_forever, session.stream, session.capture_worker)]
             for thread in threads:
                 thread.start()
             print(url, flush=True)
@@ -416,6 +783,7 @@ def main():
                     import webview
                     window = webview.create_window('Roland S-760', url, width=1100, height=1050,
                                                    min_size=(760, 700), background_color='#0a0c0f')
+                    window.events.closing += session.prepare_close
                     def watch_window():
                         if args.verify_desktop:
                             try:
@@ -447,10 +815,15 @@ def main():
             except KeyboardInterrupt:
                 pass
             finally:
+                if not session.prepare_close():
+                    session.failure = session.recovery_message
                 session.stop.set()
                 ws.shutdown()
                 http.shutdown()
                 threads[2].join(timeout=6)
+                threads[3].join(timeout=6)
+                with session.runtime_lock:
+                    session.close_capture()
                 http.server_close()
             if session.failure:
                 raise RuntimeError(session.failure)
@@ -461,6 +834,15 @@ if __name__ == '__main__':
         main()
     except Exception as error:
         import sys
+        if getattr(sys,'frozen',False):
+            import traceback
+            try:
+                position=sys.argv.index('--state-dir')
+                diagnostic=Path(sys.argv[position+1])/'startup-error.log'
+                diagnostic.parent.mkdir(parents=True,exist_ok=True)
+                diagnostic.write_text(traceback.format_exc(),encoding='utf-8')
+            except (ValueError,IndexError,OSError):
+                pass
         if getattr(sys, 'frozen', False) and '--no-browser' not in sys.argv and '--verify-desktop' not in sys.argv:
             import ctypes
             ctypes.windll.user32.MessageBoxW(None, str(error), 'S-760 could not start', 0x10)

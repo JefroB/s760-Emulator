@@ -14,18 +14,25 @@ if ($Release) {
 # No firmware, sample media, captures or private notes enter the package.
 Push-Location "$repo/google-ui"
 try {
+    & cmake --build "$repo/build" --config Release --target s760_asio
+    if ($LASTEXITCODE -ne 0) { throw 'Native ASIO bridge build failed' }
+    $asioPortAudio = & python "$repo/scripts/s760_asio.py"
+    if ($LASTEXITCODE -ne 0) { throw 'ASIO-enabled PortAudio runtime is missing' }
     & npm run build
     if ($LASTEXITCODE -ne 0) { throw 'React build failed' }
 } finally { Pop-Location }
 Push-Location $repo
 try {
     & python -m PyInstaller --noconfirm --onedir --windowed --name S760Studio `
+        --add-binary "$repo/build/Release/s760_asio.dll;audio" --add-binary "$asioPortAudio;audio" `
         --paths "$repo/scripts" --collect-all webview --exclude-module webview.__pyinstaller --exclude-module PyInstaller --copy-metadata pywebview `
         --copy-metadata websockets --copy-metadata pythonnet `
         --distpath "$output/dist" --workpath "$output/build" --specpath $output `
         "$repo/scripts/s760_standalone.py"
     if ($LASTEXITCODE -ne 0) { throw 'Standalone executable build failed' }
     $package = "$output/dist/S760Studio"
+    New-Item -ItemType Directory -Path "$package/audio" -Force | Out-Null
+    Copy-Item -LiteralPath "$repo/mame-source/3rdparty/portaudio/LICENSE.txt" -Destination "$package/audio/PORTAUDIO-LICENSE.txt"
     foreach ($folder in @('scripts','google-ui','mame-source','roms/FDD')) {
         New-Item -ItemType Directory -Path "$package/$folder" -Force | Out-Null
     }
@@ -46,6 +53,9 @@ try {
     New-Item -ItemType Directory -Path "$package/condensed/validation" -Force | Out-Null
     Copy-Item -LiteralPath "$repo/docs/condensed/validation/native-readiness-2026-10-11.json" -Destination "$package/condensed/validation/"
     Copy-Item -LiteralPath "$repo/docs/condensed/validation/native-session-2026-10-11.json" -Destination "$package/condensed/validation/"
+    Copy-Item -LiteralPath "$repo/docs/condensed/validation/standalone-asio-2026-10-12.json" -Destination "$package/condensed/validation/"
+    Copy-Item -LiteralPath "$repo/docs/condensed/validation/standalone-midi-sustained-2026-10-12.json" -Destination "$package/condensed/validation/"
+    Copy-Item -LiteralPath "$repo/docs/condensed/validation/standalone-audio-devices-2026-10-12.json" -Destination "$package/condensed/validation/"
     & python "$repo/scripts/s760_distribution_inventory.py" --package $package --build "$output/build/S760Studio" --external-windows-runtime
     if ($LASTEXITCODE -ne 0) { throw 'Bundled input inventory failed' }
     & python "$repo/scripts/s760_package_audit.py" --repo $repo --package $package --prepare

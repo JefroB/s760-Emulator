@@ -1,11 +1,16 @@
 # Roland S-760 Digital Sampler — MAME Emulator Driver
 
-> **Current status (2026-10-10):** Native MAME boots the original OS and has hardware-validated playback work. The new **[standalone development player](docs/STANDALONE_PLAYER.md)** displays live MAME CRT/LCD pixels in React/WebView2, with firmware mouse/panel controls, floppy loading and MIDI audition. The [exported VST3 factory](docs/NATIVE_PLUGIN_SELECTION.md) now selects native MAME exclusively and passes module boot/load/display/audio tests; native input, host configuration UX, actual DAW acceptance and several standalone workflows remain unfinished; historical coverage tables below do not establish end-to-end product readiness. The standalone now exposes [firmware readiness and UI recovery](docs/NATIVE_FIRMWARE_STATUS.md), including native-child restart, and [saved-session recovery](docs/NATIVE_SESSIONS.md). Follow the **[completion roadmap](docs/COMPLETION_ROADMAP.md)** for remaining work and acceptance gates, and the [native runbook](docs/condensed/11-native-boot-and-audio-runbook.md) for the tested checkpoint.
+> **Current status (2026-10-10):** Native MAME boots the original OS and has hardware-validated playback work. The new **[standalone development player](docs/STANDALONE_PLAYER.md)** displays live MAME CRT/LCD pixels in React/WebView2, with firmware mouse/panel controls, floppy loading and MIDI audition. The [exported VST3 factory](docs/NATIVE_PLUGIN_SELECTION.md) now selects native MAME exclusively and passes module boot/load/display/audio tests; native input, broader DAW acceptance and several standalone workflows remain unfinished; historical coverage tables below do not establish end-to-end product readiness. The standalone now exposes [firmware readiness and UI recovery](docs/NATIVE_FIRMWARE_STATUS.md), including native-child restart, and [saved-session recovery](docs/NATIVE_SESSIONS.md). Follow the **[completion roadmap](docs/COMPLETION_ROADMAP.md)** for remaining work and acceptance gates, and the [native runbook](docs/condensed/11-native-boot-and-audio-runbook.md) for the tested checkpoint.
 
-The [native rack media library](docs/NATIVE_MEDIA_LIBRARY.md) now supports configurable recursive folders and plugin-state recall of library, browse selection and inserted-media identity. SoundCheck loaded-sample audio and [persistent plugin setup](docs/NATIVE_PLUGIN_CONFIGURATION.md) are also qualified. Milestone 2 is complete for the qualified Windows development profile: [Value/Output controls](docs/NATIVE_RACK_CONTROLS.md) now pass native and SoundCheck acceptance. Input Level remains disabled and explicitly belongs to Milestone 3 native sampling; packaged release and broader DAW qualification remain open.
+The [native rack media library](docs/NATIVE_MEDIA_LIBRARY.md) now supports configurable recursive folders and plugin-state recall of library, browse selection and inserted-media identity. SoundCheck loaded-sample audio and [persistent plugin setup](docs/NATIVE_PLUGIN_CONFIGURATION.md) are also qualified. Milestone 2 is complete for the qualified Windows development profile: [Value/Output controls](docs/NATIVE_RACK_CONTROLS.md) now pass native and SoundCheck acceptance. Standalone [Input Level](docs/NATIVE_RACK_CONTROLS.md) now passes native recording and session-recall acceptance; VST host input routing, physical capture-device selection, packaged release and broader DAW qualification remain open.
 
 [![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
 [Runtime qualification and distribution status](docs/NATIVE_BOUNDARY_QUALIFICATION.md)
+[Milestone 4 SDK and SoundCheck scan/load qualification](docs/condensed/validation/milestone-4-sdk-host-2026-10-12.json) passes for the current Windows x64 instrument.
+[Milestone 4 processing and lifecycle qualification](docs/condensed/validation/milestone-4-processing-lifecycle-2026-10-12.json) now also covers all three supported rates with varying blocks, exact native reference audio, two independent SoundCheck instances, editor resize/reopen and clean removal/exit. Remaining MIDI controllers, project portability and host sampling-input qualification remain open; graphical setup is delivered below.
+[Native VST3 MIDI controller transport](docs/NATIVE_VST3_MIDI.md) now delivers host controller queues to original firmware. SoundCheck verifies volume, sustain and All Notes Off through measured audio; configured bend and broader controller/reset acceptance remain open.
+[Native VST3 rendering](docs/NATIVE_VST3_RENDERING.md) now supports unpaced offline bounce. SoundCheck offline PCM exactly matches realtime playback with held-note suspend/resume; latency and infinite-tail reporting are qualified for the documented native QA profile. Host sampling input remains open.
+[Plugin configuration](docs/NATIVE_VST3_CONFIGURATION.md) now saves firmware/media paths in the editor and shows startup errors with a silent recovery state. Correct settings and reload through the host; audio and MIDI devices remain host-controlled. DAW project portability remains open.
 [Qualified Windows standalone distribution and source delivery](docs/DISTRIBUTION_QUALIFICATION.md)
 
 **[Milestone 1 complete](docs/MILESTONE_1_COMPLETION.md):** standalone and the exported module share native execution, display/MIDI/audio and bounded state. Configuration/editor, sampling and actual DAW acceptance remain open in Milestones 2–4.
@@ -31,6 +36,29 @@ The **canonical user interface is the React app in [`google-ui/`](google-ui/)** 
 ---
 
 ## User Interface
+
+![Native standalone with original firmware, loaded ROBOFULL disk and optional on-screen keyboard](docs/images/standalone-keyboard.png)
+
+The Windows standalone has a gear button for **Configuration** for MIDI selection, audio
+output/backend/buffer settings, recording-device selection and firmware/media paths. Its on-screen keyboard
+is hidden by default; enable **Show on-screen keyboard** in Configuration.
+**ASIO** is available with driver, stereo input/output pair and buffer-size selection
+for the supported 44.1 kHz profile.
+The standalone shares the VST rack and CRT housing. Select images with the Gotek
+controls; session, recovery and export actions are in **Configuration**. The screenshot shows live native firmware.
+The VST editor receives MIDI and audio from its host. Physical stereo input now
+records through firmware Sampling and survives Save/fresh Load exactly in the
+supported 44.1 kHz profile. Physical MIDI loopback playing and note release also pass;
+five-minute ASIO playback, normal stream reopening and selected Windows output conversion now pass for the documented profiles.
+The remaining Milestone 3 production ADC objective is tracked in the
+[completion roadmap](docs/COMPLETION_ROADMAP.md).
+
+An opt-in [offline native sampling profile](docs/NATIVE_SAMPLING.md) now records
+known stereo PCM through firmware Sampling and preserves both samples through
+Save and a fresh Load. Standalone Input Level is qualified at unity, half gain and mute, including cold
+session recall. Physical Windows MME and ASIO sampling are qualified for the
+documented profiles; broader production ADC/rate qualification remains open.
+Audio input is disabled by default.
 
 The **canonical S-760 user interface is the React application in [`google-ui/`](google-ui/)**. It owns 100% of the device shell/chrome — the 1U rack chassis, the OP-760 CRT bezel, the 160×64 front-panel LCD housing, hardware dials, and the Gotek drive bay — and composites the three authentic emulated display surfaces inside it:
 

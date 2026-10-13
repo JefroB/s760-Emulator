@@ -6,6 +6,7 @@ Live PCM can be drained from MAME; sample-clocked plugin audio is not implemente
 """
 from dataclasses import dataclass
 import json
+import math
 import hashlib
 import os
 from pathlib import Path
@@ -17,6 +18,7 @@ import subprocess
 import sys
 import threading
 import time
+import xml.etree.ElementTree as ET
 
 
 def application_root():
@@ -35,6 +37,27 @@ def midi_inputs(executable):
         elif reading and line.strip():
             names.append(line.removesuffix(' (default)'))
     return names
+
+
+def stage_audio_mapping(config):
+    """Own only this standalone's private MAME speaker endpoint mappings."""
+    path=config.state_dir/'cfg/s760.cfg'
+    selected=config.audio_output_device if config.audio_backend in ('auto','wasapi') else ''
+    if not selected and not path.exists():return
+    tree=ET.parse(path) if path.exists() else ET.ElementTree(ET.Element('mameconfig',version='10'))
+    root=tree.getroot();system=root.find("system[@name='s760']")
+    if system is None:system=ET.SubElement(root,'system',name='s760')
+    mixer=system.find('mixer')
+    if mixer is None:mixer=ET.SubElement(system,'mixer')
+    for mapping in list(mixer.findall('sound_map')):
+        if mapping.get('tag') in (':lspeaker',':rspeaker'):mixer.remove(mapping)
+    if selected:
+        for channel,tag in enumerate((':lspeaker',':rspeaker')):
+            mapping=ET.SubElement(mixer,'sound_map',tag=tag)
+            ET.SubElement(mapping,'channel_mapping',guest_channel='0',node='o:'+selected,node_channel=str(channel),db='0')
+    path.parent.mkdir(parents=True,exist_ok=True)
+    temporary=path.with_suffix('.cfg.tmp');tree.write(temporary,encoding='utf-8',xml_declaration=True)
+    os.replace(temporary,path)
 
 
 def read_exact(connection, size):
@@ -83,8 +106,45 @@ class RuntimeConfig:
     throttle: bool = True
     wav_output: Path | None = None
     wave_dump: Path | None = None
+    audio_backend: str = 'auto'
+    audio_latency_ms: float = 0
+    audio_output_device: str = ''
+    experimental_adc: bool = False
+    recording_device: str = ''
+    asio_driver: str = ''
+    asio_output_channel: int = 1
+    asio_input_channel: int = 0
+    asio_buffer_frames: int = 512
+
+    def audio_arguments(self):
+        """OSD buffer target only; native transport stays stereo 44100 Hz."""
+        if self.audio_backend not in ('auto', 'wasapi', 'xaudio2', 'asio'):
+            raise ValueError('Audio backend must be auto, wasapi, xaudio2 or asio')
+        if not isinstance(self.audio_output_device,str) or len(self.audio_output_device)>256 or '\0' in self.audio_output_device:
+            raise ValueError('Invalid Windows output endpoint')
+        if not isinstance(self.asio_driver,str) or len(self.asio_driver)>256 or '\0' in self.asio_driver:
+            raise ValueError('Invalid ASIO driver')
+        for channel, minimum in ((self.asio_output_channel,1),(self.asio_input_channel,0)):
+            if type(channel) is not int or not minimum<=channel<=255:
+                raise ValueError('Invalid ASIO stereo channel pair')
+        if type(self.asio_buffer_frames) is not int or self.asio_buffer_frames not in (64,128,256,512,1024,2048):
+            raise ValueError('Invalid ASIO buffer size')
+        if self.audio_backend=='asio' and not self.asio_driver.strip():
+            raise ValueError('Select an ASIO driver')
+        latency = self.audio_latency_ms
+        if (type(latency) not in (int, float) or not math.isfinite(latency)
+                or not 0 <= latency <= 1000):
+            raise ValueError('Audio buffer target must be finite and between 0 and 1000 ms')
+        backend='wasapi' if self.audio_output_device and self.audio_backend=='auto' else self.audio_backend
+        return ['-sound', backend if self.sound and backend!='asio' else 'none',
+                '-audio_latency', format(latency / 20, 'g')]
 
     def validate(self):
+        self.audio_arguments()
+        if not isinstance(self.recording_device, str) or len(self.recording_device)>256 or '\0' in self.recording_device:
+            raise ValueError('Invalid recording device')
+        if (self.recording_device or self.audio_backend=='asio') and not self.throttle:
+            raise ValueError('Live recording requires normal-speed emulation; disable --fast')
         for path in (self.executable, self.boot_rom, self.system_disk, self.sample_disk):
             if path is not None and not path.is_file():
                 raise FileNotFoundError(path)
@@ -117,6 +177,10 @@ class NativeRuntime:
     def _start(self, timeout):
         self.config.validate()
         cfg = self.config
+        if cfg.audio_output_device and cfg.audio_backend in ('auto','wasapi'):
+            from s760_asio import windows_outputs
+            if not any(d['id']==cfg.audio_output_device for d in windows_outputs()):
+                raise ValueError('Selected Windows output endpoint is unavailable; refresh outputs and select it again')
         self.scsi_identity = self._scsi_identity()
         cfg.state_dir.mkdir(parents=True, exist_ok=True)
         self.state_lock = (cfg.state_dir / 'runtime.lock').open('a+b')
@@ -161,9 +225,14 @@ class NativeRuntime:
             if cfg.sample_disk and cfg.sample_disk.resolve() != slot.resolve():
                 shutil.copyfile(cfg.sample_disk, slot)
             env['S760_SAMPLE_FLOPPY'] = str(slot.resolve())
+            if cfg.experimental_adc or cfg.recording_device or (cfg.audio_backend=='asio' and cfg.asio_input_channel):
+                env['S760_NATIVE_ADC'] = '1'
+            if cfg.audio_backend=='asio':
+                env['S760_ASIO_CLOCK'] = '1'
             if cfg.wave_dump:
                 env['S760_VDP_TRACE'] = '1'  # Existing exit observer, no guest writes.
                 env['S760_WAVE_DUMP'] = str(cfg.wave_dump.resolve())
+            stage_audio_mapping(cfg)
             command = [str(cfg.executable.resolve()), 's760', '-rompath',
                        str(rom_dir.parent.resolve()),
                        '-pluginspath', str(root / 'mame-source/plugins'),
@@ -173,8 +242,7 @@ class NativeRuntime:
                        '-autoboot_delay', '0', '-autoboot_script', str(root / 'scripts/s760_runtime.lua'),
                        '-video', 'none', '-window', '-skip_gameinfo', '-samplerate', '44100',
                        '-throttle' if cfg.throttle else '-nothrottle']
-            if not cfg.sound:
-                command += ['-sound', 'none']
+            command += cfg.audio_arguments()
             if cfg.wav_output:
                 command += ['-wavwrite', str(cfg.wav_output.resolve())]
             self.log = (cfg.state_dir / 'runtime.log').open('wb')
@@ -221,6 +289,11 @@ class NativeRuntime:
         return json.loads(read_exact(self.connection, length))
 
     def request(self, operation, **kwargs):
+        pcm=kwargs.pop('_pcm',None)
+        if operation=='input_audio_binary' and pcm is None:raise ValueError('Missing binary PCM frame')
+        if pcm is not None and (operation!='input_audio_binary' or not isinstance(pcm,(bytes,bytearray))
+                or not 4<=len(pcm)<=8192 or len(pcm)%4 or type(kwargs.get('frames')) is not int or kwargs['frames']!=len(pcm)//4):
+            raise ValueError('Invalid binary PCM frame')
         with self.lock:
             if self.connection is None or self.process.poll() is not None:
                 raise ConnectionError('MAME is not running')
@@ -230,7 +303,7 @@ class NativeRuntime:
                     raise ValueError('Invalid MIDI packet')
                 self.midi_connection.sendall(bytes(packet))
                 return {'ok': True}, []
-            self.connection.sendall((json.dumps({'op': operation, **kwargs}) + '\n').encode())
+            self.connection.sendall((json.dumps({'op': operation, **kwargs}) + '\n').encode()+(pcm or b''))
             response = self._receive()
             if not response.get('ok'):
                 raise RuntimeError(response.get('error', 'Runtime command failed'))
@@ -245,10 +318,44 @@ class NativeRuntime:
                                            read_exact(self.connection, width * height * 4)))
             return response, frames
 
-    def read_audio(self):
+    @staticmethod
+    def _clock_arguments(clock_rate):
+        if clock_rate is None:
+            return {}
+        if type(clock_rate) not in (int,float) or not math.isfinite(clock_rate) or not .97<=clock_rate<=1.03:
+            raise ValueError('Device clock pacing must be finite and between0.97 and1.03')
+        return {'clock_rate':clock_rate}
+
+    def read_audio(self, clock_rate=None):
         """Drain bounded native PCM on a worker; never call from a DAW callback."""
-        response, _ = self.request('audio')
+        response, _ = self.request('audio', **self._clock_arguments(clock_rate))
         return response['audio'], response['pcm']
+
+    def queue_input_pcm(self, pcm, rate=44100, channels=2, live=False, duplex=False, clock_rate=None, binary=False):
+        """Queue interleaved little-endian PCM16 on the opt-in native ADC.
+
+        Worker/offline only; each atomic submission contains 1-2048 frames.
+        Live mode accepts running input and discards input while paused.
+        Unsupported formats and malformed blocks fail before transport.
+        """
+        if type(rate) is not int or rate != 44100 or type(channels) is not int or channels != 2:
+            raise ValueError('Input requires 44100Hz stereo PCM16')
+        if not isinstance(pcm, (bytes, bytearray)) or not 4 <= len(pcm) <= 8192 or len(pcm) % 4:
+            raise ValueError('Expected 1 to 2048 complete stereo PCM16 frames')
+        if type(binary) is not bool:raise ValueError('Binary PCM mode must be boolean')
+        if type(live) is not bool:
+            raise ValueError('Live input mode must be boolean')
+        if type(duplex) is not bool or (duplex and not live):
+            raise ValueError('Duplex input requires live mode')
+        arguments = dict(rate=rate, channels=channels, **self._clock_arguments(clock_rate))
+        if binary:arguments.update(frames=len(pcm)//4,_pcm=bytes(pcm))
+        else:arguments['samples']=list(struct.unpack('<'+'h'*(len(pcm)//2),pcm))
+        if live:
+            arguments['live'] = True
+        if duplex:
+            arguments['output'] = True
+        response, _ = self.request('input_audio_binary' if binary else 'input_audio', **arguments)
+        return response
 
     def render_audio(self, frames):
         """Worker/offline pull. MAME must be paused with capture enabled."""
@@ -285,10 +392,16 @@ class NativeRuntime:
         scsi = self._scsi_identity()
         if self.scsi_identity is not None and scsi != self.scsi_identity:
             raise ValueError('SCSI backing files changed since runtime startup')
-        identity = {name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in {
-            'mame': cfg.executable, 'boot': cfg.boot_rom, 'system': cfg.system_disk,
-            'protocol': application_root()/'scripts/s760_runtime.lua'}.items()}
+        identity = {}
+        for name, path in {'mame': cfg.executable, 'boot': cfg.boot_rom, 'system': cfg.system_disk,
+                           'protocol': application_root()/'scripts/s760_runtime.lua'}.items():
+            try:
+                identity[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+            except FileNotFoundError:
+                raise ValueError(f'Session prerequisite missing: {path}. Correct the paths in Runtime settings; saved sample media is contained in the session.') from None
         identity['scsi'] = scsi
+        if cfg.experimental_adc or cfg.recording_device or (cfg.audio_backend=='asio' and cfg.asio_input_channel):
+            identity['experimental_adc'] = 'pcm16-stereo-44100-v1'
         return identity
 
     def save_checkpoint(self, destination):
@@ -320,19 +433,40 @@ class NativeRuntime:
     def _read_checkpoint(self, source):
         # Caller holds media_lock across validation and any subsequent load.
         source = Path(source)
-        if source.stat().st_size > 258*1024*1024:
-            raise ValueError('Checkpoint exceeds size limit')
-        data = source.read_bytes()
+        try:
+            if source.stat().st_size > 258*1024*1024:
+                raise ValueError('Checkpoint exceeds size limit')
+            data = source.read_bytes()
+        except FileNotFoundError:
+            raise ValueError('No saved session was found. Reopen the original state directory or save a new session; current sampler memory has not been replaced.') from None
+        if data[:8] == b'S760CKP1':
+            raise ValueError('Session format version 1 is unsupported. Use the matching older application to export media; session migration is not available.')
         if len(data) < 12 or data[:8] != b'S760CKP2':
-            raise ValueError('Invalid checkpoint header')
+            raise ValueError('Session header is invalid or damaged. Restore a known-good backup; current sampler memory has not been replaced.')
         size, = struct.unpack_from('<I', data, 8)
         if size > 65536 or len(data) < 12+size:
             raise ValueError('Invalid checkpoint manifest size')
-        meta = json.loads(data[12:12+size])
+        try:
+            meta = json.loads(data[12:12+size])
+        except (ValueError, UnicodeDecodeError):
+            raise ValueError('Session manifest is damaged. Restore a known-good backup; current sampler memory has not been replaced.') from None
         blob = data[12+size:]
-        if (not isinstance(meta, dict) or meta.get('version') != 2 or meta.get('identity') != self._checkpoint_identity()
-                or meta.get('bytes') != len(blob) or meta.get('sha256') != hashlib.sha256(blob).hexdigest()):
-            raise ValueError('Checkpoint version, runtime/firmware identity or integrity mismatch')
+        if not isinstance(meta, dict) or meta.get('version') != 2:
+            raise ValueError('Session format version is unsupported. Reopen with the matching application; session migration is not available.')
+        if meta.get('bytes') != len(blob) or meta.get('sha256') != hashlib.sha256(blob).hexdigest():
+            raise ValueError('Session integrity check failed. Restore a known-good backup; current sampler memory has not been replaced.')
+        expected = self._checkpoint_identity()
+        saved = meta.get('identity')
+        if saved != expected:
+            labels = {'mame':'MAME build', 'boot':'boot ROM', 'system':'system disk',
+                      'protocol':'runtime protocol', 'scsi':'SCSI backing media'}
+            differences = [labels.get(key, key) for key in expected
+                           if not isinstance(saved, dict) or saved.get(key) != expected[key]]
+            description = ', '.join(differences) or 'identity manifest'
+            action = 'Use the matching application build and firmware, then retry.'
+            if 'SCSI backing media' in differences:
+                action += f' Restore SCSI files with the saved names/content under {self.config.state_dir / "roms/SCSI"}.'
+            raise ValueError(f'Session identity mismatch: {description}. {action} Current sampler memory has not been replaced.')
         return blob
 
     def load_checkpoint(self, source):
@@ -384,6 +518,12 @@ class NativeRuntime:
     def eject_media(self):
         with self.media_lock:
             return self._media_control('Eject Sample Floppy')
+
+    def set_media_write_protect(self, enabled):
+        if type(enabled) is not bool:
+            raise ValueError('Write protection must be a boolean')
+        with self.media_lock:
+            return self._media_control('Protect Sample Floppy' if enabled else 'Unprotect Sample Floppy')
 
     def export_media(self, destination):
         """Export real controller bytes to a new image, never replace a library file."""

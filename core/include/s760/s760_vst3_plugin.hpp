@@ -23,13 +23,14 @@ class S760Vst3PlugView; // WebView-backed IPlugView (defined in the .cpp)
 // in-process S760Bridge.
 class S760Vst3Plugin : public Steinberg::IComponent,
                        public Steinberg::IAudioProcessor,
-                       public Steinberg::IEditController {
+                       public Steinberg::IEditController,
+                       public Steinberg::IMidiMapping {
 public:
     // Direct construction for historical core diagnostic tests only. The
     // exported VST3 factory uses the native configuration overload exclusively.
     explicit S760Vst3Plugin(bool is_fx = false);
     // Same native engine used by the standalone and exported factory.
-    explicit S760Vst3Plugin(const NativeRuntimeConfig& config);
+    explicit S760Vst3Plugin(const NativeRuntimeConfig& config,const std::string& startup_error={});
     virtual ~S760Vst3Plugin();
 
     // FUnknown
@@ -76,6 +77,8 @@ public:
     tresult setParamNormalized(uint32_t id, double value) override;
     tresult setComponentHandler(void* handler) override;
     Steinberg::IPlugView* createView(FIDString name) override;
+    tresult getMidiControllerAssignment(int32_t bus,int16_t channel,int16_t controller,uint32_t& id) override;
+    static constexpr uint32_t midi_parameter_base=0x760000, midi_parameters=16*129;
 
     S760LibretroHost& get_host() { return m_host; }
     S760Bridge& get_bridge() { return m_bridge; }
@@ -84,6 +87,7 @@ public:
 
 private:
     std::atomic<uint32_t> m_ref_count{1};
+    std::array<std::atomic<double>,midi_parameters> m_midi_values{};
     // Concrete Core backend. KEPT as a value member so all Core-specific
     // lifecycle/audio/savestate calls keep compiling and behaving exactly as
     // before (default Core path stays byte-for-byte identical on the wire).
@@ -102,8 +106,15 @@ private:
     bool m_native_mode = false;
     bool m_native_state_failed = false;
     std::string m_native_ui_url;
+    bool m_configuration_pending=false,m_terminated=false,m_configuration_saved=false;
+    unsigned m_configuration_revision=0;
+    std::string m_configuration_json,m_configuration_error,m_startup_error;
+    void initialize_configuration(const NativeRuntimeConfig&);
+    bool configure_from_editor(const std::string&);
+    std::string configuration_snapshot() const;
 
     double m_sample_rate = 44100.0;
+    int32_t m_process_mode = 0;
     int32_t m_max_block_size = 512;
     bool m_is_active = false;
     bool m_is_processing = false;

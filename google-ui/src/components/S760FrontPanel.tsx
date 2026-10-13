@@ -15,6 +15,8 @@ import {NativeDriveBay} from './NativeDriveBay';
 import { soundFx } from '../audio/soundFx';
 
 interface S760FrontPanelProps {
+  /** Native standalone supplies its own transport and live surfaces. */
+  nativeHardware?: {send: import('../nativeKeyboard').NativeSend; enabled: boolean; outputLevel: number; inputLevel: number; lcd: React.ReactNode; driveBay: React.ReactNode};
   state: SamplerState;
   diskList: DiskImage[];
   onTogglePower: () => void;
@@ -58,11 +60,13 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
   onEventEmit,
   onTriggerAudition,
   shiftButtonMapping = BUTTON_MAPPING,
+  nativeHardware,
 }) => {
-  const native=!!detectEmbeddedTransport();
+  const native=!!nativeHardware || !!detectEmbeddedTransport();
   const client=useBridgeClient(), connection=useBridgeStatus();
   const telemetry=useBridgeTelemetry();
-  const send=useCallback((type:string,payload:Record<string,unknown>)=>client?.send({type,payload} as S760ClientMessage),[client]);
+  const send=useCallback((type:string,payload:Record<string,unknown>)=>nativeHardware ? nativeHardware.send(type,payload) : client?.send({type,payload} as S760ClientMessage),[client,nativeHardware]);
+  const enabled=nativeHardware?.enabled ?? (connection==='connected' && !telemetry?.pluginConfiguration?.needsConfiguration);
   const [pressedBtn, setPressedBtn] = useState<string | null>(null);
 
   // The exact set of dedicated SHIFT buttons to render: one descriptor per
@@ -166,7 +170,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
   const currentPatchName =
     mountedDisk && mountedDisk.patches[state.currentPatchIndex % mountedDisk.patches.length]
       ? mountedDisk.patches[state.currentPatchIndex % mountedDisk.patches.length]
-      : selectedDisk.patches[0];
+      : selectedDisk?.patches[0] ?? '';
 
   return (
     <div className="relative w-full overflow-x-auto py-4 flex justify-center items-center">
@@ -255,8 +259,8 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
 
           {/* Hardware Silkscreen Model Block */}
           {native ? <div className="flex items-center gap-3" aria-label="Audio levels">
-            <RackKnob label="INPUT LEVEL" disabled title="Native input gain routing is not yet implemented"/>
-            <RackKnob label="OUTPUT LEVEL" value={telemetry?.outputLevel??100} disabled={connection!=='connected'} onStep={delta=>send('DIAL_DELTA',{id:'VOLUME',delta})} title="Stereo Out 1 and headphone level"/>
+            <RackKnob label="INPUT LEVEL" value={nativeHardware?.inputLevel} disabled={!nativeHardware||!enabled} onStep={delta=>send('DIAL_DELTA',{id:'INPUT',delta})} title={nativeHardware?"Recording input gain":"Host input routing is not yet implemented"}/>
+            <RackKnob label="OUTPUT LEVEL" value={nativeHardware?.outputLevel??telemetry?.outputLevel??100} disabled={!enabled} onStep={delta=>send('DIAL_DELTA',{id:'VOLUME',delta})} title="Stereo Out 1 and headphone level"/>
           </div> : <div className="flex flex-col justify-center ml-1 pr-2">
             <div className="flex items-baseline gap-1.5">
               <span className="text-[11px] font-black tracking-tight text-neutral-300 uppercase font-sans">
@@ -279,7 +283,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
 
           {/* Roland 160x64 Backlit Graphic LCD Display & Soft Function Keys Below */}
           <div className="flex flex-col items-center">
-            <RolandLCD
+            {nativeHardware ? nativeHardware.lcd : <RolandLCD
               powerOn={state.powerOn}
               mode={state.mode}
               backlightColor={state.backlightColor}
@@ -292,7 +296,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
               sampleScrub={state.sampleScrub}
               volume={state.volume}
               activeCursorField={state.activeCursorField}
-            />
+            />}
 
             {/* Row of 6 Soft Function Buttons directly under LCD: [F1] to [F6] */}
             {!native && <div className="flex items-center justify-between w-[240px] mt-1.5 px-0.5">
@@ -322,7 +326,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
                 </div>
               ))}
             </div>}
-            {native && <NativePanelControls send={send} enabled={connection==='connected'} functionsOnly/>}
+            {native && <NativePanelControls send={send} enabled={enabled} functionsOnly/>}
           </div>
         </div>
 
@@ -349,7 +353,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
           classifies it as a fabrication. The rendered-button-id set is
           therefore consistent with the authoritative mapping.
         */}
-        {native ? <NativePanelControls send={send} enabled={connection==='connected'}/> : <div className="flex items-center px-4 gap-5 border-r border-neutral-700/60">
+        {native ? <NativePanelControls send={send} enabled={enabled}/> : <div className="flex items-center px-4 gap-5 border-r border-neutral-700/60">
           {/* Master Volume Potentiometer */}
           <div className="flex flex-col items-center">
             <span className="text-[7px] font-mono text-neutral-400 font-bold uppercase tracking-wider mb-1">
@@ -619,7 +623,7 @@ export const S760FrontPanel: React.FC<S760FrontPanelProps> = ({
 
         {/* ================= SECTION C: RIGHT FLANK (GOTEK BAY) ================= */}
         <div className="flex items-center flex-1 justify-center px-2">
-          {native ? <NativeDriveBay/> : <GotekBay
+          {native ? (nativeHardware?.driveBay ?? <NativeDriveBay/>) : <GotekBay
             powerOn={state.powerOn}
             selectedDisk={selectedDisk}
             mountedDisk={mountedDisk}

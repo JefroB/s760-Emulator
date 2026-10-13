@@ -10,6 +10,14 @@
 #include <chrono>
 #include <fstream>
 #include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#endif
 
 #if defined(_WIN32)
 #define VST3_EXPORT __declspec(dllexport)
@@ -28,11 +36,19 @@ S760Vst3Plugin::S760Vst3Plugin(bool is_fx)
     m_scratch_right.resize(8192, 0.0f);
 }
 
-S760Vst3Plugin::S760Vst3Plugin(const NativeRuntimeConfig& config)
-    : m_selected_host(std::make_unique<S760MameHost>()), m_bridge(m_selected_host.get()), m_native_mode(true) {
+S760Vst3Plugin::S760Vst3Plugin(const NativeRuntimeConfig& config,const std::string& startup_error)
+    : m_selected_host(std::make_unique<S760MameHost>()), m_bridge(m_selected_host.get()), m_native_mode(true),
+      m_configuration_pending(!startup_error.empty()),m_startup_error(startup_error) {
     auto* host=native_host();
-    host->configure_native(config);
-    if(!host->init()) throw std::runtime_error(host->native_error());
+    if(!m_configuration_pending) {
+        host->configure_native(config);
+        if(!host->init()) throw std::runtime_error(host->native_error());
+        if(!config.media_directory.empty() && !host->media_library().configure(config.media_directory.u8string()))
+            throw std::runtime_error(host->media_library().error());
+    }
+    initialize_configuration(config);
+    m_bridge.set_configuration_callbacks([this](const std::string& json){return configure_from_editor(json);},
+                                        [this]{return configuration_snapshot();});
     // Per-instance URL: do not mutate process-wide environment or depend on
     // the DAW working directory. Percent-encode UTF-8 file path bytes.
     if(const auto* override_url=std::getenv("S760_UI_URL");override_url && *override_url)
@@ -47,6 +63,7 @@ S760Vst3Plugin::S760Vst3Plugin(const NativeRuntimeConfig& config)
     }
     m_scratch_left.resize(NativeStream::max_frames);
     m_scratch_right.resize(NativeStream::max_frames);
+    for(unsigned channel=0;channel<16;++channel) m_midi_values[channel*129+128].store(8192.0/16383.0);
 }
 
 // -----------------------------------------------------------------------------
@@ -71,6 +88,7 @@ IS760Host* S760Vst3Plugin::select_bridge_host() {
 }
 
 S760Vst3Plugin::~S760Vst3Plugin() {
+    m_bridge.set_configuration_callbacks({},{});
     m_native_stream.reset();
     if(!m_selected_host) m_host.get_drive_manager().flush_all();
 }
@@ -84,6 +102,7 @@ static const TUID FUnknown_iid       = INLINE_UID(0x00000000, 0x00000000, 0xC000
 static const TUID IComponent_iid     = INLINE_UID(0xE831FF31, 0xF2D54301, 0x928EBBEE, 0x25697802);
 static const TUID IAudioProcessor_iid= INLINE_UID(0x42043F99, 0xB7DA453C, 0xA569E79D, 0x9AAEC33D);
 static const TUID IEditController_iid = INLINE_UID(0xDCD7BBE3, 0x7742448D, 0xA874AACC, 0x979C759E);
+static const TUID IMidiMapping_iid = INLINE_UID(0xDF0FF9F7, 0x49B74669, 0xB63AB732, 0x7ADBF5E5);
 static const TUID IPlugView_iid       = INLINE_UID(0x5BC32507, 0xD06049EA, 0xA6151B52, 0x2B755B29);
 
 class S760Vst3PlugView : public Steinberg::IPlugView {
@@ -187,6 +206,9 @@ tresult S760Vst3Plugin::queryInterface(const TUID _iid, void** obj) {
         addRef();
         return kResultOk;
     }
+    if(m_native_mode && std::memcmp(_iid,IMidiMapping_iid,sizeof(TUID))==0) {
+        *obj=static_cast<Steinberg::IMidiMapping*>(this);addRef();return kResultOk;
+    }
 
     *obj = nullptr;
     return kResultFalse;
@@ -210,6 +232,7 @@ tresult S760Vst3Plugin::initialize(Steinberg::FUnknown* context) {
 }
 
 tresult S760Vst3Plugin::terminate() {
+    m_terminated=true;
     m_is_processing=false;
     m_native_stream.reset();
     if(m_native_mode) native_host()->close_native();
@@ -287,13 +310,13 @@ uint32_t S760Vst3Plugin::getLatencySamples() {
 
 tresult S760Vst3Plugin::setupProcessing(Steinberg::ProcessSetup& setup) {
     if(m_selected_host) {
-        if(!m_native_mode || m_is_processing || !NativeRateConverter::supported(setup.sampleRate) || setup.symbolicSampleSize!=0 ||
+        if(!m_native_mode || m_is_processing || setup.processMode<0 || setup.processMode>2 || !NativeRateConverter::supported(setup.sampleRate) || setup.symbolicSampleSize!=0 ||
            setup.maxSamplesPerBlock<1 || setup.maxSamplesPerBlock>NativeStream::max_frames)
             return kResultFalse;
         // Preserve queued PCM/note-offs. A started timeline cannot change its
         // rate without a stateful migration; require a fresh native instance.
         if(setup.sampleRate!=m_sample_rate && m_native_stream) return kResultFalse;
-        m_sample_rate=setup.sampleRate; m_max_block_size=setup.maxSamplesPerBlock;
+        m_sample_rate=setup.sampleRate; m_max_block_size=setup.maxSamplesPerBlock; m_process_mode=setup.processMode;
         return kResultOk;
     }
     m_sample_rate = setup.sampleRate;
@@ -327,6 +350,7 @@ void S760Vst3Plugin::rebuild_native_stream(const NativeStream::Snapshot* saved) 
 
 tresult S760Vst3Plugin::setProcessing(bool state) {
     if(m_selected_host) {
+        if(m_configuration_pending && !m_terminated) {m_is_processing=state;return kResultOk;}
         if(!m_native_mode || !native_host()->native_runtime()) return kResultFalse;
         if(state && m_native_state_failed) return kResultFalse;
         if(state && m_native_stream && m_native_stream->fault()!=NativeStream::Fault::none) return kResultFalse;
@@ -355,7 +379,8 @@ tresult S760Vst3Plugin::setProcessing(bool state) {
 }
 
 uint32_t S760Vst3Plugin::getTailSamples() {
-    return 0;
+    // SDK kInfiniteTail: a held or looped voice has no finite tail bound.
+    return m_native_mode ? 0xffffffffu : 0;
 }
 
 void S760Vst3Plugin::process_events(Steinberg::IEventList* events) {
@@ -396,10 +421,19 @@ tresult S760Vst3Plugin::process_native(Steinberg::ProcessData& data) {
         }
         out.silenceFlags=~std::uint64_t(0);
     }
+    if(m_configuration_pending && !m_terminated && m_is_processing) {
+        // A failed startup is a visible, silent native configuration state.
+        // Never route it through the historical core or fabricate audio.
+        return data.numSamples>=0 && data.numSamples<=m_max_block_size && data.processMode==m_process_mode &&
+            data.symbolicSampleSize==0 && data.numInputs==0 && data.numOutputs==1 && data.outputs &&
+            data.outputs[0].numChannels==2 && data.outputs[0].channelBuffers32 &&
+            data.outputs[0].channelBuffers32[0] && data.outputs[0].channelBuffers32[1] ? kResultOk : kResultFalse;
+    }
     if(!m_native_mode || !m_is_processing || !m_native_stream) return kResultFalse;
     auto reject=[this] { m_native_stream->fail(NativeStream::Fault::invalid_block); return kResultFalse; };
-    if(data.numSamples==0 && (!data.inputEvents || data.inputEvents->getEventCount()==0)) return kResultOk;
-    if(data.numSamples<1 || data.numSamples>m_max_block_size || data.symbolicSampleSize!=0 ||
+    auto* changes=static_cast<Steinberg::IParameterChanges*>(data.inputParameterChanges);
+    if(data.numSamples==0 && (!data.inputEvents || data.inputEvents->getEventCount()==0) && (!changes || changes->getParameterCount()==0)) return kResultOk;
+    if(data.processMode!=m_process_mode || data.numSamples<1 || data.numSamples>m_max_block_size || data.symbolicSampleSize!=0 ||
        data.numInputs!=0 || data.numOutputs!=1 || !data.outputs || data.outputs[0].numChannels!=2 ||
        !data.outputs[0].channelBuffers32 || !data.outputs[0].channelBuffers32[0] || !data.outputs[0].channelBuffers32[1])
         return reject();
@@ -419,8 +453,34 @@ tresult S760Vst3Plugin::process_native(Steinberg::ProcessData& data) {
         events[i]={unsigned(e.sampleOffset),{std::uint8_t((e.type==kNoteOnEvent ? 0x90 : 0x80)|channel),
             std::uint8_t(pitch),std::uint8_t(velocity*127.f)}};
     }
+    const int queues=changes ? changes->getParameterCount() : 0;
+    if(queues<0 || queues>NativeStream::max_events) return reject();
+    for(int q=0;q<queues;++q) {
+        auto* queue=changes->getParameterData(q);
+        if(!queue) return reject();
+        const auto id=queue->getParameterId();
+        if(id<midi_parameter_base || id>=midi_parameter_base+midi_parameters) return reject();
+        const auto index=id-midi_parameter_base,channel=index/129,controller=index%129;
+        const int points=queue->getPointCount();
+        if(points<0 || points>NativeStream::max_events-count) return reject();
+        int previous=-1;
+        for(int p=0;p<points;++p) {
+            int offset=0;double value=0;
+            if(queue->getPoint(p,offset,value)!=kResultOk || offset<previous || offset<0 || offset>=data.numSamples || !std::isfinite(value) || value<0 || value>1) return reject();
+            previous=offset;
+            const unsigned discrete=unsigned(std::lround(value*(controller==128 ? 16383 : 127)));
+            events[count++]={unsigned(offset),controller==128 ? std::array<std::uint8_t,3>{std::uint8_t(0xe0|channel),std::uint8_t(discrete&127),std::uint8_t(discrete>>7)} : std::array<std::uint8_t,3>{std::uint8_t(0xb0|channel),std::uint8_t(controller),std::uint8_t(discrete)}};
+        }
+    }
+    // Stable bounded insertion sort: note events precede controller queues at
+    // equal offsets; each queue retains host ordering. No callback allocations.
+    for(int i=1;i<count;++i) {
+        const auto event=events[i];int j=i;
+        while(j>0 && events[j-1].offset>event.offset) {events[j]=events[j-1];--j;}
+        events[j]=event;
+    }
     auto& out=data.outputs[0];
-    if(!m_native_stream->process(out.channelBuffers32[0],out.channelBuffers32[1],unsigned(data.numSamples),events.data(),unsigned(count)))
+    if(!m_native_stream->process(out.channelBuffers32[0],out.channelBuffers32[1],unsigned(data.numSamples),events.data(),unsigned(count),m_process_mode==2))
         return kResultFalse;
     out.silenceFlags=0;
     return kResultOk;
@@ -681,40 +741,70 @@ tresult S760Vst3Plugin::setComponentState(Steinberg::IBStream* state) {
     return kResultOk;
 }
 
-int32_t S760Vst3Plugin::getParameterCount() { return 0; }
+int32_t S760Vst3Plugin::getParameterCount() { return m_native_mode ? midi_parameters : 0; }
+
+tresult S760Vst3Plugin::getMidiControllerAssignment(int32_t bus,int16_t channel,int16_t controller,uint32_t& id) {
+    if(!m_native_mode || bus!=0 || channel<0 || channel>15 || controller<0 || controller>129 || controller==128) return kResultFalse;
+    id=midi_parameter_base+channel*129+(controller==129 ? 128 : controller);return kResultOk;
+}
 
 tresult S760Vst3Plugin::getParameterInfo(int32_t paramIndex, void* info) {
-    (void)paramIndex; (void)info;
-    return kResultFalse;
+    if(!m_native_mode || !info || paramIndex<0 || paramIndex>=midi_parameters) return kResultFalse;
+    auto& parameter=*static_cast<Steinberg::ParameterInfo*>(info);parameter={};
+    parameter.id=midi_parameter_base+paramIndex;
+    const auto controller=paramIndex%129;
+    const std::string title="MIDI Ch "+std::to_string(paramIndex/129+1)+(controller==128 ? " Pitch Bend" : " CC "+std::to_string(controller));
+    std::copy(title.begin(),title.end(),parameter.title);
+    parameter.stepCount=controller==128 ? 16383 : 127;
+    parameter.defaultNormalizedValue=controller==128 ? 8192.0/16383.0 : 0;
+    parameter.flags=1|16; // automatable, hidden MIDI transport aliases
+    return kResultOk;
 }
 
 tresult S760Vst3Plugin::getParamStringByValue(uint32_t id, double valueNormalized, void* string) {
-    (void)id; (void)valueNormalized; (void)string;
+    if(m_native_mode && string && id>=midi_parameter_base && id<midi_parameter_base+midi_parameters && std::isfinite(valueNormalized) && valueNormalized>=0 && valueNormalized<=1) {
+        const auto text=std::to_string(std::lround(normalizedParamToPlain(id,valueNormalized)));
+        auto* out=static_cast<char16_t*>(string);std::copy(text.begin(),text.end(),out);out[text.size()]=0;return kResultOk;
+    }
     return kResultFalse;
 }
 
 tresult S760Vst3Plugin::getParamValueByString(uint32_t id, char16_t* string, double* valueNormalized) {
-    (void)id; (void)string; (void)valueNormalized;
+    if(m_native_mode && string && *string && valueNormalized && id>=midi_parameter_base && id<midi_parameter_base+midi_parameters) {
+        unsigned value=0;
+        for(unsigned i=0;string[i];++i) {
+            if(i>=5 || string[i]<u'0' || string[i]>u'9') return kInvalidArgument;
+            value=value*10+unsigned(string[i]-u'0');
+        }
+        const unsigned maximum=(id-midi_parameter_base)%129==128 ? 16383 : 127;
+        if(value>maximum) return kInvalidArgument;
+        *valueNormalized=double(value)/maximum;return kResultOk;
+    }
     return kResultFalse;
 }
 
 double S760Vst3Plugin::normalizedParamToPlain(uint32_t id, double valueNormalized) {
-    (void)id;
+    if(m_native_mode && id>=midi_parameter_base && id<midi_parameter_base+midi_parameters)
+        return valueNormalized*((id-midi_parameter_base)%129==128 ? 16383 : 127);
     return valueNormalized;
 }
 
 double S760Vst3Plugin::plainParamToNormalized(uint32_t id, double plainValue) {
-    (void)id;
+    if(m_native_mode && id>=midi_parameter_base && id<midi_parameter_base+midi_parameters)
+        return plainValue/((id-midi_parameter_base)%129==128 ? 16383 : 127);
     return plainValue;
 }
 
 double S760Vst3Plugin::getParamNormalized(uint32_t id) {
-    (void)id;
+    if(m_native_mode && id>=midi_parameter_base && id<midi_parameter_base+midi_parameters) return m_midi_values[id-midi_parameter_base].load();
     return 0.0;
 }
 
 tresult S760Vst3Plugin::setParamNormalized(uint32_t id, double value) {
-    (void)id; (void)value;
+    if(m_native_mode) {
+        if(id<midi_parameter_base || id>=midi_parameter_base+midi_parameters || !std::isfinite(value) || value<0 || value>1) return kInvalidArgument;
+        m_midi_values[id-midi_parameter_base].store(value);return kResultOk;
+    }
     return kResultOk;
 }
 
@@ -754,6 +844,92 @@ static std::filesystem::path native_settings_path() {
     }
     auto appdata=native_environment_path("LOCALAPPDATA");
     return appdata.is_absolute()?appdata/"S760"/"plugin-settings.json":std::filesystem::path{};
+}
+
+static std::string configuration_json(const rapidjson::Value& value) {
+    rapidjson::StringBuffer buffer;rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    value.Accept(writer);return {buffer.GetString(),buffer.GetSize()};
+}
+
+void S760Vst3Plugin::initialize_configuration(const NativeRuntimeConfig& config) {
+    rapidjson::Document d;d.SetObject();auto& a=d.GetAllocator();
+    auto put=[&](const char* key,const std::filesystem::path& path) {
+        const auto text=path.u8string();d.AddMember(rapidjson::Value(key,a),rapidjson::Value(text.c_str(),rapidjson::SizeType(text.size()),a),a);
+    };
+    d.AddMember("version",1,a);put("root",config.root);put("stateRoot",config.state.parent_path());
+    put("bootRom",config.boot_rom);put("systemDisk",config.system_disk);
+    put("mediaDirectory",config.media_directory.empty()?config.root/"roms/FDD":config.media_directory);
+    try {
+        const auto path=native_settings_path();
+        if(m_configuration_pending && std::filesystem::is_regular_file(path) && std::filesystem::file_size(path)<=32768) {
+            std::ifstream file(path,std::ios::binary);std::string bytes((std::istreambuf_iterator<char>(file)),{});
+            rapidjson::Document saved;saved.Parse<rapidjson::kParseValidateEncodingFlag>(bytes.data(),bytes.size());
+            if(!saved.HasParseError() && saved.IsObject()) for(auto key:{"root","stateRoot","bootRom","systemDisk","mediaDirectory"})
+                if(saved.HasMember(key) && saved[key].IsString()) d[key].CopyFrom(saved[key],a);
+        }
+    } catch(...) {} // Keep the startup error and editable defaults visible.
+    m_configuration_json=configuration_json(d);
+}
+
+std::string S760Vst3Plugin::configuration_snapshot() const {
+    rapidjson::Document d;d.Parse(m_configuration_json.c_str());auto& a=d.GetAllocator();
+    d.AddMember("needsConfiguration",m_configuration_pending,a);
+    d.AddMember("saved",m_configuration_saved,a);d.AddMember("revision",m_configuration_revision,a);
+    d.AddMember("error",rapidjson::Value(m_configuration_error.c_str(),a),a);
+    d.AddMember("startupError",rapidjson::Value(m_startup_error.c_str(),a),a);
+    return configuration_json(d);
+}
+
+bool S760Vst3Plugin::configure_from_editor(const std::string& json) {
+    if(json.size()>32768) {
+        if(json.find("\"CONFIGURE_PLUGIN\"")>64) return false;
+        ++m_configuration_revision;m_configuration_saved=false;m_configuration_error="Plugin settings exceed 32KB";return true;
+    }
+    rapidjson::Document request;request.Parse<rapidjson::kParseValidateEncodingFlag>(json.data(),json.size());
+    if(request.HasParseError() || !request.IsObject() || !request.HasMember("type") || !request["type"].IsString() ||
+       std::strcmp(request["type"].GetString(),"CONFIGURE_PLUGIN")) return false;
+    ++m_configuration_revision;m_configuration_saved=false;
+    try {
+        if(!request.HasMember("payload") || !request["payload"].IsObject()) throw std::runtime_error("Missing plugin settings");
+        const auto& p=request["payload"];
+        if(!p.HasMember("confirmReload") || !p["confirmReload"].IsBool() || !p["confirmReload"].GetBool())
+            throw std::runtime_error("Confirm applying settings after plugin reload");
+        rapidjson::Document saved;saved.SetObject();auto& a=saved.GetAllocator();saved.AddMember("version",1,a);
+        auto path=[&](const char* key) {
+            if(!p.HasMember(key) || !p[key].IsString()) throw std::runtime_error(std::string("Missing ")+key);
+            const auto& v=p[key];std::string text(v.GetString(),v.GetStringLength());
+            if(text.empty() || text.size()>4096 || text.find('\0')!=std::string::npos) throw std::runtime_error(std::string("Invalid ")+key);
+            auto result=std::filesystem::u8path(text);
+            if(!result.is_absolute()) throw std::runtime_error(std::string(key)+" must be an absolute path");
+            saved.AddMember(rapidjson::Value(key,a),rapidjson::Value(text.c_str(),a),a);return result;
+        };
+        const auto root=path("root"),state=path("stateRoot"),boot=path("bootRom"),system=path("systemDisk"),media=path("mediaDirectory");
+        for(auto file:{root/"mame-source/mames760.exe",root/"scripts/s760_runtime.lua",root/"google-ui/dist/index.html",boot,system}) {
+            if(!std::filesystem::is_regular_file(file)) throw std::runtime_error("Missing runtime or firmware file: "+file.u8string());
+            std::ifstream readable(file,std::ios::binary);if(!readable) throw std::runtime_error("Unreadable file: "+file.u8string());
+        }
+        if(std::filesystem::file_size(boot)!=32768 || std::filesystem::file_size(system)!=1474560)
+            throw std::runtime_error("Boot ROM must be 32768 bytes and system disk must be 1474560 bytes");
+        if(!std::filesystem::is_directory(media)) throw std::runtime_error("Media directory does not exist: "+media.u8string());
+        if(std::filesystem::exists(state) && !std::filesystem::is_directory(state)) throw std::runtime_error("stateRoot must be a directory");
+        const auto target=native_settings_path();if(!target.is_absolute()) throw std::runtime_error("No absolute plugin settings filename is configured");
+        for(auto file:{boot,system,root/"mame-source/mames760.exe",root/"scripts/s760_runtime.lua",root/"google-ui/dist/index.html"})
+            if(std::filesystem::weakly_canonical(target)==std::filesystem::weakly_canonical(file) ||
+               (std::filesystem::exists(target) && std::filesystem::equivalent(target,file))) throw std::runtime_error("Settings filename must not overwrite firmware or runtime files");
+        const auto bytes=configuration_json(saved);
+        std::filesystem::create_directories(target.parent_path());
+        auto temporary=target;temporary+="."+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count())+".tmp";
+        try {
+            {std::ofstream file(temporary,std::ios::binary|std::ios::trunc);file.write(bytes.data(),bytes.size());file.flush();if(!file) throw std::runtime_error("Cannot write plugin settings");}
+#if defined(_WIN32)
+            if(!MoveFileExW(temporary.c_str(),target.c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH)) throw std::runtime_error("Cannot replace plugin settings");
+#else
+            std::filesystem::rename(temporary,target);
+#endif
+        } catch(...) {std::error_code ignored;std::filesystem::remove(temporary,ignored);throw;}
+        m_configuration_json=bytes;m_configuration_error.clear();m_configuration_saved=true;
+    } catch(const std::exception& error) {m_configuration_error=error.what();}
+    return true;
 }
 
 static void report_native_startup_error(const std::string& reason) noexcept {
@@ -806,6 +982,7 @@ static NativeRuntimeConfig native_factory_config() {
             };
             fill(config.root,"root"); fill(state_root,"stateRoot");
             fill(config.boot_rom,"bootRom"); fill(config.system_disk,"systemDisk");
+            if(document.HasMember("mediaDirectory")) fill(config.media_directory,"mediaDirectory");
         }
     }
     // Explicit paths make scanner/host working directories irrelevant. Firmware
@@ -819,6 +996,8 @@ static NativeRuntimeConfig native_factory_config() {
         throw std::runtime_error("Build the React editor with npm run build in google-ui before loading the plugin");
     if(std::filesystem::file_size(config.boot_rom)!=32768 || std::filesystem::file_size(config.system_disk)!=1474560)
         throw std::runtime_error("Boot ROM must be 32768 bytes and system disk must be 1474560 bytes");
+    if(!config.media_directory.empty() && (!config.media_directory.is_absolute() || !std::filesystem::is_directory(config.media_directory)))
+        throw std::runtime_error("Media directory must name an existing absolute directory");
     std::filesystem::create_directories(state_root);
     static std::atomic<unsigned long long> next{0};
     for(unsigned retry=0;retry<100;++retry) {
@@ -826,6 +1005,26 @@ static NativeRuntimeConfig native_factory_config() {
         if(std::filesystem::create_directory(config.state)) return config;
     }
     throw std::runtime_error("Cannot allocate an independent native instance directory");
+}
+
+static NativeRuntimeConfig configuration_editor_defaults() {
+    NativeRuntimeConfig config;config.root=native_environment_path("S760_NATIVE_ROOT");
+#if defined(_WIN32)
+    HMODULE module=nullptr;wchar_t path[32768]{};
+    if(GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+        reinterpret_cast<LPCWSTR>(&configuration_editor_defaults),&module) && GetModuleFileNameW(module,path,32768)) {
+        auto folder=std::filesystem::path(path).parent_path();
+        for(unsigned i=0;i<10 && !folder.empty();++i,folder=folder.parent_path())
+            if(std::filesystem::is_regular_file(folder/"google-ui/dist/index.html")) {config.root=folder;break;}
+    }
+#endif
+    if(!std::getenv("S760_UI_URL") && !std::filesystem::is_regular_file(config.root/"google-ui/dist/index.html"))
+        throw std::runtime_error("Plugin editor files are missing; repair the S-760 installation");
+    auto state=native_environment_path("S760_NATIVE_STATE_ROOT");
+    if(state.empty()) state=native_environment_path("LOCALAPPDATA")/"S760/runtime";
+    config.state=state/"unconfigured";
+    config.boot_rom=native_environment_path("S760_BOOT_ROM");config.system_disk=native_environment_path("S760_SYSTEM_DISK");
+    return config;
 }
 
 class S760Vst3Factory : public Steinberg::IPluginFactory {
@@ -877,7 +1076,11 @@ public:
             return result;
         } catch(const std::exception& error) {
             report_native_startup_error(error.what());
-            return kResultFalse;
+            try {
+                auto* plugin=new S760Vst3Plugin(configuration_editor_defaults(),error.what());
+                auto result=plugin->queryInterface(reinterpret_cast<const std::uint8_t*>(_iid),obj);
+                plugin->release();return result;
+            } catch(...) {return kResultFalse;}
         } catch(...) {
             return kInternalError; // Never unwind through a host/plugin ABI.
         }

@@ -51,6 +51,30 @@ int main() {
         check(!underrun->process(l,r,1024,nullptr,0),"Missing deadline not detected");
         check(underrun->fault()==s760::NativeStream::Fault::output_underrun,"Wrong underrun fault");
         for(auto value:l) check(value==0,"Underrun output not silent");
+        auto offline=std::make_unique<s760::NativeStream>([](const auto& b,float* pcm) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
+            for(unsigned i=0;i<b.frames;++i) {pcm[i*2]=float(b.first+i+1);pcm[i*2+1]=-pcm[i*2];}
+            return true;
+        });
+        offline->start();
+        for(unsigned block=0;block<128;++block) {
+            check(offline->process(l,r,1024,nullptr,0,true),"Unpaced offline block failed");
+            for(unsigned i=0;i<1024;++i) {
+                auto t=block*1024+i;
+                const float expected=t<8192 ? 0.f : float(t-8192+1);
+                check(l[i]==expected && r[i]==-expected,"Offline PCM clock changed");
+            }
+        }
+        offline->stop();
+        auto tiny=std::make_unique<s760::NativeStream>([](const auto& b,float* pcm) {
+            std::fill_n(pcm,b.frames*2,.25f);return true;
+        });
+        tiny->start();
+        for(unsigned i=0;i<9000;++i) {
+            check(tiny->process(l,r,1,nullptr,0,true),"Tiny offline block backpressure failed");
+            check(l[0]==(i<8192 ? 0.f : .25f),"Tiny offline output differs");
+        }
+        tiny->stop();
         auto failure=std::make_unique<s760::NativeStream>([](auto&,float*) { return false; });
         failure->start();
         check(failure->process(l,r,1024,nullptr,0) && failure->process(l,r,1024,nullptr,0),"Failure test enqueue");

@@ -1,0 +1,190 @@
+{
+  "date": "2026-10-12",
+  "objective": "Standalone rack Input Level with native recording gain and same-build session recall",
+  "profile": "OS2.24, experimental 44100Hz stereo PCM16 ADC, linear 0\u2013100% software gain",
+  "gain_model": "s16(s32(input_pcm16) * input_level / 100), division truncates toward zero; consumption before input meter and recording wave-RAM write",
+  "gain_runs": [
+    {
+      "profile": "experimental offline 44100Hz stereo PCM16",
+      "samples": [
+        {
+          "channel": 0,
+          "frames": 56672,
+          "allocation_bytes": 119808,
+          "pcm_sha256": "a433a8a67a0d0a1172a16c154672e2251e69c9ee8f428d7d3b846ad4cae5f793",
+          "metadata_hex": "4e45573a556e6e616d65642020207f4c0000000000000000005fdd0000f8e90000fce9000200000005000d00013c0000",
+          "exact_input_pattern": true,
+          "wave_disk_cold_reload_equal": true,
+          "peak_pcm16": 8192
+        },
+        {
+          "channel": 1,
+          "frames": 56672,
+          "allocation_bytes": 119808,
+          "pcm_sha256": "a3f5819bf7d0f66a8fd6bdf1a0f469778543fbad40aaed5f176610037a44d001",
+          "metadata_hex": "4e45573a556e6e616d65642020207f520000000000000000005fdd0000f8e90000fce9000200000012000d00013c0000",
+          "exact_input_pattern": true,
+          "wave_disk_cold_reload_equal": true,
+          "peak_pcm16": 8128
+        }
+      ],
+      "input_level": 100,
+      "output_level_during_recording": 0,
+      "cold_gain_recall": true,
+      "input_underruns": 0,
+      "invalid_format_and_atomic_overflow_rejection": true,
+      "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b",
+      "source_preserved": true,
+      "saved_sha256": "c64837ff66c9318f88e26302c0723dc3bf1b578156f90950d7aa2a9967450c49",
+      "identities": {
+        "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+        "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+        "mame-source\\src\\mame\\roland\\s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+        "scripts\\s760_runtime.lua": "5d23c5cd8d0bdde8923cef627803f4335e7b916a4ddd6ffc1ddb03cabb86b670",
+        "scripts\\s760_runtime.py": "f7a1f1f367a67c2952c92b7b9da61601b615127be8c0c0be193b25fc74ccbc7d"
+      },
+      "limitations": [
+        "No physical input device or realtime timing qualification",
+        "Analog gain taper/headroom, other recording rates and hardware register semantics remain open",
+        "Experimental ADC remains disabled by default"
+      ],
+      "command": "python scripts/verify_native_sampling_input.py --input-level 100 --cold-gain-recall --blank-disk docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img --state-dir docs/ic20-hle-findings/chatGPT-work/input-level-100-v2"
+    },
+    {
+      "profile": "experimental offline 44100Hz stereo PCM16",
+      "samples": [
+        {
+          "channel": 0,
+          "frames": 56710,
+          "allocation_bytes": 119808,
+          "pcm_sha256": "715774e1a8af9341c8dffbff24044eff9b2967d1b801c16260cf2a6b30165711",
+          "metadata_hex": "4e45573a556e6e616d65642020207f4c00000000000000000085dd0000f8e90000fce9000200000005000d00013c0000",
+          "exact_input_pattern": true,
+          "wave_disk_cold_reload_equal": true,
+          "peak_pcm16": 4096
+        },
+        {
+          "channel": 1,
+          "frames": 56710,
+          "allocation_bytes": 119808,
+          "pcm_sha256": "b606273f8385fdc9698148aa00b83f1b56a1ffc87f39169a90716558e808859c",
+          "metadata_hex": "4e45573a556e6e616d65642020207f5200000000000000000085dd0000f8e90000fce9000200000012000d00013c0000",
+          "exact_input_pattern": true,
+          "wave_disk_cold_reload_equal": true,
+          "peak_pcm16": 4064
+        }
+      ],
+      "input_level": 50,
+      "output_level_during_recording": 0,
+      "cold_gain_recall": true,
+      "input_underruns": 0,
+      "invalid_format_and_atomic_overflow_rejection": true,
+      "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b",
+      "source_preserved": true,
+      "saved_sha256": "73a7dcbe85929db5b0b86f627694d682fc6ed8742e452539f1221f0cee59cad5",
+      "identities": {
+        "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+        "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+        "mame-source\\src\\mame\\roland\\s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+        "scripts\\s760_runtime.lua": "5d23c5cd8d0bdde8923cef627803f4335e7b916a4ddd6ffc1ddb03cabb86b670",
+        "scripts\\s760_runtime.py": "f7a1f1f367a67c2952c92b7b9da61601b615127be8c0c0be193b25fc74ccbc7d"
+      },
+      "limitations": [
+        "No physical input device or realtime timing qualification",
+        "Analog gain taper/headroom, other recording rates and hardware register semantics remain open",
+        "Experimental ADC remains disabled by default"
+      ],
+      "command": "python scripts/verify_native_sampling_input.py --input-level 50 --cold-gain-recall --blank-disk docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img --state-dir docs/ic20-hle-findings/chatGPT-work/input-level-50-v2"
+    },
+    {
+      "profile": "experimental offline 44100Hz stereo PCM16",
+      "samples": [
+        {
+          "channel": 0,
+          "frames": 59887,
+          "allocation_bytes": 119808,
+          "pcm_sha256": "3456174612524c5eaadabdbdb507f9daef44f7d171d9a6bffedd609e1a0ad8ed",
+          "metadata_hex": "4e45573a556e6e616d65642020207f4c000000000000000000eee90000f8e90000fce9000200000005000d00013c0000",
+          "exact_input_pattern": true,
+          "wave_disk_cold_reload_equal": true,
+          "peak_pcm16": 0
+        },
+        {
+          "channel": 1,
+          "frames": 59887,
+          "allocation_bytes": 119808,
+          "pcm_sha256": "3456174612524c5eaadabdbdb507f9daef44f7d171d9a6bffedd609e1a0ad8ed",
+          "metadata_hex": "4e45573a556e6e616d65642020207f52000000000000000000eee90000f8e90000fce9000200000012000d00013c0000",
+          "exact_input_pattern": true,
+          "wave_disk_cold_reload_equal": true,
+          "peak_pcm16": 0
+        }
+      ],
+      "input_level": 0,
+      "output_level_during_recording": 0,
+      "cold_gain_recall": true,
+      "input_underruns": 0,
+      "invalid_format_and_atomic_overflow_rejection": true,
+      "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b",
+      "source_preserved": true,
+      "saved_sha256": "de6940da1f6424ac501d52b0de2e950c7a03ce1b7d3640c83ff0d1d08705109c",
+      "identities": {
+        "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+        "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+        "mame-source\\src\\mame\\roland\\s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+        "scripts\\s760_runtime.lua": "5d23c5cd8d0bdde8923cef627803f4335e7b916a4ddd6ffc1ddb03cabb86b670",
+        "scripts\\s760_runtime.py": "f7a1f1f367a67c2952c92b7b9da61601b615127be8c0c0be193b25fc74ccbc7d"
+      },
+      "limitations": [
+        "No physical input device or realtime timing qualification",
+        "Analog gain taper/headroom, other recording rates and hardware register semantics remain open",
+        "Experimental ADC remains disabled by default"
+      ],
+      "command": "python scripts/verify_native_sampling_input.py --input-level 0 --cold-gain-recall --blank-disk docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img --state-dir docs/ic20-hle-findings/chatGPT-work/input-level-0-v2"
+    }
+  ],
+  "physical_capture_device_qualified": false,
+  "analog_pot_taper_or_headroom_qualified": false,
+  "default_playback_comparison": {
+    "frames": 132300,
+    "pcm_and_both_displays_bit_identical": true,
+    "pcm_sha256": "49b1a00c63f105edacdc97681f56968e17f6a083e89d6540ff86743159aced1c"
+  },
+  "regressions": {
+    "backend_pytest_passed": 322,
+    "react_tests_passed": 119,
+    "react_files": 23,
+    "typescript_lint": "passed",
+    "production_ui_build": "passed",
+    "shared_shell_tests_passed": 5,
+    "source_native_browser_gain_save_restore_reconnect": "passed",
+    "packaged_native_browser_gain_save_restore_reconnect": "passed",
+    "native_value_output_dial_regression": "passed",
+    "cmake_release_core_plugin": "passed"
+  },
+  "packaged_webview": {
+    "status": "OS ready \u2014 Perform Play.",
+    "width": 640,
+    "height": 480,
+    "nonzero": 225776
+  },
+  "sources": {
+    "mame-source\\src\\mame\\roland\\s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "scripts\\s760_runtime.lua": "5d23c5cd8d0bdde8923cef627803f4335e7b916a4ddd6ffc1ddb03cabb86b670",
+    "scripts\\s760_standalone.py": "2be5e4ea49e3c12c35e766f4ffd2306aa526f299921ff9a03986dedb6897e2b2",
+    "scripts\\verify_native_sampling_input.py": "9d3a1d53da6392ec789b63c0105a654b0ba2e3d0bf325eaeb21332ec788caf17",
+    "google-ui\\src\\components\\S760FrontPanel.tsx": "88e31c882cb8670f3fd2ebefbbc178bc00a57c9608a269bb4063e43713dbac3a",
+    "google-ui\\src\\NativeStudio.tsx": "83e0569a9c619afdfa7c3c41f633c41114d28eaef9ccf853722d3351d0947cb8",
+    "google-ui\\e2e\\native-input-level.spec.ts": "07564a5dff07616aed742c54f6d6bdc85bee904433ab4c649532bcef7dac1bb2"
+  },
+  "limitations": [
+    "Standalone recording gain is implemented; VST host input routing remains separate and its Input Level knob stays disabled",
+    "Physical capture-device selection, negotiated capture rates and realtime input qualification remain open",
+    "Experimental ADC stays off by default; gain selection is available independently and applies when ADC input is supplied",
+    "Same-build session identity is required; analog gain taper, saturation and noise are uncalibrated"
+  ]
+}

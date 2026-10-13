@@ -1,7 +1,7 @@
 """Native firmware Save/export/reload acceptance using a private ROBOFULL copy.
 
 Requires local MAME/firmware/ROBOFULL. Leaves originals untouched. This validates
-the supported save path, not formatting, write protection or SCSI persistence.
+the supported save path, optional 720KB formatting and write protection, not SCSI persistence.
 """
 import hashlib
 import argparse
@@ -25,7 +25,11 @@ def digest(path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--checkpoint', action='store_true', help='Verify dirty-controller state in a fresh process')
+    parser.add_argument('--write-protect', action='store_true', help='Verify firmware protected Save, exact unchanged media and cold protection recall')
+    parser.add_argument('--format', action='store_true', help='Format private loaded media through firmware before Save/export/reload')
     args = parser.parse_args()
+    if args.format and args.write_protect:
+        parser.error('Run formatting and write-protection workflows separately')
     work = ROOT / 'docs/ic20-hle-findings/chatGPT-work' / ('media-verification-' + time.strftime('%Y%m%d-%H%M%S'))
     work.mkdir(parents=True)
     source = ROOT / 'roms/FDD/ROBOFULL.IMG'
@@ -55,6 +59,58 @@ def main():
         runtime.request('button', port=':NATIVE_MEDIA', name='Insert Sample Floppy', down=False)
         click(118, 5); wait(2); click(80, 22); wait(8)
         click(50, 34); wait(2); click(76, 98); wait(35)
+        if args.format:
+            runtime.set_media_write_protect(True)
+            click(118,5);wait(2);click(80,54);wait(3)
+            click(76,98);wait(2);click(66,70);wait(10)
+            protected_format_status = runtime.media_status()
+            assert protected_format_status['writeProtected'] and not protected_format_status['dirty'] and not protected_format_status['busy']
+            runtime.export_media(work/'protected-format.img')
+            assert digest(work/'protected-format.img') == original, 'Protected Format changed media'
+            Image.frombytes('RGBA',(640,480),runtime.request('frames')[1][0][6:]).save(work/'protected-format.png')
+            runtime.set_media_write_protect(False)
+            click(80,70);wait(1)
+            click(76,98);wait(2);click(66,70);wait(100)
+            formatted_status = runtime.media_status()
+            assert formatted_status['dirty'] and not formatted_status['busy'], formatted_status
+            assert formatted_status['revision'] == 161, formatted_status
+            if args.checkpoint:
+                runtime.request('pause');runtime.save_checkpoint(work/'formatted.s760state')
+                with NativeRuntime(replace(cfg,state_dir=work/'format-restart',sample_disk=None,wave_dump=None)) as restored_format:
+                    restored_format.request('pause');restored_format.load_checkpoint(work/'formatted.s760state');restored_format.request('resume')
+                    recalled_format = restored_format.media_status()
+                    assert recalled_format['dirty'] and recalled_format['revision'] == formatted_status['revision']
+                    restored_format.export_media(work/'format-checkpoint-export.img')
+                runtime.request('resume')
+            runtime.export_media(work/'formatted.img')
+            if args.checkpoint:
+                assert digest(work/'formatted.img') == digest(work/'format-checkpoint-export.img')
+            formatted = (work/'formatted.img').read_bytes()
+            assert formatted[4096:] == b'\x0f' * (len(formatted)-4096), 'Format did not fill every sample/data sector'
+            Image.frombytes('RGBA',(640,480),runtime.request('frames')[1][0][6:]).save(work/'formatted.png')
+            click(10,5);click(15,22);wait(2)
+        if args.write_protect:
+            assert runtime.set_media_write_protect(True)['writeProtected'] is True
+            runtime.request('pause')
+            runtime.save_checkpoint(work/'protected.s760state')
+            with NativeRuntime(replace(cfg, state_dir=work/'protected-restart', sample_disk=None, wave_dump=None)) as protected:
+                protected.request('pause'); protected.load_checkpoint(work/'protected.s760state'); protected.request('resume')
+                assert protected.media_status()['writeProtected'] is True
+            runtime.request('resume')
+            click(118, 5); wait(2); click(80, 30); wait(8)
+            click(50, 34); wait(1); click(76, 98); wait(3)
+            click(62, 70); wait(3); click(66, 70); wait(15)
+            protected_status = runtime.media_status()
+            assert protected_status['writeProtected'] and not protected_status['dirty'] and not protected_status['busy'], protected_status
+            runtime.export_media(work/'protected-export.img')
+            assert digest(work/'protected-export.img') == original, 'Protected firmware Save changed controller bytes'
+            protected_frame = Image.frombytes('RGBA', (640,480), runtime.request('frames')[1][0][6:])
+            protected_frame.save(work/'protected-save.png')
+            error_pixels = hashlib.sha256(protected_frame.convert('RGB').crop((180,156,440,180)).tobytes()).hexdigest()
+            assert error_pixels == '57900bf239f4830117f71695bb0888a46a9cbc5d9d1e45fdc523cbe29c6f960a', 'Firmware Write Protected error missing'
+            assert runtime.set_media_write_protect(False)['writeProtected'] is False
+            click(80,70); wait(1) # Dismiss the firmware Write Protected error.
+            click(10,5); click(15,22); wait(2)
         click(118, 5); wait(2); click(80, 30); wait(8)
         click(50, 34); wait(1); click(76, 98); wait(3)
         click(62, 70); wait(3); click(66, 70); wait(35)
@@ -120,6 +176,19 @@ def main():
               'before_export': dirty, 'after_export': clean,
               'fresh_machine_audio': json.loads((work / 'reload/result.json').read_text())}
     result['dirty_checkpoint_cold_restore'] = args.checkpoint
+    result['protected_save_unchanged_and_cold_recall'] = args.write_protect
+    result['firmware_format_save_fresh_reload'] = args.format
+    if args.format:
+        result['formatted_status'] = formatted_status
+        result['formatted_sha256'] = digest(work/'formatted.img')
+        result['format_fill_bytes_compared'] = len(formatted)-4096
+        result['protected_format_unchanged'] = True
+        result['formatted_dirty_cold_recall'] = args.checkpoint
+    if args.write_protect:
+        result['protected_save_status'] = protected_status
+        result['protected_export_sha256'] = digest(work/'protected-export.img')
+        result['write_protected_error_rgb_region'] = [180,156,440,180]
+        result['write_protected_error_rgb_sha256'] = error_pixels
     (work / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
     print(f'Evidence: {work}')

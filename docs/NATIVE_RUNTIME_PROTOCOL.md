@@ -1,5 +1,21 @@
 # Native runtime boundary
 
+Standalone UI adds `SET_STANDALONE_PREFERENCES` with exactly
+`{showKeyboard:boolean}`. The service atomically replaces its instance-owned
+`standalone-ui.json` before returning `STANDALONE_PREFERENCES` with `preferences`.
+`SESSION` carries `preferences` and the currently selected `midiInput`;
+`MIDI_DEVICE_SELECTED` acknowledges a successful native device open/disconnect.
+Keyboard visibility defaults false. These are standalone service messages, not
+VST host or native engine device configuration.
+
+Standalone recovery adds empty-payload `SAVE_RECOVERY` and confirmed
+`RESTORE_RECOVERY`, `START_RECOVERY`, `QUIT_WITHOUT_RECOVERY` with exactly
+`{discard:true}`. Archive paths remain service-owned. `SESSION`, `FIRMWARE_STATUS`
+and recovery acknowledgements carry `recovery:{available,pending,savedAt,message}`;
+`savedAt` is a Unix timestamp or null. `RECOVERY_RESTORED` refreshes media readback.
+The underlying native checkpoint protocol/identity is unchanged. See
+[recovery policy](NATIVE_SESSIONS.md).
+
 Development protocol1, extended 2026-10-11. `scripts/s760_runtime.py` owns one MAME process;
 `scripts/s760_runtime.lua` exposes its frames and physical controls. React and
 WebView are consumers, not engine dependencies. An explicit C++ VST3 development adapter now uses
@@ -29,6 +45,33 @@ Requests are newline-terminated JSON with an `op` field. Responses use the same
 length-prefixed JSON framing as the handshake and contain `ok` or an error.
 The parent serializes requests; there are no concurrent outstanding commands.
 
+Standalone ASIO can send `input_audio_binary`: a JSON line declaring `frames`
+(1–2048), `rate:44100`, `channels:2`, followed by exactly `frames*4` raw
+little-endian stereo PCM16 bytes. Newline and NUL bytes in the body are data.
+The operation requires the explicit ASIO/ADC launch profile; other clients retain
+the JSON input operation. Offline overflow rejects atomically. Live duplex
+overflow discards the complete input packet and reports `discarded`, while still
+draining native output and applying clock feedback. It never overwrites queued
+input. This prevents capture backpressure from blocking playback.
+
+ASIO worker requests may carry a finite `clock_rate` from0.97 to1.03. This adjusts
+MAME's wall-time throttle only; guest sound clocks and PCM sample values remain
+unchanged. `device_clock` acknowledges the same bounded setting; closing ASIO
+resets it to1.0. These blocking operations never run in the device callback.
+
+Standalone `AUDIO_OUTPUT_DEVICES` enumerates Windows render endpoint IDs, names,
+mix rates and channels. `audioOutputDevice` persists the selected ID; Auto uses
+WASAPI when an explicit endpoint is selected. Private MAME sound mappings use
+`o:` plus that ID, as required by MAME's output-node naming contract. Missing
+endpoints reject before replacing the live machine.
+
+Standalone `REOPEN_AUDIO` takes an empty payload and is accepted after a device
+failure. The failure handler pauses the native machine. Reopen retains the
+machine, RAM and media, opens the configured device, re-primes selected input
+without overwriting existing queued PCM, then resumes and returns
+`AUDIO_REOPENED` with `recordingStatus`. Failure leaves the sampler paused and
+reports an error. Recovery increments the capture discontinuity count.
+
 | Operation | Payload and behavior |
 | --- | --- |
 | `frames` | Metadata includes `surfaces`, emulated `seconds` and diagnostic guest cursor coordinates. Each surface is followed by exactly width×height×4 native little-endian ARGB bytes. CRT640×240; LCD160×64. |
@@ -39,6 +82,7 @@ The parent serializes requests; there are no concurrent outstanding commands.
 | `quit` | Acknowledge then request normal machine exit. |
 | `status` | Returns running/paused, emulated seconds, capture enabled and dropped-frame count. `firmware_ready` is explicitly `unknown`; this is not a boot-complete signal. |
 | `pause` / `resume` | Stop/resume emulated time. The control channel remains responsive while paused. |
+| `bus_trace` | Diagnostic native-client operation only, requires paused state and boolean `enabled`. Start optionally takes inclusive integer physical I/O `first`/`last` within 0x100000–0x103FFF (default 0x100000–0x101FFF); also observes IC4 DMA registers 0x118–0x11F. Stop returns at most256 rows, total `accesses` and explicit `dropped`. Read polls aggregate by address/value/PC/mask; retained writes preserve order. Taps return no replacement data. Stop tracing before checkpoint save/load. Diagnostic overhead is unsuitable for latency qualification. No browser exposure. See [sampling diagnostics](NATIVE_SAMPLING.md). |
 | `step` | Requires paused state. Advances one video frame using MAME single-step and replies once paused again. Not sample-count stepping. |
 | `audio_capture` | Boolean `enabled` toggles native speaker hooks and resets the capture queue/counters. Disabled by default. |
 | `audio` | Drain capture: JSON `audio` descriptor then frames×8 bytes interleaved left/right float32 little-endian PCM.44100Hz,2 channels, at most44100 frames. Includes `first_sample` and cumulative `dropped_frames`. |
@@ -206,3 +250,91 @@ uses `{diskPath: folder}` for an explicit recursive scan; `SELECT_MEDIA` uses
 Unsupported backends reject these operations. Scans are bounded and transactional;
 see [limits and state semantics](NATIVE_MEDIA_LIBRARY.md). Native VST state v2
 captures this metadata alongside the actual mounted checkpoint bytes.
+
+Standalone JSON input additionally accepts `MEDIA_STATUS` with an empty payload
+and `MEDIA_WRITE_PROTECT` with exactly `{enabled: boolean}`. These return
+`MEDIA_STATUS` / `MEDIA_PROTECTION` with a native `mediaStatus` object containing
+`inserted`, `writeProtected`, `dirty`, `busy`, `generation` and `revision`.
+`MEDIA_INSERTED` includes that same acknowledged object. A protection change
+rejects busy/empty controllers and does not change bytes or dirty revisions.
+The native `:NATIVE_MEDIA` Protect/Unprotect Sample Floppy controls expose the
+same state. The FDC reports ST3 WP and rejects protected WRITE DATA/FORMAT with
+ST0 abnormal termination and ST1 not-writable; absent-media writes report not-ready.
+This standalone addition does not add a plugin editor control. Session recall
+preserves the native protection bit. Native OS 2.24 720KB formatting is now
+qualified separately: Format consumes a validated complete CHRN track through
+IC4 FA RAM DMA, fills sectors and marks media dirty. Unsupported DMA/geometry or
+invalid descriptors reject without mutation. PIO and physical FDC timing remain
+unsupported/unqualified. See [format evidence](condensed/validation/standalone-formatting-2026-10-12.json).
+
+
+## Experimental offline sampling input
+
+Disabled by default. Python `RuntimeConfig.experimental_adc=True` or an explicit
+standalone `recording_device` enables the native `S760_NATIVE_ADC` profile.
+VST input routing remains unsupported. Worker-only
+`queue_input_pcm(pcm, rate=44100, channels=2, live=False)` accepts little-endian
+stereo PCM16 bytes,1–2048 frames. Offline input requires pause; `live=True`
+permits running input and returns an explicit discarded-frame count while paused.
+Authenticated `input_audio` transports signed integer `samples` with explicit
+`rate` and `channels`; other formats, nonintegral/out-of-range samples and a full
+16,384-frame FIFO reject without modifying the queue. `input_status` returns
+`queued` frames and recording `underruns`. The sound callback consumes one frame
+per native44.1kHz tick; other clock selections are not qualified. Starvation
+supplies zeros and increments the counter only while recording. Reset clears
+input state. Checkpoints save the FIFO/counters and distinguish enabled profiles;
+partially queued cold recording replay remains unqualified. Transport calls are
+not realtime callback APIs. Firmware sampling/Save/cold-Load acceptance and
+remaining limits are documented in [Native sampling](NATIVE_SAMPLING.md).
+
+Standalone `RECORDING_DEVICES` refreshes the input inventory. `CONFIGURE_RUNTIME`
+accepts `recordingDevice` (empty disables capture), persists it after native
+startup, and validates missing devices before stopping the live machine.
+`SESSION` includes the inventory/configuration; `FIRMWARE_STATUS.recordingStatus`
+reports capture errors, interface format/rate, received/discarded frames, native
+underruns and capture restarts. Device buffers are reopened across checkpoint
+transactions; only native FIFO state belongs to the checkpoint. Windows MME
+does not report trustworthy physical driver losses or physical converter clocks.
+
+Standalone `ASIO_DEVICES` returns driver names and input/output channel counts.
+`CONFIGURE_RUNTIME` additionally accepts `audioBackend="asio"`, `asioDriver`,
+`asioOutputChannel` (one-based first stereo output), `asioInputChannel` (zero
+disables input; otherwise one-based first stereo input) and `asioBufferFrames`.
+ASIO replaces MAME's OS output with a native device stream; emulation remains
+normal-speed stereo44100 Hz. `input_audio` with `live=true,output=true` returns
+queued/underrun metadata and drains bounded native output PCM in the same
+transaction. This is worker transport, never an ASIO callback operation.
+`recordingStatus` reports ASIO channel/buffer selection, queue losses, driver
+flags and driver-reported input/output latency. Physical hardware buffers and
+device-clock state are reopened across session transactions.
+
+The ASIO worker may submit `input_audio_binary`: a JSON-line header containing
+`frames` (1–2048), `rate=44100`, `channels=2` and existing live/output fields,
+followed by exactly `frames*4` little-endian stereo PCM16 bytes. Embedded newline
+and NUL bytes are payload. Framing is bounded before execution; malformed frame
+lengths close the control connection. Complete packets preserve atomic FIFO
+overflow rejection. This path requires the explicit ASIO profile.
+
+ASIO launches additionally enable `S760_ASIO_CLOCK`. Audio/input transactions
+may carry finite `clock_rate` in0.97–1.03. It adjusts only MAME wall-time throttle
+pacing; native sample clocks and PCM values remain unchanged. Device output queue
+feedback targets at least8192 frames. Input-only feedback uses native FIFO depth.
+The `device_clock` control resets pacing to1.0 when hardware closes. Other
+profiles reject clock pacing. Initial startup silence is excluded from underrun
+counts; every silent refill callback after playback starts is now counted.
+
+Standalone `AUDIO_OUTPUT_DEVICES` lists active Windows render endpoint IDs,
+friendly names, mix rates and channels. Configuration accepts persistent
+`audioOutputDevice`; empty follows the Windows default. Automatic with an explicit
+endpoint uses WASAPI. Its private MAME speaker mappings route left/right to
+endpoint channels0/1, preserving unrelated configuration. Missing selections
+reject before replacing the running machine and at startup.
+
+
+Standalone `dial` also accepts `id="INPUT"` with the existing bounded signed
+integer `delta` contract. It clamps recording gain to0–100%, independently of
+`VOLUME`. Native replies/frames include `input_level`; standalone firmware-status
+packets expose `inputLevel`. The checkpoint input metadata includes this gain,
+and load validates its range before applying native state. Experimental ADC
+consumption applies gain before meter/recording writes. The VST adapter does not
+expose this new standalone dial until host input routing is supported.

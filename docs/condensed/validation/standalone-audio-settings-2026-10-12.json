@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-12",
+  "scope": "Windows standalone backend and requested buffer configuration",
+  "sha256": {
+    "scripts/s760_runtime.py": "370b91280b5e027a726e280a69df957477f1a7d4a6d4bbe700b08f38f9f8a771",
+    "scripts/s760_standalone.py": "1db0e1be37a0ef7bc540e4870a0ab7c64ec7fc9e0334e046170e203ab760124b",
+    "scripts/verify_native_runtime.py": "a65c8a2b93e750481ece72c666fbd31881947000ddfb5ce0911867b22fa0199f",
+    "google-ui/src/components/RuntimeSettings.tsx": "4e1d6405af017553d221335d91bc54347b5cb7b3440d0e46811fafd49ecb3e67",
+    "google-ui/e2e/native-audio-settings.spec.ts": "b76015369a857bbad3bdd1a264ad4d78c304e0f1a068e25f48bc081e76debe6d",
+    "mame-source/mames760.exe": "a6cb649a50a795d396dd166af506f718533b8868cbd30e6fc7d3b9616f058908",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "prerequisites": "Local Windows MAME, user-supplied IC15/OS 2.24 and ROBOFULL, default Windows output endpoint",
+  "native_command": "python scripts/verify_native_runtime.py --system-audio --audio-backend wasapi --audio-latency-ms 60 --state-dir docs/ic20-hle-findings/chatGPT-work/m3-wasapi-60ms-final",
+  "native_result": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 75.15,
+    "note_release": 77.183333333333,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": true,
+      "backend_requested": "wasapi",
+      "buffer_target_ms": 60.0,
+      "throttled": true,
+      "device_latency_measured": false
+    }
+  },
+  "native_log": "Average speed: 100.00% (78 seconds); no output backend error reported",
+  "regressions": {
+    "full_backend": "273 passed before three final focused tests were added",
+    "focused_backend_final": "35 passed",
+    "react": "112 passed",
+    "typescript": "passed",
+    "vite_build": "passed"
+  },
+  "browser": {
+    "command": "node node_modules/@playwright/test/cli.js test e2e/native-audio-settings.spec.ts --output=../docs/ic20-hle-findings/chatGPT-work/m3-browser-results",
+    "native_service_command": "python scripts/s760_standalone.py --no-browser --no-sound --fast --seconds 100 --state-dir docs/ic20-hle-findings/chatGPT-work/m3-browser-audio",
+    "result": "1 passed; confirmed apply, firmware reboot, reconnect/readback, persisted settings.json; screenshot visually inspected",
+    "sound_enabled": false
+  },
+  "limitations": [
+    "No physical loopback capture or measured audible latency/dropout rate",
+    "Windows default endpoint only; per-device selection remains open",
+    "XAudio2 selectable but not qualified by a normal-speed run here",
+    "Native PCM stays stereo 44100 Hz; device-rate conversion not measured",
+    "No physical MIDI reconnect or ADC input qualification",
+    "Source development standalone only; changed package and clean machine unqualified"
+  ],
+  "environment": "Sandbox blocked MIDI loopback and Vitest temp rename; checks passed outside sandbox",
+  "bug_fixed": "BUG-038 normal-speed verification timeout shorter than requested wait"
+}

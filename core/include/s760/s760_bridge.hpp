@@ -108,6 +108,9 @@ public:
     // left unset.
     void set_frame_callback(FrameCallback cb);
     void set_telemetry_callback(TelemetryCallback cb);
+    // Plugin configuration runs only on control/UI paths under the bridge lock.
+    void set_configuration_callbacks(std::function<bool(const std::string&)> input,
+                                     std::function<std::string()> snapshot);
 
     // Advance one host frame and push the three display surfaces + telemetry to
     // the registered callbacks (and to any connected WebSocket clients). This is
@@ -164,6 +167,8 @@ public:
     uint16_t ws_port() const;
 
 private:
+    std::function<bool(const std::string&)> m_configuration_input;
+    std::function<std::string()> m_configuration_snapshot;
     void apply_message(const bridge::ClientMessage& msg);
     void emit_frame(const std::vector<uint8_t>& framed);
     void emit_telemetry(const std::string& json);

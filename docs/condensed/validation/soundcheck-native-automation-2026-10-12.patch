@@ -1,0 +1,115 @@
+--- a/main.cpp
++++ b/main.cpp
+@@ -42,6 +42,7 @@
+ #include "pluginterfaces/vst/ivstcomponent.h"
+ #include "pluginterfaces/vst/ivstevents.h"
+ #include "pluginterfaces/vst/ivstparameterchanges.h"
++#include "public.sdk/source/vst/hosting/parameterchanges.h"
+ #include "pluginterfaces/vst/ivstmessage.h"       // IMessage, IConnectionPoint, IAttributeList
+ #include "pluginterfaces/base/funknown.h"
+ #include "pluginterfaces/base/ibstream.h"
+@@ -636,7 +637,7 @@
+         try {
+             g_wsServer = &m_server;  // Set global pointer for UI thread access
+             g_host = this;           // Set global host pointer for UI-thread plugin removal
+-            m_server.listen(m_port);
++            m_server.listen(asio::ip::tcp::endpoint(asio::ip::address::from_string("127.0.0.1"), m_port));
+             m_server.start_accept();
+             std::cout << "[C++ Host] WebSocket server running on ws://localhost:" << m_port << std::endl;
+             std::cout << "[C++ Host] VST3 SDK integrated - native plugin hosting enabled" << std::endl;
+@@ -1467,6 +1468,8 @@
+                         std::cout << "[C++ Host] Sending MIDI Note On: " << midiNote << " vel=" << midiVelocity << std::endl;
+                     }
+ 
++                    if (request.value("midiNoteOff", -1) >= 0)
++                        eventList.addNoteOff(0, static_cast<int16>(request["midiNoteOff"].get<int>()), 0.0f, 0);
+                     // Process multiple blocks
+                     for (int block = 0; block < numBlocks; block++) {
+                         // Clear outputs
+@@ -1500,7 +1503,16 @@
+                         processData.numOutputs = 1;
+                         processData.inputs = isInstrument ? nullptr : &inputBus;
+                         processData.outputs = &outputBus;
+-                        processData.inputParameterChanges = nullptr;
++                        Vst::ParameterChanges parameterChanges;
++                        if(block==0) {
++                            for(const auto& pending:plugin.pendingParamChanges) {
++                                int32 queueIndex=0,pointIndex=0;
++                                auto* queue=parameterChanges.addParameterData(pending.first,queueIndex);
++                                if(!queue || queue->addPoint(0,pending.second,pointIndex)!=kResultOk) throw std::runtime_error("Unable to queue host automation");
++                            }
++                            plugin.pendingParamChanges.clear();
++                        }
++                        processData.inputParameterChanges = &parameterChanges;
+                         processData.outputParameterChanges = nullptr;
+ 
+                         // Only send events on first block (note-on), then clear
+@@ -1513,7 +1525,7 @@
+                         processData.processContext = nullptr;
+ 
+                         // Process audio
+-                        plugin.processor->process(processData);
++                        if(plugin.processor->process(processData)!=kResultOk) throw std::runtime_error("Plugin rejected audio block");
+ 
+                         // Clear events after first block
+                         if (block == 0) {
+@@ -1564,7 +1576,7 @@
+                     }
+ 
+                     // Send note-off if we sent a note-on
+-                    if (sentNoteOn && midiNote >= 0) {
++                    if (sentNoteOn && midiNote >= 0 && request.value("autoNoteOff", true)) {
+                         eventList.clear();
+                         eventList.addNoteOff(0, static_cast<int16>(midiNote), 0.0f, 0);
+ 
+@@ -1586,7 +1598,7 @@
+                         noteOffData.outputEvents = nullptr;
+                         noteOffData.processContext = nullptr;
+ 
+-                        plugin.processor->process(noteOffData);
++                        if(plugin.processor->process(noteOffData)!=kResultOk) throw std::runtime_error("Plugin rejected note-off block");
+                         std::cout << "[C++ Host] Sent MIDI Note Off: " << midiNote << std::endl;
+                     }
+ 
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,7 +31,7 @@
+ # resolves to <repo>/third_party/vst3sdk — the one SDK the whole project builds
+ # against. The SDK is NOT required at any other path.
+ # ---------------------------------------------------------------------------
+-set(VENDORED_SDK_PATH "${CMAKE_SOURCE_DIR}/../../third_party/vst3sdk" CACHE PATH
++set(VENDORED_SDK_PATH "D:/BreakJob/third_party/vst3sdk" CACHE PATH
+     "Path to the single vendored VST3 SDK (repo third_party/vst3sdk)")
+ get_filename_component(VENDORED_SDK_PATH "${VENDORED_SDK_PATH}" ABSOLUTE)
+ 
+@@ -64,7 +64,7 @@
+ #   server/third_party/json/         -> nlohmann/json
+ #       (header: single_include/nlohmann/json.hpp)
+ # ---------------------------------------------------------------------------
+-set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/third_party")
++set(VENDOR_DIR "D:/S-760/.soundcheck/server/third_party")
+ 
+ set(WEBSOCKETPP_DIR "${VENDOR_DIR}/websocketpp")
+ set(ASIO_DIR        "${VENDOR_DIR}/asio")
+@@ -129,7 +129,7 @@
+ # library and pluginterfaces/vst/vsttypes.h (already on the VST3 include path),
+ # so pulling them in requires no extra link dependency.
+ # ---------------------------------------------------------------------------
+-set(BREAKJOB_NATIVE_ROOT "${CMAKE_SOURCE_DIR}/../../native" CACHE PATH
++set(BREAKJOB_NATIVE_ROOT "D:/BreakJob/native" CACHE PATH
+     "Path to the BreakJob native/ tree (repo root native/)")
+ get_filename_component(BREAKJOB_NATIVE_ROOT "${BREAKJOB_NATIVE_ROOT}" ABSOLUTE)
+ 
+@@ -162,6 +162,7 @@
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/module_win32.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/plugprovider.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/hostclasses.cpp
++    ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/parameterchanges.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/connectionproxy.cpp
+     ${VST3_SDK_ROOT}/public.sdk/source/vst/hosting/pluginterfacesupport.cpp
+     # VST Interface IIDs
+@@ -200,3 +201,4 @@
+ else()
+     target_link_libraries(SoundCheckServer pthread dl)
+ endif()
++target_include_directories(SoundCheckServer PRIVATE D:/S-760/.soundcheck/server)

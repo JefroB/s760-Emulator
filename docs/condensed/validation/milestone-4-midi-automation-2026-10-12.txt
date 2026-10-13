@@ -1,0 +1,21 @@
+SoundCheck1.0.0 native SDK host, Windows x64, 44100Hz/512 frames, original OS2.24/ROBOFULL
+baseline: peak=0.0445375181735 RMS=0.0314906314015 dominantHz=20004
+bend-high: peak=0.0445375181735 RMS=0.0314949937165 dominantHz=20004
+bend-center: peak=0.0445375181735 RMS=0.0314906314015 dominantHz=20004
+volume-half: peak=0.0224378760904 RMS=0.0158670861274 dominantHz=20004
+volume-full: peak=0.0445375181735 RMS=0.0314906314015 dominantHz=20004
+sustain-down: peak=0.0445375181735 RMS=0.0314951464534 dominantHz=20004.8464753
+sustain-held: peak=0.0445375181735 RMS=0.0314906314015 dominantHz=20004
+sustain-released: peak=0 RMS=0 dominantHz=0
+retrigger: peak=0.0445375181735 RMS=0.0314911492169 dominantHz=20004
+other-channel-panic: peak=0.0445375181735 RMS=0.0314944721758 dominantHz=20004
+all-notes-off: peak=0 RMS=0 dominantHz=0
+retrigger2: peak=0.0445375181735 RMS=0.0314911492169 dominantHz=20004
+all-sounds-off: peak=0.0445375181735 RMS=0.0314944721758 dominantHz=20004
+expression-half: peak=0.0445375181735 RMS=0.0314911492169 dominantHz=20004
+reset-expression: peak=0.0445375181735 RMS=0.0314944721758 dominantHz=20004
+reset-held-note: peak=0 RMS=0 dominantHz=0
+reset-sustain: peak=0 RMS=0 dominantHz=0
+panic-cleanup: peak=0 RMS=0 dominantHz=0
+
+Observations, not universal controller acceptance: bend/expression unchanged on this fixture; CC120 did not silence. Other-channel CC120 is not evidence of isolation because CC120 was also ignored on channel0. Channel15 CC123 isolation is covered by the independent exact native timeline. Reset-held-note was already silent before reset; reset-sustain effect is not established.

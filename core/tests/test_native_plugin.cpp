@@ -25,12 +25,13 @@ public:
 };
 static void check(bool ok,const char* text) { if(!ok) throw std::runtime_error(text); }
 #include "native_state_acceptance.hpp"
+#include "native_midi_acceptance.hpp"
 #ifdef S760_TEST_NATIVE_EDITOR
 #include "native_editor_acceptance.hpp"
 #endif
 int main(int argc,char** argv) {
     try {
-        if(argc<3 || argc>6) throw std::runtime_error("Usage: s760_native_runtime_tests ROOT PRIVATE_STATE [--paced|--paced-var] [44100|48000|96000] [seconds]");
+        if(argc<3 || argc>6) throw std::runtime_error("Usage: s760_native_runtime_tests ROOT PRIVATE_STATE [--paced|--paced-var|--controllers|--offline] [44100|48000|96000] [seconds]");
         std::filesystem::path root=std::filesystem::absolute(argv[1]);
         s760::NativeRuntimeConfig cfg{root,argv[2],root/"roms/BOOT/Roland_S-760_v1.11.BIN",
             root/"roms/System/S760224.IMG",root/"roms/FDD/ROBOFULL.IMG"};
@@ -49,7 +50,30 @@ int main(int argc,char** argv) {
         TUID iid=INLINE_UID(0xE831FF31,0xF2D54301,0x928EBBEE,0x25697802);
         void* object=reinterpret_cast<void*>(1);
         _wputenv_s(L"S760_NATIVE_ROOT",L"");
-        check(factory->createInstance(reinterpret_cast<char*>(info.cid),reinterpret_cast<char*>(iid),&object)==kResultFalse && !object,"Missing configuration fell through to legacy core");
+        _wputenv_s(L"S760_PLUGIN_CONFIG",std::filesystem::absolute(cfg.state/"plugin-settings.json").c_str());
+        check(factory->createInstance(reinterpret_cast<char*>(info.cid),reinterpret_cast<char*>(iid),&object)==kResultOk && object,"Missing configuration did not open recovery editor");
+        auto* pending=dynamic_cast<s760::S760Vst3Plugin*>(static_cast<Steinberg::IComponent*>(object));
+        check(pending && pending->native_host() && !pending->native_host()->native_runtime(),"Unconfigured instance fell through to legacy core");
+        check(pending->get_bridge().current_telemetry().pluginConfiguration.find("\"needsConfiguration\":true")!=std::string::npos,"Startup error not visible to editor");
+        Steinberg::ProcessSetup silent_setup{0,0,512,44100};
+        check(pending->setupProcessing(silent_setup)==kResultOk && pending->setProcessing(true)==kResultOk,"Recovery processing setup rejected");
+        float l[512],r[512];std::fill_n(l,512,1.f);std::fill_n(r,512,1.f);float* ch[]{l,r};
+        AudioBusBuffers out{2,0};out.channelBuffers32=ch;
+        Steinberg::ProcessData silent{};silent.numSamples=512;silent.numOutputs=1;silent.outputs=&out;
+        check(pending->process(silent)==kResultOk && l[0]==0 && r[511]==0,"Unconfigured processor did not remain silent");
+        auto message=std::string("{\"type\":\"CONFIGURE_PLUGIN\",\"payload\":{\"confirmReload\":true,\"root\":\"")+root.generic_u8string()+
+            "\",\"stateRoot\":\""+std::filesystem::absolute(cfg.state).generic_u8string()+"\",\"bootRom\":\""+cfg.boot_rom.generic_u8string()+
+            "\",\"systemDisk\":\""+cfg.system_disk.generic_u8string()+"\",\"mediaDirectory\":\""+(root/"roms/FDD").generic_u8string()+"\"}}";
+        check(pending->get_bridge().on_input(message),"Editor configuration rejected");
+        check(pending->get_bridge().current_telemetry().pluginConfiguration.find("\"saved\":true")!=std::string::npos,"Valid settings not persisted");
+        auto settings_file=cfg.state/"plugin-settings.json";
+        std::ifstream before_file(settings_file);std::string before((std::istreambuf_iterator<char>(before_file)),{});before_file.close();
+        auto bad=message;const auto at=bad.find(cfg.boot_rom.generic_u8string());bad.replace(at,cfg.boot_rom.generic_u8string().size(),"relative.bin");
+        check(pending->get_bridge().on_input(bad),"Invalid configuration not handled");
+        std::ifstream after_file(settings_file);std::string after((std::istreambuf_iterator<char>(after_file)),{});after_file.close();
+        check(before==after && pending->get_bridge().current_telemetry().pluginConfiguration.find("must be an absolute path")!=std::string::npos,"Rejected change replaced previous settings");
+        check(!pending->native_host()->native_runtime(),"Saving settings started or replaced a machine during processing");
+        pending->terminate();pending->release();object=nullptr;
         _wputenv_s(L"S760_NATIVE_ROOT",cfg.root.c_str());
         _wputenv_s(L"S760_NATIVE_STATE_ROOT",std::filesystem::absolute(cfg.state).c_str());
         _wputenv_s(L"S760_BOOT_ROM",cfg.boot_rom.c_str());
@@ -80,10 +104,12 @@ int main(int argc,char** argv) {
 #endif
         auto& host=*plugin.native_host();
         auto& native=*host.native_runtime();
-        const bool varied=argc>=4 && std::string(argv[3])=="--paced-var";
-        const bool paced=varied || (argc>=4 && std::string(argv[3])=="--paced");
+        const bool controller_test=argc>=4 && std::string(argv[3])=="--controllers";
+        const bool offline=argc>=4 && std::string(argv[3])=="--offline";
+        const bool varied=offline || controller_test || (argc>=4 && std::string(argv[3])=="--paced-var");
+        const bool paced=!offline && (varied || (argc>=4 && std::string(argv[3])=="--paced"));
         const bool state_test=argc>=4 && std::string(argv[3])=="--state";
-        check(argc==3 || paced || state_test,"Unknown option");
+        check(argc==3 || paced || offline || state_test,"Unknown option");
         const unsigned host_rate=argc>=5 ? unsigned(std::stoul(argv[4])) : 44100;
         const unsigned seconds=argc>=6 ? unsigned(std::stoul(argv[5])) : 10;
         check(seconds>=3 && seconds<=600,"Duration must be 3..600 seconds");
@@ -164,7 +190,16 @@ int main(int argc,char** argv) {
                   "Adapter LCD differs from native pixels");
         Steinberg::ProcessSetup setup{0,0,1024,32000};
         check(plugin.setupProcessing(setup)==kResultFalse,"Unsupported rate accepted");
-        setup.sampleRate=host_rate;
+        setup.sampleRate=host_rate;setup.processMode=offline ? 2 : 0;
+        auto invalid_setup=setup;
+        invalid_setup.sampleRate=32000;
+        check(plugin.setupProcessing(invalid_setup)==kResultFalse,"Unsupported native host rate accepted");
+        invalid_setup=setup;invalid_setup.maxSamplesPerBlock=1025;
+        check(plugin.setupProcessing(invalid_setup)==kResultFalse,"Oversized native callback accepted");
+        invalid_setup=setup;invalid_setup.maxSamplesPerBlock=0;
+        check(plugin.setupProcessing(invalid_setup)==kResultFalse,"Zero native block limit accepted");
+        invalid_setup=setup;invalid_setup.symbolicSampleSize=1;
+        check(plugin.setupProcessing(invalid_setup)==kResultFalse,"Unsupported float64 native buffers accepted");
         check(plugin.setupProcessing(setup)==kResultOk,"Native plugin setup failed");
         check(plugin.getBusCount(kAudio,kInput)==0,"Native ADC falsely advertised");
         check(plugin.getState(nullptr)==kResultFalse && plugin.setState(nullptr)==kResultFalse,"Legacy state used for native machine");
@@ -185,6 +220,8 @@ int main(int argc,char** argv) {
             return 0;
         }
         const auto padding=s760::NativeRateConverter::host_samples(s760::NativeStream::output_delay,host_rate);
+        ControllerTimeline controllers(host_rate);
+        check(!controller_test || seconds==12,"Controller timeline requires12 seconds");
         const auto total=std::size_t(host_rate)*(paced ? seconds : 3);
         const auto note_off=std::size_t(host_rate)*((paced ? seconds : 3)-2)+23;
         const auto origin=std::uint64_t(std::ceil(now*44100));
@@ -204,8 +241,16 @@ int main(int argc,char** argv) {
                 reference_native.request("{\"op\":\"schedule_midi\",\"append\":true,\"events\":[{\"sample\":"+std::to_string(sample)+",\"bytes\":["+std::to_string(status)+",60,"+(status==144 ? "127" : "0")+"]}]}");
             };
             send(event_time(17),144);
+            bool reference_off_sent=false;
+            if(controller_test) for(const auto& item:controllers.items) {
+                if(!reference_off_sent && item.time>note_off) {send(event_time(note_off),128);reference_off_sent=true;}
+                const bool bend=item.controller==129;
+                const unsigned status=(bend?0xe0:0xb0)|item.channel;
+                const unsigned first=bend?item.value&127:item.controller,second=bend?item.value>>7:item.value;
+                reference_native.request("{\"op\":\"schedule_midi\",\"append\":true,\"events\":[{\"sample\":"+std::to_string(event_time(item.time))+",\"bytes\":["+std::to_string(status)+","+std::to_string(first)+","+std::to_string(second)+"]}]}");
+            }
             s760::NativeRateConverter reference_converter(host_rate,[&](float* pcm,std::size_t frames) {return reference_native.render(pcm,frames);});
-            bool off_sent=false;
+            bool off_sent=reference_off_sent;
             for(std::size_t offset=0;offset<reference.size()/2;) {
                 if(!off_sent && offset+host_rate>=note_off) {send(event_time(note_off),128);off_sent=true;}
                 auto count=unsigned(std::min<std::size_t>(2048,reference.size()/2-offset));
@@ -217,7 +262,7 @@ int main(int argc,char** argv) {
         float left[1024],right[1024],peak=0,tail=0;
         float* channels[]{left,right};
         AudioBusBuffers output{2,0}; output.channelBuffers32=channels;
-        Steinberg::ProcessData data{}; data.numSamples=256; data.numOutputs=1; data.outputs=&output;
+        Steinberg::ProcessData data{}; data.processMode=setup.processMode; data.numSamples=256; data.numOutputs=1; data.outputs=&output;
         Events events; data.inputEvents=&events;
         std::size_t consumed=0,first_audible=0;
         bool note_on_verified=false;
@@ -235,6 +280,8 @@ int main(int argc,char** argv) {
             unsigned count=varied ? sizes[block%5] : 256;
             count=unsigned(std::min<std::size_t>(count,total-consumed));
             data.numSamples=int(count);
+            controllers.bind(consumed,count);
+            data.inputParameterChanges=controller_test ? &controllers : nullptr;
             events.present=(block==0 || (consumed<=note_off && consumed+count>note_off));
             events.event={}; events.event.sampleOffset=block==0 ? 17 : int(note_off-consumed);
             events.event.type=block==0 ? kNoteOnEvent : kNoteOffEvent;
@@ -272,12 +319,12 @@ int main(int argc,char** argv) {
                 note_on_verified=true;
             }
             // Accelerated functional test: this wait is OUTSIDE process().
-            while(!paced && (block+1)%8==0 && plugin.native_stream()->completed_frames()<consumed) {
+            while(!paced && !offline && (block+1)%8==0 && plugin.native_stream()->completed_frames()<consumed) {
                 check(plugin.native_stream()->fault()==s760::NativeStream::Fault::none,"Native plugin worker fault");
                 check(std::chrono::steady_clock::now()<deadline,"Native plugin worker stalled");
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
-            if(block==103 && !paced) {
+            if(block==103 && !paced && !offline) {
                 check(plugin.setProcessing(false)==kResultOk,"Suspend failed");
                 auto before=native.request("{\"op\":\"status\"}").seconds;
                 std::this_thread::sleep_for(std::chrono::milliseconds(25));
@@ -295,14 +342,15 @@ int main(int argc,char** argv) {
 #endif
         auto delivered=native.request("{\"op\":\"status\"}").json;
         std::cout << "Expected MIDI " << event_time(17) << "," << event_time(note_off) << "; status=" << delivered << "\n";
-        check(note_on_verified && delivered.find(std::to_string(event_time(note_off)))!=std::string::npos,"Native note-off offset differs");
+        const auto last_midi_time=controller_test ? controllers.items.back().time : note_off;
+        check(note_on_verified && delivered.find(std::to_string(event_time(last_midi_time)))!=std::string::npos,"Native final MIDI offset differs");
         check(peak>.001f && tail==0 && first_audible>=padding,"Native plugin note/release failed");
         check(plugin.native_stream()->fault()==s760::NativeStream::Fault::none,"Native plugin fault");
-        check(missed_deadlines==0,"Callback exceeded its block deadline");
+        check(offline || missed_deadlines==0,"Callback exceeded its block deadline");
         check(plugin.setProcessing(false)==kResultOk,"Final suspend failed");
         std::cout << "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=" << consumed
                   << " rate=" << host_rate << " reference_exact=1 peak=" << peak << " tail=" << tail << " first_audible=" << first_audible
-                  << " reported_latency=" << plugin.getLatencySamples() << " paced=" << paced << " varied=" << varied << " max_callback_us=" << max_callback_us << " max_deadline_fraction=" << max_deadline_fraction << " missed_deadlines=" << missed_deadlines << "\n";
+                  << " offline=" << offline << " reported_tail=" << plugin.getTailSamples() << " reported_latency=" << plugin.getLatencySamples() << " paced=" << paced << " varied=" << varied << " max_callback_us=" << max_callback_us << " max_deadline_fraction=" << max_deadline_fraction << " missed_deadlines=" << missed_deadlines << "\n";
         auto* original_stream=plugin.native_stream();
         setup.sampleRate=host_rate==96000 ? 48000 : 96000;
         check(plugin.setupProcessing(setup)==kResultFalse && plugin.native_stream()==original_stream,"Started rate change lost queued state");

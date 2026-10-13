@@ -1,0 +1,343 @@
+{
+  "date": "2026-10-12",
+  "feature": "Standalone native ASIO playback and recording option",
+  "host": "Windows x64, MOTU Pro Audio v2 ASIO, physical outputs3/4 to inputs1/2",
+  "contract": {
+    "sampler_owner": "Native MAME, original v1.11 boot ROM / OS2.24",
+    "device_clock_owner": "PortAudio ASIO native callback",
+    "rate_hz": 44100,
+    "channels": 2,
+    "output_format": "float32",
+    "input_transport": "PCM16 stereo, native float-to-int16 saturating conversion",
+    "native_ring_capacity_frames": 65536,
+    "output_prime_frames": "max(4096,4*requested buffer frames)",
+    "input_prime_frames": 8192,
+    "callback_work": "bounded preallocated SPSC copies/zero-fill and atomic counters; no Python/socket/disk/UI/mutex/allocation",
+    "worker_transport": "live PCM input and native output drain can share one control transaction; at most64KB ingress and one native command per frame",
+    "pause_reset": "Hardware stream/rings close/reopen across checkpoint transactions; native FIFO belongs to saved state; discontinuities reported"
+  },
+  "configuration": {
+    "backend": "asio",
+    "driver": "MOTU Pro Audio v2",
+    "output_first_channel": 3,
+    "input_first_channel": 1,
+    "buffer_frames": 512,
+    "input_default": "disabled",
+    "other_backends_preserved": [
+      "auto",
+      "wasapi",
+      "xaudio2"
+    ],
+    "plugin_scope": "VST host owns audio; no standalone ASIO options exposed to plugin"
+  },
+  "hardware_buffer_tests": {
+    "128": {
+      "device": "MOTU Pro Audio v2",
+      "backend": "asio",
+      "rate": 44100.0,
+      "channels": 2,
+      "format": "PCM16 input / float32 output",
+      "receivedFrames": 248704,
+      "discardedFrames": 0,
+      "outputUnderruns": 0,
+      "outputDiscardedFrames": 0,
+      "driverStatusFlags": 0,
+      "outputQueuedFrames": 9344,
+      "driverInputLatencyMs": 3.696145124716553,
+      "driverOutputLatencyMs": 4.875283446712018,
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "bufferFrames": 128,
+      "bufferCapacityFrames": 65536,
+      "driverLossMeasurement": "status flags only; latency is driver-reported",
+      "peak": [
+        2587,
+        2315
+      ],
+      "dominant_hz": [
+        440,
+        880
+      ]
+    },
+    "512": {
+      "device": "MOTU Pro Audio v2",
+      "backend": "asio",
+      "rate": 44100.0,
+      "channels": 2,
+      "format": "PCM16 input / float32 output",
+      "receivedFrames": 248832,
+      "discardedFrames": 0,
+      "outputUnderruns": 0,
+      "outputDiscardedFrames": 0,
+      "driverStatusFlags": 0,
+      "outputQueuedFrames": 9216,
+      "driverInputLatencyMs": 12.403628117913831,
+      "driverOutputLatencyMs": 13.582766439909298,
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "bufferFrames": 512,
+      "bufferCapacityFrames": 65536,
+      "driverLossMeasurement": "status flags only; latency is driver-reported",
+      "peak": [
+        2341,
+        2661
+      ],
+      "dominant_hz": [
+        440,
+        880
+      ]
+    },
+    "1024": {
+      "device": "MOTU Pro Audio v2",
+      "backend": "asio",
+      "rate": 44100.0,
+      "channels": 2,
+      "format": "PCM16 input / float32 output",
+      "receivedFrames": 248832,
+      "discardedFrames": 0,
+      "outputUnderruns": 0,
+      "outputDiscardedFrames": 0,
+      "driverStatusFlags": 0,
+      "outputQueuedFrames": 7168,
+      "driverInputLatencyMs": 24.01360544217687,
+      "driverOutputLatencyMs": 25.192743764172338,
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "bufferFrames": 1024,
+      "bufferCapacityFrames": 65536,
+      "driverLossMeasurement": "status flags only; latency is driver-reported",
+      "peak": [
+        2651,
+        2318
+      ],
+      "dominant_hz": [
+        440,
+        880
+      ]
+    }
+  },
+  "native_patch_playback": {
+    "before": {
+      "device": "MOTU Pro Audio v2",
+      "backend": "asio",
+      "rate": 44100.0,
+      "channels": 2,
+      "format": "PCM16 input / float32 output",
+      "receivedFrames": 3230720,
+      "discardedFrames": 0,
+      "outputUnderruns": 0,
+      "outputDiscardedFrames": 0,
+      "driverStatusFlags": 0,
+      "outputQueuedFrames": 15922,
+      "driverInputLatencyMs": 12.403628117913831,
+      "driverOutputLatencyMs": 13.582766439909298,
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "bufferFrames": 512,
+      "bufferCapacityFrames": 65536,
+      "driverLossMeasurement": "status flags only; latency is driver-reported"
+    },
+    "after": {
+      "device": "MOTU Pro Audio v2",
+      "backend": "asio",
+      "rate": 44100.0,
+      "channels": 2,
+      "format": "PCM16 input / float32 output",
+      "receivedFrames": 3543040,
+      "discardedFrames": 0,
+      "outputUnderruns": 0,
+      "outputDiscardedFrames": 0,
+      "driverStatusFlags": 0,
+      "outputQueuedFrames": 14948,
+      "driverInputLatencyMs": 12.403628117913831,
+      "driverOutputLatencyMs": 13.582766439909298,
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "bufferFrames": 512,
+      "bufferCapacityFrames": 65536,
+      "driverLossMeasurement": "status flags only; latency is driver-reported"
+    },
+    "native_before": {
+      "underruns": 0,
+      "queued": 7032,
+      "ok": true
+    },
+    "native_after": {
+      "underruns": 0,
+      "queued": 7266,
+      "ok": true
+    },
+    "native_peak": 0.000970863678958267,
+    "physical_peak": [
+      295,
+      295
+    ],
+    "finite_native_output": true,
+    "native_frames": 313110,
+    "physical_frames": 313344,
+    "capture_status": {
+      "state": "active",
+      "message": "ASIO: MOTU Pro Audio v2 \u2014 44.1 kHz stereo. Output 3/4; input 1/2.",
+      "device": "MOTU Pro Audio v2",
+      "backend": "asio",
+      "rate": 44100.0,
+      "channels": 2,
+      "format": "PCM16 input / float32 output",
+      "receivedFrames": 3543552,
+      "discardedFrames": 0,
+      "outputUnderruns": 0,
+      "outputDiscardedFrames": 0,
+      "driverStatusFlags": 0,
+      "outputQueuedFrames": 16200,
+      "driverInputLatencyMs": 12.403628117913831,
+      "driverOutputLatencyMs": 13.582766439909298,
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "bufferFrames": 512,
+      "bufferCapacityFrames": 65536,
+      "driverLossMeasurement": "status flags only; latency is driver-reported",
+      "nativeOutputDroppedFrames": 0,
+      "discontinuities": 0,
+      "nativeUnderruns": 0
+    },
+    "native_release_tail_peak": 0.0
+  },
+  "native_physical_sampling": {
+    "profile": "MOTU ASIO duplex outputs 3/4 to inputs 1/2 44100Hz stereo PCM16",
+    "samples": [
+      {
+        "channel": 0,
+        "frames": 64754,
+        "allocation_bytes": 138240,
+        "pcm_sha256": "bf49a2adc07ec9034d10878f39b5a89d81343f4695a650202cbf8bdc78807a74",
+        "metadata_hex": "4e45573a556e6e616d65642020207f4c000000000000000000f1fc0000f80d0100fc0d010200000005000f00013c0000",
+        "known_physical_tone_hz": 439.9435048449959,
+        "wave_disk_cold_reload_equal": true,
+        "exact_captured_input_pcm": true,
+        "captured_input_offset_frames": 1514814
+      },
+      {
+        "channel": 1,
+        "frames": 64754,
+        "allocation_bytes": 138240,
+        "pcm_sha256": "2968d71f7d87d67e76099eb862df9ce00581ccb4c2403e3a1ed01ca6f541a543",
+        "metadata_hex": "4e45573a556e6e616d65642020207f52000000000000000000f1fc0000f80d0100fc0d010200000014000f00013c0000",
+        "known_physical_tone_hz": 879.8870096899918,
+        "wave_disk_cold_reload_equal": true,
+        "exact_captured_input_pcm": true,
+        "captured_input_offset_frames": 1514814
+      }
+    ],
+    "input_level": 100,
+    "output_level_during_recording": 0,
+    "cold_gain_recall": false,
+    "capture": {
+      "state": "active",
+      "message": "ASIO: MOTU Pro Audio v2 \u2014 44.1 kHz stereo. Output 3/4; input 1/2.",
+      "device": "MOTU Pro Audio v2",
+      "backend": "asio",
+      "rate": 44100.0,
+      "channels": 2,
+      "format": "PCM16 input / float32 output",
+      "receivedFrames": 4590080,
+      "discardedFrames": 61440.0,
+      "outputUnderruns": 0,
+      "outputDiscardedFrames": 0,
+      "driverStatusFlags": 0,
+      "outputQueuedFrames": 7680,
+      "driverInputLatencyMs": 12.403628117913831,
+      "driverOutputLatencyMs": 13.582766439909298,
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "bufferFrames": 512,
+      "bufferCapacityFrames": 65536,
+      "driverLossMeasurement": "status flags only; latency is driver-reported",
+      "nativeOutputDroppedFrames": 0,
+      "discontinuities": 0,
+      "nativeUnderruns": 0
+    },
+    "native_input": {
+      "queued": 11997,
+      "underruns": 0,
+      "ok": true
+    },
+    "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b",
+    "source_preserved": true,
+    "saved_sha256": "80bc6d3cdb49fecd2efe820abde24188c8d53a642fa8197b38ec49f266e09883",
+    "identities": {
+      "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+      "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "mame-source\\src\\mame\\roland\\s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+      "scripts\\s760_runtime.lua": "fb991fd9880a3863a3a55bde6f1040b28c5e61cf0f7ccbc586ad7254e59bffec",
+      "scripts\\s760_runtime.py": "2c6dd595c7e5a9cb2c0c2bad873987cd96731bfb3bae1f3f926861b550102f37"
+    },
+    "limitations": [
+      "ASIO driver reports status flags and latency; measured physical round-trip latency remains separate",
+      "Analog gain taper/headroom, other recording rates and hardware register semantics remain open",
+      "Experimental ADC remains disabled by default"
+    ]
+  },
+  "acceptance": {
+    "backend_tests_passed": 341,
+    "react_tests_passed": 121,
+    "cpp_core": "passed",
+    "cpp_plugin": "passed",
+    "cpp_asio_ring_concurrency_wrap_saturation_prime_underrun": "passed",
+    "default_native_firmware_playback_and_note_off": "passed",
+    "source_browser_asio_select_apply_reconnect": "passed",
+    "packaged_browser_asio_select_apply_reconnect": "passed",
+    "actual_packaged_webview": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 230360
+    },
+    "desktop_clean_shutdown_no_native_child": "passed",
+    "development_package_audit_errors": [],
+    "bundled_unmapped_binaries": []
+  },
+  "commands": [
+    "cmake --build build --config Release; build/Release/s760_core_tests.exe; build/Release/s760_plugin_tests.exe; build/Release/s760_asio_tests.exe",
+    "python docs/ic20-hle-findings/chatGPT-work/m3_pytest_runner.py",
+    "npm run lint; npm run test -- --run; npm run build",
+    "python scripts/verify_native_runtime.py --state-dir docs/ic20-hle-findings/chatGPT-work/asio-default-native",
+    "python docs/ic20-hle-findings/chatGPT-work/asio_probe.py 128 (also512/1024)",
+    "python docs/ic20-hle-findings/chatGPT-work/asio_native_playback.py",
+    "python docs/ic20-hle-findings/chatGPT-work/asio_live_sampling.py --blank-disk docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img --state-dir docs/ic20-hle-findings/chatGPT-work/asio-live-sampling",
+    "python docs/ic20-hle-findings/chatGPT-work/check_motu_exact.py docs/ic20-hle-findings/chatGPT-work/asio-live-sampling",
+    "node node_modules/@playwright/test/cli.js test e2e/native-asio-settings.spec.ts --workers=1 (source and packaged private service URLs)",
+    "scripts/build_standalone.ps1 -OutputDirectory docs/ic20-hle-findings/chatGPT-work/asio-package-final",
+    "S760Studio.exe --verify-desktop --seconds45 --no-sound --audio-backend asio --asio-driver \"MOTU Pro Audio v2\" --asio-output-channel3 --asio-input-channel1 --asio-buffer-frames512 (explicit firmware/media/state paths)"
+  ],
+  "fixture_note": "Native ROBOFULL playback qualifies ASIO output. The separate sampling fixture suppresses native output only to supply explicit low-level440/880Hz test tones through the same physical ASIO output/input stream; it is not evidence of native playback by itself.",
+  "limitations": [
+    "44.1kHz stereo only; other rates and other drivers are not qualified",
+    "Driver latency excludes native transport/rings; no measured round-trip latency claim",
+    "65536-frame rings are bounded; long-term independent clock drift can cause explicitly reported loss; this is not indefinite low-latency/dropout qualification",
+    "ASIO sampling workflow reports61440 discarded input frames across the entire workflow, including paused/non-recording phases; both64754-frame recorded channels nevertheless match a contiguous captured input interval exactly",
+    "Automatic physical disconnect/reconnect, calibrated analog gain and complete ADC register semantics remain open",
+    "Development package only; changed binaries and nested ASIO SDK/PortAudio redistribution require release review; no clean-machine qualification"
+  ],
+  "identities": {
+    "core/src/s760_asio.cpp": "e3a195b6917cf1fbe4427ef77e8fee2c64d6ec507ab0d0a3588b1ca62be5e0c4",
+    "core/CMakeLists.txt": "8d2a8b98b31a2bcb742f97a0ec8c2c3c909424830a880b5729bf9c08b8db2f5c",
+    "scripts/s760_asio.py": "e1f02d9a120338a85c2d4e62905f0f8a63d5a5e7b15ce72566beadc34cf55439",
+    "scripts/s760_runtime.py": "2c6dd595c7e5a9cb2c0c2bad873987cd96731bfb3bae1f3f926861b550102f37",
+    "scripts/s760_runtime.lua": "fb991fd9880a3863a3a55bde6f1040b28c5e61cf0f7ccbc586ad7254e59bffec",
+    "scripts/s760_standalone.py": "bd2e43a2134a59a9cb578e7480fc1cba4a089e74986f7b861b383e90a32f3c52",
+    "scripts/build_standalone.ps1": "1c9d99d2bffe0d3515b117f50fe746d8e069afa4ef511efd86f057de686d7222",
+    "scripts/s760_distribution_inventory.py": "da23fae52f77ced360660050aad95bad3d4bdc330cb84a5c4838a50503e9bc04",
+    "scripts/requirements-standalone.txt": "a860f27e678d864387f4b7542f88f57cc725553569e23c1653e0211c2a70f21d",
+    "google-ui/src/components/RuntimeSettings.tsx": "29f2ba6f709047a6fc0f9014fa9a83df1f152785e734eebbdd1fb9b4d04d21b5",
+    "google-ui/src/NativeStudio.tsx": "df521667d9ad2645fa3807255807fe17e322455d16b8d1ca58e900baa1dbf91e",
+    "build/Release/s760_asio.dll": "466180f0133491ce6c860afb674429a4187679d4905d7ff4b3a0e58614f98cf6",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "docs\\ic20-hle-findings\\chatGPT-work\\asio-package-final\\dist\\S760Studio\\S760Studio.exe": "437456773562b359d9c84482357d03892ea8eb6c29043c5d9b55d2e7c9cfab06",
+    "docs\\ic20-hle-findings\\chatGPT-work\\asio-package-final\\dist\\S760Studio\\_internal\\audio\\s760_asio.dll": "466180f0133491ce6c860afb674429a4187679d4905d7ff4b3a0e58614f98cf6",
+    "docs\\ic20-hle-findings\\chatGPT-work\\asio-package-final\\dist\\S760Studio\\_internal\\audio\\libportaudio64bit-asio.dll": "6808336cc7984aff95a7e060bacc3302cea08ef08e749dd6c4327713fa658d35"
+  }
+}

@@ -1014,14 +1014,18 @@ public:
 		, m_mouse_buttons(*this, "NATIVE_MOUSE_BUTTONS")
 		, m_value_port(*this, "NATIVE_VALUE")
 		, m_output_level_port(*this, "NATIVE_OUTPUT")
+		, m_input_level_port(*this, "NATIVE_INPUT")
 		, m_gotek_ctrl(*this, "GOTEK_CTRL")
 		, m_sound(*this, "s760_sound")
+		, m_native_pcm_ingress(*this, "native_pcm_ingress", 8194, ENDIANNESS_LITTLE)
 	{ }
 
 	void s760(machine_config &config);
 	void s760_palette(palette_device &palette) const;
 	DECLARE_INPUT_CHANGED_MEMBER(native_sample_media);
 	DECLARE_INPUT_CHANGED_MEMBER(native_export_media);
+	ioport_value native_pcm_depth();
+	ioport_value native_pcm_losses() { return m_native_pcm_underruns; }
 	TIMER_CALLBACK_MEMBER(runtime_midi_poll);
 	std::unique_ptr<emu_file> m_runtime_midi;
 	void native_midi_rx_w(int state) { if (m_native_midi_experiment) rx_w(state); }
@@ -1120,6 +1124,15 @@ private:
 	std::array<double, 24> m_native_lpf_low{}, m_native_lpf_band{};
 	u8 m_native_clock_select = 0;
 	std::array<double, 32> m_native_wave_position{};
+	// Host input endpoint; emulated sound time owns consumption. No allocation
+	// or host I/O occurs in the stream callback. Experimental until qualified.
+	bool m_native_adc = false;
+	// Host-only staging endpoint, not mapped into the guest CPU address space.
+	memory_share_creator<u16> m_native_pcm_ingress;
+	std::array<s16, 32768> m_native_pcm_fifo{};
+	u32 m_native_pcm_head = 0, m_native_pcm_count = 0, m_native_pcm_underruns = 0;
+	std::array<s16, 2> m_native_pcm_last{};
+	u8 m_native_pcm_meter_channel = 0;
 	void native_wave_monitor_update(sound_stream &stream);
 	void native_audio_clock_w(u8 data);
 	void native_wave_control_w(offs_t offset, u8 data);
@@ -1203,6 +1216,7 @@ private:
 	required_ioport m_mouse_x_port, m_mouse_y_port, m_mouse_buttons;
 	required_ioport m_value_port;
 	required_ioport m_output_level_port;
+	required_ioport m_input_level_port;
 	required_ioport m_gotek_ctrl;
 	required_device<s760_sound_device> m_sound;
 
@@ -1327,6 +1341,7 @@ private:
 	int m_fdc_selected_drive;
 	bool m_fdc_motor_on[2];
 	bool m_fdc_disk_inserted;
+	bool m_fdc_write_protected = false;
 	std::vector<uint8_t> m_fdc_disk_image;
 	// Fixed save-manager storage: the live vector can resize during media swaps.
 	std::vector<u8> m_checkpoint_floppy;
@@ -1437,6 +1452,13 @@ void s760_state::machine_start()
 	m_native_sound_trace = getenv("S760_SOUND_TRACE") != nullptr;
 	save_item(NAME(m_native_clock_select));
 	save_item(NAME(m_native_wave_position));
+	m_native_adc = getenv("S760_NATIVE_ADC") != nullptr;
+	save_item(NAME(m_native_pcm_fifo));
+	save_item(NAME(m_native_pcm_head));
+	save_item(NAME(m_native_pcm_count));
+	save_item(NAME(m_native_pcm_underruns));
+	save_item(NAME(m_native_pcm_last));
+	save_item(NAME(m_native_pcm_meter_channel));
 	save_item(NAME(m_native_wave_reverse));
 	save_item(NAME(m_native_wave_stopped));
 	save_item(NAME(m_native_wave_end_pending));
@@ -1986,6 +2008,7 @@ void s760_state::machine_start()
 	save_item(NAME(m_fdc_selected_drive));
 	save_item(NAME(m_fdc_motor_on));
 	save_item(NAME(m_fdc_disk_inserted));
+	save_item(NAME(m_fdc_write_protected));
 	save_item(NAME(m_fdc_data_byte_idx));
 	save_item(NAME(m_fdc_data_byte_total));
 	save_item(NAME(m_fdc_sector_offset));
@@ -2140,11 +2163,13 @@ void s760_state::banked_w(offs_t address, u8 data)
 	{
 		m_bank_regs[address - 0x100] = data;
 		if (address == 0x115) check_irq_state();
-		if (address == 0x11d && data == 0xbc)
+		if (address == 0x11d && (data == 0xbc || data == 0xa7))
 		{
 			// OS bank005A:6A31..6A73 programs wave word address, RAM source,
-			// byte count and BC, then waits for count exhaustion. Implement this
-			// observed RAM-to-wave mode synchronously; bus arbitration is pending.
+			// byte count and BC, then waits for count exhaustion. Sampling's
+			// postprocessing bank routine 73B1..7410 uses A7 for the inverse
+			// wave-to-RAM transfer. Both observed modes are synchronous here;
+			// bus arbitration and other DMA controls remain unqualified.
 			const u32 src = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b])<<8) | (u32(m_bank_regs[0x1c])<<16);
 			const u32 count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19])<<8);
 			const u32 wave = m_native_wave_regs[0xe] | (u32(m_native_wave_regs[0xf])<<8)
@@ -2152,13 +2177,16 @@ void s760_state::banked_w(offs_t address, u8 data)
 			if (count && !(count & 1) && u64(src)+count <= m_banked_ram.size()
 				&& u64(wave)*2+count <= m_native_wave.size())
 			{
-				std::copy_n(m_banked_ram.begin()+src, count, m_native_wave.begin()+u64(wave)*2);
+				if (data == 0xbc)
+					std::copy_n(m_banked_ram.begin()+src, count, m_native_wave.begin()+u64(wave)*2);
+				else
+					std::copy_n(m_native_wave.begin()+u64(wave)*2, count, m_banked_ram.begin()+src);
 				const u32 next = src+count, wave_next = wave+count/2;
 				m_bank_regs[0x18] = m_bank_regs[0x19] = 0;
 				m_bank_regs[0x1a] = u8(next); m_bank_regs[0x1b] = u8(next>>8); m_bank_regs[0x1c] = u8(next>>16);
 				m_native_wave_regs[0xe] = u8(wave_next); m_native_wave_regs[0xf] = u8(wave_next>>8);
 				m_native_wave_regs[0xc] = u8(wave_next>>16); m_native_wave_regs[0xd] = u8(wave_next>>24);
-				logerror("[NATIVEWAVEDMA] RAM=%06x wave_byte=%08x count=%04x control=bc\n",src,wave*2,count);
+				logerror("[NATIVEWAVEDMA] RAM=%06x wave_byte=%08x count=%04x control=%02x\n",src,wave*2,count,data);
 			}
 		}
 		return;
@@ -2174,7 +2202,8 @@ u8 s760_state::banked_physical_r(u32 address)
 		return m_boot_rom[address & 0x7fff];
 	if (address < m_banked_ram.size())
 		return m_banked_ram[address];
-	if (address >= 0x100000 && address <= 0x10000f) return native_wave_r(address - 0x100000);
+	if (address >= 0x100000 && (address <= 0x10000f || (m_native_adc && address <= 0x1007ff)))
+		return native_wave_r(address - 0x100000);
 	if (m_native_loop_monitor && address >= 0x100016 && address <= 0x100017)
 		return native_wave_r(address - 0x100000);
 	// External I/O aperture selected by page0400. Remaining external decoding
@@ -2494,6 +2523,43 @@ void s760_state::native_audio_clock_w(u8 data)
 
 void s760_state::native_wave_monitor_update(sound_stream &stream)
 {
+	if (m_native_adc && m_native_clock_select == 0)
+	{
+		// Service Notes p20: recording gain precedes the ADC, independently
+		// of playback volume. Linear software attenuation; analog taper and
+		// headroom are uncalibrated. Apply at consumption, not queue ingress.
+		const int input_level = m_input_level_port->read();
+		// Experimental first profile is 44.1kHz stereo PCM16. Slots4/20 and
+		// mode8 follow actual OS2.24 arming transactions, not host RAM writes.
+		for (unsigned frame = 0; frame < stream.samples(); ++frame)
+		{
+			const bool recording = (BIT(m_native_wave_enable,4) && (m_native_wave_control[4] >> 28) == 8)
+				|| (BIT(m_native_wave_enable,20) && (m_native_wave_control[20] >> 28) == 8);
+			m_native_pcm_last.fill(0);
+			if (m_native_pcm_count)
+			{
+				m_native_pcm_last[0] = s16(s32(m_native_pcm_fifo[m_native_pcm_head*2]) * input_level / 100);
+				m_native_pcm_last[1] = s16(s32(m_native_pcm_fifo[m_native_pcm_head*2+1]) * input_level / 100);
+				m_native_pcm_head = (m_native_pcm_head+1) % 16384;
+				--m_native_pcm_count;
+			}
+			else if (recording) ++m_native_pcm_underruns;
+			for (unsigned channel=0; channel<2; ++channel)
+			{
+				const unsigned slot = channel ? 20 : 4;
+				if (!BIT(m_native_wave_enable,slot) || (m_native_wave_control[slot] >> 28) != 8) continue;
+				const u16 *p = &m_native_wave_parameters[slot*8];
+				const u32 end = p[0] | (u32(p[1] & 0x1fff) << 16);
+				double &position = m_native_wave_position[slot];
+				const u64 byte = u64(position)*2;
+				if (position > end || byte+1 >= m_native_wave.size()) continue;
+				const u16 pcm = u16(m_native_pcm_last[channel]);
+				m_native_wave[byte] = u8(pcm);
+				m_native_wave[byte+1] = u8(pcm >> 8);
+				position += 1.0;
+			}
+		}
+	}
 	// Service Notes p20: VR1 attenuates Stereo Out A / headphones after
 	// the DAC. Software linear amplitude control; physical pot taper and
 	// analog distortion are not calibrated. Unity preserves prior PCM.
@@ -2711,6 +2777,28 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 
 u8 s760_state::native_wave_r(offs_t offset)
 {
+	if (m_native_adc)
+	{
+		if (offset >= 0x200 && offset < 0x400)
+		{
+			if (!machine().side_effects_disabled()) m_native_wave_control_select = (offset-0x200) >> 4;
+			return 0;
+		}
+		if (offset >= 0x10 && offset <= 0x13)
+		{
+			if (offset == 0x10 && !machine().side_effects_disabled()) m_sound->sync_native_monitor();
+			const unsigned slot = m_native_wave_control_select;
+			const u32 position = (m_native_wave_control[slot] & 0xf0000000)
+				| (u32(m_native_wave_position[slot]*8.0) & 0x0fffffff);
+			return u8(position >> ((offset-0x10)*8));
+		}
+		if (offset == 0x1c || offset == 0x1d)
+		{
+			const u16 sample = u16(m_native_pcm_last[m_native_pcm_meter_channel]);
+			if (offset == 0x1d && !machine().side_effects_disabled()) m_native_pcm_meter_channel ^= 1;
+			return offset == 0x1c ? u8(sample) : u8(sample >> 8);
+		}
+	}
 	if (m_native_loop_monitor && (offset == 2 || offset == 3))
 	{
 		unsigned slot = 0;
@@ -2749,7 +2837,24 @@ u8 s760_state::native_wave_r(offs_t offset)
 		}
 		return result;
 	}
-	return m_native_wave_regs[offset];
+	return offset < m_native_wave_regs.size() ? m_native_wave_regs[offset] : 0xff;
+}
+
+ioport_value s760_state::native_pcm_depth()
+{
+	const u16 frames = m_native_pcm_ingress[0];
+	if (m_native_adc && frames && frames <= 2048 && m_native_pcm_count+frames <= 16384)
+	{
+		for (unsigned i=0; i<frames; ++i)
+		{
+			const unsigned tail = (m_native_pcm_head+m_native_pcm_count) % 16384;
+			m_native_pcm_fifo[tail*2] = s16(m_native_pcm_ingress[1+i*2]);
+			m_native_pcm_fifo[tail*2+1] = s16(m_native_pcm_ingress[2+i*2]);
+			++m_native_pcm_count;
+		}
+	}
+	m_native_pcm_ingress[0] = 0;
+	return m_native_pcm_count;
 }
 
 void s760_state::native_wave_w(offs_t offset,u8 data)
@@ -2806,6 +2911,10 @@ void s760_state::native_vdp_w(offs_t offset, u8 data)
 
 void s760_state::machine_reset()
 {
+ m_native_pcm_head = m_native_pcm_count = m_native_pcm_underruns = 0;
+ m_native_pcm_last.fill(0);
+ m_native_pcm_meter_channel = 0;
+ m_native_pcm_ingress[0] = 0;
 	m_native_wave_bus.fill(0);
 	m_native_midi_pending = false;
 	m_native_midi_byte = 0;
@@ -2904,6 +3013,7 @@ bool s760_state::fdc_load_disk_image(const std::string &path)
 		m_media_revision = m_media_saved_revision = 0;
 		m_media_export_valid = false;
 		m_fdc_disk_inserted = true;
+		m_fdc_write_protected = false;
 		m_native_disk_changed = true;
 		logerror("[NATIVEMEDIA] inserted %s bytes=%u\n",path.c_str(),unsigned(sz));
 		return true;
@@ -2924,6 +3034,7 @@ void s760_state::native_media_status(const std::string &error)
 		status << "{\"ok\":" << (error.empty() ? "true" : "false")
 			<< ",\"error\":\"" << error << "\",\"inserted\":" << (m_fdc_disk_inserted ? "true" : "false")
 			<< ",\"dirty\":" << (m_media_revision != m_media_saved_revision ? "true" : "false")
+			<< ",\"writeProtected\":" << (m_fdc_write_protected ? "true" : "false")
 			<< ",\"busy\":" << (m_fdc_phase != 0 || m_fdc_cmd_idx != 0 ? "true" : "false")
 			<< ",\"generation\":" << m_media_generation << ",\"revision\":" << m_media_revision << "}";
 	}
@@ -2944,6 +3055,12 @@ INPUT_CHANGED_MEMBER(s760_state::native_sample_media)
 			m_media_export_valid = false;
 		}
 	}
+	else if (param == 4 || param == 5)
+	{
+		if (m_fdc_phase != 0 || m_fdc_cmd_idx != 0) error = "Floppy controller is busy";
+		else if (!m_fdc_disk_inserted) error = "No floppy is inserted";
+		else m_fdc_write_protected = param == 4;
+	}
 	else if (param != 2) // Status is read-only and allowed while the controller is busy.
 	{
 		if (m_fdc_phase != 0 || m_fdc_cmd_idx != 0) error = "Floppy controller is busy";
@@ -2951,6 +3068,7 @@ INPUT_CHANGED_MEMBER(s760_state::native_sample_media)
 		else if (param == 1)
 		{
 			m_fdc_disk_inserted = false;
+			m_fdc_write_protected = false;
 			m_fdc_disk_image.clear();
 			m_native_disk_changed = true;
 			++m_media_generation;
@@ -3222,7 +3340,9 @@ void s760_state::fdc_execute_command()
 		{
 			int drv = m_fdc_cmd_buffer[1] & 0x03;
 			int head = (m_fdc_cmd_buffer[1] >> 2) & 1;
-			uint8_t st3 = 0x28 | (head << 2) | drv; // Ready (Bit 5) + Two-Sided (Bit 3)
+			uint8_t st3 = 0x08 | (head << 2) | drv;
+			if (m_fdc_disk_inserted) st3 |= 0x20;
+			if (m_fdc_write_protected) st3 |= 0x40;
 			if (m_fdc_current_cyl[drv] == 0)
 				st3 |= 0x10; // Track 0 (Bit 4)
 			m_fdc_res_buffer[0] = st3;
@@ -3320,6 +3440,13 @@ void s760_state::fdc_execute_command()
 			m_fdc_res_buffer[5] = (uint8_t)(r + 1);
 			m_fdc_res_buffer[6] = (uint8_t)n;
 
+			if (!m_fdc_disk_inserted || m_fdc_write_protected)
+			{
+				m_fdc_res_buffer[0] |= 0x40 | (!m_fdc_disk_inserted ? 0x08 : 0);
+				m_fdc_res_buffer[1] = m_fdc_disk_inserted ? 0x02 : 0;
+				fdc_start_result_phase(7);
+				break;
+			}
 			m_fdc_phase = 1;
 			m_fdc_msr = 0xB0; // RQM=1, DIO=0, NonDMA=1, CB=1
 			// Observed native Disk/Save at physical0195C1 programs RAM source,
@@ -3373,10 +3500,59 @@ void s760_state::fdc_execute_command()
 			m_fdc_res_buffer[0] = 0x00 | drv | (h << 2);
 			m_fdc_res_buffer[1] = 0x00;
 			m_fdc_res_buffer[2] = 0x00;
-			m_fdc_res_buffer[3] = (uint8_t)m_fdc_current_cyl[drv];
+			const int c = drv < 2 ? m_fdc_current_cyl[drv] : 0;
+			m_fdc_res_buffer[3] = (uint8_t)c;
 			m_fdc_res_buffer[4] = (uint8_t)h;
 			m_fdc_res_buffer[5] = 1;
 			m_fdc_res_buffer[6] = 2;
+			if (!m_fdc_disk_inserted || m_fdc_write_protected)
+			{
+				m_fdc_res_buffer[0] |= 0x40 | (!m_fdc_disk_inserted ? 0x08 : 0);
+				m_fdc_res_buffer[1] = m_fdc_disk_inserted ? 0x02 : 0;
+			}
+			else
+			{
+				// Native OS 2.24 at physical0188E4 supplies SC*4 CHRN bytes
+				// through IC4 FA RAM DMA. Raw images support complete standard
+				// 512-byte tracks only; validate the whole transfer before mutation.
+				const u32 src = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b]) << 8) | (u32(m_bank_regs[0x1c]) << 16);
+				const u32 count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19]) << 8);
+				const int sc = m_fdc_cmd_buffer[3];
+				const int spt = m_fdc_disk_image.size() == 737280 ? 9 : 18;
+				const u32 offset = (c * 2 + h) * spt * 512;
+				bool valid = m_banked_os && m_bank_regs[0x1d] == 0xfa
+					&& drv < 2 && c < 80 && m_fdc_cmd_buffer[2] == 2
+					&& sc == spt && count == u32(sc * 4)
+					&& u64(src) + count <= m_banked_ram.size()
+					&& u64(offset) + spt * 512 <= m_fdc_disk_image.size();
+				u32 seen = 0;
+				for (int i = 0; valid && i < sc; ++i)
+				{
+					const u8 *id = &m_banked_ram[src + i * 4];
+					valid = id[0] == c && id[1] == h && id[2] >= 1 && id[2] <= spt && id[3] == 2;
+					if (valid)
+					{
+						const u32 bit = 1U << (id[2] - 1);
+						valid = !(seen & bit);
+						seen |= bit;
+					}
+				}
+				if (valid)
+				{
+					std::fill_n(m_fdc_disk_image.begin() + offset, spt * 512, m_fdc_cmd_buffer[5]);
+					const u32 next = src + count;
+					m_bank_regs[0x1a] = u8(next); m_bank_regs[0x1b] = u8(next >> 8); m_bank_regs[0x1c] = u8(next >> 16);
+					m_bank_regs[0x18] = m_bank_regs[0x19] = 0;
+					++m_media_revision;
+					logerror("[NATIVEFDC FORMAT] cylinder=%d head=%d sectors=%d fill=%02x source=%06x count=%04x\n",
+						c, h, spt, m_fdc_cmd_buffer[5], src, count);
+				}
+				else
+				{
+					m_fdc_res_buffer[0] |= 0x40;
+					m_fdc_res_buffer[1] = 0x04; // Unsupported/malformed track: no data.
+				}
+			}
 			fdc_start_result_phase(7);
 			break;
 		}
@@ -4925,10 +5101,18 @@ static INPUT_PORTS_START( s760 )
 	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Eject Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 1)
 	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Floppy Media Status") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 2)
 	PORT_BIT(0x10, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Acknowledge Floppy Export") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 3)
+	PORT_BIT(0x20, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Protect Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 4)
+	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Unprotect Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 5)
 	PORT_START("NATIVE_VALUE")
 	PORT_BIT(0xffff, 0, IPT_DIAL) PORT_NAME("Value Encoder") PORT_SENSITIVITY(100) PORT_KEYDELTA(1)
 	PORT_START("NATIVE_OUTPUT")
 	PORT_ADJUSTER(100, "Output Level")
+	PORT_START("NATIVE_INPUT")
+	PORT_ADJUSTER(100, "Input Level")
+	PORT_START("NATIVE_PCM_DEPTH")
+	PORT_BIT(0xffff, IP_ACTIVE_HIGH, IPT_CUSTOM) PORT_CUSTOM_MEMBER(FUNC(s760_state::native_pcm_depth))
+	PORT_START("NATIVE_PCM_LOSSES")
+	PORT_BIT(0xffffffff, IP_ACTIVE_HIGH, IPT_CUSTOM) PORT_CUSTOM_MEMBER(FUNC(s760_state::native_pcm_losses))
 	PORT_START("NATIVE_MOUSE_X")
 	PORT_BIT(0xffff, 0, IPT_MOUSE_X) PORT_SENSITIVITY(50) PORT_KEYDELTA(1)
 	PORT_START("NATIVE_MOUSE_Y")

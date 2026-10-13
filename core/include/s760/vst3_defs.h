@@ -152,6 +152,31 @@ public:
     virtual tresult addEvent(Event& e) = 0;
 };
 
+class IMidiMapping : public FUnknown {
+public:
+    virtual tresult getMidiControllerAssignment(int32_t bus, int16_t channel, int16_t controller, uint32_t& id) = 0;
+};
+class IParamValueQueue : public FUnknown {
+public:
+    virtual uint32_t getParameterId() = 0;
+    virtual int32_t getPointCount() = 0;
+    virtual tresult getPoint(int32_t index, int32_t& offset, double& value) = 0;
+    virtual tresult addPoint(int32_t offset, double value, int32_t& index) = 0;
+};
+class IParameterChanges : public FUnknown {
+public:
+    virtual int32_t getParameterCount() = 0;
+    virtual IParamValueQueue* getParameterData(int32_t index) = 0;
+    virtual IParamValueQueue* addParameterData(const uint32_t& id, int32_t& index) = 0;
+};
+struct ParameterInfo {
+    uint32_t id;
+    char16_t title[128],shortTitle[128],units[128];
+    int32_t stepCount;
+    double defaultNormalizedValue;
+    int32_t unitId,flags;
+};
+
 struct ProcessData {
     int32_t processMode;
     int32_t symbolicSampleSize;

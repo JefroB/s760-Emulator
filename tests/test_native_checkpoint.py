@@ -73,3 +73,29 @@ def test_scsi_snapshot_profile_bounds_external_images(tmp_path):
         file.truncate(64*1024*1024+1)
     with pytest.raises(ValueError,match='64 MiB'):
         runtime._scsi_identity()
+
+
+@pytest.mark.parametrize('field,label', [('mame','MAME build'), ('boot','boot ROM'),
+    ('system','system disk'), ('protocol','runtime protocol'), ('scsi','SCSI backing media')])
+def test_checkpoint_mismatch_identifies_repair_action(tmp_path, monkeypatch, field, label):
+    runtime = client(tmp_path, monkeypatch)
+    identities = {key:'original' for key in ('mame','boot','system','protocol','scsi')}
+    monkeypatch.setattr(runtime, '_checkpoint_identity', lambda: {**identities, field:'changed'})
+    blob = b'snapshot'
+    meta = {'version':2,'identity':identities,'bytes':len(blob),'sha256':hashlib.sha256(blob).hexdigest()}
+    encoded = json.dumps(meta).encode()
+    path = tmp_path/'mismatch.state'
+    path.write_bytes(b'S760CKP2'+struct.pack('<I',len(encoded))+encoded+blob)
+    with pytest.raises(ValueError, match=label): runtime.validate_checkpoint(path)
+    assert not (tmp_path/'runtime-checkpoint.bin').exists()
+
+
+def test_checkpoint_missing_slot_has_recovery_message(tmp_path, monkeypatch):
+    with pytest.raises(ValueError, match='No saved session'):
+        client(tmp_path, monkeypatch).validate_checkpoint(tmp_path/'missing.state')
+
+
+def test_version_one_session_reports_no_migration(tmp_path, monkeypatch):
+    path = tmp_path/'old.state'; path.write_bytes(b'S760CKP1' + bytes(4))
+    with pytest.raises(ValueError, match='migration is not available'):
+        client(tmp_path, monkeypatch).validate_checkpoint(path)

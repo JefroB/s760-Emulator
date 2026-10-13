@@ -24,13 +24,20 @@ def main():
     parser.add_argument('--sample-disk', type=Path, default=ROOT / 'roms/FDD/ROBOFULL.IMG')
     parser.add_argument('--state-dir', type=Path, default=ROOT / 'docs/ic20-hle-findings/chatGPT-work/native-runtime-verification')
     parser.add_argument('--wave-dump', type=Path, help='Read-only wave RAM dump for persistence verification')
+    parser.add_argument('--system-audio', action='store_true', help='Enable real MAME device output at normal speed')
+    parser.add_argument('--empty-drive', action='store_true', help='Qualify empty-drive firmware response, reinsertion and loaded playback after ejection')
+    parser.add_argument('--audio-backend', choices=('auto', 'wasapi', 'xaudio2'), default='auto')
+    parser.add_argument('--audio-latency-ms', type=float, default=0, help='Requested buffer target, not measured latency')
     parser.add_argument('--runtime-contract', action='store_true', help='Verify pause/step and live PCM against MAME WAV')
     parser.add_argument('--pull-render', action='store_true', help='Verify demand-driven variable PCM block sizes')
     parser.add_argument('--scheduled-midi', action='store_true', help='Verify emulated-time MIDI scheduling with pull rendering')
     parser.add_argument('--executable', type=Path, default=ROOT/'mame-source/mames760.exe', help='Exact native binary to qualify')
     parser.add_argument('--panel-menu', action='store_true', help='Exercise Menu/Exit before absolute pointer checks (BUG-030 regression)')
     parser.add_argument('--rack-dials', action='store_true', help='Exercise real Value edits and output gain/recall against native PCM')
+    parser.add_argument('--bus-trace', action='store_true', help='Verify read-only diagnostic taps preserve exact native PCM/display replay')
     args = parser.parse_args()
+    if args.bus_trace and (args.runtime_contract or args.pull_render or args.scheduled_midi or args.rack_dials or args.loop_modes):
+        parser.error('--bus-trace uses checkpoint rewind; run other timeline scenarios separately')
     if args.rack_dials and (args.runtime_contract or args.pull_render or args.scheduled_midi):
         parser.error('--rack-dials recalls checkpoints; run WAV timeline qualification separately')
     if args.scheduled_midi and not args.pull_render:
@@ -43,7 +50,8 @@ def main():
     state = args.state_dir
     cfg = RuntimeConfig(args.executable, ROOT / 'roms/BOOT/Roland_S-760_v1.11.BIN',
         ROOT / 'roms/System/S760224.IMG', state, args.sample_disk,
-        sound=False, throttle=False, wav_output=state / 'audio.wav', wave_dump=args.wave_dump)
+        sound=args.system_audio, throttle=args.system_audio, wav_output=state / 'audio.wav', wave_dump=args.wave_dump,
+        audio_backend=args.audio_backend, audio_latency_ms=args.audio_latency_ms)
     with NativeRuntime(cfg) as runtime:
         captured = []
         capture_active = False
@@ -58,7 +66,7 @@ def main():
 
         def wait(seconds):
             target = runtime.request('frames')[0]['seconds'] + seconds
-            deadline = time.monotonic() + 30
+            deadline = time.monotonic() + 30 + (seconds if args.system_audio else 0)
             while runtime.request('frames')[0]['seconds'] < target:
                 if time.monotonic() > deadline:
                     raise TimeoutError('Machine stopped advancing')
@@ -113,6 +121,26 @@ def main():
                 move(x, y)
                 actual = runtime.request('frames')[0]['cursor']
                 assert all(abs(a-b) <= 1 for a, b in zip(actual, [x*2, y*2])), (x, y, actual)
+        if args.empty_drive:
+            from s760_readiness import labels
+            assert runtime.eject_media()['inserted'] is False
+            move(118, 5); click(); wait(2)
+            move(80, 22); click(); wait(15)
+            empty_frame = runtime.request('frames')[1][0]
+            assert 'empty_drive' in labels(empty_frame), 'Firmware did not request a disk'
+            Image.frombytes('RGBA', (640, 480), empty_frame[6:]).save(state / 'empty-drive.png')
+            assert runtime.media_status()['busy'] is False
+            before = runtime.request('status')[0]['seconds']
+            wait(10)
+            assert runtime.request('status')[0]['seconds'] >= before + 10
+            try:
+                runtime.export_media(state / 'empty-export.img')
+            except RuntimeError as error:
+                assert 'No floppy' in str(error), str(error)
+            else:
+                raise AssertionError('Empty-drive export succeeded')
+            assert not (state / 'empty-export.img').exists()
+            move(10, 5); click(); move(15, 22); click(); wait(2)
         runtime.request('button', port=':NATIVE_MEDIA', name='Insert Sample Floppy', down=True)
         runtime.request('button', port=':NATIVE_MEDIA', name='Insert Sample Floppy', down=False)
         move(118, 5); click(); wait(2)  # Disk menu
@@ -122,6 +150,56 @@ def main():
         _, frames = runtime.request('frames')
         Image.frombytes('RGBA', (640, 480), frames[0][6:]).save(state / 'loaded.png')
         move(10, 5); click(); move(15, 22); click(); wait(3)
+        if args.empty_drive:
+            assert runtime.eject_media()['inserted'] is False
+        if args.bus_trace:
+            runtime.request('pause')
+            runtime.request('audio_capture', enabled=True)
+            snapshot = state / 'bus-trace.s760state'
+            runtime.save_checkpoint(snapshot)
+            for invalid in ({'enabled':True, 'first':False},
+                            {'enabled':True, 'first':0x100000, 'last':0x104000},
+                            {'enabled':False}):
+                try:
+                    runtime.request('bus_trace', **invalid)
+                except RuntimeError:
+                    pass
+                else:
+                    raise AssertionError('Invalid diagnostic request accepted')
+            runs = []
+            displays = []
+            for traced in (False, True):
+                runtime.load_checkpoint(snapshot)
+                now = runtime.request('status')[0]['seconds']
+                timestamp = math.ceil(now * 44100) + 2048
+                if traced:
+                    runtime.request('bus_trace', enabled=True)
+                    try:
+                        runtime.save_checkpoint(state / 'active-trace.s760state')
+                    except RuntimeError as error:
+                        assert 'Stop diagnostic tracing' in str(error)
+                    else:
+                        raise AssertionError('Checkpoint accepted an active diagnostic observer')
+                runtime.schedule_midi([{'sample':timestamp, 'bytes':[144,60,127]},
+                                       {'sample':timestamp+32768, 'bytes':[128,60,0]}])
+                runs.append(b''.join(runtime.render_audio(8192)[1] for _ in range(16)))
+                displays.append(runtime.request('frames')[1])
+                if traced:
+                    trace = runtime.request('bus_trace', enabled=False)[0]
+                    assert trace['accesses'] > 0 and len(trace['rows']) <= 256
+            assert runs[0] == runs[1], 'Diagnostic taps changed native PCM'
+            assert displays[0] == displays[1], 'Diagnostic taps changed native displays'
+            samples = np.frombuffer(runs[0], dtype='<f4')
+            assert np.max(np.abs(samples)) > .001, 'Observer replay was silent'
+            assert np.max(np.abs(samples[-8192*2:])) == 0, 'Observer replay note-off failed'
+            (state / 'bus-trace-result.json').write_text(json.dumps({
+                'pcm_frames_exact':131072, 'displays_exact':True,
+                'trace_rows':len(trace['rows']), 'trace_dropped':trace['dropped'],
+                'pcm_sha256':hashlib.sha256(runs[0]).hexdigest()}), encoding='utf-8')
+            # A rewind invalidates the monotonic WAV offsets below. This is a
+            # separate replay scenario; normal WAV acceptance runs separately.
+            print(json.dumps({'bus_trace_pcm_frames_exact':131072, 'displays_exact':True}))
+            return
         if args.loop_modes:
             runtime.request('pause')
             runtime.request('audio_capture', enabled=True)
@@ -326,6 +404,13 @@ def main():
               'held_peak_pcm16': float(np.max(np.abs(held))), 'release_tail_peak_pcm16': 0,
               'sample_rate': rate, 'note_start': start, 'note_release': release,
               'process_shutdown': 'clean'}
+    result['system_audio'] = {'enabled': cfg.sound, 'backend_requested': cfg.audio_backend,
+                              'buffer_target_ms': cfg.audio_latency_ms, 'throttled': cfg.throttle,
+                              'device_latency_measured': False}
+    if args.empty_drive:
+        result['empty_drive'] = {'firmware_insert_disk_message': True, 'clock_advances': True,
+                                 'empty_export_rejected': True, 'reinsert_load': True,
+                                 'loaded_playback_after_ejection': True}
     if args.pull_render:
         from scipy.signal import correlate
         pull = np.frombuffer(b''.join(pulled), dtype='<f4').reshape(-1, 2)

@@ -1,0 +1,33 @@
+import {expect,test} from '@playwright/test';
+import {openNativeUtilities,closeNativeUtilities} from './native-controls';
+
+test('standalone Input Level acknowledges gain and preserves saved session/reconnect',async({page})=>{
+  test.skip(!process.env.S760_NATIVE_URL,'Requires a real standalone native service');
+  test.setTimeout(90000);
+  await page.goto(process.env.S760_NATIVE_URL!);
+  await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
+  const gain=page.getByRole('button',{name:'INPUT LEVEL knob'});
+  await expect(gain).toBeEnabled();
+  await expect(gain).toHaveAttribute('title','Recording input gain: 100%');
+  for(let i=0;i<5;i++)await gain.press('ArrowDown');
+  await expect(gain).toHaveAttribute('title','Recording input gain: 95%');
+  await openNativeUtilities(page);
+  await page.getByText('Save session',{exact:true}).click();
+  await expect(page.getByText(/^Session saved to /)).toBeVisible({timeout:15000});
+  await closeNativeUtilities(page);
+  for(let i=0;i<5;i++)await gain.press('ArrowDown');
+  await expect(gain).toHaveAttribute('title','Recording input gain: 90%');
+  await openNativeUtilities(page);
+  await page.getByText('Reconnect display',{exact:true}).click();
+  await closeNativeUtilities(page);
+  await expect(gain).toHaveAttribute('title','Recording input gain: 90%');
+  await openNativeUtilities(page);
+  await page.getByText('Restore saved session',{exact:true}).click();
+  await page.getByLabel('Replace current sampler memory',{exact:true}).check();
+  await page.getByText('Confirm restore',{exact:true}).click();
+  await expect(page.getByText('Saved session restored.',{exact:true})).toBeVisible({timeout:15000});
+  await closeNativeUtilities(page);
+  await expect(gain).toHaveAttribute('title','Recording input gain: 95%');
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.screenshot({path:test.info().outputPath('input-level-restored.png'),fullPage:true});
+});
