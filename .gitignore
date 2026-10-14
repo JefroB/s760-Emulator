@@ -21,6 +21,17 @@ roms/*
 *.ROM
 *.img
 *.IMG
+# Firmware image backups/compressed images are proprietary too.
+*.img.bak
+*.IMG.bak
+*.img.gz
+*.IMG.gz
+*.img.zip
+*.IMG.zip
+*.img.7z
+*.IMG.7z
+# GB-6 generated artifacts: commit patch source and instructions only.
+/patches/gb6/generated/
 *.bin
 *.BIN
 *.iso

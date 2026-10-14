@@ -1,371 +1,104 @@
-# Roland S-760 Digital Sampler — MAME Emulator Driver
+# Roland S-760 native emulator
 
-> **Current status (2026-10-10):** Native MAME boots the original OS and has hardware-validated playback work. The new **[standalone development player](docs/STANDALONE_PLAYER.md)** displays live MAME CRT/LCD pixels in React/WebView2, with firmware mouse/panel controls, floppy loading and MIDI audition. The [exported VST3 factory](docs/NATIVE_PLUGIN_SELECTION.md) now selects native MAME exclusively and passes module boot/load/display/audio tests; native input, broader DAW acceptance and several standalone workflows remain unfinished; historical coverage tables below do not establish end-to-end product readiness. The standalone now exposes [firmware readiness and UI recovery](docs/NATIVE_FIRMWARE_STATUS.md), including native-child restart, and [saved-session recovery](docs/NATIVE_SESSIONS.md). Follow the **[completion roadmap](docs/COMPLETION_ROADMAP.md)** for remaining work and acceptance gates, and the [native runbook](docs/condensed/11-native-boot-and-audio-runbook.md) for the tested checkpoint.
+An open-source Roland S-760 emulation project built around a modified MAME
+runtime, a Windows standalone player and a native VST3 instrument. The original
+firmware handles the sampler's interface and workflows; React/WebView2 displays
+the live CRT/LCD frames and provides the rack controls.
 
-The [native rack media library](docs/NATIVE_MEDIA_LIBRARY.md) now supports configurable recursive folders and plugin-state recall of library, browse selection and inserted-media identity. SoundCheck loaded-sample audio and [persistent plugin setup](docs/NATIVE_PLUGIN_CONFIGURATION.md) are also qualified. Milestone 2 is complete for the qualified Windows development profile: [Value/Output controls](docs/NATIVE_RACK_CONTROLS.md) now pass native and SoundCheck acceptance. Standalone [Input Level](docs/NATIVE_RACK_CONTROLS.md) now passes native recording and session-recall acceptance; VST host input routing, physical capture-device selection, packaged release and broader DAW qualification remain open.
+![Native standalone with original firmware and optional keyboard](docs/images/standalone-keyboard.png)
 
-[![MAME Driver](https://img.shields.io/badge/MAME-Driver-0078D7.svg)](https://www.mamedev.org/)
-[Runtime qualification and distribution status](docs/NATIVE_BOUNDARY_QUALIFICATION.md)
-[Milestone 4 SDK and SoundCheck scan/load qualification](docs/condensed/validation/milestone-4-sdk-host-2026-10-12.json) passes for the current Windows x64 instrument.
-[Milestone 4 processing and lifecycle qualification](docs/condensed/validation/milestone-4-processing-lifecycle-2026-10-12.json) now also covers all three supported rates with varying blocks, exact native reference audio, two independent SoundCheck instances, editor resize/reopen and clean removal/exit. Remaining MIDI controllers, project portability and host sampling-input qualification remain open; graphical setup is delivered below.
-[Native VST3 MIDI controller transport](docs/NATIVE_VST3_MIDI.md) now delivers host controller queues to original firmware. SoundCheck verifies volume, sustain and All Notes Off through measured audio; configured bend and broader controller/reset acceptance remain open.
-[Native VST3 rendering](docs/NATIVE_VST3_RENDERING.md) now supports unpaced offline bounce. SoundCheck offline PCM exactly matches realtime playback with held-note suspend/resume; latency and infinite-tail reporting are qualified for the documented native QA profile. Host sampling input remains open.
-[Plugin configuration](docs/NATIVE_VST3_CONFIGURATION.md) now saves firmware/media paths in the editor and shows startup errors with a silent recovery state. Correct settings and reload through the host; audio and MIDI devices remain host-controlled. DAW project portability remains open.
-[Qualified Windows standalone distribution and source delivery](docs/DISTRIBUTION_QUALIFICATION.md)
+## Current status
 
-**[Milestone 1 complete](docs/MILESTONE_1_COMPLETION.md):** standalone and the exported module share native execution, display/MIDI/audio and bounded state. Configuration/editor, sampling and actual DAW acceptance remain open in Milestones 2–4.
-[![Tests](https://img.shields.io/badge/Tests-127%20Passing-brightgreen.svg)](tests/)
-[![DAW Plugin](https://img.shields.io/badge/DAW-VST3%20%2F%20VST2%20%2F%20CLAP%20(Instrument%20%26%20FX)-blueviolet.svg)](#daw-plugins-vst3-vst2--clap--libretro-mame-host)
-[![Architecture](https://img.shields.io/badge/CPU-MCS--96%20%2F%2080C196-orange.svg)](#hardware-architecture)
-[![OS Test Matrix](https://img.shields.io/badge/OS%20Code%20Coverage-100%25%20Verified-success.svg)](docs/OS_EXHAUSTIVE_CODE_MATRIX.md)
-[![UI Elements Matrix](https://img.shields.io/badge/UI%20Elements%20Coverage-100%25%20Tested-blue.svg)](docs/UI_TEST_COVERAGE_MATRIX.md)
-[![Manual Coverage](https://img.shields.io/badge/Manual%20Functions-100%25%20Verified-orange.svg)](docs/MANUAL_FUNCTION_TEST_COVERAGE.md)
+As of **2026-10-14**, Milestones 1–4 are complete for their documented Windows
+development profiles. **SoundCheck is the automated DAW/host acceptance framework.**
+Hardware coverage and final release qualification remain open in
+[Milestones 5 and 6](docs/COMPLETION_ROADMAP.md). This is a development project;
+passing model or native-runtime tests does not establish complete hardware parity.
 
-An open-source hardware emulation driver and DAW instrument & effect plugin for the legendary **Roland S-760 16-Bit Digital Sampler** (1993) under the **MAME / Libretro** framework. This project accurately reproduces the S-760's internal architecture, full dual-display subsystem (Color CRT & Front LCD), memory-mapped gate array registers, multi-mode sampling interface, live audio track recording into wave RAM, folder-backed Gotek/ZuluSCSI drive image persistence, and native sample playback from both Roland S-7xx sound disks and converted Akai S1000 CD-ROM ISO volumes.
+| Product | Qualified scope |
+| --- | --- |
+| Windows standalone | Original-firmware boot, live displays/controls, floppy load/save/export, MIDI playing, session recovery and supported 44.1 kHz MME/ASIO stereo sampling |
+| Native VST3 instrument | SoundCheck SDK discovery, MIDI/controller effects, stereo output, offline rendering, optional 44.1 kHz input and same-build project save/cold reopen |
+| GB-6 OS experiment | Reproducible mouse-decoder patches for user-supplied OS 2.24; v8 vertical movement user-confirmed, balanced v9 hardware acceptance pending |
 
-The **canonical user interface is the React app in [`google-ui/`](google-ui/)** — it owns the entire device shell and composites the three authentic emulated display surfaces (CRT, LCD, Gotek OLED). The emulation backend emits only those real display buffers and never draws UI chrome.
+Native plugin output processing is tested at 44.1/48/96 kHz. Input and project
+profiles have narrower documented limits. Cross-build/rate/negotiated-maximum
+project migration is unsupported; incompatible recall rejects explicitly. Raw
+CC120/121 are unsupported by the qualified firmware profile; documented message
+sequences provide panic/reset. Live Sampler FX is unadvertised; VST2/CLAP and the
+historical core are diagnostic paths rather than qualified native products.
 
-> 📚 **Test Coverage & Architectural Documentation:**
-> - [**Roland RFSC16A VDP & Display Subsystem Architecture**](docs/ROLAND_RFSC16A_VDP_AND_DISPLAY_ARCHITECTURE.md) — *Authoritative technical specification of the RFSC16A VDP ASIC, 128KB TC511664 VRAM layout, Sony CXA1145M RGB DAC palette, Epson SED1335 LCD, and dual-pipeline rendering engine.*
-> - [**LLE Roadmap & Hardware Fidelity Assessment**](docs/LLE_ROADMAP_AND_FIDELITY_ASSESSMENT.md) — *Detailed fidelity matrix, HLE vs. LLE terminology standards, and the 4-step roadmap to native OS boot and DSP ASIC modeling.*
-> - [**Roland S-760 OS v2.24 Exhaustive Code & Routine Matrix**](docs/OS_EXHAUSTIVE_CODE_MATRIX.md) — *100% mapping of all 81 ROM routines, vector tables, DSP algorithms, SCSI/FDD drivers, and 14,158 string tokens.*
-> - [**Comprehensive UI Elements & Automated Test Coverage Matrix**](docs/UI_TEST_COVERAGE_MATRIX.md) — *Exhaustive mapping of all 122+ interactive UI components, 37 screen layouts, 88-key piano roll, knobs, meters, and modal dialogs.*
-> - [**Owner's Manual Function Breakdown & UI Test Matrix**](docs/MANUAL_FUNCTION_TEST_COVERAGE.md) — *100% mapping of all 70 user procedures across Chapters 1–8 of the official Owner's Manual (`S-760_OM.pdf`).*
-> - [**Next-Gen S-760 OS Roadmap & Feasibility Analysis**](docs/NEXTGEN_OS_FEATURES_AND_FEASIBILITY.md) — *Modern feature roadmap inspired by 35 years of sampler innovation (MPC Beat Chopping, Direct WAV Import, Transwave Scrubbing, Super-Unison, 8-Stage MSEGs, and Real-Time MIDI CC Automation).*
+## Start here
 
----
+1. Supply your own boot ROM and OS disk using [firmware setup](docs/FIRMWARE_SETUP.md).
+   Firmware, sample libraries, patched OS images and hardware captures are excluded
+   from the repository and packages.
+2. Follow the [standalone guide](docs/STANDALONE_PLAYER.md) or
+   [VST3 configuration guide](docs/NATIVE_PLUGIN_CONFIGURATION.md).
+3. Use Configuration for firmware/media paths, MIDI and audio devices in standalone.
+   In VST3, the host supplies audio/MIDI. Audio input and the on-screen keyboard
+   are opt-in.
 
-## User Interface
+With a current native MAME build and Node/Python dependencies installed:
 
-![Native standalone with original firmware, loaded ROBOFULL disk and optional on-screen keyboard](docs/images/standalone-keyboard.png)
-
-The Windows standalone has a gear button for **Configuration** for MIDI selection, audio
-output/backend/buffer settings, recording-device selection and firmware/media paths. Its on-screen keyboard
-is hidden by default; enable **Show on-screen keyboard** in Configuration.
-**ASIO** is available with driver, stereo input/output pair and buffer-size selection
-for the supported 44.1 kHz profile.
-The standalone shares the VST rack and CRT housing. Select images with the Gotek
-controls; session, recovery and export actions are in **Configuration**. The screenshot shows live native firmware.
-The VST editor receives MIDI and audio from its host. Physical stereo input now
-records through firmware Sampling and survives Save/fresh Load exactly in the
-supported 44.1 kHz profile. Physical MIDI loopback playing and note release also pass;
-five-minute ASIO playback, normal stream reopening and selected Windows output conversion now pass for the documented profiles.
-The remaining Milestone 3 production ADC objective is tracked in the
-[completion roadmap](docs/COMPLETION_ROADMAP.md).
-
-An opt-in [offline native sampling profile](docs/NATIVE_SAMPLING.md) now records
-known stereo PCM through firmware Sampling and preserves both samples through
-Save and a fresh Load. Standalone Input Level is qualified at unity, half gain and mute, including cold
-session recall. Physical Windows MME and ASIO sampling are qualified for the
-documented profiles; broader production ADC/rate qualification remains open.
-Audio input is disabled by default.
-
-The **canonical S-760 user interface is the React application in [`google-ui/`](google-ui/)**. It owns 100% of the device shell/chrome — the 1U rack chassis, the OP-760 CRT bezel, the 160×64 front-panel LCD housing, hardware dials, and the Gotek drive bay — and composites the three authentic emulated display surfaces inside it:
-
-- **OP-760 Color CRT** (Roland RFSC16A VDP output)
-- **Front-panel LCD** (Epson SED1335 160×64 monochrome)
-- **Gotek OLED** readout (128×32)
-
-The emulation backend (the C++ Core / libretro host now, MAME later) renders only those authentic display buffers — it does **not** draw any UI chrome. See the [UI Consolidation plan](docs/UI_CONSOLIDATION_PLAN.md) and the [UI Elements & Test Coverage Matrix](docs/UI_TEST_COVERAGE_MATRIX.md) for the component-by-component breakdown.
-
-> ⚠️ **Note:** `Main.png` is an older MAME-driver debug render of hand-drawn chrome; it is **not** the product UI and does not represent the canonical React interface. It is retained only as a historical reference.
-
----
-
-## Architectural Pillars & Subsystem Implementation
-
-| Pillar | Subsystem | Description & Implementation Level |
-| :--- | :--- | :--- |
-| **Pillar 1** | **OP-760 Video Board** | **RFSC16A-compatible MMIO/VRAM model with HLE display rendering**, 128KB TC511664 VRAM port access, and 10-pen RGB DAC palette rendering. |
-| **Pillar 2** | **Front Panel LCD** | **Epson SED1335 160×64 monochrome LCD display model** with page summaries, status readouts, and contrast calibration. |
-| **Pillar 3** | **MCS-96 CPU & MMIO** | **Intel 80C196KB / MCS-96 microcontroller core**, Gate Array MMIO decoding, interrupt handling, and 32MB sample SIMM address space. |
-| **Pillar 4** | **Mouse & Controllers** | **Roland MU-1 serial mouse and RC-100 remote controller interface** with delta tracking and front-panel tactile button dispatch. |
-| **Audio** | **Sound Engine & Filters** | **32-voice S-760-compatible PCM playback and filter model** with 4-pole 24dB resonant TVF curves, 4-point envelopes, and multi-waveform LFO. |
-| **Disk & Media** | **Roland & Akai Converter** | **Binary parser for native Roland S-760/S-770 sound disks** (`.IMG`, `.SDK`), legacy S-550/W-30 translation, and automatic Akai S1000 CD-ROM ISO extraction. |
-
----
-
-## ROM & Media Organization (`System`, `FDD`, `SCSI`)
-
-**Bring your own firmware:** follow [firmware setup and distribution policy](docs/FIRMWARE_SETUP.md)
-for exact files, sizes, hashes and path overrides. Roland firmware, system disks
-and third-party sample libraries are excluded from this repository and future
-packages. Independently authored, working replacements may be included once
-their provenance and licensing are established.
-
-To keep disk images cleanly segregated without moving files, the emulator uses a **3-folder layout** inside `roms/` matching real hardware setups (e.g. Gotek floppy emulators and BlueSCSI / ZuluSCSI devices):
-
-```
-roms/
-├── System/         # Dedicated folder for boot OS images (S760224.IMG)
-├── FDD/            # Roland floppy sound disk images (.img, .sdk - e.g. L701_1.IMG, waves760.sdk)
-└── SCSI/           # SCSI hard disk images and CD-ROM ISOs (BlueSCSI & ZuluSCSI format)
-```
-
-### Folder Roles & Formats:
-1. **`roms/System/`**:
-   - Contains the OS system disk image used to boot the emulator (**`S760224.IMG`**).
-   - Keeps the core boot payload dedicated and isolated from sample libraries.
-2. **`roms/FDD/`**:
-   - Stores Roland 1.44M HD (`SYS-772`) and 720K DD floppy sound disks (`.img`, `.sdk`, `.dsk`).
-   - Automatically extracted into voice memory and displayed on the `DISK` screen as `CD[FDD: -FloppyDisk-]`.
-3. **`roms/SCSI/`**:
-   - Implements authentic **BlueSCSI & ZuluSCSI file naming conventions**:
-     - **CD-ROM Drives (SCSI ID 1-6)**: `CD1.iso`, `CD10_2048.iso`, `CD20_2048_RolandVol.iso`, `akai.iso`, `sound.iso` (Rendered on `DISK` screen as `CD[SCSI: 1 CD-ROM  ]`)
-     - **Hard Disk Drives (SCSI ID 0-6)**: `HD0.img`, `HD00_512.img`, `HD10_512.img`, `HD20_512.img`, `HD0.hda` (Rendered on `DISK` screen as `CD[SCSI: 0 HardDisk ]`)
-     - **Magneto-Optical / Removable (SCSI ID 3-4)**: `MO40_512.img`, `RM40_512.img`
-   - Real Akai S1000 / S1100 CD-ROM volumes placed here are automatically decoded and converted.
-   - Connected SCSI targets are dynamically populated in the `SYSTEM -> SCSI` bus scan table.
-
-> To generate test Roland SCSI Hard Disk (`HD00_512.img`) and Akai SCSI CD-ROM (`CD10_2048.iso`) images:
-> ```powershell
-> python scripts/build_scsi_images.py
-> ```
-> Or to download a real Akai S1000 CD-ROM image directly to `roms/SCSI/`:
-> ```powershell
-> python scripts/download_real_akai_iso.py
-> ```
-
-## OS & Hardware Verification Matrix
-
-All primary modes, sub-pages, synthesis blocks, and hardware peripherals are audited and tested. For the complete granular breakdown, see **[`docs/TESTING.md`](file:///d:/S-760/docs/TESTING.md)**.
-
-| Subsystem / Mode | Status | Automated Test Coverage & Verification Scope |
-| :--- | :---: | :--- |
-| **`PERFORM` Mode** | ✅ Tested | 32-part matrix, MIDI channels (1-16), Part levels/pans, Output routing (1-8), EQ parameters. |
-| **`PATCH` Mode** | ✅ Tested | 128 patch catalog, split ranges (C-1 to G9), Coarse/Fine tuning, velocity switching & crossfading. |
-| **`PARTIAL` Mode** | ✅ Tested | SMT 1-6 algorithms, 4-pole resonant TVF filter, TVA volume envelopes, LFO 1/2 modulation. |
-| **`SAMPLE` Mode & DSP** | ✅ Tested | 14 DSP tools: crossfading, SOLA time-stretch, digital filter, sample rate convert, bit depth reduction, normalize, truncate, wave edit. |
-| **`DISK` & Media** | ✅ Tested | Roland 1.44M & 720K disk reading, Akai S1000 ISO conversion, SCSI hard disk/CD-ROM mounting, defragmentation, MS-DOS FAT12 sample exchange. |
-| **`SYSTEM` & Peripherals** | ✅ Tested | 640x240 RGB CRT (OP-760), 160x64 LCD, SIMM wave RAM diagnostic, Roland MU-1 mouse, ZuluSCSI/Gotek drive manager, MIDI SDS sample dump. |
-| **DAW Plugins** | ✅ Tested | VST3, VST2, and CLAP Instrument & Live Sampler FX, real-time audio input sampling, threshold triggers, and project state recall. |
-
-👉 **[View Full OS & Hardware Verification Matrix + Untested Manual Feature Audit in `docs/TESTING.md`](file:///d:/S-760/docs/TESTING.md)**
-
----
-
-## Modes & Pages Implemented
-
-The canonical React UI (`google-ui/`) renders and interactively switches between all primary Roland S-760 operating modes:
-
-1. **`PERFORM` (Performance Play)**: Multi-part performance matrix with MIDI channels, patch assignments, output bus routing (1-2 / 3-4), and volume/pan sliders.
-2. **`PATCH` (Patch Edit)**: Patch assignment matrix, key split ranges, tuning offsets, and velocity curves.
-3. **`PARTIAL` (Partial Edit)**: Time-Variant Filter (TVF cutoff & resonance), Time-Variant Amplifier (TVA), and envelope generators.
-4. **`SAMPLE` (Sample & Waveform Edit)**: Real-time waveform display, loop points (Start/Loop/End), loop modes, and fine tune.
-5. **`DISK` (Disk & Volume Management)**: Floppy disk volume loader (`[GE Pach] Art 1 CD[FDD: -FloppyDisk-]`), sound library catalog, and convert tools.
-6. **`SYSTEM` (System Setup)**: SCSI host ID (`ID: 7`), Boot drive selection, Controller selection, Master tune (`440.0 Hz`), Output levels (`+4 dBu Balanced`), and 32MB Wave memory diagnostic.
-
----
-
-## Important Notice: System Disk / ROMs Not Included
-
-> [!IMPORTANT]
-> **This repository contains strictly open-source driver source code.**
-> It **DOES NOT** distribute any proprietary Roland operating system disks (`S760224.IMG`), copyrighted firmware ROMs, or commercial factory sample sound libraries.
-
-Users must provide their own legally acquired system disk:
-1. Place your system disk image at `roms/System/S760224.IMG` (or inside `roms/s760/System/S760224.IMG`).
-
----
-
----
-
-## DAW Plugins (VST3, VST2 & CLAP — Instrument & FX) & Libretro MAME Host
-
-The project includes a self-contained, zero-dependency C++17 core (`libs760_core`), dynamic Libretro host wrapper, and native DAW instrument and audio effect plugins (**VST3**, **VST2**, and **CLAP**):
-
-```mermaid
-flowchart LR
-    DAW["DAW Track / Bus (Ableton, Cubase, Studio One, FL Studio, Reaper, Bitwig)"]
-    
-    subgraph Plugins ["DAW Instrument & Audio Effect Plugins"]
-        VST3["Roland_S760.vst3 (VST3 Instrument & FX / IComponent)"]
-        VST2_Inst["Roland_S760.dll (VST2 Instrument)"]
-        VST2_FX["Roland_S760_FX.dll (VST2 Live Sampler FX)"]
-        CLAP["Roland_S760.clap (CLAP Instrument & FX)"]
-    end
-
-    subgraph Host ["Libretro Host & Live Audio Sampling Engine"]
-        CoreLoader["S760LibretroHost (Dynamic Core Loader)"]
-        Recorder["S760SampleRecorder (Live Track Audio Capture)"]
-        AudioRing["Stereo Audio Ring Buffer"]
-    end
-
-    subgraph Drives ["Folder-Based Hardware Drive Manager"]
-        FDD["Gotek Floppy (FDD 0) .img"]
-        SCSI["ZuluSCSI / SCSI2SD (IDs 0..6) .hda / .iso"]
-    end
-
-    DAW -->|"Stereo Audio In (Live Track Feed)"| Plugins --> Recorder
-    DAW -->|"MIDI Notes / CC"| Plugins --> CoreLoader
-    Recorder -->|"Recorded Samples / Wave RAM"| CoreLoader
-    CoreLoader --> AudioRing -->|"Stereo Float Out / Monitor"| DAW
-    DAW <-->|"Session Recall (IBStream / effGetChunk / state)"| Plugins <--> CoreLoader
-    CoreLoader <--> Drives
-```
-
-### Features:
-- **`Roland_S760.vst3` (VST3 development module)**: Native MAME instrument selected through the exported factory. Explicit runtime/firmware configuration is required. Live-input FX, native ADC and complete project state are unavailable; actual SDK/DAW/editor acceptance remains open. See the [configuration and compatibility contract](docs/NATIVE_PLUGIN_SELECTION.md).
-- **`Roland_S760.dll` & `Roland_S760_FX.dll` (VST2 / `libretro_vst`)**: Dedicated VST2 instrument and live sampler effect binaries.
-- **`Roland_S760.clap` (CLAP)**: Universal open-standard plugin exporting both Instrument and FX descriptors with the `clap.audio-ports` stereo routing extension.
-- **Live Audio Sampling into Sampler**: Feed audio directly from any DAW track, mic, synthesizer, or bus into the S-760 sampler. Supports:
-  - **Threshold Auto-Trigger**: Automatically begins recording when input amplitude crosses a dB threshold (e.g. -36 dB), with pre-trigger transient buffer capture.
-  - **MIDI Note-On Trigger**: Automatically synchronizes sample recording start with incoming MIDI note triggers.
-  - **Real-Time Resampling & Normalization**: Immediate sample rate conversion (48k, 44.1k, 32k, 22.05k), peak normalization, and silence auto-truncation.
-- **Hardware-Accurate Folder Persistence**: Mounts `.img`, `.hda`, and `.iso` files directly from disk folders. OS writes (Save System, Save Patch, Save Volume) flush straight back to the file on disk, making images 100% swappable with physical Gotek USB sticks and ZuluSCSI SD cards on real Roland S-760 hardware.
-- **Full DAW Project Recall**: Project state serialization (`IBStream` / `effGetChunk` / `effSetChunk` / `clap_plugin_state`) saves and restores emulator Wave RAM and mounted drive configurations instantly.
-- **Python Extension (`s760_cpp`)**: High-performance `pybind11` C++ bindings for batch conversion, live audio streaming, and automated testing.
-
----
-
-## Building from Source
-
-### Prerequisites
-- **Compiler**: Visual Studio 2022 (MSVC v143+ with C++ Desktop tools) or Clang/GCC on Windows/Linux.
-- **CMake**: CMake 3.15+ (for building the C++ Core, Python bindings, and VST/CLAP plugins).
-- **Python**: Python 3.10+ (used by test suites and Python bindings).
-- **Dependencies**: `pip install pytest pybind11 Pillow`
-
-### 1. Compiling C++ Core, VST Plugins (Instrument + FX), CLAP Plugin & Python Bindings (CMake)
 ```powershell
-# Configure CMake project
+python -m pip install -r scripts/requirements-standalone.txt
+npm --prefix google-ui ci
+npm --prefix google-ui run build
+python scripts/s760_standalone.py
+```
+
+The desktop player requires Windows WebView2 Runtime. It does not download
+firmware. See the guide for explicit paths, startup recovery and browser mode.
+
+## Build and test
+
+The qualified development environment is Windows x64 with Visual Studio 2022 C++
+tools, CMake, Python and Node. The native MAME executable is built separately
+from the CMake host/plugins; see the [native build/runbook](docs/condensed/11-native-boot-and-audio-runbook.md).
+
+```powershell
 cmake -B build -S core -G "Visual Studio 17 2022" -A x64
-
-# Build Release binaries (s760_core.lib, Roland_S760.vst3, Roland_S760.dll, Roland_S760_FX.dll, Roland_S760.clap, s760_cpp.pyd)
 cmake --build build --config Release
-
-# Run Core and Plugin test suites
 .\build\Release\s760_core_tests.exe
 .\build\Release\s760_plugin_tests.exe
+python -m pytest tests
 ```
 
-### 2. Compiling Standalone MAME Driver (Visual Studio 2022 / MSBuild)
-```powershell
-# Build driver library
-& "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" `
-  "mame-source\build\projects\windows\mames760\vs2022\mame_s760.vcxproj" /p:Configuration=Release /p:Platform=x64 /m
+Some tests require local firmware, native artifacts or optional dependencies;
+skips are reported separately. SoundCheck qualification uses actual native SDK
+processing and measured PCM. See [SoundCheck projects](docs/SOUNDCHECK_PROJECTS.md),
+[controller tests](docs/NATIVE_VST3_MIDI.md), [rendering](docs/NATIVE_VST3_RENDERING.md)
+and [host sampling](docs/NATIVE_VST3_SAMPLING.md) for commands, identities and limits.
 
-# Build standalone MAME executable
-& "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" `
-  "mame-source\build\projects\windows\mames760\vs2022\mames760.vcxproj" /p:Configuration=Release /p:Platform=x64 /m
-```
+## GB-6 patching
 
----
+The [GB-6 patch guide](docs/GB6_OS_PATCH.md) explains how to reproduce v8/v9 from
+an original, user-owned OS 2.24. The standard-library Python patcher verifies both
+input and output hashes and refuses to overwrite files. Only patch source,
+tests and instructions are versioned; generated images remain local.
 
-## Running the Emulator
+These experiments replace the Mouse+CRT decoder. A combined mouse/RC-100/GB-6
+selection and boot-ROM changes remain deferred in the [controller plan](GB6_CONTROLLER_PLAN.md).
 
-Launch the interactive emulator using the provided batch script:
-```powershell
-.\run_s760_mame.bat
-```
+## Documentation
 
-Or run directly via command line:
-```powershell
-.\mames760.exe s760 -rompath "roms;roms/System;roms/s760" -window -nomaximize -resolution 1280x480
-```
+- [Completion roadmap](docs/COMPLETION_ROADMAP.md): completed gates and remaining work.
+- [Condensed technical references](docs/condensed/README.md): hardware, firmware and evidence.
+- [Media library](docs/NATIVE_MEDIA_LIBRARY.md) and [sessions/recovery](docs/NATIVE_SESSIONS.md).
+- [Sampling](docs/NATIVE_SAMPLING.md), [rack controls](docs/NATIVE_RACK_CONTROLS.md)
+  and [plugin state](docs/NATIVE_PLUGIN_STATE.md).
+- [Bug backlog](docs/BUG_BACKLOG.md): known defects, including intermittent controller-QA rejection BUG-060.
+- [Distribution qualification](docs/DISTRIBUTION_QUALIFICATION.md): exact dated standalone artifact review;
+  final packages and clean-machine release acceptance remain open.
 
-### Controls & Navigation
+`mame-source/` contains the native engine, `core/` the C++ host/plugins,
+`google-ui/` the shared interface and `scripts/` the runtime and verification tools.
+Historical coverage catalogs are inventories, not claims of complete product acceptance.
 
-Interaction is driven through the canonical React UI (`google-ui/`), which owns the pointer and front-panel input and forwards events to the backend:
+## License and attribution
 
-- **Mouse Movement**: Moves the pointer over the React shell (CRT bezel, front panel, Gotek bay).
-- **Mouse Left Click / Button 1**: Select active mode tab or toggle parameter.
-- **Keyboard Arrow Keys (`Up` / `Down` / `Left` / `Right`)**: Step the active cursor / selection.
-- **Enter / Spacebar**: Confirm selection / trigger action.
-
----
-
-## Automated Test Harness
-
-The project includes automated Python test suites and C++ test runners verifying invariant properties, byte-for-byte disk parity, offline DSP algorithms, and VST/CLAP plugin lifecycle.
-
-### Running Tests
-```powershell
-pytest tests -v
-```
-
-### Test Suite Summary (50 / 50 Passing)
-- `tests/test_cpp_parity.py`: Verifies 100% bit-for-bit parity between C++ (`libs760_core`) and Python reference models for Roland floppy images, Akai ISOs, DSP crossfading, ZuluSCSI drive persistence, Libretro host lifecycle, and Live Sample Recorder.
-- `tests/test_dsp_tools.py`: Verifies all 10 Roland S-760 Owner's Manual DSP algorithms (crossfade looping, SOLA time-stretch, bi-quad filter, sample rate converter, bit reduction, auto-truncate/normalize, destructive wave edit, disk defragmentation, MS-DOS FAT12, MIDI SDS).
-- `tests/test_disk_conversion.py`: Verifies `roms/System/`, `roms/FDD/`, and `roms/SCSI/` folder structure, BlueSCSI & ZuluSCSI file naming conventions, Roland S-760 `.IMG` disk reading, and Akai S1000 ISO conversion.
-- `tests/test_image_invariants.py`: Verifies Roland OS palette bounds, resolution constraints, and text layout invariants.
-- `tests/test_interactive_ui.py`: Automates the complete Roland Owner's Manual multi-mode workflow (`DISK` → `PERFORM` → `SAMPLE` → `SYSTEM`), asserting active tab boxes and parameter highlights.
-- `tests/test_mame_invariants.py`: Verifies C++ driver registration, device maps, and compilation consistency.
-
-👉 **[View Complete Test Details & Manual Function Audit in `docs/TESTING.md`](file:///d:/S-760/docs/TESTING.md)**
-
----
-
-## Repository Structure
-
-```
-d:/S-760/
-├── Main.png                                # Legacy MAME-chrome debug render (NOT the product UI; see google-ui/)
-├── google-ui/                              # Canonical React UI (device shell + display compositing)
-├── README.md                               # Project documentation & guide
-├── .gitignore                              # Git exclusion rules (ROMs, binaries, snaps, disk images)
-├── run_s760_mame.bat                       # Interactive launch script
-├── core/                                   # High-performance C++ Core & DAW Plugins
-│   ├── CMakeLists.txt                      # CMake build definition (MSVC / Clang)
-│   ├── include/s760/                       # Public C++ headers
-│   │   ├── s760_disk.hpp                   # Roland S-760 1.44M & SCSI disk generator/parser
-│   │   ├── akai_disk.hpp                   # Akai S1000 ISO parser & Roland converter
-│   │   ├── s760_dsp.hpp                    # Offline DSP engine (crossfade, SOLA, bi-quad filter)
-│   │   ├── s760_recorder.hpp               # Live audio sampling recorder (threshold/MIDI trigger)
-│   │   ├── s760_drive_manager.hpp          # Folder-backed ZuluSCSI / Gotek drive manager
-│   │   ├── s760_libretro_host.hpp          # Dynamic Libretro MAME host bridge
-│   │   ├── s760_vst3_plugin.hpp            # Steinberg VST3 instrument & FX plugin
-│   │   ├── s760_vst_plugin.hpp             # VST2 / libretro_vst instrument & FX plugin
-│   │   ├── s760_clap_plugin.hpp            # CLAP instrument & FX plugin
-│   │   ├── vst3_defs.h                     # VST3 C-ABI / COM interface definitions
-│   │   ├── vst_defs.h                      # VST2 C-ABI definitions
-│   │   ├── clap_defs.h                     # CLAP C-ABI definitions
-│   │   └── libretro.h                      # Libretro core specification header
-│   ├── src/                                # C++ source implementations
-│   └── tests/                              # C++ unit test runners & mock libretro core
-├── roms/                                   # Dedicated ROM & Media directories (.gitkeep tracked)
-│   ├── System/                             # System OS boot disk images (S760224.IMG)
-│   ├── FDD/                                # Roland floppy sound disk images (.img, .sdk)
-│   └── SCSI/                               # BlueSCSI/ZuluSCSI HDD images & ISOs (akai.iso, CD1.iso)
-├── scripts/                                # Utility and helper scripts
-│   ├── build_s760_disk.py                  # Standalone sound disk generator
-│   └── download_real_akai_iso.py           # Akai S1000 CD-ROM test downloader
-├── mame-source/                            # MAME source tree
-│   ├── src/mame/roland/s760.cpp            # S-760 MAME driver implementation
-│   ├── scripts/target/mame/s760.lua        # Target driver build configuration
-│   └── snap/s760/                          # Emulator screenshot output
-├── docs/                                   # Hardware architecture & technical specifications
-│   ├── images/Main.png                     # Documentation image assets
-│   ├── mame/src/mame/roland/s760.cpp       # Synchronized reference source
-│   └── reference/                          # S-760 service manual & schematic notes
-└── tests/                                  # Automated Python & Lua test suite
-    ├── mame_harness.py                     # Headless MAME runner & screenshot analyzer
-    ├── test_cpp_parity.py                  # C++ vs Python 100% byte parity test suite
-    ├── test_dsp_tools.py                   # 10 DSP Owner's Manual algorithm tests
-    ├── test_disk_conversion.py             # Roland & Akai disk conversion + BlueSCSI tests
-    ├── test_interactive_ui.py              # Interactive UI & manual workflow tests
-    ├── test_image_invariants.py            # Color palette & layout invariant tests
-    └── test_mame_invariants.py             # MAME driver registration tests
-```
-
----
-
-## Trademark & Non-Affiliation Disclaimer
-
-*Roland*, *S-760*, *OP-760*, and *RC-100* are registered trademarks of **Roland Corporation**. *Akai* and *S1000* are registered trademarks of **Akai Professional / inMusic Brands**. *BlueSCSI* and *ZuluSCSI* are open hardware / SCSI emulation projects.
-
-This project is an independent, non-commercial open-source hardware emulation and research endeavor. It is **not** affiliated with, endorsed by, sponsored by, or associated with Roland Corporation or Akai Professional.
-
----
-
-## License
-
-Original project-owned code is available under [BSD-3-Clause](LICENSE), permitting
-broad reuse with the required notices. Third-party files retain their existing
-licenses; this does not relicense the complete MAME engine as BSD.
-
-The software is provided **as is**, without warranty. Emulation is a development
-tool, not a guarantee that experimental firmware is safe on physical hardware.
-See [license scope and hardware-use guidance](docs/LICENSING.md). Roland binaries
-are excluded. Public executable release qualification remains open; see the
-[source/package audit](docs/NATIVE_BOUNDARY_QUALIFICATION.md).
+Project-owned code is [BSD-3-Clause](LICENSE); MAME and other dependencies retain
+their respective licenses and notices. See the distribution review before packaging.
+Roland and other product names belong to their owners. This independent project
+is not affiliated with or endorsed by Roland Corporation.

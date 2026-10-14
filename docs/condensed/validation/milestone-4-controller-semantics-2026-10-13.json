@@ -1,0 +1,523 @@
+{
+  "date": "2026-10-13",
+  "gate": "Milestone4 original-firmware controller effects and explicit panic/reset qualification",
+  "status": "complete for documented Windows native QA profile",
+  "source_revision": "d6264da54caa89b09fcd894ce7d9dba322df856e",
+  "working_tree_change": "core/src/s760_native_runtime.cpp explicitly enables existing native stereo coefficient path; no MAME/firmware DSP algorithm change",
+  "sha256": {
+    "core/src/s760_native_runtime.cpp": "37cd94b429a701b81d8a88b5cb0067602d742350b836e1da1be247605b49395e",
+    "scripts/verify_vst3_controllers.py": "92a7a553b52326caa775fa02f276ad15d619ee2626e8d6959e1a5a1dbe7f5ef0",
+    "scripts/s760_runtime.lua": "5ee465c4e011217c7d635df28f820285e36b1ab126711745acba2859b6ec52d1",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "build/Release/Roland_S760.vst3": "9002c3d8c2c8810f1df4c999af456b1893ae34b0e45a5728b3cd19a51551a7ee",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "21d0ee86732f17e0cd48eeca14c8aa3d7320935f3341f40bbd01e25e45a05c5a",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "8a1d7353921710830ac919a847f0df4164f93839126c2b111ca0ed8086dea890",
+    "Manuals/S-760_MI.pdf": "4a63cae6d48256f4c800169d43b9a9939d807f8316cfed20ad9b808166380bcc",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "docs/condensed/validation/soundcheck-controller-qa-2026-10-13.patch": "b03f9894ce483917ad4dba8ee796bd9d9d615c44bccc878f324fb1edacef5bca"
+  },
+  "verifier_as_executed_sha256": "e9ee998dcead93d43bc091c1d23a09d533d9213d9daf456468eaa7c61a2b6367",
+  "postrun_volume_assertion": "Additional0.50..0.51 ratio check passed against saved rows; current reusable verifier includes it",
+  "primary_specification": {
+    "document": "Roland S-760 MIDI Implementation",
+    "version": "1.00",
+    "date": "1993-11-18",
+    "pages": [
+      1,
+      2,
+      3
+    ],
+    "observations": [
+      "CC7/10/64 and Modulation are documented with performance receive switches",
+      "Assignable control0..95 and RPN0/1 are documented",
+      "CC123\u2013127 provide notes-off behavior; damper-held notes wait for pedal release",
+      "CC120/121 are not listed and are observed ignored in this profile"
+    ]
+  },
+  "host": "SoundCheck1.0.0 Windows x64 private native Steinberg SDK host",
+  "profile": {
+    "rate": 44100,
+    "block_frames": 512,
+    "fixture": "Original IC15v1.11, OS2.24, ROBOFULL; firmware Ctrl Select11 then1, TVA Control+63, Bend Up/Down12",
+    "time_owner": "Host callbacks schedule bounded native worker blocks; native serial MIDI and MAME produce all PCM",
+    "event_order": "Pan precedes note in a separate block; ordered RPN messages use successive blocks"
+  },
+  "command": "python scripts/verify_vst3_controllers.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-controllers-final-180",
+  "result": {
+    "exit_code": 0,
+    "measured_cases": 55,
+    "metrics": {
+      "baseline": {
+        "peak": 0.0006031051743775606,
+        "rms": 0.00042645985377021134,
+        "frequency": 20004.0,
+        "left_peak": 0.0006031051743775606,
+        "right_peak": 0.0006031051743775606
+      },
+      "expression-full": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021734299138188362,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "expression-half": {
+        "peak": 0.008256100118160248,
+        "rms": 0.005837945733219385,
+        "frequency": 20004.0,
+        "left_peak": 0.008256100118160248,
+        "right_peak": 0.008256100118160248
+      },
+      "expression-zero": {
+        "peak": 0.0006031051743775606,
+        "rms": 0.0004264604358468205,
+        "frequency": 20004.0,
+        "left_peak": 0.0006031051743775606,
+        "right_peak": 0.0006031051743775606
+      },
+      "expression-restored": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021734271198511124,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "configured-bend-high": {
+        "peak": 0.01397621724754572,
+        "rms": 0.008360514417290688,
+        "frequency": 4108.0,
+        "left_peak": 0.01397621724754572,
+        "right_peak": 0.01397621724754572
+      },
+      "configured-bend-low": {
+        "peak": 0.013255426660180092,
+        "rms": 0.009372844360768795,
+        "frequency": 10002.0,
+        "left_peak": 0.013255426660180092,
+        "right_peak": 0.013255426660180092
+      },
+      "configured-bend-centre": {
+        "peak": 0.030710523948073387,
+        "rms": 0.0217166505753994,
+        "frequency": 20004.0,
+        "left_peak": 0.030710523948073387,
+        "right_peak": 0.030710523948073387
+      },
+      "before-pan-left-release": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "pan-left": {
+        "peak": 0.02199944667518139,
+        "rms": 0.015554970130324364,
+        "frequency": 20004.0,
+        "left_peak": 0.04399889335036278,
+        "right_peak": 0.0
+      },
+      "before-pan-right-release": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "pan-right": {
+        "peak": 0.02199944667518139,
+        "rms": 0.015554970130324364,
+        "frequency": 20004.0,
+        "left_peak": 0.0,
+        "right_peak": 0.04399889335036278
+      },
+      "before-pan-centre-release": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "pan-centre": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021732885390520096,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "volume-half": {
+        "peak": 0.015487506054341793,
+        "rms": 0.010952036827802658,
+        "frequency": 20004.0,
+        "left_peak": 0.015487506054341793,
+        "right_peak": 0.015487506054341793
+      },
+      "volume-restored": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021732885390520096,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "rpn-two-semitones-up": {
+        "peak": 0.013933188281953335,
+        "rms": 0.008362438529729843,
+        "frequency": 21654.0,
+        "left_peak": 0.013933188281953335,
+        "right_peak": 0.013933188281953335
+      },
+      "rpn-two-semitones-down": {
+        "peak": 0.0268369410187006,
+        "rms": 0.018835091963410378,
+        "frequency": 17822.0,
+        "left_peak": 0.0268369410187006,
+        "right_peak": 0.0268369410187006
+      },
+      "rpn-centre": {
+        "peak": 0.030669620260596275,
+        "rms": 0.021685047075152397,
+        "frequency": 20004.0,
+        "left_peak": 0.030669620260596275,
+        "right_peak": 0.030669620260596275
+      },
+      "rpn-null-preserves-range": {
+        "peak": 0.013924754224717617,
+        "rms": 0.008362378925085068,
+        "frequency": 21654.0,
+        "left_peak": 0.013924754224717617,
+        "right_peak": 0.013924754224717617
+      },
+      "restored-centre": {
+        "peak": 0.030316274613142014,
+        "rms": 0.021434981375932693,
+        "frequency": 20004.0,
+        "left_peak": 0.030316274613142014,
+        "right_peak": 0.030316274613142014
+      },
+      "pedal-down": {
+        "peak": 0.030316274613142014,
+        "rms": 0.02143782377243042,
+        "frequency": 20004.8464752907,
+        "left_peak": 0.030316274613142014,
+        "right_peak": 0.030316274613142014
+      },
+      "sustain-held": {
+        "peak": 0.030316274613142014,
+        "rms": 0.021434981375932693,
+        "frequency": 20004.0,
+        "left_peak": 0.030316274613142014,
+        "right_peak": 0.030316274613142014
+      },
+      "cc120-unsupported": {
+        "peak": 0.030316274613142014,
+        "rms": 0.02143794111907482,
+        "frequency": 20004.0,
+        "left_peak": 0.030316274613142014,
+        "right_peak": 0.030316274613142014
+      },
+      "cc121-unsupported": {
+        "peak": 0.030316274613142014,
+        "rms": 0.021434981375932693,
+        "frequency": 20004.0,
+        "left_peak": 0.030316274613142014,
+        "right_peak": 0.030316274613142014
+      },
+      "other-channel-notes-off": {
+        "peak": 0.030316274613142014,
+        "rms": 0.02143794111907482,
+        "frequency": 20004.0,
+        "left_peak": 0.030316274613142014,
+        "right_peak": 0.030316274613142014
+      },
+      "native-panic": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "note-before-123": {
+        "peak": 0.0307368915528059,
+        "rms": 0.02154400758445263,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "released-by-123": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "note-before-124": {
+        "peak": 0.0307368915528059,
+        "rms": 0.02154400758445263,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "released-by-124": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "note-before-125": {
+        "peak": 0.0307368915528059,
+        "rms": 0.02154400758445263,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "released-by-125": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "note-before-126": {
+        "peak": 0.0307368915528059,
+        "rms": 0.02154400758445263,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "released-by-126": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "note-before-127": {
+        "peak": 0.0307368915528059,
+        "rms": 0.02154400758445263,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "released-by-127": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "reset-note": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021732885390520096,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "reset-pedal-down": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021735379472374916,
+        "frequency": 20004.8464752907,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "reset-held-note": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021732885390520096,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "reset-nondefault-controls": {
+        "peak": 0.0037431332748383284,
+        "rms": 0.002245265757665038,
+        "frequency": 21654.0,
+        "left_peak": 0.0037431332748383284,
+        "right_peak": 0.0037431332748383284
+      },
+      "explicit-reset-released": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "explicit-reset-fresh-note": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021732885390520096,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "panic-pedal-down": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021735379472374916,
+        "frequency": 20004.8464752907,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "panic-held-note": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021732885390520096,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "all-channel-panic": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "post-panic-note": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021732885390520096,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "final-release": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "assigned-modulation-full": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021735109388828278,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "assigned-modulation-half": {
+        "peak": 0.008256100118160248,
+        "rms": 0.005837728269398212,
+        "frequency": 20004.0,
+        "left_peak": 0.008256100118160248,
+        "right_peak": 0.008256100118160248
+      },
+      "assigned-modulation-zero": {
+        "peak": 0.0006031051743775606,
+        "rms": 0.00042647626833058894,
+        "frequency": 20004.0,
+        "left_peak": 0.0006031051743775606,
+        "right_peak": 0.0006031051743775606
+      },
+      "assigned-modulation-restored": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021733460947871208,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "modulation-test-release": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      },
+      "final-retrigger": {
+        "peak": 0.0307368915528059,
+        "rms": 0.021735109388828278,
+        "frequency": 20004.0,
+        "left_peak": 0.0307368915528059,
+        "right_peak": 0.0307368915528059
+      },
+      "final-all-channel-panic": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0,
+        "left_peak": 0.0,
+        "right_peak": 0.0
+      }
+    },
+    "pan_regression_before_fix": {
+      "module_sha256": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe",
+      "pan_left": {
+        "peak": 0.0440203882753849,
+        "rms": 0.03112659603357315,
+        "frequency": 20004.0,
+        "left_peak": 0.0440203882753849,
+        "right_peak": 0.0440203882753849
+      },
+      "pan_right": {
+        "peak": 0.0440203882753849,
+        "rms": 0.03112659603357315,
+        "frequency": 20004.0,
+        "left_peak": 0.0440203882753849,
+        "right_peak": 0.0440203882753849
+      },
+      "failing_assertion": "BUG-056: native pan is bypassed"
+    },
+    "panic_messages": 32,
+    "neutral_reset_messages": 64,
+    "supported_channels_sent": 16
+  },
+  "native_rate_regressions": {
+    "44100": {
+      "command": "build/Release/s760_native_factory_tests.exe . PRIVATE_STATE --controllers 44100 12",
+      "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=529200 rate=44100 reference_exact=1 peak=0.031098 tail=0 first_audible=13313 offline=0 reported_tail=4294967295 reported_latency=12288 paced=1 varied=1 max_callback_us=43.4 max_deadline_fraction=0.012495 missed_deadlines=0"
+    },
+    "48000": {
+      "command": "build/Release/s760_native_factory_tests.exe . PRIVATE_STATE --controllers 48000 12",
+      "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=576000 rate=48000 reference_exact=1 peak=0.031098 tail=0 first_audible=13857 offline=0 reported_tail=4294967295 reported_latency=13393 paced=1 varied=1 max_callback_us=925.4 max_deadline_fraction=0.69405 missed_deadlines=0"
+    },
+    "96000": {
+      "command": "build/Release/s760_native_factory_tests.exe . PRIVATE_STATE --controllers 96000 12",
+      "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=1152000 rate=96000 reference_exact=1 peak=0.0316243 tail=0 first_audible=28333 offline=0 reported_tail=4294967295 reported_latency=26785 paced=1 varied=1 max_callback_us=39.1 max_deadline_fraction=0.0408 missed_deadlines=0"
+    }
+  },
+  "state_regression": {
+    "command": "build/Release/s760_native_factory_tests.exe . PRIVATE_STATE --state 48000",
+    "result": "Native plugin state passed rate=48000 exact_frames=240000 pending_host_note=1 cold_active_note=1 repeated_recall=1 silent_tail=1 corrupt_rejected=1 failed_write_recoverable=1"
+  },
+  "checks": {
+    "default_build": "exit0",
+    "webview_build": "exit0",
+    "private_QA_host_build": "exit0",
+    "cpp_core_tests": "passed",
+    "cpp_plugin_tests": "passed",
+    "backend": "354 passed in41.67s",
+    "native_original_firmware_verifier": {
+      "native_boot_frames": true,
+      "long_mouse_jump": [
+        300,
+        120
+      ],
+      "midi_note": 60,
+      "held_peak_pcm16": 1459.0,
+      "release_tail_peak_pcm16": 0,
+      "sample_rate": 44100,
+      "note_start": 79.033333333333,
+      "note_release": 81.166666666667,
+      "process_shutdown": "clean",
+      "system_audio": {
+        "enabled": false,
+        "backend_requested": "auto",
+        "buffer_target_ms": 0,
+        "throttled": false,
+        "device_latency_measured": false
+      }
+    }
+  },
+  "prerequisites": [
+    "Windows x64, WebView-enabled current module and private SDK QA host rebuilt with accompanying patch",
+    "User-supplied original firmware and ROBOFULL",
+    "Python numpy/websockets/playwright; free loopback4000 and debug9231; new private state directory"
+  ],
+  "limitations": [
+    "Raw CC120/121 passthrough remains unsupported; explicit macros are the qualified reset/panic contract",
+    "Panic follows native firmware release envelopes, not instantaneous hard mute",
+    "Neutral macro resets only CC1/11/64/bend; it is not arbitrary firmware/EQ/tuning/program reset",
+    "The64-point reset must occupy an otherwise empty event block or be split",
+    "Assigned CC1 TVA gain is tested; LFO vibrato, aftertouch/program/SysEx mapping and hardware coefficient/gain/alias parity are not claimed",
+    "Audible host matrix is44.1kHz/512 in SoundCheck; native transport/reference regressions cover all3 supported host rates",
+    "Active-part/channel0 effects are measured; all16-channel macros are submitted, not16 simultaneously sounding parts",
+    "Older module snapshots intentionally reject; fresh same-build cold replay is qualified"
+  ],
+  "private_evidence": "docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-controllers-final-180"
+}

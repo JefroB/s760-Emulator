@@ -136,6 +136,29 @@ int main() {
         bool rejected=false;
         try { auto bad=std::make_unique<s760::NativeStream>(synth,saved); } catch(const std::invalid_argument&) { rejected=true; }
         check(rejected,"Inconsistent saved stream clock accepted");
+        s760::NativeStream::InputRenderer capture=[](const auto& b,const float* input,float* pcm) {
+            for(unsigned i=0;i<b.frames;++i) {
+                check(input[i*2]==float(b.first+i)/32768.f && input[i*2+1]==-float(b.first+i)/32768.f,"Input copy/ordering changed");
+                pcm[i*2]=input[i*2];pcm[i*2+1]=input[i*2+1];
+            }
+            return true;
+        };
+        auto input_source=std::make_unique<s760::NativeStream>(capture);
+        float in_l[64],in_r[64];
+        for(unsigned i=0;i<64;++i){in_l[i]=float(i)/32768.f;in_r[i]=-in_l[i];}
+        check(input_source->process(l,r,64,nullptr,0,false,in_l,in_r),"Input enqueue failed");
+        auto input_saved=input_source->snapshot();
+        std::fill_n(in_l,64,99.f);std::fill_n(in_r,64,99.f);
+        auto input_clone=std::make_unique<s760::NativeStream>(capture,input_saved);input_clone->start();
+        for(unsigned block=1;block<160;++block) {
+            for(unsigned i=0;i<64;++i){in_l[i]=float(block*64+i)/32768.f;in_r[i]=-in_l[i];}
+            check(input_clone->process(l,r,64,nullptr,0,true,in_l,in_r),"Input snapshot replay failed");
+            if(block*64>=8192)for(unsigned i=0;i<64;++i)check(l[i]==float(block*64+i-8192)/32768.f && r[i]==-l[i],"Recorded input output shifted");
+        }
+        input_clone->stop();
+        auto bad_input=std::make_unique<s760::NativeStream>(capture);in_l[3]=NAN;
+        check(!bad_input->process(l,r,64,nullptr,0,false,in_l,in_r),"Nonfinite input accepted");
+        check(bad_input->fault()==s760::NativeStream::Fault::invalid_block,"Input format fault hidden");
         std::cout << "Native stream ordering, fixed delay, note-off offsets, backpressure and validation passed\n";
     } catch(const std::exception& e) { std::cerr << e.what()<<"\n"; return 1; }
 }

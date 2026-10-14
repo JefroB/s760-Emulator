@@ -53,6 +53,8 @@ while processing is active starts no native child and preserves silent output,
 then boots native firmware and matches independent reference PCM.
 
 This completes the scoped Milestone4 configuration gate. Other DAWs and damaged
-installation repair remain unqualified. DAW project-file save/reopen, relocated
-media portability and live host sampling input remain separate objectives.
+installation repair remain unqualified. SoundCheck project-file save/reopen,
+project-local settings and relocated media now have
+[separate project acceptance](SOUNDCHECK_PROJECTS.md). Live host sampling input has
+[its own native acceptance](NATIVE_VST3_SAMPLING.md).
 See the [validation record](condensed/validation/milestone-4-configuration-2026-10-12.json).

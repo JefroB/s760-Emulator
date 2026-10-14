@@ -1,5 +1,14 @@
 # Source Map & Evidence Policy
 
+Current project qualification (2026-10-14): `docs/SOUNDCHECK_PROJECTS.md`,
+`scripts/soundcheck_project.py`, `scripts/verify_soundcheck_project.py` and
+`tests/test_soundcheck_project.py` define the accepted SoundCheck SDK adapter/
+project-runner scope. Source/binary hashes,221184 exact-frame comparisons and
+compatibility limits are recorded in
+[validation](validation/milestone-4-soundcheck-project-2026-10-14.json).
+This does not establish stock-GUI project integration, other DAW containers or
+cross-build/rate/negotiated-maximum migration.355 backend regressions pass.
+
 Updated 2026-10-10. Every public Markdown/text/JSON source under `docs/` is
 mapped below; private agent work folders and condensed outputs are excluded.
 Source documents remain intact as historical evidence. Raw catalogs/OCR/JSON
@@ -23,6 +32,7 @@ D010 enable write. Document 08 explains why old coverage totals are unsupported.
 
 | Original source | Condensed document numbers |
 | --- | --- |
+| [NATIVE_VST3_SAMPLING.md](../NATIVE_VST3_SAMPLING.md) | 06, 10 |
 | [01-overview.md](../01-overview.md) | 05 |
 | [02-disk-layout.md](../02-disk-layout.md) | 05 |
 | [03-cpu-investigation.md](../03-cpu-investigation.md) | 01, 05 |

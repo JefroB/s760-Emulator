@@ -391,6 +391,24 @@ local function execute(command)
                and command.frames >= 1 and command.frames <= 8192, 'Invalid render frame count')
         assert(audio_dropped == 0, 'Restart capture after an audio discontinuity')
         assert(command.display == nil or type(command.display) == 'boolean', 'Invalid display request')
+        if command.input_samples ~= nil then
+            assert(os.getenv('S760_NATIVE_ADC'), 'Native ADC input is not enabled')
+            local samples=command.input_samples
+            assert(type(samples)=='table' and #samples==command.frames*2, 'Invalid render input size')
+            for _,sample in ipairs(samples) do
+                assert(type(sample)=='number' and sample%1==0 and sample>=-32768 and sample<=32767, 'Invalid PCM16 sample')
+            end
+            local depth=machine.ioport.ports[':NATIVE_PCM_DEPTH']:read()
+            assert(depth+command.frames<=16384, 'Input PCM queue is full')
+            local ingress=assert(machine.memory.shares[':native_pcm_ingress'])
+            for first=0,command.frames-1,2048 do
+                local count=math.min(2048,command.frames-first)
+                for i=1,count*2 do ingress:write_u16(i*2,samples[first*2+i] & 0xffff) end
+                ingress:write_u16(0,count)
+                depth=depth+count
+                assert(machine.ioport.ports[':NATIVE_PCM_DEPTH']:read()==depth, 'Native ADC input is not enabled')
+            end
+        end
         render_pending = {frames=command.frames, steps=0, display=command.display}
     elseif command.op == 'frames' then
         local crt, w, h = machine.screens[':crt_screen']:pixels()

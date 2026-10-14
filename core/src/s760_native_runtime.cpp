@@ -1,3 +1,4 @@
+#include <cmath>
 #include "s760/s760_native_runtime.hpp"
 #include <stdexcept>
 #include <mutex>
@@ -209,7 +210,10 @@ NativeRuntimeClient::NativeRuntimeClient(const NativeRuntimeConfig& supplied) : 
     env[L"S760_MEDIA_EXPORT"]=(cfg.state/"media-export.img").wstring();
     env[L"S760_MEDIA_STATUS"]=(cfg.state/"media-status.json").wstring();
     env[L"S760_F00A"]=L"00"; env[L"S760_IC4_MIDI_EXPERIMENT"]=L"1"; env[L"S760_NATIVE_INTERPOLATION_MONITOR"]=L"1";
+    // Honor firmware pan coefficients in the native instrument's stereo bus.
+    env[L"S760_NATIVE_STEREO_MONITOR"]=L"1";
     env[L"S760_NATIVE_VALUE_ENCODER"]=L"1";
+    if(cfg.experimental_adc) env[L"S760_NATIVE_ADC"]=L"1";
     std::vector<wchar_t> environment;
     for(const auto& item:env) { auto entry=item.first+L"="+item.second; environment.insert(environment.end(),entry.begin(),entry.end()); environment.push_back(0); }
     environment.push_back(0);
@@ -288,9 +292,24 @@ std::vector<std::uint8_t> NativeRuntimeClient::checkpoint_identity() const {
     for(const auto& path:paths) {auto sum=native_digest(read_state_file(path,512u*1024*1024));result.insert(result.end(),sum.begin(),sum.end());}
     // Fold media identity into the host-module slot, retaining the 160-byte profile.
     std::vector<std::uint8_t> host_media(result.end()-32,result.end());
-    host_media.insert(host_media.end(),scsi.begin(),scsi.end());auto combined=native_digest(host_media);
+    host_media.insert(host_media.end(),scsi.begin(),scsi.end());
+    host_media.push_back(cfg.experimental_adc?1:0);auto combined=native_digest(host_media);
     std::copy(combined.begin(),combined.end(),result.end()-32);
     return result;
+}
+void NativeRuntimeClient::queue_input(const float* pcm,unsigned frames) {
+    if(!impl_->config.experimental_adc || !pcm || !frames || frames>8192) throw std::invalid_argument("Invalid native ADC packet");
+    for(unsigned i=0;i<frames*2;++i) if(!std::isfinite(pcm[i])) throw std::invalid_argument("Nonfinite native ADC PCM");
+    for(unsigned first=0;first<frames;first+=2048) {
+        const auto count=std::min(2048u,frames-first);
+        std::string json="{\"op\":\"input_audio\",\"rate\":44100,\"channels\":2,\"samples\":[";
+        for(unsigned i=0;i<count*2;++i) {
+            if(i)json+=",";
+            const auto value=std::clamp(std::lround(double(std::clamp(pcm[first*2+i],-1.f,1.f))*32768.0),-32768l,32767l);
+            json+=std::to_string(value);
+        }
+        request(json+"]}");
+    }
 }
 std::vector<std::uint8_t> NativeRuntimeClient::save_checkpoint() {
     std::lock_guard<std::mutex> lock(impl_->media_mutex);
@@ -346,11 +365,28 @@ NativeRuntimeReply NativeRuntimeClient::request(const std::string& command) {
 #endif
     return result;
 }
-bool NativeRuntimeClient::render(float* output,std::size_t frames) {
+bool NativeRuntimeClient::render(float* output,std::size_t frames,const float* input) {
     if(!frames || frames>8192) return false;
+    if(input && frames>4096) {
+        for(std::size_t offset=0;offset<frames;offset+=4096) {
+            const auto count=std::min<std::size_t>(4096,frames-offset);
+            if(!render(output+offset*2,count,input+offset*2))return false;
+        }
+        return true;
+    }
     const bool display=impl_->display_requested.exchange(false);
-    auto response=request("{\"op\":\"render\",\"frames\":"+std::to_string(frames)+
-        (display?",\"display\":true}":"}"));
+    std::string command="{\"op\":\"render\",\"frames\":"+std::to_string(frames);
+    if(input) {
+        if(!impl_->config.experimental_adc)return false;
+        command+=",\"input_samples\":[";
+        for(unsigned i=0;i<frames*2;++i) {
+            if(!std::isfinite(input[i]))return false;
+            if(i)command+=",";
+            command+=std::to_string(std::clamp(std::lround(double(std::clamp(input[i],-1.f,1.f))*32768.0),-32768l,32767l));
+        }
+        command+="]";
+    }
+    auto response=request(command+(display?",\"display\":true}":"}"));
     if(response.pcm.size()!=frames*8) return false;
     std::memcpy(output,response.pcm.data(),response.pcm.size()); return true;
 }

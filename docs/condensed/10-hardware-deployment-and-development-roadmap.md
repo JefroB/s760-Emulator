@@ -1,7 +1,30 @@
 # Hardware Deployment & Development Roadmap
 
+Milestones5/6 evidence reconciliation (2026-10-14): the roadmap now exposes
+completed native controller/stereo-routing and720KB floppy/sampling workflows,
+plus development standalone sampling/session restore, SoundCheck acceptance,
+bounded playback/startup/media recovery, the dated standalone distribution
+review, current setup/contracts and recorded development identities. Compound
+objectives retain unchecked entries for the remaining work. This is a review of
+existing dated evidence, with no new execution or hardware measurements. CPU/IC4
+audits, full editing/SCSI workflows, physical DSP/ADC fidelity, longer release
+stress, final artifacts and clean-machine acceptance remain open. Neither
+Milestone5 nor Milestone6 is closed. See the
+[updated objectives](../COMPLETION_ROADMAP.md#milestone-5--hardware-coverage-and-supported-defaults).
+
 Condensed from HIL deployment, LLE fidelity assessment, and next-generation OS
 proposal, reconciled with current source and hardware specifications.
+
+Current closure (2026-10-14): Milestones1–4 are qualified for their documented
+Windows development profiles. By user direction, the Milestone4 DAW matrix is
+SoundCheck1.0.0 with the private SDK adapter/project-document runner. Cold reopen,
+project-local configuration and relative fixture references preserve221184 exact
+L/R-average frames; variable callback sizes also match. Changed builds, host
+rates or negotiated maxima reject explicitly; migration and stock-GUI/other-DAW
+containers remain unsupported. Dated statements below about the remaining
+project gate are superseded for this scope. BUG-060 remains an open intermittent
+controller-QA reliability defect. See the [project contract](../SOUNDCHECK_PROJECTS.md)
+and [validation](validation/milestone-4-soundcheck-project-2026-10-14.json).
 
 Milestone 1 is complete for the Windows native-engine integration profile.
 The final compound objective was split: native-only selection and bounded
@@ -255,7 +278,9 @@ physical bridge arrival upper bounds with explicit limits. Larger transport
 buffering trades latency for scheduling headroom; its371.52ms target is visible
 separately from driver latency.354 backend/123 React tests and native queue tests
 pass. Production ADC alternate clocks, driver-level loss coverage and hardware
-register/meter semantics remain the one open Milestone3 objective. Physical
+register/meter semantics moved to Milestone5 by user direction on2026-10-13.
+Milestone3 is complete for the qualified Windows development profile;
+clean-machine/final-artifact acceptance remains Milestone6. Physical
 unplug/replug tests were removed by user direction.
 [Device evidence](validation/standalone-audio-devices-2026-10-12.json).
 
@@ -295,9 +320,74 @@ measures CC7 scaling, CC64 held/released notes and CC123 silence on original
 OS2.24/ROBOFULL.354 backend tests, C++ core/plugin and actual SDK queue/metadata/
 overflow checks pass. The private SoundCheck QA adapter was repaired to forward
 stored automation through real SDK queues; its independent checkout is unchanged.
-The full MIDI gate remains open: configured audible bend and other controller
-effects/reset semantics are unqualified, CC120 did not silence this fixture,
-and an already-silent reset trial is not evidence of reset behavior. Firmware
+Configured audible bend now passes with firmware Bend Up/Down set to12:
+centre20004Hz, folded upward4108Hz, downward10002Hz, restored centre20004Hz
+and silent release. The supported original-firmware controller gate is now qualified below.
+Raw CC120/121 are unsupported; explicit supported-message macros provide panic
+and neutral-controller reset. CC123 retains held-pedal audio until CC64 up. Firmware
 bytes are unchanged. See the [controller contract](../NATIVE_VST3_MIDI.md),
 [text/audio report](validation/milestone-4-midi-automation-2026-10-12.txt) and
 [source/binary evidence](validation/milestone-4-midi-2026-10-12.json).
+
+
+SoundCheck1.0.0 native QA project-file save/cold reopen now passes at44.1kHz/512
+frames. The same module recalls embedded floppy state with original library and
+private runtime paths absent, using relocated matching firmware and persisted
+local product settings. The full-rate host L/R-average waveform matches221184
+frames exactly, including a silent release tail; corrupted-file rejection
+preserves another exact replay. This is same-build native QA component-state
+file acceptance; actual DAW project containers, per-project firmware overrides,
+other hosts and cross-build/rate/block migration remain open. No proprietary
+state/media is committed. [State contract](../NATIVE_PLUGIN_STATE.md) and
+[project evidence](validation/milestone-4-project-portability-2026-10-13.json).
+
+
+The remaining Milestone4 controller objective is complete for the Windows native
+QA profile. BUG-056 enabled the existing stereo mixer in the C++ native launcher;
+CC10 now produces left-only/right-only/equal-centre output on fresh notes.
+Configured CC11 expression and assigned CC1 modulation control TVA gain; ordered
+RPN0 sets a measured two-semitone bend range and null selection prevents further
+Data Entry changes. CC123–127 release with pedal up.32-message all-channel
+panic and64-message neutral-controller reset macros release sustain-held audio
+and permit fresh notes. Original-firmware CC120/121 remain explicitly unsupported,
+consistent with the1993 MIDI implementation and observed native behavior.
+
+The55-case SoundCheck1.0.0 matrix passes at44.1kHz/512 frames. Three-rate paced
+native runs match independent reference PCM with zero missed callback deadlines;
+fresh48kHz state recall reproduces240000 stereo frames. Core/plugin tests,
+354 backend regressions and the default native verifier pass. This qualifies the
+software/controller profile, not hardware gain/LFO/filter/alias fidelity or other
+DAWs. Existing same-build constraints reject older-module snapshots after rebuild.
+Host ADC/input is qualified below; actual DAW project portability is the remaining
+Milestone4 objective. [Controller contract](../NATIVE_VST3_MIDI.md) and
+[complete evidence](validation/milestone-4-controller-semantics-2026-10-13.json).
+
+
+## Native VST3 host sampling — 2026-10-13
+
+Milestone 4 host input now passes the Windows SoundCheck 1.0.0 native instrument
+profile. Its optional inactive stereo bus accepts float32 at 44.1 kHz. Callback
+buffers are copied before output clearing, preserving aliased input/output and
+channel silence flags. A bounded worker queue carries PCM alongside MIDI;
+worker conversion feeds the existing native ADC peripheral in the same render
+transaction, using validated 2,048-frame ingress chunks. Firmware performs the
+recording; no guest/sample RAM writes or substitute recorder are used.
+
+Original OS 2.24 records 45,649 exact host frames/channel with varying
+64/127/256/511/1024-frame callbacks and shared input/output buffers. Native
+recording underruns are zero. All 184,320 allocated sample bytes match recorded
+wave RAM, firmware Sample Save/export and fresh native Sample Load. The source
+floppy is unchanged. Actual SDK getState captures the machine for diagnostic
+wave/FIFO inspection; this is separate from third-party DAW project containers.
+
+A strict 12-second active-input clock produces 529,200 exact output frames with
+36.9 µs maximum callback and zero missed deadlines. Output-only 48/96 kHz runs and
+240,000-frame cold state also pass.354 backend tests and independent SDK metadata,
+input-clock rejection, silence flags and disconnection checks pass. State v3
+preserves pending input PCM; older formats remain decodable with zero input.
+
+Live Sampler FX remains unadvertised. Other input clocks, physical ADC fidelity,
+other DAWs and release qualification remain open. Actual DAW project portability
+is the sole remaining Milestone 4 checkbox. See the
+[host sampling contract](../NATIVE_VST3_SAMPLING.md) and
+[exact source/binary validation](validation/milestone-4-host-sampling-2026-10-13.json).

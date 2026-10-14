@@ -21,7 +21,9 @@ timeline; it does not reboot firmware or discard sustained voices.
 ## Host reporting
 
 The supported instrument advertises one stereo output, one 16-channel event
-input and no audio input. Native sampling input and the FX class remain gated.
+input and one optional, inactive-by-default stereo audio input. Input is qualified
+at44.1kHz through the native ADC; the FX class remains unadvertised. See
+[host sampling](NATIVE_VST3_SAMPLING.md).
 `getTailSamples()` returns SDK `kInfiniteTail` because held or looped voices have
 no finite duration bound. This is a maximum-tail declaration; note-off can still
 release a particular voice to silence.
@@ -58,8 +60,10 @@ SoundCheck's amplitude-threshold “dropout” flag counts intended silent block
 it is not used as evidence of transport loss. Exact PCM comparison and processor
 return values determine this acceptance result.
 
-This closes the scoped host output-rendering gate, not host ADC/input sampling,
-other DAWs, arbitrary crash recovery or DAW project-file portability. The test
+This closes the scoped host output-rendering gate. Host ADC/input sampling has
+separate acceptance. The accepted SoundCheck project-runner profile now has
+[separate cold-project acceptance](SOUNDCHECK_PROJECTS.md); other DAWs and
+arbitrary crash recovery remain unqualified. The rendering test
 snapshot supports this render comparison; it is not a real DAW save/reopen test.
 
 ## Reproduction

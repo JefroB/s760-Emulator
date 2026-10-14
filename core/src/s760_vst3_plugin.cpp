@@ -39,6 +39,7 @@ S760Vst3Plugin::S760Vst3Plugin(bool is_fx)
 S760Vst3Plugin::S760Vst3Plugin(const NativeRuntimeConfig& config,const std::string& startup_error)
     : m_selected_host(std::make_unique<S760MameHost>()), m_bridge(m_selected_host.get()), m_native_mode(true),
       m_configuration_pending(!startup_error.empty()),m_startup_error(startup_error) {
+    m_native_input_supported=config.experimental_adc;
     auto* host=native_host();
     if(!m_configuration_pending) {
         host->configure_native(config);
@@ -252,7 +253,7 @@ tresult S760Vst3Plugin::setIoMode(int32_t mode) {
 
 tresult S760Vst3Plugin::getBusCount(int32_t type, int32_t dir) {
     if (type == kAudio) {
-        if(m_selected_host && dir==kInput) return 0; // Native ADC is not connected yet.
+        if(m_selected_host && dir==kInput) return m_native_input_supported?1:0;
         return 1; // 1 Stereo Input bus (for live sampling / recording) + 1 Stereo Output bus
     } else if (type == kEvent) {
         return (dir == kInput) ? 1 : 0;
@@ -266,7 +267,7 @@ tresult S760Vst3Plugin::getBusInfo(int32_t type, int32_t dir, int32_t index, voi
     info.mediaType=type; info.direction=dir; info.channelCount=type==kAudio?2:16;
     const char16_t* name=type==kEvent?u"MIDI Input":dir==kOutput?u"Stereo Output":u"Stereo Input";
     std::copy(name,name+std::char_traits<char16_t>::length(name),info.name);
-    info.busType=kMain; info.flags=1; return kResultOk;
+    info.busType=kMain; info.flags=(m_native_mode && type==kAudio && dir==kInput)?0:1; return kResultOk;
 }
 
 tresult S760Vst3Plugin::getRoutingInfo(void* inInfo, void* outInfo) {
@@ -275,7 +276,11 @@ tresult S760Vst3Plugin::getRoutingInfo(void* inInfo, void* outInfo) {
 }
 
 tresult S760Vst3Plugin::activateBus(int32_t type, int32_t dir, int32_t index, bool state) {
-    (void)type; (void)dir; (void)index; (void)state;
+    if(m_native_mode && type==kAudio && dir==kInput) {
+        if(index!=0 || !m_native_input_supported || m_is_processing || (state && m_sample_rate!=44100))return kResultFalse;
+        m_native_input_active=state;return kResultOk;
+    }
+    if(index!=0 || !getBusCount(type,dir))return kResultFalse;
     return kResultOk;
 }
 
@@ -289,7 +294,7 @@ tresult S760Vst3Plugin::setActive(bool state) {
 }
 
 tresult S760Vst3Plugin::setBusArrangements(void* inputs, int32_t numIns, void* outputs, int32_t numOuts) {
-    if(numIns!=getBusCount(kAudio,kInput) || numOuts!=1 || !outputs ||
+    if(numIns<0 || numIns>getBusCount(kAudio,kInput) || (!m_native_mode && numIns!=getBusCount(kAudio,kInput)) || numOuts!=1 || !outputs ||
        *static_cast<uint64_t*>(outputs)!=3 || (numIns && (!inputs || *static_cast<uint64_t*>(inputs)!=3))) return kResultFalse;
     return kResultOk;
 }
@@ -311,7 +316,7 @@ uint32_t S760Vst3Plugin::getLatencySamples() {
 tresult S760Vst3Plugin::setupProcessing(Steinberg::ProcessSetup& setup) {
     if(m_selected_host) {
         if(!m_native_mode || m_is_processing || setup.processMode<0 || setup.processMode>2 || !NativeRateConverter::supported(setup.sampleRate) || setup.symbolicSampleSize!=0 ||
-           setup.maxSamplesPerBlock<1 || setup.maxSamplesPerBlock>NativeStream::max_frames)
+           setup.maxSamplesPerBlock<1 || setup.maxSamplesPerBlock>NativeStream::max_frames || (m_native_input_active && setup.sampleRate!=44100))
             return kResultFalse;
         // Preserve queued PCM/note-offs. A started timeline cannot change its
         // rate without a stateful migration; require a fresh native instance.
@@ -330,8 +335,13 @@ tresult S760Vst3Plugin::setupProcessing(Steinberg::ProcessSetup& setup) {
 
 void S760Vst3Plugin::rebuild_native_stream(const NativeStream::Snapshot* saved) {
     auto* native=native_host()->native_runtime();
-    auto origin=m_native_origin;auto rate=unsigned(m_sample_rate);auto converter=m_native_converter;
-    NativeStream::Renderer renderer=[native,origin,rate,converter](const NativeStream::Block& b,float* pcm) {
+    auto origin=m_native_origin;auto rate=unsigned(m_sample_rate);auto converter=m_native_converter;auto input_supported=m_native_input_supported;
+    auto input_context=std::make_shared<const float*>(nullptr);
+    converter->set_renderer([native,rate,input_supported,input_context](float* pcm,std::size_t frames) {
+        static const std::array<float,8192*2> silence{};
+        return native->render(pcm,frames,input_supported?(rate==44100?*input_context:silence.data()):nullptr);
+    });
+    NativeStream::InputRenderer renderer=[native,origin,rate,converter,input_supported,input_context](const NativeStream::Block& b,const float* input,float* pcm) {
         if(b.events) {
             std::string json="{\"op\":\"schedule_midi\",\"append\":true,\"events\":[";
             for(unsigned i=0;i<b.events;++i) {
@@ -341,6 +351,7 @@ void S760Vst3Plugin::rebuild_native_stream(const NativeStream::Snapshot* saved) 
             }
             native->request(json+"]}");
         }
+        *input_context=input;
         return converter->host_frames()==b.first && converter->pull(pcm,b.frames);
     };
     if(saved) m_native_stream=std::make_unique<NativeStream>(renderer,*saved);
@@ -362,6 +373,12 @@ tresult S760Vst3Plugin::setProcessing(bool state) {
                 m_native_origin=std::uint64_t(std::ceil(now*44100));
                 auto rate=unsigned(m_sample_rate);
                 m_native_converter=std::make_shared<NativeRateConverter>(rate,[native](float* pcm,std::size_t frames) { return native->render(pcm,frames); });
+                if(m_native_input_supported) {
+                    // ADC ingress shares the MIDI lead so video-frame surplus
+                    // cannot consume host input before it has been submitted.
+                    const std::array<float,NativeStream::midi_lead*2> silence{};
+                    native->queue_input(silence.data(),NativeStream::midi_lead);
+                }
                 rebuild_native_stream();
             } catch(...) { m_native_stream.reset(); return kResultFalse; }
         }
@@ -410,6 +427,23 @@ void S760Vst3Plugin::process_events(Steinberg::IEventList* events) {
 }
 
 tresult S760Vst3Plugin::process_native(Steinberg::ProcessData& data) {
+    // VST hosts may alias input and output buffers. Capture ingress before
+    // clearing output, using storage allocated during construction.
+    bool input_valid=true;
+    if(m_native_input_active) {
+        input_valid=data.numSamples>=0 && data.numSamples<=m_max_block_size && data.numSamples<=int(m_scratch_left.size()) &&
+            data.numInputs==1 && data.inputs && data.inputs[0].numChannels==2;
+        if(input_valid) {
+            const auto& bus=data.inputs[0];auto** channels=bus.channelBuffers32;
+            input_valid=((bus.silenceFlags&1) || (channels && channels[0])) && ((bus.silenceFlags&2) || (channels && channels[1]));
+            if(input_valid) {
+                if(bus.silenceFlags&1)std::fill_n(m_scratch_left.data(),data.numSamples,0.f);
+                else std::copy_n(channels[0],data.numSamples,m_scratch_left.data());
+                if(bus.silenceFlags&2)std::fill_n(m_scratch_right.data(),data.numSamples,0.f);
+                else std::copy_n(channels[1],data.numSamples,m_scratch_right.data());
+            }
+        }
+    }
     // Clear even rejected blocks, including unsupported 64-bit host buffers.
     if(data.numSamples>0 && data.outputs) for(int b=0;b<data.numOutputs;++b) {
         auto& out=data.outputs[b];
@@ -434,9 +468,14 @@ tresult S760Vst3Plugin::process_native(Steinberg::ProcessData& data) {
     auto* changes=static_cast<Steinberg::IParameterChanges*>(data.inputParameterChanges);
     if(data.numSamples==0 && (!data.inputEvents || data.inputEvents->getEventCount()==0) && (!changes || changes->getParameterCount()==0)) return kResultOk;
     if(data.processMode!=m_process_mode || data.numSamples<1 || data.numSamples>m_max_block_size || data.symbolicSampleSize!=0 ||
-       data.numInputs!=0 || data.numOutputs!=1 || !data.outputs || data.outputs[0].numChannels!=2 ||
+       data.numInputs<0 || data.numInputs>1 || (m_native_input_active && data.numInputs!=1) || data.numOutputs!=1 || !data.outputs || data.outputs[0].numChannels!=2 ||
        !data.outputs[0].channelBuffers32 || !data.outputs[0].channelBuffers32[0] || !data.outputs[0].channelBuffers32[1])
         return reject();
+    const float* input_left=nullptr;const float* input_right=nullptr;
+    if(m_native_input_active) {
+        if(!input_valid)return reject();
+        input_left=m_scratch_left.data();input_right=m_scratch_right.data();
+    }
     std::array<NativeStream::Midi,NativeStream::max_events> events{};
     int count=data.inputEvents ? data.inputEvents->getEventCount() : 0;
     if(count<0 || count>NativeStream::max_events) return reject();
@@ -480,7 +519,7 @@ tresult S760Vst3Plugin::process_native(Steinberg::ProcessData& data) {
         events[j]=event;
     }
     auto& out=data.outputs[0];
-    if(!m_native_stream->process(out.channelBuffers32[0],out.channelBuffers32[1],unsigned(data.numSamples),events.data(),unsigned(count),m_process_mode==2))
+    if(!m_native_stream->process(out.channelBuffers32[0],out.channelBuffers32[1],unsigned(data.numSamples),events.data(),unsigned(count),m_process_mode==2,input_left,input_right))
         return kResultFalse;
     out.silenceFlags=0;
     return kResultOk;
@@ -951,7 +990,7 @@ static void report_native_startup_error(const std::string& reason) noexcept {
 }
 
 static NativeRuntimeConfig native_factory_config() {
-    NativeRuntimeConfig config;
+    NativeRuntimeConfig config;config.experimental_adc=true;
     config.root=native_environment_path("S760_NATIVE_ROOT");
     auto state_root=native_environment_path("S760_NATIVE_STATE_ROOT");
     config.boot_rom=native_environment_path("S760_BOOT_ROM");
@@ -1008,7 +1047,7 @@ static NativeRuntimeConfig native_factory_config() {
 }
 
 static NativeRuntimeConfig configuration_editor_defaults() {
-    NativeRuntimeConfig config;config.root=native_environment_path("S760_NATIVE_ROOT");
+    NativeRuntimeConfig config;config.experimental_adc=true;config.root=native_environment_path("S760_NATIVE_ROOT");
 #if defined(_WIN32)
     HMODULE module=nullptr;wchar_t path[32768]{};
     if(GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
@@ -1027,13 +1066,14 @@ static NativeRuntimeConfig configuration_editor_defaults() {
     return config;
 }
 
-class S760Vst3Factory : public Steinberg::IPluginFactory {
+class S760Vst3Factory : public Steinberg::IPluginFactory2 {
 public:
     tresult queryInterface(const TUID _iid, void** obj) override {
         if (!obj) return kInvalidArgument;
         *obj=nullptr;
         static const TUID factoryId=INLINE_UID(0x7A4D811C,0x52114A1F,0xAED9D2EE,0x0B43BF9F);
-        if(std::memcmp(_iid,FUnknown_iid,16) && std::memcmp(_iid,factoryId,16)) return kResultFalse;
+        static const TUID factory2Id=INLINE_UID(0x0007B650,0xF24B4C0B,0xA464EDB9,0xF00B2ABB);
+        if(std::memcmp(_iid,FUnknown_iid,16) && std::memcmp(_iid,factoryId,16) && std::memcmp(_iid,factory2Id,16)) return kResultFalse;
         *obj=static_cast<Steinberg::IPluginFactory*>(this); addRef(); return kResultOk;
     }
     uint32_t addRef() override { return 1; }
@@ -1054,6 +1094,7 @@ public:
     tresult getClassInfo(int32_t index, Steinberg::PClassInfo* info) override {
         if (!info) return kInvalidArgument;
         if (index == 0) {
+            *info={};
             std::memcpy(info->cid, S760ProcessorUID, 16);
             info->cardinality = 0x7fffffff;
             std::strncpy(info->category, "Audio Module Class", sizeof(info->category) - 1);
@@ -1061,6 +1102,20 @@ public:
             return kResultOk;
         }
         return kInvalidArgument;
+    }
+
+    tresult getClassInfo2(int32_t index, Steinberg::PClassInfo2* info) override {
+        if(!info || index!=0) return kInvalidArgument;
+        *info={};
+        std::memcpy(info->cid,S760ProcessorUID,16);
+        info->cardinality=0x7fffffff;
+        std::strcpy(info->category,"Audio Module Class");
+        std::strcpy(info->name,"Roland S-760 Sampler");
+        std::strcpy(info->subCategories,"Instrument|Sampler");
+        std::strcpy(info->vendor,"S-760 Emulator Contributors");
+        std::strcpy(info->version,"1.0.0");
+        std::strcpy(info->sdkVersion,"VST 3");
+        return kResultOk;
     }
 
     tresult createInstance(FIDString cid, FIDString _iid, void** obj) override {

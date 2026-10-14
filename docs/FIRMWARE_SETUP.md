@@ -8,6 +8,10 @@ third-party sample libraries, and saved sessions containing those bytes.
 Users supply their own appropriately authorized firmware and media. The project
 does not download or bundle them automatically.
 
+GB-6 experiments follow the same rule: use the [source-only patcher](GB6_OS_PATCH.md)
+with an original user-supplied OS2.24. Original and patched OS images, including
+compressed images/backups, remain local and must not be force-added to Git.
+
 An independently authored replacement may be distributed with the project once
 it works and its source provenance, license and distribution rights are
 established. Patching, renaming, converting or embedding a Roland binary does

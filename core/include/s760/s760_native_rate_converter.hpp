@@ -52,6 +52,7 @@ public:
         for(auto value:s.history) if(!std::isfinite(value)) throw std::invalid_argument("Invalid converter history");
         host_cursor_=s.host_cursor;native_cursor_=s.native_cursor;history_=s.history;
     }
+    void set_renderer(Render render) {render_=std::move(render);}
     Snapshot snapshot() const { return {1,rate_,host_cursor_,native_cursor_,history_}; }
     bool pull(float* output,unsigned count) {
         if(!count || count>max_frames) return false;

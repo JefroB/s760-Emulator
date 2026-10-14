@@ -22,6 +22,16 @@ int main(int argc,char** argv) {
   check(restored.state().folder==root.u8string() && restored.state().paths==snapshot.paths,"Library state lost");
   auto old=state;old.version=1;auto legacy=s760::NativePluginState::decode(old.encode());
   check(legacy.media.inserted.empty() && legacy.media.paths.empty(),"Legacy state invents media identity");
+  auto input_state=state;input_state.has_stream=true;input_state.stream.clock=64;
+  input_state.stream.pending.resize(1);auto& block=input_state.stream.pending[0];block.frames=64;
+  for(unsigned i=0;i<128;++i)block.input[i]=float(int(i)-64)/128.f;
+  auto input_recall=s760::NativePluginState::decode(input_state.encode());
+  check(input_recall.version==3 && input_recall.stream.pending[0].input==block.input,"Pending stereo input lost in state");
+  auto downgrade=input_state;downgrade.version=2;bool refused=false;
+  try{downgrade.encode();}catch(const std::invalid_argument&){refused=true;}
+  check(refused,"Legacy encoding silently discarded queued input");
+  downgrade.stream.pending[0].input.fill(0.f);
+  check(s760::NativePluginState::decode(downgrade.encode()).version==2,"Legacy v2 decode rejected");
   auto broken=snapshot;broken.selected="not-in-inventory";
   bool rejected=false;try{restored.restore(broken);}catch(...){rejected=true;}
   check(rejected && restored.state().selected==selected,"Malformed metadata was applied");

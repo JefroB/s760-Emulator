@@ -178,8 +178,9 @@ a claim that every requested sample loaded successfully.
 
 The C++ native client, scheduled MIDI, bounded PCM, sample-clock advancement,
 latency/fault reporting and bounded same-build state are implemented. Actual
-SDK/DAW acceptance, portable project state, graphical plugin configuration and
-native sampling input remain open. See [completion gates](COMPLETION_ROADMAP.md).
+SoundCheck SDK/configuration and scoped host sampling acceptance are documented
+separately. Third-party DAW project portability remains open. See
+[completion gates](COMPLETION_ROADMAP.md).
 
 ## Native checkpoints
 
@@ -272,7 +273,9 @@ unsupported/unqualified. See [format evidence](condensed/validation/standalone-f
 
 Disabled by default. Python `RuntimeConfig.experimental_adc=True` or an explicit
 standalone `recording_device` enables the native `S760_NATIVE_ADC` profile.
-VST input routing remains unsupported. Worker-only
+The native VST3 instrument explicitly enables this profile with an optional,
+inactive-by-default stereo input bus; see [host sampling](NATIVE_VST3_SAMPLING.md).
+Worker-only
 `queue_input_pcm(pcm, rate=44100, channels=2, live=False)` accepts little-endian
 stereo PCM16 bytes,1–2048 frames. Offline input requires pause; `live=True`
 permits running input and returns an explicit discarded-frame count while paused.
@@ -286,6 +289,15 @@ input state. Checkpoints save the FIFO/counters and distinguish enabled profiles
 partially queued cold recording replay remains unqualified. Transport calls are
 not realtime callback APIs. Firmware sampling/Save/cold-Load acceptance and
 remaining limits are documented in [Native sampling](NATIVE_SAMPLING.md).
+
+Paused `render` optionally accepts `input_samples`, exactly `frames*2` signed
+PCM16 integers at the fixed native 44.1 kHz clock. The complete input array and
+FIFO capacity are checked before insertion. Delivery commits bounded 2,048-frame
+chunks through the same `native_pcm_ingress` peripheral, then services the render
+in the same transaction. Requests without this field retain output-only behavior.
+This avoids an extra paused-wall-time control round trip per VST worker batch.
+C++ request framing remains bounded to 65,000 bytes; its input-render helper
+splits above 4,096 frames. Neither guest memory nor sample RAM is written.
 
 Standalone `RECORDING_DEVICES` refreshes the input inventory. `CONFIGURE_RUNTIME`
 accepts `recordingDevice` (empty disables capture), persists it after native

@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-13",
+  "gate": "Milestone 4 host sampling input",
+  "status": "complete for documented Windows native instrument QA profile",
+  "source_revision": "d6264da54caa89b09fcd894ce7d9dba322df856e",
+  "working_tree_changes": "Optional stereo instrument input; bounded copied host PCM; worker PCM16 conversion and single input/render transaction through existing native ADC; v3 pending-input state; Factory2 instrument metadata. MAME executable and firmware unchanged.",
+  "sha256": {
+    "core/include/s760/s760_native_plugin_state.hpp": "0da0d19cbad1b8396eaa17e50bdf55bf1b8aa1ec99ca797da92ea1789c1a3d35",
+    "core/include/s760/s760_native_rate_converter.hpp": "10f034fc9aa08f09767fb1abbc822a091c70ef5a4c4aeb59f8f7bfbd5c5fa10a",
+    "core/include/s760/s760_native_runtime.hpp": "6ca541b7228070d4067b24b7e321de43864e7263b67c03845b2ce2373be921fa",
+    "core/include/s760/s760_native_stream.hpp": "44eaa5ea6a4fc6550b31529aa0cfa99dd4bdd0de002dcb95e4131b0047bd0775",
+    "core/include/s760/s760_vst3_plugin.hpp": "1e68f2887a00247a72709caa5f020135cf270947bce55ca8393232ff6c83a67e",
+    "core/include/s760/vst3_defs.h": "4361a8124c2cff467f7f5447a3ceaefa9555b1bd84c593456c40b948b0d34860",
+    "core/src/s760_native_runtime.cpp": "dc3da7a9f5a1d2037f10cd8af54d8c036a374ac7c6bfe86385852e40be3c428c",
+    "core/src/s760_vst3_plugin.cpp": "ab18649f47c5e5bef26bb85294dd61233610e919fa760fcddda92b1da04cfdc8",
+    "core/tests/test_media_library.cpp": "5a832c93d8e91e78a25918018f4104517c777dbfd6a5418803d78bf7eaee7ec7",
+    "core/tests/test_native_plugin.cpp": "bb30343a5ceb78bee8c201f1da75359e26fcccce7451f0cbbce2666c13dd81d0",
+    "core/tests/test_native_stream.cpp": "a92caaa70ee2c7c4b53bb521f72cf9bb6b3f1c2ed5b20dc3ade1b8adac6d310c",
+    "core/tests/test_vst3_sdk.cpp": "fe3bdc3da3696f69c4ad962ccb5d8291f0a3c5aef41bbd7ce2afc8b878b9dfd0",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "scripts/verify_vst3_sampling_input.py": "608cace17391ce08c1753015ac839cf01a8fbd07961ee4e2513cd45c6c7964e6",
+    "build/Release/Roland_S760.vst3": "6719f173e1ecaa15bed876d026a11787166ac7eaf3f4845055281e1faec4c6a2",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "5b76cd34d27c7eef0657d6ad967a7892d62a324ff6b33ece204acf713fb2de27",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "78fbb2790e5399804de8a09c6c91103fabae11076779ddf4c19553997f43b2cc",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "docs/condensed/validation/soundcheck-sampling-qa-2026-10-13.patch": "3d2cdae5534cc957a72b86b76cf41f20bb293849eb62644f928088a2117e2284"
+  },
+  "host": {
+    "profile": "SoundCheck actual VST3 stereo input, float32 44100Hz, varying 64/127/256/511/1024-frame paced realtime-mode callbacks",
+    "samples": [
+      {
+        "channel": 0,
+        "frames": 45649,
+        "allocation_bytes": 92160,
+        "pcm_sha256": "5520dfc34d22534ba8c3f055f5396a8f5fc205ee115fc3ffee454680e04a5290",
+        "exact_host_input": true,
+        "wave_disk_cold_reload_equal": true,
+        "metadata_hex": "4e45573a556e6e616d65642020207f4c00000000000000000050b20000f8b30000fcb3000200000005000a00013c0000"
+      },
+      {
+        "channel": 1,
+        "frames": 45649,
+        "allocation_bytes": 92160,
+        "pcm_sha256": "24d1e7e020cd02a1004fda25d365cc7aecb97e15512c5a4996616cace99ad319",
+        "exact_host_input": true,
+        "wave_disk_cold_reload_equal": true,
+        "metadata_hex": "4e45573a556e6e616d65642020207f5200000000000000000050b20000f8b30000fcb300020000000f000a00013c0000"
+      }
+    ],
+    "in_place_host_buffers": true,
+    "input_underruns": 0,
+    "source_preserved": true,
+    "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b",
+    "identities": {
+      "docs\\ic20-hle-findings\\chatGPT-work\\m2-webview-build\\Release\\Roland_S760.vst3": "5b76cd34d27c7eef0657d6ad967a7892d62a324ff6b33ece204acf713fb2de27",
+      "docs\\ic20-hle-findings\\chatGPT-work\\sdk150\\host\\build\\Release\\SoundCheckServer.exe": "78fbb2790e5399804de8a09c6c91103fabae11076779ddf4c19553997f43b2cc",
+      "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+      "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    },
+    "limitations": [
+      "No physical ADC/analog hardware parity claim",
+      "No third-party DAW recording acceptance",
+      "Input buses at 48000/96000 explicitly unsupported; output-only remains supported",
+      "Live Sampler FX class remains unadvertised"
+    ]
+  },
+  "inspection": "Actual SDK getState archive contains native recorded machine. Diagnostic native checkpoint replay reads wave RAM/FIFO and exports controller media. Separate original-firmware cold Sample Load verifies persistence. This does not establish third-party DAW project-container compatibility.",
+  "atomic_protocol": {
+    "checks": [
+      "wrong_length",
+      "out_of_range",
+      "nonintegral",
+      "full_fifo_atomic_rejection",
+      "3071_frame_single_transaction"
+    ],
+    "passed": true
+  },
+  "sdk": {
+    "passed": true,
+    "checks": [
+      "Factory2 version/vendor and Instrument|Sampler metadata",
+      "Optional inactive stereo input description",
+      "Active input 48kHz rejection",
+      "Silent channels with null buffers",
+      "Disconnected active input rejects, clears output and latches failure",
+      "Existing MIDI/controller ABI"
+    ]
+  },
+  "regressions": {
+    "python_passed": 354,
+    "core_tests": "passed",
+    "plugin_tests": "passed",
+    "native_stream": "copied stereo ordering, pending snapshot replay, NaN rejection passed",
+    "state_archive": "v3 pending input exact, v1/v2 compatibility and nonzero legacy downgrade rejection passed",
+    "paced_rates": [
+      {
+        "rate": 44100,
+        "input_active": true,
+        "frames": 529200,
+        "reference_exact": true,
+        "max_callback_us": 36.9,
+        "missed_deadlines": 0
+      },
+      {
+        "rate": 48000,
+        "input_active": false,
+        "frames": 576000,
+        "reference_exact": true,
+        "max_callback_us": 23.1,
+        "missed_deadlines": 0
+      },
+      {
+        "rate": 96000,
+        "input_active": false,
+        "frames": 1152000,
+        "reference_exact": true,
+        "max_callback_us": 111.2,
+        "missed_deadlines": 0
+      }
+    ],
+    "cold_state": {
+      "rate": 48000,
+      "exact_stereo_frames": 240000,
+      "pending_and_active_notes": true,
+      "corruption_rejected": true,
+      "failed_write_recoverable": true
+    },
+    "native_protocol": "Original-firmware boot/load/display/variable pull-render/scheduled MIDI passed; same native binary",
+    "builds": [
+      "default Release",
+      "WebView Release",
+      "private SoundCheck QA host"
+    ]
+  },
+  "private_artifacts": "docs/ic20-hle-findings/chatGPT-work/m4-host-input-final2; m4-input-paced-active2; m4-input-paced-final-48000; m4-input-paced-final-96000; m4-input-state-final2; m4-input-atomic; m4-input-sdk-final.log; m4-input-pytest-final2.log; m4-input-native-final"
+}

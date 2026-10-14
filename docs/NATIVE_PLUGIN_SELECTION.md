@@ -36,17 +36,20 @@ component creation. See [graphical setup and recovery](NATIVE_VST3_CONFIGURATION
 ## Supported surface and compatibility
 
 The factory advertises the instrument class only. The former Live Sampler FX
-class is not advertised or instantiated until native sampling input exists.
+class remains unadvertised and cannot be instantiated. Qualified input is on the
+native instrument's optional stereo bus; a separate FX class is not delivered.
 Existing projects referencing that FX class cannot instantiate it in this build;
 silently substituting the historical core would conceal the missing native path.
 The instrument class identifier is unchanged.
 
 Supported native processing is float32 stereo at 44.1/48/96 kHz with note-on/off;
-see the [timing contract](NATIVE_AUDIO_TIMING.md). Native audio input and complete
-state outside the supported floppy profile reject. Suspended native save/recall is
+see the [timing contract](NATIVE_AUDIO_TIMING.md). Optional native input supports
+44.1 kHz stereo float32 through the same native ADC as the standalone. Input at
+48/96 kHz rejects explicitly; see [sampling](NATIVE_VST3_SAMPLING.md). State
+outside the bounded native profile rejects. Suspended native save/recall is
 now implemented; see the [state contract](NATIVE_PLUGIN_STATE.md). These operations
 do not use the historical core. Factory selection retirement therefore does not close the separate full
-project-state, sampling-input or DAW/editor objectives.
+third-party DAW project-state and hardware qualification objectives.
 
 ## Acceptance
 
@@ -62,7 +65,7 @@ children. With the historical selector explicitly set to `core`, the exported
 component still boots native firmware, loads ROBOFULL through firmware controls,
 returns authentic converted CRT/LCD frames and renders exact offline-reference
 PCM at wall-clock pace. The test also checks note offsets/release, rejected
-native input and invalid state requests, suspend/resume and termination. The
+unsupported input clocks and invalid state requests, suspend/resume and termination. The
 separate `--state` acceptance covers supported native save/recall.
 
 This exported-module harness uses this repository's interface definitions.
