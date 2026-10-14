@@ -43,6 +43,10 @@ int main(int argc,char** argv) {
   Steinberg::TUID invalid{};
   require(factory->queryInterface(invalid,&unsupported)!=Steinberg::kResultOk && !unsupported,"unsupported factory interface");
   require(factory->countClasses()==1,"class count");
+  Steinberg::IPluginFactory2* factory2=nullptr;
+  require(factory->queryInterface(Steinberg::IPluginFactory2_iid,reinterpret_cast<void**>(&factory2))==Steinberg::kResultOk && factory2,"extended factory metadata interface");
+  Steinberg::PClassInfo2 info2{};
+  require(factory2->getClassInfo2(0,&info2)==Steinberg::kResultOk && std::strcmp(info2.subCategories,"Instrument|Sampler")==0 && info2.version[0],"instrument sampling subcategory");factory2->release();
   Steinberg::PClassInfo cls{};
   require(factory->getClassInfo(0,&cls)==Steinberg::kResultOk && std::strcmp(cls.category,kVstAudioEffectClass)==0,"audio effect category");
   Steinberg::Vst::IComponent* component=nullptr;
@@ -52,7 +56,8 @@ int main(int argc,char** argv) {
   require(component->getBusCount(Steinberg::Vst::kAudio,Steinberg::Vst::kOutput)==1,"output bus count");
   require(component->getBusInfo(Steinberg::Vst::kAudio,Steinberg::Vst::kOutput,0,bus)==Steinberg::kResultOk && bus.channelCount==2 && bus.name[0],"stereo bus metadata");
   require(bus.mediaType==Steinberg::Vst::kAudio && bus.direction==Steinberg::Vst::kOutput && bus.busType==Steinberg::Vst::kMain,"output bus description");
-  require(component->getBusCount(Steinberg::Vst::kAudio,Steinberg::Vst::kInput)==0,"unqualified ADC bus stays hidden");
+  require(component->getBusCount(Steinberg::Vst::kAudio,Steinberg::Vst::kInput)==1,"optional native input bus");
+  require(component->getBusInfo(Steinberg::Vst::kAudio,Steinberg::Vst::kInput,0,bus)==Steinberg::kResultOk && bus.channelCount==2 && !(bus.flags & Steinberg::Vst::BusInfo::kDefaultActive),"optional stereo input metadata");
   require(component->getBusCount(Steinberg::Vst::kEvent,Steinberg::Vst::kInput)==1 && component->getBusCount(Steinberg::Vst::kEvent,Steinberg::Vst::kOutput)==0,"MIDI bus counts");
   require(component->getBusInfo(Steinberg::Vst::kEvent,Steinberg::Vst::kInput,0,bus)==Steinberg::kResultOk && bus.mediaType==Steinberg::Vst::kEvent && bus.direction==Steinberg::Vst::kInput && bus.channelCount==16 && bus.name[0],"MIDI bus description");
   require(component->getBusInfo(Steinberg::Vst::kAudio,Steinberg::Vst::kOutput,1,bus)!=Steinberg::kResultOk,"nonexistent bus rejected");
@@ -125,6 +130,23 @@ int main(int argc,char** argv) {
   require(left[0]==0 && right[511]==0,"rejected controller block cleared");
   require(audio->setProcessing(false)==Steinberg::kResultOk,"controller test suspend");
   controller->release(); audio->release(); component->terminate(); component->release();
-  FreeLibrary(dll); std::cout<<"Independent SDK factory/component/bus/controller ABI passed\n"; return 0;
+  component=nullptr;audio=nullptr;
+  require(factory->createInstance(cls.cid,Steinberg::Vst::IComponent_iid,reinterpret_cast<void**>(&component))==Steinberg::kResultOk && component,"fresh input component");
+  require(component->initialize(nullptr)==Steinberg::kResultOk,"input initialize");
+  require(component->queryInterface(Steinberg::Vst::IAudioProcessor_iid,reinterpret_cast<void**>(&audio))==Steinberg::kResultOk && audio,"input audio interface");
+  setup.sampleRate=44100;
+  require(audio->setupProcessing(setup)==Steinberg::kResultOk && component->activateBus(Steinberg::Vst::kAudio,Steinberg::Vst::kInput,0,true)==Steinberg::kResultOk,"activate optional input");
+  auto invalid_input_setup=setup;invalid_input_setup.sampleRate=48000;
+  require(audio->setupProcessing(invalid_input_setup)!=Steinberg::kResultOk,"active input rejects unsupported clock");
+  require(component->setActive(true)==Steinberg::kResultOk && audio->setProcessing(true)==Steinberg::kResultOk,"start input");
+  Steinberg::Vst::AudioBusBuffers input{};input.numChannels=2;input.silenceFlags=3;
+  data.inputParameterChanges=nullptr;data.numInputs=1;data.inputs=&input;
+  require(audio->process(data)==Steinberg::kResultOk,"silent input permits null buffers");
+  data.numInputs=0;data.inputs=nullptr;
+  std::fill_n(left,512,1.f);std::fill_n(right,512,1.f);
+  require(audio->process(data)!=Steinberg::kResultOk && left[0]==0 && right[511]==0,"disconnected active input rejects silently");
+  require(audio->setProcessing(false)==Steinberg::kResultOk && audio->setProcessing(true)!=Steinberg::kResultOk,"input disconnection latches visible processing failure");
+  audio->release();component->terminate();component->release();
+  FreeLibrary(dll); std::cout<<"Independent SDK factory/component/bus/controller/input ABI passed\n"; return 0;
  } catch(const std::exception& e) { std::cerr<<e.what()<<'\n'; return 1; }
 }

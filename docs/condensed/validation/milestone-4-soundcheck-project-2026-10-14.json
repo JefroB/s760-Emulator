@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-14",
+  "gate": "Milestone4 SoundCheck project save/cold reopen and compatibility qualification",
+  "user_scope": "SoundCheck accepted as the DAW/host matrix",
+  "source_revision": "d6264da54caa89b09fcd894ce7d9dba322df856e",
+  "working_tree": "Project-document helper, verifier and unit regression added; private SDK QA adapter extended; no sampler C++ or native firmware changes for this gate",
+  "command": "python scripts/verify_soundcheck_project.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-project-document-20261014",
+  "exit_code": 0,
+  "result": {
+    "host": "SoundCheck 1.0.0 Windows x64 native SDK QA host",
+    "sampleRate": 44100,
+    "blockSize": 512,
+    "frames": 221184,
+    "exact_pcm": true,
+    "corrupt_rejection_preserves_pcm": true,
+    "release_tail_peak": 0.0,
+    "original_library_missing": true,
+    "original_native_state_directory_missing": true,
+    "firmware_relocated": true,
+    "settings_persisted": true,
+    "project_bytes": 160655984,
+    "project_sha256": "888df924ce62e9561072485d12dc2a023345ee3de8eec052d3cc4843d3a676ec",
+    "module_sha256": "5b76cd34d27c7eef0657d6ad967a7892d62a324ff6b33ece204acf713fb2de27",
+    "project_document_sha256": "9d5cf76d955026474994d872890cb21ab266d3d053a861b27c5e95b426ba0992",
+    "host_sha256": "bd6e96c65e741a27be2265bad38477cc7a2a537b6b02fb3af3f00d658fbe7345",
+    "project_configuration_override": true,
+    "global_settings_unchanged": true,
+    "variable_callback_blocks_exact": true,
+    "different_negotiated_maximum_rejected": true,
+    "different_rate_rejected": true,
+    "cross_build_rejected": true,
+    "host_matrix": [
+      "SoundCheck 1.0.0 Windows x64 private SDK adapter"
+    ]
+  },
+  "sha256": {
+    "scripts/soundcheck_project.py": "fdc639c3f6af0e2df94fd5490bb84888db84458f2910a1ecd891f82b725ed1cc",
+    "scripts/verify_soundcheck_project.py": "82c851a92ab4150c243a7ce7c5b68662bc5fe2476061e5b94b14a66938f0b08e",
+    "tests/test_soundcheck_project.py": "63a1f4ee91975953da2947785f0ced86c8f1ec752ee9b886de8886f6161aa7ce",
+    "core/src/s760_vst3_plugin.cpp": "ab18649f47c5e5bef26bb85294dd61233610e919fa760fcddda92b1da04cfdc8",
+    "core/include/s760/s760_native_plugin_state.hpp": "0da0d19cbad1b8396eaa17e50bdf55bf1b8aa1ec99ca797da92ea1789c1a3d35",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/main.cpp": "e86145c462e0e155232cbece5fe98333de027f495f400094f80800a17facaa52",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "bd6e96c65e741a27be2265bad38477cc7a2a537b6b02fb3af3f00d658fbe7345",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "5b76cd34d27c7eef0657d6ad967a7892d62a324ff6b33ece204acf713fb2de27",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "docs/condensed/validation/soundcheck-project-document-qa-2026-10-14.patch": "385972e366a74c33787975454a908f8f53f7fb28d6db612a9acb6d8c8c90c223"
+  },
+  "tests": {
+    "backend": "355 passed in36.42s; no skips",
+    "document_regression": "1 passed",
+    "adapter_patch_check": "git apply --check against independent SoundCheck main.cpp passed"
+  },
+  "private_evidence": "docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-project-document-20261014",
+  "limitations": [
+    "SoundCheck1.0.0 Windows x64 private SDK adapter/project runner only; not stock-GUI project integration or another DAW container.",
+    "Project matrix44100Hz/maximum512; actual callbacks64/127/256/511/512. Other rates remain independent native-harness evidence.",
+    "Cross-build, cross-rate and negotiated-maximum changes reject; no migration is implemented.",
+    "Different-build probe changes module bytes and is rejected by project-document identity before host launch.",
+    "Host capture is full-rate L/R average, not independent stereo channels.",
+    "Native archives/settings remain same-build, user-firmware and matching external-SCSI constrained.",
+    "No multi-track project editor, autosave or clean-machine release qualification.",
+    "Existing BUG-060 intermittent controller QA rejection remains open; this project run passed."
+  ]
+}

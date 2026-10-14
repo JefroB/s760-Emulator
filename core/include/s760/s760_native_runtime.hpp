@@ -11,6 +11,7 @@ std::array<std::uint8_t,32> native_digest(const std::vector<std::uint8_t>& data)
 struct NativeRuntimeConfig {
     std::filesystem::path root, state, boot_rom, system_disk, sample_disk;
     std::filesystem::path media_directory;
+    bool experimental_adc=false;
 };
 struct NativeRuntimeReply {
     std::string json;
@@ -27,8 +28,9 @@ public:
     NativeRuntimeClient(const NativeRuntimeClient&)=delete;
     NativeRuntimeClient& operator=(const NativeRuntimeClient&)=delete;
     NativeRuntimeReply request(const std::string& json);
-    bool render(float* interleaved,std::size_t frames);
+    bool render(float* interleaved,std::size_t frames,const float* input=nullptr);
     void set_audio_streaming(bool enabled);
+    void queue_input(const float* interleaved,unsigned frames);
     NativeRuntimeReply display_frames();
     void midi(const std::uint8_t* bytes,std::size_t size);
     void insert_media(const std::filesystem::path& source);

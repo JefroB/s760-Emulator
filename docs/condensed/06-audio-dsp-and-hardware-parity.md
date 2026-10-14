@@ -623,3 +623,60 @@ zero native input underruns and276480 allocated bytes surviving Save/cold Load.
 4096 input frames are discarded over the full workflow. Alternate ADC clocks,
 unreported physical driver losses and hardware register/meter fidelity remain
 open. [Evidence](validation/standalone-audio-devices-2026-10-12.json).
+
+
+## Native host configured bend and reset qualification (2026-10-13)
+
+SoundCheck1.0.0 Windows x64,44.1kHz/512-frame SDK processing delivers audible
+bend after original OS2.24 Patch Control Bend Up/Down are set to12. The ROBOFULL
+fixture measures20004Hz at centre,4108Hz at maximum upward bend (folded into the
+output band),10002Hz downward and20004Hz after return to centre. Release reaches
+zero. The earlier zero-range fixture did not test configured bend. These are
+native host effect measurements, not hardware tuning, alias/interpolation or
+amplitude parity across the musical range.
+
+A controlled sustain-held trial establishes that CC121 does not release the
+note or restore CC7 volume on this fixture. Same-channel CC123 leaves held-pedal
+audio sounding; CC64 up releases it. The later supported-message controller qualification below resolves this
+Milestone4 gate without claiming rawCC120/121 support. [Contract](../NATIVE_VST3_MIDI.md) and
+[measured evidence](validation/milestone-4-configured-bend-2026-10-13.json).
+
+
+Native VST controller qualification now includes the existing stereo coefficient
+path in normal C++ native launches (BUG-056). Left/right/centre CC10 routing,
+configured CC11 and assigned CC1 TVA gain, RPN bend range/null selection and
+explicit supported-message panic/reset macros pass measured native SDK hosting.
+Stereo centre gain differs from the previous mono bypass. Three-rate exact
+reference PCM and bounded cold state replay pass. These are software integration
+results; physical gain/pan law, LFO/filter/tuning and alias fidelity remain separate
+Milestone5 domains. [Current evidence](validation/milestone-4-controller-semantics-2026-10-13.json).
+
+
+## Native VST3 host sampling — 2026-10-13
+
+Milestone 4 host input now passes the Windows SoundCheck 1.0.0 native instrument
+profile. Its optional inactive stereo bus accepts float32 at 44.1 kHz. Callback
+buffers are copied before output clearing, preserving aliased input/output and
+channel silence flags. A bounded worker queue carries PCM alongside MIDI;
+worker conversion feeds the existing native ADC peripheral in the same render
+transaction, using validated 2,048-frame ingress chunks. Firmware performs the
+recording; no guest/sample RAM writes or substitute recorder are used.
+
+Original OS 2.24 records 45,649 exact host frames/channel with varying
+64/127/256/511/1024-frame callbacks and shared input/output buffers. Native
+recording underruns are zero. All 184,320 allocated sample bytes match recorded
+wave RAM, firmware Sample Save/export and fresh native Sample Load. The source
+floppy is unchanged. Actual SDK getState captures the machine for diagnostic
+wave/FIFO inspection; this is separate from third-party DAW project containers.
+
+A strict 12-second active-input clock produces 529,200 exact output frames with
+36.9 µs maximum callback and zero missed deadlines. Output-only 48/96 kHz runs and
+240,000-frame cold state also pass.354 backend tests and independent SDK metadata,
+input-clock rejection, silence flags and disconnection checks pass. State v3
+preserves pending input PCM; older formats remain decodable with zero input.
+
+Live Sampler FX remains unadvertised. Other input clocks, physical ADC fidelity,
+other DAWs and release qualification remain open. Actual DAW project portability
+is the sole remaining Milestone 4 checkbox. See the
+[host sampling contract](../NATIVE_VST3_SAMPLING.md) and
+[exact source/binary validation](validation/milestone-4-host-sampling-2026-10-13.json).

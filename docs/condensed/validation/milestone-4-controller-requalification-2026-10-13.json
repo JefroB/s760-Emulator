@@ -1,0 +1,415 @@
+{
+  "date": "2026-10-13",
+  "gate": "Milestone 4 controller current-artifact requalification",
+  "status": "55-case matrix passed; intermittent process rejection tracked as BUG-060",
+  "command": "python scripts/verify_vst3_controllers.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-controller-requalification-20261013-retry",
+  "exit_code": 0,
+  "measured_cases": 55,
+  "profile": "SoundCheck native SDK Windows x64, original OS2.24/ROBOFULL, 44100Hz/512 frames, firmware bend12 and assigned TVA controllers",
+  "sha256": {
+    "scripts/verify_vst3_controllers.py": "92a7a553b52326caa775fa02f276ad15d619ee2626e8d6959e1a5a1dbe7f5ef0",
+    "core/src/s760_native_runtime.cpp": "dc3da7a9f5a1d2037f10cd8af54d8c036a374ac7c6bfe86385852e40be3c428c",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "5b76cd34d27c7eef0657d6ad967a7892d62a324ff6b33ece204acf713fb2de27",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "78fbb2790e5399804de8a09c6c91103fabae11076779ddf4c19553997f43b2cc",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "metrics": {
+    "baseline": {
+      "peak": 0.0006031051743775606,
+      "rms": 0.0004264739400241524,
+      "frequency": 20004.0,
+      "left_peak": 0.0006031051743775606,
+      "right_peak": 0.0006031051743775606
+    },
+    "expression-full": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021733582019805908,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "expression-half": {
+      "peak": 0.008256100118160248,
+      "rms": 0.0058381385169923306,
+      "frequency": 20004.0,
+      "left_peak": 0.008256100118160248,
+      "right_peak": 0.008256100118160248
+    },
+    "expression-zero": {
+      "peak": 0.0006031051743775606,
+      "rms": 0.0004264463495928794,
+      "frequency": 20004.0,
+      "left_peak": 0.0006031051743775606,
+      "right_peak": 0.0006031051743775606
+    },
+    "expression-restored": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021734988316893578,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "configured-bend-high": {
+      "peak": 0.01396904420107603,
+      "rms": 0.00836026668548584,
+      "frequency": 4108.0,
+      "left_peak": 0.01396904420107603,
+      "right_peak": 0.01396904420107603
+    },
+    "configured-bend-low": {
+      "peak": 0.013255426660180092,
+      "rms": 0.00937280897051096,
+      "frequency": 10002.0,
+      "left_peak": 0.013255426660180092,
+      "right_peak": 0.013255426660180092
+    },
+    "configured-bend-centre": {
+      "peak": 0.03071090206503868,
+      "rms": 0.021715596318244934,
+      "frequency": 20004.0,
+      "left_peak": 0.03071090206503868,
+      "right_peak": 0.03071090206503868
+    },
+    "before-pan-left-release": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "pan-left": {
+      "peak": 0.02199944667518139,
+      "rms": 0.015554898418486118,
+      "frequency": 20004.0,
+      "left_peak": 0.04399889335036278,
+      "right_peak": 0.0
+    },
+    "before-pan-right-release": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "pan-right": {
+      "peak": 0.02199944667518139,
+      "rms": 0.015554898418486118,
+      "frequency": 20004.0,
+      "left_peak": 0.0,
+      "right_peak": 0.04399889335036278
+    },
+    "before-pan-centre-release": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "pan-centre": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021732784807682037,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "volume-half": {
+      "peak": 0.015487506054341793,
+      "rms": 0.010952087119221687,
+      "frequency": 20004.0,
+      "left_peak": 0.015487506054341793,
+      "right_peak": 0.015487506054341793
+    },
+    "volume-restored": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021732784807682037,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "rpn-two-semitones-up": {
+      "peak": 0.013982033357024193,
+      "rms": 0.008357827551662922,
+      "frequency": 21654.0,
+      "left_peak": 0.013982033357024193,
+      "right_peak": 0.013982033357024193
+    },
+    "rpn-two-semitones-down": {
+      "peak": 0.026834510266780853,
+      "rms": 0.018834523856639862,
+      "frequency": 17822.0,
+      "left_peak": 0.026834510266780853,
+      "right_peak": 0.026834510266780853
+    },
+    "rpn-centre": {
+      "peak": 0.030433878302574158,
+      "rms": 0.021518707275390625,
+      "frequency": 20004.0,
+      "left_peak": 0.030433878302574158,
+      "right_peak": 0.030433878302574158
+    },
+    "rpn-null-preserves-range": {
+      "peak": 0.013952705077826977,
+      "rms": 0.008358939550817013,
+      "frequency": 21654.0,
+      "left_peak": 0.013952705077826977,
+      "right_peak": 0.013952705077826977
+    },
+    "restored-centre": {
+      "peak": 0.030305761843919754,
+      "rms": 0.02142779901623726,
+      "frequency": 20004.0,
+      "left_peak": 0.030305761843919754,
+      "right_peak": 0.030305761843919754
+    },
+    "pedal-down": {
+      "peak": 0.030305761843919754,
+      "rms": 0.021430805325508118,
+      "frequency": 20004.8464752907,
+      "left_peak": 0.030305761843919754,
+      "right_peak": 0.030305761843919754
+    },
+    "sustain-held": {
+      "peak": 0.030305761843919754,
+      "rms": 0.02142779901623726,
+      "frequency": 20004.0,
+      "left_peak": 0.030305761843919754,
+      "right_peak": 0.030305761843919754
+    },
+    "cc120-unsupported": {
+      "peak": 0.030305761843919754,
+      "rms": 0.021430790424346924,
+      "frequency": 20004.0,
+      "left_peak": 0.030305761843919754,
+      "right_peak": 0.030305761843919754
+    },
+    "cc121-unsupported": {
+      "peak": 0.030305761843919754,
+      "rms": 0.02142779901623726,
+      "frequency": 20004.0,
+      "left_peak": 0.030305761843919754,
+      "right_peak": 0.030305761843919754
+    },
+    "other-channel-notes-off": {
+      "peak": 0.030305761843919754,
+      "rms": 0.021430790424346924,
+      "frequency": 20004.0,
+      "left_peak": 0.030305761843919754,
+      "right_peak": 0.030305761843919754
+    },
+    "native-panic": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "note-before-123": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021735787391662598,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "released-by-123": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "note-before-124": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021735787391662598,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "released-by-124": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "note-before-125": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021735787391662598,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "released-by-125": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "note-before-126": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021735787391662598,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "released-by-126": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "note-before-127": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021735787391662598,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "released-by-127": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "reset-note": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021732784807682037,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "reset-pedal-down": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021735908463597298,
+      "frequency": 20004.8464752907,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "reset-held-note": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021732784807682037,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "reset-nondefault-controls": {
+      "peak": 0.0037490352988243103,
+      "rms": 0.0022458890452980995,
+      "frequency": 21654.0,
+      "left_peak": 0.0037490352988243103,
+      "right_peak": 0.0037490352988243103
+    },
+    "explicit-reset-released": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "explicit-reset-fresh-note": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021732784807682037,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "panic-pedal-down": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021735908463597298,
+      "frequency": 20004.8464752907,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "panic-held-note": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021732784807682037,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "all-channel-panic": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "post-panic-note": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021732784807682037,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "final-release": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "assigned-modulation-full": {
+      "peak": 0.0307368915528059,
+      "rms": 0.02173515595495701,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "assigned-modulation-half": {
+      "peak": 0.008256100118160248,
+      "rms": 0.005837715696543455,
+      "frequency": 20004.0,
+      "left_peak": 0.008256100118160248,
+      "right_peak": 0.008256100118160248
+    },
+    "assigned-modulation-zero": {
+      "peak": 0.0006031051743775606,
+      "rms": 0.00042647719965316355,
+      "frequency": 20004.0,
+      "left_peak": 0.0006031051743775606,
+      "right_peak": 0.0006031051743775606
+    },
+    "assigned-modulation-restored": {
+      "peak": 0.0307368915528059,
+      "rms": 0.021733416244387627,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "modulation-test-release": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    },
+    "final-retrigger": {
+      "peak": 0.0307368915528059,
+      "rms": 0.02173515595495701,
+      "frequency": 20004.0,
+      "left_peak": 0.0307368915528059,
+      "right_peak": 0.0307368915528059
+    },
+    "final-all-channel-panic": {
+      "peak": 0.0,
+      "rms": 0.0,
+      "frequency": 0.0,
+      "left_peak": 0.0,
+      "right_peak": 0.0
+    }
+  },
+  "private_evidence": "docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-controller-requalification-20261013-retry",
+  "limitations": [
+    "One preceding run rejected a process block during assignment UI editing; unchanged repeat passed. BUG-060 remains open; cause unknown.",
+    "Raw CC120/121 remain unsupported; explicit supported-message panic/reset sequences are qualified.",
+    "All-channel sequences submitted; simultaneous audible effects on all16 parts are not established.",
+    "Other DAWs and hardware fidelity remain separate.",
+    "No new three-rate, state or backend regression run; those remain historical evidence in the original qualification record."
+  ]
+}

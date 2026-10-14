@@ -10,7 +10,7 @@ namespace s760 {
 // All allocation and validation take place off the realtime callback.
 struct NativePluginState {
     static constexpr std::size_t max_bytes=266u*1024*1024;
-    unsigned version=2,rate=44100,max_block=512;
+    unsigned version=3,rate=44100,max_block=512;
     MediaLibrary::Snapshot media;
     bool has_stream=false;
     std::uint64_t origin=0;
@@ -43,9 +43,11 @@ struct NativePluginState {
         if(!NativeRateConverter::supported(rate) || !max_block || max_block>1024 || identity.size()!=160 ||
            machine.empty() || machine.size()>257u*1024*1024 || origin>9007199254740991ULL)
             throw std::invalid_argument("Invalid plugin state profile");
-        if(version!=1 && version!=2) throw std::invalid_argument("Invalid state version");
+        if(version!=1 && version!=2 && version!=3) throw std::invalid_argument("Invalid state version");
         if(version>=2) media.validate();
         if(!has_stream) return;
+        if(version<3) for(const auto& block:stream.pending) for(unsigned i=0;i<block.frames*2;++i)
+            if(block.input[i]!=0.f)throw std::invalid_argument("Legacy state cannot preserve input PCM");
         if(converter.rate!=rate || converter.host_cursor!=stream.completed ||
            stream.delay_frames!=NativeRateConverter::host_samples(NativeStream::output_delay,rate) ||
            stream.batch_frames!=NativeRateConverter::host_samples(2048,rate))
@@ -63,6 +65,7 @@ struct NativePluginState {
             for(const auto& b:stream.pending) {
                 w.integer(b.first,8);w.integer(b.frames);w.integer(b.events);
                 for(unsigned i=0;i<b.events;++i) {w.integer(b.midi[i].offset);for(auto byte:b.midi[i].bytes) w.integer(byte,1);}
+                if(version>=3)for(unsigned i=0;i<b.frames*2;++i)w.pcm(b.input[i]);
             }
             w.integer(stream.pcm.size());for(auto value:stream.pcm) w.pcm(value);
         }
@@ -76,7 +79,7 @@ struct NativePluginState {
         std::vector<std::uint8_t> payload(archive.begin()+40,archive.end());auto sum=native_digest(payload);
         if(!std::equal(sum.begin(),sum.end(),archive.begin()+8)) throw std::invalid_argument("Plugin state checksum mismatch");
         Reader r{payload};NativePluginState s;
-        s.version=unsigned(r.integer());if(s.version!=1 && s.version!=2) throw std::invalid_argument("Unsupported plugin state version");
+        s.version=unsigned(r.integer());if(s.version!=1 && s.version!=2 && s.version!=3) throw std::invalid_argument("Unsupported plugin state version");
         s.rate=unsigned(r.integer());s.max_block=unsigned(r.integer());auto has=r.integer();
         if(has>1) throw std::invalid_argument("Invalid stream marker");s.has_stream=has!=0;s.origin=r.integer(8);s.identity=r.blob(160);s.machine=r.blob(257u*1024*1024);
         if(s.has_stream) {
@@ -87,8 +90,9 @@ struct NativePluginState {
             q.pending.resize(std::size_t(count));
             for(auto& b:q.pending) {
                 b.first=r.integer(8);b.frames=unsigned(r.integer());b.events=unsigned(r.integer());
-                if(b.events>NativeStream::max_events) throw std::invalid_argument("Too many pending events");
+                if(b.frames>NativeStream::max_frames || b.events>NativeStream::max_events) throw std::invalid_argument("Too many pending events");
                 for(unsigned i=0;i<b.events;++i) {b.midi[i].offset=unsigned(r.integer());for(auto& byte:b.midi[i].bytes) byte=std::uint8_t(r.integer(1));}
+                if(s.version>=3)for(unsigned i=0;i<b.frames*2;++i)b.input[i]=r.pcm();
             }
             count=r.integer();if(count>65536) throw std::invalid_argument("Too much queued PCM");q.pcm.resize(std::size_t(count));for(auto& value:q.pcm)value=r.pcm();
         }

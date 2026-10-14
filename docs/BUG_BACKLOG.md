@@ -78,10 +78,147 @@ follow the schema so entries stay machine-greppable.
 | BUG-053 | FIXED | S3 | tests | Private SoundCheck test processor drops pending parameter automation | 2026-10-12 | 2026-10-12 |
 | BUG-054 | CANNOT-REPRODUCE | S3 | ui | Knob indicator visual defect; fix required before shipping, shared frontend impact suspected | 2026-10-12 | |
 | BUG-055 | FIXED | S3 | bridge | Native VST3 now reports potentially infinite sustained-voice tail | 2026-10-12 | 2026-10-12 |
+| BUG-056 | FIXED | S2 | dsp-audio | Native VST launcher enables stereo mixer; MIDI pan now reaches native L/R output | 2026-10-13 | 2026-10-13 |
+| BUG-057 | FIXED | S2 | dsp-audio | Optional native stereo host ADC input records and saves exact firmware samples | 2026-10-13 | 2026-10-13 |
 
-<!-- NEXT-ID: BUG-056 -->
+| BUG-058 | FIXED | S2 | hardware | User reseated misplaced internal wheel; GB-6 now works with installed experimental OS | 2026-10-13 | 2026-10-13 |
+
+| BUG-059 | FIXED | S3 | hardware | User confirms v8 vertical gain4 fixes row selection; matching X4/Y4 v9 generated | 2026-10-13 | 2026-10-13 |
+
+| BUG-060 | OPEN | S3 | tests | Intermittent controller QA audio-block rejection; unchanged55-case repeat passes | 2026-10-13 | |
+
+<!-- NEXT-ID: BUG-061 -->
 
 ## Details
+
+### BUG-060 — Controller requalification rejects a block during UI editing
+
+- **Status:** OPEN
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-13
+- **Reported by:** Native controller requalification
+
+**Summary:** A fresh run against the current WebView module passes measured bend, expression, pan, channel-mode release, panic and neutral reset, then rejects a process block while changing the assigned controller from11 to1. The historical55-case run predates the current binaries.
+
+**Repro:** `python scripts/verify_vst3_controllers.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir NEW_PRIVATE_DIRECTORY`, outside the sandbox, original OS2.24/ROBOFULL.
+
+**Expected:** All55 measured cases finish and emit automation-report.json.
+
+**Actual:** `RuntimeError: Error: Plugin rejected audio block` in select_assigned_controller. No completed report is emitted. Cause and repeatability remain under investigation; this is not evidence of incorrect CC1 semantics.
+
+**Evidence:** Private soundcheck/m4-controller-requalification-20261013-native captures and host.log.
+
+**Notes:** Earlier successful qualification remains historical evidence. Current artifact requalification must finish before claiming a fresh full pass.
+
+**Follow-up:** The unchanged current-artifact repeat in private soundcheck/m4-controller-requalification-20261013-retry exits0 and passes all55 cases, including the assignment edit that failed previously. Keep this intermittent failure OPEN: its cause is unknown. Current hashes and complete measured results are recorded in `docs/condensed/validation/milestone-4-controller-requalification-2026-10-13.json`; no production fix or reliability closure is claimed.
+
+### BUG-059 — GB-6 vertical sensitivity skips part rows
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** hardware
+- **Opened:** 2026-10-13
+- **Reported by:** user, physical GB-6/S-760
+- **Resolved:** 2026-10-13
+
+**Summary:** After the mechanical wheel repair, tracking works but vertical cursor steps are too coarse for adjacent Perform Play part selection.
+
+**Resolution:** User tested v8 X8/Y4 and reports it works perfectly for the requested row-selection task. Resolved2026-10-13. At user request, v9 matches horizontal gain to4 as well; only file0x18BD0 changes from3 to2 relative to v8. All2,048 decoded/peripheral-model cases pass. V9 SHA256 `c611e7156c9069dc632bcfd8e4d20a52da70ed2528112f29fe87258803f42deb`; v9 itself still awaits hardware confirmation. Earlier notes below describe pre-resolution evidence.
+
+**Repro:** Hover over Perform Play part rows and move the trackball vertically to select the next row. Installed image revision was not explicitly identified; latest supplied baseline was v7 X8/Y8.
+
+**Expected:** Adjacent rows are readily selectable.
+
+**Actual:** Cursor skips a row when moving up or down.
+
+**Evidence:** User report in chat; `temp/work/sony-gb6-20261013/v8-validation.json` identifies the candidate and checks.
+
+**Notes:** V8 halves vertical gain to4, keeping horizontal gain8. Compared with v7, only file byte0x18BEB changes from3 to2 (vertical SHLB count). 2,048 decoded/peripheral-model cases pass. If stock2x scaling applies, a single vertical counter step now produces8 pixels rather than16. Actual row-selection improvement awaits hardware test. Original images retained; fourth-controller plan remains deferred.
+
+### BUG-058 — Experimental GB-6 OS patch has weak axis response
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** hardware
+- **Opened:** 2026-10-13
+- **Reported by:** user, real S-760/GB-6 trial
+- **Resolved:** 2026-10-13
+
+**Resolution:** User found an internal wheel incorrectly seated, reseated it, and reports the device now works. Before repair, directly rotating the tracking shafts by finger produced very smooth cursor movement, supporting mechanical contact/binding as the cause of the remaining left/up difficulty. Preserve the user's currently installed image as their working baseline; the exact installed revision was not explicitly identified, so do not claim v7 hardware qualification. Earlier v3 bank-addressing and axis-select implementation defects remain part of the experimental history. Button coverage, long-duration testing and general GB-6 compatibility are not established by this report. Negative-endpoint and phase explanations were hypotheses, not confirmed causes of the final sticking.
+
+**Summary:** The first GB-6-only OS2.24 patch communicates with the device but motion is impractically slow and asymmetric.
+
+**Repro:** Boot `S760224.GB6-experimental.IMG` (SHA256 `285059b2055892fb7d15faf1b1927ddc54eb6b3093548a1c5914f0cc79890f2c`) on the physical sampler with Sony GB-6 and move the ball on each axis.
+
+**Expected:** Usable horizontal and vertical cursor motion.
+
+**Actual:** User reports right/left works very slowly; up/down barely works. Button behavior was not reported.
+
+**V2 hardware follow-up:** User reports up/down reversed and left/right still super slow. No measured speed or button results supplied. V3 candidate reverses Y and supports independent build-time gains, default X16/Y4 (4x v2 small horizontal motion; same vertical magnitude). Lookup outputs clamp to +/-63 before stock 2x scaling to avoid sign wrap. 512 decoded table cases pass; v3 hardware validation pending.
+
+**V3 hardware follow-up:** User reports no vertical motion and only leftward horizontal motion. V3 is rejected by hardware. Its static lookup tests assumed CPU code and data addresses map to the same physical bank, contrary to the separate fetch/data selectors documented in condensed document 01. The lookup tables were placed in code backing without configuring the data selector. This is an implementation defect; actual runtime bank selectors were not captured.
+
+**V4 candidate:** Rebuilt from v2, removes all lookup loads/tables, directly reverses Y arithmetic, raises X gain from4 to8 and caps its +64 endpoint to+63 before stock scaling. Full decoded poll flow passes 768 phase/nibble/upper-bit cases, including phase and selection. Candidate SHA256 `5d43390dd5ab1080a7cab0656a6c5d1fffd12d0b0f393be07ea2564e55622fa8`. Hardware retest remains required; previous static checks did not establish hardware correctness.
+
+**V4 hardware follow-up:** User reports right seems to move the cursor down; up/down now have correct direction but remain slow. Stored-phase/physical-select mismatch is a possible cause, not established by a port capture. V5 removes the persistent phase byte and explicitly selects high/X, waits, samples X, then low/Y, waits, samples Y. X8/Y8 arithmetic, no lookup tables. 1,024 decoded X/Y/button combinations passed, including delay loops and write/read ordering; hardware select mapping, latency and counter behavior remain unverified. V5 SHA256 `c7407cbac08a16de3389e3f43b5d5adf5144de5f4b1961524b3986995a41d0dc`. Still IN-PROGRESS.
+
+**Evidence:** Original report in this chat. Local experiment artifacts under `temp/work/sony-gb6-20261013/`; v2 hashes, decoded checks and caveats in `v2-validation.json`.
+
+**V6 hardware follow-up / v7 diagnostic:** User reports improvement but intermittent difficulty moving up or left. V6 produces -64 at nibble0, subsequently -128 if stock 2x scaling applies. This is representable signed-byte data, so it is not proof of overflow or the cause of the reported sticking. V7 changes only that negative endpoint on each axis to -63 (stock doubled value -126), leaving ordinary X8/Y8 gain, direction, selection, timing and buttons unchanged. 2,048 decoded/peripheral-model cases pass. Candidate SHA256 `b438cc9d0a2157113aa0f71974cfa51e5d176ef84cd9449f965cc53c93ae1ea4`; hardware validation pending. If symptom persists, raw counter observations are needed rather than assuming further gain changes fix it.
+
+**V5 hardware follow-up and revised protocol evidence:** User reports pure right moves mostly down and somewhat right; vertical responds poorly. No other device is available to test this GB-6. Retrieved openMSX `src/input/Trackball.cc` directly via GitHub: its read selects Y when pin8 high, X when low; rising resets X, falling resets Y. Its signed deltas pass through without mouse-style negation. This contradicts the wiki select mapping used in v1-v5 and agrees with the published MSX BIOS listing (first low sample DX, subsequent high sample DY). Related GB-7 evidence, not direct GB-6 parity. Prior level-reset/phase theories are unconfirmed and no longer the leading explanation.
+
+**V6 candidate:** Low/X then high/Y; read each counter before its reset edge, end low; original short delay helper only; X8/Y8, no mouse sign negation, no lookup tables or persistent phase. 2,048 decoded polling/peripheral-model cases pass, including actual select-keyed reads, reset edges and both startup select states. Evidence source saved locally as `openmsx-Trackball-reference.cc`; validation in `v6-validation.json`. SHA256 `b8ea69e840d38701f16bed091c1e1950c2eca8f1371bd46bcf2cb88744d9e3fd`. Hardware retest required.
+
+**Notes:** V1 uses conservative linear gain and leaves X selected between polls. A possible level-sensitive counter reset could starve Y; this remains a hypothesis. V2 alternates selection across polls and increases per-sample gain 4x, repurposes the old mouse timeout byte as phase and bypasses its mouse-only timeout logic. Static checks passed for 192 phase/nibble/button cases. Real boot, axis timing, speed and buttons remain unverified for v2; do not mark fixed until retested.
+
+
+### BUG-057 — Native VST3 host input does not reach native ADC
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-13
+- **Severity:** S2
+- **Area:** dsp-audio
+- **Opened:** 2026-10-13
+- **Reported by:** Milestone 4 host sampling objective / native QA
+
+**Summary:** The native instrument exposed no accepted host input bus and its worker rendered output without delivering host PCM to the Milestone 3 ADC peripheral.
+
+**Repro:** Load the original-firmware native module in SoundCheck and request stereo sampling input. The prior module reports no input bus. An initial separate input/render worker implementation also exhausts its output lead under paced host processing.
+
+**Expected:** An explicitly activated supported stereo input reaches firmware Sampling and survives Sample Save/cold Load; inactive output-only use remains valid.
+
+**Actual:** Host recording was unavailable. The first ingress implementation rejects audio blocks after output starvation; logs are retained under chatGPT-work/m4-host-input-181 and -182.
+
+**Evidence:** `scripts/verify_vst3_sampling_input.py`; private native host logs and firmware screenshots. [Final validation](condensed/validation/milestone-4-host-sampling-2026-10-13.json).
+
+**Resolution:** Optional 44.1 kHz stereo instrument input, bounded copied PCM with in-place buffer support, worker-side PCM16 conversion and combined peripheral input/render transactions. FX remains unadvertised; other input rates reject explicitly.
+
+**Qualification:** Actual SoundCheck SDK buses with varying/aliased buffers record45649 exact L/R frames/channel with zero native ADC underruns;184320 allocation bytes survive firmware Save/cold Load. Active-input paced callbacks and output-only48/96kHz replay are exact with zero missed deadlines. Single render transactions enqueue bounded peripheral chunks, avoiding partial-batch round trips.354 backend regressions, SDK input rejection/silence/disconnection tests and240000-frame cold state pass.
+
+### BUG-056 — Native VST launcher omits stereo mixer enable
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** dsp-audio
+- **Opened:** 2026-10-13
+- **Resolved:** 2026-10-13
+- **Reported by:** Native SoundCheck controller qualification
+
+**Summary:** The C++ native launcher enables interpolation/envelopes but never enables the existing stereo mixer. Native pan coefficients are bypassed and both output channels remain identical.
+
+**Repro:** SoundCheck1.0.0 Windows x64, OS2.24/ROBOFULL,44100Hz/512 frames, module SHA256 e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe. Send CC10=0/127 and retrigger note60. Compare separately captured left/right PCM.
+
+**Expected:** Firmware-selected pan changes native stereo channel levels.
+
+**Actual:** Both channel peaks remain0.0440203883 for both pan extremes. `native_wave_monitor_update` applies unity to both sides because `m_native_stereo_monitor` is false.
+
+**Evidence:** Private soundcheck/m4-controllers-182/automation-report.json and controller qualification log. Regression and final identities accompany closure.
+
+**Notes:** Stereo coefficient storage/scaling already exists in the native driver; qualify enabling that path in the C++ runtime. Hardware gain-law fidelity remains Milestone5.
+
+**Resolution:** C++ native launches explicitly enable the existing stereo coefficient path. SoundCheck fresh-note pan produces left-only/right-only/equal-centre output; the prior binary fails this check.55 controller cases, three-rate exact native PCM with zero missed deadlines,240000-frame cold state, core/plugin tests,354 backend tests and native original-firmware acceptance pass. Centre level changes from the former mono bypass; old-build state intentionally rejects. Hardware gain-law fidelity remains separate. [Evidence](condensed/validation/milestone-4-controller-semantics-2026-10-13.json).
 
 ### BUG-055 — Native sampler reports zero tail
 

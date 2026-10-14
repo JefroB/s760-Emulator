@@ -1,5 +1,18 @@
 # Native plugin state contract
 
+## SoundCheck project document — 2026-10-14
+
+SoundCheck is the user-accepted DAW/host matrix for Milestone4. Its private SDK
+adapter and new project-document runner qualify cold project reopen at44.1kHz/
+maximum512, explicit per-project configuration, relocated matching firmware and
+captured media, and variable callback blocks64/127/256/511/512. Each221184-frame
+L/R-average playback/release capture matches exactly. Corrupt-state rejection
+preserves replay. Different module bytes,48kHz recall and a changed negotiated
+maximum reject; migration remains unsupported. This is command-driven project
+tooling, not stock-GUI project integration or another DAW's project format.
+See the [project workflow](SOUNDCHECK_PROJECTS.md) and
+[current evidence](condensed/validation/milestone-4-soundcheck-project-2026-10-14.json).
+
 The native instrument now implements suspended `getState`/`setState` for the
 bounded native checkpoint profile. A single archive contains native
 machine/Lua state, unread stereo PCM, queued host blocks and note events, host
@@ -86,8 +99,10 @@ These device-level tests do not qualify the original firmware's SCSI Save/load
 workflow, explicit host-image export, autosave or hardware bus fidelity. Those
 remain open. Larger media configurations remain outside the snapshot profile.
 
-Actual DAW state-call ordering, differing host block sizes/rates, simultaneous
-editor controls, native ADC, autosave and cross-build migration remain unqualified.
+Third-party DAW state-call ordering, changed negotiated block maxima/rates,
+simultaneous third-party DAW input-state recall, autosave and cross-build migration
+remain unqualified. The accepted SoundCheck project-runner profile and variable
+callback sizes are qualified below.
 The Milestone 1 snapshot objective is complete for this quiescent, same-build,
 same-rate/block-size profile. Actual DAW/editor and sampling objectives remain open.
 
@@ -121,3 +136,70 @@ Keep `s760_native_runtime_tests ROOT PRIVATE_STATE --startup-repeats` as the
 targeted lifecycle regression. Earlier failing artifacts remain recorded in
 the backlog and finding159; exception diagnostics retain the operation stage,
 socket error and remaining byte count.
+
+## Cold native QA host project reopen — 2026-10-13
+
+SoundCheck1.0.0 Windows x64 now qualifies file-backed component state at
+44100 Hz/512 frames. The private QA adapter suspends processing, calls actual
+SDK `IComponent::getState`, writes the complete stream to disk and removes the
+instance. A new host process loads the same module and calls `setState` from
+that file before resuming. The test moves the original sample library and old
+private runtime directory out of their original paths and supplies matching ROM
+and system-disk contents from relocated filenames through persisted local settings.
+
+Loaded ROBOFULL playback/release matches221184 frames exactly before/after cold
+host exit; the final22050 frames are zero. This comparison uses SoundCheck's
+full-rate `(L+R)/2` waveform (512 samples per request), not an independent
+stereo-channel comparison. Earlier native all-rate stereo state replay remains
+separate evidence. Flipping one payload byte rejects the file; after resuming,
+another221184-frame replay remains exact. Captures and the approximately153MiB
+state file stay private; no firmware/sample bytes are committed.
+
+Product installation/firmware settings remain a local configuration file.
+Projects capture media metadata and native media bytes; they do not overwrite
+the user's global settings. Browser references retain the saved source labels;
+relocation does not silently remount a file or infer a replacement library.
+Use the media browser's **Media folder / Scan folder** for subsequent insertions
+from a new library. External SCSI matching-content prerequisites are unchanged.
+
+Reproduce with a private SoundCheck server copy built with the
+[QA adapter patch](condensed/validation/soundcheck-project-qa-2026-10-13.patch),
+a WebView-enabled native module, installed Python `websockets`, `playwright` and
+`numpy`, and the documented original local firmware/ROBOFULL fixtures. The
+verifier requires free loopback port4000 and a free WebView debug port9231 by
+default; it starts hidden, task-owned hosts and requires a new private directory.
+
+```powershell
+python scripts/verify_vst3_project_portability.py --host <private-SoundCheckServer.exe> --module <WebView-Roland_S760.vst3> --state-dir <new-private-directory>
+```
+
+This was the native QA host subset of project portability. The subsequent
+SoundCheck project-document qualification below adds project-local configuration
+selection, a versioned document, variable callback sizes and compatibility
+rejection tests. Other hosts, migration and clean-machine product acceptance
+remain outside that profile. [Original identity, commands and results](condensed/validation/milestone-4-project-portability-2026-10-13.json).
+
+
+The2026-10-13 controller fix enables the C++ native stereo mixer. The module
+identity changes, so earlier-module archives intentionally reject under the
+existing same-build rule. Fresh exported-module48kHz recall reproduces240000
+stereo frames, queued/active notes and a silent release tail; corruption and
+failed writes reject/recover as before. No archive migration is introduced.
+See [current build/state evidence](condensed/validation/milestone-4-controller-semantics-2026-10-13.json).
+
+
+## Pending host input (state version 3)
+
+Version 3 adds copied interleaved input PCM to pending host blocks. ADC FIFO,
+recorded wave RAM and recording-loss counters remain native machine state.
+The ADC launch profile participates in the identity hash. Bus activation is
+host-managed and is not serialized. Versions 1/2 decode with zero pending input;
+encoding nonzero input as a legacy version rejects instead of discarding audio.
+Finite values, bounded frame counts and queue continuity validate before restore.
+
+Stream and archive regressions preserve exact queued stereo input after source
+buffers are overwritten, and reject NaN input and legacy downgrades. The actual
+SoundCheck sampling acceptance inspects recorded wave RAM and saved media from
+its real SDK getState archive, then verifies a fresh firmware Sample Load. This
+is distinct from third-party DAW project portability. See
+[host sampling and evidence](NATIVE_VST3_SAMPLING.md).

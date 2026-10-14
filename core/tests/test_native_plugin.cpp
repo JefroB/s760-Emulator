@@ -31,11 +31,12 @@ static void check(bool ok,const char* text) { if(!ok) throw std::runtime_error(t
 #endif
 int main(int argc,char** argv) {
     try {
-        if(argc<3 || argc>6) throw std::runtime_error("Usage: s760_native_runtime_tests ROOT PRIVATE_STATE [--paced|--paced-var|--controllers|--offline] [44100|48000|96000] [seconds]");
+        if(argc<3 || argc>6) throw std::runtime_error("Usage: s760_native_runtime_tests ROOT PRIVATE_STATE [--paced|--paced-var|--controllers|--input|--offline] [44100|48000|96000] [seconds]");
         std::filesystem::path root=std::filesystem::absolute(argv[1]);
         s760::NativeRuntimeConfig cfg{root,argv[2],root/"roms/BOOT/Roland_S-760_v1.11.BIN",
             root/"roms/System/S760224.IMG",root/"roms/FDD/ROBOFULL.IMG"};
 #ifdef S760_TEST_EXPORTED_FACTORY
+        cfg.experimental_adc=true;
         struct Module {
             HMODULE handle;
             ~Module() { if(handle) FreeLibrary(handle); }
@@ -106,7 +107,8 @@ int main(int argc,char** argv) {
         auto& native=*host.native_runtime();
         const bool controller_test=argc>=4 && std::string(argv[3])=="--controllers";
         const bool offline=argc>=4 && std::string(argv[3])=="--offline";
-        const bool varied=offline || controller_test || (argc>=4 && std::string(argv[3])=="--paced-var");
+        const bool input_test=argc>=4 && std::string(argv[3])=="--input";
+        const bool varied=offline || controller_test || input_test || (argc>=4 && std::string(argv[3])=="--paced-var");
         const bool paced=!offline && (varied || (argc>=4 && std::string(argv[3])=="--paced"));
         const bool state_test=argc>=4 && std::string(argv[3])=="--state";
         check(argc==3 || paced || offline || state_test,"Unknown option");
@@ -201,7 +203,16 @@ int main(int argc,char** argv) {
         invalid_setup=setup;invalid_setup.symbolicSampleSize=1;
         check(plugin.setupProcessing(invalid_setup)==kResultFalse,"Unsupported float64 native buffers accepted");
         check(plugin.setupProcessing(setup)==kResultOk,"Native plugin setup failed");
-        check(plugin.getBusCount(kAudio,kInput)==0,"Native ADC falsely advertised");
+        check(plugin.getBusCount(kAudio,kInput)==(cfg.experimental_adc?1:0),"Native input topology mismatch");
+        if(cfg.experimental_adc) {
+            auto input_setup=setup;input_setup.sampleRate=44100;
+            check(plugin.setupProcessing(input_setup)==kResultOk,"Input clock setup failed");
+            check(plugin.activateBus(kAudio,kInput,0,true)==kResultOk,"Native stereo input activation failed");
+            auto unsupported=input_setup;unsupported.sampleRate=48000;
+            check(plugin.setupProcessing(unsupported)==kResultFalse,"Unsupported active-input rate accepted");
+            check(plugin.activateBus(kAudio,kInput,0,false)==kResultOk,"Native input deactivation failed");
+            check(plugin.setupProcessing(setup)==kResultOk,"Output-only rate setup failed");
+        }
         check(plugin.getState(nullptr)==kResultFalse && plugin.setState(nullptr)==kResultFalse,"Legacy state used for native machine");
         if(state_test) {
             unsigned instance=0;
@@ -219,6 +230,7 @@ int main(int argc,char** argv) {
             });
             return 0;
         }
+        if(input_test)check(cfg.experimental_adc && host_rate==44100 && plugin.activateBus(kAudio,kInput,0,true)==kResultOk,"Input acceptance requires native 44.1kHz ADC profile");
         const auto padding=s760::NativeRateConverter::host_samples(s760::NativeStream::output_delay,host_rate);
         ControllerTimeline controllers(host_rate);
         check(!controller_test || seconds==12,"Controller timeline requires12 seconds");
@@ -263,6 +275,9 @@ int main(int argc,char** argv) {
         float* channels[]{left,right};
         AudioBusBuffers output{2,0}; output.channelBuffers32=channels;
         Steinberg::ProcessData data{}; data.processMode=setup.processMode; data.numSamples=256; data.numOutputs=1; data.outputs=&output;
+        float input_left[1024]{},input_right[1024]{};float* input_channels[]{input_left,input_right};
+        AudioBusBuffers input_bus{2,0};input_bus.channelBuffers32=input_channels;
+        if(input_test){data.numInputs=1;data.inputs=&input_bus;}
         Events events; data.inputEvents=&events;
         std::size_t consumed=0,first_audible=0;
         bool note_on_verified=false;
@@ -280,6 +295,10 @@ int main(int argc,char** argv) {
             unsigned count=varied ? sizes[block%5] : 256;
             count=unsigned(std::min<std::size_t>(count,total-consumed));
             data.numSamples=int(count);
+            if(input_test)for(unsigned i=0;i<count;++i) {
+                input_left[i]=float((int((consumed+i)%257)-128)*64)/32768.f;
+                input_right[i]=float((int((consumed+i)%509)-254)*32)/32768.f;
+            }
             controllers.bind(consumed,count);
             data.inputParameterChanges=controller_test ? &controllers : nullptr;
             events.present=(block==0 || (consumed<=note_off && consumed+count>note_off));
@@ -349,7 +368,7 @@ int main(int argc,char** argv) {
         check(offline || missed_deadlines==0,"Callback exceeded its block deadline");
         check(plugin.setProcessing(false)==kResultOk,"Final suspend failed");
         std::cout << "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=" << consumed
-                  << " rate=" << host_rate << " reference_exact=1 peak=" << peak << " tail=" << tail << " first_audible=" << first_audible
+                  << " rate=" << host_rate << " input_active=" << input_test << " reference_exact=1 peak=" << peak << " tail=" << tail << " first_audible=" << first_audible
                   << " offline=" << offline << " reported_tail=" << plugin.getTailSamples() << " reported_latency=" << plugin.getLatencySamples() << " paced=" << paced << " varied=" << varied << " max_callback_us=" << max_callback_us << " max_deadline_fraction=" << max_deadline_fraction << " missed_deadlines=" << missed_deadlines << "\n";
         auto* original_stream=plugin.native_stream();
         setup.sampleRate=host_rate==96000 ? 48000 : 96000;

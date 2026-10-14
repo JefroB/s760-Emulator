@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-13",
+  "gate": "Milestone 4 native QA disk-backed project save/cold reopen subset",
+  "identity": {
+    "source_revision": "d6264da54caa89b09fcd894ce7d9dba322df856e",
+    "sha256": {
+      "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+      "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "roms\\FDD\\ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+      "scripts\\s760_runtime.lua": "5ee465c4e011217c7d635df28f820285e36b1ab126711745acba2859b6ec52d1",
+      "core\\src\\s760_vst3_plugin.cpp": "e358b87993111c44f963b7cda2175a78872fad1a7ce3c01d77c8aee92bd28e2b",
+      "scripts\\verify_vst3_project_portability.py": "f5c4db7929d033830c8213bc3ec79a34310d1e7f8b95680f98bd08207f96280f",
+      "scripts\\verify_vst3_configured_bend.py": "59afbe098f41bb258eceed53c65ded8eada5c3a957f72e0908cbb6c31b9e4773",
+      "docs\\condensed\\validation\\soundcheck-project-qa-2026-10-13.patch": "5b226a4f038c963a5481b82b31542798c86f3779b25e01a9ba33693fb2adeb06",
+      "docs\\ic20-hle-findings\\chatGPT-work\\m2-webview-build\\Release\\Roland_S760.vst3": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe",
+      "docs\\ic20-hle-findings\\chatGPT-work\\sdk150\\host\\build\\Release\\SoundCheckServer.exe": "ab0c38385f72551077957ce278c96cd3fa1f1fc3b5b8ddd0296ec704b52eb61f"
+    },
+    "runtime_module_changed": false
+  },
+  "command": "python scripts/verify_vst3_project_portability.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-project-final-181",
+  "result": {
+    "host": "SoundCheck 1.0.0 Windows x64 native SDK QA host",
+    "sampleRate": 44100,
+    "blockSize": 512,
+    "frames": 221184,
+    "exact_pcm": true,
+    "corrupt_rejection_preserves_pcm": true,
+    "release_tail_peak": 0.0,
+    "original_library_missing": true,
+    "original_native_state_directory_missing": true,
+    "firmware_relocated": true,
+    "settings_persisted": true,
+    "project_bytes": 160646896,
+    "project_sha256": "754ae3eec5200527bffca971368877edcf51326d60c12af61f585276314f1a2a",
+    "module_sha256": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe"
+  },
+  "comparison": "Full-rate (L+R)/2 waveform,512 frames/request;221184 frames exact before/after cold host exit and again after corrupt-file rejection",
+  "prerequisites": [
+    "Windows x64; WebView-enabled native instrument",
+    "Private SoundCheck1.0.0 SDK QA host built with committed adapter patch",
+    "Original IC15 v1.11, OS2.24 and ROBOFULL fixtures",
+    "Python websockets/playwright/numpy; free loopback4000 and9231"
+  ],
+  "regressions": "354 passed in36.02s; native process access permitted. An initial restricted sandbox run stalled and was stopped; it is not passing evidence.",
+  "limitations": [
+    "Native QA host component-state files, not actual DAW project containers",
+    "Same build,44100Hz,512-frame setup; local product configuration persists separately",
+    "No cross-build/rate/block migration, per-project firmware overrides or SCSI portability qualification",
+    "L/R-average comparison does not independently compare stereo channels",
+    "Captures and proprietary project-state archive remain private"
+  ],
+  "private_evidence": "docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-project-final-181"
+}

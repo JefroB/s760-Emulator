@@ -104,6 +104,7 @@ private:
     tresult get_native_state(Steinberg::IBStream*);
     tresult set_native_state(Steinberg::IBStream*);
     bool m_native_mode = false;
+    bool m_native_input_supported=false,m_native_input_active=false;
     bool m_native_state_failed = false;
     std::string m_native_ui_url;
     bool m_configuration_pending=false,m_terminated=false,m_configuration_saved=false;

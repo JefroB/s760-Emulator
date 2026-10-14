@@ -1,0 +1,287 @@
+--- a/main.cpp
++++ b/main.cpp
+@@ -1,3 +1,5 @@
++#include <filesystem>
++#include <fstream>
+ /**
+  * SoundCheck C++ WebSocket Server
+  * Provides native VST3 hosting capabilities via WebSocket bridge
+@@ -42,6 +44,7 @@
+ #include "pluginterfaces/vst/ivstcomponent.h"
+ #include "pluginterfaces/vst/ivstevents.h"
+ #include "pluginterfaces/vst/ivstparameterchanges.h"
++#include "public.sdk/source/vst/hosting/parameterchanges.h"
+ #include "pluginterfaces/vst/ivstmessage.h"       // IMessage, IConnectionPoint, IAttributeList
+ #include "pluginterfaces/base/funknown.h"
+ #include "pluginterfaces/base/ibstream.h"
+@@ -250,6 +253,7 @@
+ class SimpleMemoryStream : public IBStream {
+ public:
+     SimpleMemoryStream() : refCount(1), pos(0) {}
++    const std::vector<uint8_t>& qaBytes() const {return data;}
+ 
+     tresult PLUGIN_API queryInterface(const TUID _iid, void** obj) override {
+         if (FUnknownPrivate::iidEqual(_iid, IBStream::iid) ||
+@@ -406,8 +410,12 @@
+     std::string name;
+     std::string path;
+     bool isProcessing = false;
++    bool isInstrument = false, samplingInput = false;
++    uint64_t qaInputClock = 0;
+     double sampleRate = 44100.0;
+     int32 blockSize = 512;
++    int32 processMode = Vst::kRealtime;
++    IPtr<SimpleMemoryStream> qaState;
+     // For sustained notes during testing
+     std::vector<int16> activeNotes;
+     // Pending parameter changes to send to processor
+@@ -636,7 +644,7 @@
+         try {
+             g_wsServer = &m_server;  // Set global pointer for UI thread access
+             g_host = this;           // Set global host pointer for UI-thread plugin removal
+-            m_server.listen(m_port);
++            m_server.listen(asio::ip::tcp::endpoint(asio::ip::address::from_string("127.0.0.1"), m_port));
+             m_server.start_accept();
+             std::cout << "[C++ Host] WebSocket server running on ws://localhost:" << m_port << std::endl;
+             std::cout << "[C++ Host] VST3 SDK integrated - native plugin hosting enabled" << std::endl;
+@@ -695,7 +703,7 @@
+     }
+ 
+     // Load a VST3 plugin and extract its info
+-    json loadVst3Plugin(const std::string& pluginPath) {
++    json loadVst3Plugin(const std::string& pluginPath, bool samplingInput=false) {
+         json result;
+         std::string errorDesc;
+ 
+@@ -911,7 +919,7 @@
+                     Vst::ProcessSetup setup;
+                     setup.processMode = Vst::kRealtime;
+                     setup.symbolicSampleSize = Vst::kSample32;
+-                    setup.maxSamplesPerBlock = 512;
++                    setup.maxSamplesPerBlock = samplingInput?1024:512;
+                     setup.sampleRate = 44100.0;
+ 
+                     if (processor->setupProcessing(setup) == kResultOk) {
+@@ -919,7 +927,7 @@
+                     }
+ 
+                     // Activate audio buses
+-                    component->activateBus(Vst::kAudio, Vst::kInput, 0, true);
++                    if(samplingInput && component->activateBus(Vst::kAudio,Vst::kInput,0,true)!=kResultOk) throw std::runtime_error("Sampling input activation rejected");
+                     component->activateBus(Vst::kAudio, Vst::kOutput, 0, true);
+                     component->activateBus(Vst::kEvent, Vst::kInput, 0, true);
+ 
+@@ -931,6 +939,7 @@
+                 // Store the loaded plugin - use session ID to prevent collisions across restarts
+                 std::string instanceId = "vst_" + std::to_string(m_sessionId) + "_" + std::to_string(m_nextPluginId++);
+                 LoadedPlugin lp;
++                lp.isInstrument=isInstrument;lp.samplingInput=samplingInput;lp.blockSize=samplingInput?1024:512;
+                 lp.module = module;
+                 lp.component = component;
+                 lp.controller = controller;
+@@ -1038,7 +1047,7 @@
+ 
+                 std::cout << "[C++ Host] Load request - path: " << pluginPath << ", filename: " << filename << std::endl;
+ 
+-                json pluginInfo = loadVst3Plugin(pluginPath);
++                json pluginInfo = loadVst3Plugin(pluginPath,request.value("samplingInput",false));
+ 
+                 if (pluginInfo.contains("error")) {
+                     response["type"] = "error";
+@@ -1382,6 +1391,61 @@
+                 std::cout << "[C++ Host] MIDI: " << status << " " << note << " " << velocity << std::endl;
+                 response["type"] = "midi_processed";
+             }
++            else if (command == "qa_project_file") {
++                auto it=m_plugins.find(request.at("instanceId").get<std::string>());
++                if(it==m_plugins.end() || !it->second.processor) throw std::runtime_error("Missing native processor");
++                auto& plugin=it->second;
++                const auto action=request.at("action").get<std::string>();
++                const auto path=std::filesystem::u8path(request.at("path").get<std::string>());
++                if(!path.is_absolute()) throw std::runtime_error("QA project path must be absolute");
++                if(plugin.processor->setProcessing(false)!=kResultOk) throw std::runtime_error("Suspend rejected");
++                IPtr<SimpleMemoryStream> stream(new SimpleMemoryStream(),false);
++                if(action=="save") {
++                    if(plugin.component->getState(stream)!=kResultOk) throw std::runtime_error("Project save rejected");
++                    std::ofstream out(path,std::ios::binary|std::ios::trunc);
++                    const auto& bytes=stream->qaBytes();out.write(reinterpret_cast<const char*>(bytes.data()),bytes.size());out.flush();
++                    if(!out) throw std::runtime_error("Project file write failed");
++                } else if(action=="restore") {
++                    const auto length=std::filesystem::file_size(path);
++                    if(length<44 || length>266ull*1024*1024+4) throw std::runtime_error("Invalid QA project size");
++                    std::vector<uint8_t> bytes(static_cast<size_t>(length));
++                    std::ifstream in(path,std::ios::binary);in.read(reinterpret_cast<char*>(bytes.data()),bytes.size());
++                    if(!in) throw std::runtime_error("Project file read failed");
++                    stream->write(bytes.data(),static_cast<int32>(bytes.size()),nullptr);
++                    if(plugin.component->setState(stream)!=kResultOk) throw std::runtime_error("Project restore rejected");
++                } else throw std::runtime_error("Unknown project action");
++                if(plugin.processor->setProcessing(true)!=kResultOk) throw std::runtime_error("Resume rejected");
++                response["type"]="qa_project_file";
++                response["data"]={{"bytes",stream->qaBytes().size()},{"action",action}};
++            }
++            else if (command == "qa_processing") {
++                auto it=m_plugins.find(request.value("instanceId", ""));
++                if(it==m_plugins.end() || !it->second.processor) throw std::runtime_error("Missing native processor");
++                auto& plugin=it->second;
++                const auto action=request.value("action", "report");
++                if(action=="suspend" || action=="resume") {
++                    if(plugin.processor->setProcessing(action=="resume")!=kResultOk) throw std::runtime_error("Processing transition rejected");
++                } else if(action=="mode") {
++                    const int mode=request.at("mode").get<int>();
++                    if(plugin.processor->setProcessing(false)!=kResultOk) throw std::runtime_error("Suspend rejected");
++                    Vst::ProcessSetup setup{};setup.processMode=mode;setup.sampleRate=plugin.sampleRate;setup.maxSamplesPerBlock=plugin.blockSize;setup.symbolicSampleSize=Vst::kSample32;
++                    if(plugin.processor->setupProcessing(setup)!=kResultOk || plugin.processor->setProcessing(true)!=kResultOk) throw std::runtime_error("Mode setup rejected");
++                    plugin.processMode=mode;
++                } else if(action=="save" || action=="restore") {
++                    if(plugin.processor->setProcessing(false)!=kResultOk) throw std::runtime_error("State suspend rejected");
++                    if(action=="save") {
++                        plugin.qaState=IPtr<SimpleMemoryStream>(new SimpleMemoryStream(),false);
++                        if(plugin.component->getState(plugin.qaState)!=kResultOk) throw std::runtime_error("State save rejected");
++                    } else {
++                        if(!plugin.qaState) throw std::runtime_error("No QA snapshot");
++                        plugin.qaState->seek(0,IBStream::kIBSeekSet,nullptr);
++                        if(plugin.component->setState(plugin.qaState)!=kResultOk) throw std::runtime_error("State restore rejected");
++                    }
++                    if(plugin.processor->setProcessing(true)!=kResultOk) throw std::runtime_error("State resume rejected");
++                }
++                response["type"]="qa_processing";
++                response["data"]={{"latencySamples",plugin.processor->getLatencySamples()},{"tailSamples",plugin.processor->getTailSamples()},{"audioInputs",plugin.component->getBusCount(Vst::kAudio,Vst::kInput)},{"audioOutputs",plugin.component->getBusCount(Vst::kAudio,Vst::kOutput)},{"mode",plugin.processMode}};
++            }
+             else if (command == "process_test_chunk") {
+                 std::string instanceId = request.value("instanceId", "");
+                 int midiNote = request.value("midiNote", -1);  // -1 = no note, just process
+@@ -1391,7 +1455,8 @@
+                 auto it = m_plugins.find(instanceId);
+                 if (it != m_plugins.end() && it->second.processor) {
+                     auto& plugin = it->second;
+-                    const int32 blockSize = plugin.blockSize;
++                    const int32 blockSize = request.value("blockSize",plugin.blockSize);
++                    if(blockSize<1 || blockSize>plugin.blockSize)throw std::runtime_error("Unsupported QA block size");
+                     const double sampleRate = plugin.sampleRate;
+ 
+                     // Allocate audio buffers
+@@ -1413,7 +1478,7 @@
+                     // (see LoadedPlugin::ReplacementState). The loop is advanced across
+                     // blocks via `loopReadFrame` so multi-block processing reads a
+                     // continuous, wrapping stream rather than restarting each block.
+-                    bool isInstrument = (plugin.component->getBusCount(Vst::kAudio, Vst::kInput) == 0);
++                    bool isInstrument = plugin.isInstrument;
+                     const bool hasReplacement =
+                         plugin.replacement.loaded && !plugin.replacement.loop.empty();
+                     std::size_t loopReadFrame = 0;  // advanced per block below
+@@ -1434,7 +1499,7 @@
+ 
+                     Vst::AudioBusBuffers outputBus;
+                     outputBus.numChannels = 2;
+-                    outputBus.channelBuffers32 = outputs;
++                    outputBus.channelBuffers32 = request.value("inPlace",false)?inputs:outputs;
+                     outputBus.silenceFlags = 0;
+ 
+                     // Metrics accumulators
+@@ -1452,7 +1517,7 @@
+                     const int maxWaveformSamples = 2048;
+                     const int totalExpectedSamples = numBlocks * blockSize;
+                     const int downsampleFactor = std::max(1, totalExpectedSamples / maxWaveformSamples);
+-                    std::vector<float> waveformSamples;
++                    std::vector<float> waveformSamples, waveformLeftSamples, waveformRightSamples;
+                     waveformSamples.reserve(maxWaveformSamples);
+                     int sampleCounter = 0;
+ 
+@@ -1467,6 +1532,8 @@
+                         std::cout << "[C++ Host] Sending MIDI Note On: " << midiNote << " vel=" << midiVelocity << std::endl;
+                     }
+ 
++                    if (request.value("midiNoteOff", -1) >= 0)
++                        eventList.addNoteOff(0, static_cast<int16>(request["midiNoteOff"].get<int>()), 0.0f, 0);
+                     // Process multiple blocks
+                     for (int block = 0; block < numBlocks; block++) {
+                         // Clear outputs
+@@ -1492,15 +1559,32 @@
+                             }
+                         }
+ 
++                        if(plugin.samplingInput) {
++                            for(int32 i=0;i<blockSize;++i) {
++                                const auto clock=plugin.qaInputClock+i;
++                                inputL[i]=float((int(clock%257)-128)*64)/32768.f;
++                                inputR[i]=float((int(clock%509)-254)*32)/32768.f;
++                            }
++                            plugin.qaInputClock+=blockSize;
++                        }
+                         Vst::ProcessData processData;
+-                        processData.processMode = Vst::kRealtime;
++                        processData.processMode = plugin.processMode;
+                         processData.symbolicSampleSize = Vst::kSample32;
+                         processData.numSamples = blockSize;
+-                        processData.numInputs = isInstrument ? 0 : 1;
++                        processData.numInputs = (!isInstrument || plugin.samplingInput) ? 1 : 0;
+                         processData.numOutputs = 1;
+-                        processData.inputs = isInstrument ? nullptr : &inputBus;
++                        processData.inputs = (!isInstrument || plugin.samplingInput) ? &inputBus : nullptr;
+                         processData.outputs = &outputBus;
+-                        processData.inputParameterChanges = nullptr;
++                        Vst::ParameterChanges parameterChanges;
++                        if(block==0) {
++                            for(const auto& pending:plugin.pendingParamChanges) {
++                                int32 queueIndex=0,pointIndex=0;
++                                auto* queue=parameterChanges.addParameterData(pending.first,queueIndex);
++                                if(!queue || queue->addPoint(0,pending.second,pointIndex)!=kResultOk) throw std::runtime_error("Unable to queue host automation");
++                            }
++                            plugin.pendingParamChanges.clear();
++                        }
++                        processData.inputParameterChanges = &parameterChanges;
+                         processData.outputParameterChanges = nullptr;
+ 
+                         // Only send events on first block (note-on), then clear
+@@ -1513,7 +1597,7 @@
+                         processData.processContext = nullptr;
+ 
+                         // Process audio
+-                        plugin.processor->process(processData);
++                        if(plugin.processor->process(processData)!=kResultOk) throw std::runtime_error("Plugin rejected audio block");
+ 
+                         // Clear events after first block
+                         if (block == 0) {
+@@ -1542,6 +1626,7 @@
+                             // Capture waveform samples (downsampled)
+                             if (sampleCounter % downsampleFactor == 0 && waveformSamples.size() < maxWaveformSamples) {
+                                 waveformSamples.push_back(sample);
++                                waveformLeftSamples.push_back(outputL[i]);waveformRightSamples.push_back(outputR[i]);
+                             }
+                             sampleCounter++;
+                         }
+@@ -1564,7 +1649,7 @@
+                     }
+ 
+                     // Send note-off if we sent a note-on
+-                    if (sentNoteOn && midiNote >= 0) {
++                    if (sentNoteOn && midiNote >= 0 && request.value("autoNoteOff", true)) {
+                         eventList.clear();
+                         eventList.addNoteOff(0, static_cast<int16>(midiNote), 0.0f, 0);
+ 
+@@ -1573,7 +1658,7 @@
+                         std::fill(outputR.begin(), outputR.end(), 0.0f);
+ 
+                         Vst::ProcessData noteOffData;
+-                        noteOffData.processMode = Vst::kRealtime;
++                        noteOffData.processMode = plugin.processMode;
+                         noteOffData.symbolicSampleSize = Vst::kSample32;
+                         noteOffData.numSamples = blockSize;
+                         noteOffData.numInputs = 0;
+@@ -1586,7 +1671,7 @@
+                         noteOffData.outputEvents = nullptr;
+                         noteOffData.processContext = nullptr;
+ 
+-                        plugin.processor->process(noteOffData);
++                        if(plugin.processor->process(noteOffData)!=kResultOk) throw std::runtime_error("Plugin rejected note-off block");
+                         std::cout << "[C++ Host] Sent MIDI Note Off: " << midiNote << std::endl;
+                     }
+ 
+@@ -1608,6 +1693,7 @@
+ 
+                     // Include waveform data for visualization and test comparison
+                     response["data"]["waveform"] = waveformSamples;
++                    response["data"]["waveformLeft"] = waveformLeftSamples;response["data"]["waveformRight"] = waveformRightSamples;
+                     response["data"]["waveformSampleRate"] = sampleRate / downsampleFactor;
+                     response["data"]["waveformLength"] = waveformSamples.size();
+ 

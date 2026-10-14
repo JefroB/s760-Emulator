@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-14",
+  "scope": "Source-only GB-6 v8/v9 patch reproduction and publication exclusion review",
+  "base_revision": "d6264da54caa89b09fcd894ce7d9dba322df856e",
+  "firmware_distributed": false,
+  "generated_images_tracked": false,
+  "source_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "outputs": {
+    "v8": "cf29f7fdf75a3a672eefdd34d52f66aa25a6624632a85d52c0500d84223afead",
+    "v9": "c611e7156c9069dc632bcfd8e4d20a52da70ed2528112f29fe87258803f42deb"
+  },
+  "tooling_sha256": {
+    "tests": "4425ba8fe5d33b639753b9d83e99fdc3d77461d4db75a14ee8c69a607b953d45",
+    "patcher": "522b5d506f7dc8eec65a7e8f11797d09352f9f7ab7e45c83fc0e1fbe484a2777"
+  },
+  "checks": {
+    "cpp_core": "passed",
+    "backend": "360 passed in42.14s; no skips",
+    "build": "Release CMake build exit0",
+    "gb6": "5 passed;4096 decoded peripheral cases across both profiles; exact local image reproduction; source and existing-output preservation",
+    "staged_artifact_audit": "No firmware/disk images, scratch captures or files over1MiB staged",
+    "cpp_plugin": "passed"
+  },
+  "limitations": [
+    "v8 vertical row selection user-confirmed; v9 balanced hardware acceptance pending",
+    "Replaces Mouse+CRT decoder; no combined-controller selection or boot-ROM patch",
+    "Negative-endpoint clamp retained as historical experiment, not established hardware requirement",
+    "Physical button behavior and broader GB-6 fidelity not qualified"
+  ]
+}

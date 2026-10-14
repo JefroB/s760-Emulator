@@ -316,6 +316,22 @@ public:
     virtual tresult createInstance(FIDString cid, FIDString _iid, void** obj) = 0;
 };
 
+struct PClassInfo2 {
+    TUID cid;
+    int32_t cardinality;
+    char category[32];
+    char name[64];
+    uint32_t classFlags;
+    char subCategories[128];
+    char vendor[64];
+    char version[64];
+    char sdkVersion[64];
+};
+class IPluginFactory2 : public IPluginFactory {
+public:
+    virtual tresult getClassInfo2(int32_t index, PClassInfo2* info) = 0;
+};
+
 } // namespace Steinberg
 
 #endif
