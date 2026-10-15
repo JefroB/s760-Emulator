@@ -1,5 +1,45 @@
 # Native runtime boundary
 
+## Bounded disk/voice observation
+
+Authenticated `bus_trace` requests may supply `include_fdc:true` alongside the
+existing inclusive `first`/`last` range. This adds only the fixed FDC status/data
+ports `0x102000` and `0x102002` to the read-only observer. The option is boolean,
+false when omitted; the256-row bound, read-poll aggregation, dropped-row reporting
+and checkpoint prohibition while tracing remain unchanged. No bus value or
+guest state is modified. This is not a browser command. The changed Lua protocol
+hash is part of existing strict checkpoint identity; older archives require their
+matching runtime, with no automatic migration.
+
+[Directory restriction and Perform control evidence](condensed/validation/milestone-5-disk-voice-restriction-2026-10-14.json)
+distinguishes actual source2 status reads from allocation clears and PCM silence.
+
+## Normal combined-audio profile
+
+Normal Python and C++ VST3 launchers explicitly enable stereo, interpolation,
+envelope/loop and the existing native filter renderer. Inherited `S760_*` flags
+are cleared before launch. Recording remains opt-in. Native DSP stays at44.1kHz;
+48/96kHz plugin output uses the existing host converter.
+
+Supported filter words require command0, cutoff<=0x3fff and damping<=0x0fff.
+LP mode0 accepts this damping range; BP mode0x0400 and HP mode0x0200 accept
+only damping0x0fff or85. Other modes, flagged commands and clocks use the raw
+unfiltered path and clear filter history. These are functional implementation
+bounds, not a claim of physical moving/resonant response accuracy (BUG-005).
+
+`RuntimeConfig.diagnostic_combined_audio` remains an explicit qualification
+provenance switch with a separate checkpoint identity; it now uses the same
+renderer as normal defaults. `--combined-audio --combined-normal` exercises the
+full72-case matrix without the diagnostic switch. `--combined-baseline` runs a
+six-case normal filter/stereo smoke test.
+
+Standalone checkpoint identity is now
+`audio_profile=native-stereo-filter-interpolation-44100-v2`. Earlier mono and
+filter-bypass archives require their matching application; no automatic migration
+is available. VST3 identity already includes the rebuilt module hash and rejects
+old-build states before mutation.
+[Normal-filter evidence](condensed/validation/milestone-5-normal-filter-2026-10-14.json).
+
 Standalone UI adds `SET_STANDALONE_PREFERENCES` with exactly
 `{showKeyboard:boolean}`. The service atomically replaces its instance-owned
 `standalone-ui.json` before returning `STANDALONE_PREFERENCES` with `preferences`.
@@ -350,3 +390,32 @@ packets expose `inputLevel`. The checkpoint input metadata includes this gain,
 and load validates its range before applying native state. Experimental ADC
 consumption applies gain before meter/recording writes. The VST adapter does not
 expose this new standalone dial until host input routing is supported.
+
+## Configurable wave memory — 2026-10-14
+
+`RuntimeConfig.wave_memory_mb` and `NativeRuntimeConfig.wave_memory_mb` accept
+8,16 or32 (default32). Managed native launches set `S760_WAVE_MEMORY_MB`
+explicitly. Standalone/plugin settings use JSON `waveMemoryMb`; omitted fields
+use32. Changes apply on a new machine. Native wave RAM is size-bounded;
+CPU work RAM remains a separate allocation. Both checkpoint identities include
+memory capacity and reject mismatches before loading sampler state.
+
+## External read-only SCSI CDs — 2026-10-14
+
+Recognized CD startup filenames (`CD1.iso`, `CD10_2048.iso`, `akai.iso`, `sound.iso`,
+`CD30_2048.iso`, `CD3.iso`, `CD60_2048.iso`) have a separate1 GiB aggregate
+content budget. Other SCSI image files retain the64 MiB writable snapshot budget.
+Python and C++ stream SHA256 rather than allocating a second entire CD buffer.
+Native device-type5 CD vectors remain external to machine state; WRITE commands
+still return DATA PROTECT before DATA OUT. Pending transfer buffers remain saved.
+Managed launchers require exact filenames/content on restore and reject changes
+before applying state. Raw direct-MAME saves do not supply this host identity guard.
+Changed native builds reject older checkpoints; no state migration is qualified.
+See [full-CD validation](condensed/validation/milestone-5-roland-scsi-load-2026-10-14.json).
+
+
+### Native HD0 writes (2026-10-14)
+
+Original firmware quick initialization and performance Save now use bounded RAM78/waveA0 output DMA with native SPC counter completion. Writes modify the instance's controller image; source files remain unchanged. Python `NativeRuntime.export_scsi_hd0(new_path)` requests an idle HD0 snapshot through the native media port, validates its byte count and publishes a new output without replacing an existing destination. Busy/missing/read-only targets reject; export failures preserve controller data. The emulator must be running for the input callback. This export is a Python QA operation; the packaged GUI/VST export action has not been qualified for SCSI.
+
+`verify_native_scsi_save.py` qualifies the private10 MiB HD00_512.img / HD0 /512-byte-sector profile: initialize, Save ROBOFULL performance, export and fresh firmware Load without a sample floppy. All13 sample allocations/119808 bytes are exact; playback level/spectrum and release survive. No low-level physical format/timing or arbitrary-media acceptance is claimed. [Validation](condensed/validation/milestone-5-scsi-save-2026-10-14.json).

@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; hashes identify files after help-text-only correction following execution",
+  "evidence_class": "native runtime; original firmware Load and MIDI; no hardware comparison",
+  "command": "python scripts/verify_native_runtime.py --loop-modes --loop-stress --sample-disk D:/S-760/roms/FDD/ROBOLOOP.IMG --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-loop-stress-20261014",
+  "prerequisites": "Local native binary, user-supplied boot ROM/OS, hash-checked ROBOLOOP fixture, local control/MIDI sockets permitted; headless unthrottled, not realtime/device qualification",
+  "identities_sha256": {
+    "scripts/verify_native_runtime.py": "5acf2693fd2247fdfe3a4bc76744c313aceff0064739b8a602ecc6d0884573eb",
+    "scripts/s760_runtime.py": "2c4ef576cedb8833768f52ddce5e64b56f1b699b311669fd9399c82a275c3eab",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "mame-source/src/mame/roland/s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/FDD/ROBOLOOP.IMG": "65f8a8353d4e5bedfa1cc0f0d600012cf6946cda0129ec96363f49a91cb43060",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "result": {
+    "passed": true,
+    "rate": 44100,
+    "rows": [
+      {
+        "mode": 0,
+        "note": 60,
+        "sign_match": 1.0,
+        "peak": 0.002532482147216797,
+        "held_peak": 0.002532482147216797,
+        "first_nonzero": 3055,
+        "last_nonzero": 149170
+      },
+      {
+        "mode": 1,
+        "note": 61,
+        "sign_match": 1.0,
+        "peak": 0.002532482147216797,
+        "held_peak": 0.002532482147216797,
+        "first_nonzero": 2326,
+        "last_nonzero": 148479
+      },
+      {
+        "mode": 2,
+        "note": 62,
+        "sign_match": null,
+        "peak": 0.002532482147216797,
+        "held_peak": 0.0,
+        "first_nonzero": 2321,
+        "last_nonzero": 4367
+      },
+      {
+        "mode": 3,
+        "note": 63,
+        "sign_match": 1.0,
+        "peak": 0.002532482147216797,
+        "held_peak": 0.002532482147216797,
+        "first_nonzero": 2321,
+        "last_nonzero": 137360
+      },
+      {
+        "mode": 4,
+        "note": 64,
+        "sign_match": 1.0,
+        "peak": 0.002532482147216797,
+        "held_peak": 0.002532482147216797,
+        "first_nonzero": 2321,
+        "last_nonzero": 148207
+      },
+      {
+        "mode": 5,
+        "note": 65,
+        "sign_match": null,
+        "peak": 0.002532482147216797,
+        "held_peak": 0.0,
+        "first_nonzero": 2321,
+        "last_nonzero": 4368
+      },
+      {
+        "mode": 6,
+        "note": 66,
+        "sign_match": 1.0,
+        "peak": 0.002532482147216797,
+        "held_peak": 0.002532482147216797,
+        "first_nonzero": 2322,
+        "last_nonzero": 148603
+      }
+    ],
+    "scope": "Current default native profile, ROBOLOOP firmware load; not hardware parity",
+    "stress": {
+      "cycles": [
+        {
+          "cycle": 0,
+          "peak": 0.026568572968244553,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 1,
+          "peak": 0.026822727173566818,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 2,
+          "peak": 0.026822727173566818,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 3,
+          "peak": 0.028707029297947884,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 4,
+          "peak": 0.028707029297947884,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 5,
+          "peak": 0.028707029297947884,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 6,
+          "peak": 0.026822727173566818,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 7,
+          "peak": 0.026822727173566818,
+          "silent_tail_frames": 44100
+        }
+      ],
+      "note_ons_per_run": 112,
+      "exact_replay_frames": 1058400,
+      "pcm_sha256": "d7216f6380aca277bd1a6b38b4e22202e1088b5ae406f9b4296e47bd8ae1a4ed",
+      "limits": "Same-process checkpoint recall; no disk overlap, voice-count/stealing assertion or hardware comparison"
+    }
+  },
+  "limitations": [
+    "Unity-pitch isolated modes; practical pitch transitions remain open",
+    "No simultaneous disk activity or asserted allocation/voice-stealing counts",
+    "Same-process checkpoint replay, not cold process reopen",
+    "No new physical interpolation/filter fidelity claim"
+  ],
+  "sandbox_attempts": "Two restricted launches rejected local MIDI socket connections before acceptance; elevated local run passed.",
+  "backend_regressions": {
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-playback-pytest-185.py",
+    "runner": "pytest tests -q; private harness/snapshot/basetemp/cache directories; local native sockets permitted",
+    "passed": 360,
+    "seconds": 42.92,
+    "exit_code": 0,
+    "restricted_run": "Interrupted after sandbox-related native launch failures; not counted as product failures or passing evidence"
+  }
+}

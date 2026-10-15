@@ -73,6 +73,25 @@ def test_launch_failure_releases_state_directory(tmp_path, monkeypatch):
         assert runtime.process is None
 
 
+@pytest.mark.parametrize('diagnostic', [False, True])
+def test_normal_filter_profile_is_explicit_and_inherited_flags_cannot_disable_it(tmp_path, monkeypatch, diagnostic):
+    import s760_runtime
+    executable, boot, disk = (tmp_path / name for name in ('mame.exe', 'boot.bin', 'system.img'))
+    executable.write_bytes(b'placeholder'); boot.write_bytes(b'placeholder'); disk.write_bytes(bytes(1474560))
+    monkeypatch.setenv('S760_NATIVE_STEREO_MONITOR', '1')
+    monkeypatch.setenv('S760_NATIVE_LPF_MONITOR', '0')
+    captured = {}
+    def fail(*args, **kwargs):
+        captured.update(kwargs['env'])
+        raise OSError('Inspect launch environment')
+    monkeypatch.setattr(s760_runtime.subprocess, 'Popen', fail)
+    config = RuntimeConfig(executable, boot, disk, tmp_path / 'state', diagnostic_combined_audio=diagnostic)
+    with pytest.raises(OSError, match='Inspect launch environment'):
+        s760_runtime.NativeRuntime(config).start()
+    assert captured['S760_NATIVE_LPF_MONITOR'] == '1'
+    assert captured['S760_NATIVE_STEREO_MONITOR'] == '1'
+
+
 @pytest.mark.parametrize('descriptor', [
     {'frames': -1, 'channels': 2, 'rate': 44100},
     {'frames': 44101, 'channels': 2, 'rate': 44100},

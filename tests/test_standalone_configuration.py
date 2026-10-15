@@ -192,3 +192,18 @@ def test_missing_windows_output_rejects_before_replacing_machine(configured,monk
     with pytest.raises(ValueError,match='output endpoint is unavailable'):
         session.input({'type':'CONFIGURE_RUNTIME','payload':{**payload,'audioOutputDevice':'missing'}})
     assert session.runtime.calls==[]
+
+@pytest.mark.parametrize('size',[8,16,32])
+def test_wave_memory_configuration_persists(configured,size):
+    session,payload=configured
+    response=session.input({'type':'CONFIGURE_RUNTIME','payload':{**payload,'waveMemoryMb':size}})
+    assert session.runtime.config.wave_memory_mb==size
+    assert response['configuration']['waveMemoryMb']==size
+    assert app.load_settings(session.runtime.config.state_dir)['waveMemoryMb']==size
+
+@pytest.mark.parametrize('size',[2,64,True,'32'])
+def test_invalid_wave_memory_preserves_machine(configured,size):
+    session,payload=configured
+    with pytest.raises(ValueError,match='memory'):
+        session.input({'type':'CONFIGURE_RUNTIME','payload':{**payload,'waveMemoryMb':size}})
+    assert not session.runtime.calls

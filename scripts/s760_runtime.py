@@ -115,9 +115,13 @@ class RuntimeConfig:
     asio_output_channel: int = 1
     asio_input_channel: int = 0
     asio_buffer_frames: int = 512
+    diagnostic_combined_audio: bool = False
+    wave_memory_mb: int = 32
 
     def audio_arguments(self):
         """OSD buffer target only; native transport stays stereo 44100 Hz."""
+        if type(self.wave_memory_mb) is not int or self.wave_memory_mb not in (8,16,32):
+            raise ValueError('Wave memory must be 8, 16 or 32 MB')
         if self.audio_backend not in ('auto', 'wasapi', 'xaudio2', 'asio'):
             raise ValueError('Audio backend must be auto, wasapi, xaudio2 or asio')
         if not isinstance(self.audio_output_device,str) or len(self.audio_output_device)>256 or '\0' in self.audio_output_device:
@@ -140,6 +144,8 @@ class RuntimeConfig:
                 '-audio_latency', format(latency / 20, 'g')]
 
     def validate(self):
+        if type(self.diagnostic_combined_audio) is not bool:
+            raise ValueError('Expected diagnostic combined audio boolean')
         self.audio_arguments()
         if not isinstance(self.recording_device, str) or len(self.recording_device)>256 or '\0' in self.recording_device:
             raise ValueError('Invalid recording device')
@@ -216,9 +222,11 @@ class NativeRuntime:
             midi_listener.settimeout(.25)
             env.update(S760_ROM_BOOT=str(cfg.boot_rom.resolve()), S760_FLOPPY=str(cfg.system_disk.resolve()),
                        S760_MEDIA_EXPORT=str((cfg.state_dir / 'media-export.img').resolve()),
+                       S760_SCSI_EXPORT=str((cfg.state_dir / 'scsi-hd0-export.img').resolve()),
                        S760_MEDIA_STATUS=str((cfg.state_dir / 'media-status.json').resolve()),
                        S760_F00A='00', S760_IC4_MIDI_EXPERIMENT='1', S760_NATIVE_INTERPOLATION_MONITOR='1',
-                       S760_NATIVE_VALUE_ENCODER='1',
+                       S760_NATIVE_STEREO_MONITOR='1', S760_NATIVE_LPF_MONITOR='1',
+                       S760_NATIVE_VALUE_ENCODER='1', S760_WAVE_MEMORY_MB=str(cfg.wave_memory_mb),
                        S760_RUNTIME_PORT=str(listener.getsockname()[1]), S760_RUNTIME_TOKEN=token,
                        S760_RUNTIME_MIDI_PORT=str(midi_listener.getsockname()[1]))
             slot = cfg.state_dir / 'inserted-floppy.img'
@@ -378,13 +386,21 @@ class NativeRuntime:
     def _scsi_identity(self):
         result = {}
         total = 0
+        cd_total = 0
+        cd_names = {'CD1.iso','CD10_2048.iso','akai.iso','sound.iso','CD30_2048.iso','CD3.iso','CD60_2048.iso'}
         for path in sorted((self.config.state_dir/'roms/SCSI').glob('*')):
             if not path.is_file() or path.is_symlink():
                 raise ValueError('SCSI snapshot profile requires regular image files')
-            total += path.stat().st_size
-            if total > 64*1024*1024:
-                raise ValueError('SCSI snapshot profile supports at most 64 MiB of external images')
-            result[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+            if path.name in cd_names:
+                cd_total += path.stat().st_size
+                if cd_total > 1024*1024*1024:
+                    raise ValueError('SCSI profile supports at most 1 GiB of read-only CD images')
+            else:
+                total += path.stat().st_size
+                if total > 64*1024*1024:
+                    raise ValueError('SCSI snapshot profile supports at most 64 MiB of writable images')
+            with path.open('rb') as image:
+                result[path.name] = hashlib.file_digest(image,'sha256').hexdigest()
         return result
 
     def _checkpoint_identity(self):
@@ -400,6 +416,10 @@ class NativeRuntime:
             except FileNotFoundError:
                 raise ValueError(f'Session prerequisite missing: {path}. Correct the paths in Runtime settings; saved sample media is contained in the session.') from None
         identity['scsi'] = scsi
+        identity['wave_memory_mb'] = cfg.wave_memory_mb
+        identity['audio_profile'] = 'native-stereo-filter-interpolation-44100-v2'
+        if cfg.diagnostic_combined_audio:
+            identity['diagnostic_combined_audio'] = 'stereo-filter-44100-v1'
         if cfg.experimental_adc or cfg.recording_device or (cfg.audio_backend=='asio' and cfg.asio_input_channel):
             identity['experimental_adc'] = 'pcm16-stereo-44100-v1'
         return identity
@@ -459,11 +479,13 @@ class NativeRuntime:
         saved = meta.get('identity')
         if saved != expected:
             labels = {'mame':'MAME build', 'boot':'boot ROM', 'system':'system disk',
-                      'protocol':'runtime protocol', 'scsi':'SCSI backing media'}
+                      'protocol':'runtime protocol', 'scsi':'SCSI backing media', 'wave_memory_mb':'wave memory size'}
             differences = [labels.get(key, key) for key in expected
                            if not isinstance(saved, dict) or saved.get(key) != expected[key]]
             description = ', '.join(differences) or 'identity manifest'
             action = 'Use the matching application build and firmware, then retry.'
+            if 'wave memory size' in differences:
+                action += ' Select the saved wave memory size in Runtime settings and restart before retrying.'
             if 'SCSI backing media' in differences:
                 action += f' Restore SCSI files with the saved names/content under {self.config.state_dir / "roms/SCSI"}.'
             raise ValueError(f'Session identity mismatch: {description}. {action} Current sampler memory has not been replaced.')
@@ -565,6 +587,33 @@ class NativeRuntime:
                 self._media_control('Acknowledge Floppy Export')
             except (OSError, ValueError, RuntimeError) as error:
                 raise RuntimeError(f'Image saved to {destination}, but controller acknowledgement failed: {error}') from error
+            return destination
+
+    def export_scsi_hd0(self, destination):
+        """Snapshot idle native HD0 to a new file. Never replaces backing/library media."""
+        destination=Path(destination)
+        with self.media_lock:
+            if destination.exists():raise FileExistsError(destination)
+            spool=self.config.state_dir/'scsi-hd0-export.img'
+            status=spool.with_name(spool.name+'.status')
+            spool.unlink(missing_ok=True);status.unlink(missing_ok=True)
+            try:self.request('button',port=':NATIVE_MEDIA',name='Export SCSI HD0',down=True)
+            finally:self.request('button',port=':NATIVE_MEDIA',name='Export SCSI HD0',down=False)
+            deadline=time.monotonic()+10
+            while not status.exists():
+                if time.monotonic()>=deadline:raise TimeoutError('No SCSI export acknowledgement from MAME')
+                time.sleep(.01)
+            result=json.loads(status.read_text(encoding='utf-8'))
+            if result.get('ok') is not True:raise RuntimeError(result.get('error','SCSI export rejected'))
+            data=spool.read_bytes()
+            if type(result.get('bytes')) is not int or len(data)!=result['bytes'] or not 0<len(data)<=64*1024*1024:
+                raise ValueError('Incomplete exported SCSI image')
+            pending=destination.with_name(destination.name+'.'+secrets.token_hex(8)+'.pending')
+            try:
+                with pending.open('xb') as out:
+                    out.write(data);out.flush();os.fsync(out.fileno())
+                os.link(pending,destination)
+            finally:pending.unlink(missing_ok=True)
             return destination
 
     def close(self):

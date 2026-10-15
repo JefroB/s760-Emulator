@@ -1,5 +1,7 @@
 # Roland S-760 — Hardware Fidelity Assessment & Low-Level Emulation (LLE) Roadmap
 
+Current architecture correction (2026-10-14): Step4 below replaces the former shared-reference-DSP claim. Other early assessment tables are historical; use the [current completion roadmap](COMPLETION_ROADMAP.md) and [acceptance matrix](MILESTONE_5_ACCEPTANCE.md) for supported product claims.
+
 ## 1. Executive Summary & Engineering Fidelity Assessment
 
 This document provides a transparent, engineering-grade assessment of the current implementation of the Roland S-760 emulator project, clarifying the distinction between **High-Level Functional Emulation (HLE)** and **Low-Level Hardware Emulation (LLE)**, and defining the roadmap toward authentic cycle-accurate hardware execution.
@@ -23,7 +25,7 @@ This document provides a transparent, engineering-grade assessment of the curren
 | **CRT Monitor Display** | Pixel-accurate hand-rendered React/Canvas & MAME display | **HLE Canvas** | Direct VRAM-driven framebuffer generated natively by the OS |
 | **Audio Voice DSPs** | 32-voice S-760-compatible PCM playback & filter model | **Functional DSP Model** | Behavioral ASIC model of Fujitsu MB87422 / MB87423 voice generation |
 | **TVF Resonant Filter** | 4-Pole 24dB/oct resonant digital filter model | **Functional DSP Model** | Exact behavioral model of Roland MB87424 TVF filter IC & MEQ stage |
-| **DAW Plugins (VST3/CLAP)** | C++ standalone sound engine & DSP processing suite | **Substantial Integration** | Unified core sharing the identical hardware/DSP model with MAME |
+| **Native VST3** | Isolated native MAME runtime with PCM/MIDI transport and host output conversion | **Qualified named native workflows** | Same machine implementation as standalone; unlinked reference DSP is separate |
 | **Automated Testing Suite** | 53 automated regression tests (pytest, Playwright, MAME Lua) | **Comprehensive** | Expanded with bit-exact audio parity against real hardware recordings |
 
 ---
@@ -67,7 +69,7 @@ flowchart TD
     Step1["Step 1: Finish CPU/OS Boot & Execution Environment in MAME"]
     Step2["Step 2: Native RFSC16A VRAM-Driven Display Rendering"]
     Step3["Step 3: Reverse-Engineer Fujitsu Audio DSP ASICs & TVF"]
-    Step4["Step 4: Unified Hardware Core for MAME & DAW Plugins"]
+    Step4["Step 4: Shared native runtime; separate reference DSP"]
 
     Step1 -->|OS executes real code & sets hardware registers| Step2
     Step2 -->|OS natively draws CRT monitor via VRAM| Step3
@@ -106,25 +108,21 @@ flowchart TD
 
 ---
 
-### **Step 4: Unified Hardware Core (MAME + Standalone DAW Plugins)**
-- **Goal:** Consolidate the low-level hardware and DSP models into a single, clean C++ library shared across both MAME and the DAW plugins.
-- **Status:** ✅ **DONE** — Implemented [`core/include/s760/s760_core.hpp`](file:///d:/S-760/core/include/s760/s760_core.hpp) and [`core/src/s760_core.cpp`](file:///d:/S-760/core/src/s760_core.cpp) defining the standalone `S760HardwareCore` engine. Encapsulates 32-voice polyphony, MMIO streaming, 4-point Hermite cubic sample interpolation, 4-pole ZDF resonant TVF ladder filtering, and multi-channel rendering with 100% parity across MAME and DAW plugins (VST3 / CLAP / AU).
+### Step 4: Shared native runtime and separate reference model
+
+**Current architecture, corrected2026-10-14 (BUG-008):** Windows standalone and the native VST3 instrument run the modified MAME S-760 machine. MAME owns the CPU, peripherals, wave RAM and `s760_sound_device` renderer. The standalone launcher and VST3 worker each control an isolated process; the VST3 worker transports PCM/MIDI and converts host output rates. They share the native machine implementation through process control, rather than linking `S760HardwareCore` into both products.
+
+`core/include/s760/s760_core.hpp` and `core/src/s760_core.cpp` contain an unlinked reference model. Its omission from `core/CMakeLists.txt` is deliberate under the native product architecture. Its Hermite/filter implementation is not the product audio renderer. Adding it to the library would not establish integration or parity. Historical VST2/CLAP/core paths are diagnostic; AU and WebAssembly products are not qualified here.
 
 ```mermaid
 flowchart TD
-    Core["S-760 Unified Hardware & DSP Core (C++)"]
-
-    Core --> MAME["MAME Emulator Driver (mame-source/)"]
-    Core --> VST3["DAW Instrument & FX Plugins (VST3 / VST2 / CLAP)"]
-    Core --> Web["Web Audio / WebAssembly Runtime (google-ui/)"]
+    Standalone[Windows standalone] --> Native[Isolated native MAME S-760 machine]
+    VST3[Native VST3 worker] --> Native
+    Native --> DSP[MAME s760_sound_device renderer]
+    Reference[Unlinked S760HardwareCore reference model]
 ```
 
-- **Benefits:**
-  - Zero duplicate code between MAME and plugin sound engines.
-  - VST3, CLAP, and AU plugins run the **exact same bit-accurate Roland hardware model** as the emulator.
-  - Unified automated regression test suite covering all frontends simultaneously.
-
----
+The former completion claim of32 playable voices and100% DSP parity across every frontend was unsupported and is withdrawn. The named native allocator fixture qualifies24 playable voices; shared native-runtime reference replay establishes software agreement, with hardware fidelity limited to measured domains. See [current workflow acceptance](MILESTONE_5_ACCEPTANCE.md), [native plugin selection](NATIVE_PLUGIN_SELECTION.md) and [audio evidence](condensed/06-audio-dsp-and-hardware-parity.md).
 
 ## 5. Master Roadmap Timeline
 
@@ -143,6 +141,6 @@ gantt
     OS DSP Parameter Protocol Reverse-Eng :dsp_1, 2027-03-15, 30d
     MB87424 TVF Filter & MEQ Model        :dsp_2, after dsp_1, 30d
     Physical Hardware Recording Parity    :dsp_3, after dsp_2, 20d
-    section Phase 4: Unified Core
-    Consolidate Shared C++ Engine         :core_1, 2027-06-01, 30d
+    section Historical Proposed Phase 4
+    Reference-core integration is not the native product architecture :core_1, 2027-06-01, 30d
 ```

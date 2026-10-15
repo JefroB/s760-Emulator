@@ -1,6 +1,9 @@
 """Native SDK host acceptance for configured expression, bend/RPN, stereo pan,
 sustain, documented channel modes and explicit all-channel panic/reset macros.
 Requires the private SoundCheck QA patch with separate stereo waveform capture.
+Functional controller checks negotiate offline processing by default; use the
+separate paced native-host tests for realtime deadlines. --burst-check verifies
+unpaced blocks under the chosen contract without retrying rejected blocks.
 RawCC120/121 remain original-firmware passthrough; see docs/NATIVE_VST3_MIDI.md.
 """
 """Qualify audible native firmware bend through actual VST3 parameter queues.
@@ -24,6 +27,8 @@ parser.add_argument('--host',type=Path,required=True)
 parser.add_argument('--module',type=Path,required=True)
 parser.add_argument('--state-dir',type=Path,required=True)
 parser.add_argument('--debug-port',type=int,default=9231)
+parser.add_argument('--processing-mode',choices=('realtime','offline'),default='offline',help='Negotiate the host processing contract explicitly')
+parser.add_argument('--burst-check',action='store_true',help='Exercise64 unpaced host blocks before the controller matrix')
 options=parser.parse_args()
 if not 1<=options.debug_port<=65535 or options.debug_port==4000:
  raise SystemExit('Choose a debug port in1..65535 other than4000')
@@ -73,6 +78,13 @@ async def main():
   loaded=await req('load_plugin','plugin_loaded',path=str(module))
 
   print("loaded parameters",len(loaded["data"]["parameters"]),flush=True);(w/'loaded.json').write_text(json.dumps(loaded,indent=2));iid=loaded['data']['instanceId']
+  mode=2 if options.processing_mode=='offline' else 0
+  setup=await req('qa_processing','qa_processing',instanceId=iid,action='mode',mode=mode)
+  assert setup['data']['mode']==mode,'Host did not negotiate requested processing mode'
+  (w/'processing-contract.json').write_text(json.dumps(dict(mode=options.processing_mode,host=setup,burst_check=options.burst_check),indent=2),encoding='utf-8')
+  if options.burst_check:
+   await req('process_test_chunk','audio_metrics',instanceId=iid,numBlocks=64)
+   print('64 unpaced blocks passed',flush=True)
 
   await asyncio.sleep(3)
 

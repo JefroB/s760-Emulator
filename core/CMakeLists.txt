@@ -28,6 +28,10 @@ if (NOT S760_BACKEND STREQUAL "core" AND NOT S760_BACKEND STREQUAL "mame")
     set(S760_BACKEND "core" CACHE STRING "Default backend: core|mame" FORCE)
 endif()
 
+# Native host/plugin support plus historical diagnostic utilities.
+# src/s760_core.cpp (S760HardwareCore) is deliberately unlinked: product DSP
+# lives in the isolated MAME s760_sound_device, shared by native launchers.
+# Compiling the reference model here would not integrate it with the machine.
 # Static Core Library
 add_library(s760_core STATIC
     src/s760_disk.cpp

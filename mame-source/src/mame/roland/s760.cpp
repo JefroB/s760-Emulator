@@ -1024,6 +1024,7 @@ public:
 	void s760_palette(palette_device &palette) const;
 	DECLARE_INPUT_CHANGED_MEMBER(native_sample_media);
 	DECLARE_INPUT_CHANGED_MEMBER(native_export_media);
+    DECLARE_INPUT_CHANGED_MEMBER(native_export_scsi_hd0);
 	ioport_value native_pcm_depth();
 	ioport_value native_pcm_losses() { return m_native_pcm_underruns; }
 	TIMER_CALLBACK_MEMBER(runtime_midi_poll);
@@ -2043,9 +2044,10 @@ void s760_state::machine_start()
 	m_checkpoint_scsi_transfer.assign(65535U * 2048U, 0);
 	save_item(NAME(m_checkpoint_scsi_transfer));
 	save_item(NAME(m_checkpoint_scsi_transfer_size));
-	// Images are loaded before registration and never resized during commands.
+	// Writable images are checkpointed. Immutable CDs stay external and are
+	// content-validated by both native launchers before restore.
 	for (unsigned id = 0; id < 7; ++id)
-		if (!m_scsi_disk_images[id].empty())
+		if (!m_scsi_disk_images[id].empty() && m_scsi_device_type[id] != 5)
 			save_item(NAME(m_scsi_disk_images[id]), id);
 	save_pointer(NAME(m_vdp_vram), 0x20000);
 	m_checkpoint_floppy.assign(1474560, 0);
@@ -2067,7 +2069,14 @@ void s760_state::machine_start()
 		else
 			std::copy_n(memregion("maincpu")->base() + 0x4800, 0xfc000, m_banked_ram.begin());
 		m_bank_regs.fill(0);
-		m_native_wave.assign(0x200000,0);
+		unsigned memory_mb = 32;
+        if (const char *memory = getenv("S760_WAVE_MEMORY_MB"))
+        {
+            if (!strcmp(memory, "8")) memory_mb = 8;
+            else if (!strcmp(memory, "16")) memory_mb = 16;
+            else if (strcmp(memory, "32")) fatalerror("Wave memory must be 8, 16 or 32 MB");
+        }
+        m_native_wave.assign(memory_mb * 1024 * 1024, 0);
 		// These handler-backed memories are not automatically saved by an
 		// address-map RAM entry. Restore them with the CPU and filter states.
 		save_item(NAME(m_banked_ram));
@@ -2163,6 +2172,79 @@ void s760_state::banked_w(offs_t address, u8 data)
 	{
 		m_bank_regs[address - 0x100] = data;
 		if (address == 0x115) check_irq_state();
+		if (address == 0x11d && data == 0x47 && m_scsi_bus_phase == 4
+			&& (m_scsi_scmd & 0xe0) == 0x80)
+		{
+			// Original OS page003B:7724..778C uses47 for SPC-to-RAM.
+			// Like the observed wave DMA modes below, this bounded transfer is
+			// synchronous; it does not establish physical IC4 bus arbitration.
+			const u32 dest = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b]) << 8) | (u32(m_bank_regs[0x1c]) << 16);
+			const u32 count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19]) << 8);
+			if (count && count <= m_scsi_tc && u64(dest) + count <= m_banked_ram.size()
+				&& m_scsi_data_idx <= m_scsi_data_buffer.size()
+				&& count <= m_scsi_data_buffer.size() - m_scsi_data_idx)
+			{
+				for (u32 i = 0; i < count; ++i) m_banked_ram[dest + i] = scsi_r(0x0a);
+				const u32 next = dest + count;
+				m_bank_regs[0x18] = m_bank_regs[0x19] = 0;
+				m_bank_regs[0x1a] = u8(next); m_bank_regs[0x1b] = u8(next >> 8); m_bank_regs[0x1c] = u8(next >> 16);
+				logerror("[NATIVESCSIDMA] RAM=%06x count=%04x control=47\n", dest, count);
+			}
+		}
+        if (address == 0x11d && (data == 0x78 || data == 0xa0) && m_scsi_bus_phase == 5
+            && (m_scsi_scmd & 0xe0) == 0x80)
+        {
+            // Observed original OS page003B:77A9..782D RAM output (78),
+            // and7C90..7D29 direct wave output (A0). SPC owns full24-bit length.
+            const u32 encoded = m_bank_regs[0x18] | (u32(m_bank_regs[0x19])<<8);
+            const u32 count = encoded == (m_scsi_tc & 0xffff) ? m_scsi_tc : encoded;
+            const u32 ram = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b])<<8) | (u32(m_bank_regs[0x1c])<<16);
+            const u32 wave = m_native_wave_regs[0xe] | (u32(m_native_wave_regs[0xf])<<8)
+                | (u32(m_native_wave_regs[0xc])<<16) | (u32(m_native_wave_regs[0xd])<<24);
+            const u64 source = data == 0x78 ? u64(ram) : u64(wave)*2;
+            const auto& bytes = data == 0x78 ? m_banked_ram : m_native_wave;
+            if (count && count <= m_scsi_tc && (data == 0x78 || !(count & 1))
+                && source <= bytes.size() && count <= bytes.size()-source
+                && m_scsi_data_idx <= m_scsi_data_buffer.size()
+                && count <= m_scsi_data_buffer.size()-m_scsi_data_idx)
+            {
+                for (u32 i=0; i<count; ++i) scsi_w(0x0a,bytes[source+i]);
+                m_bank_regs[0x18]=m_bank_regs[0x19]=0;
+                if (data == 0x78) {
+                    const u32 next=ram+count;
+                    m_bank_regs[0x1a]=u8(next);m_bank_regs[0x1b]=u8(next>>8);m_bank_regs[0x1c]=u8(next>>16);
+                } else {
+                    const u32 next=wave+count/2;
+                    m_native_wave_regs[0xe]=u8(next);m_native_wave_regs[0xf]=u8(next>>8);
+                    m_native_wave_regs[0xc]=u8(next>>16);m_native_wave_regs[0xd]=u8(next>>24);
+                }
+                logerror("[NATIVESCSIOUT] source=%08x count=%08x control=%02x\n",u32(source),count,data);
+            }
+        }
+		if (address == 0x11d && data == 0x84 && m_scsi_bus_phase == 4
+            && (m_scsi_scmd & 0xe0) == 0x80)
+        {
+            // Original OS page003B:7CD0..7D29: SPC directly to wave RAM.
+            // The native Roland loader uses84; Akai conversion uses RAM mode47.
+            const u32 encoded_count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19]) << 8);
+            // Firmware supplies the low16 bits to IC4, but SPC owns the
+            // full24-bit transfer length (observed118784-byte sample chunk).
+            const u32 count = encoded_count == (m_scsi_tc & 0xffff) ? m_scsi_tc : encoded_count;
+            const u32 wave = m_native_wave_regs[0xe] | (u32(m_native_wave_regs[0xf]) << 8)
+                | (u32(m_native_wave_regs[0xc]) << 16) | (u32(m_native_wave_regs[0xd]) << 24);
+            if (count && !(count & 1) && count <= m_scsi_tc
+                && u64(wave)*2 + count <= m_native_wave.size()
+                && m_scsi_data_idx <= m_scsi_data_buffer.size()
+                && count <= m_scsi_data_buffer.size() - m_scsi_data_idx)
+            {
+                for (u32 i=0; i<count; ++i) m_native_wave[u64(wave)*2+i] = scsi_r(0x0a);
+                const u32 next = wave + count/2;
+                m_native_wave_regs[0xe]=u8(next);m_native_wave_regs[0xf]=u8(next>>8);
+                m_native_wave_regs[0xc]=u8(next>>16);m_native_wave_regs[0xd]=u8(next>>24);
+                m_bank_regs[0x18]=m_bank_regs[0x19]=0;
+                logerror("[NATIVESCSIWAVE] wave_byte=%08x count=%04x control=84\n",wave*2,count);
+            } else logerror("[NATIVESCSIWAVE-BOUNDS] wave=%08x count=%08x tc=%08x idx=%08x size=%08x\n",wave,count,m_scsi_tc,u32(m_scsi_data_idx),u32(m_scsi_data_buffer.size()));
+        }
 		if (address == 0x11d && (data == 0xbc || data == 0xa7))
 		{
 			// OS bank005A:6A31..6A73 programs wave word address, RAM source,
@@ -2214,7 +2296,11 @@ u8 s760_state::banked_physical_r(u32 address)
         return lcd_r(address - 0x103800); // Preserve the existing native status handshake.
     }
 	if (address >= 0x103000 && address <= 0x10301f) return mmio_r(address - 0x103000);
-	if (address >= 0x102400 && address <= 0x10240f) return scsi_r(address - 0x102400);
+	// IC15 initialization writes BDID/SCTL/SCMD at E400/E402/E404;
+	// native SPC registers occupy the low byte lane with a two-byte stride.
+	// Keep the historical flat F020 register fixture separate.
+	if (address >= 0x102400 && address <= 0x10241e && !(address & 1))
+		return scsi_r((address - 0x102400) >> 1);
 	if (address == 0x102000) return fdc_r(0);
 	if (address == 0x102002) return fdc_r(1);
 	return 0xff;
@@ -2255,7 +2341,11 @@ void s760_state::banked_physical_w(u32 address, u8 data)
         } else lcd_w((address - 0x103800) ^ 2, data);
 		return; }
 	if (address >= 0x103000 && address <= 0x10301f) { mmio_w(address - 0x103000, data); return; }
-	if (address >= 0x102400 && address <= 0x10240f) { scsi_w(address - 0x102400, data); return; }
+	if (address >= 0x102400 && address <= 0x10241e && !(address & 1))
+	{
+		scsi_w((address - 0x102400) >> 1, data);
+		return;
+	}
 	if (address == 0x102002) { fdc_w(1, data); return; }
 	if (address == 0x102000)
 	{
@@ -3113,6 +3203,25 @@ INPUT_CHANGED_MEMBER(s760_state::native_export_media)
 	status << result;
 }
 
+INPUT_CHANGED_MEMBER(s760_state::native_export_scsi_hd0)
+{
+    if (!m_banked_os || !newval) return;
+    const char* path=getenv("S760_SCSI_EXPORT");if (!path) return;
+    std::string error;
+    if (m_scsi_bus_phase != 0) error="SCSI controller is busy";
+    else if (!m_scsi_device_present[0] || m_scsi_disk_images[0].empty()) error="No SCSI HD0 image is mounted";
+    else if (m_scsi_device_type[0] == 5) error="SCSI target is read-only";
+    else {
+        std::ofstream file(path,std::ios::binary|std::ios::trunc);
+        file.write(reinterpret_cast<const char*>(m_scsi_disk_images[0].data()),m_scsi_disk_images[0].size());
+        file.flush();if (!file) error="Cannot export SCSI HD0";
+        file.close();if (file.fail()) error="Cannot close exported SCSI HD0";
+    }
+    std::ofstream status(std::string(path)+".status",std::ios::trunc);
+    status << "{\"ok\":" << (error.empty()?"true":"false") << ",\"error\":\"" << error
+        << "\",\"bytes\":" << m_scsi_disk_images[0].size() << "}";
+}
+
 TIMER_CALLBACK_MEMBER(s760_state::runtime_midi_poll)
 {
 	// Bound ingress per tick and use the existing 31250-baud transmitter.
@@ -3606,13 +3715,14 @@ void s760_state::scsi_init_devices()
 	// ID 6: CD-ROM 6
 	scsi_load_device_image(6, "roms/SCSI/CD60_2048.iso", 5);
 
-	// Ensure ID 0 and ID 1 are always ready with at least standard formatted media
-	if (!m_scsi_device_present[0])
+	// Synthetic blank targets belong only to the old flat/HLE fixture.
+	// Native firmware must observe an absent target when no image is supplied.
+	if (!m_banked_os && !m_scsi_device_present[0])
 	{
 		m_scsi_disk_images[0].resize(10 * 1024 * 1024, 0x00); // 10MB blank hard disk
 		m_scsi_device_present[0] = true;
 	}
-	if (!m_scsi_device_present[1])
+	if (!m_banked_os && !m_scsi_device_present[1])
 	{
 		m_scsi_disk_images[1].resize(10 * 1024 * 1024, 0x00); // 10MB sample CD-ROM
 		m_scsi_device_present[1] = true;
@@ -3640,7 +3750,8 @@ uint8_t s760_state::scsi_r(offs_t offset)
 	switch (offset & 0x0F)
 	{
 		case 0x00: // BDID
-			val = m_scsi_bdid;
+			// SPC writes encode the ID; reads expose its SCSI bus bit.
+			val = m_banked_os ? uint8_t(1U << (m_scsi_bdid & 7)) : m_scsi_bdid;
 			break;
 
 		case 0x01: // SCTL
@@ -3657,8 +3768,13 @@ uint8_t s760_state::scsi_r(offs_t offset)
 
 		case 0x04: // INTS (Interrupt Status Register)
 			val = m_scsi_ints;
-			m_scsi_ints = 0x00; // Clear on read
-			clear_irq(IRQ_SCSI);
+			// Native SPC firmware explicitly acknowledges INTS by writing it.
+			// Retain the older clear-on-read device fixture only in flat mode.
+			if (!m_banked_os)
+			{
+				m_scsi_ints = 0x00;
+				clear_irq(IRQ_SCSI);
+			}
 			break;
 
 		case 0x05: // PSNS (Phase Sense & Bus Lines)
@@ -3667,6 +3783,18 @@ uint8_t s760_state::scsi_r(offs_t offset)
 
 		case 0x06: // SSTS (SPC Status Register)
 			val = m_scsi_ssts;
+			if (m_banked_os)
+			{
+				// The native direct-data model has no asynchronous FIFO engine.
+				// Report its actual availability, counter and bus state; 0x28
+				// means BUSY + RESET, not the legacy comment's EMPTY + TC ZERO.
+				val = (m_scsi_bus_phase == 4 && m_scsi_data_idx < m_scsi_data_buffer.size()) ? 0 : 0x01;
+				if (!m_scsi_tc) val |= 0x04;
+				if (m_scsi_scmd & 0x10) val |= 0x08;
+				if (m_scsi_bus_phase != 0) val |= 0x80;
+				if ((m_scsi_scmd & 0xe0) == 0x80 && m_scsi_tc
+					&& (m_scsi_bus_phase == 4 || m_scsi_bus_phase == 5)) val |= 0x30;
+			}
 			break;
 
 		case 0x07: // SERR
@@ -3688,12 +3816,14 @@ uint8_t s760_state::scsi_r(offs_t offset)
 				if (m_scsi_data_idx < m_scsi_data_buffer.size())
 				{
 					val = m_scsi_data_buffer[m_scsi_data_idx++];
+					if (m_banked_os && m_scsi_tc) --m_scsi_tc;
 					if (m_scsi_data_idx >= m_scsi_data_buffer.size())
 					{
 						// Transition to STATUS phase (011)
 						m_scsi_bus_phase = 6;
 						m_scsi_psns = 0x8B; // BSY=1, REQ=1, Status Phase (011)
 						m_scsi_ints = 0x08; // Service Required
+						if (m_banked_os && !m_scsi_tc) m_scsi_ints |= 0x10;
 						trigger_irq(IRQ_SCSI);
 					}
 				}
@@ -3720,7 +3850,7 @@ uint8_t s760_state::scsi_r(offs_t offset)
 				// Transition to BUS FREE
 				m_scsi_bus_phase = 0;
 				m_scsi_psns = 0x00; // Bus Free
-				m_scsi_ints = 0x01; // Command Complete
+				m_scsi_ints = m_banked_os ? 0x20 : 0x01; // Native disconnect; legacy completion
 				trigger_irq(IRQ_SCSI);
 			}
 			break;
@@ -3728,6 +3858,13 @@ uint8_t s760_state::scsi_r(offs_t offset)
 
 		case 0x0B: // TEMP
 			val = m_scsi_temp;
+			if (m_banked_os && (m_scsi_psns & 0x80))
+			{
+				if (m_scsi_bus_phase == 4 && m_scsi_data_idx < m_scsi_data_buffer.size())
+					val = m_scsi_data_buffer[m_scsi_data_idx];
+				else if (m_scsi_bus_phase == 6) val = m_scsi_target_status;
+				else if (m_scsi_bus_phase == 7) val = 0;
+			}
 			break;
 
 		case 0x0C: // TCH
@@ -3753,12 +3890,21 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 	switch (offset & 0x0F)
 	{
 		case 0x00: // BDID
-			m_scsi_bdid = data;
+			m_scsi_bdid = m_banked_os ? (data & 7) : data;
 			break;
 
 		case 0x01: // SCTL
 			m_scsi_sctl = data;
-			if (data & 0x01) // RST (Reset Bus)
+			if (m_banked_os && (data & 0x40)) // SPC controller reset
+			{
+				m_scsi_bus_phase = 0;
+				m_scsi_psns = m_scsi_ints = 0;
+				m_scsi_cdb_idx = m_scsi_tc = 0;
+				m_scsi_data_idx = 0;
+				m_scsi_data_buffer.clear();
+				clear_irq(IRQ_SCSI);
+			}
+			else if (!m_banked_os && (data & 0x01)) // Legacy fixture reset
 			{
 				m_scsi_bus_phase = 0;
 				m_scsi_psns = 0x00;
@@ -3770,20 +3916,28 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 		case 0x02: // SCMD
 		{
 			m_scsi_scmd = data;
-			uint8_t cmd = data & 0x07;
-			if (cmd == 0x01 || cmd == 0x02 || cmd == 0x03) // Select without/with ATN
+			if (m_banked_os && (data & 0x10)) // SCSI bus reset, independent of command class
+			{
+				m_scsi_bus_phase = 0;
+				m_scsi_psns = 0;
+				m_scsi_ints = 0x01;
+				trigger_irq(IRQ_SCSI);
+				break;
+			}
+			uint8_t cmd = data & (m_banked_os ? 0xe0 : 0x07);
+			if ((m_banked_os && cmd == 0x20) || (!m_banked_os && (cmd == 0x01 || cmd == 0x02 || cmd == 0x03)))
 			{
 				int target_id = -1;
-				uint8_t mask = (m_scsi_temp != 0) ? m_scsi_temp : m_scsi_dreg;
+				uint8_t mask = m_banked_os ? m_scsi_temp : ((m_scsi_temp != 0) ? m_scsi_temp : m_scsi_dreg);
 				for (int i = 0; i < 7; i++)
 				{
-					if (mask & (1 << i))
+					if ((mask & (1 << i)) && (!m_banked_os || i != m_scsi_bdid))
 					{
 						target_id = i;
 						break;
 					}
 				}
-				if (target_id < 0) target_id = m_scsi_target_id;
+				if (target_id < 0 && !m_banked_os) target_id = m_scsi_target_id;
 
 				if (target_id >= 0 && target_id < 7 && m_scsi_device_present[target_id])
 				{
@@ -3792,7 +3946,7 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 					m_scsi_psns = 0x8A;   // BSY=1, REQ=1, Command Phase (010)
 					m_scsi_cdb_idx = 0;
 					m_scsi_cdb_len = 6;
-					m_scsi_ints = 0x02;   // Selection Done
+					m_scsi_ints = m_banked_os ? 0x10 : 0x02; // Native command done; legacy fixture value
 					trigger_irq(IRQ_SCSI);
 				}
 				else
@@ -3802,6 +3956,23 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 					m_scsi_ints = 0x04;   // Timeout
 					trigger_irq(IRQ_SCSI);
 				}
+			}
+			else if (m_banked_os && cmd == 0xe0) // Initiator ACK: target drops REQ
+			{
+				const u8 sensed = m_scsi_psns;
+				if (sensed & 0x80)
+				{
+					if (m_scsi_bus_phase == 3 || m_scsi_bus_phase == 5)
+						scsi_w(0x0a, m_scsi_temp);
+					else if (m_scsi_bus_phase == 4 || m_scsi_bus_phase == 6 || m_scsi_bus_phase == 7)
+						m_scsi_temp = scsi_r(0x0a);
+				}
+				m_scsi_psns = (sensed & ~0x80) | 0x40;
+			}
+			else if (m_banked_os && cmd == 0xc0) // Release ACK, expose next target phase
+			{
+				static constexpr u8 phases[] = {0, 0, 0, 0x8a, 0x89, 0x88, 0x8b, 0x8f};
+				m_scsi_psns = phases[m_scsi_bus_phase];
 			}
 			else if (cmd == 0x00) // Bus Release
 			{
@@ -3850,6 +4021,7 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 				if (m_scsi_data_idx < m_scsi_data_buffer.size())
 				{
 					m_scsi_data_buffer[m_scsi_data_idx++] = data;
+                    if (m_banked_os && m_scsi_tc) --m_scsi_tc;
 					if (m_scsi_data_idx >= m_scsi_data_buffer.size())
 					{
 						// Commit only a complete command into the private, checkpointed image.
@@ -3866,6 +4038,7 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 						m_scsi_bus_phase = 6; // STATUS phase
 						m_scsi_psns = 0x8B;
 						m_scsi_ints = 0x08;
+                        if (m_banked_os && !m_scsi_tc) m_scsi_ints |= 0x10;
 						trigger_irq(IRQ_SCSI);
 					}
 				}
@@ -5103,6 +5276,7 @@ static INPUT_PORTS_START( s760 )
 	PORT_BIT(0x10, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Acknowledge Floppy Export") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 3)
 	PORT_BIT(0x20, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Protect Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 4)
 	PORT_BIT(0x40, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Unprotect Sample Floppy") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_sample_media), 5)
+	PORT_BIT(0x80, IP_ACTIVE_HIGH, IPT_OTHER) PORT_NAME("Export SCSI HD0") PORT_CHANGED_MEMBER(DEVICE_SELF, FUNC(s760_state::native_export_scsi_hd0), 0)
 	PORT_START("NATIVE_VALUE")
 	PORT_BIT(0xffff, 0, IPT_DIAL) PORT_NAME("Value Encoder") PORT_SENSITIVITY(100) PORT_KEYDELTA(1)
 	PORT_START("NATIVE_OUTPUT")

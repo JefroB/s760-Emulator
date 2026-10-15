@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "source_hashes": {
+    "D:\\S-760\\roms\\SCSI\\HD00_512.img": "8a940c7f114326aedbeb457ed3ed83bc7dbc4b2000ac552d8ff7c410bba43a6c",
+    "D:\\S-760\\roms\\FDD\\ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "D:\\S-760\\roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "saved_sha256": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+  "image_bytes": 10485760,
+  "sample_count": 13,
+  "exact_sample_bytes": 119808,
+  "cold_frequency_bin": 29728,
+  "audio": {
+    "channel": 1,
+    "note": 60,
+    "peak": 0.01694745011627674,
+    "silent_release_frames": 44100
+  },
+  "existing_output_rejected": true,
+  "repeat_export_exact": true,
+  "limits": "Named HD0/512-sector 10 MiB quick initialization and performance Save; explicit Python export, fresh original-firmware Load. No automatic library writeback, GUI/VST export, physical timing or arbitrary media claim.",
+  "date": "2026-10-14",
+  "bug": "BUG-072",
+  "backend_tests": "392 passed in42.63s",
+  "native_output_dma": {
+    "ram": "0x78",
+    "wave": "0xa0",
+    "roundtrip_bytes": 1024,
+    "interrupted_write_preserves_sector": true,
+    "invalid_source_rejected": true
+  },
+  "negative_media": {
+    "passed": true,
+    "two_instances_original_bytes_exact": true,
+    "missing_hd0_rejected": true
+  },
+  "build": "MAME driver/link and CMake Release passed; C++ core/plugin units passed",
+  "commands": [
+    "python scripts/verify_native_scsi_save.py --state-dir <fresh-private-directory>",
+    "python scripts/verify_native_scsi_write_dma.py --state-dir <fresh-private-directory>",
+    "python scripts/verify_native_scsi_wave_dma.py --state-dir <fresh-private-directory>"
+  ],
+  "artifacts": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\scsi204-acceptance",
+  "native_cpp_host": {
+    "passed": true,
+    "sample_rate": 48000,
+    "exact_reference_frames": 240000,
+    "variable_blocks": true,
+    "missed_deadlines": 0
+  },
+  "native_readonly_dma_regression": {
+    "passed": true,
+    "transfer_bytes": [
+      36,
+      65536,
+      118784
+    ],
+    "cd_write_protected": true
+  }
+}

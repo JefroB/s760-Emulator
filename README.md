@@ -9,10 +9,11 @@ the live CRT/LCD frames and provides the rack controls.
 
 ## Current status
 
-As of **2026-10-14**, Milestones 1–4 are complete for their documented Windows
+As of **2026-10-14**, Milestones 1–5 are complete for their documented Windows
 development profiles. **SoundCheck is the automated DAW/host acceptance framework.**
-Hardware coverage and final release qualification remain open in
-[Milestones 5 and 6](docs/COMPLETION_ROADMAP.md). This is a development project;
+The [Milestone5 acceptance matrix](docs/MILESTONE_5_ACCEPTANCE.md) records named
+sampler workflows and firmware restrictions. Final shipped-artifact and clean-machine
+release qualification remains open in [Milestone6](docs/COMPLETION_ROADMAP.md). This is a development project;
 passing model or native-runtime tests does not establish complete hardware parity.
 
 | Product | Qualified scope |
@@ -20,6 +21,16 @@ passing model or native-runtime tests does not establish complete hardware parit
 | Windows standalone | Original-firmware boot, live displays/controls, floppy load/save/export, MIDI playing, session recovery and supported 44.1 kHz MME/ASIO stereo sampling |
 | Native VST3 instrument | SoundCheck SDK discovery, MIDI/controller effects, stereo output, offline rendering, optional 44.1 kHz input and same-build project save/cold reopen |
 | GB-6 OS experiment | Reproducible mouse-decoder patches for user-supplied OS 2.24; v8 vertical movement user-confirmed, balanced v9 hardware acceptance pending |
+
+Native-runtime testing also qualifies named Akai S1000 Convert Load and native
+Roland CD1 Load profiles. The full JMD Roland CD loads its K4 performance and79
+byte-verified sample allocations, with playback/release and exact cold recall.
+See the [native Roland results and limits](docs/condensed/validation/milestone-5-roland-scsi-load-2026-10-14.json).
+Native HD0 initialization/Save/export/fresh Load also passes on the named10MiB profile;
+[SCSI write limits](docs/condensed/validation/milestone-5-scsi-save-2026-10-14.json)
+include explicit Python export only. Final packaged media selection/export remains unqualified.
+The original firmware mutes Disk/Quick Load/Sampling displays; disk/MIDI tests qualify
+safe completion and playback recovery, without musical continuity during disk operations.
 
 Native plugin output processing is tested at 44.1/48/96 kHz. Input and project
 profiles have narrower documented limits. Cross-build/rate/negotiated-maximum
@@ -88,7 +99,7 @@ selection and boot-ROM changes remain deferred in the [controller plan](GB6_CONT
 - [Media library](docs/NATIVE_MEDIA_LIBRARY.md) and [sessions/recovery](docs/NATIVE_SESSIONS.md).
 - [Sampling](docs/NATIVE_SAMPLING.md), [rack controls](docs/NATIVE_RACK_CONTROLS.md)
   and [plugin state](docs/NATIVE_PLUGIN_STATE.md).
-- [Bug backlog](docs/BUG_BACKLOG.md): known defects, including intermittent controller-QA rejection BUG-060.
+- [Bug backlog](docs/BUG_BACKLOG.md): known defects and their resolutions; BUG-060 functional QA now explicitly negotiates offline processing.
 - [Distribution qualification](docs/DISTRIBUTION_QUALIFICATION.md): exact dated standalone artifact review;
   final packages and clean-machine release acceptance remain open.
 

@@ -1,10 +1,110 @@
 # Audio DSP & Hardware Parity
 
-## Current status — 2026-10-10 review
+## Current status — static filter correction2026-10-14
 
-Finding124 establishes sub-1% normalized RMS agreement for the documented interpolation captures and settings, with an opt-in native implementation. Loop/envelope and filter audition work has progressed beyond the earlier raw monitor. Dynamic resonance, other playback domains and combined signal paths remain incomplete. Dated findings below preserve the investigation history; early claims that interpolation is unresolved or filters are absent are superseded within the tested domains by the later findings.
+Static C64/R64 BP/HP capture comparison now passes the1% waveform target:0.07924% BP and0.10408% HP on the withheld interval, with unchanged428/85 equations. Corrected capture analysis retains DAC image harmonics present in the48kHz recording and uses training-only timing/gain. The former HP1.59% failure was analysis aliasing. Moving/resonant response remains BUG-005; no native filter constants changed. [Correction, controls and identities](validation/static-filter-capture-correction-2026-10-14.json).
+
+### Historical2026-10-10 review
+
+Finding124 establishes sub-1% normalized RMS agreement for the documented interpolation captures and settings, with an opt-in native implementation. Loop/envelope and filter audition work has progressed beyond the earlier raw monitor. Physical dynamic-resonance fidelity remains open. Normal-default combined-path qualification is recorded below alongside historical diagnostic evidence. Dated findings below preserve the investigation history; early claims that interpolation is unresolved or filters are absent are superseded within the tested domains by the later findings.
 
 See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+
+## Normal filter profile — 2026-10-14
+
+Python and C++ VST3 launchers now enable the existing native filter renderer
+alongside stereo, interpolation and envelope/loop processing. No coefficient
+algorithm changed. Normal72-case firmware acceptance covers bypass, LP32/64/96,
+resonant LP64 and nonresonant LP/BP/HP sweeps at MIDI57/60/63 and three pan
+positions. Finite bounded output, spectral/cutoff effects and silent release pass.
+
+Native filter words require44.1kHz, command0, cutoff<=0x3fff and damping<=0x0fff.
+LP mode0 accepts that damping range; BP0x0400/HP0x0200 accept only damping0x0fff
+or85. Other words/clocks retain the raw path and clear filter history. Firmware
+coefficient writes are stepped. Exact moving/resonant response remains outside
+the qualified domain; BUG-005 is still open.
+
+Normal seven-mode/retrigger acceptance replays1,058,400 frames exactly. Firmware
+partial edit/Save/fresh Load preserves the measured octave change; native cold
+scheduled/SCSI recall reproduces131072 stereo frames and refreshed displays.
+Variable PCM/scheduled MIDI and paced48/96kHz variable-block plugin tests pass;
+these are not physical device-latency or final-package measurements. All363
+backend tests and core/plugin unit suites pass.
+
+Standalone state uses audio profile `native-stereo-filter-interpolation-44100-v2`;
+old bypass-profile archives require their matching application. VST3 rebuilt-module
+identity already enforces the same-build state rule. Recording remains opt-in.
+Actual SoundCheck SDK host acceptance passes nine named LP/bypass/pan cases,
+silent releases, editor reopen and220500 exact fresh-instance replay frames
+with variable blocks. Active LP-history cold native recall separately matches
+65536 frames. The first host attempt times out on editor readiness; the second
+hits existing BUG-060 block rejection. Fully paced repetition passes, without
+a production reliability fix or closure of BUG-060.
+[Exact artifacts, commands, results and limits](validation/milestone-5-normal-filter-2026-10-14.json).
+
+## Supported loop-mode acceptance — 2026-10-14
+
+Current native firmware Load/playback acceptance covers all seven ROBOLOOP modes
+at 44.1 kHz/unity pitch. Five repeating modes match the fixture sign/direction
+sequence exactly, including reverse and alternate; both one-shots finish while
+held, and all modes release silently. Eight overlapping seven-mode retrigger
+cycles deliver 112 note-ons per run and exact replay of 1,058,400 stereo frames
+from a same-process checkpoint, with a full second of silence after each cycle.
+This is native functional evidence, not voice-count/stealing, simultaneous disk
+activity, cold-process recall, realtime device timing or physical parity.
+Named octave transitions are now qualified below. Reproduce with
+`python scripts/verify_native_runtime.py --loop-modes --loop-stress` and explicit
+absolute `--sample-disk` ROBOLOOP and private `--state-dir` paths.
+[Identities, command, measured rows and limits](validation/milestone-5-loop-modes-2026-10-14.json).
+
+## Bounded native allocator acceptance — 2026-10-14
+
+ROBOFULL original-firmware Load and serialized MIDI allocate all 24 playable
+wave slots. Each of eight excess notes disables/re-enables a slot (24 to 23 to
+24 enabled voices). Releasing all original notes preserves eight replacement
+voices; releasing the replacements clears the bitmap and leaves a full second
+of exact silence. Eight single-note retriggers and sustain hold/release also
+pass counted allocation and silent-tail checks. Read-only bus traces have no
+dropped rows. This establishes bounded native allocation/release behavior, not
+exact hardware steal priority, arbitrary layered-patch behavior, concurrent disk
+activity or a spectral proof of every mixed voice.
+[Measured rows, identities and reproduction command](validation/milestone-5-polyphony-2026-10-14.json).
+The [workflow matrix](../MILESTONE_5_ACCEPTANCE.md) separates completed and pending
+product coverage.
+
+## Native loop/pitch acceptance — 2026-10-14
+
+A private ROBOLOOP-derived fixture copies partials and adjusts their coarse tuning
+and key map, preserving all sample records and PCM. Original firmware loads all
+seven modes at -12/0/+12 semitones. Read-only pitch observations match8192/16384/
+32768; repeating modes have >0.99 correlation at their expected recurrence lags,
+one-shot durations scale within8 frames of expected, and all notes release to a
+full silent second.42 overlapping transitions across those mapped notes remain
+finite/bounded and release silently. This is functional octave/key-transition
+acceptance, not continuous glide, arbitrary ratio, click-free transition or new
+physical interpolation parity. For odd-length loops at double speed, recurrence
+uses two cycles to obtain an integral lag; pitch observations independently verify
+speed. Existing physical measurements retain their original domain limits.
+[Commands, fixture recipe/hash, pitch traces and PCM metrics](validation/milestone-5-loop-pitch-2026-10-14.json).
+
+## Diagnostic combined-path acceptance — 2026-10-14
+
+The explicit native diagnostic profile enables stereo and the existing filter
+monitor alongside interpolation/envelopes.72 original-firmware cases cover bypass,
+LP static cutoff32/64/96 at resonance0, LP cutoff64/resonance64 and LP/BP/HP
+nonresonant sweeps, at MIDI57/60/63 and pan0/64/127. All produce finite bounded
+output, correct stereo routing and a silent release second. Static cutoff changes
+alter spectral balance; the moving LP patch changes RMS across its envelope.
+These are functional assertions, not physical moving/resonant filter equivalence.
+
+The historical six-case baseline confirmed BUG-061: Python normal output
+bypassed stereo gains. The later normal-profile correction enables the stereo
+mixer and passes six pan cases, variable-block audio and131072-frame cold replay.
+Normal filter selection/default qualification remains open; the diagnostic result
+does not promote filtering.
+[Normal stereo qualification](validation/milestone-5-normal-stereo-2026-10-14.json). The profile is explicitly
+opt-in and has separate checkpoint identity;363 backend tests pass.
+[Commands, identities,72 diagnostic rows and baseline comparison](validation/milestone-5-combined-audio-2026-10-14.json).
 
 ## Technical reference and dated milestone history
 
@@ -43,13 +143,9 @@ across channels **0–7 and 16–23** (skipping the reserved diagnostic slots) f
 playable channels. The 32 initialized register slots are therefore NOT 32
 playable voices.
 
-`S760HardwareCore` exists in `core/include/s760/s760_core.hpp` and
-`core/src/s760_core.cpp`, but **the current `core/CMakeLists.txt` library source
-list omits `s760_core.cpp`**, and MAME defines its own `s760_sound_device`.
-The roadmap's claim that MAME/plugins already share this exact DSP engine is
-incorrect. The standalone source implements Hermite interpolation and four-stage
-resonant filtering. Those algorithms are software models, not established
-reconstructions of Roland DI or measured hardware parity.
+Current architecture correction (2026-10-14, BUG-008): standalone and native VST3 use the same modified MAME machine implementation, including its `s760_sound_device` renderer, through isolated runtime processes. The VST3 worker transports MIDI/PCM and converts host output rates. They do not link or render through `S760HardwareCore`.
+
+`S760HardwareCore` in `core/include/s760/s760_core.hpp` and `core/src/s760_core.cpp` is an unlinked reference model, deliberately absent from the product CMake source list. Its Hermite interpolation and four-stage resonant filter are software experiments; their presence is not evidence of product integration or hardware parity. The earlier shared-reference-DSP completion claim is withdrawn. Native reference replay qualifies software agreement for named workflows; physical fidelity retains its measured limits.
 
 ## Native firmware voice interface (2026-10-10)
 
@@ -358,7 +454,7 @@ these are DSP words, not patch bytes). Transfer forms share the LP denominator
 `1-(2-c·d-c·c)z+(1-c·d)z`: **BP numerator c(1-z), HP numerator (1-z)²**, and
 BP/HP use UNSCALED (unity) band/high — the damping-scaled BP hypothesis is
 rejected (finding106). On STATIC captures at cutoff 428/damping 85: BP residual
-−60.84 dB (passes 1% RMS), **HP 1.59% (does NOT pass)**. Implemented in the opt-in
+−60.84 dB BP and1.59% HP were the historical4096-point analysis results. The2026-10-14 correction above supersedes the HP failure: retained recording-band image harmonics yield0.10408% HP and0.07924% BP, with resolution stability and a failing wrong-cutoff control. Implemented in the opt-in
 audition for res words 0FFF and 85 at 44.1 kHz. Resonant/moving BP/HP, other
 clocks and HP precision remain open.
 
@@ -680,3 +776,18 @@ other DAWs and release qualification remain open. Actual DAW project portability
 is the sole remaining Milestone 4 checkbox. See the
 [host sampling contract](../NATIVE_VST3_SAMPLING.md) and
 [exact source/binary validation](validation/milestone-4-host-sampling-2026-10-13.json).
+
+
+### Static filter timing diagnostic (BUG-005,2026-10-14)
+
+Using the original stationary BP/HP captures and fixed428/85 recurrence, affine phase drift fitted only on1.0..2.4s forecasts the withheld3.0..4.5s interval with0.0789% BP and1.1311% HP normalized RMS error. HP remains above1%, and moving/resonant accuracy remains unresolved. This improves the timing analysis without adjusting native coefficients or fitting held-out data; it does not qualify the filter or justify an emulator change. [Investigation and limits](validation/remaining-bug-investigation-2026-10-14.json).
+
+
+### Reproduce static capture correction
+
+Run `python scripts/verify_static_filter_captures.py --state-dir <fresh-private-directory>` with numpy/scipy/soundfile and the original fingerprinted local hardware ZIP recordings. The script checks all input identities, reproduces the old folded failure, qualifies8192/16384-point resolution checks and rejects a wrong-cutoff model. It never changes captures or emulator constants. Tests independently verify fractional source delay for image harmonics above the source Nyquist. The original static/moving investigation remains historical; the corrected static result does not qualify moving resonance or arbitrary coefficients/clocks.
+
+
+### Moving-filter remainder: negative diagnostics (2026-10-14)
+
+The accepted quiet and repeat LP R64 recordings were rechecked with the same85 damping/unity calibrated gain and original inferred coefficient trajectory. Fourier fractional excitation alignment changes evaluation error from17.627% to17.898% (quiet) and18.444% to18.038% (repeat); it is not a consistent correction. Diagnostic stepped writes and32/64/128-sample coefficient cadences are worse. These reused evaluation blocks do not provide fresh independent validation. No native renderer or coefficient change was made, and BUG-005 stays open for moving/sweep response. Static agreement from the corrected recording-band analysis above remains valid. [Commands, candidate parameters, capture identities and next evidence](validation/moving-filter-investigation-2026-10-14.json).

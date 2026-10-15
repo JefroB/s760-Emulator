@@ -66,10 +66,7 @@ and the same prerequisites/port ownership as the [project verifier](NATIVE_PLUGI
 
 ## Completed controller and panic/reset profile — 2026-10-13
 
-The current-artifact55-case requalification also passes unchanged. One preceding
-run rejected an audio block while editing the assigned controller; BUG-060 tracks
-that intermittent failure and remains open. The successful repeat establishes
-controller effects for this profile, not failure-free host reliability.
+The historical current-artifact55-case repeat passes. A preceding realtime QA run rejected an audio block during controller editing. The2026-10-14 BUG-060 correction explicitly negotiates offline processing for this functional verifier:64 unpaced host blocks and all55 measured cases pass without retries. A realtime64-block burst reproduces the rejection; unpaced functional batches cannot assume realtime deadlines. This resolves the verifier contract defect, without proving the exact cause of every historical rejection or indefinite host reliability. Paced realtime deadline acceptance remains a separate test.
 [Current artifact hashes and measured results](condensed/validation/milestone-4-controller-requalification-2026-10-13.json).
 
 The remaining controller objective is complete for SoundCheck1.0.0 Windows x64
@@ -141,3 +138,10 @@ state format and same-build constraints are unchanged.
 
 See the [text/audio report](condensed/validation/milestone-4-midi-automation-2026-10-12.txt)
 and [binary/source evidence](condensed/validation/milestone-4-midi-2026-10-12.json).
+
+
+### Functional QA processing contract (BUG-060,2026-10-14)
+
+`verify_vst3_controllers.py` defaults to `--processing-mode offline` and validates the host's `qa_processing` mode acknowledgement before the first block. `--burst-check` exercises64 consecutive unpaced blocks; a rejected block still fails immediately. No retries, skipped metrics or production fault suppression are added. `--processing-mode realtime` is available for explicit pacing experiments; its burst check is expected to reject when rendering outruns the worker. The actual paced native-host48kHz variable-block regression remains realtime and matches240000 reference frames with zero missed deadlines.
+
+`verify_vst3_filters.py` also negotiates offline processing for its functional cases and again before fresh-instance project restore. Host mode is part of the snapshot compatibility contract. These tests qualify controller/filter semantics and state replay, not realtime scheduling under arbitrary UI or system load. Source/artifact identities and reports are in [the QA correction record](condensed/validation/bug-060-qa-processing-contract-2026-10-14.json).

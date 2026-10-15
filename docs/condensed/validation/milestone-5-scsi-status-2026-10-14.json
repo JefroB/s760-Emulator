@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; exact identities below",
+  "scope": "BUG-065 native SCSI status correction; isolated device acceptance, not firmware SCSI Load",
+  "identities_sha256": {
+    "mame-source/src/mame/roland/s760.cpp": "eed443a40a3d376de5f54df287a352393c70439cd9aed6a1061706259928091d",
+    "mame-source/mames760.exe": "26b61444c908795426769c946becb681e36f07a7336d37f99e52bf3af8c5591b",
+    "scripts/verify_native_scsi_registers.py": "d2c0beb58a28bed582b6f3249fe710a95809c27121d2faea6aad350f6b8b2402",
+    "scripts/s760_runtime.py": "6d5b1374fcbde46dbb0cd6b980c7aecea001c079f13fd52d2da05f5f85112c44",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/SCSI/HD00_512.img": "8a940c7f114326aedbeb457ed3ed83bc7dbc4b2000ac552d8ff7c410bba43a6c",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "reference": "Local upstream mame-source/src/devices/machine/mb87030.h SSTS constants and mb87030.cpp dynamic TC/FIFO flags",
+  "before": {
+    "error": "...le-findings\\chatGPT-work\\scsi-status198-before\\probe.lua:18: Idle SSTS must report empty FIFO and zero counter, without busy/reset",
+    "native_scsi_stride": 2,
+    "cpu": "I80C196KB",
+    "firmware_load": false,
+    "passed": false
+  },
+  "after": {
+    "cpu": "I80C196KB",
+    "passed": true,
+    "error": "",
+    "firmware_load": false,
+    "native_scsi_stride": 2
+  },
+  "native_audio_midi": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.733333333333,
+    "note_release": 80.8,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    },
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999542236328125,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "sample": 3663505,
+        "seconds": 83.072675736961
+      },
+      {
+        "sample": 3707605,
+        "seconds": 84.072675736961
+      }
+    ]
+  },
+  "cold_state": {
+    "scsi_identity_verified": true,
+    "cold_pcm_frames_exact": 131072,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": true,
+    "serial_boundary": false,
+    "enqueue_age_seconds": -0.02269841269807671,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "firmware_probe": {
+    "result": "No Drive after Scan; no late SPC accesses",
+    "trace": {
+      "rows": [],
+      "accesses": 0,
+      "dropped": 0,
+      "ok": true
+    },
+    "fixture": "Private copy of generated 10MiB HD; filesystem not firmware qualified",
+    "firmware_modified": false
+  },
+  "commands": [
+    "python scripts/verify_native_scsi_registers.py --state-dir <fresh-absolute-directory>",
+    "python scripts/verify_native_runtime.py --pull-render --scheduled-midi --state-dir <fresh-absolute-directory>",
+    "python scripts/verify_native_checkpoint.py --scheduled --scsi --state-dir <fresh-absolute-directory>",
+    "python scripts/verify_scsi_checkpoint.py --state-dir <fresh-absolute-directory>"
+  ],
+  "legacy_state": "Partial CDB/data, writes, sense, protection, aborted writes and cold media recall pass",
+  "limitations": [
+    "No asynchronous native FIFO/PIO/DMA handshake qualification",
+    "Connected/data-availability flags reflect existing direct-data model; no physical timing claim",
+    "SCSI discovery/Load remains open; no genuine supported SCSI filesystem qualified",
+    "Immediate cold display cache differs; refreshed display frames exact as required by existing contract"
+  ],
+  "backend_tests": {
+    "passed": 363,
+    "seconds": 38.03,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-scsi-pytest-198.py",
+    "harness": "Private scratch/snapshot/temp/cache directories; permitted local socket execution",
+    "initial_attempt": "Restricted attempt reported failures and stalled; stopped, unchanged permitted repeat passed"
+  },
+  "build": {
+    "driver": "MSBuild mame_s760.vcxproj Release/x64 OldStyle, zero errors",
+    "link": "MSBuild mames760.vcxproj Release/x64 OldStyle, zero errors"
+  }
+}

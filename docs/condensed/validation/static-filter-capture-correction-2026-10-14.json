@@ -1,0 +1,351 @@
+{
+  "passed": true,
+  "captures": [
+    {
+      "file": "s760_01 REF NOISE_20261010_121558.zip",
+      "zip_sha256": "f4aa569c7c5148f5e49004f6ddef1591b51143bd5a4b38c09f839fd1d1856d44",
+      "wav_sha256": "fa3b605f577393acef17ae8d0bfbc3ed7ae4c1c879bbd7ec1fa121c3e639ab4c",
+      "frames": 715436,
+      "sample_rate": 48000
+    },
+    {
+      "file": "s760_01 BP C64 R64_20261010_162825.zip",
+      "zip_sha256": "178008864049418d53e632d1523391078ef68dabed4496f5db0110f84d37732d",
+      "wav_sha256": "e59edf2a0d5b8115f227e92138a17cf2f84fcb0d4617a7aec3f41c0d3146b4b4",
+      "frames": 763479,
+      "sample_rate": 48000
+    },
+    {
+      "file": "s760_02 HP C64 R64_20261010_162854.zip",
+      "zip_sha256": "65e80dccf01f6e4f20e77bbcc3ee20a368e781aa1548a6085c812e45ab29bd4e",
+      "wav_sha256": "ad94f3f05012edb1ed963729582dcbf8c276771fafe78c2f3e15c926d287e391",
+      "frames": 763374,
+      "sample_rate": 48000
+    }
+  ],
+  "calibrated_recording_period": 4458.136121698991,
+  "source_rate": 44100.94143223983,
+  "old_analysis": {
+    "points": 4096,
+    "recording_oversample": 8,
+    "rows": [
+      {
+        "mode": "BP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3138.3266847964405
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3138.3273856205997
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3138.3255053706234
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3138.3220050846867
+          }
+        ],
+        "gain": 0.9997233645212071,
+        "phase_slope": -0.005306461746528316,
+        "heldout_correlation": 0.9999996336108079,
+        "heldout_rms_error_percent": 0.08565831586901122
+      },
+      {
+        "mode": "HP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3140.5825544253676
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3140.5811367606584
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3140.578016061394
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3140.5733921892243
+          }
+        ],
+        "gain": 0.9999468986628449,
+        "phase_slope": -0.010202469231648293,
+        "heldout_correlation": 0.9998736283023053,
+        "heldout_rms_error_percent": 1.5897989642615156
+      }
+    ]
+  },
+  "corrected": {
+    "points": 8192,
+    "recording_oversample": 8,
+    "rows": [
+      {
+        "mode": "BP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3138.3275782676355
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3138.328238008413
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3138.3265058880206
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3138.3229780226975
+          }
+        ],
+        "gain": 0.9997405678404846,
+        "phase_slope": -0.005177618402581901,
+        "heldout_correlation": 0.9999996864978555,
+        "heldout_rms_error_percent": 0.0792437761520853
+      },
+      {
+        "mode": "HP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3140.583700749303
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3140.5806604406243
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3140.5776651403867
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3140.5746027631394
+          }
+        ],
+        "gain": 0.9996662082490966,
+        "phase_slope": -0.010096419576897898,
+        "heldout_correlation": 0.9999994585343163,
+        "heldout_rms_error_percent": 0.1040800007936581
+      }
+    ]
+  },
+  "resolution_check": {
+    "points": 16384,
+    "recording_oversample": 16,
+    "rows": [
+      {
+        "mode": "BP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3138.3275295396234
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3138.3281854430534
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3138.326437811207
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3138.3229250917066
+          }
+        ],
+        "gain": 0.9997418537676274,
+        "phase_slope": -0.0051869918665617435,
+        "heldout_correlation": 0.9999996860036624,
+        "heldout_rms_error_percent": 0.07930611288803967
+      },
+      {
+        "mode": "HP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3140.583649007138
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3140.5807094331612
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3140.5776609014574
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3140.574602413879
+          }
+        ],
+        "gain": 0.9996666876491109,
+        "phase_slope": -0.010062770494566331,
+        "heldout_correlation": 0.9999994612079914,
+        "heldout_rms_error_percent": 0.10382198917188656
+      }
+    ]
+  },
+  "wrong_cutoff_control": {
+    "points": 8192,
+    "recording_oversample": 8,
+    "rows": [
+      {
+        "mode": "BP",
+        "cutoff": 430,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3151.2404954325684
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3151.2421226315855
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3151.2401688611862
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3151.2372887152305
+          }
+        ],
+        "gain": 1.129154062337066,
+        "phase_slope": -0.003857974137461099,
+        "heldout_correlation": 0.987876793684095,
+        "heldout_rms_error_percent": 15.523994801444571
+      },
+      {
+        "mode": "HP",
+        "cutoff": 430,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3140.5945567882954
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3140.5915685888613
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3140.588533759961
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3140.5854947548214
+          }
+        ],
+        "gain": 1.0426345635220182,
+        "phase_slope": -0.010073643108390802,
+        "heldout_correlation": 0.9549535747591269,
+        "heldout_rms_error_percent": 29.6755236462082
+      }
+    ]
+  },
+  "limits": "One stationary C64/R64 BP/HP capture pair with calibrated bypass; fitted gain/training-only phase, not raw whole-chip identity. No renderer changes, moving/resonant accuracy, arbitrary coefficients, clocks or MIDI arbitration claim.",
+  "date": "2026-10-14",
+  "bug": "BUG-005 static-HP component",
+  "classification": "Existing physical capture reanalysis; static waveform comparison with training-only gain/phase; no new capture or renderer change",
+  "command": "python scripts/verify_static_filter_captures.py --state-dir <fresh-private-directory>",
+  "prerequisites": "Original fingerprinted local REF NOISE/BP C64 R64/HP C64 R64 ZIP captures, Python numpy/scipy/soundfile; no firmware needed for offline analysis",
+  "identities": {
+    "scripts/verify_static_filter_captures.py": "c1ad48cc0430da92ca77dfb05bb4346a1ffe1ccbe6fea497d90bac69a23b1b4d",
+    "tests/test_static_filter_capture_phase.py": "f04f6eeaae64d266d89eaaff56dd82df3f9b599c07165f43900b7bf47e5345d7",
+    "mame-source/src/mame/roland/s760.cpp": "b4e21396a32c3b4c89942790754be6155f7f383faa4cfa66cb2000c5438e5023",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04"
+  },
+  "scope_resolution": "Static-HP threshold failure resolved as a capture-analysis aliasing defect. BUG-005 remains OPEN solely for the unresolved moving/sweep filter response; no whole-chip accuracy claim.",
+  "regressions": {
+    "passed": 396,
+    "seconds": 39.4,
+    "new_phase_regression_cases": 2,
+    "product_runtime_changed": false
+  }
+}

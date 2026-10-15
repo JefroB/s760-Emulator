@@ -1,6 +1,6 @@
 # Roland S-760 CRT Display — System Mode Screens
 
-This document covers all screens within the **System** mode of the Roland S-760 hardware display (`system-1.jpeg` through `system-5.jpeg`), including System Parameters, SCSI bus drive configuration, System MIDI global settings, Volume ID metadata, and System Parameter disk load/save.
+This document covers all screens within the **System** mode of the Roland S-760 hardware display (`system-1.jpeg` through `system-5.jpeg`), including System Parameters, SCSI bus drive configuration, System MIDI global settings, Volume ID metadata, and System Parameter backup-memory load/save.
 
 ---
 
@@ -267,12 +267,12 @@ This document covers all screens within the **System** mode of the Roland S-760 
 
 ### Detailed Element Breakdown
 
-1. **Parameter File Container (Rows 8-12):**
-   - Displays the system configuration file name currently loaded or targeted for save operations `[ ------------------------------ ]`.
+1. **System Parameter Status (Rows 8-12):**
+   - This is a backup-memory operation, not a disk-file selector. The owner manual Advanced3-104 (PDF page128) states that LoadPRM/SavePRM transfer System Parameter, System SCSI and System MIDI settings between internal memory and System Backup memory. `SysPRM Are Edited` indicates unsaved differences.
 
 2. **Bottom Softkeys (Row 23-24):**
-   - **F1:** `LoadPRM` — Loads hardware settings, SCSI IDs, and MIDI configurations from disk.
+   - **F1:** `LoadPRM` — Restores saved System Backup memory settings into internal memory, discarding unsaved setting changes.
    - **F2:** `---` — Disabled placeholder.
-   - **F3:** `SavePRM` — Writes current system parameters permanently to the system floppy or boot SCSI volume.
+   - **F3:** `SavePRM` — Copies current system settings to System Backup memory. This does not access floppy/SCSI media; unsaved changes are lost at power-off.
    - **F4:** `---` — Disabled placeholder.
    - **F5 / Side:** `VolInfo` — Volume memory information.

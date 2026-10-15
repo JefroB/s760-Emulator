@@ -59,7 +59,7 @@ end)
 '''
 
 
-def main(lua=LUA, native_only=False):
+def main(lua=LUA, native_only=False, prepare_work=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--state-dir', type=Path, required=True)
     parser.add_argument('--banked', action='store_true', default=native_only, help='Exercise the native I80C196KB core')
@@ -70,6 +70,8 @@ def main(lua=LUA, native_only=False):
     rom = work / 'roms/s760'
     rom.mkdir(parents=True)
     shutil.copyfile(ROOT / 'roms/System/S760224.IMG', rom / 's760224.img')
+    if prepare_work is not None:
+        prepare_work(work)
     script = work / 'probe.lua'
     script.write_text(lua, encoding='utf-8')
     command = [str(ROOT / 'mame-source/mames760.exe'), 's760', '-rompath',

@@ -6,6 +6,18 @@ Native ROM boot now reaches a colour, mouse-interactive Perform Play screen and 
 
 See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
+## Native wave-memory configurations — 2026-10-14
+
+Native sample RAM is configurable to8,16 or32 MiB (default32), independently of
+CPU work RAM. Standalone/VST3 settings expose Wave memory, persisted as
+`waveMemoryMb`; direct MAME launches use `S760_WAVE_MEMORY_MB`.
+Original OS2.24 System Parameter1 reports8/16/32 Mbyte and90.8/181.8/363.8 seconds.
+Native dumps contain8,388,608 /16,777,216 /33,554,432 bytes. Same-size native
+checkpoint round trips pass; different-size preflight rejects before restore.
+This establishes the available capacity and firmware detection, without adding
+claims about physical SIMM timing or completing formatted SCSI sample loading.
+[Validation](validation/milestone-5-wave-memory-2026-10-14.json).
+
 ## Technical reference and dated milestone history
 
 Milestone labels below apply to their cited finding, not to the present project status.
@@ -43,7 +55,7 @@ CPU gate IC4 expands A0..A19, IC17/18/19 decode the high bits):
 | MEQ control (**IC30 TC24SC220AF-007**) | D800 | 101800 | CS_MEQ; 24-store initialization observed; distinct per-voice registers/attenuation law unproved |
 | Pan command aperture (exact chip-select coverage unresolved) | DC00 | 101C00 | 101C00=coefficient, 101C06=tag OR0200; bit9 hardware function unproved — finding76 |
 | FDC (uPD72068) | E000 | 102000 | **E000=MSR/auxiliary, E002=FIFO** (not old generic765 at F040) |
-| SCSI | E400 | 102400 | |
+| SCSI | E400 | 102400 | Native even-byte register ports at stride2 through E41E/10241E; legacy F020 mapping is separate |
 | VDP (RFSC16A) | E800 | 102800 | address E804/E806, data E800/E802, cmd/status E808 |
 | I/O | F000 | 103000 | |
 | LCD | F800 | 103800 | |

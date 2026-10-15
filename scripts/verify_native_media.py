@@ -22,16 +22,32 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def compare_wave_records(before, after):
+    """Report every changed byte; do not treat a disk Load as a full session restore."""
+    import numpy as np
+    if len(before) != len(after):
+        raise AssertionError('Wave RAM size changed across media reload')
+    changed = np.flatnonzero(np.frombuffer(before, dtype='u1') != np.frombuffer(after, dtype='u1'))
+    groups = np.split(changed, np.flatnonzero(np.diff(changed) > 1) + 1) if len(changed) else []
+    return {'bytes': len(before), 'equal': not len(changed), 'changed_bytes': len(changed),
+            'before_sha256': hashlib.sha256(before).hexdigest(), 'after_sha256': hashlib.sha256(after).hexdigest(),
+            'ranges': [{'first': int(g[0]), 'last_exclusive': int(g[-1]) + 1,
+                        'before_hex': before[int(g[0]):int(g[-1]) + 1].hex(),
+                        'after_hex': after[int(g[0]):int(g[-1]) + 1].hex()} for g in groups]}
+
+
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--state-dir', type=Path, help='Fresh private absolute output directory')
     parser.add_argument('--checkpoint', action='store_true', help='Verify dirty-controller state in a fresh process')
     parser.add_argument('--write-protect', action='store_true', help='Verify firmware protected Save, exact unchanged media and cold protection recall')
     parser.add_argument('--format', action='store_true', help='Format private loaded media through firmware before Save/export/reload')
     args = parser.parse_args()
     if args.format and args.write_protect:
         parser.error('Run formatting and write-protection workflows separately')
-    work = ROOT / 'docs/ic20-hle-findings/chatGPT-work' / ('media-verification-' + time.strftime('%Y%m%d-%H%M%S'))
-    work.mkdir(parents=True)
+    work = args.state_dir.resolve() if args.state_dir else ROOT / 'docs/ic20-hle-findings/chatGPT-work' / ('media-verification-' + time.strftime('%Y%m%d-%H%M%S'))
+    if work.exists() and any(work.iterdir()):parser.error('Use a fresh private state directory')
+    work.mkdir(parents=True, exist_ok=True)
     source = ROOT / 'roms/FDD/ROBOFULL.IMG'
     original = digest(source)
     assert original == '8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae', 'Unexpected ROBOFULL fixture'
@@ -119,7 +135,7 @@ def main():
         if args.checkpoint:
             runtime.request('pause')
             runtime.save_checkpoint(work/'dirty.s760state')
-            with NativeRuntime(replace(cfg, state_dir=work/'checkpoint-restart', sample_disk=None, wave_dump=None)) as restored:
+            with NativeRuntime(replace(cfg, state_dir=work/'checkpoint-restart', sample_disk=None, wave_dump=work/'checkpoint-wave.bin')) as restored:
                 restored.request('pause')
                 restored.load_checkpoint(work/'dirty.s760state')
                 restored.request('resume')
@@ -157,6 +173,10 @@ def main():
                     '--wave-dump', str(work / 'after-wave.bin')], check=True)
     before = (work / 'before-wave.bin').read_bytes()
     after = (work / 'after-wave.bin').read_bytes()
+    full_wave = compare_wave_records(before, after)
+    if args.checkpoint:
+        checkpoint_wave = (work / 'checkpoint-wave.bin').read_bytes()
+        assert before == checkpoint_wave, 'Full-session checkpoint changed wave RAM metadata or samples'
     source_bytes = source.read_bytes()
     samples = []
     # Fixture123 has13 generated9216-byte payloads used by all88 MIDI keys.
@@ -172,6 +192,9 @@ def main():
     result = {'source_sha256': original, 'saved_sha256': digest(saved),
               'sample_payloads': samples, 'sample_bytes_compared': sum(s['bytes'] for s in samples),
               'whole_wave_ram_equal': before == after,
+              'whole_wave_comparison': full_wave,
+              'checkpoint_whole_wave_exact': args.checkpoint,
+              'comparison_contract': 'Media reload preserves the saved samples/program, not unrelated RAM/catalog state; checkpoint restore preserves full wave RAM.',
               'original_preserved': True, 'dirty_media_protection': True,
               'before_export': dirty, 'after_export': clean,
               'fresh_machine_audio': json.loads((work / 'reload/result.json').read_text())}
@@ -189,7 +212,7 @@ def main():
         result['protected_export_sha256'] = digest(work/'protected-export.img')
         result['write_protected_error_rgb_region'] = [180,156,440,180]
         result['write_protected_error_rgb_sha256'] = error_pixels
-    (work / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
+    (work / 'result.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, indent=2))
     print(f'Evidence: {work}')
 
