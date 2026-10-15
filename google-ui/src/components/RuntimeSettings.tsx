@@ -6,6 +6,7 @@ export interface RuntimeConfiguration {
   systemDisk: string;
   mediaDirectory: string;
   sound: boolean;
+  waveMemoryMb?: 8 | 16 | 32;
   audioBackend?: 'auto' | 'wasapi' | 'xaudio2' | 'asio';
   audioLatencyMs?: number;
   audioOutputDevice?: string;
@@ -45,6 +46,10 @@ export function RuntimeSettings({configuration, pending, onApply, onCancel, chil
     {([['bootRom','Boot ROM (32KB)'],['systemDisk','System disk (1.44MB)'],['mediaDirectory','Media directory']] as const).map(([key,label])=>
       <label key={key} className="block">{label}<input className="block w-full bg-neutral-800 border border-neutral-600 rounded p-2" value={draft[key]} disabled={pending}
         onChange={e=>{setDraft({...draft,[key]:e.target.value});setConfirmed(false);}}/></label>)}
+    <label className="block">Wave memory<select className="block w-full bg-neutral-800 border border-neutral-600 rounded p-2" value={draft.waveMemoryMb??32} disabled={pending}
+      onChange={e=>{setDraft({...draft,waveMemoryMb:Number(e.target.value) as 8|16|32});setConfirmed(false);}}>
+      {[8,16,32].map(n=><option key={n} value={n}>{n} MB</option>)}
+    </select></label>
     {!hostDriven && <label className="block"><input type="checkbox" checked={draft.sound} disabled={pending} onChange={e=>{setDraft({...draft,sound:e.target.checked});setConfirmed(false);}}/> Enable audio output</label>}
     {draft.audioBackend !== undefined && <>
       <label className="block">Audio output backend<select className="block w-full bg-neutral-800 border border-neutral-600 rounded p-2" value={draft.audioBackend} disabled={pending}

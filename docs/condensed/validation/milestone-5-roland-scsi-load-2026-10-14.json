@@ -1,0 +1,672 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; tested source/artifact identities below",
+  "scope": "Full606709760-byte native JMD Roland CD1 normal firmware performance Load, exact sample allocations, playback and cold recall",
+  "command": "python scripts/verify_native_roland_load.py --state-dir PRIVATE_EMPTY_DIRECTORY",
+  "prerequisites": "Windows x64 native MAME; original IC15 v1.11/OS2.24; user-supplied JMD native Roland CD;32 MB wave RAM; local loopback; private writable state; NumPy/Pillow",
+  "passed": true,
+  "native_result": {
+    "audio": [
+      {
+        "channel": 1,
+        "note": 36,
+        "peak": 0.015418121591210365,
+        "silent_release_frames": 44100
+      },
+      {
+        "channel": 1,
+        "note": 38,
+        "peak": 0.015320458449423313,
+        "silent_release_frames": 44100
+      },
+      {
+        "channel": 1,
+        "note": 42,
+        "peak": 0.0142532829195261,
+        "silent_release_frames": 44100
+      },
+      {
+        "channel": 2,
+        "note": 60,
+        "peak": 0.01407843828201294,
+        "silent_release_frames": 44100
+      }
+    ],
+    "floppy_status": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": false,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 1,
+      "revision": 0
+    },
+    "samples": [
+      {
+        "index": 0,
+        "name": "K4 :K4-BassDrum1",
+        "bytes": 18432,
+        "wave_byte_offset": 16,
+        "sha256": "5a9b7058a178ba97703ecb2866e43d8d443b74d2c9e824c866cdb480b1964836"
+      },
+      {
+        "index": 1,
+        "name": "K4 :K4-RimShot1",
+        "bytes": 9216,
+        "wave_byte_offset": 18448,
+        "sha256": "27c9d2744afdeeb101d751cff98e3ec08737704418c3acfc4f03f21301d87e97"
+      },
+      {
+        "index": 2,
+        "name": "K4 :K4-SnarDrum1",
+        "bytes": 27648,
+        "wave_byte_offset": 27664,
+        "sha256": "9c1bcc4a12dad71527b300a822a70ab0a8eb4f19245390854fd042420756238f"
+      },
+      {
+        "index": 3,
+        "name": "K4 :K4-Claps1",
+        "bytes": 9216,
+        "wave_byte_offset": 55312,
+        "sha256": "7f1ae4a5978f5b8932cd9e32f69dc1abde2dc5a6600c2dded109927c5abdd495"
+      },
+      {
+        "index": 4,
+        "name": "K4 :K4-SnarDrum2",
+        "bytes": 27648,
+        "wave_byte_offset": 64528,
+        "sha256": "5abee22bde1f92ae37324bfaa5d93bfffd1c2748464da3b04245c979aaa4b65b"
+      },
+      {
+        "index": 5,
+        "name": "K4 :K4-LoETom",
+        "bytes": 46080,
+        "wave_byte_offset": 92176,
+        "sha256": "c73927a4fa702df175e93d38f29180c21e0f9bc7a30e0d1d3c5990fb3c7948c9"
+      },
+      {
+        "index": 6,
+        "name": "K4 :K4-HHCL1",
+        "bytes": 9216,
+        "wave_byte_offset": 138256,
+        "sha256": "d8580bd1f29f3cfedb90603e5a2a0b9f9976e42b14d4e3612ead8b12b507d016"
+      },
+      {
+        "index": 7,
+        "name": "K4 :K4-LoTom1",
+        "bytes": 46080,
+        "wave_byte_offset": 147472,
+        "sha256": "2518faa92e297f3d6f7b729408c2d9a7c25640bf80d6846c1de19a51330da586"
+      },
+      {
+        "index": 8,
+        "name": "K4 :K4-HHCL2",
+        "bytes": 18432,
+        "wave_byte_offset": 193552,
+        "sha256": "b4bb9d281643f4fa40578e41db405b13ff5e7bc3cb68d592c1473bac1d3ad1fd"
+      },
+      {
+        "index": 9,
+        "name": "K4 :K4-MidETom",
+        "bytes": 36864,
+        "wave_byte_offset": 211984,
+        "sha256": "5286670978a64c45f909565132b30b9fc12ab5efd59f920d203aaa61d03b1e59"
+      },
+      {
+        "index": 10,
+        "name": "K4 :K4-HHOP1",
+        "bytes": 36864,
+        "wave_byte_offset": 248848,
+        "sha256": "59e8cee8b938a8b8a5ddb05af2c893854337c1e79d3fa26239025d4dd2b6f7dc"
+      },
+      {
+        "index": 11,
+        "name": "K4 :K4-MidTom1",
+        "bytes": 46080,
+        "wave_byte_offset": 285712,
+        "sha256": "6782b2f1e18765714db5fcc1f0e9771e163440064a9f6b1a378c083be7544128"
+      },
+      {
+        "index": 12,
+        "name": "K4 :K4-HiETom",
+        "bytes": 36864,
+        "wave_byte_offset": 331792,
+        "sha256": "410a9986c1257feb4b98494cd0bfeeeddfe6a2e03662ea7ffa99d3b937ae9212"
+      },
+      {
+        "index": 13,
+        "name": "K4 :K4-Clash",
+        "bytes": 119808,
+        "wave_byte_offset": 368656,
+        "sha256": "5b563b3854efbac7f460c74c12905ec750f903d25414456bde0426ff1098e55d"
+      },
+      {
+        "index": 14,
+        "name": "K4 :K4-HiTom1",
+        "bytes": 36864,
+        "wave_byte_offset": 488464,
+        "sha256": "693af9f850c2d46668120f7a0b58f76055a970cdc5cacfd1babe33cc664dddb8"
+      },
+      {
+        "index": 15,
+        "name": "K4 :K4-RideEdge",
+        "bytes": 64512,
+        "wave_byte_offset": 525328,
+        "sha256": "57f985e0dfcf361cb0263e66fb72f21db8e3f6421ac53d3c4d77787b303d325e"
+      },
+      {
+        "index": 16,
+        "name": "K4 :K4-Clash2",
+        "bytes": 82944,
+        "wave_byte_offset": 589840,
+        "sha256": "d2ef9da806f5f3e0c1d4dee171d31b68e51257357bc543663d6711e6dbd24d85"
+      },
+      {
+        "index": 17,
+        "name": "K4 :K4-RideCup",
+        "bytes": 82944,
+        "wave_byte_offset": 672784,
+        "sha256": "af18af646295882821b9f91e9de2e22323a628d8732f8a8d2119d86555d6e998"
+      },
+      {
+        "index": 18,
+        "name": "K4 :K4-Tambourin",
+        "bytes": 18432,
+        "wave_byte_offset": 755728,
+        "sha256": "2834076aec5921bead5756b1da2800db71f9bb7167e99c2ce205f52a38821138"
+      },
+      {
+        "index": 19,
+        "name": "K4 :K4-Splash",
+        "bytes": 73728,
+        "wave_byte_offset": 774160,
+        "sha256": "e4677f9755ca16daa17e849439cd6a12d4aec803c8d01a63783208783fca2fce"
+      },
+      {
+        "index": 20,
+        "name": "K4 :K4-CowBell",
+        "bytes": 18432,
+        "wave_byte_offset": 847888,
+        "sha256": "7a484efb86d7db438fc9fe918641ea2f06d0ad073e5929007adc979ee9484403"
+      },
+      {
+        "index": 21,
+        "name": "K4 :K4-MuteCrash",
+        "bytes": 36864,
+        "wave_byte_offset": 866320,
+        "sha256": "454f2e0f9fd2bb06f12bfb3e00fd624b89f15f3455ec828b3a449e14b9d5732e"
+      },
+      {
+        "index": 22,
+        "name": "K4 :K4-SnarDrum3",
+        "bytes": 27648,
+        "wave_byte_offset": 903184,
+        "sha256": "8068e92aad74d85f4771938a4c6fa905ea30dbfd819bff3b502d3ed7ad8896c9"
+      },
+      {
+        "index": 23,
+        "name": "K4 :K4-MuteRide",
+        "bytes": 18432,
+        "wave_byte_offset": 930832,
+        "sha256": "2e1fcdaad2f23735e11d0ee8b68c01df9ba0a163d68700a62ba001e59fc69400"
+      },
+      {
+        "index": 24,
+        "name": "K4 :K4-HiBongo",
+        "bytes": 9216,
+        "wave_byte_offset": 949264,
+        "sha256": "527c85ae8def2f4e87b2c6273aa25487e87332091a1167631c343a7da81e073d"
+      },
+      {
+        "index": 25,
+        "name": "K4 :K4-LoBongo",
+        "bytes": 9216,
+        "wave_byte_offset": 958480,
+        "sha256": "cc8e47f09737876671252c92aa336b6918325147a78929d65e785ca2b7023371"
+      },
+      {
+        "index": 26,
+        "name": "K4 :K4-HiMuConga",
+        "bytes": 9216,
+        "wave_byte_offset": 967696,
+        "sha256": "e113e3233dc9b134ede716227ce8fb90aef8dbd7dbad9c6f32a59d0000be8e69"
+      },
+      {
+        "index": 27,
+        "name": "K4 :K4-HiConga",
+        "bytes": 27648,
+        "wave_byte_offset": 976912,
+        "sha256": "f966d6db018fb6fe4129f1abf2251e41041d8fff3406599349c364e17fb261da"
+      },
+      {
+        "index": 28,
+        "name": "K4 :K4-LoConga",
+        "bytes": 27648,
+        "wave_byte_offset": 1004560,
+        "sha256": "70dc6e0e575b517833f963ce8394d159d7e7312e20aa78d561f1a849bd14187a"
+      },
+      {
+        "index": 29,
+        "name": "K4 :K4-HiTimbale",
+        "bytes": 18432,
+        "wave_byte_offset": 1032208,
+        "sha256": "c0d2501e067f6eeced9cc378a1821118533c889eb891a2e9c8debd15fbd20044"
+      },
+      {
+        "index": 30,
+        "name": "K4 :K4-LoTimbale",
+        "bytes": 27648,
+        "wave_byte_offset": 1050640,
+        "sha256": "169cb6d0fab7a0606c0c114ff9cd0db38cf6548ce705d6d397c3b7350da4a114"
+      },
+      {
+        "index": 31,
+        "name": "K4 :K4-HiAgogo",
+        "bytes": 9216,
+        "wave_byte_offset": 1078288,
+        "sha256": "690d97e20eb4ca16dba14f20688e26ff6693938046a63b2103c5c06c2a5754e1"
+      },
+      {
+        "index": 32,
+        "name": "K4 :K4-LoAGogo",
+        "bytes": 9216,
+        "wave_byte_offset": 1087504,
+        "sha256": "bd3f919805ea2050da1254ed91cb2b7e0700bc0a9eb5e2c9a0dfaa528ee069f4"
+      },
+      {
+        "index": 33,
+        "name": "K4 :K4-Shaker",
+        "bytes": 9216,
+        "wave_byte_offset": 1096720,
+        "sha256": "213fe59381d71245b1af0fccd4f2244259e4e9aeb8ec78b18e1932f296c13470"
+      },
+      {
+        "index": 34,
+        "name": "K4 :K4-Maracas",
+        "bytes": 18432,
+        "wave_byte_offset": 1105936,
+        "sha256": "2176da1585f5f0941e6acdf05ca5cef1e6962abc3d4be973711f76b74de470d0"
+      },
+      {
+        "index": 35,
+        "name": "K4 :K4-Cha 1",
+        "bytes": 9216,
+        "wave_byte_offset": 1124368,
+        "sha256": "8217bf3b2ba8b9d13dcfd0bc74fb37638c74556db593272ad7a039200bfb0c2d"
+      },
+      {
+        "index": 36,
+        "name": "K4 :K4-Cha 2",
+        "bytes": 18432,
+        "wave_byte_offset": 1133584,
+        "sha256": "603ee4aafc539bd6579623f590a0ec067a002e9478d2fe789f0b590bdf628705"
+      },
+      {
+        "index": 37,
+        "name": "K4 :K4-SleiBell",
+        "bytes": 27648,
+        "wave_byte_offset": 1152016,
+        "sha256": "9ff2a3119d848945eb64ffefc0979e2c158fc4605fb70f8e43e043507d544f98"
+      },
+      {
+        "index": 38,
+        "name": "K4 :K4-Click",
+        "bytes": 18432,
+        "wave_byte_offset": 1179664,
+        "sha256": "960b3c708d3266aec03810adab98585a243a65d8c9a2980fd9bf66717982f594"
+      },
+      {
+        "index": 39,
+        "name": "K4 :K4-Claves",
+        "bytes": 9216,
+        "wave_byte_offset": 1198096,
+        "sha256": "55b3d694e18bf34d2a0695b6be0378585e7de320b936c965b4a7ae91cace3171"
+      },
+      {
+        "index": 40,
+        "name": "K4 :K4-Brush1",
+        "bytes": 18432,
+        "wave_byte_offset": 1207312,
+        "sha256": "38f676942b2b2af434c672ce2c5335c27bcedf0dab3ef688b4a4d78ba756a627"
+      },
+      {
+        "index": 41,
+        "name": "K4 :K4-Brush2",
+        "bytes": 27648,
+        "wave_byte_offset": 1225744,
+        "sha256": "d383528a8d8b64b7c45186e24026e89bc0f0e18cfbee10550337f7ff74fac6ff"
+      },
+      {
+        "index": 42,
+        "name": "K4 :K4-Pole",
+        "bytes": 27648,
+        "wave_byte_offset": 1253392,
+        "sha256": "864e2dc7ca105b876cbf1cdea23372cae8d0c61fff09757aec5eaffceb16a2b0"
+      },
+      {
+        "index": 43,
+        "name": "K4 :K4-Timpany",
+        "bytes": 55296,
+        "wave_byte_offset": 1281040,
+        "sha256": "9bb4caa040c201b85bc3a8bebf6ebb61d8db60f47cd227c2692fc3250c9fb749"
+      },
+      {
+        "index": 44,
+        "name": "K4 :K4-BassDrum2",
+        "bytes": 18432,
+        "wave_byte_offset": 1336336,
+        "sha256": "6746b1b826cdebaf44837645e2dbf3f8e7e34bbe181b787c0f609385a2763ffb"
+      },
+      {
+        "index": 45,
+        "name": "K4 :K4-BassDrum3",
+        "bytes": 18432,
+        "wave_byte_offset": 1354768,
+        "sha256": "de5cdb12fdd8e96357923c792f9dbc16ae5ab766a161698deeb95af93eb1f3eb"
+      },
+      {
+        "index": 46,
+        "name": "K4 :K4-BassDrum4",
+        "bytes": 36864,
+        "wave_byte_offset": 1373200,
+        "sha256": "efcf556392ca85d0ba13712ae9d6011bf69f1fcba39258e48cefd4be86b045bc"
+      },
+      {
+        "index": 47,
+        "name": "K4 :K4-SnarDrum4",
+        "bytes": 18432,
+        "wave_byte_offset": 1410064,
+        "sha256": "5beb23d58f2c42ac760c103c34af50a8b3fa438649e164fdf9599c5a34b5d996"
+      },
+      {
+        "index": 48,
+        "name": "K4 :K4-SnarDrum5",
+        "bytes": 18432,
+        "wave_byte_offset": 1428496,
+        "sha256": "333865a2bb73277c068b18e350ad5efd1b862308a7342e1ca49308f6e43d9e8f"
+      },
+      {
+        "index": 49,
+        "name": "K4 :K4-SnarDrum6",
+        "bytes": 36864,
+        "wave_byte_offset": 1446928,
+        "sha256": "79fe4ea90a03205248fb47380f840a22cd4312542858a2c502cf829fe392b3eb"
+      },
+      {
+        "index": 50,
+        "name": "K4 :K4-BassDrum5",
+        "bytes": 18432,
+        "wave_byte_offset": 1483792,
+        "sha256": "5bceb02a68a3abf5abe5dfed927aa179965a6725ac1038c14841c27b14512707"
+      },
+      {
+        "index": 51,
+        "name": "K4 :K4-HHCL3",
+        "bytes": 36864,
+        "wave_byte_offset": 1502224,
+        "sha256": "4fdac9d35a55fc56c151904235c53efaf0e781c5f9f72b6b648df98ea687f363"
+      },
+      {
+        "index": 52,
+        "name": "K4 :K4-Claps2",
+        "bytes": 18432,
+        "wave_byte_offset": 1539088,
+        "sha256": "737230ffba7d2d0a2f24eb8d2000f52d9fe9c8288dbec5c3431f49327f22e088"
+      },
+      {
+        "index": 53,
+        "name": "K4 :K4-HHFoot",
+        "bytes": 36864,
+        "wave_byte_offset": 1557520,
+        "sha256": "57695bf5656baca627b657a82538fee2129c57b29cba50570520b2812f544e61"
+      },
+      {
+        "index": 54,
+        "name": "K4 :K4-SnarDrum7",
+        "bytes": 18432,
+        "wave_byte_offset": 1594384,
+        "sha256": "8629e4ed60eccabb5bdf6853cadb1240fe76827788a2c5f3b8a87cc68d3a5a13"
+      },
+      {
+        "index": 55,
+        "name": "K4 :K4-WaterDrop",
+        "bytes": 27648,
+        "wave_byte_offset": 1612816,
+        "sha256": "3ea81ab09a3bed40187d04d8bd434fb71c334acf9c744cdaeaeb39e615cd6dfb"
+      },
+      {
+        "index": 56,
+        "name": "K4 :K4-DoorKnock",
+        "bytes": 18432,
+        "wave_byte_offset": 1640464,
+        "sha256": "c8e8b6e7a8225f1c41239dea583bfd4363486d5df2e166f7476cbe57c607fe96"
+      },
+      {
+        "index": 57,
+        "name": "K4 :K4-MetalHit",
+        "bytes": 27648,
+        "wave_byte_offset": 1658896,
+        "sha256": "73fefc2505b8c9866996ea210428a5c496d86f862a48a756a62759f419bc3eb2"
+      },
+      {
+        "index": 58,
+        "name": "K4 :K4-Brass1 c1",
+        "bytes": 359424,
+        "wave_byte_offset": 1686544,
+        "sha256": "04f6345117f7e4b9efc180f8f2a51fb7b52f8119a4b55b31034bfc1093f8c44c"
+      },
+      {
+        "index": 59,
+        "name": "K4 :K4-Brass1 c4",
+        "bytes": 248832,
+        "wave_byte_offset": 2045968,
+        "sha256": "c9f1cac0d1b6a050707873624be0cc3164eba5e2706c65e4ed8e2b1d566e3fdb"
+      },
+      {
+        "index": 60,
+        "name": "K4 :K4-AutumnSet",
+        "bytes": 313344,
+        "wave_byte_offset": 2294800,
+        "sha256": "b1fcffe6ac0c174dcbe3d4c76dfe4865a3625cabb6e8e059b5bf986ad01148cc"
+      },
+      {
+        "index": 61,
+        "name": "K4 :K4-AutumnSe2",
+        "bytes": 156672,
+        "wave_byte_offset": 2608144,
+        "sha256": "fabf219cafe2f85feb28e1e3a02ddcbc80b7f99e23a83f1ff4c40a2bf86c1dfd"
+      },
+      {
+        "index": 62,
+        "name": "K4 :K4-AnaStr",
+        "bytes": 147456,
+        "wave_byte_offset": 2764816,
+        "sha256": "faa79a0c5cf8c4994f5ae4ac70e8ed7f8139ad25f30298a052f39fefec730f67"
+      },
+      {
+        "index": 63,
+        "name": "K4 :K4-BigCity",
+        "bytes": 184320,
+        "wave_byte_offset": 2912272,
+        "sha256": "50831cc86478f96722634497d53be455f7641c262b75079a1cb1d24a391c2f19"
+      },
+      {
+        "index": 64,
+        "name": "K4 :K4-FunkPuls2",
+        "bytes": 239616,
+        "wave_byte_offset": 3096592,
+        "sha256": "bd77d7d2a020c20e28d1d7a530d2beddc8d70f729914cbc22cbeea1d359c6999"
+      },
+      {
+        "index": 65,
+        "name": "K4 :K4-FunkPuls1",
+        "bytes": 119808,
+        "wave_byte_offset": 3336208,
+        "sha256": "eabb7bd481efb0f76572ae2412cb3203ae178a600a5e922e267fb20773836606"
+      },
+      {
+        "index": 66,
+        "name": "K4 :K4-AcGtr2-C5",
+        "bytes": 110592,
+        "wave_byte_offset": 3456016,
+        "sha256": "9016adc57188941177b10d11dd7d7e5e6ccbef11b99f117fcfe6a159f768d26e"
+      },
+      {
+        "index": 550,
+        "name": "K4 :K4-Aeolsha\u007fL",
+        "bytes": 470016,
+        "wave_byte_offset": 3566608,
+        "sha256": "4854eb2254a291b994223f96372d4ff0de054b2980784a07fb06faab771e1d93"
+      },
+      {
+        "index": 551,
+        "name": "K4 :K4-Aeolsha\u007fR",
+        "bytes": 470016,
+        "wave_byte_offset": 4036624,
+        "sha256": "cadf6ed0f0e3747ca8ffbcd5f0029fb2e29bf88883996f5706ce5854e57825cd"
+      },
+      {
+        "index": 552,
+        "name": "K4 :K4-BlueEye\u007fR",
+        "bytes": 211968,
+        "wave_byte_offset": 4506640,
+        "sha256": "49f74b6627a04bcfc9204d72cfaaa71c05d38151e3198849a2ff6dcf821b0589"
+      },
+      {
+        "index": 553,
+        "name": "K4 :K4-BlueEye\u007fL",
+        "bytes": 211968,
+        "wave_byte_offset": 4718608,
+        "sha256": "b78feed01bf2a0bc76bbc5807229acae7203e9097dcef8868be5113a8c3e97ad"
+      },
+      {
+        "index": 554,
+        "name": "K4 :K4-BlueEy2\u007fR",
+        "bytes": 304128,
+        "wave_byte_offset": 4930576,
+        "sha256": "075137e6e5e65bdb2c21ad546028b701c1dc940c26b413f70207dca46b15189b"
+      },
+      {
+        "index": 555,
+        "name": "K4 :K4-BlueEy2\u007fL",
+        "bytes": 304128,
+        "wave_byte_offset": 5234704,
+        "sha256": "5b92a6c8eb04c2f7c5751a88beeae48b4e90b5d289ceae6fb88e0933f563cf81"
+      },
+      {
+        "index": 556,
+        "name": "K4 :DbleHelixA\u007fL",
+        "bytes": 147456,
+        "wave_byte_offset": 5538832,
+        "sha256": "898e4d9eb28c833d92737b750edd536536ea69b1dcdc5f4191bf344ad5934e0f"
+      },
+      {
+        "index": 557,
+        "name": "K4 :DbleHelixA\u007fR",
+        "bytes": 147456,
+        "wave_byte_offset": 5686288,
+        "sha256": "e04ca83dde00a50ce60163704571f9bae429f2f38b0b9f087339832cddd1e1ce"
+      },
+      {
+        "index": 558,
+        "name": "K4 :DbleHelixL\u007fL",
+        "bytes": 73728,
+        "wave_byte_offset": 5833744,
+        "sha256": "80bd8ac06b9158cf1fc0e2ecfee1fbd944f911e6699c2fa029ad48a8924c4145"
+      },
+      {
+        "index": 559,
+        "name": "K4 :DbleHelixL\u007fR",
+        "bytes": 73728,
+        "wave_byte_offset": 5907472,
+        "sha256": "59930a7f4b58de399c3a315ae1cb96418db8a594a7c026732096d015662a6902"
+      },
+      {
+        "index": 560,
+        "name": "K4 :DbleHelixB\u007fL",
+        "bytes": 36864,
+        "wave_byte_offset": 5981200,
+        "sha256": "1a25c416194fd2fd4b8c118282005ec7d8d15b28a4cb14c955451ff47a1c3986"
+      },
+      {
+        "index": 561,
+        "name": "K4 :DbleHelixB\u007fR",
+        "bytes": 36864,
+        "wave_byte_offset": 6018064,
+        "sha256": "1b14dddf8b40754ae1f6fbc2a0a6a0e0e02093bb0a62ce8f491aa9b0d1aaa26b"
+      }
+    ],
+    "passed": true,
+    "source_sha256": "1e3e25be27366d9499927417cf9a8194cc66269bca263466ce576e26b8291618",
+    "source_bytes": 606709760,
+    "volume": "K4 :KAWAI K4",
+    "sample_count": 79,
+    "allocation_bytes_verified": 6054912,
+    "checkpoint_bytes": 171072219,
+    "cold_exact_stereo_frames": 65536,
+    "cold_processes": 2,
+    "changed_cd_rejected": true,
+    "limits": "One full native JMD CD1/2048-sector image and first K4 performance; no SCSI Save, hot-plug, arbitrary libraries, physical timing or final packaged-interface claim"
+  },
+  "fixes": {
+    "BUG-070": "Read-only CD contents excluded from checkpoint; streaming hashes in Python/C++; aggregate CD limit1GiB, writable image limit64MiB retained; external contents required on restore",
+    "BUG-071": "Observed native SCSI-to-wave DMA84; low16-bit gate count paired with full24-bit SPC count;36,65536,118784-byte transfers, counters, address advance, bounds and CD write rejection pass"
+  },
+  "negative_and_intermediate_evidence": [
+    "Large65MiB sparse CD rejected before fix; passes and is stream-hashed afterward",
+    "DMA84 initially failed: Wave DMA count did not exhaust",
+    "Partial16-bit implementation stalled original firmware at003B:7D11 with65536 bytes left from118784-byte transfer",
+    "Both65536 and118784-byte isolated transfer regressions fail before full-count correction, pass afterward",
+    "Changed external CD preflight rejects before native restore; original library image unchanged"
+  ],
+  "regressions": {
+    "backend_passed": 389,
+    "backend_seconds": 42.58,
+    "core_and_plugin_unit_suites": "passed",
+    "native_SCSI_RAM47_PIO_register_fixtures": "passed",
+    "DMA84_sizes": [
+      36,
+      65536,
+      118784
+    ],
+    "CD_WRITE_rejected_before_DATA_OUT": true,
+    "writable_SCSI_checkpoint": "passed;131072 exact stereo frames",
+    "native_cpp_plugin_with_full_CD": "240000 frames48kHz variable blocks, exact reference, silent release,zero missed deadlines",
+    "builds": [
+      "CMake Release",
+      "native MSBuild driver and linker",
+      "WebView2 SDK tree Release"
+    ]
+  },
+  "format_reference": {
+    "url": "https://github.com/bmxcode/samplerdisc/tree/e2a4fcff854b06680c3515649a3ea6ae1293e4ce",
+    "use": "Independent fixed-directory and FAT layout; own bounded fixture reader; no sample-data injection or HLE importer"
+  },
+  "identities_sha256": {
+    "scripts/s760_runtime.py": "8d918475c8055ec8749012c87dbfc5bc3305bb04c9b3e648bc9ae1025424005b",
+    "core/src/s760_native_runtime.cpp": "d96e6facd66d6765ef1bd3c9e3ada0bb7c2decd578ce4cd2be188cf054a2d4a3",
+    "mame-source/src/mame/roland/s760.cpp": "9fb92162b953076db6637122732d61cc86f6088813cbb5950e7691feea7efd4b",
+    "mame-source/mames760.exe": "21764e99345b4bc8a2b01cdc444fa19edb36259bf2755c1fa815fc35f03f4bf2",
+    "scripts/verify_native_roland_load.py": "fdcebcd48946bebd875fd7dd863742a5af3afd853e7b8bf871d1e4811fc0fa12",
+    "scripts/verify_native_scsi_wave_dma.py": "0bcbdd73dc3879518b68653388171afd27b56c5c02d5628335bb3bc09c13b44e",
+    "tests/test_native_checkpoint.py": "ff48a58d4216f0b2f073cdced6e56878ae9036006144d1a41ef67cecb59863d5",
+    "build/Release/Roland_S760.vst3": "b5e8c52021e1d426701701bc64bb7dfb61ba395f1cc7c83f202da677ea1ef3de",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "16d77d3567d60ea5991f9d759d7e6c13b4ac7330033a44b31026aa24a3b2e50c",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "screenshots_sha256": {
+    "scan.png": "57a1f69f8911cfddce752f753db6e8ee7340820ba20ae44c97ade9771c209b09",
+    "volumes.png": "af6a935e05db1840f73e8a1edf9b86feaccfc2f96d474c674c69e74e3e9b84bd",
+    "loaded.png": "fa86eab338b97a27388c72e92c65ad8ca43e535b2caf5118ee6be769db2770f3",
+    "perform.png": "f80ccd27e71513ddfd7c2d189e0495718a38c767176ede89b7bceb62c2a9eafd"
+  },
+  "limits": [
+    "First K4 native performance on one full CD1/2048-sector image; other volumes/libraries/devices are unqualified",
+    "SCSI output/writeback, hot-plug, physical DMA priority/timing and final packaged interface are unqualified",
+    "Writable SCSI checkpoint budget remains64MiB; immutable CDs require same filename/content; older build states reject",
+    "Controller idle/clean result is floppy status; CD integrity is established by content hashes"
+  ]
+}

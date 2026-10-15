@@ -48,6 +48,28 @@ std::vector<std::uint8_t> read_state_file(const std::filesystem::path& path,std:
     if(!input.read(reinterpret_cast<char*>(bytes.data()),bytes.size())) throw std::runtime_error("Native file read failed");
     return bytes;
 }
+std::array<std::uint8_t,32> digest_image_file(const std::filesystem::path& path) {
+#ifdef _WIN32
+    std::ifstream file(path,std::ios::binary);
+    if(!file) throw std::runtime_error("Cannot read SCSI image");
+    BCRYPT_ALG_HANDLE algorithm=nullptr;BCRYPT_HASH_HANDLE hash=nullptr;
+    std::array<std::uint8_t,32> result{};std::array<char,65536> chunk{};
+    if(BCryptOpenAlgorithmProvider(&algorithm,BCRYPT_SHA256_ALGORITHM,nullptr,0)<0)
+        throw std::runtime_error("SHA256 provider unavailable");
+    auto status=BCryptCreateHash(algorithm,&hash,nullptr,0,nullptr,0,0);
+    while(status>=0 && file) {
+        file.read(chunk.data(),chunk.size());
+        if(file.gcount()) status=BCryptHashData(hash,reinterpret_cast<PUCHAR>(chunk.data()),ULONG(file.gcount()),0);
+    }
+    const bool read_ok=file.eof();
+    if(status>=0 && read_ok) status=BCryptFinishHash(hash,result.data(),ULONG(result.size()),0);
+    if(hash) BCryptDestroyHash(hash);BCryptCloseAlgorithmProvider(algorithm,0);
+    if(status<0 || !read_ok) throw std::runtime_error("SCSI image hash/read failed");
+    return result;
+#else
+    throw std::runtime_error("Native state currently requires Windows");
+#endif
+}
 std::array<std::uint8_t,32> scsi_identity(const std::filesystem::path& state) {
     const auto directory=state/"roms/SCSI";
     std::vector<std::filesystem::path> files;
@@ -57,12 +79,14 @@ std::array<std::uint8_t,32> scsi_identity(const std::filesystem::path& state) {
             files.push_back(file.path());
         }
     std::sort(files.begin(),files.end());
-    std::vector<std::uint8_t> manifest;std::uintmax_t total=0;
+    std::vector<std::uint8_t> manifest;std::uintmax_t total=0,cd_total=0;
     for(const auto& file:files) {
-        auto size=std::filesystem::file_size(file);total+=size;
-        if(total>64u*1024*1024) throw std::runtime_error("SCSI snapshot profile supports at most 64 MiB of external images");
+        auto size=std::filesystem::file_size(file);auto filename=file.filename().u8string();
+        const bool cd=filename=="CD1.iso" || filename=="CD10_2048.iso" || filename=="akai.iso" || filename=="sound.iso" || filename=="CD30_2048.iso" || filename=="CD3.iso" || filename=="CD60_2048.iso";
+        if(cd) {cd_total+=size;if(cd_total>1024ull*1024*1024) throw std::runtime_error("SCSI profile supports at most 1 GiB of read-only CD images");}
+        else {total+=size;if(total>64u*1024*1024) throw std::runtime_error("SCSI snapshot profile supports at most 64 MiB of writable images");}
         auto name=file.filename().u8string();manifest.insert(manifest.end(),name.begin(),name.end());manifest.push_back(0);
-        auto sum=native_digest(size ? read_state_file(file,64u*1024*1024) : std::vector<std::uint8_t>{});
+        auto sum=digest_image_file(file);
         manifest.insert(manifest.end(),sum.begin(),sum.end());
     }
     return native_digest(manifest);
@@ -162,6 +186,7 @@ struct NativeRuntimeClient::Impl {
 NativeRuntimeClient::NativeRuntimeClient(const NativeRuntimeConfig& supplied) : impl_(std::make_unique<Impl>()) {
 #ifdef _WIN32
     auto cfg=supplied;
+    if(cfg.wave_memory_mb!=8 && cfg.wave_memory_mb!=16 && cfg.wave_memory_mb!=32) throw std::runtime_error("Wave memory must be 8, 16 or 32 MB");
     if(cfg.root.empty() || cfg.state.empty()) throw std::runtime_error("Explicit native root and state directories are required");
     cfg.root=std::filesystem::absolute(cfg.root); cfg.state=std::filesystem::absolute(cfg.state);
     impl_->state=cfg.state;
@@ -212,7 +237,9 @@ NativeRuntimeClient::NativeRuntimeClient(const NativeRuntimeConfig& supplied) : 
     env[L"S760_F00A"]=L"00"; env[L"S760_IC4_MIDI_EXPERIMENT"]=L"1"; env[L"S760_NATIVE_INTERPOLATION_MONITOR"]=L"1";
     // Honor firmware pan coefficients in the native instrument's stereo bus.
     env[L"S760_NATIVE_STEREO_MONITOR"]=L"1";
+    env[L"S760_NATIVE_LPF_MONITOR"]=L"1";
     env[L"S760_NATIVE_VALUE_ENCODER"]=L"1";
+    env[L"S760_WAVE_MEMORY_MB"]=std::to_wstring(cfg.wave_memory_mb);
     if(cfg.experimental_adc) env[L"S760_NATIVE_ADC"]=L"1";
     std::vector<wchar_t> environment;
     for(const auto& item:env) { auto entry=item.first+L"="+item.second; environment.insert(environment.end(),entry.begin(),entry.end()); environment.push_back(0); }
@@ -293,7 +320,7 @@ std::vector<std::uint8_t> NativeRuntimeClient::checkpoint_identity() const {
     // Fold media identity into the host-module slot, retaining the 160-byte profile.
     std::vector<std::uint8_t> host_media(result.end()-32,result.end());
     host_media.insert(host_media.end(),scsi.begin(),scsi.end());
-    host_media.push_back(cfg.experimental_adc?1:0);auto combined=native_digest(host_media);
+    host_media.push_back(cfg.experimental_adc?1:0);host_media.push_back(std::uint8_t(cfg.wave_memory_mb));auto combined=native_digest(host_media);
     std::copy(combined.begin(),combined.end(),result.end()-32);
     return result;
 }

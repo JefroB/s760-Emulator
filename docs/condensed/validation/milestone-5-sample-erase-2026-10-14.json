@@ -1,0 +1,114 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; hashes after report wording correction Value control to firmware controls; no execution change",
+  "evidence_class": "Native original-firmware Area Erase/Save/export/fresh-process Load, exact wave byte comparison and PCM silence; not physical or final shipped-interface acceptance",
+  "command": "python scripts/verify_native_patch_edit.py --sample-erase --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-sample-erase-20261014-final",
+  "prerequisites": "Built native executable/user-supplied ROM/OS/hash-checked ROBOFULL, fresh private media/runtime/NVRAM, permitted local sockets; headless unthrottled",
+  "identities_sha256": {
+    "scripts/verify_native_patch_edit.py": "af74a2a2030af0854de311c49ae01284ea914bc7f8ed9867221b011c1017d5fa",
+    "scripts/s760_runtime.py": "2c4ef576cedb8833768f52ddce5e64b56f1b699b311669fd9399c82a275c3eab",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "mame-source/src/mame/roland/s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "result": {
+    "before": [
+      {
+        "bend": "centre",
+        "frequency_hz": 248,
+        "peak": 0.0110410051420331
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 248,
+        "peak": 0.0110410051420331
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 248,
+        "peak": 0.0110410051420331
+      }
+    ],
+    "edited": [
+      {
+        "bend": "centre",
+        "frequency_hz": null,
+        "peak": 0.0
+      },
+      {
+        "bend": "up",
+        "frequency_hz": null,
+        "peak": 0.0
+      },
+      {
+        "bend": "down",
+        "frequency_hz": null,
+        "peak": 0.0
+      }
+    ],
+    "dirty": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": true,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 134
+    },
+    "reloaded": [
+      {
+        "bend": "centre",
+        "frequency_hz": null,
+        "peak": 0.0
+      },
+      {
+        "bend": "up",
+        "frequency_hz": null,
+        "peak": 0.0
+      },
+      {
+        "bend": "down",
+        "frequency_hz": null,
+        "peak": 0.0
+      }
+    ],
+    "sample_data": {
+      "zero_source_body_bytes": 8192,
+      "exact_cold_allocation_bytes": 9216,
+      "unchanged_neighbor_sample_bytes": 110592,
+      "edited_wave_offset": 110608,
+      "cold_wave_offset": 16,
+      "edited_allocation_sha256": "7736e27da5643a78babdddc7d5158aebf2b663978be759996bf185000d1566b1"
+    },
+    "passed": true,
+    "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "saved_sha256": "858d5eebc6f8ebd4f965459ce6769a8f6c32cd227cf76d86250b29cf0b570f74",
+    "scope": "Sample1 whole-range Area Erase via firmware Value control; original-firmware Save/export/fresh Load and measured audio",
+    "limits": "One named operation; not arbitrary edits, hardware or packaged-interface acceptance"
+  },
+  "operation": "Sample menu Area Erase with default entire source range, zero fade, Exec; firmware performance Save/export and fresh native Load",
+  "observations": "Before note21 peak0.0110410051420331/frequency248Hz. After erase and cold Load peak0.0. Source4096-frame body8192 bytes zero;9216-byte edited allocation preserved exactly; twelve neighboring samples110592 bytes unchanged. Firmware compacts neighboring allocations down and appends erased replacement at wave offset110608; cold Load puts sample1 at16. Source/working input files unchanged.",
+  "limitations": [
+    "Whole-range Area Erase only, not arbitrary subranges/fades, Truncate, Cut/Splice, Normalize or every sample command",
+    "Byte comparison respects observed firmware memory compaction; inactive old addresses are not the edited sample",
+    "Source4096-frame body zeroed; wrap/padding retained and byte-exact, not advertised as erased",
+    "Final shipped-interface repetition remains Milestone6; no hardware parity or realtime device claim"
+  ],
+  "test_development": "Initial byte assertion assumed stable wave addresses; corrected to observed firmware compaction. Audio/cold-load already passed; no emulator defect or behavior change.",
+  "backend_regressions": {
+    "passed": 360,
+    "seconds": 36.96,
+    "exit_code": 0,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-sample-erase-pytest-193.py",
+    "scope": "Full tests/ before final sample-only compaction assertion and report wording correction; private harness/temp/cache; permitted sockets"
+  },
+  "partial_path_regression": {
+    "passed": true,
+    "command": "python scripts/verify_native_patch_edit.py --partial-tune --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-erase-partial-regression-20261014"
+  }
+}

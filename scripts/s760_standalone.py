@@ -85,7 +85,7 @@ def validate_input(message):
             raise ValueError('Write protection requires a boolean enabled value')
     elif kind == 'CONFIGURE_RUNTIME':
         required = {'bootRom','systemDisk','mediaDirectory','sound','discard'}
-        if not required <= set(p) or set(p) - required - {'audioBackend','audioLatencyMs','audioOutputDevice','recordingDevice'} - set(ASIO_SETTINGS) or p.get('discard') is not True:
+        if not required <= set(p) or set(p) - required - {'audioBackend','audioLatencyMs','audioOutputDevice','recordingDevice','waveMemoryMb'} - set(ASIO_SETTINGS) or p.get('discard') is not True:
             raise ValueError('Confirm replacement of the current sampler before applying settings')
         for key in ('bootRom','systemDisk','mediaDirectory'):
             if not isinstance(p[key],str) or not p[key].strip() or len(p[key])>2048 or '\0' in p[key]:
@@ -93,7 +93,7 @@ def validate_input(message):
         if type(p['sound']) is not bool: raise ValueError('Sound must be a boolean')
         if 'recordingDevice' in p and (not isinstance(p['recordingDevice'],str) or len(p['recordingDevice'])>256 or '\0' in p['recordingDevice']):
             raise ValueError('Invalid recording device')
-        RuntimeConfig(None, None, None, None, audio_backend=p.get('audioBackend', 'auto'),
+        RuntimeConfig(None, None, None, None, wave_memory_mb=p.get('waveMemoryMb',32), audio_backend=p.get('audioBackend', 'auto'),
                       audio_latency_ms=p.get('audioLatencyMs', 0),
                       audio_output_device=p.get('audioOutputDevice',''),
                       **{field:p[key] for key,field in ASIO_SETTINGS.items() if key in p}).audio_arguments()
@@ -122,7 +122,7 @@ def load_settings(state_dir):
     data.setdefault('audioLatencyMs', 0)
     if not isinstance(data.get('recordingDevice',''),str) or len(data.get('recordingDevice',''))>256:
         raise ValueError('Invalid recording device setting')
-    RuntimeConfig(None, None, None, state_dir, audio_backend=data['audioBackend'],
+    RuntimeConfig(None, None, None, state_dir, wave_memory_mb=data.get('waveMemoryMb',32), audio_backend=data['audioBackend'],
                   audio_latency_ms=data['audioLatencyMs'],
                   audio_output_device=data.get('audioOutputDevice',''),
                   **{field:data[key] for key,field in ASIO_SETTINGS.items() if key in data}).audio_arguments()
@@ -186,7 +186,7 @@ class StandaloneSession:
     def configuration(self):
         cfg = self.runtime.config
         return {'bootRom':str(cfg.boot_rom),'systemDisk':str(cfg.system_disk),
-                'mediaDirectory':str(self.media_dir),'sound':cfg.sound,
+                'mediaDirectory':str(self.media_dir),'sound':cfg.sound,'waveMemoryMb':getattr(cfg,'wave_memory_mb',32),
                 'audioBackend':cfg.audio_backend,'audioLatencyMs':cfg.audio_latency_ms,
                 'audioOutputDevice':getattr(cfg,'audio_output_device',''),
                 'recordingDevice':getattr(cfg,'recording_device',''),
@@ -330,6 +330,7 @@ class StandaloneSession:
         media = media_index(folder)
         slot = r.config.state_dir/'inserted-floppy.img'
         candidate = replace(r.config, boot_rom=boot, system_disk=disk, sound=payload['sound'],
+                            wave_memory_mb=payload.get('waveMemoryMb',getattr(r.config,'wave_memory_mb',32)),
                             audio_backend=payload.get('audioBackend', r.config.audio_backend),
                             audio_latency_ms=payload.get('audioLatencyMs', r.config.audio_latency_ms),
                             audio_output_device=payload.get('audioOutputDevice',getattr(r.config,'audio_output_device','')),
@@ -710,6 +711,7 @@ def main():
     parser.add_argument('--browser', action='store_true', help='Use an external browser instead of the desktop window')
     parser.add_argument('--no-sound', action='store_true')
     parser.add_argument('--recording-device',default=None,help='Exact Windows recording device ID from Configuration')
+    parser.add_argument('--wave-memory-mb',type=int,choices=(8,16,32))
     parser.add_argument('--audio-backend', choices=('auto', 'wasapi', 'xaudio2', 'asio'),
                         help='Windows MAME output backend (default: saved setting or auto)')
     parser.add_argument('--audio-latency-ms', type=float,
@@ -738,6 +740,7 @@ def main():
     cfg = RuntimeConfig(ROOT / 'mame-source/mames760.exe', args.boot_rom, args.system_disk,
                         args.state_dir, media_slot if media_slot.exists() else args.system_disk,
                         False if args.no_sound else settings.get('sound',True), not args.fast,
+                        wave_memory_mb=args.wave_memory_mb or settings.get('waveMemoryMb',32),
                         audio_backend=args.audio_backend or settings.get('audioBackend', 'auto'),
                         audio_output_device=settings.get('audioOutputDevice',''),
                         audio_latency_ms=args.audio_latency_ms if args.audio_latency_ms is not None

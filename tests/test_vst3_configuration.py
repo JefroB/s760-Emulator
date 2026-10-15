@@ -55,3 +55,14 @@ def test_settings_cannot_overwrite_firmware(tmp_path):
     with pytest.raises(ValueError, match='must not overwrite'):
         save_config(boot, settings)
     assert boot.read_bytes() == original
+
+@pytest.mark.parametrize('size',[8,16,32])
+def test_wave_memory_configuration_round_trip(tmp_path,size):
+    settings={**fixture(tmp_path),'waveMemoryMb':size}
+    path=tmp_path/'settings.json';save_config(path,settings)
+    assert json.loads(path.read_text(encoding='utf-8'))['waveMemoryMb']==size
+
+@pytest.mark.parametrize('size',[2,64,True,'32'])
+def test_invalid_wave_memory_setting(tmp_path,size):
+    with pytest.raises(ValueError,match='memory'):
+        validate({**fixture(tmp_path),'waveMemoryMb':size})

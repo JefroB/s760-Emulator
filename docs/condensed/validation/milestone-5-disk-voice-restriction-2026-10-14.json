@@ -1,0 +1,6071 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; verifier help/comments clarified after execution, with no functional changes",
+  "evidence_class": "Native original-firmware directory/MIDI restriction and recovery acceptance; read-only bus trace, serial timestamps, PCM and exported media; not hardware IRQ priority evidence",
+  "command": "python scripts/verify_native_runtime.py --disk-voice-stress --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-disk-voice-20261014-qualified",
+  "prerequisites": "Built native binary, local ROM/OS, hash-checked ROBOLOOP, fresh private state, local sockets permitted; headless unthrottled",
+  "identities_sha256": {
+    "scripts/verify_native_runtime.py": "05c42a794c25c8bcd4b9522924a759f950582fc5c833d77a4deb68ad15a03a6a",
+    "scripts/verify_native_disk_voice.py": "1e0676942a441309c6e5ee83168c95edcaf8aa9a89c2e670673d0ace99bf257b",
+    "scripts/s760_runtime.py": "6d5b1374fcbde46dbb0cd6b980c7aecea001c079f13fd52d2da05f5f85112c44",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "mame-source/src/mame/roland/s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "roms/FDD/ROBOLOOP.IMG": "65f8a8353d4e5bedfa1cc0f0d600012cf6946cda0129ec96363f49a91cb43060",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "result": {
+    "passed": true,
+    "perform_control": {
+      "trace": {
+        "rows": [
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 78.796340375,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 78.7977895,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 78.797790375,
+            "pc": 13919,
+            "data": 16,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 78.797807875,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 78.79780875,
+            "pc": 13919,
+            "data": 16,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.261797875,
+            "pc": 52182,
+            "data": 36,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.261812875,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.2636815,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.263682375,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.296361125,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.29781025,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.297811125,
+            "pc": 13919,
+            "data": 32,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.297828625,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.2978295,
+            "pc": 13919,
+            "data": 32,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.761820625,
+            "pc": 52182,
+            "data": 37,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.761835625,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.76254925,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.762550125,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.796356625,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.79780575,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.797806625,
+            "pc": 13919,
+            "data": 64,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 79.797824125,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 79.797825,
+            "pc": 13919,
+            "data": 64,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.261824,
+            "pc": 52182,
+            "data": 38,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.261839,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.264195125,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.264196,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.29635725,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.297806375,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.29780725,
+            "pc": 13919,
+            "data": 128,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.29782475,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.297825625,
+            "pc": 13919,
+            "data": 128,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.761830375,
+            "pc": 52182,
+            "data": 39,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.761845375,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.76289575,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.762896625,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.7963585,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.797807625,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.7978085,
+            "pc": 13919,
+            "data": 256,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 80.797826,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 80.797826875,
+            "pc": 13919,
+            "data": 256,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.261845625,
+            "pc": 52182,
+            "data": 40,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.261860625,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.264267,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.264267875,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.29635725,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.297806375,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.29780725,
+            "pc": 13919,
+            "data": 512,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.29782475,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.297825625,
+            "pc": 13919,
+            "data": 512,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.761828125,
+            "pc": 52182,
+            "data": 41,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.761843125,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.76273775,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.762738625,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.79635775,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.797806875,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.79780775,
+            "pc": 13919,
+            "data": 1024,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 81.79782525,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 81.797826125,
+            "pc": 13919,
+            "data": 1024,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.261853375,
+            "pc": 52182,
+            "data": 42,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.261868375,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.263974,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.263974875,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.29632775,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.297776875,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.29777775,
+            "pc": 13919,
+            "data": 2048,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.29779525,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.297796125,
+            "pc": 13919,
+            "data": 2048,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.761788,
+            "pc": 52182,
+            "data": 43,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.761803,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.7624625,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.762463375,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.796359,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.797808125,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.797809,
+            "pc": 13919,
+            "data": 4096,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 82.7978265,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 82.797827375,
+            "pc": 13919,
+            "data": 4096,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.26181875,
+            "pc": 52182,
+            "data": 44,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.26183375,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.264160625,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.2641615,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.29635825,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.297807375,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.29780825,
+            "pc": 13919,
+            "data": 8192,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.29782575,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.297826625,
+            "pc": 13919,
+            "data": 8192,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.761851,
+            "pc": 52182,
+            "data": 45,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.761866,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.762960375,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.76296125,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.796359875,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.797809,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.797809875,
+            "pc": 13919,
+            "data": 16384,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 83.797827375,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 83.79782825,
+            "pc": 13919,
+            "data": 16384,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 84.261908625,
+            "pc": 52182,
+            "data": 46,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 84.261923625,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 84.26453825,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 84.264539125,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 84.29635875,
+            "pc": 19417,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 84.297807875,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 84.29780875,
+            "pc": 13919,
+            "data": 32768,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 84.29782625,
+            "pc": 13914,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 84.297827125,
+            "pc": 13919,
+            "data": 32768,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 84.761839875,
+            "pc": 52182,
+            "data": 47,
+            "mask": 65535,
+            "kind": "r"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 84.761854875,
+            "pc": 52310,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048578,
+            "seconds": 84.76321775,
+            "pc": 51471,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          },
+          {
+            "count": 1,
+            "address": 1048576,
+            "seconds": 84.763218625,
+            "pc": 51476,
+            "data": 0,
+            "mask": 65535,
+            "kind": "w"
+          }
+        ],
+        "accesses": 108,
+        "dropped": 0,
+        "ok": true
+      },
+      "completion_requests": [
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 79.261797875,
+          "pc": 52182,
+          "data": 36,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 79.761820625,
+          "pc": 52182,
+          "data": 37,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 80.261824,
+          "pc": 52182,
+          "data": 38,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 80.761830375,
+          "pc": 52182,
+          "data": 39,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 81.261845625,
+          "pc": 52182,
+          "data": 40,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 81.761828125,
+          "pc": 52182,
+          "data": 41,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 82.261853375,
+          "pc": 52182,
+          "data": 42,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 82.761788,
+          "pc": 52182,
+          "data": 43,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 83.26181875,
+          "pc": 52182,
+          "data": 44,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 83.761851,
+          "pc": 52182,
+          "data": 45,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 84.261908625,
+          "pc": 52182,
+          "data": 46,
+          "mask": 65535,
+          "kind": "r"
+        },
+        {
+          "count": 1,
+          "address": 1048578,
+          "seconds": 84.761839875,
+          "pc": 52182,
+          "data": 47,
+          "mask": 65535,
+          "kind": "r"
+        }
+      ],
+      "serial_delivered": [
+        {
+          "seconds": 78.794943310658,
+          "sample": 3474857
+        },
+        {
+          "seconds": 79.194943310658,
+          "sample": 3492497
+        },
+        {
+          "seconds": 79.294943310658,
+          "sample": 3496907
+        },
+        {
+          "seconds": 79.694943310658,
+          "sample": 3514547
+        },
+        {
+          "seconds": 79.794943310658,
+          "sample": 3518957
+        },
+        {
+          "seconds": 80.194943310658,
+          "sample": 3536597
+        },
+        {
+          "seconds": 80.294943310658,
+          "sample": 3541007
+        },
+        {
+          "seconds": 80.694943310658,
+          "sample": 3558647
+        },
+        {
+          "seconds": 80.794943310658,
+          "sample": 3563057
+        },
+        {
+          "seconds": 81.194943310658,
+          "sample": 3580697
+        },
+        {
+          "seconds": 81.294943310658,
+          "sample": 3585107
+        },
+        {
+          "seconds": 81.694943310658,
+          "sample": 3602747
+        },
+        {
+          "seconds": 81.794943310658,
+          "sample": 3607157
+        },
+        {
+          "seconds": 82.194943310658,
+          "sample": 3624797
+        },
+        {
+          "seconds": 82.294943310658,
+          "sample": 3629207
+        },
+        {
+          "seconds": 82.694943310658,
+          "sample": 3646847
+        },
+        {
+          "seconds": 82.794943310658,
+          "sample": 3651257
+        },
+        {
+          "seconds": 83.194943310658,
+          "sample": 3668897
+        },
+        {
+          "seconds": 83.294943310658,
+          "sample": 3673307
+        },
+        {
+          "seconds": 83.694943310658,
+          "sample": 3690947
+        },
+        {
+          "seconds": 83.794943310658,
+          "sample": 3695357
+        },
+        {
+          "seconds": 84.194943310658,
+          "sample": 3712997
+        },
+        {
+          "seconds": 84.294943310658,
+          "sample": 3717407
+        },
+        {
+          "seconds": 84.694943310658,
+          "sample": 3735047
+        }
+      ]
+    },
+    "trials": [
+      {
+        "trial": 0,
+        "trace": {
+          "rows": [
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 87.429713,
+              "pc": 19417,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 87.431097875,
+              "pc": 13914,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 87.43109875,
+              "pc": 13919,
+              "data": 16,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 87.43111625,
+              "pc": 13914,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 87.431117125,
+              "pc": 13919,
+              "data": 16,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 87.66589475,
+              "pc": 16418,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 87.665895625,
+              "pc": 16423,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "pc": 23371,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 87.709366,
+              "last_seconds": 94.511238125,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 87.70936875,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23392,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 87.709369625,
+              "last_seconds": 94.51124175,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23405,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 87.709371875,
+              "last_seconds": 94.511244,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23418,
+              "count": 10,
+              "address": 1056770,
+              "seconds": 87.709374125,
+              "last_seconds": 94.51124625,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23423,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 87.709374875,
+              "last_seconds": 94.511247,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 87.709409,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 87.70945825,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 87.709538,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23751,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 87.70958,
+              "last_seconds": 88.34031275,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 87.70958275,
+              "pc": 23767,
+              "data": 30,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23772,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 87.709583625,
+              "last_seconds": 88.340316375,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23785,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 87.709585875,
+              "last_seconds": 88.340318625,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23798,
+              "count": 2,
+              "address": 1056770,
+              "seconds": 87.709588125,
+              "last_seconds": 88.340320875,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23803,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 87.709588875,
+              "last_seconds": 88.340321625,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 88.3140995,
+              "pc": 23621,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.31410225,
+              "pc": 23637,
+              "data": 7,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 88.314103125,
+              "pc": 23642,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.314105375,
+              "pc": 23655,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52582,
+              "count": 4,
+              "address": 1056768,
+              "seconds": 88.31411025,
+              "last_seconds": 89.277849125,
+              "data": 129,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.314113,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52603,
+              "count": 4,
+              "address": 1056768,
+              "seconds": 88.314113875,
+              "last_seconds": 89.27785275,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52620,
+              "count": 50,
+              "address": 1056768,
+              "seconds": 88.31411675,
+              "last_seconds": 89.3314255,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52633,
+              "count": 50,
+              "address": 1056768,
+              "seconds": 88.314119,
+              "last_seconds": 89.33142775,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 4,
+              "address": 1056770,
+              "seconds": 88.31412125,
+              "last_seconds": 89.277860125,
+              "data": 32,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 25,
+              "address": 1056770,
+              "seconds": 88.3141285,
+              "last_seconds": 89.3314155,
+              "data": 0,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52620,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 88.31413125,
+              "last_seconds": 89.33143275,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52633,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 88.3141335,
+              "last_seconds": 89.331435,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52656,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 88.31413625,
+              "last_seconds": 89.33143775,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 26783,
+              "count": 6,
+              "address": 284,
+              "seconds": 88.33574575,
+              "last_seconds": 89.33131475,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 88.335747125,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 88.335748625,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 88.335750125,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 88.335752,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "pc": 27496,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.33577275,
+              "last_seconds": 89.33134175,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.3357755,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27517,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.335776375,
+              "last_seconds": 89.331345375,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.335778625,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27535,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.3357795,
+              "last_seconds": 89.3313485,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.33578175,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27553,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.335782625,
+              "last_seconds": 89.331351625,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.3357865,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27577,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.335787375,
+              "last_seconds": 89.331356375,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.335789625,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27595,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.3357905,
+              "last_seconds": 89.3313595,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.33579325,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27616,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.335794125,
+              "last_seconds": 89.331363125,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.335798,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27645,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.335798875,
+              "last_seconds": 89.331367875,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.335801625,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27666,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.3358025,
+              "last_seconds": 89.3313715,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.33580475,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52582,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 88.335809625,
+              "last_seconds": 89.331378625,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 6,
+              "address": 1056770,
+              "seconds": 88.33585375,
+              "last_seconds": 89.33142275,
+              "data": 9,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 8,
+              "address": 1056770,
+              "seconds": 88.335861,
+              "last_seconds": 89.33143,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 88.3403155,
+              "pc": 23767,
+              "data": 30,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 15566,
+              "count": 8654,
+              "address": 1048576,
+              "seconds": 88.945513625,
+              "last_seconds": 89.40658825,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 88.945878625,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 88.945880125,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 88.945881625,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 88.9458835,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.945907,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.945910125,
+              "pc": 27530,
+              "data": 4,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.94591325,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.945918,
+              "pc": 27572,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.945921125,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.94592475,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.9459295,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.945933125,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 88.94593625,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52646,
+              "count": 2,
+              "address": 1056770,
+              "seconds": 88.945949,
+              "last_seconds": 89.133563875,
+              "data": 4,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 5,
+              "address": 1056770,
+              "seconds": 88.945978,
+              "last_seconds": 89.133592875,
+              "data": 1,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23991,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 89.012323625,
+              "last_seconds": 89.27783525,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.012326375,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 24012,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 89.01232725,
+              "last_seconds": 89.277838875,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.0123295,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 24030,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 89.012330375,
+              "last_seconds": 89.277842,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.012332625,
+              "pc": 24043,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.01234025,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.065692375,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 89.065693875,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 89.065695375,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.06569725,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.06572075,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.065723875,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.065727,
+              "pc": 27548,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.06573175,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.065734875,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.0657385,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.06574325,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.065746875,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.06575,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.1334935,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 89.133495,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 89.1334965,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.133498375,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133521875,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133525,
+              "pc": 27530,
+              "data": 4,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133528125,
+              "pc": 27548,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133532875,
+              "pc": 27572,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133536,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133539625,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133544375,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133548,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.133551125,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.2016635,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.201666625,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.20166975,
+              "pc": 24043,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.201677375,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.255036,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 89.2550375,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 89.255039,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.255040875,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.255064375,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.2550675,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.255070625,
+              "pc": 27548,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.255075375,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.2550785,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.255082125,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.255086875,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.2550905,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.255093625,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.277838,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.277841125,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.27784425,
+              "pc": 24043,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.277851875,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.331316125,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 89.331317625,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 89.331319125,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 89.331321,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.3313445,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.331347625,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.33135075,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.3313555,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.331358625,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.33136225,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.331367,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.331370625,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.33137375,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 89.406600875,
+              "pc": 23857,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 89.406603625,
+              "pc": 23873,
+              "data": 14,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 89.4066045,
+              "pc": 23878,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 89.40660675,
+              "pc": 23891,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 89.406609,
+              "pc": 23904,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 89.40660975,
+              "pc": 23909,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 15521,
+              "count": 26,
+              "address": 1048576,
+              "seconds": 89.40704575,
+              "last_seconds": 89.4247105,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 89.425064125,
+              "pc": 51471,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 89.425065,
+              "pc": 51476,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 90.271363875,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 91.119482125,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 91.967597625,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 92.815513375,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 93.663527625,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 94.511240875,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            }
+          ],
+          "accesses": 9125,
+          "dropped": 0,
+          "ok": true
+        },
+        "serial_delivered": [
+          {
+            "seconds": 87.428299319728,
+            "sample": 3855588
+          },
+          {
+            "seconds": 87.828299319728,
+            "sample": 3873228
+          },
+          {
+            "seconds": 87.928299319728,
+            "sample": 3877638
+          },
+          {
+            "seconds": 88.328299319728,
+            "sample": 3895278
+          },
+          {
+            "seconds": 88.428299319728,
+            "sample": 3899688
+          },
+          {
+            "seconds": 88.828299319728,
+            "sample": 3917328
+          },
+          {
+            "seconds": 88.928299319728,
+            "sample": 3921738
+          },
+          {
+            "seconds": 89.328299319728,
+            "sample": 3939378
+          },
+          {
+            "seconds": 89.428299319728,
+            "sample": 3943788
+          },
+          {
+            "seconds": 89.828299319728,
+            "sample": 3961428
+          },
+          {
+            "seconds": 89.928299319728,
+            "sample": 3965838
+          },
+          {
+            "seconds": 90.328299319728,
+            "sample": 3983478
+          },
+          {
+            "seconds": 90.428299319728,
+            "sample": 3987888
+          },
+          {
+            "seconds": 90.828299319728,
+            "sample": 4005528
+          },
+          {
+            "seconds": 90.928299319728,
+            "sample": 4009938
+          },
+          {
+            "seconds": 91.328299319728,
+            "sample": 4027578
+          },
+          {
+            "seconds": 91.428299319728,
+            "sample": 4031988
+          },
+          {
+            "seconds": 91.828299319728,
+            "sample": 4049628
+          },
+          {
+            "seconds": 91.928299319728,
+            "sample": 4054038
+          },
+          {
+            "seconds": 92.328299319728,
+            "sample": 4071678
+          },
+          {
+            "seconds": 92.428299319728,
+            "sample": 4076088
+          },
+          {
+            "seconds": 92.828299319728,
+            "sample": 4093728
+          },
+          {
+            "seconds": 92.928299319728,
+            "sample": 4098138
+          },
+          {
+            "seconds": 93.328299319728,
+            "sample": 4115778
+          }
+        ],
+        "enable_clear_times": [
+          87.66589475
+        ],
+        "fdc_interval": [
+          88.31410225,
+          89.33137375
+        ],
+        "overlapping_completions": [],
+        "note_offs_during_trace": 12,
+        "completion_requests": []
+      },
+      {
+        "trial": 1,
+        "trace": {
+          "rows": [
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 100.829940125,
+              "pc": 19417,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 100.831325,
+              "pc": 13914,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 100.831325875,
+              "pc": 13919,
+              "data": 16,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 100.831343375,
+              "pc": 13914,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 100.83134425,
+              "pc": 13919,
+              "data": 16,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 101.06229325,
+              "pc": 16418,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 101.062294125,
+              "pc": 16423,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "pc": 23371,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 101.1057645,
+              "last_seconds": 107.907636625,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.10576725,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23392,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 101.105768125,
+              "last_seconds": 107.90764025,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23405,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 101.105770375,
+              "last_seconds": 107.9076425,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23418,
+              "count": 10,
+              "address": 1056770,
+              "seconds": 101.105772625,
+              "last_seconds": 107.90764475,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23423,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 101.105773375,
+              "last_seconds": 107.9076455,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.1058075,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.10585675,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.1059365,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23751,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 101.1059785,
+              "last_seconds": 101.73671125,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.10598125,
+              "pc": 23767,
+              "data": 30,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23772,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 101.105982125,
+              "last_seconds": 101.736714875,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23785,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 101.105984375,
+              "last_seconds": 101.736717125,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23798,
+              "count": 2,
+              "address": 1056770,
+              "seconds": 101.105986625,
+              "last_seconds": 101.736719375,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23803,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 101.105987375,
+              "last_seconds": 101.736720125,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.710498,
+              "pc": 23621,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.71050075,
+              "pc": 23637,
+              "data": 7,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.710501625,
+              "pc": 23642,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.710503875,
+              "pc": 23655,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52582,
+              "count": 4,
+              "address": 1056768,
+              "seconds": 101.71050875,
+              "last_seconds": 102.674247625,
+              "data": 129,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.7105115,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52603,
+              "count": 4,
+              "address": 1056768,
+              "seconds": 101.710512375,
+              "last_seconds": 102.67425125,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52620,
+              "count": 50,
+              "address": 1056768,
+              "seconds": 101.71051525,
+              "last_seconds": 102.727705375,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52633,
+              "count": 50,
+              "address": 1056768,
+              "seconds": 101.7105175,
+              "last_seconds": 102.727707625,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 4,
+              "address": 1056770,
+              "seconds": 101.71051975,
+              "last_seconds": 102.674258625,
+              "data": 32,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 25,
+              "address": 1056770,
+              "seconds": 101.710527,
+              "last_seconds": 102.727695375,
+              "data": 0,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52620,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 101.71052975,
+              "last_seconds": 102.727712625,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52633,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 101.710532,
+              "last_seconds": 102.727714875,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52656,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 101.71053475,
+              "last_seconds": 102.727717625,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 26783,
+              "count": 6,
+              "address": 284,
+              "seconds": 101.732126875,
+              "last_seconds": 102.727594625,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 101.73212825,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 101.73212975,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 101.73213125,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 101.732133125,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "pc": 27496,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.732153875,
+              "last_seconds": 102.727621625,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.732156625,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27517,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.7321575,
+              "last_seconds": 102.72762525,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.73215975,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27535,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.732160625,
+              "last_seconds": 102.727628375,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.732162875,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27553,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.73216375,
+              "last_seconds": 102.7276315,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.732167625,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27577,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.7321685,
+              "last_seconds": 102.72763625,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.73217075,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27595,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.732171625,
+              "last_seconds": 102.727639375,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.732174375,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27616,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.73217525,
+              "last_seconds": 102.727643,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.732179125,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27645,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.73218,
+              "last_seconds": 102.72764775,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.73218275,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27666,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.732183625,
+              "last_seconds": 102.727651375,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 101.732185875,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52582,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 101.73219075,
+              "last_seconds": 102.7276585,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 6,
+              "address": 1056770,
+              "seconds": 101.732234875,
+              "last_seconds": 102.727702625,
+              "data": 9,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 8,
+              "address": 1056770,
+              "seconds": 101.732242125,
+              "last_seconds": 102.727709875,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 101.736714,
+              "pc": 23767,
+              "data": 30,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 15566,
+              "count": 8654,
+              "address": 1048576,
+              "seconds": 102.341912125,
+              "last_seconds": 102.80298675,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.342277125,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 102.342278625,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 102.342280125,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.342282,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.3423055,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.342308625,
+              "pc": 27530,
+              "data": 4,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.34231175,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.3423165,
+              "pc": 27572,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.342319625,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.34232325,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.342328,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.342331625,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.34233475,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52646,
+              "count": 2,
+              "address": 1056770,
+              "seconds": 102.3423475,
+              "last_seconds": 102.529945,
+              "data": 4,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 5,
+              "address": 1056770,
+              "seconds": 102.3423765,
+              "last_seconds": 102.529974,
+              "data": 1,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23991,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 102.408722125,
+              "last_seconds": 102.67423375,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.408724875,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 24012,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 102.40872575,
+              "last_seconds": 102.674237375,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.408728,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 24030,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 102.408728875,
+              "last_seconds": 102.6742405,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.408731125,
+              "pc": 24043,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.40873875,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.462090875,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 102.462092375,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 102.462093875,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.46209575,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.46211925,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.462122375,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.4621255,
+              "pc": 27548,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.46213025,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.462133375,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.462137,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.46214175,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.462145375,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.4621485,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.529874625,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 102.529876125,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 102.529877625,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.5298795,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.529903,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.529906125,
+              "pc": 27530,
+              "data": 4,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.52990925,
+              "pc": 27548,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.529914,
+              "pc": 27572,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.529917125,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.52992075,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.5299255,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.529929125,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.52993225,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.598062,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.598065125,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.59806825,
+              "pc": 24043,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.598075875,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.6514345,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 102.651436,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 102.6514375,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.651439375,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651462875,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651466,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651469125,
+              "pc": 27548,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651473875,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651477,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651480625,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651485375,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651489,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.651492125,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.6742365,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.674239625,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.67424275,
+              "pc": 24043,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.674250375,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.727596,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 102.7275975,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 102.727599,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 102.727600875,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.727624375,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.7276275,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.727630625,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.727635375,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.7276385,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.727642125,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.727646875,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.7276505,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.727653625,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 102.802999375,
+              "pc": 23857,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 102.803002125,
+              "pc": 23873,
+              "data": 14,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 102.803003,
+              "pc": 23878,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 102.80300525,
+              "pc": 23891,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 102.8030075,
+              "pc": 23904,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 102.80300825,
+              "pc": 23909,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 15521,
+              "count": 26,
+              "address": 1048576,
+              "seconds": 102.80344425,
+              "last_seconds": 102.821109,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 102.821462625,
+              "pc": 51471,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 102.8214635,
+              "pc": 51476,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 103.667762375,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 104.515880625,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 105.363996125,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 106.211911875,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 107.059926125,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 107.907639375,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            }
+          ],
+          "accesses": 9125,
+          "dropped": 0,
+          "ok": true
+        },
+        "serial_delivered": [
+          {
+            "seconds": 100.82829931973,
+            "sample": 4446528
+          },
+          {
+            "seconds": 101.22829931973,
+            "sample": 4464168
+          },
+          {
+            "seconds": 101.32829931973,
+            "sample": 4468578
+          },
+          {
+            "seconds": 101.72829931973,
+            "sample": 4486218
+          },
+          {
+            "seconds": 101.82829931973,
+            "sample": 4490628
+          },
+          {
+            "seconds": 102.22829931973,
+            "sample": 4508268
+          },
+          {
+            "seconds": 102.32829931973,
+            "sample": 4512678
+          },
+          {
+            "seconds": 102.72829931973,
+            "sample": 4530318
+          },
+          {
+            "seconds": 102.82829931973,
+            "sample": 4534728
+          },
+          {
+            "seconds": 103.22829931973,
+            "sample": 4552368
+          },
+          {
+            "seconds": 103.32829931973,
+            "sample": 4556778
+          },
+          {
+            "seconds": 103.72829931973,
+            "sample": 4574418
+          },
+          {
+            "seconds": 103.82829931973,
+            "sample": 4578828
+          },
+          {
+            "seconds": 104.22829931973,
+            "sample": 4596468
+          },
+          {
+            "seconds": 104.32829931973,
+            "sample": 4600878
+          },
+          {
+            "seconds": 104.72829931973,
+            "sample": 4618518
+          },
+          {
+            "seconds": 104.82829931973,
+            "sample": 4622928
+          },
+          {
+            "seconds": 105.22829931973,
+            "sample": 4640568
+          },
+          {
+            "seconds": 105.32829931973,
+            "sample": 4644978
+          },
+          {
+            "seconds": 105.72829931973,
+            "sample": 4662618
+          },
+          {
+            "seconds": 105.82829931973,
+            "sample": 4667028
+          },
+          {
+            "seconds": 106.22829931973,
+            "sample": 4684668
+          },
+          {
+            "seconds": 106.32829931973,
+            "sample": 4689078
+          },
+          {
+            "seconds": 106.72829931973,
+            "sample": 4706718
+          }
+        ],
+        "enable_clear_times": [
+          101.06229325
+        ],
+        "fdc_interval": [
+          101.71050075,
+          102.727653625
+        ],
+        "overlapping_completions": [],
+        "note_offs_during_trace": 12,
+        "completion_requests": []
+      },
+      {
+        "trial": 2,
+        "trace": {
+          "rows": [
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 114.39635625,
+              "pc": 19417,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 114.397741125,
+              "pc": 13914,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 114.397742,
+              "pc": 13919,
+              "data": 16,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 114.3977595,
+              "pc": 13914,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 114.397760375,
+              "pc": 13919,
+              "data": 16,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 114.64755925,
+              "pc": 16418,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 114.647560125,
+              "pc": 16423,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "pc": 23371,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 114.6910305,
+              "last_seconds": 121.492902625,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 114.69103325,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23392,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 114.691034125,
+              "last_seconds": 121.49290625,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23405,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 114.691036375,
+              "last_seconds": 121.4929085,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23418,
+              "count": 10,
+              "address": 1056770,
+              "seconds": 114.691038625,
+              "last_seconds": 121.49291075,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23423,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 114.691039375,
+              "last_seconds": 121.4929115,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 114.6910735,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 114.69112275,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 114.6912025,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23751,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 114.6912445,
+              "last_seconds": 115.321959875,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 114.69124725,
+              "pc": 23767,
+              "data": 30,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 23772,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 114.691248125,
+              "last_seconds": 115.3219635,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23785,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 114.691250375,
+              "last_seconds": 115.32196575,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23798,
+              "count": 2,
+              "address": 1056770,
+              "seconds": 114.691252625,
+              "last_seconds": 115.321968,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23803,
+              "count": 2,
+              "address": 1056768,
+              "seconds": 114.691253375,
+              "last_seconds": 115.32196875,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 115.2958315,
+              "pc": 23621,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.29583425,
+              "pc": 23637,
+              "data": 7,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 115.295835125,
+              "pc": 23642,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.295837375,
+              "pc": 23655,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52582,
+              "count": 4,
+              "address": 1056768,
+              "seconds": 115.29584225,
+              "last_seconds": 116.259513625,
+              "data": 129,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.295845,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52603,
+              "count": 4,
+              "address": 1056768,
+              "seconds": 115.295845875,
+              "last_seconds": 116.25951725,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52620,
+              "count": 50,
+              "address": 1056768,
+              "seconds": 115.29584875,
+              "last_seconds": 116.313072625,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52633,
+              "count": 50,
+              "address": 1056768,
+              "seconds": 115.295851,
+              "last_seconds": 116.313074875,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 4,
+              "address": 1056770,
+              "seconds": 115.29585325,
+              "last_seconds": 116.259524625,
+              "data": 32,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 25,
+              "address": 1056770,
+              "seconds": 115.2958605,
+              "last_seconds": 116.313062625,
+              "data": 0,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52620,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 115.29586325,
+              "last_seconds": 116.313079875,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52633,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 115.2958655,
+              "last_seconds": 116.313082125,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52656,
+              "count": 10,
+              "address": 1056768,
+              "seconds": 115.29586825,
+              "last_seconds": 116.313084875,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 26783,
+              "count": 6,
+              "address": 284,
+              "seconds": 115.317392875,
+              "last_seconds": 116.312961875,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 115.31739425,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 115.31739575,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 115.31739725,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 115.317399125,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "pc": 27496,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.317419875,
+              "last_seconds": 116.312988875,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.317422625,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27517,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.3174235,
+              "last_seconds": 116.3129925,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.31742575,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27535,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.317426625,
+              "last_seconds": 116.312995625,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.317428875,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27553,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.31742975,
+              "last_seconds": 116.31299875,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.317433625,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27577,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.3174345,
+              "last_seconds": 116.3130035,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.31743675,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27595,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.317437625,
+              "last_seconds": 116.313006625,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.317440375,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27616,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.31744125,
+              "last_seconds": 116.31301025,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.317445125,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27645,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.317446,
+              "last_seconds": 116.313015,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.31744875,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 27666,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.317449625,
+              "last_seconds": 116.313018625,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.317451875,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52582,
+              "count": 6,
+              "address": 1056768,
+              "seconds": 115.31745675,
+              "last_seconds": 116.31302575,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 6,
+              "address": 1056770,
+              "seconds": 115.317500875,
+              "last_seconds": 116.313069875,
+              "data": 9,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 8,
+              "address": 1056770,
+              "seconds": 115.317508125,
+              "last_seconds": 116.313077125,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 115.321962625,
+              "pc": 23767,
+              "data": 30,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 15566,
+              "count": 8654,
+              "address": 1048576,
+              "seconds": 115.92716075,
+              "last_seconds": 116.388235375,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 115.92752575,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 115.92752725,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 115.92752875,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 115.927530625,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.927554125,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.92755725,
+              "pc": 27530,
+              "data": 4,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.927560375,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.927565125,
+              "pc": 27572,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.92756825,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.927571875,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.927576625,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.92758025,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.927583375,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 52646,
+              "count": 2,
+              "address": 1056770,
+              "seconds": 115.927596125,
+              "last_seconds": 116.115211,
+              "data": 4,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 52646,
+              "count": 5,
+              "address": 1056770,
+              "seconds": 115.927625125,
+              "last_seconds": 116.11524,
+              "data": 1,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 23991,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 115.993988125,
+              "last_seconds": 116.25949975,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.993990875,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 24012,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 115.99399175,
+              "last_seconds": 116.259503375,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.993994,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "pc": 24030,
+              "count": 3,
+              "address": 1056768,
+              "seconds": 115.993994875,
+              "last_seconds": 116.2595065,
+              "data": 144,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.993997125,
+              "pc": 24043,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 115.99400475,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.047356875,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 116.047358375,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 116.047359875,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.04736175,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.04738525,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.047388375,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.0473915,
+              "pc": 27548,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.04739625,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.047399375,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.047403,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.04740775,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.047411375,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.0474145,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.115140625,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 116.115142125,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 116.115143625,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.1151455,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.115169,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.115172125,
+              "pc": 27530,
+              "data": 4,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.11517525,
+              "pc": 27548,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.11518,
+              "pc": 27572,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.115183125,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.11518675,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.1151915,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.115195125,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.11519825,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.183310625,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.18331375,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.183316875,
+              "pc": 24043,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.1833245,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.236683125,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 116.236684625,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 116.236686125,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.236688,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.2367115,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.236714625,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.23671775,
+              "pc": 27548,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.2367225,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.236725625,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.23672925,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.236734,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.236737625,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.23674075,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.2595025,
+              "pc": 24007,
+              "data": 15,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.259505625,
+              "pc": 24025,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.25950875,
+              "pc": 24043,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.259516375,
+              "pc": 52598,
+              "data": 8,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.31296325,
+              "pc": 26792,
+              "data": 11,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 282,
+              "seconds": 116.31296475,
+              "pc": 26801,
+              "data": 13594,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 280,
+              "seconds": 116.31296625,
+              "pc": 26810,
+              "data": 4608,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 284,
+              "seconds": 116.312968125,
+              "pc": 26821,
+              "data": 55040,
+              "mask": 65280,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.312991625,
+              "pc": 27512,
+              "data": 70,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.31299475,
+              "pc": 27530,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.312997875,
+              "pc": 27548,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.313002625,
+              "pc": 27572,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.31300575,
+              "pc": 27590,
+              "data": 1,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.313009375,
+              "pc": 27611,
+              "data": 2,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.313014125,
+              "pc": 27640,
+              "data": 9,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.31301775,
+              "pc": 27661,
+              "data": 84,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.313020875,
+              "pc": 27679,
+              "data": 0,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 116.388248,
+              "pc": 23857,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 116.38825075,
+              "pc": 23873,
+              "data": 14,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 116.388251625,
+              "pc": 23878,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 116.388253875,
+              "pc": 23891,
+              "data": 208,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056770,
+              "seconds": 116.388256125,
+              "pc": 23904,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 116.388256875,
+              "pc": 23909,
+              "data": 128,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "pc": 15521,
+              "count": 26,
+              "address": 1048576,
+              "seconds": 116.38871025,
+              "last_seconds": 116.40647625,
+              "data": 2,
+              "mask": 255,
+              "kind": "r"
+            },
+            {
+              "count": 1,
+              "address": 1048578,
+              "seconds": 116.406829875,
+              "pc": 51471,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1048576,
+              "seconds": 116.40683075,
+              "pc": 51476,
+              "data": 0,
+              "mask": 65535,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 117.253028375,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 118.101146625,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 118.949262125,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 119.797279125,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 120.645192125,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            },
+            {
+              "count": 1,
+              "address": 1056768,
+              "seconds": 121.492905375,
+              "pc": 23387,
+              "data": 27,
+              "mask": 255,
+              "kind": "w"
+            }
+          ],
+          "accesses": 9125,
+          "dropped": 0,
+          "ok": true
+        },
+        "serial_delivered": [
+          {
+            "seconds": 114.39494331066,
+            "sample": 5044817
+          },
+          {
+            "seconds": 114.79494331066,
+            "sample": 5062457
+          },
+          {
+            "seconds": 114.89494331066,
+            "sample": 5066867
+          },
+          {
+            "seconds": 115.29494331066,
+            "sample": 5084507
+          },
+          {
+            "seconds": 115.39494331066,
+            "sample": 5088917
+          },
+          {
+            "seconds": 115.79494331066,
+            "sample": 5106557
+          },
+          {
+            "seconds": 115.89494331066,
+            "sample": 5110967
+          },
+          {
+            "seconds": 116.29494331066,
+            "sample": 5128607
+          },
+          {
+            "seconds": 116.39494331066,
+            "sample": 5133017
+          },
+          {
+            "seconds": 116.79494331066,
+            "sample": 5150657
+          },
+          {
+            "seconds": 116.89494331066,
+            "sample": 5155067
+          },
+          {
+            "seconds": 117.29494331066,
+            "sample": 5172707
+          },
+          {
+            "seconds": 117.39494331066,
+            "sample": 5177117
+          },
+          {
+            "seconds": 117.79494331066,
+            "sample": 5194757
+          },
+          {
+            "seconds": 117.89494331066,
+            "sample": 5199167
+          },
+          {
+            "seconds": 118.29494331066,
+            "sample": 5216807
+          },
+          {
+            "seconds": 118.39494331066,
+            "sample": 5221217
+          },
+          {
+            "seconds": 118.79494331066,
+            "sample": 5238857
+          },
+          {
+            "seconds": 118.89494331066,
+            "sample": 5243267
+          },
+          {
+            "seconds": 119.29494331066,
+            "sample": 5260907
+          },
+          {
+            "seconds": 119.39494331066,
+            "sample": 5265317
+          },
+          {
+            "seconds": 119.79494331066,
+            "sample": 5282957
+          },
+          {
+            "seconds": 119.89494331066,
+            "sample": 5287367
+          },
+          {
+            "seconds": 120.29494331066,
+            "sample": 5305007
+          }
+        ],
+        "enable_clear_times": [
+          114.64755925
+        ],
+        "fdc_interval": [
+          115.29583425,
+          116.313020875
+        ],
+        "overlapping_completions": [],
+        "note_offs_during_trace": 12,
+        "completion_requests": []
+      }
+    ],
+    "post_stress_peak": 0.0009636619361117482,
+    "media": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": false,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 0
+    },
+    "unchanged_media_sha256": "65f8a8353d4e5bedfa1cc0f0d600012cf6946cda0129ec96363f49a91cb43060",
+    "firmware_restriction": "Disk/Load clears playable voices before FDC commands and suppresses new note allocations. Return to Perform before auditioning; no event-preservation or musical-continuity guarantee during Load.",
+    "limits": "Named workload robustness/restriction qualification; no observed three-source simultaneous IRQ arbitration. Sample Load-under-MIDI qualified separately; bitmap clears in Disk are not labelled natural completions."
+  },
+  "observer_neutrality": {
+    "command": "python scripts/verify_native_runtime.py --bus-trace --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-disk-trace-neutral-20261014",
+    "result": {
+      "pcm_frames_exact": 131072,
+      "displays_exact": true,
+      "trace_rows": 256,
+      "trace_dropped": 513,
+      "pcm_sha256": "0143763f337b44fa6d31eae74e985ba8b87dcdf1ce487498e450e7f4d4fb5572"
+    }
+  },
+  "backend_regressions": {
+    "passed": 363,
+    "seconds": 43.17,
+    "exit_code": 0,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-disk-voice-pytest-196.py",
+    "scope": "Full tests/ after production Lua observer change; before final sample-only export assertion; private directories, permitted sockets"
+  },
+  "interpretation": "Perform control exposes12 distinct source2 completion-status slots. In three Disk/Load trials firmware clears playable voices before FDC requests and allocates no new voices despite24 delivered serial events/trial; no source2 completion reads overlap disk commands. This qualifies a restriction/robustness subset, not simultaneous three-source arbitration.",
+  "limitations": [
+    "Full three-source overlap gate remains open; no fabricated IRQs, RAM/PC forcing or event-preservation claim",
+    "Directory FDC traces have zero dropped rows; separate broad observer-neutrality trace is capped and reports its dropped rows",
+    "Post-disk explicit cleanup and returned Perform note/release pass; media export byte-exact/idle/clean",
+    "Existing sample Load-under-MIDI exact-payload evidence is separate from directory-read workload",
+    "Lua protocol hash changes; prior session archives require matching earlier runtime; automatic migration unsupported",
+    "Initial harness hypotheses based on one-shot silence and enable-bit clears were rejected in favor of actual source2 status reads; no emulator defect inferred"
+  ]
+}

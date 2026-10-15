@@ -14,7 +14,7 @@ describe('Plugin configuration recovery',()=>{
     fireEvent.change(screen.getByLabelText('Boot ROM (32KB)'),{target:{value:'relative.bin'}});
     fireEvent.click(screen.getByLabelText('Apply after reloading the plugin in the host'));
     fireEvent.click(screen.getByText('Save plugin settings'));
-    expect(bridge.send).toHaveBeenCalledWith({type:'CONFIGURE_PLUGIN',payload:{root:'D:/S760',stateRoot:'D:/State',bootRom:'relative.bin',systemDisk:'D:/system.img',mediaDirectory:'D:/Media',confirmReload:true}});
+    expect(bridge.send).toHaveBeenCalledWith({type:'CONFIGURE_PLUGIN',payload:{root:'D:/S760',stateRoot:'D:/State',bootRom:'relative.bin',systemDisk:'D:/system.img',mediaDirectory:'D:/Media',waveMemoryMb:32,confirmReload:true}});
     expect(screen.getByText('Saving settings…')).toBeDisabled();
     Object.assign(bridge.configuration,{revision:1,error:'bootRom must be an absolute path'});rerender(<PluginConfiguration/>);
     expect(screen.getByText('bootRom must be an absolute path')).toBeVisible();

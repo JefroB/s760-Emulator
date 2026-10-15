@@ -1,0 +1,276 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; exact final file hashes below",
+  "evidence_class": "Native isolated device register/selection tests, original-firmware boot register observations and native playback/state regressions; firmware SCSI Load NOT qualified",
+  "identities_sha256": {
+    "mame-source/src/mame/roland/s760.cpp": "db19afa4db5eda815db2148f4a405b696ff44afdf770184d90cf2b6e121c9acf",
+    "mame-source/mames760.exe": "fc815b76c0559452126793fd48e21e8aee78147875033f21168d4881b0432f67",
+    "scripts/verify_native_scsi_registers.py": "e992d557010ca1e0db3cdbd277cb404fff664a95506f1f93ac9a1cacec439767",
+    "scripts/verify_bmovi_fetch.py": "cb2dd14119f39b5e1e59ab7fe4ff9f2766b15977f0ad1b03a44a4e9a47b94548",
+    "scripts/s760_runtime.py": "6d5b1374fcbde46dbb0cd6b980c7aecea001c079f13fd52d2da05f5f85112c44",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "primary_reference": "https://raw.githubusercontent.com/NetBSD/src/trunk/sys/dev/ic/mb89352reg.h",
+  "prerequisites": "Built native executable, local OS image, user-supplied boot ROM for firmware probes, private state/media copies and permitted local sockets; headless unthrottled",
+  "isolated_registers": {
+    "command": "python scripts/verify_native_scsi_registers.py --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/scsi-register197-final",
+    "result": {
+      "cpu": "I80C196KB",
+      "passed": true,
+      "error": "",
+      "firmware_load": false,
+      "native_scsi_stride": 2
+    },
+    "synthetic_setup": "Isolated fixture selects data bank0400 through010E to access physical SPC registers; no firmware workflow claim",
+    "before_address_fix": {
+      "passed": false,
+      "native_scsi_stride": 2,
+      "cpu": "I80C196KB",
+      "firmware_load": false,
+      "error": "...-findings\\chatGPT-work\\scsi-register197-before\\probe.lua:14: TEMP port missing or misaddressed"
+    },
+    "after_address_only": {
+      "cpu": "I80C196KB",
+      "passed": true,
+      "error": "",
+      "firmware_load": false,
+      "native_scsi_stride": 2
+    },
+    "before_command_fix": {
+      "passed": false,
+      "cpu": "I80C196KB",
+      "native_scsi_stride": 2,
+      "firmware_load": false,
+      "error": "...e-findings\\chatGPT-work\\scsi-command197-before\\probe.lua:19: Absent target SELECT must report timeout"
+    },
+    "before_absent_target_fix": {
+      "passed": false,
+      "error": "...ndings\\chatGPT-work\\scsi-register197-qualified\\probe.lua:19: Absent target SELECT must report timeout",
+      "cpu": "I80C196KB",
+      "firmware_load": false,
+      "native_scsi_stride": 2
+    }
+  },
+  "firmware_observation": {
+    "boot_trace_rows": [
+      {
+        "kind": "w",
+        "address": 1057794,
+        "data": 128,
+        "count": 1,
+        "pc": 8638,
+        "seconds": 1.82762925,
+        "mask": 255
+      },
+      {
+        "kind": "w",
+        "address": 1057792,
+        "data": 7,
+        "count": 1,
+        "pc": 8653,
+        "seconds": 1.82763175,
+        "mask": 255
+      },
+      {
+        "kind": "w",
+        "address": 1057796,
+        "data": 0,
+        "count": 1,
+        "pc": 8658,
+        "seconds": 1.827632625,
+        "mask": 255
+      },
+      {
+        "kind": "w",
+        "address": 1057794,
+        "data": 146,
+        "count": 1,
+        "pc": 8691,
+        "seconds": 1.827638375,
+        "mask": 255
+      },
+      {
+        "kind": "w",
+        "address": 1057794,
+        "data": 18,
+        "count": 1,
+        "pc": 8699,
+        "seconds": 1.82763975,
+        "mask": 255
+      },
+      {
+        "kind": "w",
+        "address": 1057796,
+        "data": 20,
+        "count": 1,
+        "pc": 8714,
+        "seconds": 1.827642375,
+        "mask": 255
+      },
+      {
+        "kind": "w",
+        "address": 1057796,
+        "data": 4,
+        "count": 1,
+        "pc": 8732,
+        "seconds": 1.82821975,
+        "mask": 255
+      },
+      {
+        "kind": "r",
+        "address": 1057800,
+        "data": 0,
+        "count": 1,
+        "pc": 8737,
+        "seconds": 1.828220625,
+        "mask": 255
+      },
+      {
+        "kind": "w",
+        "address": 1057800,
+        "data": 0,
+        "count": 1,
+        "pc": 8742,
+        "seconds": 1.828221375,
+        "mask": 255
+      },
+      {
+        "kind": "r",
+        "address": 1057792,
+        "data": 7,
+        "count": 1,
+        "pc": 8758,
+        "seconds": 1.82822525,
+        "mask": 255
+      }
+    ],
+    "trace_accesses": 478,
+    "trace_dropped": 222,
+    "interpretation": "Original IC15 initializes SCTL atE402 and SCMD atE404; native device register stride2 confirmed. Boot trace is bounded/truncated; no exhaustive controller claim."
+  },
+  "legacy_scsi": {
+    "command": "python scripts/verify_scsi_checkpoint.py --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/scsi197-legacy-regression",
+    "result": {
+      "partial_data_out": true,
+      "write10": true,
+      "partial_cdb": true,
+      "writeback_supported": true,
+      "aborted_write": true,
+      "cd_protection": true,
+      "zero_counts": true,
+      "sense_recall": true,
+      "range_sense": true,
+      "passed": true,
+      "remaining_bytes": 28
+    },
+    "cold": {
+      "passed": true,
+      "media_bytes": 512,
+      "partial_write10": true,
+      "response_bytes": 28,
+      "written_media": true
+    },
+    "limit": "Legacy flat-device model, not native firmware Load; run after command fix before final native-only fallback guard"
+  },
+  "native_regression": {
+    "command": "python scripts/verify_native_runtime.py --pull-render --scheduled-midi --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/scsi197-qualified-native",
+    "result": {
+      "native_boot_frames": true,
+      "long_mouse_jump": [
+        300,
+        120
+      ],
+      "midi_note": 60,
+      "held_peak_pcm16": 1019.0,
+      "release_tail_peak_pcm16": 0,
+      "sample_rate": 44100,
+      "note_start": 79.183333333333,
+      "note_release": 81.3,
+      "process_shutdown": "clean",
+      "system_audio": {
+        "enabled": false,
+        "backend_requested": "auto",
+        "buffer_target_ms": 0,
+        "throttled": false,
+        "device_latency_measured": false
+      },
+      "pull_render": {
+        "sizes": [
+          1,
+          63,
+          127,
+          256,
+          511,
+          1024,
+          4096,
+          8192
+        ],
+        "frames": 122616,
+        "wav_max_error_pcm16": 0.9999542236328125,
+        "dropped_frames": 0,
+        "paused_between_requests": true,
+        "release_tail_silent": true
+      },
+      "scheduled_midi": [
+        {
+          "seconds": 83.439365079365,
+          "sample": 3679676
+        },
+        {
+          "seconds": 84.439365079365,
+          "sample": 3723776
+        }
+      ]
+    }
+  },
+  "native_cold_state": {
+    "command": "python scripts/verify_native_checkpoint.py --scheduled --scsi --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/scsi197-qualified-checkpoint",
+    "result": {
+      "scsi_identity_verified": true,
+      "cold_pcm_frames_exact": 131072,
+      "note_off_silent": true,
+      "immediate_frames_equal": false,
+      "refreshed_frames_exact": true,
+      "corrupt_rejected_before_mutation": true,
+      "running_checkpoint_rejected": true,
+      "scheduled_midi_restored": true,
+      "serial_boundary": false,
+      "enqueue_age_seconds": -0.02267573696144609,
+      "fresh_process_sample_disk_supplied": false
+    }
+  },
+  "backend_regressions": {
+    "passed": 363,
+    "seconds": 40.06,
+    "exit_code": 0,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-scsi-pytest-197-final.py",
+    "scope": "Full tests/ against final native binary; private harness/temp/cache, permitted sockets"
+  },
+  "builds": {
+    "native": "Serial Release/x64 MSBuild mame_s760.vcxproj then mames760.vcxproj; DebugInformationFormat=OldStyle; zero errors,3 link warnings (LNK4206 precompiled type info); final build/link logs in private scsi197-final-*.log",
+    "host": "cmake --build build --config Release; s760_core_tests.exe and s760_plugin_tests.exe pass; host/core code unchanged by subsequent native-only fixes"
+  },
+  "firmware_discovery_probe": {
+    "private_probes": [
+      "scsi-load197-final-probe",
+      "scsi-load197-hd-probe"
+    ],
+    "target_images": "Byte-exact ROBOFULL720KiB presented as512-byte HD target and separate10MiB generated target. Neither filesystem is qualified for SCSI firmware use.",
+    "observed": "Drive list still No Drive; late Scan observer has zero SPC accesses. CPU observer advances across normal guest code. Early boot observation disproves the earlier broad no-SPC-access hypothesis.",
+    "limits": "Cannot attribute remaining discovery failure to image format, controller status/transfer handling, IRQ/DMA or Scan activation yet; no guessed fix or firmware patch applied."
+  },
+  "fixes": [
+    "BUG-062 native even-byte register stride2/full16-register window; legacyflat mapping preserved",
+    "BUG-063 native SELECT20, command-done10, SCTL controller-reset40 and SCMD bus-reset10; INTS read preserves state and write acknowledges. Transfer/FIFO/DMA not qualified.",
+    "BUG-064 only supplied SCSI images produce native targets; synthetic blank targets retained only for legacy flat diagnostics"
+  ],
+  "limitations": [
+    "Firmware SCSI Scan/Load, media formats, PIO/DMA/IRQ and physical selection timing remain open",
+    "No changed-package/real-host/public-distribution qualification; old same-build snapshots require their matching native binary",
+    "Isolated commands/register reads do not qualify original-firmware SCSI loading"
+  ]
+}

@@ -6,6 +6,82 @@ window. The original OS handles mouse/panel controls, disk loading and MIDI.
 Audio comes from the native MAME machine. The standalone routes it through
 MAME's Windows output or the native ASIO bridge.
 
+## Wave memory — 2026-10-14
+
+Standalone and VST3 support **8, 16 or 32 MB**, defaulting to **32 MB**.
+Select Wave memory in runtime/plugin settings; standalone applies by restarting,
+and VST3 applies after reloading the plugin. Both command-line setup tools accept
+`--wave-memory-mb 8|16|32`. Existing settings without this field use32 MB.
+The native driver also accepts `S760_WAVE_MEMORY_MB=8|16|32` for direct launches;
+managed launchers always supply their configured value.
+
+Original OS2.24 reports8/16/32 Mbyte and90.8/181.8/363.8 seconds respectively.
+Memory size is included in checkpoint identity: restore requires the same size.
+Older2 MB checkpoints need the matching older application; there is no automatic
+migration. [Native validation](condensed/validation/milestone-5-wave-memory-2026-10-14.json).
+
+## Supported audio defaults — 2026-10-14
+
+Normal standalone output enables firmware stereo pan alongside the existing
+interpolation, envelopes, loops and the native filter renderer. Firmware TVF
+controls affect normal output within the documented LP/BP/HP word profiles;
+unsupported commands/modes retain the raw path. Functional acceptance does not
+establish hardware-exact DSP.
+Recording remains off until explicitly selected within the supported44.1kHz
+stereo profiles. Diagnostic flags inherited from the shell do not enable it.
+
+The stereo correction changes audible center levels from the earlier duplicated
+mono path. Native checkpoint identity now includes the stereo audio profile;
+earlier mono-path saves require the matching earlier application, and reject
+explicitly here before replacing current memory. Automatic migration is unsupported.
+[Native acceptance and limits](condensed/validation/milestone-5-normal-stereo-2026-10-14.json).
+
+## Native Roland CD development profile — 2026-10-14
+
+The full JMD S760 Freeware CD is qualified for normal firmware Disk/Load: CD1,
+2048-byte sectors,32 MB wave RAM, first K4 :KAWAI K4 performance. Stage a private
+copy of the original image at `STATE_DIR/roms/SCSI/CD10_2048.iso` before launch.
+Open firmware Disk/Load drive selection, use F3 Scan, select CD1 (Formatted),
+select the first volume and execute Load. Wait for Now Working to clear, then
+return to Perform Play. Its native patches are already assigned to parts;
+channel1 notes36/38/42 audition drums, and channel2 note60 auditions the brass.
+
+All79 sample allocations match source exactly; playback/release and cold recall
+pass. The complete606.7 MB CD remains external to saved sessions and must be
+present with matching name/content on restore. Recognized read-only CDs have
+an aggregate1 GiB budget; writable SCSI images remain limited to64 MiB.
+This qualifies a native development workflow; final packaged media selection,
+other volumes/libraries, SCSI Save and hot-plug remain unqualified.
+[Full-CD results and reproducer](condensed/validation/milestone-5-roland-scsi-load-2026-10-14.json).
+
+## Native Akai CD development profile — 2026-10-14
+
+Native firmware Convert Load is qualified for the first volume/program of the
+user-supplied String.Ensembles Akai S1000 CD (28,180,480 bytes), with32 MB RAM.
+Stage a private copy as `STATE_DIR/roms/SCSI/CD10_2048.iso` before launching.
+In firmware Disk/Load, open drive selection, use F3 Scan and select CD1. Normal
+Roland Load can label an Akai CD Unformatted; use **Disk → Convert Load** to
+browse its Akai volumes. Select the first volume and execute ConvLD. Wait until
+Now Working clears, then return to Perform Play and assign the first imported
+patch to part1 before auditioning.
+
+Thirty imported samples, source data plus observed firmware loop-tail adjustments,
+three-key playback/release, unchanged CD contents and cold session recall pass.
+This is a native development workflow; mounting CDs through the final shipped
+interface, larger/other Akai CDs and SCSI Save remain unqualified. Native Roland performance
+Load has its own qualified profile above. Floppy Export disk does not export a SCSI CD.
+[Fixture and reproducible verifier](condensed/validation/milestone-5-akai-scsi-load-2026-10-14.json).
+
+## Disk/Load playback restriction
+
+In the qualified OS2.24 Disk/Load directory workflow, firmware clears playable
+voices before its disk reads and suppresses new note allocations. MIDI serial
+transport can continue, but notes are not promised to play or be preserved.
+Return to Perform Play before auditioning. Three native trials verify responsive
+navigation, clean post-mode playback/release and unchanged disk bytes; they do
+not establish simultaneous FDC/MIDI/voice interrupt priority.
+[Control traces and limits](condensed/validation/milestone-5-disk-voice-restriction-2026-10-14.json).
+
 ## Standalone configuration and on-screen keyboard
 
 Use the gear button to open **Configuration** to select MIDI input, enable audio output, choose the
@@ -340,3 +416,13 @@ converter fidelity. Physical MOTU outputs3/4 to inputs1/2 probes at128/512/1024
 ASIO frames measured10.45–88.43 ms from host write to observed input. That upper
 bound includes full2048-frame input block completion and worker/API delivery;
 it excludes MAME and MIDI transport and is not pure ADC/DAC latency.
+
+## Normal filter rendering
+
+Normal standalone playback now enables the native filter renderer alongside
+stereo, interpolation and envelope/loop processing. Firmware TVF settings affect
+output within the supported LP/BP/HP word profiles documented in
+[NATIVE_RUNTIME_PROTOCOL.md](NATIVE_RUNTIME_PROTOCOL.md). Unsupported filter
+commands/modes retain the raw path; physical moving/resonant accuracy remains
+limited. Recording remains opt-in. Existing filter-bypass session archives need
+their matching application; the changed audio-profile identity rejects them.

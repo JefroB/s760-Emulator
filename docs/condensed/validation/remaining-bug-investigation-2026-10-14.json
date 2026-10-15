@@ -1,0 +1,786 @@
+{
+  "date": "2026-10-14",
+  "classification": "Native original-firmware media and MIDI regressions; offline hardware-capture timing diagnostic; no new physical capture",
+  "commands": [
+    "python scripts/verify_native_media.py --checkpoint --state-dir <fresh-private-directory>",
+    "python scripts/verify_native_runtime.py --polyphony --state-dir <fresh-private-directory> (native launch additionally uses -log)",
+    "python docs/ic20-hle-findings/chatGPT-work/bug005-207-phase.py"
+  ],
+  "media": {
+    "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "saved_sha256": "9a8c4c6f8907afeecf7a42b621f8f7769dc0cd48fc1e16dcd0a4924b5f491f4c",
+    "sample_payloads": [
+      {
+        "sample": 0,
+        "wave_offset": 16,
+        "bytes": 9216,
+        "sha256": "e1d5a5ee84d35434b8f798cc5c2f382f0f6750fc337260e40c66d55b43a88860"
+      },
+      {
+        "sample": 1,
+        "wave_offset": 9232,
+        "bytes": 9216,
+        "sha256": "4e639d66d25f21253fa0d7a7605065a793b0d1c8950b6a05ab6e9f34fd4ed2a4"
+      },
+      {
+        "sample": 2,
+        "wave_offset": 18448,
+        "bytes": 9216,
+        "sha256": "cd318a52be42a5d2976ec80314a3835080b949328c9d138ebdc1e9f1665a7c96"
+      },
+      {
+        "sample": 3,
+        "wave_offset": 27664,
+        "bytes": 9216,
+        "sha256": "3df2bdce5eb49359fdc566eefad4b31a3234b4a55dc1ae391dec3c18837a6c52"
+      },
+      {
+        "sample": 4,
+        "wave_offset": 36880,
+        "bytes": 9216,
+        "sha256": "1690e0745040f188fefa735c70dd380555578db41513fb58a99906a13387f935"
+      },
+      {
+        "sample": 5,
+        "wave_offset": 46096,
+        "bytes": 9216,
+        "sha256": "d397b6d17c0c0d873ca29d03e259c40b83cd202b225a611544dcdcb9512c275e"
+      },
+      {
+        "sample": 6,
+        "wave_offset": 55312,
+        "bytes": 9216,
+        "sha256": "bc916213148290c733bcbe396392b734f23668a22cc9d3ce96197957252d2a83"
+      },
+      {
+        "sample": 7,
+        "wave_offset": 64528,
+        "bytes": 9216,
+        "sha256": "e3de9fbb0b4cf7d8eff0b669d92c6bccb42a8ee093bae282b8ba607baf0b3e80"
+      },
+      {
+        "sample": 8,
+        "wave_offset": 73744,
+        "bytes": 9216,
+        "sha256": "ef770fcc95f494f012a25d5e22af5a02a2a185556e3a428067cd9e4fcac7c631"
+      },
+      {
+        "sample": 9,
+        "wave_offset": 82960,
+        "bytes": 9216,
+        "sha256": "3a289ec864084557aff759fab52f88d93b04c5265f551ff5339c4612690b37f9"
+      },
+      {
+        "sample": 10,
+        "wave_offset": 92176,
+        "bytes": 9216,
+        "sha256": "0ca38978098afdac3077684d15f9d81bfe6aa27c5a6ec52d1ec634e19bfa7f32"
+      },
+      {
+        "sample": 11,
+        "wave_offset": 101392,
+        "bytes": 9216,
+        "sha256": "d6be9f1eed7108334710591954eb2886556c206e1be58a2025dc47909bdd269c"
+      },
+      {
+        "sample": 12,
+        "wave_offset": 110608,
+        "bytes": 9216,
+        "sha256": "ffe782ebff0068c007d26b569fb94e5902ea9956f3bf798589c13d71827f90d4"
+      }
+    ],
+    "sample_bytes_compared": 119808,
+    "whole_wave_ram_equal": false,
+    "whole_wave_comparison": {
+      "bytes": 33554432,
+      "equal": false,
+      "changed_bytes": 347,
+      "before_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+      "after_sha256": "86a71c60868affee5481192a50d7cfa6c05e3bbccd8814deb4a2f45e9c63015f",
+      "ranges": [
+        {
+          "first": 33527824,
+          "last_exclusive": 33527841,
+          "before_hex": "5458573a545838315a2077617665732017",
+          "after_hex": "0000000000000000000000000000000000"
+        },
+        {
+          "first": 33527842,
+          "last_exclusive": 33527845,
+          "before_hex": "43414c",
+          "after_hex": "545857"
+        },
+        {
+          "first": 33527858,
+          "last_exclusive": 33527859,
+          "before_hex": "17",
+          "after_hex": "0d"
+        },
+        {
+          "first": 33529010,
+          "last_exclusive": 33529011,
+          "before_hex": "02",
+          "after_hex": "0d"
+        },
+        {
+          "first": 33531728,
+          "last_exclusive": 33531730,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531746,
+          "last_exclusive": 33531748,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531764,
+          "last_exclusive": 33531766,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531782,
+          "last_exclusive": 33531784,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531800,
+          "last_exclusive": 33531802,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531818,
+          "last_exclusive": 33531820,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531836,
+          "last_exclusive": 33531838,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531854,
+          "last_exclusive": 33531856,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531872,
+          "last_exclusive": 33531874,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531890,
+          "last_exclusive": 33531892,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531908,
+          "last_exclusive": 33531910,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531926,
+          "last_exclusive": 33531928,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531944,
+          "last_exclusive": 33531946,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531962,
+          "last_exclusive": 33531964,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531980,
+          "last_exclusive": 33531982,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33531998,
+          "last_exclusive": 33532000,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532016,
+          "last_exclusive": 33532018,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532034,
+          "last_exclusive": 33532036,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532052,
+          "last_exclusive": 33532054,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532070,
+          "last_exclusive": 33532072,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532088,
+          "last_exclusive": 33532090,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532106,
+          "last_exclusive": 33532108,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532124,
+          "last_exclusive": 33532126,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532142,
+          "last_exclusive": 33532144,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532160,
+          "last_exclusive": 33532162,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532178,
+          "last_exclusive": 33532180,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532196,
+          "last_exclusive": 33532198,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532214,
+          "last_exclusive": 33532216,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532232,
+          "last_exclusive": 33532234,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532250,
+          "last_exclusive": 33532252,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532268,
+          "last_exclusive": 33532270,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532286,
+          "last_exclusive": 33532288,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532304,
+          "last_exclusive": 33532306,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532322,
+          "last_exclusive": 33532324,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532340,
+          "last_exclusive": 33532342,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532358,
+          "last_exclusive": 33532360,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532376,
+          "last_exclusive": 33532378,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532394,
+          "last_exclusive": 33532396,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532412,
+          "last_exclusive": 33532414,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532430,
+          "last_exclusive": 33532432,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532448,
+          "last_exclusive": 33532450,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532466,
+          "last_exclusive": 33532468,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532484,
+          "last_exclusive": 33532486,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532502,
+          "last_exclusive": 33532504,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532520,
+          "last_exclusive": 33532522,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532538,
+          "last_exclusive": 33532540,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532556,
+          "last_exclusive": 33532558,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532574,
+          "last_exclusive": 33532576,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532592,
+          "last_exclusive": 33532594,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532610,
+          "last_exclusive": 33532612,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532628,
+          "last_exclusive": 33532630,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532646,
+          "last_exclusive": 33532648,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532664,
+          "last_exclusive": 33532666,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532682,
+          "last_exclusive": 33532684,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532700,
+          "last_exclusive": 33532702,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532718,
+          "last_exclusive": 33532720,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532736,
+          "last_exclusive": 33532738,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532754,
+          "last_exclusive": 33532756,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532772,
+          "last_exclusive": 33532774,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532790,
+          "last_exclusive": 33532792,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532808,
+          "last_exclusive": 33532810,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532826,
+          "last_exclusive": 33532828,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532844,
+          "last_exclusive": 33532846,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532862,
+          "last_exclusive": 33532864,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33532880,
+          "last_exclusive": 33532882,
+          "before_hex": "ffff",
+          "after_hex": "0100"
+        },
+        {
+          "first": 33536140,
+          "last_exclusive": 33536320,
+          "before_hex": "43414c3a4e4f49534520313420202020010043414c3a4e4f49534520313520202020010043414c3a4e4f49534520313620202020010043414c3a4e4f49534520313720202020010043414c3a4e4f49534520313820202020010043414c3a4e4f49534520313920202020010043414c3a4e4f49534520323020202020010043414c3a53494e452032312020202020010043414c3a515549455420323220202020010043414c3a5155494554203233202020200100",
+          "after_hex": "00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff00000000000000000000000000000000ffff"
+        },
+        {
+          "first": 33545122,
+          "last_exclusive": 33545123,
+          "before_hex": "05",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545124,
+          "last_exclusive": 33545125,
+          "before_hex": "06",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545126,
+          "last_exclusive": 33545127,
+          "before_hex": "07",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545128,
+          "last_exclusive": 33545129,
+          "before_hex": "08",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545130,
+          "last_exclusive": 33545131,
+          "before_hex": "09",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545132,
+          "last_exclusive": 33545133,
+          "before_hex": "0a",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545134,
+          "last_exclusive": 33545135,
+          "before_hex": "0b",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545136,
+          "last_exclusive": 33545137,
+          "before_hex": "0c",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545138,
+          "last_exclusive": 33545139,
+          "before_hex": "0d",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545140,
+          "last_exclusive": 33545141,
+          "before_hex": "0e",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545142,
+          "last_exclusive": 33545143,
+          "before_hex": "0f",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545144,
+          "last_exclusive": 33545145,
+          "before_hex": "10",
+          "after_hex": "00"
+        },
+        {
+          "first": 33545146,
+          "last_exclusive": 33545147,
+          "before_hex": "11",
+          "after_hex": "00"
+        },
+        {
+          "first": 33546146,
+          "last_exclusive": 33546147,
+          "before_hex": "01",
+          "after_hex": "00"
+        },
+        {
+          "first": 33546154,
+          "last_exclusive": 33546155,
+          "before_hex": "17",
+          "after_hex": "0d"
+        }
+      ]
+    },
+    "checkpoint_whole_wave_exact": true,
+    "comparison_contract": "Media reload preserves the saved samples/program, not unrelated RAM/catalog state; checkpoint restore preserves full wave RAM.",
+    "original_preserved": true,
+    "dirty_media_protection": true,
+    "before_export": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": true,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 134
+    },
+    "after_export": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": false,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 134
+    },
+    "fresh_machine_audio": {
+      "native_boot_frames": true,
+      "long_mouse_jump": [
+        300,
+        120
+      ],
+      "midi_note": 60,
+      "held_peak_pcm16": 1019.0,
+      "release_tail_peak_pcm16": 0,
+      "sample_rate": 44100,
+      "note_start": 79.766666666667,
+      "note_release": 81.883333333333,
+      "process_shutdown": "clean",
+      "system_audio": {
+        "enabled": false,
+        "backend_requested": "auto",
+        "buffer_target_ms": 0,
+        "throttled": false,
+        "device_latency_measured": false
+      }
+    },
+    "dirty_checkpoint_cold_restore": true,
+    "protected_save_unchanged_and_cold_recall": false,
+    "firmware_format_save_fresh_reload": false
+  },
+  "midi": {
+    "native_allocation_retrigger_sustain_passed": true,
+    "received_bytes": 252,
+    "logged_overruns": 0,
+    "log_sha256": "d0ac13985fd873f7799875fd122b6965da6cddc56a742b19c1c50999610724a4",
+    "limits": "One supported ROBOFULL workload; not IC4 FIFO depth, overrun law, arbitration, MIDI-out or physical equivalence"
+  },
+  "filter_timing_diagnostic": {
+    "passed": true,
+    "method": "Fixed428/85 recurrence; affine timing learned only from1..2.4s; withheld3..4.5s; no emulator adjustment",
+    "results": [
+      {
+        "mode": "BP",
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3138.331062033416
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3138.331974895984
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3138.3300142698426
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3138.326497169037
+          }
+        ],
+        "training_phase_slope_samples_per_second": -0.005218406426436351,
+        "gain": 0.999773883251941,
+        "heldout": {
+          "correlation": 0.9999996894981482,
+          "relative_error_db": -62.06300588966202,
+          "normalized_rms_error_percent": 0.07885871673143006
+        }
+      },
+      {
+        "mode": "HP",
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3140.583362709265
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3140.5806679122106
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3140.5777612927195
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3140.5742231599434
+          }
+        ],
+        "training_phase_slope_samples_per_second": -0.010108422485755664,
+        "gain": 0.9997578574564456,
+        "heldout": {
+          "correlation": 0.9999360285044341,
+          "relative_error_db": -38.9298650244533,
+          "normalized_rms_error_percent": 1.131114966309823
+        }
+      }
+    ]
+  },
+  "identities": {
+    "scripts/verify_native_media.py": "287035d1a9c6278c9f1baed2488e17f4de8cbf7a67245076b54b30e87863ad57",
+    "tests/test_wave_media_comparison.py": "a5a47490fb2411ea6006a1b4b6bf979858e03b5f8d09cd846d179ab3a2333bf5",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "mame-source/src/mame/roland/s760.cpp": "b4e21396a32c3b4c89942790754be6155f7f383faa4cfa66cb2000c5438e5023",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "results": {
+    "BUG-006": "WONTFIX: erroneous whole-session equality expectation for disk Load; metadata differences retained in full detail, sample persistence and full-session checkpoint byte equality pass",
+    "BUG-004": "OPEN: no overrun in named supported workload; hardware buffer/vector/arbitration contract unresolved",
+    "BUG-005": "OPEN: training-only phase forecast improves heldout HP residual, but remains above1%; no native filter constants changed"
+  },
+  "limits": "No product runtime change. Neither supported stress nor timing fitting qualifies physical IC4/filter fidelity. Large artifacts and trial code remain private.",
+  "regressions": {
+    "passed": 394,
+    "seconds": 40.57,
+    "new_diagnostic_tests": 2,
+    "product_runtime_changed": false
+  },
+  "filter_capture_identities": [
+    {
+      "file": "s760_01 REF NOISE_20261010_121558.zip",
+      "zip_sha256": "f4aa569c7c5148f5e49004f6ddef1591b51143bd5a4b38c09f839fd1d1856d44",
+      "wav_sha256": "fa3b605f577393acef17ae8d0bfbc3ed7ae4c1c879bbd7ec1fa121c3e639ab4c"
+    },
+    {
+      "file": "s760_01 BP C64 R64_20261010_162825.zip",
+      "zip_sha256": "178008864049418d53e632d1523391078ef68dabed4496f5db0110f84d37732d",
+      "wav_sha256": "e59edf2a0d5b8115f227e92138a17cf2f84fcb0d4617a7aec3f41c0d3146b4b4"
+    },
+    {
+      "file": "s760_02 HP C64 R64_20261010_162854.zip",
+      "zip_sha256": "65e80dccf01f6e4f20e77bbcc3ee20a368e781aa1548a6085c812e45ab29bd4e",
+      "wav_sha256": "ad94f3f05012edb1ed963729582dcbf8c276771fafe78c2f3e15c926d287e391"
+    }
+  ],
+  "filter_analysis_script_sha256": "db14da5873c13d7b153451c8c3a8cdfc9edaf44f20443ecb77a14c0a4406122b"
+}

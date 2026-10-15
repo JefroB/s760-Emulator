@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; identities below",
+  "scope": "Native wave-memory options 8/16/32 MB, default32; firmware capacity detection and checkpoint compatibility",
+  "passed": true,
+  "default_mb": 32,
+  "rows": [
+    {
+      "wave_memory_mb": 8,
+      "native_bytes": 8388608,
+      "checkpoint_round_trip": true,
+      "different_size_rejected": true,
+      "firmware_screen_observed": "Total: 8Mbyte, 90.8sec",
+      "firmware_screen_sha256": "8cbec323973a5207fa4086030c77888d3890e8356feacc57b5ee34e1f028ccc7"
+    },
+    {
+      "wave_memory_mb": 16,
+      "native_bytes": 16777216,
+      "checkpoint_round_trip": true,
+      "different_size_rejected": true,
+      "firmware_screen_observed": "Total: 16Mbyte, 181.8sec",
+      "firmware_screen_sha256": "da30d8c2a482f1c5a49cfe0e29773042019fe0456fb4320cfadd34a58cbfec14"
+    },
+    {
+      "wave_memory_mb": 32,
+      "native_bytes": 33554432,
+      "checkpoint_round_trip": true,
+      "different_size_rejected": true,
+      "firmware_screen_observed": "Total: 32Mbyte, 363.8sec",
+      "firmware_screen_sha256": "5cc980aa5329c1658bd2d1768e35f4b75247df224a11baa060d79ad8e26122d6"
+    }
+  ],
+  "interfaces": [
+    "Standalone runtime settings",
+    "Standalone --wave-memory-mb",
+    "VST3 plugin settings",
+    "configure_vst3.py --wave-memory-mb",
+    "RuntimeConfig.wave_memory_mb",
+    "NativeRuntimeConfig.wave_memory_mb",
+    "direct MAME S760_WAVE_MEMORY_MB"
+  ],
+  "settings_key": "waveMemoryMb",
+  "compatibility": "Missing settings field defaults32; checkpoints require matching size; older2 MB snapshots require matching older build",
+  "validation": {
+    "backend_tests": 388,
+    "ui_tests": 126,
+    "checkpoint_targeted_tests": 29,
+    "core_unit_tests": "passed",
+    "mame_driver_and_link": "passed",
+    "cmake_release": "passed",
+    "typescript_lint": "passed",
+    "production_ui_build": "passed",
+    "exported_vst3_factory": "Native boot, Load, variable-block48kHz playback: 240000 frames, exact reference, silent release, zero missed deadlines"
+  },
+  "command": "python scripts/verify_native_wave_memory.py --state-dir PRIVATE_EMPTY_DIRECTORY",
+  "firmware_control_method": "Original IC15 and OS2.24; runtime pointer/buttons only; no guest RAM/PC or firmware edits",
+  "limits": [
+    "Capacity and firmware detection are native functional evidence; physical SIMM timing remains unqualified",
+    "Successful genuine Akai/SCSI sample Load remains a separate open gate",
+    "No checkpoint migration across sizes or old builds"
+  ],
+  "identities_sha256": {
+    "scripts/s760_runtime.py": "a0d6ac4ba3155b16677d610f0eb26c6d4f82892ce0aea31e7d7c493726e02232",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "scripts/configure_vst3.py": "9c038d5d1c035dc9aa5df35963cefa2bb04d6eaa009873550ef2cdcddbf4e332",
+    "scripts/verify_native_wave_memory.py": "4917471bd2ead06e6a48724085a76d2926c5e825719ca8ff0008880a2b8747e9",
+    "core/include/s760/s760_native_runtime.hpp": "e682745829728dae8a80ff30f5e6409d50f36d931c2adf7ba66e482d0b5cc0d2",
+    "core/src/s760_native_runtime.cpp": "91d42da23e3d9225fdace584352957e01f416b31b07f5cfcde8b0ca1ed58ede2",
+    "core/src/s760_vst3_plugin.cpp": "829fef1c10cb7c9515d86120ee343a8d7ff705d1833010e37952f89f31c755c0",
+    "google-ui/src/components/RuntimeSettings.tsx": "cef24cb13cebeb875f144d1ac6180a1b1d26c284f2a444ceb5694fc399fb686d",
+    "google-ui/src/components/PluginConfiguration.tsx": "8b40757288318439db5c298157cab513d094d7dd468160177945e15a0e17062f",
+    "mame-source/src/mame/roland/s760.cpp": "282baca19514ad7f42438fe10adaaacab4a6d2df4f471a0c1a13da8e1dac1a37",
+    "mame-source/mames760.exe": "850dddf37f7c07af8544dba2dd0baed649240faa6b025ca96eaaa02bb215a5b0",
+    "build/Release/Roland_S760.vst3": "0ede151471d31dbf7b1aa302472ee137e5369b00df11f3a6c740adc2e3609cf8",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  }
+}

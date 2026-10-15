@@ -1,5 +1,7 @@
 # Hardware Deployment & Development Roadmap
 
+Current product status (2026-10-14): Milestones1–5 are complete within their documented Windows development profiles; final shipped-artifact/clean-machine qualification remains Milestone6. [Current roadmap](../COMPLETION_ROADMAP.md). Dated reconciliation below predates the subsequent native editing/SCSI/concurrency results.
+
 Milestones5/6 evidence reconciliation (2026-10-14): the roadmap now exposes
 completed native controller/stereo-routing and720KB floppy/sampling workflows,
 plus development standalone sampling/session restore, SoundCheck acceptance,
@@ -107,10 +109,7 @@ complete," "cycle accurate," and "bit accurate across all frontends" remain
 unsupported and are not claimed; numerical replay is implementation agreement,
 not hardware equivalence.
 
-In particular, `S760HardwareCore` exists but its implementation file is omitted
-from the CMake library source list, and MAME defines a separate sound engine.
-Completing a genuinely shared DSP implementation requires explicit integration
-and compiled end-to-end verification, not just adding another reference model.
+Architecture correction (2026-10-14, BUG-008): the native standalone and VST3 share the modified MAME machine implementation through isolated runtime processes. MAME owns the product renderer; the VST3 worker transports PCM/MIDI and host-rate conversion. `S760HardwareCore` is a separate, deliberately unlinked reference model, not a missing product dependency. The former shared-reference-DSP completion claim is withdrawn; see the current architecture in document06.
 
 ## Native runtime integration (findings 100, 125–135) — "Milestone 1", in progress
 

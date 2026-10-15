@@ -1,0 +1,172 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; tested file identities below",
+  "evidence_class": "Native firmware mouse/Value editing, performance Save/export/fresh-process Load and measured PCM; not packaged or hardware acceptance",
+  "command": "python scripts/verify_native_patch_edit.py --perform-level --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-perform-edit-20261014",
+  "prerequisites": "Built native executable, user-supplied boot ROM/OS, hash-checked ROBOFULL, fresh private media/state copies, local sockets permitted; headless unthrottled",
+  "identities_sha256": {
+    "scripts/verify_native_patch_edit.py": "71e497696a6b3b35a9bdd5d8b83b71885a91414a789b44329777bb77ad64240f",
+    "scripts/s760_runtime.py": "2c4ef576cedb8833768f52ddce5e64b56f1b699b311669fd9399c82a275c3eab",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "mame-source/src/mame/roland/s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "result": {
+    "before": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      }
+    ],
+    "edited": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.012226643972098827
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.012226643972098827
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.012226643972098827
+      }
+    ],
+    "edited_gain_ratio": 0.5037429650812634,
+    "dirty": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": true,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 134
+    },
+    "reloaded": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.012226643972098827
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.012226643972098827
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.012226643972098827
+      }
+    ],
+    "passed": true,
+    "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "saved_sha256": "fae7791772ef37533c3bf68f9dc17036dbf814ed06f03de80960413a80ab05ed",
+    "scope": "Performance part1 level127 to64 via firmware Value control; original-firmware Save/export/fresh Load and measured audio",
+    "limits": "One named operation; not partial/destructive sample editing, arbitrary edits, hardware or packaged-interface acceptance"
+  },
+  "operation": "Perform Play1 part1 Level127 to64 using63 Value decrements; firmware performance Save/export to a new private image; separate-process Load with fresh runtime/NVRAM",
+  "observations": "Screenshot reviewed: part1 Level64, Master Level127. Peak0.024271592497825623 to0.012226643972098827, ratio0.5037429650812634. Frequency20004Hz unchanged. Cold Load reproduces edited frequency/peak; each audition has a full silent second after release. Original library/working input image unchanged.",
+  "limitations": [
+    "One named performance part-level edit, not master-level persistence or all performance parameters",
+    "Partial and destructive sample editing remain open",
+    "Not final shipped-interface, analog taper/calibration, driver timing or hardware parity"
+  ],
+  "backend_regressions": {
+    "passed": 360,
+    "seconds": 39.25,
+    "exit_code": 0,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-perform-edit-pytest-191.py",
+    "scope": "Full tests/; private harness/snapshot/temp/cache and permitted local sockets"
+  },
+  "patch_path_regression": {
+    "command": "python scripts/verify_native_patch_edit.py --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-perform-patch-regression-20261014",
+    "result": {
+      "before": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.024271592497825623
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.024271592497825623
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.024271592497825623
+        }
+      ],
+      "edited": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.024271592497825623
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 4107,
+          "peak": 0.011030844412744045
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 10002,
+          "peak": 0.0110410051420331
+        }
+      ],
+      "dirty": {
+        "ok": true,
+        "error": "",
+        "inserted": true,
+        "dirty": true,
+        "writeProtected": false,
+        "busy": false,
+        "generation": 2,
+        "revision": 134
+      },
+      "reloaded": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.024271592497825623
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 4107,
+          "peak": 0.011030844412744045
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 10002,
+          "peak": 0.0110410051420331
+        }
+      ],
+      "passed": true,
+      "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+      "saved_sha256": "f4375aebc53815b26d265fbea161018af7b684cae6bcaa9e1943642f90ec3c39",
+      "scope": "Patch Bend Up/Down0 to12 via firmware Value control; original-firmware Save/export/fresh Load and measured audio",
+      "limits": "One named operation; not partial/destructive sample editing, arbitrary edits, hardware or packaged-interface acceptance"
+    }
+  }
+}

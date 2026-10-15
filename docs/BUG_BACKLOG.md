@@ -27,10 +27,10 @@ follow the schema so entries stay machine-greppable.
 | BUG-002 | FIXED | S2 | cpu | BMOVI (0xCD) duplicate operand fetch fixed; interrupt semantics remain unaudited | 2026-10-11 | 2026-10-11 |
 | BUG-003 | FIXED | S2 | dsp-audio | Seven loop modes verified in the supported 44.1 kHz native profile | 2026-10-11 | 2026-10-11 |
 | BUG-004 | OPEN | S2 | midi | IC4 MIDI vector arbitration and buffering remain inferred; latch overruns drop bytes | 2026-10-11 | |
-| BUG-005 | OPEN | S3 | dsp-audio | Static HP filter fails the 1% accuracy target (1.59%); moving/sweep filter response unmatched | 2026-10-11 | |
-| BUG-006 | OPEN | S3 | disk | Native floppy save/export: whole-wave-RAM compare differs by 347 name/high-mem bytes | 2026-10-11 | |
+| BUG-005 | OPEN | S3 | dsp-audio | Moving/sweep filter response unmatched; static HP failure resolved by correcting capture analysis | 2026-10-11 | |
+| BUG-006 | WONTFIX | S3 | disk | Disk reload metadata difference is expected; payloads and full-session wave RAM integrity verified | 2026-10-11 | 2026-10-14 |
 | BUG-007 | FIXED | S2 | tests | Generated coverage matrices now separate unverified inventory from scoped test evidence | 2026-10-11 | 2026-10-11 |
-| BUG-008 | OPEN | S3 | build | core/CMakeLists.txt omits s760_core.cpp — the "shared DSP engine" is not actually compiled/linked | 2026-10-11 | |
+| BUG-008 | FIXED | S3 | build | Shared reference-DSP claim corrected to the actual isolated native MAME architecture | 2026-10-11 | 2026-10-14 |
 | BUG-009 | FIXED | S2 | core | Checkpoint save/load executed inside an emulated-timer callback → restored empty patch table | 2026-10-11 | 2026-10-11 |
 | BUG-010 | FIXED | S3 | build | Desktop package omitted MAME full license texts and had no development/release audit gate | 2026-10-11 | 2026-10-11 |
 | BUG-011 | FIXED | S3 | docs | README claimed a project-wide BSD license and linked to a nonexistent LICENSE | 2026-10-11 | 2026-10-11 |
@@ -80,24 +80,321 @@ follow the schema so entries stay machine-greppable.
 | BUG-055 | FIXED | S3 | bridge | Native VST3 now reports potentially infinite sustained-voice tail | 2026-10-12 | 2026-10-12 |
 | BUG-056 | FIXED | S2 | dsp-audio | Native VST launcher enables stereo mixer; MIDI pan now reaches native L/R output | 2026-10-13 | 2026-10-13 |
 | BUG-057 | FIXED | S2 | dsp-audio | Optional native stereo host ADC input records and saves exact firmware samples | 2026-10-13 | 2026-10-13 |
-
 | BUG-058 | FIXED | S2 | hardware | User reseated misplaced internal wheel; GB-6 now works with installed experimental OS | 2026-10-13 | 2026-10-13 |
-
 | BUG-059 | FIXED | S3 | hardware | User confirms v8 vertical gain4 fixes row selection; matching X4/Y4 v9 generated | 2026-10-13 | 2026-10-13 |
+| BUG-060 | FIXED | S3 | tests | Functional controller/filter QA explicitly negotiates offline processing; realtime checks stay separate | 2026-10-13 | 2026-10-14 |
+| BUG-061 | FIXED | S2 | dsp-audio | Normal standalone launcher enables stereo; pan and cold native replay pass | 2026-10-14 | 2026-10-14 |
+| BUG-062 | FIXED | S2 | disk | Native SCSI register window uses byte stride instead of firmware two-byte spacing | 2026-10-14 | 2026-10-14 |
+| BUG-063 | FIXED | S2 | disk | Native SPC command classes and INTS acknowledgement use legacy synthetic semantics | 2026-10-14 | 2026-10-14 |
+| BUG-064 | FIXED | S2 | disk | Native SCSI fabricates ready HD/CD targets when backing images are absent | 2026-10-14 | 2026-10-14 |
+| BUG-065 | FIXED | S2 | disk | Native SCSI idle status permanently asserts busy and reset | 2026-10-14 | 2026-10-14 |
+| BUG-066 | FIXED | S2 | disk | Native SCSI initiator readback and selection masks are incorrect | 2026-10-14 | 2026-10-14 |
+| BUG-067 | FIXED | S4 | docs | System SavePRM incorrectly described as disk storage | 2026-10-14 | 2026-10-14 |
+| BUG-068 | FIXED | S2 | disk | Native SCSI command ACK never drops REQ; present targets stall firmware boot | 2026-10-14 | 2026-10-14 |
+| BUG-069 | FIXED | S2 | disk | Observed native SPC-to-RAM DMA47 command is unimplemented | 2026-10-14 | 2026-10-14 |
+| BUG-070 | FIXED | S2 | disk | Full native Roland CD blocked by writable-media checkpoint cap | 2026-10-14 |  2026-10-14 |
+| BUG-071 | FIXED | S2 | mame-driver | Native Roland Load stalls on unimplemented SCSI-to-wave DMA84 | 2026-10-14 |  2026-10-14 |
+| BUG-072 | FIXED | S2 | disk | Native SCSI Format/Save lacks output DMA and counter completion | 2026-10-14 | 2026-10-14 |
 
-| BUG-060 | OPEN | S3 | tests | Intermittent controller QA audio-block rejection; unchanged55-case repeat passes | 2026-10-13 | |
-
-<!-- NEXT-ID: BUG-061 -->
+<!-- NEXT-ID: BUG-073 -->
 
 ## Details
 
+### BUG-072 — Native SCSI Format/Save output transfer is missing
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Reported by:** Native HD00_512.img write acceptance
+
+**Summary:** Firmware initialization stalls at page003B:77FF with DMA78, DATA OUT and1024 bytes pending. Native RAM-to-SPC78 and wave-to-SPCA0 are absent; native output FIFO does not exhaust the SPC transfer counter or signal completion.
+
+**Repro:** Boot original IC15/OS2.24, private10 MiB HD0, Disk Utility Format/Initialize. Isolated verify_native_scsi_write_dma.py fails: RAM output DMA did not complete.
+
+**Expected:** Bounded complete-command commits, correct source/counter advancement, no partial-sector commit after interruption, and fresh original-firmware Load of exported saved data.
+
+**Resolution:** Bounded RAM78/waveA0 output DMA advances sources and SPC counters, signals completion and commits only complete commands. Original firmware quick initialization/Save/export/fresh HD0 Load passes with13 exact sample allocations/119808 bytes and matching playback. Missing media, existing output, interrupted WRITE, invalid source and instance-isolation checks pass.392 backend tests pass. Evidence: docs/condensed/validation/milestone-5-scsi-save-2026-10-14.json.
+
+**Evidence:** Private scsi204-init3 and scsi204-dma-before; original code003B:77A9..782D and7C90..7D29.
+
+**Notes:** User explicitly authorized SCSI write testing on2026-10-14. Export must preserve source library images and reject busy/missing media or existing destinations.
+
+
+### BUG-071 — Native Roland SCSI Load requires direct wave DMA84
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-14
+- **Severity:** S2
+- **Area:** mame-driver
+- **Opened:** 2026-10-14
+- **Reported by:** JMD native Roland CD Load acceptance
+
+**Summary:** Native Roland-format selection reads directories then stalls original firmware at page003B:7D11/7D16, waiting for transfer-complete. Unlike Akai mode47 through CPU RAM, the native loader programs direct SPC-to-wave DMA84.
+
+**Repro:** Full JMD CD1, native IC15/OS2.24,32 MB. Select CD1 in Disk/Load; firmware stops processing controls with DATA IN active and8192 bytes remaining. Isolated verify_native_scsi_wave_dma.py fails: Wave DMA count did not exhaust.
+
+**Expected:** Bounded source-to-wave copy, exhausted gate/SPC counters and transfer-complete, followed by usable firmware.
+
+**Actual:** Mode84 has no transfer implementation, leaving firmware polling indefinitely.
+
+**Evidence:** Private roland203-inspect2 and roland203-wave-before; original code page003B:7CD0..7D29.
+
+**Notes:** Implement observed synchronous input mode only. SCSI output-to-media modeA0 and physical arbitration remain unqualified.
+
+
+**Resolution:** Bounded synchronous DMA84 honors the full24-bit SPC length when the gate supplies its low16 bits.36/65536/118784-byte regression and full K4 Load/79 exact sample allocations/playback/cold recall pass. Physical timing/output modes remain unqualified. [Validation](condensed/validation/milestone-5-roland-scsi-load-2026-10-14.json).
+
+### BUG-070 — Read-only CD images share the writable-media checkpoint cap
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-14
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Reported by:** Native JMD Roland CD Load acceptance
+
+**Summary:** Both launchers reject a genuine606,709,760-byte native Roland CD before boot because all SCSI files share a64 MiB checkpoint budget; the driver also serializes immutable CD contents into state.
+
+**Repro:** Stage JMD_S760_Freeware_CD.iso as roms/SCSI/CD10_2048.iso and start a native runtime. New sparse65 MiB CD regression fails before implementation.
+
+**Expected:** Full read-only CDs load while writable images retain bounded checkpoint storage and all external media are identity-validated.
+
+**Actual:** ValueError: SCSI snapshot profile supports at most64 MiB of external images.
+
+**Evidence:** Private roland203-* logs and tests/test_native_checkpoint.py.
+
+**Notes:** Separate bounded read-only CD identity hashing from writable checkpoint contents; retain CD write protection and restore mismatch rejection.
+
+
+**Resolution:** Immutable CDs remain externally hashed/required, stream hashing supports full CD startup, native state omits CD contents. Full606709760-byte JMD Load,171072219-byte checkpoint and changed-CD rejection pass. [Validation](condensed/validation/milestone-5-roland-scsi-load-2026-10-14.json).
+
+### BUG-069 — Native SPC-to-RAM DMA47 is unimplemented
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-14
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Reported by:** original-firmware SCSI device discovery
+
+**Summary:** After the command ACK/REQ repair, the firmware programs SPC data transfer and DMA control47, then polls INTS at7770/7775 forever. The gate handler implements only wave DMA BC/A7.
+
+**Repro:** Original firmware with supplied private target0; read-only trace polls INTS0. Native INQUIRY DMA fixture fails `SCSI DMA count did not exhaust` before implementation.
+
+**Expected:** Observed SPC-to-RAM transfer consumes its bounded input bytes, advances destination, exhausts gate/SPC counters and exposes transfer completion.
+
+**Actual:** Command47 only stores its register value; no bytes move or completion occurs.
+
+**Evidence:** Original page003B:7724..778C, private scsi200-pio-discovery and scsi200-dma-before. All fixtures use private media, no firmware/RAM/PC forcing in workflow tests.
+
+**Notes:** Synchronous bounded DMA is functional implementation, not exact IC4 arbitration or SCSI Save support.
+
+
+**Resolution:** Native identity/selection, command ACK/REQ and bounded input DMA47 fixes pass isolated before/after regressions, original-firmware discovery/unsupported-media recovery,131072 exact cold stereo frames and363 backend tests. Source/fixture/commands and explicit limits: [SCSI discovery evidence](condensed/validation/milestone-5-scsi-discovery-2026-10-14.json). Successful SCSI sample Load remains open.
+
+### BUG-068 — Native SCSI ACK/REQ command handshake is missing
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-14
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Reported by:** native SCSI identity/boot regression
+
+**Summary:** Correcting native BDID exposes original-firmware device discovery. A present target enters COMMAND, but SET ACK E4 never drops REQ, stalling the original firmware at7624/7629 and breaking SCSI-backed cold-state acceptance.
+
+**Repro:** Original firmware with a private supplied target0 image; screen SCSI Device Check0, complete read-only late trace polls PSNS0x8a 12204444 times. Isolated native PIO fixture fails `Target must drop REQ after ACK`.
+
+**Expected:** TEMP supplies a command byte, SET ACK consumes it and drops REQ, RESET ACK releases the next target phase; programmed-input FIFO consumes response bytes with a decreasing counter, then status/message handshakes free the bus.
+
+**Actual:** Native SCMD E0/C0/80 classes lack transfer behavior; TEMP is a plain latch, transfer counter never decreases. Earlier BDID defects masked this path.
+
+**Evidence:** Private scsi200-qualified-discovery/edit/scsi-trace.json, scsi200-pio-before/result.json; original OS fetch page003b code75fe..76bb, and local upstream mb87030 SCMD/PSNS constants.
+
+**Notes:** The BDID correction was not accepted until this exposed regression was resolved. No forced CPU/RAM/firmware workaround was used.
+
+
+**Resolution:** Native identity/selection, command ACK/REQ and bounded input DMA47 fixes pass isolated before/after regressions, original-firmware discovery/unsupported-media recovery,131072 exact cold stereo frames and363 backend tests. Source/fixture/commands and explicit limits: [SCSI discovery evidence](condensed/validation/milestone-5-scsi-discovery-2026-10-14.json). Successful SCSI sample Load remains open.
+
+### BUG-067 — System SavePRM incorrectly described as disk storage
+
+- **Status:** FIXED
+- **Severity:** S4
+- **Area:** docs
+- **Opened:** 2026-10-14
+- **Resolved:** 2026-10-14
+- **Reported by:** native concurrency investigation
+
+**Summary:** Local System screen notes describe SavePRM as writing settings to floppy or SCSI; it actually transfers between internal memory and system backup memory.
+
+**Repro:** Compare docs/real-hardware-ui-analysis/06-system-screens.md section5 against owner manual Advanced3-104 (PDF page128).
+
+**Expected:** Backup-memory semantics with no disk-file promise.
+
+**Actual:** Incorrect file container and permanent disk write claims. Native probes show MIDI completions but zero FDC accesses, consistent with the manual.
+
+**Resolution:** Corrected section5 to the verified owner-manual contract. This command cannot qualify concurrent disk activity.
+
+### BUG-066 — Native SCSI BDID read/write encoding is incorrect
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-14
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Reported by:** native SCSI identity regression
+
+**Summary:** Native BDID returns numeric initiator ID and retains unused upper write bits. The SPC reads a one-bit bus mask and accepts only write bits0..2.
+
+**Repro:** Expanded scripts/verify_native_scsi_registers.py; pre-fix binary fails at ID0 (returns0 instead of1).
+
+**Expected:** IDs0..7 read1,2,4,8,16,32,64,128; upper write bits are ignored.
+
+**Actual:** Encoded ID returned unchanged; existing fixture incorrectly expected7 for ID7.
+
+**Evidence:** Local upstream mb87030.cpp bdid_r/bdid_w (also inherited by mb89352), and private scsi200-bdid-before/result.json.
+
+**Selection regression:** With a supplied private target6 image, an initiator0+target6 mask incorrectly selects bit0; the native identity fixture fails before correction. Native selection must exclude its own initiator bit, and initiator-only/empty masks must time out without falling back to a stale target. All eight IDs, seven target6 selections and direct-data INQUIRY identities are exercised; the direct-data fixture does not qualify PIO/DMA handshake.
+
+**Notes:** Native-only correction; does not qualify SCSI discovery or full PIO/DMA.
+
+
+**Resolution:** Native identity/selection, command ACK/REQ and bounded input DMA47 fixes pass isolated before/after regressions, original-firmware discovery/unsupported-media recovery,131072 exact cold stereo frames and363 backend tests. Source/fixture/commands and explicit limits: [SCSI discovery evidence](condensed/validation/milestone-5-scsi-discovery-2026-10-14.json). Successful SCSI sample Load remains open.
+
+### BUG-065 — Native SCSI idle status permanently asserts busy and reset
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-14
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Reported by:** native SCSI status regression
+
+**Summary:** Native SSTS returns constant 0x28, whose actual bits mean busy and reset. The old comment incorrectly calls these empty FIFO and zero transfer count.
+
+**Repro:** `python scripts/verify_native_scsi_registers.py --state-dir <fresh-absolute-directory>` with the added idle/status assertions.
+
+**Expected:** Idle direct-data controller reports 0x05; TC-zero follows the counter and reset follows SCMD reset assertion.
+
+**Actual:** Pre-fix native binary fails the idle SSTS assertion with constant 0x28.
+
+**Evidence:** Private scsi-status198-before/result.json; local upstream mb87030.h SSTS constants and mb87030.cpp dynamic counter/FIFO flags.
+
+**Notes:** This does not establish native PIO/DMA handshake or firmware SCSI discovery.
+
+**Resolution:** Native SSTS derives data availability, TC-zero, reset and connection from existing direct-data controller state; legacy flat behavior remains separate. Before/after assertions, native audio/MIDI, 131072 exact cold stereo frames, legacy transfer/state and 363 backend tests pass. Firmware discovery still reports No Drive. [Durable evidence](condensed/validation/milestone-5-scsi-status-2026-10-14.json).
+
+### BUG-064 — Native absent SCSI targets are fabricated
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Resolved:** 2026-10-14
+- **Reported by:** Native SCSI absent-target selection fixture
+
+**Summary:** scsi_init_devices creates ready10MiB target0/1 even when no backing
+image exists. These synthetic defaults must not apply to native firmware.
+**Repro:** Fresh isolated native register fixture, no roms/SCSI images; target0
+SELECT succeeds after command decode is corrected instead of timing out.
+**Expected:** Native targets exist only for explicitly supplied images.
+**Actual:** Hidden blank HD/CD targets always present.
+**Evidence:** Native fixture scsi-register197-qualified; scsi_init_devices fallback
+source blocks. The older flat/HLE diagnostic fallback is a separate profile.
+**Notes:** Preserve legacy fixture defaults; qualify native absent vs supplied
+images separately from firmware Load and physical selection timing.
+
+
+**Resolution:** Native-only prerequisite corrected; isolated final register/absent-target/acknowledgement fixture passes. Native boot/audio/MIDI and131072-frame cold state,363 backend tests and legacy SCSI regressions pass within recorded limits. Full firmware SCSI discovery/Load remains OPEN. Evidence: `docs/condensed/validation/milestone-5-scsi-prerequisites-2026-10-14.json`.
+
+### BUG-063 — Native SPC selection and interrupt acknowledgement mismatch
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Resolved:** 2026-10-14
+- **Reported by:** Milestone5 SCSI native register regression
+
+**Summary:** Native SCMD20 selection is decoded with the legacy low-three-bit
+synthetic command model; native INTS is cleared on read rather than write.
+**Repro:** `python scripts/verify_native_scsi_registers.py --state-dir <fresh>`
+after BUG-062 address fix. Absent-target SELECT must report TIMEOUT04 and preserve
+INTS on repeated reads until explicit acknowledgement; currently fails.
+**Expected:** MB89352 command high-bit classes, SCTL controller-reset40,
+SCMD bus-reset10 and INTS write acknowledgement for native firmware.
+**Actual:** Legacy command encodings/interrupt side effects applied in native mode.
+**Evidence:** Private scsi-command197-before/result.json; NetBSD original register
+header at https://raw.githubusercontent.com/NetBSD/src/trunk/sys/dev/ic/mb89352reg.h
+**Notes:** Qualify this limited contract separately from full transfer/FIFO/DMA,
+SCSI IRQ routing, device discovery and firmware Load. Preserve legacy fixtures.
+
+
+**Resolution:** Native-only prerequisite corrected; isolated final register/absent-target/acknowledgement fixture passes. Native boot/audio/MIDI and131072-frame cold state,363 backend tests and legacy SCSI regressions pass within recorded limits. Full firmware SCSI discovery/Load remains OPEN. Evidence: `docs/condensed/validation/milestone-5-scsi-prerequisites-2026-10-14.json`.
+
+### BUG-062 — Native SCSI register spacing is incorrect
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-14
+- **Resolved:** 2026-10-14
+- **Reported by:** Milestone5 firmware SCSI Load probe
+
+**Summary:** Original boot firmware accesses MB89352A registers at102400,102402,
+102404,102408 etc. Native map routes only102400..10240F using byte offsets, so
+SCTL/SCMD accesses hit other registers and TEMP/transfer counters are unmapped.
+
+**Repro:** Private original-firmware boot trace under scsi-load197-boottrace;
+isolated native register-window regression will qualify the correction.
+**Expected:** Native even byte ports102400+2*register map all16 registers.
+**Actual:** Byte-stride map, truncated window. Firmware drive list stays No Drive;
+full Scan/Load causality and remaining controller semantics are not yet qualified.
+**Evidence:** Private scsi-load197-boottrace/edit/scsi-trace.json; boot SCTL writes
+80/92/12 at102402 and SCMD writes14/04 at102404. MB89352 register definitions:
+https://raw.githubusercontent.com/NetBSD/src/trunk/sys/dev/ic/mb89352reg.h
+**Notes:** Legacy flat F020 mapping/device-model tests are separate; do not change
+their addressing silently. Correct native spacing before auditing command behavior.
+
+
+**Resolution:** Native-only prerequisite corrected; isolated final register/absent-target/acknowledgement fixture passes. Native boot/audio/MIDI and131072-frame cold state,363 backend tests and legacy SCSI regressions pass within recorded limits. Full firmware SCSI discovery/Load remains OPEN. Evidence: `docs/condensed/validation/milestone-5-scsi-prerequisites-2026-10-14.json`.
+
+### BUG-061 — Standalone launcher omits native stereo mixer
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** dsp-audio
+- **Opened:** 2026-10-14
+- **Resolved:** 2026-10-14
+- **Reported by:** Milestone5 combined-audio qualification
+
+**Summary:** Python standalone NativeRuntime sets interpolation but omits
+S760_NATIVE_STEREO_MONITOR. Native left/right gains consequently stay1.0,
+bypassing firmware pan. The C++ plugin path already enables stereo (BUG-056).
+
+**Repro:** Inspect scripts/s760_runtime.py launch environment and native
+left_gain/right_gain selection in s760.cpp; reproduce loaded-note CC10 pan with
+the forthcoming combined-audio acceptance script in default vs diagnostic mode.
+
+**Expected:** Supported standalone firmware pan reaches native stereo output.
+**Actual:** Source path bypasses mixer gains unless explicitly enabled.
+**Evidence:** Native six-case baseline on2026-10-14 confirms identical held L/R at pan0/64/127 for bypass and LP-C32 patches; explicit diagnostic stereo/filter profile routes correctly in72 cases. Commands, hashes and rows: `docs/condensed/validation/milestone-5-combined-audio-2026-10-14.json`.
+**Notes:** Explicit diagnostic combined profile enables stereo plus existing filter
+monitor for qualification; normal stereo is now fixed independently; filter remains diagnostic.
+
+
+**Resolution:** Always enable existing native stereo mixer in Python launcher; plugin already does so. Six normal stereo cases, native variable PCM/scheduled MIDI and131072-frame cold replay pass;363 backend tests pass. Changed audio-profile identity rejects incompatible old mono state. Filter remains diagnostic. Evidence: `docs/condensed/validation/milestone-5-normal-stereo-2026-10-14.json`.
+
 ### BUG-060 — Controller requalification rejects a block during UI editing
 
-- **Status:** OPEN
+- **Status:** FIXED
 - **Severity:** S3
 - **Area:** tests
 - **Opened:** 2026-10-13
 - **Reported by:** Native controller requalification
+
+**Historical report (superseded by the scoped verifier resolution below).**
 
 **Summary:** A fresh run against the current WebView module passes measured bend, expression, pan, channel-mode release, panic and neutral reset, then rejects a process block while changing the assigned controller from11 to1. The historical55-case run predates the current binaries.
 
@@ -112,6 +409,16 @@ follow the schema so entries stay machine-greppable.
 **Notes:** Earlier successful qualification remains historical evidence. Current artifact requalification must finish before claiming a fresh full pass.
 
 **Follow-up:** The unchanged current-artifact repeat in private soundcheck/m4-controller-requalification-20261013-retry exits0 and passes all55 cases, including the assignment edit that failed previously. Keep this intermittent failure OPEN: its cause is unknown. Current hashes and complete measured results are recorded in `docs/condensed/validation/milestone-4-controller-requalification-2026-10-13.json`; no production fix or reliability closure is claimed.
+
+**2026-10-14 filter follow-up:** New normal-filter SoundCheck fixture loads and completes the first bypass/left-pan case, then reports the same audio-block rejection. Initial editor selector timeout is separate. Private `soundcheck/filter199-retry` retains captures. Verifier inspection found eight unpaced setup blocks between cases; a fully paced repeat subsequently passes as recorded below. No production cause or reliability closure is claimed.
+
+**Filter repeat result:** Fully paced normal-filter SoundCheck repeat passes all nine named cases, editor reopen and220500 exact fresh-instance/variable-block frames. Unpaced setup bursts were removed from the verifier. BUG-060 remains OPEN because no production cause/reliability fix is established; see normal-filter validation.
+
+- **Resolved:** 2026-10-14
+
+**Resolution:** The functional controller and filter verifiers now explicitly negotiate offline processing and require mode2 acknowledgement before rendering; filter fresh-instance project restore negotiates the same mode. A64-block unpaced realtime host burst deterministically reproduces the audio-block rejection; the same burst and all55 controller cases pass offline. All9 filter cases and220500 exact fresh-instance/variable-block replay frames pass. No rejected block is retried, no assertion is skipped and no production deadline handling is weakened. Stream/core/plugin units and392 backend tests pass. Separate paced native C++48kHz/variable-block processing matches240000 reference frames with zero missed deadlines. Evidence: docs/condensed/validation/bug-060-qa-processing-contract-2026-10-14.json.
+
+**Scope of closure:** Corrects the functional QA processing-contract defect. The burst establishes the rejection class, not the exact cause of every historical intermittent run. Production realtime UI/load reliability remains subject to the separate release acceptance matrix; a future supported-profile rejection requires its own evidence and triage.
 
 ### BUG-059 — GB-6 vertical sensitivity skips part rows
 
@@ -1199,7 +1506,7 @@ rejected (no migration). Related: findings 134/135 (checkpoint design), BUG-004.
 
 ### BUG-008 — Shared DSP engine source (`s760_core.cpp`) is not compiled into the library
 
-- **Status:** OPEN
+- **Status:** FIXED
 - **Severity:** S3
 - **Area:** build
 - **Reported by:** condensed docs 06/10 (code audit)
@@ -1217,6 +1524,10 @@ claims stop asserting a shared engine.
 **Notes:** fixing means explicit integration + compiled end-to-end verification,
 not just adding another reference model. Low user impact today; it is a
 correctness/architecture-claim defect.
+
+- **Resolved:** 2026-10-14
+
+**Resolution:** Corrected the stale LLE roadmap completion claim and diagram, canonical DSP/deployment references, CMake comments and reference header. Native standalone/VST3 share the modified MAME machine through isolated runtime processes, not the unlinked S760HardwareCore model. Its omission is deliberate; no extra renderer was linked. Native C++48kHz/variable-block run matches240000 reference frames with zero missed deadlines; stream/core/plugin units and392 backend tests pass. Evidence: docs/condensed/validation/bug-008-native-architecture-2026-10-14.json.
 
 ### BUG-007 — Generated coverage matrices claim coverage from tests that don't exercise that layer
 
@@ -1247,7 +1558,7 @@ it by asserting per-layer. Fix the generators + regenerate, downgrade false rows
 
 ### BUG-006 — Native floppy save/export: whole-wave-RAM compare differs by 347 bytes
 
-- **Status:** OPEN
+- **Status:** WONTFIX
 - **Severity:** S3
 - **Area:** disk
 - **Reported by:** finding 128
@@ -1267,26 +1578,33 @@ reload → compare entire wave RAM to source.
 "Dirty" tracking is controller-write based, not firmware Save completion. Related:
 findings 128/129.
 
-### BUG-005 — Static HP filter fails the 1% accuracy target; moving/sweep filter unmatched
+- **Resolved:** 2026-10-14
+
+**Resolution:** WONTFIX as an invalid disk-reload/session-equivalence expectation. Current native reproduction still has347 changed bytes, all in high-memory metadata/name/ID/directory records (32MiB profile:0x1FF9810..0x1FFDFAA), while all13 sample allocations/119808 bytes and fresh firmware playback/release pass. A separate cold full-session checkpoint preserves every33554432 wave-RAM bytes exactly, including those metadata records. A disk Load rebuilds metadata and is not a session restore; altering the guest's reconstructed records to force equality would be incorrect. The media verifier now reports every changed range with before/after bytes and hashes, rejects size differences, and asserts full-wave equality for checkpoint recall. Originals remain unchanged. Evidence: docs/condensed/validation/remaining-bug-investigation-2026-10-14.json.
+
+### BUG-005 — Moving/sweep filter unmatched; static HP analysis corrected
 
 - **Status:** OPEN
 - **Severity:** S3
 - **Area:** dsp-audio
 - **Reported by:** findings 87–95, 108
 
-**Summary:** The fitted filter model matches static LP (−45/−58 dB) and static
-BP (−60.84 dB, <1% RMS), but static **HP residual is 1.59%** — it does NOT pass
-the 1% RMS threshold. Separately, the **moving/sweep** resonant response does not
-yet match hardware; the filter topology is not uniquely identified.
+**Summary:** Moving/sweep resonant response remains unmatched and topology/update timing are not uniquely identified. The former static-HP1.59% failure was a capture-analysis aliasing defect: retaining recording-band DAC images gives withheld0.10408% HP and0.07924% BP with unchanged428/85 equations. Static C64/R64 waveform accuracy now passes the named1% target; the broader moving-filter bug remains OPEN.
 
 **Repro:** compare the opt-in filter audition against the RoboSampler static HP
 capture (cutoff 428, damping 85) and the moving-sweep captures.
 **Expected:** HP within ~1% RMS; moving sweep matches hardware.
-**Actual:** HP 1.59%; moving-sweep mismatch unresolved.
+**Actual:** Static HP now passes after the measurement correction below; moving-sweep mismatch remains unresolved.
 
 **Notes:** opt-in/diagnostic path only (`S760_NATIVE_LPF_MONITOR` etc.), not the
 default audio. Fixed-point width, saturation, resonance feedback law and update
 timing remain open. This is a fidelity gap in an experimental feature, hence S3.
+
+**2026-10-14 investigation:** A new timing-only diagnostic fits affine phase drift on four training windows between1.0 and2.4s, then forecasts the untouched3.0..4.5s interval using the fixed428/85 recurrence. Withheld BP residual is0.0789% and HP1.1311% (previous fixed-rate HP1.5925%). HP still fails1%; moving/resonant mismatch is not resolved. No held-out refit or native DSP coefficient change was made. Keep OPEN; this is diagnostic measurement-chain evidence, not filter accuracy closure. The renderer is now enabled by supported native launchers; the old opt-in-only note above is historical. Evidence: docs/condensed/validation/remaining-bug-investigation-2026-10-14.json.
+
+**Static-HP partial resolution (2026-10-14):** The old4096-point folding collapses frequencies above the source Nyquist that remain in48kHz hardware captures. Fractional phase shifts and frequency-dependent filter transfer then operate on aliased harmonics. The corrected8192-point analysis retains recording-band image harmonics, applies phase in physical source samples and fits timing/gain on1.0..2.4s only. Untouched3.0..4.5s yields0.10408% HP and0.07924% BP;16384-point/16x reconstruction yields0.10382% HP. Old4096-point analysis reproduces1.5898% HP; wrong cutoff430 yields29.6755% HP, so the correction does not simply hide model errors. No native coefficient or renderer change was made. Reproduction: scripts/verify_static_filter_captures.py; evidence: docs/condensed/validation/static-filter-capture-correction-2026-10-14.json. This supersedes the earlier static residual claims and timing-only follow-up; keep OPEN for moving/resonant response.
+
+**Moving-response follow-up (2026-10-14):** Rechecked accepted quiet130922 and repeat133400 captures with fixed damping85 and unity gain. Exact Fourier fractional excitation alignment yields evaluation errors17.898%/18.038%, versus linear alignment17.627%/18.444%; the improvement does not transfer consistently. Stepped coefficient updates and fixed32/64/128-sample cadences worsen the evaluated fits. The evaluation blocks have already been reused for historical model comparisons and are not fresh independent validation. No renderer/timing/saturation change is justified. Keep OPEN: the cutoff timestamps are an emulator trace, not hardware measurements. A native-rate digital capture with bypass/static/sweep controls, or synchronized hardware coefficient writes, is the next discriminating evidence. Full parameters/input hashes and limits: docs/condensed/validation/moving-filter-investigation-2026-10-14.json.
 
 ### BUG-004 — Experimental IC4 MIDI vector response is inferred/forced; no real arbitration or FIFO
 
@@ -1315,6 +1633,8 @@ This does not establish hardware arbitration or FIFO depth.
 **Notes:** three-voice and 24-voice polyphony were demonstrated through this
 experimental path. Do NOT promote to default emulation until real IC4
 arbitration/buffering is resolved. Related: BUG-009.
+
+**2026-10-14 investigation:** Current original-firmware ROBOFULL allocator/retrigger/sustain qualification passes24 voices and eight recycled slots. Diagnostic MAME logging records252 received serial bytes and zero unsupported overruns. This does not reproduce a supported-profile byte-loss failure or establish physical IC4 arbitration/FIFO depth. No guessed FIFO, synthetic IRQ or serial timing change was added. Keep OPEN for the unresolved hardware receive/vector/buffering contract. Evidence: docs/condensed/validation/remaining-bug-investigation-2026-10-14.json.
 
 ### BUG-003 — Unrecognized sample loop/direction mode flags are silently dropped
 

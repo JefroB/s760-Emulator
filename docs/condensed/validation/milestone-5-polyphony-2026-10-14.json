@@ -1,0 +1,3150 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; tested file identities below",
+  "evidence_class": "native original-firmware Load/MIDI plus read-only bus trace and PCM, not physical comparison",
+  "command": "python scripts/verify_native_runtime.py --polyphony --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-polyphony-20261014-final",
+  "prerequisites": "User-supplied ROM/OS, hash-checked ROBOFULL, built native executable, permitted local control/MIDI sockets; headless unthrottled",
+  "identities_sha256": {
+    "scripts/verify_native_runtime.py": "6756de45f15f2a88364df4ace9b4c42f830fcf5d5bc1ba53f468667a19b3127f",
+    "scripts/verify_native_polyphony.py": "66f18391bea6269fb34bfd4c6ce0fd927a91275943216d9ab028a4527e4d96f2",
+    "scripts/s760_runtime.py": "2c4ef576cedb8833768f52ddce5e64b56f1b699b311669fd9399c82a275c3eab",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "mame-source/src/mame/roland/s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "result": {
+    "passed": true,
+    "rate": 44100,
+    "rows": [
+      {
+        "label": "allocate-48",
+        "bitmap": "00000010",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.010900919325649738,
+        "trace": [
+          {
+            "seconds": 78.679696875,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 78.681143125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 78.681144,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          },
+          {
+            "seconds": 78.6811615,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 78.681162375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          }
+        ]
+      },
+      {
+        "label": "allocate-49",
+        "bitmap": "00000030",
+        "voices": 2,
+        "transitions": [
+          1,
+          1,
+          2,
+          2,
+          2
+        ],
+        "peak": 0.022106721997261047,
+        "trace": [
+          {
+            "seconds": 78.846349125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          },
+          {
+            "seconds": 78.847795125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 78.847796,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 48
+          },
+          {
+            "seconds": 78.8478135,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 78.847814375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 48
+          }
+        ]
+      },
+      {
+        "label": "allocate-50",
+        "bitmap": "00000070",
+        "voices": 3,
+        "transitions": [
+          2,
+          2,
+          3,
+          3,
+          3
+        ],
+        "peak": 0.038075387477874756,
+        "trace": [
+          {
+            "seconds": 78.97970675,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 48
+          },
+          {
+            "seconds": 78.98115275,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 78.981153625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 112
+          },
+          {
+            "seconds": 78.981171125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 78.981172,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 112
+          }
+        ]
+      },
+      {
+        "label": "allocate-51",
+        "bitmap": "000000f0",
+        "voices": 4,
+        "transitions": [
+          3,
+          3,
+          4,
+          4,
+          4
+        ],
+        "peak": 0.04856399819254875,
+        "trace": [
+          {
+            "seconds": 79.146350625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 112
+          },
+          {
+            "seconds": 79.14779975,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.147800625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 240
+          },
+          {
+            "seconds": 79.147818125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.147819,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 240
+          }
+        ]
+      },
+      {
+        "label": "allocate-52",
+        "bitmap": "000001f0",
+        "voices": 5,
+        "transitions": [
+          4,
+          4,
+          5,
+          5,
+          5
+        ],
+        "peak": 0.05661443620920181,
+        "trace": [
+          {
+            "seconds": 79.279706375,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 240
+          },
+          {
+            "seconds": 79.28115575,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.281156625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 496
+          },
+          {
+            "seconds": 79.281174125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.281175,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 496
+          }
+        ]
+      },
+      {
+        "label": "allocate-53",
+        "bitmap": "000003f0",
+        "voices": 6,
+        "transitions": [
+          5,
+          5,
+          6,
+          6,
+          6
+        ],
+        "peak": 0.06425916403532028,
+        "trace": [
+          {
+            "seconds": 79.44635075,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 496
+          },
+          {
+            "seconds": 79.447800125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.447801,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 1008
+          },
+          {
+            "seconds": 79.4478185,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.447819375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 1008
+          }
+        ]
+      },
+      {
+        "label": "allocate-54",
+        "bitmap": "000007f0",
+        "voices": 7,
+        "transitions": [
+          6,
+          6,
+          7,
+          7,
+          7
+        ],
+        "peak": 0.07899029552936554,
+        "trace": [
+          {
+            "seconds": 79.579705875,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 1008
+          },
+          {
+            "seconds": 79.581155,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.581155875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 2032
+          },
+          {
+            "seconds": 79.581173375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.58117425,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 2032
+          }
+        ]
+      },
+      {
+        "label": "allocate-55",
+        "bitmap": "00000ff0",
+        "voices": 8,
+        "transitions": [
+          7,
+          7,
+          8,
+          8,
+          8
+        ],
+        "peak": 0.08811763674020767,
+        "trace": [
+          {
+            "seconds": 79.746350375,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 2032
+          },
+          {
+            "seconds": 79.7477995,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.747800375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4080
+          },
+          {
+            "seconds": 79.747817875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.74781875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4080
+          }
+        ]
+      },
+      {
+        "label": "allocate-56",
+        "bitmap": "00001ff0",
+        "voices": 9,
+        "transitions": [
+          8,
+          8,
+          9,
+          9,
+          9
+        ],
+        "peak": 0.08884073048830032,
+        "trace": [
+          {
+            "seconds": 79.879707625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4080
+          },
+          {
+            "seconds": 79.88115675,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.881157625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8176
+          },
+          {
+            "seconds": 79.881175125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 79.881176,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8176
+          }
+        ]
+      },
+      {
+        "label": "allocate-57",
+        "bitmap": "00003ff0",
+        "voices": 10,
+        "transitions": [
+          9,
+          9,
+          10,
+          10,
+          10
+        ],
+        "peak": 0.09590023756027222,
+        "trace": [
+          {
+            "seconds": 80.046352125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8176
+          },
+          {
+            "seconds": 80.0478015,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 80.047802375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16368
+          },
+          {
+            "seconds": 80.047819875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 80.04782075,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16368
+          }
+        ]
+      },
+      {
+        "label": "allocate-58",
+        "bitmap": "00007ff0",
+        "voices": 11,
+        "transitions": [
+          10,
+          10,
+          11,
+          11,
+          11
+        ],
+        "peak": 0.10401637852191925,
+        "trace": [
+          {
+            "seconds": 80.179702,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16368
+          },
+          {
+            "seconds": 80.181151375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 80.18115225,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32752
+          },
+          {
+            "seconds": 80.18116975,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 80.181170625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32752
+          }
+        ]
+      },
+      {
+        "label": "allocate-59",
+        "bitmap": "0000fff0",
+        "voices": 12,
+        "transitions": [
+          11,
+          11,
+          12,
+          12,
+          12
+        ],
+        "peak": 0.0997815802693367,
+        "trace": [
+          {
+            "seconds": 80.346352125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32752
+          },
+          {
+            "seconds": 80.34780125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 80.347802125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 80.347819625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 80.3478205,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-60",
+        "bitmap": "0010fff0",
+        "voices": 13,
+        "transitions": [
+          12,
+          13,
+          13,
+          13,
+          13
+        ],
+        "peak": 0.12338060885667801,
+        "trace": [
+          {
+            "seconds": 80.479828875,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 80.481276625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          },
+          {
+            "seconds": 80.4812775,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 80.481295,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          },
+          {
+            "seconds": 80.481295875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-61",
+        "bitmap": "0030fff0",
+        "voices": 14,
+        "transitions": [
+          13,
+          14,
+          14,
+          14,
+          14
+        ],
+        "peak": 0.11683734506368637,
+        "trace": [
+          {
+            "seconds": 80.64648325,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          },
+          {
+            "seconds": 80.647931,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 48
+          },
+          {
+            "seconds": 80.647931875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 80.647949375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 48
+          },
+          {
+            "seconds": 80.64795025,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-62",
+        "bitmap": "0070fff0",
+        "voices": 15,
+        "transitions": [
+          14,
+          15,
+          15,
+          15,
+          15
+        ],
+        "peak": 0.12004229426383972,
+        "trace": [
+          {
+            "seconds": 80.780086375,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 48
+          },
+          {
+            "seconds": 80.781534375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 112
+          },
+          {
+            "seconds": 80.78153525,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 80.78155275,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 112
+          },
+          {
+            "seconds": 80.781553625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-63",
+        "bitmap": "00f0fff0",
+        "voices": 16,
+        "transitions": [
+          15,
+          16,
+          16,
+          16,
+          16
+        ],
+        "peak": 0.13027426600456238,
+        "trace": [
+          {
+            "seconds": 80.946707375,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 112
+          },
+          {
+            "seconds": 80.948155375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 240
+          },
+          {
+            "seconds": 80.94815625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 80.94817375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 240
+          },
+          {
+            "seconds": 80.948174625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-64",
+        "bitmap": "01f0fff0",
+        "voices": 17,
+        "transitions": [
+          16,
+          17,
+          17,
+          17,
+          17
+        ],
+        "peak": 0.132553368806839,
+        "trace": [
+          {
+            "seconds": 81.080010125,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 240
+          },
+          {
+            "seconds": 81.081457875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 496
+          },
+          {
+            "seconds": 81.08145875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 81.08147625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 496
+          },
+          {
+            "seconds": 81.081477125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-65",
+        "bitmap": "03f0fff0",
+        "voices": 18,
+        "transitions": [
+          17,
+          18,
+          18,
+          18,
+          18
+        ],
+        "peak": 0.13216690719127655,
+        "trace": [
+          {
+            "seconds": 81.246483875,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 496
+          },
+          {
+            "seconds": 81.247931625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 1008
+          },
+          {
+            "seconds": 81.2479325,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 81.24795,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 1008
+          },
+          {
+            "seconds": 81.247950875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-66",
+        "bitmap": "07f0fff0",
+        "voices": 19,
+        "transitions": [
+          18,
+          19,
+          19,
+          19,
+          19
+        ],
+        "peak": 0.15019795298576355,
+        "trace": [
+          {
+            "seconds": 81.379933875,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 1008
+          },
+          {
+            "seconds": 81.381381625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 2032
+          },
+          {
+            "seconds": 81.3813825,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 81.3814,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 2032
+          },
+          {
+            "seconds": 81.381400875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-67",
+        "bitmap": "0ff0fff0",
+        "voices": 20,
+        "transitions": [
+          19,
+          20,
+          20,
+          20,
+          20
+        ],
+        "peak": 0.13117824494838715,
+        "trace": [
+          {
+            "seconds": 81.5464855,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 2032
+          },
+          {
+            "seconds": 81.5479335,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4080
+          },
+          {
+            "seconds": 81.547934375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 81.547951875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4080
+          },
+          {
+            "seconds": 81.54795275,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-68",
+        "bitmap": "1ff0fff0",
+        "voices": 21,
+        "transitions": [
+          20,
+          21,
+          21,
+          21,
+          21
+        ],
+        "peak": 0.13837526738643646,
+        "trace": [
+          {
+            "seconds": 81.68006575,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4080
+          },
+          {
+            "seconds": 81.68151375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8176
+          },
+          {
+            "seconds": 81.681514625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 81.681532125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8176
+          },
+          {
+            "seconds": 81.681533,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-69",
+        "bitmap": "3ff0fff0",
+        "voices": 22,
+        "transitions": [
+          21,
+          22,
+          22,
+          22,
+          22
+        ],
+        "peak": 0.1433522254228592,
+        "trace": [
+          {
+            "seconds": 81.846484875,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8176
+          },
+          {
+            "seconds": 81.847932625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16368
+          },
+          {
+            "seconds": 81.8479335,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 81.847951,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16368
+          },
+          {
+            "seconds": 81.847951875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-70",
+        "bitmap": "7ff0fff0",
+        "voices": 23,
+        "transitions": [
+          22,
+          23,
+          23,
+          23,
+          23
+        ],
+        "peak": 0.1657390147447586,
+        "trace": [
+          {
+            "seconds": 81.979960625,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16368
+          },
+          {
+            "seconds": 81.981408375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32752
+          },
+          {
+            "seconds": 81.98140925,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 81.98142675,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32752
+          },
+          {
+            "seconds": 81.981427625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "allocate-71",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          24,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.15223799645900726,
+        "trace": [
+          {
+            "seconds": 82.1468455,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32752
+          },
+          {
+            "seconds": 82.14829325,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.148294125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.148311625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.1483125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-72",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.15701711177825928,
+        "trace": [
+          {
+            "seconds": 82.281255875,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65504
+          },
+          {
+            "seconds": 82.282602125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.282603,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.2826205,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.282621375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-73",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.15920841693878174,
+        "trace": [
+          {
+            "seconds": 82.44772225,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65488
+          },
+          {
+            "seconds": 82.4490685,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.449069375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.449086875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.44908775,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-74",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.1604648232460022,
+        "trace": [
+          {
+            "seconds": 82.581117125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65456
+          },
+          {
+            "seconds": 82.582463125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.582464,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.5824815,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.582482375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-75",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.15851181745529175,
+        "trace": [
+          {
+            "seconds": 82.747614375,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65392
+          },
+          {
+            "seconds": 82.748960375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.74896125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.74897875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.748979625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-76",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.15600800514221191,
+        "trace": [
+          {
+            "seconds": 82.88108825,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65264
+          },
+          {
+            "seconds": 82.88243425,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.882435125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.882452625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 82.8824535,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-77",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.14433573186397552,
+        "trace": [
+          {
+            "seconds": 83.047965125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65008
+          },
+          {
+            "seconds": 83.049311375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.04931225,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.04932975,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.049330625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-78",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.15582087635993958,
+        "trace": [
+          {
+            "seconds": 83.181235625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 64496
+          },
+          {
+            "seconds": 83.182581875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.18258275,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.18260025,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.182601125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "steal-79",
+        "bitmap": "fff0fff0",
+        "voices": 24,
+        "transitions": [
+          23,
+          23,
+          24,
+          24,
+          24
+        ],
+        "peak": 0.14882522821426392,
+        "trace": [
+          {
+            "seconds": 83.347835625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 63472
+          },
+          {
+            "seconds": 83.349181625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.3491825,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.3492,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          },
+          {
+            "seconds": 83.349200875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65520
+          }
+        ]
+      },
+      {
+        "label": "release-original-notes",
+        "bitmap": "00000ff0",
+        "voices": 8,
+        "transitions": [
+          23,
+          22,
+          21,
+          20,
+          19,
+          18,
+          17,
+          16,
+          15,
+          14,
+          13,
+          12,
+          11,
+          10,
+          9,
+          8
+        ],
+        "peak": 0.12126469612121582,
+        "trace": [
+          {
+            "seconds": 83.828311125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 61424
+          },
+          {
+            "seconds": 83.828395375,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 53232
+          },
+          {
+            "seconds": 83.828479625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 36848
+          },
+          {
+            "seconds": 83.828563875,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4080
+          },
+          {
+            "seconds": 83.828648625,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65504
+          },
+          {
+            "seconds": 83.828732375,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65472
+          },
+          {
+            "seconds": 83.828816125,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65408
+          },
+          {
+            "seconds": 83.828899875,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65280
+          },
+          {
+            "seconds": 83.828983625,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 65024
+          },
+          {
+            "seconds": 83.829067375,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 64512
+          },
+          {
+            "seconds": 83.829151125,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 63488
+          },
+          {
+            "seconds": 83.829234875,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 61440
+          },
+          {
+            "seconds": 83.829318625,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 57344
+          },
+          {
+            "seconds": 83.843369,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 49152
+          },
+          {
+            "seconds": 83.84345275,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32768
+          },
+          {
+            "seconds": 83.8435365,
+            "pc": 19448,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "release-replacement-notes",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          7,
+          6,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ],
+        "peak": 0.05600607767701149,
+        "trace": [
+          {
+            "seconds": 85.803659625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4064
+          },
+          {
+            "seconds": 85.82306075,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4032
+          },
+          {
+            "seconds": 85.823145,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 3968
+          },
+          {
+            "seconds": 85.82322925,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 3840
+          },
+          {
+            "seconds": 85.8233135,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 3584
+          },
+          {
+            "seconds": 85.82339775,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 3072
+          },
+          {
+            "seconds": 85.823482,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 2048
+          },
+          {
+            "seconds": 85.82356625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 85.826568,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 85.826568875,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-0",
+        "bitmap": "00001000",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 87.479714875,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 87.481060875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 87.48106175,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4096
+          },
+          {
+            "seconds": 87.48107925,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 87.481080125,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 4096
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-0",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 87.983029,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 87.983414125,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 87.983415,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-1",
+        "bitmap": "00002000",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 88.646359,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 88.647705,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 88.647705875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8192
+          },
+          {
+            "seconds": 88.647723375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 88.64772425,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 8192
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-1",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 89.10367125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 89.105172375,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 89.10517325,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-2",
+        "bitmap": "00004000",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 89.77971475,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 89.78106075,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 89.781061625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16384
+          },
+          {
+            "seconds": 89.781079125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 89.78108,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16384
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-2",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 90.2850495,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 90.287794375,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 90.28779525,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-3",
+        "bitmap": "00008000",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 90.946360125,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 90.947706125,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 90.947707,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32768
+          },
+          {
+            "seconds": 90.9477245,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 90.947725375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32768
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-3",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 91.40609325,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 91.406726375,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 91.40672725,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-4",
+        "bitmap": "00000010",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 92.0797165,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 92.0810625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 92.081063375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          },
+          {
+            "seconds": 92.081080875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 92.08108175,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 16
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-4",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 92.567362,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 92.568254625,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 92.5682555,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-5",
+        "bitmap": "00000020",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 93.246357375,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 93.247703375,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 93.24770425,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32
+          },
+          {
+            "seconds": 93.24772175,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 93.247722625,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 32
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-5",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 93.709093875,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 93.71108525,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 93.711086125,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-6",
+        "bitmap": "00000040",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 94.379713625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 94.381059625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 94.3810605,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 64
+          },
+          {
+            "seconds": 94.381078,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 94.381078875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 64
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-6",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 94.870467,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 94.872657875,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 94.87265875,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "retrigger-on-7",
+        "bitmap": "00000080",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 95.546357625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 95.547703625,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 95.5477045,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 128
+          },
+          {
+            "seconds": 95.547722,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 95.547722875,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 128
+          }
+        ]
+      },
+      {
+        "label": "retrigger-off-7",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 96.011782625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 96.0126405,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 96.012641375,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      },
+      {
+        "label": "pedal-down",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [],
+        "peak": 0.0,
+        "trace": []
+      },
+      {
+        "label": "sustain-on",
+        "bitmap": "00000100",
+        "voices": 1,
+        "transitions": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 96.846361625,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 96.8477085,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 96.847709375,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 256
+          },
+          {
+            "seconds": 96.847726875,
+            "pc": 13914,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 96.84772775,
+            "pc": 13919,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 256
+          }
+        ]
+      },
+      {
+        "label": "sustain-held",
+        "bitmap": "00000100",
+        "voices": 1,
+        "transitions": [],
+        "peak": 0.024271592497825623,
+        "trace": []
+      },
+      {
+        "label": "pedal-up",
+        "bitmap": "00000000",
+        "voices": 0,
+        "transitions": [
+          0,
+          0,
+          0
+        ],
+        "peak": 0.024271592497825623,
+        "trace": [
+          {
+            "seconds": 98.314216375,
+            "pc": 19417,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 98.316871125,
+            "pc": 51471,
+            "address": 1048578,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          },
+          {
+            "seconds": 98.316872,
+            "pc": 51476,
+            "address": 1048576,
+            "kind": "w",
+            "count": 1,
+            "mask": 65535,
+            "data": 0
+          }
+        ]
+      }
+    ],
+    "scope": "ROBOFULL native firmware allocation bitmap and PCM; 24 voices, eight excess notes, retrigger and sustain",
+    "limits": "No steal-order claim, disk overlap, panic sequence or hardware parity; enabled slots are not a per-voice spectral mix proof"
+  },
+  "backend_regressions": {
+    "passed": 360,
+    "seconds": 36.99,
+    "exit_code": 0,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-polyphony-pytest-186.py",
+    "scope": "Full tests/ suite; private harness/snapshot/temp/cache paths, permitted local sockets"
+  }
+}

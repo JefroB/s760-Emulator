@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "date": "2026-10-14",
+  "bug": "BUG-008",
+  "resolution": "Correct the unsupported shared-reference-DSP claim. The product shares native MAME via isolated processes; S760HardwareCore remains deliberately unlinked.",
+  "identities": {
+    "core/CMakeLists.txt": "487d75ae78ad9f468e93f94fe0b68ff04feb3eb5a144b993e470e5839dd61701",
+    "core/include/s760/s760_core.hpp": "93c0495e57786e191b33a226265d0efb09d160c6e3640575b7ea9de73e7aa3a9",
+    "core/src/s760_core.cpp": "50a42f38629a96a51f7a83741471b84d8aab470b7f59b2b528a03073dcb5e63e",
+    "core/src/s760_native_runtime.cpp": "d96e6facd66d6765ef1bd3c9e3ada0bb7c2decd578ce4cd2be188cf054a2d4a3",
+    "core/src/s760_vst3_plugin.cpp": "829fef1c10cb7c9515d86120ee343a8d7ff705d1833010e37952f89f31c755c0",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "build/Release/Roland_S760.vst3": "b5e8c52021e1d426701701bc64bb7dfb61ba395f1cc7c83f202da677ea1ef3de",
+    "docs/LLE_ROADMAP_AND_FIDELITY_ASSESSMENT.md": "608929bca9202f74c793c7ef9614dae9a173ac706329f493e0cf5bfff5156cc2"
+  },
+  "commands": [
+    "cmake --build build --config Release",
+    "build/Release/s760_native_stream_tests.exe",
+    "build/Release/s760_core_tests.exe",
+    "build/Release/s760_plugin_tests.exe",
+    "build/Release/s760_native_plugin_tests.exe D:/S-760 <new-private-state> --paced-var 48000 5"
+  ],
+  "native_runtime_result": "Expected MIDI 3912108,4044414; status={\"audio_dropped\":0,\"firmware_ready\":\"unknown\",\"audio_enabled\":true,\"state\":\"paused\",\"ok\":true,\"midi_delivered\":[{\"seconds\":91.710068027211,\"sample\":4044414}],\"midi_pending\":0,\"midi_error\":\"\",\"seconds\":93.566666666667}\nNative VST3 boot/load/display/offsets/audio/suspend passed; frames=240000 rate=48000 input_active=0 reference_exact=1 peak=0.031098 tail=0 first_audible=14337 offline=0 reported_tail=4294967295 reported_latency=13393 paced=1 varied=1 max_callback_us=203.8 max_deadline_fraction=0.021375 missed_deadlines=0\n",
+  "backend": {
+    "passed": 392,
+    "seconds": 44.09
+  },
+  "limits": "Architecture-claim correction, not integration of the reference model or a new physical DSP parity claim. Native PCM agreement does not establish arbitrary frontend support."
+}

@@ -1,0 +1,266 @@
+{
+  "date": "2026-10-14",
+  "bug": "BUG-005 moving/sweep remainder",
+  "outcome": "No defensible renderer correction identified; BUG-005 stays OPEN",
+  "classification": "Offline diagnostics using existing physical capture recordings and an inferred emulator coefficient trace; not new hardware validation",
+  "phase_interpolation": {
+    "results": [
+      {
+        "level": "quiet",
+        "interpolation": "linear",
+        "parameters": [
+          0.9204073451926751,
+          1543.8272186849354,
+          1.002076479650362
+        ],
+        "train": {
+          "correlation": 0.9788513502948231,
+          "relative_error_db": -13.781216036975014
+        },
+        "heldout": {
+          "correlation": 0.9843445995331541,
+          "relative_error_db": -15.076457655916013
+        },
+        "evaluation_rms_error_percent": 17.626947751302698
+      },
+      {
+        "level": "quiet",
+        "interpolation": "fourier",
+        "parameters": [
+          0.9196304429477038,
+          1543.8282442213608,
+          1.0022552427738631
+        ],
+        "train": {
+          "correlation": 0.9794537367117487,
+          "relative_error_db": -13.858815635055677
+        },
+        "heldout": {
+          "correlation": 0.9839319686556247,
+          "relative_error_db": -14.944007226972225
+        },
+        "evaluation_rms_error_percent": 17.897799502471244
+      },
+      {
+        "level": "repeat",
+        "interpolation": "linear",
+        "parameters": [
+          0.38485752516003024,
+          1795.1077543793588,
+          1.0004806961978778
+        ],
+        "train": {
+          "correlation": 0.9821647605686415,
+          "relative_error_db": -14.51492036478686
+        },
+        "heldout": {
+          "correlation": 0.9828447175782691,
+          "relative_error_db": -14.682849524552182
+        },
+        "evaluation_rms_error_percent": 18.44410235983991
+      },
+      {
+        "level": "repeat",
+        "interpolation": "fourier",
+        "parameters": [
+          0.3847621530529324,
+          1795.116175182844,
+          1.0005049176519232
+        ],
+        "train": {
+          "correlation": 0.9826327626848784,
+          "relative_error_db": -14.585624125506415
+        },
+        "heldout": {
+          "correlation": 0.9838352643778273,
+          "relative_error_db": -14.876260702477369
+        },
+        "evaluation_rms_error_percent": 18.03794111673525
+      }
+    ],
+    "limits": "Accepted quiet/repeat captures; fixed85/unity gain, original inferred coefficient trace; no native changes"
+  },
+  "coefficient_cadence": {
+    "results": [
+      {
+        "level": "quiet",
+        "coefficient_cadence_samples": 1,
+        "parameters": [
+          0.9295068328831556,
+          1543.8609849175418,
+          1.002131646148246
+        ],
+        "train": {
+          "correlation": 0.877863751743261,
+          "relative_error_db": -6.095529128327407
+        },
+        "heldout": {
+          "correlation": 0.8983550291647303,
+          "relative_error_db": -6.9074946599473
+        },
+        "evaluation_rms_error_percent": 45.14662265477343
+      },
+      {
+        "level": "quiet",
+        "coefficient_cadence_samples": 32,
+        "parameters": [
+          0.9284509734537623,
+          1543.8493678272664,
+          1.0017658242490133
+        ],
+        "train": {
+          "correlation": 0.8007139947135935,
+          "relative_error_db": -4.022042503859714
+        },
+        "heldout": {
+          "correlation": 0.828415614552655,
+          "relative_error_db": -4.700166555478215
+        },
+        "evaluation_rms_error_percent": 58.20920558111528
+      },
+      {
+        "level": "quiet",
+        "coefficient_cadence_samples": 64,
+        "parameters": [
+          0.9297461426830548,
+          1543.781309230093,
+          1.001467297726089
+        ],
+        "train": {
+          "correlation": 0.7832781800039341,
+          "relative_error_db": -3.6429478576551673
+        },
+        "heldout": {
+          "correlation": 0.8183654121026739,
+          "relative_error_db": -4.457925753845881
+        },
+        "evaluation_rms_error_percent": 59.85545166518599
+      },
+      {
+        "level": "quiet",
+        "coefficient_cadence_samples": 128,
+        "parameters": [
+          0.929226001296283,
+          1543.8623505865726,
+          1.0015380946706005
+        ],
+        "train": {
+          "correlation": 0.7617317792410474,
+          "relative_error_db": -3.248374909498435
+        },
+        "heldout": {
+          "correlation": 0.7867422012630676,
+          "relative_error_db": -3.7801004584095943
+        },
+        "evaluation_rms_error_percent": 64.7135131133337
+      },
+      {
+        "level": "repeat",
+        "coefficient_cadence_samples": 1,
+        "parameters": [
+          0.39240473934592995,
+          1795.2209234208174,
+          1.0010669257025253
+        ],
+        "train": {
+          "correlation": 0.907714358829558,
+          "relative_error_db": -7.298692576339018
+        },
+        "heldout": {
+          "correlation": 0.902458849677233,
+          "relative_error_db": -6.991103329494973
+        },
+        "evaluation_rms_error_percent": 44.71413498265773
+      },
+      {
+        "level": "repeat",
+        "coefficient_cadence_samples": 32,
+        "parameters": [
+          0.38694441362403953,
+          1794.923444010627,
+          1.0012698695110573
+        ],
+        "train": {
+          "correlation": 0.7926338741508915,
+          "relative_error_db": -3.8741397487188634
+        },
+        "heldout": {
+          "correlation": 0.8165436428528928,
+          "relative_error_db": -4.3389136974592475
+        },
+        "evaluation_rms_error_percent": 60.68122159353013
+      },
+      {
+        "level": "repeat",
+        "coefficient_cadence_samples": 64,
+        "parameters": [
+          0.3870088290759054,
+          1794.903026612378,
+          1.000981484316235
+        ],
+        "train": {
+          "correlation": 0.7316719603458178,
+          "relative_error_db": -2.803348441266041
+        },
+        "heldout": {
+          "correlation": 0.7441008943635883,
+          "relative_error_db": -2.817002664106588
+        },
+        "evaluation_rms_error_percent": 72.30192608019858
+      },
+      {
+        "level": "repeat",
+        "coefficient_cadence_samples": 128,
+        "parameters": [
+          0.38658104396810195,
+          1794.8847709654942,
+          1.0011138594679376
+        ],
+        "train": {
+          "correlation": 0.7041681663748326,
+          "relative_error_db": -2.390958935632606
+        },
+        "heldout": {
+          "correlation": 0.7205159165367954,
+          "relative_error_db": -2.4525881251272788
+        },
+        "evaluation_rms_error_percent": 75.3998694197968
+      }
+    ],
+    "limits": "Accepted quiet/repeat captures; fixed85/unity gain, original inferred coefficient trace; no native changes"
+  },
+  "identities": {
+    "test-recordings\\s760_01 REF NOISE_20261010_121558.zip": "f4aa569c7c5148f5e49004f6ddef1591b51143bd5a4b38c09f839fd1d1856d44",
+    "test-recordings\\s760_01 REF NOISE 2_20261010_130755.zip": "7f83e74a62c5c3ace3771467e8e1ead4a3e3be6efb42464b3e4d91a512245487",
+    "test-recordings\\s760_04 LP SW R64_20261010_130922.zip": "34315b1ca9d12fc8d6a20cb41a4a0652c24d4ba28a03b81dc432abdeee0354d0",
+    "test-recordings\\s760_04 LP SW R64_20261010_133400.zip": "c90dc78bb559f0468f47a016a74944f152dc93b0eb0d43f3bb2c5c5293820536",
+    "docs\\ic20-hle-findings\\chatGPT-work\\capture-81b.log": "dec9a1a4e1aa32ccb3521011d1c1a433711ada162021160649dcd5873303faad",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bug005-209-phase.py": "ee5133a501375a42b934e7040fd904a41f80d105eabf7508a7d8457140bfdd85",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bug005-209-cadence.py": "342f15b5fb6d0e168409289a06d7fd540c60c131fca8452cec0fa00bd43cc804",
+    "docs\\ic20-hle-findings\\chatGPT-work\\trajectory_finite_94.py": "946e32993af8fd3e247cf6685404504edf5ce9e1ef9e30cec66c2de0c8d32bea",
+    "docs\\ic20-hle-findings\\chatGPT-work\\damping_check_91.py": "8bcd6da7c04f2245770aafbd07e8435c6a1f9f2eed0cfaa3caa6892b26e7fd32",
+    "docs\\ic20-hle-findings\\chatGPT-work\\joint_sweep_89.py": "bd6a358e0e690af591e434f3d8d7baeebc77f1ff6b229c1dfe550c4c18ff461d",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "b4e21396a32c3b4c89942790754be6155f7f383faa4cfa66cb2000c5438e5023",
+    "mame-source\\mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04"
+  },
+  "commands": [
+    "python docs/ic20-hle-findings/chatGPT-work/bug005-209-phase.py",
+    "python docs/ic20-hle-findings/chatGPT-work/bug005-209-cadence.py"
+  ],
+  "controls": {
+    "damping_word": 85,
+    "gain": 1,
+    "cutoff_low_bit_mask": 3,
+    "training": "Alternating0.4-second blocks over1.5..6.4s, source phase/trim/small time-scale fitted on training only",
+    "evaluation": "Other blocks in that interval, reused in historical model comparisons; not fresh independent held-out validation",
+    "excluded_capture": "121743 initial loud LP capture remains the documented outlier; first analog-placement pilot included it and is excluded from qualification"
+  },
+  "limits": [
+    "Analog-chain placement control was already inconclusive in finding94; this turn does not promote a new analog model.",
+    "Exact Fourier phase improves one recording slightly and worsens the other; cannot select as a hardware correction.",
+    "Tested coefficient cadences are diagnostic candidates; worse local fits do not exclude all physical coefficient timing laws.",
+    "Emulator coefficient-write trace is not a measured hardware bus trace.",
+    "No native renderer, coefficient, firmware or capture files changed."
+  ],
+  "next_evidence": "Prefer original untrimmed digital output recordings at native sample rate, with unchanged gain/settings and original ROBO_TVF/ROBO_LOW fixtures: bypass, static LP C64/R64 and LP SW R64, MIDI60/velocity127, >=13s held plus >=3s release. Preserve original ZIP metadata/raw audio; no resampling/normalization. A synchronized physical coefficient-write trace would directly resolve activation timing."
+}

@@ -1,0 +1,5237 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; exact source/artifact/fixture identities below",
+  "scope": "Native original-firmware SCSI discovery and absence/unsupported-media recovery; successful SCSI sample Load remains open",
+  "identities_sha256": {
+    "mame-source/src/mame/roland/s760.cpp": "257d9dfb98f5da4d4c2ec9fa4a5927cfdea8fd66e9c3637bd3b6921f421c05ae",
+    "mame-source/mames760.exe": "39bc87484fa8866207e5812e10f9f89034c70595c8b9683a1aebd042cda1efe7",
+    "scripts/verify_bmovi_fetch.py": "9981df74c4fdb4edb658161d2e2d027be81d5b19d5b83dd46200d80c660b1690",
+    "scripts/verify_native_scsi_registers.py": "e8034478c20c2393122fbc65b7b5a34bb43615ad712670c8f82655a3cac5e885",
+    "scripts/verify_native_scsi_identity.py": "b18517724d0866726bcf9c51078d083cdae73ab2de258e68442d66037779fda0",
+    "scripts/verify_native_scsi_pio.py": "bca38a85aba1f2229c6d54d7c4f92b9da34b1fe372a9d2957c716f4080b98461",
+    "scripts/verify_native_scsi_dma.py": "21213f4b9391adfc734b523dec364264f9876abd8e374dc8a8447db4d79608f8",
+    "scripts/verify_native_scsi_discovery.py": "86daedc3746438559ec644cc745c865eae3ad760305759d1c4c791331b1099cc",
+    "scripts/s760_runtime.py": "10c1621fcf85ad234aae1cbb6f6bdeada8c8ab5af427e3b95f9da9af450b92ba",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/FDD/ROBOLOOP.IMG": "65f8a8353d4e5bedfa1cc0f0d600012cf6946cda0129ec96363f49a91cb43060",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "Manuals/S-760_OM.pdf": "0cd22a130b1241381b5ebf88d0f23283a3ffc84cd0d8618c95ce211679027cdc"
+  },
+  "prerequisites": "Windows x64 local native MAME, original IC15/OS2.24 and ROBOFULL; private target files and state, local sockets, Python numpy/Pillow; headless unthrottled",
+  "isolated_setup": "Synthetic bank/controller/RAM writes occur only in isolated fixtures. Original-firmware workflow uses real controls/MIDI and read-only observations, with no CPU/RAM/firmware forcing.",
+  "references": {
+    "registers": "Local upstream mame-source/src/devices/machine/mb87030.cpp/.h, inherited by mb89352: BDID one-bit reads/three-bit writes, TEMP selection bus data, SCMD ACK/REQ and PSNS flags",
+    "firmware": "Original OS fetch page003b:75fe..7634 TEMP/ACK command handshake,7647..76bb programmed input,7724..778c DMA47/INTS polling; no firmware patches",
+    "manual": "Owner manual Advanced3-104 (PDF page128) SavePRM backup-memory semantics; Advanced5-15 (PDF page153) Scan instruction"
+  },
+  "before": {
+    "bdid": {
+      "error": "...-hle-findings\\chatGPT-work\\scsi200-bdid-before\\probe.lua:11: BDID must read as a one-bit bus mask, id=0",
+      "firmware_load": false,
+      "cpu": "I80C196KB",
+      "native_scsi_stride": 2,
+      "passed": false
+    },
+    "selection": {
+      "native_transfer_handshake": false,
+      "target": 6,
+      "passed": false,
+      "initiator_ids": 8,
+      "present_target_selections": 7,
+      "error": "...le-findings\\chatGPT-work\\scsi200-select-before\\probe.lua:16: SELECT must exclude initiator bit, id=0",
+      "inquiry_bytes": 36,
+      "target_type": "CD-ROM",
+      "firmware_load": false
+    },
+    "empty_temp": {
+      "error": "...-hle-findings\\chatGPT-work\\scsi200-temp-before\\probe.lua:34: Empty mask must not reuse previous target",
+      "firmware_load": false,
+      "target": 6,
+      "initiator_ids": 8,
+      "native_transfer_handshake": false,
+      "present_target_selections": 7,
+      "passed": false,
+      "inquiry_bytes": 36,
+      "target_type": "CD-ROM"
+    },
+    "pio": {
+      "present_target_selections": 7,
+      "initiator_ids": 8,
+      "inquiry_bytes": 36,
+      "target_type": "CD-ROM",
+      "native_pio_inquiry": true,
+      "passed": false,
+      "error": "...0-hle-findings\\chatGPT-work\\scsi200-pio-before\\probe.lua:22: Target must drop REQ after ACK",
+      "target": 6,
+      "firmware_load": false
+    },
+    "dma": {
+      "native_inquiry_dma": true,
+      "target": 6,
+      "initiator_ids": 8,
+      "passed": false,
+      "error": "...0-hle-findings\\chatGPT-work\\scsi200-dma-before\\probe.lua:34: SCSI DMA count did not exhaust",
+      "target_type": "CD-ROM",
+      "inquiry_bytes": 36,
+      "present_target_selections": 7,
+      "firmware_load": false
+    }
+  },
+  "after": {
+    "registers": {
+      "firmware_load": false,
+      "native_scsi_stride": 2,
+      "passed": true,
+      "cpu": "I80C196KB",
+      "error": ""
+    },
+    "identity": {
+      "target_type": "CD-ROM",
+      "present_target_selections": 7,
+      "inquiry_bytes": 36,
+      "error": "",
+      "initiator_ids": 8,
+      "firmware_load": false,
+      "passed": true,
+      "native_transfer_handshake": false,
+      "target": 6
+    },
+    "pio": {
+      "target": 6,
+      "target_type": "CD-ROM",
+      "present_target_selections": 7,
+      "passed": true,
+      "error": "",
+      "initiator_ids": 8,
+      "native_pio_inquiry": true,
+      "firmware_load": false,
+      "inquiry_bytes": 36
+    },
+    "dma_and_bounds": {
+      "present_target_selections": 7,
+      "target": 6,
+      "target_type": "CD-ROM",
+      "error": "",
+      "passed": true,
+      "native_inquiry_dma": true,
+      "initiator_ids": 8,
+      "firmware_load": false,
+      "inquiry_bytes": 36
+    }
+  },
+  "firmware_discovery": {
+    "passed": true,
+    "rows": [
+      {
+        "profile": "absent",
+        "scsi_bytes": null,
+        "firmware_label": "absent",
+        "scan_label_sha256": "ef1b224c9495e70cb7d1915b7f838304aeee8852e2b7fd26ff8a2bf08f85ec5e",
+        "scan_trace": {
+          "accesses": 21,
+          "rows": [
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.852248625,
+              "address": 1057796,
+              "data": 68,
+              "pc": 29959
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.852251625,
+              "address": 1057796,
+              "data": 36,
+              "pc": 29977
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.852258125,
+              "address": 1057796,
+              "data": 4,
+              "pc": 30015
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.885081875,
+              "address": 1057796,
+              "data": 68,
+              "pc": 29959
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.885084875,
+              "address": 1057796,
+              "data": 36,
+              "pc": 29977
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.885091375,
+              "address": 1057796,
+              "data": 4,
+              "pc": 30015
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.916195375,
+              "address": 1057796,
+              "data": 68,
+              "pc": 29959
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.916198375,
+              "address": 1057796,
+              "data": 36,
+              "pc": 29977
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.916204875,
+              "address": 1057796,
+              "data": 4,
+              "pc": 30015
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.947326375,
+              "address": 1057796,
+              "data": 68,
+              "pc": 29959
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.947329375,
+              "address": 1057796,
+              "data": 36,
+              "pc": 29977
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.947335875,
+              "address": 1057796,
+              "data": 4,
+              "pc": 30015
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.978440125,
+              "address": 1057796,
+              "data": 68,
+              "pc": 29959
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.978443125,
+              "address": 1057796,
+              "data": 36,
+              "pc": 29977
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 33.978449625,
+              "address": 1057796,
+              "data": 4,
+              "pc": 30015
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 34.009571375,
+              "address": 1057796,
+              "data": 68,
+              "pc": 29959
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 34.009574375,
+              "address": 1057796,
+              "data": 36,
+              "pc": 29977
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 34.009580875,
+              "address": 1057796,
+              "data": 4,
+              "pc": 30015
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 34.04070275,
+              "address": 1057796,
+              "data": 68,
+              "pc": 29959
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 34.04070575,
+              "address": 1057796,
+              "data": 36,
+              "pc": 29977
+            },
+            {
+              "mask": 255,
+              "count": 1,
+              "kind": "w",
+              "seconds": 34.04071225,
+              "address": 1057796,
+              "data": 4,
+              "pc": 30015
+            }
+          ],
+          "dropped": 0,
+          "ok": true
+        },
+        "firmware_dma47": [],
+        "recovered_floppy_sample_bytes": 119808,
+        "recovery_peak": 0.01694745011627674,
+        "silent_release_frames": 44100,
+        "media": {
+          "ok": true,
+          "error": "",
+          "inserted": true,
+          "dirty": false,
+          "writeProtected": false,
+          "busy": false,
+          "generation": 2,
+          "revision": 0
+        }
+      },
+      {
+        "profile": "blank-10MiB",
+        "scsi_bytes": 10485760,
+        "firmware_label": "unformatted",
+        "scan_label_sha256": "3d97c1db4e2e4031947e371452325d6fdd58272b5fcd6711e41bfc6b506090ff",
+        "scan_trace": {
+          "accesses": 324,
+          "rows": [
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.635618,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.635621,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.635735,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63573725,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63574525,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6357475,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6357555,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63575775,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63576575,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.635768,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.635776,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63577825,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63578625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6357885,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 22137,
+              "seconds": 33.6358485,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.635991375,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.63599575,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.636000375,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.63600475,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.63614375,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.63614675,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.636278125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.636280375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.636288375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.636290625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.636298625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.636300875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.636308875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.636311125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.636319125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.636321375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.636329375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.636331625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 22275,
+              "seconds": 33.636391625,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.63672825,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.636732625,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.63673725,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.636741625,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.636903875,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.636906875,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637020875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637023125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637031125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637033375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637041375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637043625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637051625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637053875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637061875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637064125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637072125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637074375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.63711025,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.637114625,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.63711925,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.637123625,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.637234375,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.637237375,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637351375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637353625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637361625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637363875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637371875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637374125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637382125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637384375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637392375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637394625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637402625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637404875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 22137,
+              "seconds": 33.637464875,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.63760775,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.637612125,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.63761675,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.637621125,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.637780625,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.637783625,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637909625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637911875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637919875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637922125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637930125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637932375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637940375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637942625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637950625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637952875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637960875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637963125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637971125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637973375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637981375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637983625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.637991625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.637993875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.638001875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.638004125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 23689,
+              "seconds": 33.638064125,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.6381915,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.638195875,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.6382005,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.638204875,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 284,
+              "mask": 65280,
+              "pc": 23901,
+              "seconds": 33.638316625,
+              "count": 1,
+              "kind": "r",
+              "data": 55040
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.638367375,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.638370375,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63850625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6385085,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6385165,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63851875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63852675,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.638529,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.638537,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63853925,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63854725,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6385495,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6385575,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63855975,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63856775,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63857,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.638578,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63858025,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63858825,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6385905,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6385985,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63860075,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 284,
+              "mask": 255,
+              "pc": 24095,
+              "seconds": 33.638668375,
+              "count": 1,
+              "kind": "w",
+              "data": 8
+            },
+            {
+              "address": 282,
+              "mask": 65535,
+              "pc": 24104,
+              "seconds": 33.638669875,
+              "count": 1,
+              "kind": "w",
+              "data": 15886
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 24524,
+              "seconds": 33.638678875,
+              "count": 1,
+              "kind": "w",
+              "data": 128
+            },
+            {
+              "address": 284,
+              "mask": 65280,
+              "pc": 30505,
+              "seconds": 33.638692375,
+              "count": 1,
+              "kind": "r",
+              "data": 55040
+            },
+            {
+              "address": 280,
+              "mask": 65535,
+              "pc": 30538,
+              "seconds": 33.638697625,
+              "count": 1,
+              "kind": "w",
+              "data": 512
+            },
+            {
+              "address": 284,
+              "mask": 65280,
+              "pc": 30576,
+              "seconds": 33.63870575,
+              "count": 1,
+              "kind": "w",
+              "data": 18176
+            },
+            {
+              "address": 284,
+              "last_seconds": 33.642657625,
+              "mask": 65280,
+              "pc": 30594,
+              "seconds": 33.638708875,
+              "count": 3,
+              "kind": "r",
+              "data": 18176
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.638749875,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.63875425,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.638758875,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.63876325,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.639026,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.639029,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.639143,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63914525,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63915325,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6391555,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6391635,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63916575,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63917375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.639176,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.639184,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63918625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63919425,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6391965,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 22137,
+              "seconds": 33.6392565,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.639399375,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.63940375,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.639408375,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.63941275,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.63955175,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.63955475,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63966875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.639671,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.639679,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63968125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63968925,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6396915,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6396995,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63970175,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63970975,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.639712,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.63972,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.63972225,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 22275,
+              "seconds": 33.63978225,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.640118875,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.64012325,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.640127875,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.64013225,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.6402945,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.6402975,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6404115,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64041375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64042175,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.640424,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.640432,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64043425,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64044225,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6404445,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6404525,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64045475,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64046275,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.640465,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.640500875,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.64050525,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.640509875,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.64051425,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.640625,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.640628,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.640742,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64074425,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64075225,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6407545,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6407625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64076475,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64077275,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.640775,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.640783,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64078525,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64079325,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6407955,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 22137,
+              "seconds": 33.6408555,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.640998375,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.64100275,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.641007375,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.64101175,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.64117125,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.64117425,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64130025,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6413025,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6413105,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64131275,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64132075,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641323,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641331,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64133325,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64134125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6413435,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6413515,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64135375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64136175,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641364,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641372,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64137425,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.64138225,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.6413845,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.6413925,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.64139475,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 23689,
+              "seconds": 33.64145475,
+              "count": 1,
+              "kind": "w",
+              "data": 132
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32068,
+              "seconds": 33.641582125,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32094,
+              "seconds": 33.6415865,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32121,
+              "seconds": 33.641591125,
+              "count": 1,
+              "kind": "w",
+              "data": 224
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 32147,
+              "seconds": 33.6415955,
+              "count": 1,
+              "kind": "w",
+              "data": 192
+            },
+            {
+              "address": 284,
+              "last_seconds": 33.642265375,
+              "mask": 65280,
+              "pc": 23901,
+              "seconds": 33.64170725,
+              "count": 2,
+              "kind": "r",
+              "data": 18176
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29959,
+              "seconds": 33.641758,
+              "count": 1,
+              "kind": "w",
+              "data": 68
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 29977,
+              "seconds": 33.641761,
+              "count": 1,
+              "kind": "w",
+              "data": 36
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641896875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641899125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641907125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641909375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641917375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641919625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641927625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641929875,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641937875,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641940125,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641948125,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641950375,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641958375,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30257,
+              "seconds": 33.641960625,
+              "count": 1,
+              "kind": "w",
+              "data": 196
+            },
+            {
+              "address": 1057796,
+              "mask": 255,
+              "pc": 30244,
+              "seconds": 33.641968625,
+              "count": 1,
+              "kind": "w",
+              "data": 228
+            }
+          ],
+          "dropped": 65,
+          "ok": true
+        },
+        "firmware_dma47": [
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          }
+        ],
+        "recovered_floppy_sample_bytes": 119808,
+        "recovery_peak": 0.01694745011627674,
+        "silent_release_frames": 44100,
+        "media": {
+          "ok": true,
+          "error": "",
+          "inserted": true,
+          "dirty": false,
+          "writeProtected": false,
+          "busy": false,
+          "generation": 2,
+          "revision": 0
+        }
+      },
+      {
+        "profile": "truncated-1024",
+        "scsi_bytes": 1024,
+        "firmware_label": "unformatted",
+        "scan_label_sha256": "3d97c1db4e2e4031947e371452325d6fdd58272b5fcd6711e41bfc6b506090ff",
+        "scan_trace": {
+          "accesses": 324,
+          "dropped": 65,
+          "ok": true,
+          "rows": [
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718267375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718270375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718384375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718386625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718394625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718396875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718404875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718407125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718415125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718417375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718425375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718427625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718435625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718437875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 22137,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718497875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.71864075,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718645125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.71864975,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718654125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718793125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718796125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718910125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718912375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718920375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718922625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718930625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718932875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718940875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718943125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718951125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718953375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718961375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.718963625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 22275,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719023625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.71936025,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719364625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.71936925,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719373625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719535875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719538875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719652875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719655125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719663125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719665375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719673375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719675625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719683625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719685875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719693875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719696125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719704125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719706375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.71974225,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719746625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.71975125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719755625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719866375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719869375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719983375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719985625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719993625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.719995875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720003875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720006125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720014125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720016375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720024375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720026625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720034625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720036875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 22137,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720096875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72023975,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720244125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72024875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720253125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720412625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720415625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720541625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720543875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720551875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720554125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720562125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720564375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720572375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720574625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720582625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720584875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720592875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720595125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720603125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720605375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720613375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720615625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720623625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720625875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720633875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720636125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 23689,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720696125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7208235,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720827875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7208325,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720836875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 55040,
+              "pc": 23901,
+              "count": 1,
+              "mask": 65280,
+              "seconds": 33.720948625,
+              "address": 284,
+              "kind": "r"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.720999375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721002375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72113825,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7211405,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7211485,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72115075,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72115875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721161,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721169,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72117125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72117925,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7211815,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7211895,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72119175,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72119975,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721202,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72121,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72121225,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72122025,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7212225,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7212305,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72123275,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 8,
+              "pc": 24095,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721300375,
+              "address": 284,
+              "kind": "w"
+            },
+            {
+              "data": 15886,
+              "pc": 24104,
+              "count": 1,
+              "mask": 65535,
+              "seconds": 33.721301875,
+              "address": 282,
+              "kind": "w"
+            },
+            {
+              "data": 128,
+              "pc": 24524,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721310875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 55040,
+              "pc": 30505,
+              "count": 1,
+              "mask": 65280,
+              "seconds": 33.721324375,
+              "address": 284,
+              "kind": "r"
+            },
+            {
+              "data": 512,
+              "pc": 30538,
+              "count": 1,
+              "mask": 65535,
+              "seconds": 33.721329625,
+              "address": 280,
+              "kind": "w"
+            },
+            {
+              "data": 18176,
+              "pc": 30576,
+              "count": 1,
+              "mask": 65280,
+              "seconds": 33.72133775,
+              "address": 284,
+              "kind": "w"
+            },
+            {
+              "data": 18176,
+              "pc": 30594,
+              "last_seconds": 33.725289625,
+              "count": 3,
+              "mask": 65280,
+              "seconds": 33.721340875,
+              "address": 284,
+              "kind": "r"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721381875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72138625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721390875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72139525,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721658,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721661,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721775,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72177725,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72178525,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7217875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7217955,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72179775,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72180575,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721808,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.721816,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72181825,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72182625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7218285,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 22137,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7218885,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722031375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72203575,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722040375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72204475,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72218375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72218675,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72230075,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722303,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722311,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72231325,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72232125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7223235,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7223315,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72233375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72234175,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722344,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722352,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72235425,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 22275,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72241425,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722750875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72275525,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.722759875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72276425,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7229265,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7229295,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7230435,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72304575,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72305375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723056,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723064,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72306625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72307425,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7230765,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7230845,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72308675,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72309475,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723097,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723132875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72313725,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723141875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72314625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723257,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72326,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723374,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72337625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72338425,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7233865,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7233945,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72339675,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72340475,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723407,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723415,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72341725,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72342525,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7234275,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 22137,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7234875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723630375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72363475,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723639375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72364375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72380325,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72380625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72393225,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7239345,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7239425,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72394475,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72395275,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723955,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723963,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72396525,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72397325,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7239755,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7239835,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72398575,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72399375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.723996,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724004,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72400625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72401425,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7240165,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7240245,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72402675,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 132,
+              "pc": 23689,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72408675,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32068,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724214125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32094,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7242185,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 224,
+              "pc": 32121,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724223125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 192,
+              "pc": 32147,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.7242275,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 18176,
+              "pc": 23901,
+              "last_seconds": 33.724897375,
+              "count": 2,
+              "mask": 65280,
+              "seconds": 33.72433925,
+              "address": 284,
+              "kind": "r"
+            },
+            {
+              "data": 68,
+              "pc": 29959,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.72439,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 36,
+              "pc": 29977,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724393,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724528875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724531125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724539125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724541375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724549375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724551625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724559625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724561875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724569875,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724572125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724580125,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724582375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724590375,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 196,
+              "pc": 30257,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724592625,
+              "address": 1057796,
+              "kind": "w"
+            },
+            {
+              "data": 228,
+              "pc": 30244,
+              "count": 1,
+              "mask": 255,
+              "seconds": 33.724600625,
+              "address": 1057796,
+              "kind": "w"
+            }
+          ]
+        },
+        "firmware_dma47": [
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          },
+          {
+            "destination": 540174,
+            "bytes": 512
+          }
+        ],
+        "recovered_floppy_sample_bytes": 119808,
+        "recovery_peak": 0.01694745011627674,
+        "silent_release_frames": 44100,
+        "media": {
+          "ok": true,
+          "error": "",
+          "inserted": true,
+          "dirty": false,
+          "writeProtected": false,
+          "busy": false,
+          "generation": 2,
+          "revision": 0
+        }
+      }
+    ],
+    "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "scope": "Original-firmware F3 Scan, absence/unsupported-image handling and floppy Load/playback recovery",
+    "limits": "HD0 512-byte-sector development target only; bounded traces may drop rows and do not establish exhaustive bus coverage. No successful SCSI sample Load, SCSI Save, hot-plug, full DMA/arbitration or physical timing claim"
+  },
+  "native_audio_midi": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 79.2,
+    "note_release": 81.366666666667,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    },
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999542236328125,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "sample": 3689230,
+        "seconds": 83.656009070295
+      },
+      {
+        "sample": 3733330,
+        "seconds": 84.656009070295
+      }
+    ]
+  },
+  "cold_scsi_state": {
+    "active_normal_filter": false,
+    "scsi_identity_verified": true,
+    "cold_pcm_frames_exact": 131072,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": true,
+    "serial_boundary": false,
+    "enqueue_age_seconds": -0.02269841269809092,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "legacy_state": {
+    "warm": {
+      "writeback_supported": true,
+      "passed": true,
+      "partial_cdb": true,
+      "cd_protection": true,
+      "range_sense": true,
+      "aborted_write": true,
+      "sense_recall": true,
+      "zero_counts": true,
+      "write10": true,
+      "remaining_bytes": 28,
+      "partial_data_out": true
+    },
+    "cold": {
+      "written_media": true,
+      "response_bytes": 28,
+      "passed": true,
+      "partial_write10": true,
+      "media_bytes": 512
+    }
+  },
+  "backend_tests": {
+    "passed": 363,
+    "seconds": 40.39,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-scsi-pytest-200-final.py",
+    "private_harness": true
+  },
+  "core_plugin_units": "Both full existing executable suites pass",
+  "build": "MSBuild mame_s760 then mames760 Release/x64 OldStyle; zero errors",
+  "regression_investigation": {
+    "identity_only": "Exposed firmware Device Check0 stall at7624/7629, PSNS8a polled12204444 times; SCSI-backed state test correctly failed its non-silence assertion twice",
+    "pio_only": "Advanced to missing DMA47, INTS0 polled7959420 times; state test still failed",
+    "complete_fix": "Present target is identified as Unformatted, firmware rejects it and recovers; SCSI-backed cold replay and non-silence/release assertions pass"
+  },
+  "commands": [
+    "python scripts/verify_native_scsi_registers.py --state-dir <fresh-absolute>",
+    "python scripts/verify_native_scsi_identity.py --state-dir <fresh-absolute>",
+    "python scripts/verify_native_scsi_pio.py --state-dir <fresh-absolute>",
+    "python scripts/verify_native_scsi_dma.py --state-dir <fresh-absolute>",
+    "python scripts/verify_native_scsi_discovery.py --state-dir <fresh-absolute>",
+    "python scripts/verify_native_checkpoint.py --scheduled --scsi --state-dir <fresh-absolute>",
+    "python scripts/verify_native_runtime.py --pull-render --scheduled-midi --state-dir <fresh-absolute>",
+    "python scripts/verify_scsi_checkpoint.py --state-dir <fresh-absolute>"
+  ],
+  "limits": [
+    "Successful original-firmware SCSI sample Load requires a genuine supported filesystem fixture and remains unqualified",
+    "DMA47 is synchronous bounded SPC-input-to-RAM only; other DMA controls, output transfers, zero-count conventions, native IRQ priority and physical timings are not qualified",
+    "Scan command trace is bounded and drops rows in present-target cases; no exhaustive bus/arbitration claim. Completed DMA47 is additionally observed in private MAME -log output",
+    "Absent-target case displays No Drive and recovers; its late command trace is empty, so no claim that every absent ID is reselected by that UI action",
+    "Firmware display assertions use visually reviewed OS2.24 pixel signatures, not OCR or generalized text recognition",
+    "No SCSI Save/writeback/hot-plug or final-package/DAW acceptance added",
+    "System SavePRM is backup memory, not disk activity; concurrent disk/MIDI/voice gate remains open"
+  ]
+}

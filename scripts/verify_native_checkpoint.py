@@ -1,5 +1,6 @@
 """Cold native checkpoint acceptance using real firmware controls and PCM."""
 import argparse
+import hashlib
 import json
 import math
 import time
@@ -21,8 +22,13 @@ def main():
     mode.add_argument('--serial', action='store_true', help='Checkpoint just after MIDI serial enqueue')
     mode.add_argument('--pre-capture', action='store_true', help='Repeated in-process rewind to before audio capture')
     mode.add_argument('--standalone-session', action='store_true', help='Standalone session save/restore and crash recovery')
+    parser.add_argument('--filter-state', action='store_true', help='Cold replay of an active normal-profile LP C32 filter on ROBO_TVF')
     parser.add_argument('--scsi', action='store_true', help='Stage generated SCSI media and verify identity rejection before cold replay')
     args = parser.parse_args()
+    if args.filter_state and any((args.scheduled,args.serial,args.pre_capture,args.standalone_session)):
+        parser.error('--filter-state uses the active-note scenario')
+    if args.filter_state:
+        assert hashlib.sha256((ROOT/'roms/FDD/ROBO_TVF.IMG').read_bytes()).hexdigest() == '1bcbd06688769883ad0f1477608fd80a134e4b22e7bea76709a98283007f3fad', 'Unexpected filter fixture'
     blocks = 16 if args.scheduled else 8
     work = args.state_dir.resolve()
     work.mkdir(parents=True, exist_ok=True)
@@ -31,7 +37,7 @@ def main():
             media=work/name/'roms/SCSI';media.mkdir(parents=True,exist_ok=True)
             (media/'HD00_512.img').write_bytes(bytes(range(256))*4)
         return RuntimeConfig(ROOT/'mame-source/mames760.exe', ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN',
-                             ROOT/'roms/System/S760224.IMG', work/name, None if args.standalone_session else ROOT/'roms/FDD/ROBOFULL.IMG',
+                             ROOT/'roms/System/S760224.IMG', work/name, None if args.standalone_session else ROOT/('roms/FDD/ROBO_TVF.IMG' if args.filter_state else 'roms/FDD/ROBOFULL.IMG'),
                              sound=False, throttle=args.realtime)
     with NativeRuntime(config('first')) as runtime:
         def wait(seconds):
@@ -171,6 +177,10 @@ def main():
             print(json.dumps(result, indent=2))
             return
         runtime.request('audio_capture', enabled=True)
+        if args.filter_state:
+            runtime.request('midi', bytes=[0xc0,13])
+            runtime.render_audio(8192)
+            now=runtime.request('status')[0]['seconds']
         timestamp = math.ceil(now*44100)+1000
         if args.serial:
             # Rendering stops at a native frame boundary whose phase need not
@@ -248,9 +258,9 @@ def main():
         runtime.schedule_midi([{'sample': math.ceil(now*44100)+1000, 'bytes': [128, 60, 0]}])
         release = b''.join(runtime.render_audio(8192)[1] for _ in range(blocks))
         import numpy as np
-        assert np.max(np.abs(np.frombuffer(reference, dtype='<f4'))) > .001
+        assert np.max(np.abs(np.frombuffer(reference, dtype='<f4'))) > (1e-5 if args.filter_state else .001)
         assert np.max(np.abs(np.frombuffer(release, dtype='<f4')[-8192:])) == 0
-    result = {'scsi_identity_verified': args.scsi, 'cold_pcm_frames_exact': len(reference)//8, 'note_off_silent': True,
+    result = {'active_normal_filter': args.filter_state, 'scsi_identity_verified': args.scsi, 'cold_pcm_frames_exact': len(reference)//8, 'note_off_silent': True,
               'immediate_frames_equal': replay_frames == frames, 'refreshed_frames_exact': True,
               'corrupt_rejected_before_mutation': True, 'running_checkpoint_rejected': True, 'scheduled_midi_restored': args.scheduled,
               'serial_boundary': args.serial, 'enqueue_age_seconds': enqueue_age,

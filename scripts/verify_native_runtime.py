@@ -21,6 +21,13 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--loop-modes', action='store_true', help='Verify seven ROBOLOOP modes through firmware playback')
+    parser.add_argument('--loop-stress', action='store_true', help='With --loop-modes, overlap/retrigger all modes and verify exact checkpoint replay and release')
+    parser.add_argument('--polyphony', action='store_true', help='Verify firmware allocation/stealing/retrigger/sustain with ROBOFULL')
+    parser.add_argument('--pitch-loops', action='store_true', help='Build/load a private 21-note ROBOLOOP-derived octave fixture and qualify pitch transitions')
+    parser.add_argument('--combined-audio', action='store_true', help='Qualify explicit diagnostic filter/stereo/envelope/interpolation profile on ROBO_TVF')
+    parser.add_argument('--combined-normal', action='store_true', help='With --combined-audio, qualify all72 cases through normal defaults')
+    parser.add_argument('--combined-baseline', action='store_true', help='With --combined-audio, verify a six-case normal filter/stereo smoke matrix')
+    parser.add_argument('--disk-voice-stress', action='store_true', help='Qualify Disk/Load note restrictions and recovery against a Perform completion-status control')
     parser.add_argument('--sample-disk', type=Path, default=ROOT / 'roms/FDD/ROBOFULL.IMG')
     parser.add_argument('--state-dir', type=Path, default=ROOT / 'docs/ic20-hle-findings/chatGPT-work/native-runtime-verification')
     parser.add_argument('--wave-dump', type=Path, help='Read-only wave RAM dump for persistence verification')
@@ -36,6 +43,34 @@ def main():
     parser.add_argument('--rack-dials', action='store_true', help='Exercise real Value edits and output gain/recall against native PCM')
     parser.add_argument('--bus-trace', action='store_true', help='Verify read-only diagnostic taps preserve exact native PCM/display replay')
     args = parser.parse_args()
+    if args.disk_voice_stress:
+        if any((args.combined_audio, args.polyphony, args.pitch_loops, args.loop_modes, args.bus_trace, args.rack_dials, args.pull_render, args.scheduled_midi, args.runtime_contract)):
+            parser.error('--disk-voice-stress is a separate acceptance scenario')
+        args.sample_disk = ROOT / 'roms/FDD/ROBOLOOP.IMG'
+        if hashlib.sha256(args.sample_disk.read_bytes()).hexdigest() != '65f8a8353d4e5bedfa1cc0f0d600012cf6946cda0129ec96363f49a91cb43060':
+            parser.error('Unexpected ROBOLOOP fixture')
+    if args.combined_normal and not args.combined_audio:
+        parser.error('--combined-normal requires --combined-audio')
+    if args.combined_baseline and not args.combined_audio:
+        parser.error('--combined-baseline requires --combined-audio')
+    if args.combined_audio:
+        if any((args.polyphony, args.pitch_loops, args.loop_modes, args.bus_trace, args.rack_dials, args.pull_render, args.scheduled_midi, args.runtime_contract)):
+            parser.error('--combined-audio is a separate acceptance scenario')
+        args.sample_disk = ROOT / 'roms/FDD/ROBO_TVF.IMG'
+        if hashlib.sha256(args.sample_disk.read_bytes()).hexdigest() != '1bcbd06688769883ad0f1477608fd80a134e4b22e7bea76709a98283007f3fad':
+            parser.error('Unexpected ROBO_TVF fixture')
+    if args.pitch_loops:
+        if any((args.polyphony, args.loop_modes, args.bus_trace, args.rack_dials, args.pull_render, args.scheduled_midi, args.runtime_contract)):
+            parser.error('--pitch-loops is a separate acceptance scenario')
+        from verify_native_loop_pitch import build_fixture
+        args.sample_disk = build_fixture(ROOT / 'roms/FDD/ROBOLOOP.IMG', args.state_dir.resolve())
+    if args.polyphony:
+        if any((args.loop_modes, args.bus_trace, args.rack_dials, args.pull_render, args.scheduled_midi, args.runtime_contract)):
+            parser.error('--polyphony is a separate acceptance scenario')
+        if hashlib.sha256(args.sample_disk.read_bytes()).hexdigest() != '8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae':
+            parser.error('--polyphony requires the qualified ROBOFULL.IMG fixture')
+    if args.loop_stress and not args.loop_modes:
+        parser.error('--loop-stress requires --loop-modes')
     if args.bus_trace and (args.runtime_contract or args.pull_render or args.scheduled_midi or args.rack_dials or args.loop_modes):
         parser.error('--bus-trace uses checkpoint rewind; run other timeline scenarios separately')
     if args.rack_dials and (args.runtime_contract or args.pull_render or args.scheduled_midi):
@@ -51,7 +86,8 @@ def main():
     cfg = RuntimeConfig(args.executable, ROOT / 'roms/BOOT/Roland_S-760_v1.11.BIN',
         ROOT / 'roms/System/S760224.IMG', state, args.sample_disk,
         sound=args.system_audio, throttle=args.system_audio, wav_output=state / 'audio.wav', wave_dump=args.wave_dump,
-        audio_backend=args.audio_backend, audio_latency_ms=args.audio_latency_ms)
+        audio_backend=args.audio_backend, audio_latency_ms=args.audio_latency_ms,
+        diagnostic_combined_audio=args.combined_audio and not (args.combined_baseline or args.combined_normal))
     with NativeRuntime(cfg) as runtime:
         captured = []
         capture_active = False
@@ -152,6 +188,22 @@ def main():
         move(10, 5); click(); move(15, 22); click(); wait(3)
         if args.empty_drive:
             assert runtime.eject_media()['inserted'] is False
+        if args.polyphony:
+            from verify_native_polyphony import qualify
+            qualify(runtime, state)
+            return
+        if args.pitch_loops:
+            from verify_native_loop_pitch import qualify
+            qualify(runtime, state)
+            return
+        if args.combined_audio:
+            from verify_native_combined_audio import qualify
+            qualify(runtime, state, baseline=args.combined_baseline, normal=args.combined_normal or args.combined_baseline)
+            return
+        if args.disk_voice_stress:
+            from verify_native_disk_voice import qualify
+            qualify(runtime, state)
+            return
         if args.bus_trace:
             runtime.request('pause')
             runtime.request('audio_capture', enabled=True)
@@ -246,6 +298,49 @@ def main():
                              'first_nonzero': int(nz[0]), 'last_nonzero': int(nz[-1])})
             report = {'passed': True, 'rate': 44100, 'rows': rows,
                       'scope': 'Current default native profile, ROBOLOOP firmware load; not hardware parity'}
+            if args.loop_stress:
+                checkpoint = state / 'loop-stress.checkpoint'
+                runtime.save_checkpoint(checkpoint)
+                runs = []
+                stress_rows = []
+                for replay in range(2):
+                    if replay:
+                        runtime.load_checkpoint(checkpoint)
+                    blocks = []
+                    for cycle in range(8):
+                        now = runtime.request('status')[0]['seconds']
+                        start = math.ceil(now * 44100) + 2048
+                        events = []
+                        for mode in range(7):
+                            note = 60 + mode
+                            events.extend([
+                                {'sample': start + mode * 64, 'bytes': [0x90, note, 127]},
+                                {'sample': start + 11025 + mode * 64, 'bytes': [0x80, note, 0]},
+                                {'sample': start + 12000 + mode * 64, 'bytes': [0x90, note, 127]},
+                                {'sample': start + 44100 + mode * 64, 'bytes': [0x80, note, 0]},
+                            ])
+                        runtime.schedule_midi(sorted(events, key=lambda e: e['sample']))
+                        cycle_blocks = []
+                        remaining = 3 * 44100
+                        while remaining:
+                            n = min(8192, remaining)
+                            _, pcm = runtime.render_audio(n)
+                            cycle_blocks.append(pcm)
+                            remaining -= n
+                        pcm = b''.join(cycle_blocks)
+                        audio = np.frombuffer(pcm, dtype='<f4').reshape(-1, 2)
+                        peak = float(np.max(np.abs(audio)))
+                        assert np.isfinite(audio).all() and 0 < peak < 1, 'Invalid mixed playback'
+                        assert np.max(np.abs(audio[-44100:])) == 0, 'Stuck note after mixed retrigger/release'
+                        if not replay:
+                            stress_rows.append({'cycle': cycle, 'peak': peak, 'silent_tail_frames': 44100})
+                        blocks.append(pcm)
+                    runs.append(b''.join(blocks))
+                assert runs[0] == runs[1], 'Mixed-mode checkpoint replay differs'
+                report['stress'] = {'cycles': stress_rows, 'note_ons_per_run': 112,
+                    'exact_replay_frames': len(runs[0]) // 8,
+                    'pcm_sha256': hashlib.sha256(runs[0]).hexdigest(),
+                    'limits': 'Same-process checkpoint recall; no disk overlap, voice-count/stealing assertion or hardware comparison'}
             (state / 'loop-results.json').write_text(json.dumps(report, indent=2))
             print(json.dumps(report, indent=2))
             return

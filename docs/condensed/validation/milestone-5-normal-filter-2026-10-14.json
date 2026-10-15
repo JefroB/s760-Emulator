@@ -1,0 +1,1394 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; file identities recorded",
+  "scope": "Normal filter default selection and requalification; native functional evidence, no new physical accuracy claim",
+  "identities_sha256": {
+    "scripts/s760_runtime.py": "10c1621fcf85ad234aae1cbb6f6bdeada8c8ab5af427e3b95f9da9af450b92ba",
+    "scripts/verify_native_runtime.py": "bbb89eaf3c045e5a86da324ba6e98d20a48d36ccd289f704ce28809ef0c60b10",
+    "scripts/verify_native_combined_audio.py": "ebd71b3f327dddbfa5b3af9dce1ba386af45e806c4eade9eb087a8ed8bc15e6a",
+    "scripts/verify_vst3_filters.py": "3b6f5118de8347391983c3ec71c4fb064fe7157a15fb353377f47a6476cd0d12",
+    "core/src/s760_native_runtime.cpp": "6d570ab15618c69b12b4db5e2175bf09edd82b14e597d240b40edb0851878731",
+    "mame-source/src/mame/roland/s760.cpp": "eed443a40a3d376de5f54df287a352393c70439cd9aed6a1061706259928091d",
+    "mame-source/mames760.exe": "26b61444c908795426769c946becb681e36f07a7336d37f99e52bf3af8c5591b",
+    "build/Release/Roland_S760.vst3": "b6e5a417650723123347fcfe927d9da19273efb4c4b79c189cbe51e4076b70eb",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "c255953dcbc326b2327dde0b3d763cd62addc6aa3ed94dd2fe4f5a1352051513",
+    "docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe": "bd6e96c65e741a27be2265bad38477cc7a2a537b6b02fb3af3f00d658fbe7345",
+    "roms/FDD/ROBO_TVF.IMG": "1bcbd06688769883ad0f1477608fd80a134e4b22e7bea76709a98283007f3fad",
+    "roms/FDD/ROBOLOOP.IMG": "65f8a8353d4e5bedfa1cc0f0d600012cf6946cda0129ec96363f49a91cb43060",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "scripts/verify_native_checkpoint.py": "8f1aa2103d72c87a41d3dcc4636d1354789530ad71d4b5af644af39eacfe7a03",
+    "tests/test_native_runtime.py": "b0d05517467245cf620e10eb981d105a8626f6fb5ce3c5df35125cd0f1112b09",
+    "tests/test_native_checkpoint.py": "92bff8dfcc4e842529f995994de3e38376ae08279137b98c4d0d998df53ef713"
+  },
+  "prerequisites": "Windows x64 native MAME, original OS/boot ROM and named floppy fixtures; private state/media; local sockets; SoundCheck private SDK QA host and WebView2",
+  "normal_matrix": {
+    "passed": true,
+    "profile": "normal stereo/filter/interpolation",
+    "rate": 44100,
+    "cases": 72,
+    "rows": [
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.0017498225206509233,
+        "right_peak": 0.0,
+        "rms": 0.001172390067949891,
+        "low_high_power_ratio": 0.3311473655093084,
+        "early_rms": 0.0008288462413474917,
+        "late_rms": 0.0008289559627883136,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.0013794517144560814,
+        "right_peak": 0.0,
+        "rms": 0.0013794517144560814,
+        "low_high_power_ratio": 0.13507684079518567,
+        "early_rms": 0.0009754195925779641,
+        "late_rms": 0.000975419650785625,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.002657217439264059,
+        "right_peak": 0.0,
+        "rms": 0.0014375066384673119,
+        "low_high_power_ratio": 0.08799244460870254,
+        "early_rms": 0.0010166417341679335,
+        "late_rms": 0.0010165659477934241,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.0012223967351019382,
+        "right_peak": 0.0012223967351019382,
+        "rms": 0.0008190120570361614,
+        "low_high_power_ratio": 0.3311473654808669,
+        "early_rms": 0.0008188552455976605,
+        "late_rms": 0.0008189637446776032,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 0.0009636619361117482,
+        "right_peak": 0.0009636619361117482,
+        "rms": 0.0009636618779040873,
+        "low_high_power_ratio": 0.13507684079518573,
+        "early_rms": 0.0009636618779040873,
+        "late_rms": 0.0009636618779040873,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 0.0018562877085059881,
+        "right_peak": 0.0018562877085059881,
+        "rms": 0.0010042182402685285,
+        "low_high_power_ratio": 0.08799244458611706,
+        "early_rms": 0.0010043870424851775,
+        "late_rms": 0.0010043121874332428,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.0017498225206509233,
+        "rms": 0.001172390067949891,
+        "low_high_power_ratio": 0.3311473655093084,
+        "early_rms": 0.0008288462413474917,
+        "late_rms": 0.0008289559627883136,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.0013794517144560814,
+        "rms": 0.0013794517144560814,
+        "low_high_power_ratio": 0.13507684079518567,
+        "early_rms": 0.0009754195925779641,
+        "late_rms": 0.000975419650785625,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 0,
+        "patch": "bypass",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.002657217439264059,
+        "rms": 0.0014375229366123676,
+        "low_high_power_ratio": 0.08799244531936912,
+        "early_rms": 0.0010166852734982967,
+        "late_rms": 0.0010165569838136435,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.0001444509398424998,
+        "right_peak": 0.0,
+        "rms": 7.447505049640313e-05,
+        "low_high_power_ratio": 166553275.4078822,
+        "early_rms": 5.189296280150302e-05,
+        "late_rms": 5.2457373385550454e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.00011597549018915743,
+        "right_peak": 0.0,
+        "rms": 6.89332518959418e-05,
+        "low_high_power_ratio": 97316901.23084074,
+        "early_rms": 4.9234975449508056e-05,
+        "late_rms": 4.850140612688847e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.00010595680942060426,
+        "right_peak": 0.0,
+        "rms": 6.231886800378561e-05,
+        "low_high_power_ratio": 67457172.18149936,
+        "early_rms": 4.367739529698156e-05,
+        "late_rms": 4.426660234457813e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.00010091101285070181,
+        "right_peak": 0.00010091101285070181,
+        "rms": 5.202556712902151e-05,
+        "low_high_power_ratio": 166553707.8790574,
+        "early_rms": 5.126533142174594e-05,
+        "late_rms": 5.182293534744531e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 8.101853745756671e-05,
+        "right_peak": 8.101853745756671e-05,
+        "rms": 4.815861757379025e-05,
+        "low_high_power_ratio": 97316298.96666944,
+        "early_rms": 4.863697540713474e-05,
+        "late_rms": 4.791123865288682e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 7.4019655585289e-05,
+        "right_peak": 7.4019655585289e-05,
+        "rms": 4.3534171709325165e-05,
+        "low_high_power_ratio": 67457224.31127574,
+        "early_rms": 4.314718535169959e-05,
+        "late_rms": 4.3734329665312544e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.0001444509398424998,
+        "rms": 7.447338430210948e-05,
+        "low_high_power_ratio": 166553245.99552473,
+        "early_rms": 5.189127114135772e-05,
+        "late_rms": 5.24556526215747e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.00011597549018915743,
+        "rms": 6.893755198689178e-05,
+        "low_high_power_ratio": 97316901.2574029,
+        "early_rms": 4.923040251014754e-05,
+        "late_rms": 4.8495807277504355e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 13,
+        "patch": "LP-C32-R0",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.00010595680942060426,
+        "rms": 6.231800944078714e-05,
+        "low_high_power_ratio": 67457159.40119332,
+        "early_rms": 4.3674397602444515e-05,
+        "late_rms": 4.426767191034742e-05,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.0004663341387640685,
+        "right_peak": 0.0,
+        "rms": 0.0001660599373281002,
+        "low_high_power_ratio": 405816.6410697529,
+        "early_rms": 0.00011540863488335162,
+        "late_rms": 0.00011752401042031124,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.0004181189287919551,
+        "right_peak": 0.0,
+        "rms": 0.00015577464364469051,
+        "low_high_power_ratio": 243106.76484342234,
+        "early_rms": 0.00011027519940398633,
+        "late_rms": 0.00011000128870364279,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.0003838705597445369,
+        "right_peak": 0.0,
+        "rms": 0.0001456436439184472,
+        "low_high_power_ratio": 179370.54852363735,
+        "early_rms": 0.00010317667329218239,
+        "late_rms": 0.0001028438491630368,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.0003257732605561614,
+        "right_peak": 0.0003257732605561614,
+        "rms": 0.00011600669677136466,
+        "low_high_power_ratio": 405816.6306183445,
+        "early_rms": 0.0001140174936153926,
+        "late_rms": 0.00011610738147282973,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 0.0002920909028034657,
+        "right_peak": 0.0002920909028034657,
+        "rms": 0.00010882196511374786,
+        "low_high_power_ratio": 243107.16448902304,
+        "early_rms": 0.00010893445869442075,
+        "late_rms": 0.00010867367382161319,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 0.0002681655460037291,
+        "right_peak": 0.0002681655460037291,
+        "rms": 0.00010174421913689002,
+        "low_high_power_ratio": 179370.55005499732,
+        "early_rms": 0.00010193297202931717,
+        "late_rms": 0.00010160417150473222,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.0004663341387640685,
+        "rms": 0.00016606190183665603,
+        "low_high_power_ratio": 405816.6303404123,
+        "early_rms": 0.00011540948617039248,
+        "late_rms": 0.00011752230057027191,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.0004181189287919551,
+        "rms": 0.00015577464364469051,
+        "low_high_power_ratio": 243106.76484342234,
+        "early_rms": 0.00011027519940398633,
+        "late_rms": 0.00011000128870364279,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 14,
+        "patch": "LP-C64-R0",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.0003838705597445369,
+        "rms": 0.00014564291632268578,
+        "low_high_power_ratio": 179370.54477951807,
+        "early_rms": 0.00010317983105778694,
+        "late_rms": 0.00010284233576385304,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.0014548483304679394,
+        "right_peak": 0.0,
+        "rms": 0.00042386201675981283,
+        "low_high_power_ratio": 1236.4743205351172,
+        "early_rms": 0.0002966099127661437,
+        "late_rms": 0.00029936328064650297,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.0013115619076415896,
+        "right_peak": 0.0,
+        "rms": 0.0003866641200147569,
+        "low_high_power_ratio": 704.4007628126425,
+        "early_rms": 0.0002750148414634168,
+        "late_rms": 0.00027313875034451485,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.001119829947128892,
+        "right_peak": 0.0,
+        "rms": 0.00035218530683778226,
+        "low_high_power_ratio": 491.5510268826045,
+        "early_rms": 0.0002486877201590687,
+        "late_rms": 0.00024933702661655843,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.0010163327679038048,
+        "right_peak": 0.0010163327679038048,
+        "rms": 0.0002961020218208432,
+        "low_high_power_ratio": 1236.4742791891883,
+        "early_rms": 0.0002930371556431055,
+        "late_rms": 0.0002957633987534791,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 0.0009162352653220296,
+        "right_peak": 0.0009162352653220296,
+        "rms": 0.0002701171033550054,
+        "low_high_power_ratio": 704.4007187446992,
+        "early_rms": 0.000271699798759073,
+        "late_rms": 0.00026984637952409685,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 0.0007822944899089634,
+        "right_peak": 0.0007822944899089634,
+        "rms": 0.0002460308314766735,
+        "low_high_power_ratio": 491.55103265678446,
+        "early_rms": 0.00024569162633270025,
+        "late_rms": 0.0002463290293235332,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.0014548483304679394,
+        "rms": 0.0004238609690219164,
+        "low_high_power_ratio": 1236.4742940769079,
+        "early_rms": 0.0002966127067338675,
+        "late_rms": 0.0002993709349539131,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.0013115619076415896,
+        "rms": 0.000386664061807096,
+        "low_high_power_ratio": 704.4007628091597,
+        "early_rms": 0.000275006634183228,
+        "late_rms": 0.0002731385175138712,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 15,
+        "patch": "LP-C96-R0",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.001119829947128892,
+        "rms": 0.00035218530683778226,
+        "low_high_power_ratio": 491.5510268826045,
+        "early_rms": 0.0002486877201590687,
+        "late_rms": 0.00024933702661655843,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.0015986073995009065,
+        "right_peak": 0.0,
+        "rms": 0.0006801118142902851,
+        "low_high_power_ratio": 6945490.507309809,
+        "early_rms": 0.00047958522918634117,
+        "late_rms": 0.0004800906463060528,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.002600698731839657,
+        "right_peak": 0.0,
+        "rms": 0.0013708868063986301,
+        "low_high_power_ratio": 19480155.419329822,
+        "early_rms": 0.0009214492165483534,
+        "late_rms": 0.0009767579613253474,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.0012260675430297852,
+        "right_peak": 0.0,
+        "rms": 0.0004656539822462946,
+        "low_high_power_ratio": 1891515.7497598012,
+        "early_rms": 0.00032777353771962225,
+        "late_rms": 0.0003313774068374187,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.0011167604243382812,
+        "right_peak": 0.0011167604243382812,
+        "rms": 0.0004751147935166955,
+        "low_high_power_ratio": 6945498.071657715,
+        "early_rms": 0.00047380427713505924,
+        "late_rms": 0.0004743036115542054,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 0.0018168047536164522,
+        "right_peak": 0.0018168047536164522,
+        "rms": 0.0009576785960234702,
+        "low_high_power_ratio": 19480179.55216849,
+        "early_rms": 0.0009103419724851847,
+        "late_rms": 0.0009649841813370585,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 0.0008565103053115308,
+        "right_peak": 0.0008565103053115308,
+        "rms": 0.0003252980823162943,
+        "low_high_power_ratio": 1891517.6929375678,
+        "early_rms": 0.0003238225181121379,
+        "late_rms": 0.0003273829643148929,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.0015986073995009065,
+        "rms": 0.0006801114650443196,
+        "low_high_power_ratio": 6945490.8522990635,
+        "early_rms": 0.00047959748189896345,
+        "late_rms": 0.0004801020259037614,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.002600698731839657,
+        "rms": 0.0013708868063986301,
+        "low_high_power_ratio": 19480155.419329822,
+        "early_rms": 0.0009214492165483534,
+        "late_rms": 0.0009767579613253474,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 17,
+        "patch": "LP-C64-R64",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.0012260675430297852,
+        "rms": 0.0004656539822462946,
+        "low_high_power_ratio": 1891515.8370356446,
+        "early_rms": 0.0003277571522630751,
+        "late_rms": 0.0003313695196993649,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.000854019308462739,
+        "right_peak": 0.0,
+        "rms": 0.0001569205051055178,
+        "low_high_power_ratio": 433030.474674905,
+        "early_rms": 1.3613233022624627e-05,
+        "late_rms": 0.0003449417999945581,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.0007564764237031341,
+        "right_peak": 0.0,
+        "rms": 0.00014352193102240562,
+        "low_high_power_ratio": 267587.7617506533,
+        "early_rms": 9.364983270643279e-06,
+        "late_rms": 0.00031461616163142025,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.0006925156922079623,
+        "right_peak": 0.0,
+        "rms": 0.0001338018337264657,
+        "low_high_power_ratio": 181480.34751164744,
+        "early_rms": 7.289847872016253e-06,
+        "late_rms": 0.0002911555056925863,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.0005966036696918309,
+        "right_peak": 0.0005966036696918309,
+        "rms": 0.00010887125245062634,
+        "low_high_power_ratio": 456495.9617585657,
+        "early_rms": 1.2731206879834644e-05,
+        "late_rms": 0.00033742093364708126,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 0.0005353615269996226,
+        "right_peak": 0.0005353615269996226,
+        "rms": 0.00010063146328320727,
+        "low_high_power_ratio": 260958.35883020953,
+        "early_rms": 9.817211321205832e-06,
+        "late_rms": 0.0003115790314041078,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 0.0004703803570009768,
+        "right_peak": 0.0004703803570009768,
+        "rms": 9.33873379835859e-05,
+        "low_high_power_ratio": 182832.92076113884,
+        "early_rms": 7.404347343253903e-06,
+        "late_rms": 0.00028673032647930086,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.000854019308462739,
+        "rms": 0.0001576808572281152,
+        "low_high_power_ratio": 420754.0039000425,
+        "early_rms": 1.4358904991240706e-05,
+        "late_rms": 0.00034621654776856303,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.0007564764237031341,
+        "rms": 0.00014372872828971595,
+        "low_high_power_ratio": 264684.08440523635,
+        "early_rms": 9.495333870290779e-06,
+        "late_rms": 0.00031478831078857183,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 1,
+        "patch": "LP-sweep-R0",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.0006735657807439566,
+        "rms": 0.00013358643627725542,
+        "low_high_power_ratio": 183620.51759960255,
+        "early_rms": 7.276535143319052e-06,
+        "late_rms": 0.0002901987172663212,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.0009787429589778185,
+        "right_peak": 0.0,
+        "rms": 0.00015514451661147177,
+        "low_high_power_ratio": 161.02851501711083,
+        "early_rms": 2.2850957975606434e-05,
+        "late_rms": 0.0003548644599504769,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.0009258605423383415,
+        "right_peak": 0.0,
+        "rms": 0.00014404687681235373,
+        "low_high_power_ratio": 79.98578570703309,
+        "early_rms": 2.0456311176531017e-05,
+        "late_rms": 0.0003473992692306638,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.0008609005017206073,
+        "right_peak": 0.0,
+        "rms": 0.00013357146235648543,
+        "low_high_power_ratio": 55.606950292761354,
+        "early_rms": 1.6513247828697786e-05,
+        "late_rms": 0.0003344864526297897,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.0006837333785369992,
+        "right_peak": 0.0006837333785369992,
+        "rms": 0.00010921559442067519,
+        "low_high_power_ratio": 158.23355219560582,
+        "early_rms": 2.3044647605274804e-05,
+        "late_rms": 0.00035340801696293056,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 0.0006548055680468678,
+        "right_peak": 0.0006548055680468678,
+        "rms": 0.00010150695743504912,
+        "low_high_power_ratio": 78.44696649781535,
+        "early_rms": 2.0329900507931598e-05,
+        "late_rms": 0.0003468872746452689,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 0.0006007397314533591,
+        "right_peak": 0.0006007397314533591,
+        "rms": 9.25797939999029e-05,
+        "low_high_power_ratio": 56.57019586006728,
+        "early_rms": 1.5722338503110223e-05,
+        "late_rms": 0.00032784350332804024,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.0009787437738850713,
+        "rms": 0.00015494921535719186,
+        "low_high_power_ratio": 161.42989462517681,
+        "early_rms": 2.305620364495553e-05,
+        "late_rms": 0.00035395982558839023,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.0009154477738775313,
+        "rms": 0.00014355486200656742,
+        "low_high_power_ratio": 80.60617201067735,
+        "early_rms": 1.9846338545903563e-05,
+        "late_rms": 0.00034564087400212884,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 5,
+        "patch": "BP-sweep-R0",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.0008469533058814704,
+        "rms": 0.00013248571485746652,
+        "low_high_power_ratio": 56.540117243871464,
+        "early_rms": 1.6274685549433343e-05,
+        "late_rms": 0.0003311366308480501,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 0,
+        "note": 57,
+        "left_peak": 0.0029459462966769934,
+        "right_peak": 0.0,
+        "rms": 0.0011865516426041722,
+        "low_high_power_ratio": 0.3263109821830284,
+        "early_rms": 0.0008292416459880769,
+        "late_rms": 0.0009231921285390854,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 0,
+        "note": 60,
+        "left_peak": 0.002577253384515643,
+        "right_peak": 0.0,
+        "rms": 0.0013959427597001195,
+        "low_high_power_ratio": 0.13301861902314305,
+        "early_rms": 0.0009759298991411924,
+        "late_rms": 0.0010977920610457659,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 0,
+        "note": 63,
+        "left_peak": 0.0034554514568299055,
+        "right_peak": 0.0,
+        "rms": 0.001454953453503549,
+        "low_high_power_ratio": 0.08650675140042063,
+        "early_rms": 0.0010172969195991755,
+        "late_rms": 0.0011515545193105936,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 64,
+        "note": 57,
+        "left_peak": 0.002055929973721504,
+        "right_peak": 0.002055929973721504,
+        "rms": 0.0008286210359074175,
+        "low_high_power_ratio": 0.3264765492454625,
+        "early_rms": 0.000819150940515101,
+        "late_rms": 0.0009095842833630741,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 64,
+        "note": 60,
+        "left_peak": 0.0018004262819886208,
+        "right_peak": 0.0018004262819886208,
+        "rms": 0.0009752953192219138,
+        "low_high_power_ratio": 0.13300316195961753,
+        "early_rms": 0.000964184058830142,
+        "late_rms": 0.0010859499452635646,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 64,
+        "note": 63,
+        "left_peak": 0.002415706869214773,
+        "right_peak": 0.002415706869214773,
+        "rms": 0.0010165800340473652,
+        "low_high_power_ratio": 0.08647042160653663,
+        "early_rms": 0.0010050325654447079,
+        "late_rms": 0.0011399934301152825,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 127,
+        "note": 57,
+        "left_peak": 0.0,
+        "right_peak": 0.0029459462966769934,
+        "rms": 0.0011863698018714786,
+        "low_high_power_ratio": 0.32641125561045764,
+        "early_rms": 0.0008292103884741664,
+        "late_rms": 0.0009221015498042107,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 127,
+        "note": 60,
+        "left_peak": 0.0,
+        "right_peak": 0.0026046931743621826,
+        "rms": 0.0013964049285277724,
+        "low_high_power_ratio": 0.13295965666862514,
+        "early_rms": 0.0009759538806974888,
+        "late_rms": 0.0011017397046089172,
+        "silent_release_frames": 44100
+      },
+      {
+        "program": 9,
+        "patch": "HP-sweep-R0",
+        "pan": 127,
+        "note": 63,
+        "left_peak": 0.0,
+        "right_peak": 0.0034554407466202974,
+        "rms": 0.0014549288898706436,
+        "low_high_power_ratio": 0.08650253218318703,
+        "early_rms": 0.0010172956390306354,
+        "late_rms": 0.001151698175817728,
+        "silent_release_frames": 44100
+      }
+    ],
+    "limits": "Named patches/pan/pitch at native44.1kHz, forward loops and finite/release checks; no exact moving/resonant filter parity, other modes/clocks, packaged qualification"
+  },
+  "loops": {
+    "passed": true,
+    "rate": 44100,
+    "rows": [
+      {
+        "mode": 0,
+        "note": 60,
+        "sign_match": 1.0,
+        "peak": 0.0017682858742773533,
+        "held_peak": 0.0017682858742773533,
+        "first_nonzero": 2761,
+        "last_nonzero": 148731
+      },
+      {
+        "mode": 1,
+        "note": 61,
+        "sign_match": 1.0,
+        "peak": 0.0017682858742773533,
+        "held_peak": 0.0017682858742773533,
+        "first_nonzero": 2762,
+        "last_nonzero": 148931
+      },
+      {
+        "mode": 2,
+        "note": 62,
+        "sign_match": null,
+        "peak": 0.0017682858742773533,
+        "held_peak": 0.0,
+        "first_nonzero": 2762,
+        "last_nonzero": 4808
+      },
+      {
+        "mode": 3,
+        "note": 63,
+        "sign_match": 1.0,
+        "peak": 0.0017682858742773533,
+        "held_peak": 0.0017682858742773533,
+        "first_nonzero": 2762,
+        "last_nonzero": 137801
+      },
+      {
+        "mode": 4,
+        "note": 64,
+        "sign_match": 1.0,
+        "peak": 0.0017682858742773533,
+        "held_peak": 0.0017682858742773533,
+        "first_nonzero": 2762,
+        "last_nonzero": 148663
+      },
+      {
+        "mode": 5,
+        "note": 65,
+        "sign_match": null,
+        "peak": 0.0017682858742773533,
+        "held_peak": 0.0,
+        "first_nonzero": 2764,
+        "last_nonzero": 4811
+      },
+      {
+        "mode": 6,
+        "note": 66,
+        "sign_match": 1.0,
+        "peak": 0.0017682858742773533,
+        "held_peak": 0.0017682858742773533,
+        "first_nonzero": 2764,
+        "last_nonzero": 149069
+      }
+    ],
+    "scope": "Current default native profile, ROBOLOOP firmware load; not hardware parity",
+    "stress": {
+      "cycles": [
+        {
+          "cycle": 0,
+          "peak": 0.0185512974858284,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 1,
+          "peak": 0.02004445530474186,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 2,
+          "peak": 0.02004445530474186,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 3,
+          "peak": 0.017113737761974335,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 4,
+          "peak": 0.02004445530474186,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 5,
+          "peak": 0.017113737761974335,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 6,
+          "peak": 0.01872875913977623,
+          "silent_tail_frames": 44100
+        },
+        {
+          "cycle": 7,
+          "peak": 0.01872875913977623,
+          "silent_tail_frames": 44100
+        }
+      ],
+      "note_ons_per_run": 112,
+      "exact_replay_frames": 1058400,
+      "pcm_sha256": "28d6fcb15237508e72f8e5075eeed0dd6931bc76d00ae83df20ca70829be8e42",
+      "limits": "Same-process checkpoint recall; no disk overlap, voice-count/stealing assertion or hardware comparison"
+    }
+  },
+  "partial_edit_save_load": {
+    "before": [
+      {
+        "bend": "centre",
+        "frequency_hz": 248,
+        "peak": 0.007709295488893986
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 248,
+        "peak": 0.007709295488893986
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 248,
+        "peak": 0.007709295488893986
+      }
+    ],
+    "edited": [
+      {
+        "bend": "centre",
+        "frequency_hz": 495,
+        "peak": 0.007714434992522001
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 495,
+        "peak": 0.007714434992522001
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 495,
+        "peak": 0.007714434992522001
+      }
+    ],
+    "edited_frequency_ratio": 1.9959677419354838,
+    "dirty": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": true,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 134
+    },
+    "reloaded": [
+      {
+        "bend": "centre",
+        "frequency_hz": 495,
+        "peak": 0.007714434992522001
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 495,
+        "peak": 0.007714434992522001
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 495,
+        "peak": 0.007714434992522001
+      }
+    ],
+    "passed": true,
+    "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "saved_sha256": "6269f853087881a7ba73df4d461ed98a5aff27d4f680a07e98971f9be04cde21",
+    "scope": "Partial Common coarse tune0 to12 via firmware controls; original-firmware Save/export/fresh Load and measured audio",
+    "limits": "One named operation; not arbitrary edits, hardware or packaged-interface acceptance"
+  },
+  "cold_state": {
+    "scsi_identity_verified": true,
+    "cold_pcm_frames_exact": 131072,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": true,
+    "serial_boundary": false,
+    "enqueue_age_seconds": -0.022675736961787152,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "variable_pcm": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.433333333333,
+    "note_release": 80.633333333333,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    },
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999542236328125,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "seconds": 82.939365079365,
+        "sample": 3657626
+      },
+      {
+        "seconds": 83.939365079365,
+        "sample": 3701726
+      }
+    ]
+  },
+  "backend": {
+    "passed": 363,
+    "seconds": 49.19,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-filter-pytest-199.py"
+  },
+  "core_plugin_units": "Both complete executable suites pass; SDK invocation without settings was not acceptance",
+  "supported_filter_words": {
+    "native_rate": 44100,
+    "command": 0,
+    "cutoff_max": 16383,
+    "damping_max": 4095,
+    "LP_mode": 0,
+    "BP_mode": 1024,
+    "HP_mode": 512,
+    "BP_HP_damping_values": [
+      4095,
+      85
+    ],
+    "other_words": "Raw unfiltered path with cleared filter history"
+  },
+  "checkpoint_policy": "Standalone audio_profile=native-stereo-filter-interpolation-44100-v2 rejects old bypass-profile states; VST module hash rejects old builds",
+  "commands": [
+    "python scripts/verify_native_runtime.py --combined-audio --combined-normal --state-dir <fresh-absolute>",
+    "python scripts/verify_native_runtime.py --loop-modes --loop-stress --sample-disk D:/S-760/roms/FDD/ROBOLOOP.IMG --state-dir <fresh-absolute>",
+    "python scripts/verify_native_patch_edit.py --partial-tune --state-dir <fresh-absolute>",
+    "python scripts/verify_native_checkpoint.py --scheduled --scsi --state-dir <fresh-absolute>",
+    "python scripts/verify_native_runtime.py --pull-render --scheduled-midi --state-dir <fresh-absolute>",
+    "python scripts/verify_native_checkpoint.py --filter-state --state-dir <fresh-absolute>",
+    "python scripts/verify_vst3_filters.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir <fresh-private> --debug-port 9233"
+  ],
+  "limits": [
+    "Stepped firmware coefficient writes; no hardware-exact moving/resonant response claim; BUG-005 remains open",
+    "Other commands/modes fall back unfiltered; no alternate ADC clock expansion",
+    "Headless native and paced host-unit tests do not qualify physical driver latency or final shipped package"
+  ],
+  "host_48000": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=240000 rate=48000 input_active=0 reference_exact=1 peak=0.0311661 tail=0 first_audible=14496 offline=0 reported_tail=4294967295 reported_latency=13393 paced=1 varied=1 max_callback_us=32.3 max_deadline_fraction=0.0122079 missed_deadlines=0",
+  "host_96000": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=480000 rate=96000 input_active=0 reference_exact=1 peak=0.0311495 tail=0 first_audible=28973 offline=0 reported_tail=4294967295 reported_latency=26785 paced=1 varied=1 max_callback_us=31.4 max_deadline_fraction=0.0471 missed_deadlines=0",
+  "soundcheck": {
+    "passed": true,
+    "profile": "SoundCheck native SDK VST3 44100Hz, normal filter defaults",
+    "cases": 9,
+    "rows": [
+      {
+        "note": 60,
+        "pan": 0,
+        "rms": 0.0013794517144560814,
+        "low_high": 0.13507249985151357,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 60,
+        "pan": 64,
+        "rms": 0.0009636618779040873,
+        "low_high": 0.13507249985151304,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 60,
+        "pan": 127,
+        "rms": 0.0013794517144560814,
+        "low_high": 0.13507249985151357,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 61,
+        "pan": 0,
+        "rms": 6.904916517669335e-05,
+        "low_high": 97303374.98274423,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 61,
+        "pan": 64,
+        "rms": 4.823659037356265e-05,
+        "low_high": 97302770.62266645,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 61,
+        "pan": 127,
+        "rms": 6.904916517669335e-05,
+        "low_high": 97303374.98274423,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 62,
+        "pan": 0,
+        "rms": 0.00038639636477455497,
+        "low_high": 704.3016064136289,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 62,
+        "pan": 64,
+        "rms": 0.00026993005303665996,
+        "low_high": 704.3015623652362,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 62,
+        "pan": 127,
+        "rms": 0.00038639636477455497,
+        "low_high": 704.3016064136289,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 61,
+        "pan": 64,
+        "rms": 4.823659037356265e-05,
+        "low_high": 97302770.62266645,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 61,
+        "pan": 64,
+        "rms": 4.823659037356265e-05,
+        "low_high": 97302770.62266645,
+        "silent_release_frames": 44100
+      }
+    ],
+    "exact_replay_frames": 220500,
+    "variable_blocks": [
+      64,
+      127,
+      256,
+      511,
+      512
+    ],
+    "limits": "Three named patches; no physical fidelity or other DAW claim"
+  },
+  "soundcheck_fixture": {
+    "source_sha256": "1bcbd06688769883ad0f1477608fd80a134e4b22e7bea76709a98283007f3fad",
+    "fixture_sha256": "494f3c9276c6463405fe0309cc5ef0bc5f3bb509f72f1a61e52779f40c29b608",
+    "mapping": {
+      "60": "bypass",
+      "61": "LP C32 R0",
+      "62": "LP C96 R0"
+    },
+    "changes": "First patch keymap and partial coarse compensation only; all sample/PCM bytes unchanged"
+  },
+  "active_filter_cold_state": {
+    "active_normal_filter": true,
+    "scsi_identity_verified": false,
+    "cold_pcm_frames_exact": 65536,
+    "note_off_silent": true,
+    "immediate_frames_equal": false,
+    "refreshed_frames_exact": true,
+    "corrupt_rejected_before_mutation": true,
+    "running_checkpoint_rejected": true,
+    "scheduled_midi_restored": false,
+    "serial_boundary": false,
+    "enqueue_age_seconds": 0.7106575963722292,
+    "fresh_process_sample_disk_supplied": false
+  },
+  "host_attempts": {
+    "first": "Editor control selector timeout; no acceptance",
+    "second": "Firmware Load and first bypass/pan case passed, then existing BUG-060 audio-block rejection; no full acceptance",
+    "third": "Every callback paced; all nine cases, fresh-instance replay, variable blocks and editor reopen passed",
+    "limits": "No production reliability fix for BUG-060 is claimed; paced functional evidence only"
+  },
+  "before_regression": {
+    "command": "python -m pytest tests/test_native_runtime.py tests/test_native_checkpoint.py -q -k 'normal_filter_profile or diagnostic_combined' with private tmp/cache",
+    "result": "2 failed, 1 passed before launcher/identity changes; complete suite passes after"
+  },
+  "exported_vst3_48000": {
+    "command": "./build/Release/s760_native_factory_tests.exe D:/S-760 <private-state> --paced-var 48000 5",
+    "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=240000 rate=48000 input_active=0 reference_exact=1 peak=0.031098 tail=0 first_audible=13857 offline=0 reported_tail=4294967295 reported_latency=13393 paced=1 varied=1 max_callback_us=23.8 max_deadline_fraction=0.00615 missed_deadlines=0",
+    "exit_code": 0
+  },
+  "exported_vst3_96000": {
+    "command": "./build/Release/s760_native_factory_tests.exe D:/S-760 <private-state> --paced-var 96000 5",
+    "result": "Native VST3 boot/load/display/offsets/audio/suspend passed; frames=480000 rate=96000 input_active=0 reference_exact=1 peak=0.0310982 tail=0 first_audible=28984 offline=0 reported_tail=4294967295 reported_latency=26785 paced=1 varied=1 max_callback_us=34.4 max_deadline_fraction=0.0114 missed_deadlines=0",
+    "exit_code": 0
+  }
+}

@@ -1,5 +1,7 @@
 # Roland S-760 Condensed Reference
 
+Current product status (2026-10-14): Milestones1–5 are complete for the documented Windows development profiles. The [acceptance matrix](../MILESTONE_5_ACCEPTANCE.md) controls supported sampler claims, including disk-mode mute/recovery and named SCSI writes. Final shipped-artifact and clean-machine qualification remains Milestone6; physical fidelity limits remain explicit. The dated checkpoint below is historical.
+
 Current checkpoint: 2026-10-11, findings through146. Native original-ROM boot
 reaches the colour, mouse-interactive Perform Play screen, loads sample disks,
 and plays firmware-driven MIDI voices (up to 24-voice polyphony). Measured loop,

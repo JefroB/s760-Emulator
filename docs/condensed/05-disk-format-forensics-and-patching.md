@@ -1,5 +1,132 @@
 # Disk Format, Forensics & Patching
 
+## Full native Roland SCSI performance Load — 2026-10-14
+
+The complete606,709,760-byte JMD S760 freeware CD now boots as an external CD1
+profile, reports Formatted, lists all10 volumes and loads K4 :KAWAI K4 through
+normal Disk/Load. The firmware restores its native performance/patch/partial
+hierarchy; no Akai conversion or host-generated sample injection is involved.
+All79 K4 sample allocations/6,054,912 bytes match independent source FAT-chain
+reads exactly. Three channel1 drum notes and channel2 note60 produce bounded
+finite audio and release to a full silent second. Two cold processes replay
+65536 stereo frames exactly; changed-CD preflight rejects before native restore.
+
+BUG-070 separated immutable CD identity from mutable state: both managed
+launchers stream-hash recognized CD filenames, allowing1 GiB aggregate read-only
+CD content, while writable SCSI media retain64 MiB aggregate checkpoint storage.
+CD contents are excluded from native machine state; the imported session is
+171,072,219 bytes. Mounted CD writes still fail before DATA OUT. External CD
+filename/content are required on recall; this guard belongs to managed launchers.
+Older-build checkpoints reject by build identity; no migration is qualified.
+
+BUG-071 implements observed SCSI-to-wave DMA84. Native code page003B:7CD0..7D29
+programs wave address and gate count then waits for SPC completion. The gate
+carries the low16 bits of the full24-bit SPC length; treating a118,784-byte
+request as53,248 leaves65,536 bytes pending and freezes firmware controls.
+Bounded36/65,536/118,784-byte regressions, counter/address advancement, invalid
+bounds and CD write rejection pass. Prior RAM47/PIO/register contracts remain
+qualified;389 backend tests, core/plugin units, full-CD C++ host playback and
+writable-SCSI checkpoint recall pass. All changed artifacts build successfully.
+
+The qualified scope is this CD1/2048-sector image and first K4 performance at
+32 MB RAM. Other volumes/libraries, SCSI Save, hot-plug, physical arbitration and
+final packaged interface repetition remain separate work.
+[Exact identities, commands, source samples and limits](validation/milestone-5-roland-scsi-load-2026-10-14.json).
+
+## Genuine Akai S1000 SCSI Convert Load — 2026-10-14
+
+Original IC15/OS2.24 imports the first volume of the supplied String.Ensembles CD
+through CD1,2048-byte sectors and32 MB wave RAM. Convert Load produces the
+VI LONG FF patch and30 samples, totaling13,568,196 PCM bytes. The imported patch
+is then assigned to performance part1 through the firmware's Value control.
+
+A bounded independent reader follows the fingerprinted volume directory/FAT and
+150-byte S1000 sample headers. Every source PCM word matches native wave RAM
+except107 words in the four-word regions after aligned loop boundaries.
+A read-only native wave-port observer records240 writes without drops: source
+values are first transferred correctly, then the original firmware rewrites
+those regions. Converted values match those writes exactly. The complete32 MiB
+wave dump is byte-identical to an unobserved fresh conversion. This is observed
+firmware conversion behavior, not proof of physical loop/DSP equivalence.
+
+MIDI55/72/96 produce finite bounded output and release to a full silent second.
+The source and private CD backing hashes remain unchanged. Two fresh processes
+restore the imported session and produce65536 identical stereo frames, then
+release silently. Backend388 regressions pass. Failed exploratory probes
+included an insufficient45-second conversion wait, audition before assigning
+an imported patch, and overbroad diagnostic capture; these are not product fixes.
+
+This qualifies one genuine Akai CD/volume/program through native firmware;
+at that checkpoint native Roland-format Load was still pending. The later full
+Roland qualification is above. Other Akai CDs/device profiles, SCSI Save/writeback,
+hot-plug and final packaged media selection remain unqualified.
+[Exact fixture/artifact identities, command and results](validation/milestone-5-akai-scsi-load-2026-10-14.json).
+
+## Native SCSI prerequisite correction — 2026-10-14
+
+Original IC15 initialization accesses the SPC registers at E400/E402/E404/E408,
+physical102400/02/04/08. Native decoding now uses a two-byte stride through the
+16-register address window; TEMP and transfer-counter ports are accessible.
+Native SELECT uses command20 and reports command-done10 or absent-target timeout04;
+INTS reads preserve pending status until explicit write acknowledgement. Controller
+reset uses SCTL40, bus reset SCMD10. These definitions agree with the
+[original NetBSD MB89352 register header](https://raw.githubusercontent.com/NetBSD/src/trunk/sys/dev/ic/mb89352reg.h)
+and the isolated native register fixture. Synthetic blank targets0/1 are retained
+only for the legacy flat/HLE device fixture; native targets require supplied files.
+
+Native SSTS now reports idle empty-data/zero-counter as 0x05 rather than the
+incorrect constant 0x28 (busy/reset). TC-zero follows the programmed counter;
+reset follows SCMD assertion/deassertion. The failing-before/passing-after native
+fixture also checks idle recovery after absent selection. BUG-065 is fixed for
+this direct-data status contract; this does not add an asynchronous FIFO engine.
+[Status regression and native/state evidence](validation/milestone-5-scsi-status-2026-10-14.json).
+
+## Native SCSI discovery and unsupported-media recovery — 2026-10-14
+
+Native BDID reads now expose1<<ID and ignore upper write bits. SELECT uses TEMP,
+excludes the initiator bit, and times out on empty/initiator-only masks without
+reusing an old target. Original firmware page003B:75FE..7634 writes command bytes
+through TEMP and handshakes SET ACK E4 / RESET ACK C4; the native controller now
+drops/reasserts REQ accordingly. Programmed-input reads decrease the SPC counter,
+and status/message ACKs release the bus.
+
+Observed firmware DMA47 (page003B:7724..778C) now transfers bounded SPC input into
+RAM, advances destination and exhausts gate/SPC counters. Oversized and out-of-RAM
+fixture requests leave data/counters unchanged. This implementation is synchronous;
+other controls, output DMA, zero-count conventions, native IRQ priority and exact
+hardware timing remain unqualified. Legacy flat behavior stays separate.
+
+Original IC15/OS2.24 now identifies a private HD0/512-byte-sector target rather
+than listing every supplied device as No Drive. Three fresh-machine cases qualify
+absence, a zero-filled10MiB image and a truncated1024-byte image. Absent target
+shows No Drive; both unsupported images show Unformatted and emit Not Formatted
+on selection. Each case returns to a real floppy Load, verifies all119808 sample
+bytes, plays/releases to a full silent second, and preserves both source/backing
+images with idle/clean media. Firmware-issued512-byte DMA completions are logged
+for present targets. Command traces are bounded and drop rows in present cases;
+no exhaustive bus/arbitration claim is made. Late absent-case trace has no commands,
+so no claim is made that every absent ID is actively reselected by that UI action.
+
+Isolated before/after regressions cover eight initiator IDs, seven present-target
+INQUIRY selections, command/PIO and DMA/bounds. Original-firmware native audio/MIDI,
+131072 exact cold stereo frames/refreshed displays, legacy transfer/state and363
+backend tests pass on the complete fix. Intermediate BDID-only and PIO-only builds
+exposed two firmware stalls; both are resolved rather than accepted as regressions.
+BUG-066/068/069 are fixed for this bounded contract.
+
+At this discovery checkpoint, genuine formatted SCSI sample Load was unqualified.
+The later Akai Convert Load subset is qualified above; native Roland performance
+Load and SCSI Save remain separate pending work.
+[Exact identities, commands, failures, firmware cases and limits](validation/milestone-5-scsi-discovery-2026-10-14.json).
+
+The owner manual Advanced3-104 (PDF page128) states that System LoadPRM/SavePRM
+transfer settings between internal and System Backup memory. This is not a disk
+operation and cannot establish concurrent disk/MIDI/voice coverage. Earlier local
+screen notes incorrectly described disk storage; BUG-067 corrects those notes.
+Advanced5-15 (PDF page153) describes the drive Scan action. The firmware verifier
+uses the actual Scan widget and panel action; screenshots identify reviewed OS2.24
+labels, not generalized OCR.
+
 ## Native persistence checkpoint — 2026-10-11
 
 Firmware Save now completes observed IC4 DMA modes FA (RAM to floppy) and E2
@@ -181,3 +308,22 @@ confirmation. Visually checked parts list p.5 establishes **IC15 = BOOT EPROM,
 IC1 = CPU, IC20 = I/O gate array**; finding 22's CPU designation was incorrect.
 Directory/catalog structure, allocation units, full record semantics, and checks
 outside the tested boot patches remain open.
+
+
+### Native HD0 writes (2026-10-14)
+
+Original firmware quick initialization and performance Save now use bounded RAM78/waveA0 output DMA with native SPC counter completion. Writes modify the instance's controller image; source files remain unchanged. Python `NativeRuntime.export_scsi_hd0(new_path)` requests an idle HD0 snapshot through the native media port, validates its byte count and publishes a new output without replacing an existing destination. Busy/missing/read-only targets reject; export failures preserve controller data. The emulator must be running for the input callback. This export is a Python QA operation; the packaged GUI/VST export action has not been qualified for SCSI.
+
+`verify_native_scsi_save.py` qualifies the private10 MiB HD00_512.img / HD0 /512-byte-sector profile: initialize, Save ROBOFULL performance, export and fresh firmware Load without a sample floppy. All13 sample allocations/119808 bytes are exact; playback level/spectrum and release survive. No low-level physical format/timing or arbitrary-media acceptance is claimed. [Validation](validation/milestone-5-scsi-save-2026-10-14.json).
+
+
+### Supported disk/MIDI/voice contract (2026-10-14)
+
+Owner's manual Advanced1-3 (S-760_OM.pdf page11) explicitly excludes sound output in Disk, Quick Load and Sampling displays and while commands such as Copy execute. Searching for a supported ongoing-voice disk operation was an incorrect roadmap requirement. This resolves the remaining Milestone5 gate through documented restriction/recovery, without claiming three-source arbitration.
+
+Current native ROBOFULL Save clears four active notes, completes under240 incoming scheduled MIDI events (166 observed overlapping FDC writes), remains exactly silent over1543500 frames, and returns to Perform without stuck notes. Fresh Load preserves13 allocations/119808 bytes and matching recovered peak/release; original media/firmware hashes remain unchanged. The positive Save trace drops378 rows and cannot prove exhaustive handling or absence of every event. Three current Load-directory trials have complete traces and zero restricted completion overlap; their Perform control observes12 source2 requests. [Evidence and commands](validation/milestone-5-concurrent-recovery-2026-10-14.json).
+
+
+### Disk Load versus full-session identity (BUG-006,2026-10-14)
+
+The historical347-byte wave-RAM mismatch reproduces in the32MiB profile at high-memory metadata/name/ID/directory records, while13 sample allocations/119808 bytes remain exact through Save/export/fresh firmware Load. A separate cold checkpoint preserves all33554432 wave-RAM bytes exactly. Disk Load reconstructs records and must not be required to reproduce an entire session. BUG-006 is closed WONTFIX for its erroneous whole-session expectation; no guest metadata was patched. `verify_native_media.py --checkpoint --state-dir <fresh-private-directory>` now records every changed range and asserts full-wave identity specifically for checkpoint recall. [Evidence](validation/remaining-bug-investigation-2026-10-14.json).

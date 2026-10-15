@@ -1,0 +1,531 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; tested identities recorded",
+  "scope": "Native original-firmware Akai S1000 CD1 Convert Load, program-to-performance assignment, PCM provenance, playback and cold recall",
+  "passed": true,
+  "command": "python scripts/verify_native_akai_load.py --state-dir PRIVATE_EMPTY_DIRECTORY",
+  "prerequisites": "Windows x64 native MAME; original IC15 v1.11/OS2.24; user-supplied genuine String.Ensembles.iso; private writable state and loopback access; Python NumPy/Pillow",
+  "fixture": {
+    "filename": "Best Service - Peter Siedleczek's Advance Orchestra (DISC 1) - String.Ensembles.iso",
+    "source_sha256": "f1879343706559e38c6705148cb48e1bc23e50edc65aecea2a712eafe9fff144",
+    "bytes": 28180480,
+    "private_target": "STATE/load/roms/SCSI/CD10_2048.iso",
+    "target_id": 1,
+    "lun": 0,
+    "sector_bytes": 2048,
+    "wave_memory_mb": 32,
+    "volume_directory_name": "01 VI LNG FF",
+    "program_name": "VI LONG FF"
+  },
+  "native_result": {
+    "audio": [
+      {
+        "note": 55,
+        "peak": 0.009815623983740807,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 72,
+        "peak": 0.011083253659307957,
+        "silent_release_frames": 44100
+      },
+      {
+        "note": 96,
+        "peak": 0.010030411183834076,
+        "silent_release_frames": 44100
+      }
+    ],
+    "media_status": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": false,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 1,
+      "revision": 0
+    },
+    "samples": [
+      {
+        "name": "VI LGFF G2-L",
+        "frames": 217215,
+        "wave_byte_offset": 16,
+        "bytes_verified": 434430,
+        "source_sha256": "638a89da1b0ead5f2b0fae7ce45e5898a6781c9d9c1cf2a90cc497806656957f",
+        "converted_sha256": "96d2ab2edec05c57cc0d43cbb9a995f752108a6f0bae14b55df0b7aadca368e1",
+        "firmware_tail_words": [
+          217153,
+          217154,
+          217155,
+          217156
+        ]
+      },
+      {
+        "name": "VI LGFF G2-R",
+        "frames": 217215,
+        "wave_byte_offset": 442384,
+        "bytes_verified": 434430,
+        "source_sha256": "36fe0532ee6ae0f291fca9cc447c89e303b0c5c2e5dbfac0f56b3078e4878be8",
+        "converted_sha256": "1515c0c103fef8d3cae8ac73edcf6e2b749b6d3d88b229a973098f4df05ea9df",
+        "firmware_tail_words": [
+          217153,
+          217154,
+          217155
+        ]
+      },
+      {
+        "name": "VI LGFF#A2-L",
+        "frames": 240690,
+        "wave_byte_offset": 884752,
+        "bytes_verified": 481380,
+        "source_sha256": "bc0ecbba8347ca86602c142541f5783c9f5a0229494f1367016aa13134be3d69",
+        "converted_sha256": "92e0ea82146705f9b5499e5fd642093291ec9e6615a9278b24f4c988ce63f29c",
+        "firmware_tail_words": [
+          240641,
+          240642,
+          240643,
+          240644
+        ]
+      },
+      {
+        "name": "VI LGFF#A2-R",
+        "frames": 240690,
+        "wave_byte_offset": 1373200,
+        "bytes_verified": 481380,
+        "source_sha256": "75c33b601b8003b75a248aebf18f4e98e9e5fca3245e5c0bb163a62cf6ac0ac4",
+        "converted_sha256": "5dfc06415ad5e77d59ce2fc820a224209aec4f8b2924942d8aba6f8562cf5f21",
+        "firmware_tail_words": [
+          240641,
+          240642,
+          240643,
+          240644
+        ]
+      },
+      {
+        "name": "VI LGFF#C3-L",
+        "frames": 220483,
+        "wave_byte_offset": 1861648,
+        "bytes_verified": 440966,
+        "source_sha256": "a04b0fd0eb1d44dd13645e2b1b597d8001d5c00a149b06729409d57eff994987",
+        "converted_sha256": "547366c36518c47232d069fe1db160b23386e48c715b7d90cad7c328fd0d8bd2",
+        "firmware_tail_words": [
+          220417,
+          220418,
+          220419,
+          220420
+        ]
+      },
+      {
+        "name": "VI LGFF#C3-R",
+        "frames": 220483,
+        "wave_byte_offset": 2304016,
+        "bytes_verified": 440966,
+        "source_sha256": "4853b24efa21e98017ea9002d518733efc76daf92b1ce51a0aeb273594b6b135",
+        "converted_sha256": "f1e69ae4fa994bfffc7eefe6d988bee3d4886ba9b6769a7db2758d13df2477e5",
+        "firmware_tail_words": [
+          220417,
+          220418,
+          220419,
+          220420
+        ]
+      },
+      {
+        "name": "VI LGFF E3-L",
+        "frames": 246012,
+        "wave_byte_offset": 2746384,
+        "bytes_verified": 492024,
+        "source_sha256": "62f01b8d2e785374a5fdba665eb5f5a6fcce3b9871a55e07c94a47faf6c9269b",
+        "converted_sha256": "77a913aca149f4ada9e90bd4578affac383909f13758aa9b1ed196baa023d448",
+        "firmware_tail_words": [
+          245953,
+          245954,
+          245955,
+          245956
+        ]
+      },
+      {
+        "name": "VI LGFF E3-R",
+        "frames": 246012,
+        "wave_byte_offset": 3244048,
+        "bytes_verified": 492024,
+        "source_sha256": "8db44a189f04df32c0c6645dfeae2f84eb084a6539288b6da24140c26ce1387d",
+        "converted_sha256": "131e79ef6d9d503bb34a8dd0ac74f39f1cd9c17d64db8f525ce1461986223404",
+        "firmware_tail_words": [
+          245953,
+          245954,
+          245955,
+          245956
+        ]
+      },
+      {
+        "name": "VI LGFF G3-L",
+        "frames": 260720,
+        "wave_byte_offset": 3741712,
+        "bytes_verified": 521440,
+        "source_sha256": "68b1ebb11bfb3bbe4d8e5c0de01e7cf41e0613275336395daaa249b53ff44343",
+        "converted_sha256": "97a6c1d3cdeb37dcc2c5a35788fa6e59dfcddab677ee078ba26094ca7a81367e",
+        "firmware_tail_words": [
+          260673,
+          260674,
+          260675,
+          260676
+        ]
+      },
+      {
+        "name": "VI LGFF G3-R",
+        "frames": 260720,
+        "wave_byte_offset": 4267024,
+        "bytes_verified": 521440,
+        "source_sha256": "e74a31d3343787bead5a2c147128f5f3dda189c2ade9cb2706eb00ca3868da2d",
+        "converted_sha256": "8e2e59dc0629c4a95465f3ab007a2d4d2ec33c7394caf35c9a8e39d39b024a7a",
+        "firmware_tail_words": [
+          260673,
+          260674,
+          260675,
+          260676
+        ]
+      },
+      {
+        "name": "VI LGFF#A3-L",
+        "frames": 253396,
+        "wave_byte_offset": 4792336,
+        "bytes_verified": 506792,
+        "source_sha256": "ab3112558f60231651245742f695db6f418fa0905d86830a537e5ac195d9e2d6",
+        "converted_sha256": "fbebeebbf095e421ba6c32da23d6ce3639bd98bf6e4f0e08eb30ed8b67cbe540",
+        "firmware_tail_words": [
+          253377,
+          253378,
+          253379,
+          253380
+        ]
+      },
+      {
+        "name": "VI LGFF#A3-R",
+        "frames": 253396,
+        "wave_byte_offset": 5299216,
+        "bytes_verified": 506792,
+        "source_sha256": "30b77010131d5737f0fd78120f8f6e320f6887c13420be6deabdc161ee6f832d",
+        "converted_sha256": "a6a47b9cd254aaa8b068e53df6d540af0b427ab9c49d8e6fd5daf2c4ffbec5ed",
+        "firmware_tail_words": [
+          253377,
+          253378,
+          253379,
+          253380
+        ]
+      },
+      {
+        "name": "VI LGFF#C4-L",
+        "frames": 239282,
+        "wave_byte_offset": 5806096,
+        "bytes_verified": 478564,
+        "source_sha256": "4edbb88317e9e52870ce99d127ee93b98b2cff5fa055a915f90ed5a90a5dcccf",
+        "converted_sha256": "16ed6386481eadd22ac1a241cd6fb9e937c5ec8c0c745b08688d4658ede6e5dd",
+        "firmware_tail_words": [
+          239233,
+          239234,
+          239235,
+          239236
+        ]
+      },
+      {
+        "name": "VI LGFF#C4-R",
+        "frames": 239282,
+        "wave_byte_offset": 6285328,
+        "bytes_verified": 478564,
+        "source_sha256": "04cd8e5f10f119bb01dae0f67f4ac2bbb7437ed976e0e3ebe81c07d512b49ba8",
+        "converted_sha256": "6f38696ad4de02ef2918c643eeef29d2d357cab3f7bfd9208f118adf6508c322",
+        "firmware_tail_words": [
+          239233,
+          239234,
+          239235,
+          239236
+        ]
+      },
+      {
+        "name": "VI LGFF E4-L",
+        "frames": 216220,
+        "wave_byte_offset": 6764560,
+        "bytes_verified": 432440,
+        "source_sha256": "9f3fe88b8df7e3d69aa697de5a012ea3de722219199ffac7e5e3ada1e6fe223e",
+        "converted_sha256": "062d9d1380721dd6d843821f7c9f0c934f0ecf4478e5f9611eaf9c451732fc61",
+        "firmware_tail_words": [
+          216193,
+          216194,
+          216195,
+          216196
+        ]
+      },
+      {
+        "name": "VI LGFF E4-R",
+        "frames": 216220,
+        "wave_byte_offset": 7197712,
+        "bytes_verified": 432440,
+        "source_sha256": "cf146718228d96a3673f2a5072076446ca4e31b4f31b73b28bb4b50071175d32",
+        "converted_sha256": "1e5eb4b99aaeea40dbb92050087c3f844ef9cd06a85a3b92550fdd2bef5b775c",
+        "firmware_tail_words": [
+          216193,
+          216194,
+          216195,
+          216196
+        ]
+      },
+      {
+        "name": "VI LGFF G4-L",
+        "frames": 214529,
+        "wave_byte_offset": 7630864,
+        "bytes_verified": 429058,
+        "source_sha256": "bedd0837361ad99efc2614cdffa2c5b4536418e4d42f62dcd5c6b7f3edaf3509",
+        "converted_sha256": "105ae37d28e42cbc8e6fe47296e50c97f6a5729e203e61f7f106b0a3d50d8988",
+        "firmware_tail_words": [
+          214465,
+          214466,
+          214467,
+          214468
+        ]
+      },
+      {
+        "name": "VI LGFF G4-R",
+        "frames": 214529,
+        "wave_byte_offset": 8064016,
+        "bytes_verified": 429058,
+        "source_sha256": "c3bf3f7d580571cceb4c24909f603de840a593b0029501eca532aba16a310b5f",
+        "converted_sha256": "a5a0a4c5d5e6232ac89f943306b023dd794f4d8fdcdfa22ac4b4fc431d31ca22",
+        "firmware_tail_words": [
+          214465,
+          214466,
+          214467,
+          214468
+        ]
+      },
+      {
+        "name": "VI LGFF#A4-L",
+        "frames": 221611,
+        "wave_byte_offset": 8497168,
+        "bytes_verified": 443222,
+        "source_sha256": "19c723d02fc309377eada405f79428cab476bb7bcdd1240cf79a68edf88587c7",
+        "converted_sha256": "20dc9e5eaf7eaa7212f8ddf0718b4e8aa61e2b44fb33481261363b15a5201c00",
+        "firmware_tail_words": [
+          221569,
+          221570,
+          221571,
+          221572
+        ]
+      },
+      {
+        "name": "VI LGFF#A4-R",
+        "frames": 221611,
+        "wave_byte_offset": 8948752,
+        "bytes_verified": 443222,
+        "source_sha256": "3bbd12302faf8efe5983261b4cd15d51aaf52773edf902d7d84a4bd993b888b8",
+        "converted_sha256": "b442eaffae43a5dd5067eba3e914878a6939d351e489b949dee43ca2c0adeac2",
+        "firmware_tail_words": [
+          221569,
+          221570,
+          221571,
+          221572
+        ]
+      },
+      {
+        "name": "VI LGFF#C5-L",
+        "frames": 201648,
+        "wave_byte_offset": 9400336,
+        "bytes_verified": 403296,
+        "source_sha256": "d6ee71dba967470f91291b193da1b19235138f46ee0ae70867a893204230cf74",
+        "converted_sha256": "dcf0de2b59ae5b15ebbb233e09a533e09d36dc82580c828f9db91d01a34e4551",
+        "firmware_tail_words": [
+          201601,
+          201602
+        ]
+      },
+      {
+        "name": "VI LGFF#C5-R",
+        "frames": 201648,
+        "wave_byte_offset": 9805840,
+        "bytes_verified": 403296,
+        "source_sha256": "5d2a901e85de9fb89dc8ca26307c1e2a3a4249225f9ca1e89e3c5ade7bfa68e2",
+        "converted_sha256": "b5f92ba4e1b380fcbcdf0feb1269ee2958b984876ed5f515c955e2514cc30b81",
+        "firmware_tail_words": [
+          201601,
+          201602,
+          201603,
+          201604
+        ]
+      },
+      {
+        "name": "VI LGFF E5-L",
+        "frames": 228375,
+        "wave_byte_offset": 10211344,
+        "bytes_verified": 456750,
+        "source_sha256": "a4f8c96e5fb04684dea504b4f0076996b2471b283a5cf73b77131f7ededfac37",
+        "converted_sha256": "ed2058df692f2e107c62d5fac0577433c8f77ec90cb2231881cecbb9adc7070d",
+        "firmware_tail_words": [
+          228353,
+          228354,
+          228355,
+          228356
+        ]
+      },
+      {
+        "name": "VI LGFF E5-R",
+        "frames": 228375,
+        "wave_byte_offset": 10672144,
+        "bytes_verified": 456750,
+        "source_sha256": "c9e2e298f45e9a2116eb1e44940e7f6d61c37dce9cb2d16d63956585398a9951",
+        "converted_sha256": "53066460f7c546f0459664513abc0d10b02c0b73134929001c661aadc509f22a",
+        "firmware_tail_words": [
+          228353,
+          228354,
+          228355,
+          228356
+        ]
+      },
+      {
+        "name": "VI LGFF G5-L",
+        "frames": 212357,
+        "wave_byte_offset": 11132944,
+        "bytes_verified": 424714,
+        "source_sha256": "b39c780bdcdf970fb5ee35fecfc9d8e161404fe4354bab7c742c4ec56d5a2163",
+        "converted_sha256": "5e053fdb7beba79df4d4dbbe01696148164577646ce45e1858d0a37a528a4d0f",
+        "firmware_tail_words": [
+          212355,
+          212356
+        ]
+      },
+      {
+        "name": "VI LGFF G5-R",
+        "frames": 212357,
+        "wave_byte_offset": 11566096,
+        "bytes_verified": 424714,
+        "source_sha256": "cb3ea3799fe3cd7ee6d8bc4f3d8378c80aea6674ebabb5f7d4aeb9c906fef5e7",
+        "converted_sha256": "80d1308558240caacb8e36cd47f7c89c3d2bf117d1ab35fa1666fd564745d38b",
+        "firmware_tail_words": [
+          212354,
+          212355,
+          212356
+        ]
+      },
+      {
+        "name": "VI LGFF#A5-L",
+        "frames": 207366,
+        "wave_byte_offset": 11999248,
+        "bytes_verified": 414732,
+        "source_sha256": "05198fcb3a5a3f8e7b1bb8114da6d6d264125faf8b8c2c45245f654cd57f97e4",
+        "converted_sha256": "e969be7f26999e63005f3cdd91f20a1a5be7a50b525d31a80fb2649fd0855293",
+        "firmware_tail_words": [
+          207364
+        ]
+      },
+      {
+        "name": "VI LGFF#A5-R",
+        "frames": 207366,
+        "wave_byte_offset": 12423184,
+        "bytes_verified": 414732,
+        "source_sha256": "3381e21702c24611b795f2c9cb1c512fb1a7e17c6a5c90ef15968834b1cc3c86",
+        "converted_sha256": "3381e21702c24611b795f2c9cb1c512fb1a7e17c6a5c90ef15968834b1cc3c86",
+        "firmware_tail_words": []
+      },
+      {
+        "name": "VI LGFF C6-L",
+        "frames": 212145,
+        "wave_byte_offset": 12847120,
+        "bytes_verified": 424290,
+        "source_sha256": "9c480dfd38a4df336ae96ac8e6e8f47ece6418025293dbdaf04d165832d391ef",
+        "converted_sha256": "d1e6b749ac317229dfcb755f563400de078eb766f002be3fd736e6eb3bf3c449",
+        "firmware_tail_words": [
+          212097,
+          212098,
+          212099,
+          212100
+        ]
+      },
+      {
+        "name": "VI LGFF C6-R",
+        "frames": 212145,
+        "wave_byte_offset": 13280272,
+        "bytes_verified": 424290,
+        "source_sha256": "7291f8d093b7f9bf83971b32684524bf897c74963de0bc4aebb654b50d4ee2d8",
+        "converted_sha256": "18a15e5afc20746b44216b586d7a3135dbe769f703c106ae6da7c5d77c796c14",
+        "firmware_tail_words": [
+          212097,
+          212098,
+          212099,
+          212100
+        ]
+      }
+    ],
+    "cold_recall": {
+      "passed": true,
+      "fresh_processes": 2,
+      "exact_stereo_frames": 65536,
+      "rows": [
+        {
+          "frames": 65536,
+          "pcm_sha256": "1474ea19a671d58a2125ac8adfe7427f80bf8ba9f0705ea145388d1694c939de",
+          "peak": 0.009815623983740807,
+          "silent_release_frames": 44100
+        },
+        {
+          "frames": 65536,
+          "pcm_sha256": "1474ea19a671d58a2125ac8adfe7427f80bf8ba9f0705ea145388d1694c939de",
+          "peak": 0.009815623983740807,
+          "silent_release_frames": 44100
+        }
+      ]
+    },
+    "passed": true,
+    "source_sha256": "f1879343706559e38c6705148cb48e1bc23e50edc65aecea2a712eafe9fff144",
+    "source_bytes": 28180480,
+    "sample_count": 30,
+    "bytes_verified": 13568196,
+    "observer_sha256": "abe1e0f3449ef916ba46c3bd281a6f968525bdfa36cfa8483abec5da8eaeaaee",
+    "limits": "One genuine CD1/2048-byte-sector S1000 volume; original-firmware conversion includes observed four-word tail adjustments. Not arbitrary CDs, SCSI Save, hot-plug, concurrent voices or physical timing."
+  },
+  "source_to_wave_verification": {
+    "pcm_bytes": 13568196,
+    "samples": 30,
+    "changed_words": 107,
+    "trace_rows": 240,
+    "trace_dropped": 0,
+    "method": "For each source-derived loop-tail region, first native CPU wave-port writes equal source PCM; final writes equal converted RAM. Every other PCM word is source-exact. No guest state or waveform injection.",
+    "negative_checks": [
+      "Unrelated PCM byte mutation rejects",
+      "Missing tail-write evidence rejects"
+    ],
+    "observer_neutrality": "Complete32MiB wave dump matches an earlier unobserved fresh firmware Convert Load byte-for-byte",
+    "unobserved_wave_sha256": "54f60ea68b3d46a568f2b39893f767bcd7228bfa247c932b0557c44e8282f221",
+    "observed_wave_sha256": "54f60ea68b3d46a568f2b39893f767bcd7228bfa247c932b0557c44e8282f221"
+  },
+  "backend_regressions": {
+    "passed": 388,
+    "seconds": 40.52
+  },
+  "format_reference": {
+    "url": "https://github.com/Midi-In/akaiutil/tree/38fef03a12c2bdf870d286e0741a35ea923c0993",
+    "use": "Independent first-partition volume-directory, FAT and S1000 header layout; bounded reader for fingerprinted fixture; no HLE importer used"
+  },
+  "identities_sha256": {
+    "scripts/verify_native_akai_load.py": "a000d2f75808b6b30f0509ae5a65d83594e4f10bd1298af7ba0c2405fce22000",
+    "scripts/s760_wave_tail_observer.lua": "1dccec7260b5753109eb7297e1d3a3ea74b7094a14099027f7d8c5eeba75c4f0",
+    "scripts/s760_runtime.py": "a0d6ac4ba3155b16677d610f0eb26c6d4f82892ce0aea31e7d7c493726e02232",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "mame-source/src/mame/roland/s760.cpp": "282baca19514ad7f42438fe10adaaacab4a6d2df4f471a0c1a13da8e1dac1a37",
+    "mame-source/mames760.exe": "850dddf37f7c07af8544dba2dd0baed649240faa6b025ca96eaaa02bb215a5b0",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "screenshots_sha256": {
+    "scanned.png": "118005861885a33b259b13aab9c96b8f9a2edd1c061d9b9c64f61be265501c97",
+    "volumes.png": "df42eba2050fef0408e6bbb761ae5810d30f7d458e1bd607bf2cf9c8cd2b5efc",
+    "converted.png": "13da40362813e666ee8a820f05d5c613c3ccf8ecdd94ed79f58cc59dce3bdf03",
+    "assigned.png": "702c267af8429d349335918f51999017e940585e9c6183e64d46478f86b99913"
+  },
+  "limitations": [
+    "Native headless functional evidence; repeat against final shipped media-selection UI separately",
+    "Only one28,180,480-byte CD1/2048-sector fixture, first volume and named program; other IDs, larger CDs, S3000 and other volumes not qualified",
+    "Akai Convert Load creates imported patches/samples; assigning patch1 to performance part1 is explicit; native Roland SCSI performance-file Load remains unqualified",
+    "SCSI Save/writeback and hot-plug are not qualified",
+    "No concurrent voice/disk arbitration or physical DSP/SIMM/SCSI timing claim",
+    "The controller media-status result is for floppy; SCSI CD integrity is established by before/after backing hashes"
+  ]
+}

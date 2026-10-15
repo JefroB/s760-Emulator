@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-14",
+  "revision": "611a52c1120d4c1f8b9656a8ad91d166bbf23994",
+  "worktree": "dirty; tested file hashes below",
+  "evidence_class": "Native firmware mouse/Value editing, firmware Save/export/fresh-process Load and measured MIDI bend PCM; not packaged/physical acceptance",
+  "command": "python scripts/verify_native_patch_edit.py --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/m5-patch-edit-20261014",
+  "prerequisites": "Built native binary, user-supplied boot ROM/OS, hash-checked ROBOFULL, fresh private state/media copies, permitted local sockets; headless unthrottled",
+  "identities_sha256": {
+    "scripts/verify_native_patch_edit.py": "dd0a3d32cc346d492e1f4d9e5a067db7924d56204cbb04bffdda7a08ad559e8b",
+    "scripts/s760_runtime.py": "2c4ef576cedb8833768f52ddce5e64b56f1b699b311669fd9399c82a275c3eab",
+    "scripts/s760_runtime.lua": "bbe65cb7ffbff3be758fbcaf1d63d9bdd550c0e34586f9fcb937f2022e550719",
+    "mame-source/src/mame/roland/s760.cpp": "253c3e70c99d5b1fbceb4d0967a3b953bdb3e37a3096d5f59fbf729a56f26498",
+    "mame-source/mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "result": {
+    "before": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      }
+    ],
+    "edited": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 4107,
+        "peak": 0.011030844412744045
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 10002,
+        "peak": 0.0110410051420331
+      }
+    ],
+    "dirty": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": true,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 134
+    },
+    "reloaded": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.024271592497825623
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 4107,
+        "peak": 0.011030844412744045
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 10002,
+        "peak": 0.0110410051420331
+      }
+    ],
+    "passed": true,
+    "source_sha256": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "saved_sha256": "9c86f54e3b22d640ec9f2ffcf69f31eb10b032de60ebe1f7a1fa90ad96eab0f2",
+    "scope": "Patch Bend Up/Down0 to12 via firmware Value control; original-firmware Save/export/fresh Load and audible bend",
+    "limits": "One named patch operation; not perform/partial/destructive sample editing, arbitrary edits, hardware or packaged-interface acceptance"
+  },
+  "operation": "Patch Control Bend Up and Bend Down each0 to12 via twelve Value increments; Save performance through firmware, export a new image, Load into a separate native process with fresh runtime/NVRAM",
+  "observations": "Before editing centre/up/down all20004Hz; after and cold Load centre20004/up4107/down10002Hz, peaks identical; every audition releases to a one-second exact silent tail. Aliased high-frequency fixture is a functional effect check, not an analog tuning/parity claim.",
+  "screenshot_review": "after-edit.png visually shows Patch Control Bend Up12/Bend Down12; before/edit/saved/reload screens and captured PCM remain in private work",
+  "limitations": [
+    "One named patch operation, not full patch-menu coverage",
+    "Perform/partial/destructive sample editing and final shipped-interface acceptance remain open",
+    "No hardware parity or realtime device latency claim",
+    "No guessed guest RAM writes or firmware modifications; original and working input hashes unchanged"
+  ],
+  "backend_regressions": {
+    "passed": 360,
+    "seconds": 33.71,
+    "exit_code": 0,
+    "command": "python docs/ic20-hle-findings/chatGPT-work/m5-patch-edit-pytest-190.py",
+    "scope": "Full tests/; private harness/snapshot/temp/cache and permitted local sockets"
+  }
+}

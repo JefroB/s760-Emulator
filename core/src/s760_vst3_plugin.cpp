@@ -897,6 +897,7 @@ void S760Vst3Plugin::initialize_configuration(const NativeRuntimeConfig& config)
     };
     d.AddMember("version",1,a);put("root",config.root);put("stateRoot",config.state.parent_path());
     put("bootRom",config.boot_rom);put("systemDisk",config.system_disk);
+    d.AddMember("waveMemoryMb",config.wave_memory_mb,a);
     put("mediaDirectory",config.media_directory.empty()?config.root/"roms/FDD":config.media_directory);
     try {
         const auto path=native_settings_path();
@@ -942,6 +943,13 @@ bool S760Vst3Plugin::configure_from_editor(const std::string& json) {
             if(!result.is_absolute()) throw std::runtime_error(std::string(key)+" must be an absolute path");
             saved.AddMember(rapidjson::Value(key,a),rapidjson::Value(text.c_str(),a),a);return result;
         };
+        unsigned memory=32;
+        if(p.HasMember("waveMemoryMb")) {
+            if(!p["waveMemoryMb"].IsUint()) throw std::runtime_error("Wave memory must be 8, 16 or 32 MB");
+            memory=p["waveMemoryMb"].GetUint();
+        }
+        if(memory!=8 && memory!=16 && memory!=32) throw std::runtime_error("Wave memory must be 8, 16 or 32 MB");
+        saved.AddMember("waveMemoryMb",memory,a);
         const auto root=path("root"),state=path("stateRoot"),boot=path("bootRom"),system=path("systemDisk"),media=path("mediaDirectory");
         for(auto file:{root/"mame-source/mames760.exe",root/"scripts/s760_runtime.lua",root/"google-ui/dist/index.html",boot,system}) {
             if(!std::filesystem::is_regular_file(file)) throw std::runtime_error("Missing runtime or firmware file: "+file.u8string());
@@ -1019,6 +1027,12 @@ static NativeRuntimeConfig native_factory_config() {
                     throw std::runtime_error(std::string("Invalid plugin setting: ")+key);
                 path=std::filesystem::u8path(text);
             };
+            if(document.HasMember("waveMemoryMb")) {
+                if(!document["waveMemoryMb"].IsUint()) throw std::runtime_error("Wave memory must be 8, 16 or 32 MB");
+                config.wave_memory_mb=document["waveMemoryMb"].GetUint();
+                if(config.wave_memory_mb!=8 && config.wave_memory_mb!=16 && config.wave_memory_mb!=32)
+                    throw std::runtime_error("Wave memory must be 8, 16 or 32 MB");
+            }
             fill(config.root,"root"); fill(state_root,"stateRoot");
             fill(config.boot_rom,"bootRom"); fill(config.system_disk,"systemDisk");
             if(document.HasMember("mediaDirectory")) fill(config.media_directory,"mediaDirectory");

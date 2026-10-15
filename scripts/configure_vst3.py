@@ -21,6 +21,8 @@ def default_config():
 def validate(settings):
     if not isinstance(settings, dict) or type(settings.get('version')) is not int or settings['version'] != 1:
         raise ValueError('Unsupported settings version')
+    if type(settings.get('waveMemoryMb',32)) is not int or settings.get('waveMemoryMb',32) not in (8,16,32):
+        raise ValueError('Wave memory must be 8, 16 or 32 MB')
     paths = {}
     for key in ('root', 'stateRoot', 'bootRom', 'systemDisk'):
         value = settings.get(key)
@@ -76,6 +78,7 @@ def main():
     parser.add_argument('--state-root', type=Path)
     parser.add_argument('--boot-rom', type=Path)
     parser.add_argument('--system-disk', type=Path)
+    parser.add_argument('--wave-memory-mb',type=int,choices=(8,16,32),default=32)
     parser.add_argument('--check', action='store_true', help='Validate existing settings without changing them')
     parser.add_argument('--diagnose', action='store_true', help='Show the last factory failure, then validate settings')
     args = parser.parse_args()
@@ -94,7 +97,7 @@ def main():
         else:
             if not all((args.state_root, args.boot_rom, args.system_disk)):
                 parser.error('--state-root, --boot-rom and --system-disk are required')
-            settings = {'version': 1, 'root': str(args.root.resolve()),
+            settings = {'version': 1, 'waveMemoryMb': args.wave_memory_mb, 'root': str(args.root.resolve()),
                         'stateRoot': str(args.state_root.resolve()),
                         'bootRom': str(args.boot_rom.resolve()), 'systemDisk': str(args.system_disk.resolve())}
             save_config(path, settings)

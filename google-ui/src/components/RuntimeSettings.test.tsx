@@ -4,6 +4,17 @@ import {RuntimeSettings} from './RuntimeSettings';
 
 describe('Runtime settings',()=>{
   const configuration={bootRom:'boot.bin',systemDisk:'system.img',mediaDirectory:'samples',sound:true};
+  it('defaults to 32 MB and applies a selected memory size after confirmation',()=>{
+    const apply=vi.fn();render(<RuntimeSettings configuration={configuration} pending={false} onApply={apply} onCancel={()=>{}}/>);
+    expect(screen.getByLabelText('Wave memory')).toHaveValue('32');
+    expect([...screen.getByLabelText('Wave memory').querySelectorAll('option')].map(o=>o.value)).toEqual(['8','16','32']);
+    fireEvent.click(screen.getByLabelText('Replace current sampler memory and restart'));
+    fireEvent.change(screen.getByLabelText('Wave memory'),{target:{value:'16'}});
+    expect(screen.getByText('Apply settings and start')).toBeDisabled();
+    fireEvent.click(screen.getByLabelText('Replace current sampler memory and restart'));
+    fireEvent.click(screen.getByText('Apply settings and start'));
+    expect(apply).toHaveBeenCalledWith({...configuration,waveMemoryMb:16});
+  });
   it('uses host-driven plugin settings without standalone audio controls',()=>{
     render(<RuntimeSettings configuration={configuration} hostDriven pending={false} onApply={()=>{}} onCancel={()=>{}}/>);
     expect(screen.queryByLabelText('Enable audio output')).toBeNull();

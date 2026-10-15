@@ -12,6 +12,7 @@ struct NativeRuntimeConfig {
     std::filesystem::path root, state, boot_rom, system_disk, sample_disk;
     std::filesystem::path media_directory;
     bool experimental_adc=false;
+    unsigned wave_memory_mb=32;
 };
 struct NativeRuntimeReply {
     std::string json;

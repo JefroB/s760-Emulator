@@ -73,7 +73,7 @@ export type S760ClientMessageType =
  *  NOTE_OFF                      : { note, velocity? }
  */
 export interface S760ClientPayload {
-  root?: string;stateRoot?: string;bootRom?: string;systemDisk?: string;mediaDirectory?: string;confirmReload?: boolean;
+  root?: string;stateRoot?: string;bootRom?: string;systemDisk?: string;mediaDirectory?: string;confirmReload?: boolean;waveMemoryMb?:8|16|32;
   id?: string;
   delta?: number;
   x?: number;
@@ -126,7 +126,7 @@ export interface S760ServerTelemetry {
 }
 
 export interface PluginConfigurationState {
-  root:string;stateRoot:string;bootRom:string;systemDisk:string;mediaDirectory:string;
+  root:string;stateRoot:string;bootRom:string;systemDisk:string;mediaDirectory:string;waveMemoryMb?:8|16|32;
   needsConfiguration:boolean;saved:boolean;revision:number;error:string;startupError:string;
 }
 

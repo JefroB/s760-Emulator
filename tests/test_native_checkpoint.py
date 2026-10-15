@@ -66,6 +66,24 @@ def test_scsi_identity_tracks_backing_files_and_rejects_changes(tmp_path, monkey
         runtime._checkpoint_identity()
 
 
+def test_diagnostic_combined_audio_cannot_share_normal_checkpoint_identity(tmp_path, monkeypatch):
+    import s760_runtime
+    for name in ('mame', 'boot', 'system'):
+        (tmp_path/name).write_bytes(name.encode())
+    (tmp_path/'scripts').mkdir(); (tmp_path/'scripts/s760_runtime.lua').write_bytes(b'protocol')
+    monkeypatch.setattr(s760_runtime, 'application_root', lambda: tmp_path)
+    config = RuntimeConfig(tmp_path/'mame', tmp_path/'boot', tmp_path/'system', tmp_path)
+    runtime = NativeRuntime(config)
+    normal = runtime._checkpoint_identity()
+    assert normal['audio_profile'] == 'native-stereo-filter-interpolation-44100-v2'
+    assert 'diagnostic_combined_audio' not in normal
+    config.diagnostic_combined_audio = True
+    diagnostic = runtime._checkpoint_identity()
+    assert diagnostic != normal
+    assert diagnostic.pop('diagnostic_combined_audio') == 'stereo-filter-44100-v1'
+    assert diagnostic == normal
+
+
 def test_scsi_snapshot_profile_bounds_external_images(tmp_path):
     runtime=NativeRuntime(RuntimeConfig(Path('mame'),Path('boot'),Path('system'),tmp_path))
     media=tmp_path/'roms/SCSI';media.mkdir(parents=True)
@@ -99,3 +117,16 @@ def test_version_one_session_reports_no_migration(tmp_path, monkeypatch):
     path = tmp_path/'old.state'; path.write_bytes(b'S760CKP1' + bytes(4))
     with pytest.raises(ValueError, match='migration is not available'):
         client(tmp_path, monkeypatch).validate_checkpoint(path)
+
+def test_large_readonly_cd_is_stream_hashed_separately_from_writable_limit(tmp_path,monkeypatch):
+    runtime=NativeRuntime(RuntimeConfig(Path('mame'),Path('boot'),Path('system'),tmp_path))
+    folder=tmp_path/'roms/SCSI';folder.mkdir(parents=True);cd=folder/'CD10_2048.iso'
+    with cd.open('wb') as f:f.truncate(65*1024*1024)
+    original=Path.read_bytes
+    def bounded(path):
+        if path==cd:pytest.fail('Large CD read into a temporary bytes object')
+        return original(path)
+    monkeypatch.setattr(Path,'read_bytes',bounded)
+    before=runtime._scsi_identity()
+    with cd.open('r+b') as f:f.seek(-1,2);f.write(b'1')
+    assert before!=runtime._scsi_identity()

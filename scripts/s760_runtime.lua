@@ -21,7 +21,7 @@ local checkpoint_pause = {grace=0}
 -- Opt-in diagnostic observer. Callbacks return nil and never change bus data.
 -- Only the authenticated native client exposes this; it is not a browser action.
 local bus_trace = nil
-local function start_bus_trace(first, last_address)
+local function start_bus_trace(first, last_address, include_fdc)
     local cpu = machine.devices[':maincpu']
     local space, banks = cpu.spaces['program'], {}
     for i=0,31 do banks[i] = space:read_u8(0x100+i) end
@@ -36,7 +36,8 @@ local function start_bus_trace(first, last_address)
         else
             local slot = 8 + 2*(address >> 14)
             address = ((banks[slot] | (banks[slot+1] << 8)) << 10) + (address & 0x3fff)
-            if address < first or address > last_address then return end
+            if (address < first or address > last_address)
+                and not (include_fdc and (address == 0x102000 or address == 0x102002)) then return end
         end
         trace.accesses = trace.accesses + 1
         -- Aggregate read polls by address/value/PC. Writes retain their order.
@@ -260,6 +261,7 @@ local function execute(command)
     elseif command.op == 'bus_trace' then
         assert(machine.paused, 'Pause before changing diagnostic tracing')
         assert(type(command.enabled) == 'boolean', 'Expected diagnostic enabled boolean')
+        assert(command.include_fdc == nil or type(command.include_fdc) == 'boolean', 'Expected include_fdc boolean')
         if command.enabled then
             assert(not bus_trace, 'Diagnostic trace is already active')
             local first = command.first == nil and 0x100000 or command.first
@@ -267,7 +269,7 @@ local function execute(command)
             assert(type(first) == 'number' and first % 1 == 0 and first >= 0x100000
                 and type(last) == 'number' and last % 1 == 0 and last <= 0x103fff
                 and first <= last, 'Expected inclusive external I/O trace range')
-            bus_trace = start_bus_trace(first, last)
+            bus_trace = start_bus_trace(first, last, command.include_fdc == true)
             reply({ok=true, capacity=256})
         else
             assert(bus_trace, 'Diagnostic trace is not active')

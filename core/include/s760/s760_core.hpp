@@ -1,5 +1,9 @@
 #pragma once
 
+// Historical reference model, deliberately unlinked from the native products.
+// Product wave/DSP execution belongs to MAME s760_sound_device; this interface
+// is not the standalone/VST3 renderer or a hardware-parity contract.
+
 #include <cstdint>
 #include <vector>
 #include <string>
