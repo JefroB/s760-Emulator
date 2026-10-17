@@ -7,7 +7,7 @@ the live CRT/LCD frames and provides the rack controls.
 
 ![Native standalone with original firmware and optional keyboard](docs/images/standalone-keyboard.png)
 
-Download the [standalone clean-machine acceptance kit](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v3).
+Download the [standalone clean-machine acceptance kit](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v4).
 See the [artifact index/checksum](artifacts/standalone/README.md) and
 [test instructions](docs/testing/standalone-clean-machine-handoff.md). The user accepted clean-machine launch/setup; full media workflows were waived.
 

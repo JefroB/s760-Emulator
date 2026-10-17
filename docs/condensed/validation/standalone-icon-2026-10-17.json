@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "sizes": [
+    16,
+    24,
+    32,
+    48,
+    64,
+    128,
+    256
+  ],
+  "exe_sha256": "78d863441f6e36070c04fcac5b971a4b97bca3a1c2a7f950f40fe7618a5de8c2",
+  "ico_sha256": "79c555a7c70a6faeb6cf1c605e485c5218090d15a8b2b6d86f7c8d2817cdde1f",
+  "date": "2026-10-17",
+  "artwork": "assets/s760-studio.png",
+  "window_icon": {
+    "size": 48,
+    "pixel_exact_match": true
+  },
+  "desktop": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "missing-firmware-close",
+        "mode": "unconfigured",
+        "exitCode": 0,
+        "nativeChildrenStopped": 0,
+        "profile": "D:\\S-760\\temp\\icon-2026-10-17\\desktop-qa\\empty-local\\S760Studio\\default",
+        "docsUnchanged": true
+      },
+      {
+        "name": "boot-save-quit",
+        "mode": "safe",
+        "exitCode": 0,
+        "nativeChildrenStopped": 1,
+        "profile": "D:\\S-760\\temp\\icon-2026-10-17\\desktop-qa\\boot-local\\S760Studio\\default",
+        "docsUnchanged": true
+      },
+      {
+        "name": "existing-recovery-close-discard",
+        "mode": "blocked",
+        "exitCode": 0,
+        "nativeChildrenStopped": 1,
+        "profile": "D:\\S-760\\temp\\icon-2026-10-17\\desktop-qa\\boot-local\\S760Studio\\default",
+        "docsUnchanged": true
+      }
+    ]
+  },
+  "scope": "Icon resources and real frozen workstation regression; no new clean-machine claim"
+}

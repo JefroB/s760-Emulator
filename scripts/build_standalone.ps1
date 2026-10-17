@@ -23,7 +23,8 @@ try {
 } finally { Pop-Location }
 Push-Location $repo
 try {
-    & python -m PyInstaller --noconfirm --onedir --windowed --name S760Studio `
+    & python -m PyInstaller --noconfirm --clean --onedir --windowed --name S760Studio `
+        --icon "$repo/assets/s760-studio.ico" `
         --add-binary "$repo/build/Release/s760_asio.dll;audio" --add-binary "$asioPortAudio;audio" `
         --paths "$repo/scripts" --collect-all webview --exclude-module webview.__pyinstaller --exclude-module PyInstaller --copy-metadata pywebview `
         --copy-metadata websockets --copy-metadata pythonnet `
