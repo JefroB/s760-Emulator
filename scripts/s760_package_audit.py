@@ -131,11 +131,15 @@ def audit_package(repo: Path, package: Path) -> dict:
         if source.is_file() and source.suffix.lower() in PRIVATE_SUFFIXES:
             private[digest(source)] = source.relative_to(repo).as_posix()
     for source in sorted(package.rglob('*')):
+        if source.is_dir() and source.name.casefold() == 'ic20-hle-findings':
+            errors.append(f'Research folder in distribution: {source.relative_to(package)}')
         if source.is_symlink():
             errors.append(f'Unexpected symlink: {source.relative_to(package)}')
             continue
         if not source.is_file() or source == package/'PACKAGE-AUDIT.json':
             continue
+        if source.relative_to(package).parts[0] == 'docs' and source.suffix.lower() in {'.exe', '.dll', '.pyd', '.py', '.ps1', '.lua'}:
+            errors.append(f'Executable content in documentation: {source.relative_to(package)}')
         name = source.relative_to(package).as_posix()
         checksum = digest(source)
         files[name] = {'sha256': checksum, 'bytes': source.stat().st_size}

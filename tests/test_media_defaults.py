@@ -3,7 +3,12 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from s760_media_paths import default_media_paths, stage_scsi_library
+from s760_media_paths import default_media_paths, stage_scsi_library, default_state_directory
+
+
+def test_default_profile_uses_local_appdata_not_install_folder(tmp_path, monkeypatch):
+    monkeypatch.setenv('LOCALAPPDATA', str(tmp_path / 'Local AppData'))
+    assert default_state_directory() == tmp_path / 'Local AppData/S760Studio/default'
 
 
 def test_roland_out_and_alternate_boot_name_are_discovered(tmp_path):

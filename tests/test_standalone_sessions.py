@@ -6,6 +6,32 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'scripts'))
 import s760_standalone as standalone
 
 
+def test_quit_before_native_start_releases_desktop_worker(session):
+    session.runtime.process = None
+    assert session.input(message('QUIT_APPLICATION')) == {'type': 'CLOSING'}
+    assert session.closing and session.stop.is_set()
+
+
+def test_safe_quit_failure_keeps_process_open_until_explicit_discard(session):
+    session.recovery_pending = True
+    result = session.input(message('QUIT_APPLICATION'))
+    assert result['type'] == 'QUIT_BLOCKED'
+    assert not session.closing and not session.stop.is_set()
+    assert session.input(message('QUIT_WITHOUT_RECOVERY', discard=True))['type'] == 'CLOSING'
+    assert session.closing and session.stop.is_set()
+
+
+def test_window_close_routes_to_visible_quit_dialog(session):
+    class Window:
+        def evaluate_js(self, script):
+            assert 's760-request-quit' in script
+            return True
+    assert standalone.request_desktop_close(Window(), session) is False
+    assert not session.stop.is_set()
+    session.closing = True
+    assert standalone.request_desktop_close(Window(), session) is True
+
+
 @pytest.fixture
 def session(tmp_path, monkeypatch):
     monkeypatch.setattr(standalone, 'midi_inputs', lambda _: [])

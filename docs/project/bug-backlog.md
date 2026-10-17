@@ -127,12 +127,71 @@ follow the schema so entries stay machine-greppable.
 | BUG-102 | FIXED | S3 | build | Dependency inventory accepts unattributed inputs and reports another installed version | 2026-10-17 | 2026-10-17 |
 | BUG-103 | FIXED | S3 | build | Documentation moves and mutable checkout checks invalidate historical artifact identity | 2026-10-17 | 2026-10-17 |
 | BUG-104 | FIXED | S3 | tests | Static artifact checker claims unobserved clean-machine and DAW qualification | 2026-10-17 | 2026-10-17 |
-
 | BUG-105 | FIXED | S2 | build | Downloaded acceptance ZIP extracts blocked .NET assemblies and fails before UI startup | 2026-10-17 | 2026-10-17 |
+| BUG-106 | FIXED | S2 | ui | Desktop has no clear safe Quit and can leave a worker waiting after window close | 2026-10-17 | 2026-10-17 |
+| BUG-107 | FIXED | S2 | build | Double-click runtime writes staged firmware into a research-style directory inside the package | 2026-10-17 | 2026-10-17 |
+| BUG-108 | FIXED | S3 | docs | Standalone archive omits an offline user documentation set | 2026-10-17 | 2026-10-17 |
 
-<!-- NEXT-ID: BUG-106 -->
+<!-- NEXT-ID: BUG-109 -->
 
 ## Details
+
+### BUG-108 — Standalone archive omits offline user documentation
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** docs
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User acceptance follow-up
+
+**Summary:** The standalone has a root README but no curated user documentation under docs. The only docs folder seen by the user was generated runtime state.
+
+**Repro:** Extract the original standalone and look for offline user guides in docs.
+
+**Expected:** Distributed Quick Start, full guide, controls and troubleshooting with working relative links; documentation folders contain no runtime state.
+
+**Actual:** The package builder copies the README but installs no user documentation set.
+
+**Resolution:** Install five offline Markdown documents: index, Quick Start, full guide, controls and troubleshooting. Root README links them. Link tests validate every relative documentation link. Build output defaults to build/standalone-package; current QA output stays under temp. Executable content in docs is rejected. See docs/testing/standalone-exit-profile-and-docs.md and its validation record.
+
+### BUG-106 — Desktop Quit is undiscoverable and early close can leave the process running
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User acceptance follow-up
+
+**Summary:** Desktop Quit is undiscoverable and early close can leave the process running.
+
+**Repro:** Start the application and try to quit without killing its process. Window-close recovery failure can cancel closure without a focused quit choice; an unstarted/dead child path returns from prepare_close without signaling the window worker.
+
+**Expected:** Visible Quit and window X offer save-and-quit or explicit discard; accepted closure stops the app and owned native child.
+
+**Actual:** User reports needing to kill the application. Existing Quit without recovery is buried in Configuration. Closing an unstarted runtime does not signal the worker event.
+
+**Resolution:** Visible Quit and native window X share a save/discard dialog. Early/dead-runtime close signals the worker; WinForms close dispatch runs asynchronously to avoid UI deadlock. Actual frozen WebView2 tests pass missing-firmware X close, boot/save/quit, and existing-recovery refusal followed by explicit discard. App exits0 and owned MAME children stop. See docs/testing/standalone-exit-profile-and-docs.md and its validation record.
+
+### BUG-107 — Packaged default profile creates a research directory and staged firmware
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** build
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User acceptance follow-up
+
+**Summary:** Packaged default profile creates a research directory and staged firmware.
+
+**Repro:** Double-click the frozen executable without --state-dir; default state resolves below the application docs/ic20-hle-findings/chatGPT-work folder. NativeRuntime privately stages the user OS image under that directory.
+
+**Expected:** Private profiles, logs and staged firmware belong in per-user application data, outside the installed package.
+
+**Actual:** User reports finding an OS IMG under findings in the distributed folder. Initial inspection of both exact published ZIPs and their host-source archives found no findings or raw firmware entries. The runtime default deterministically creates that path after launch; the user confirmed the exact application-relative docs/ic20-hle-findings/chatGPT-work/standalone-state/roms/s760 path. The IMG is the staged user input, not a shipped firmware file.
+
+**Resolution:** Default private state is now Local AppData/S760Studio/default. Packaged boot and close tests use that default without --state-dir and leave package docs unchanged. Prior profiles are preserved; no automatic deletion or migration. The user confirmed the exact old generated state path. Archive/package checks reject any findings directory. See docs/testing/standalone-exit-profile-and-docs.md and its validation record.
 
 ### BUG-105 — Downloaded acceptance kit fails at Python.Runtime startup
 

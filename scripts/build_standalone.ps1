@@ -1,5 +1,5 @@
 param(
-    [string]$OutputDirectory = "$PSScriptRoot/../docs/ic20-hle-findings/chatGPT-work/standalone-package",
+    [string]$OutputDirectory = "$PSScriptRoot/../build/standalone-package",
     [switch]$Release
 )
 $ErrorActionPreference = 'Stop'
@@ -45,6 +45,8 @@ try {
         Copy-Item -LiteralPath "$repo/LICENSE" -Destination "$package/LICENSE.txt"
     }
     Copy-Item -LiteralPath "$repo/docs/emulator/guides/standalone-package-readme.md" -Destination "$package/README.md"
+    & python "$repo/scripts/s760_user_docs.py" --repo $repo --package $package
+    if ($LASTEXITCODE -ne 0) { throw 'User documentation install failed' }
     & python "$repo/scripts/s760_distribution_inventory.py" --package $package --build "$output/build/S760Studio" --external-windows-runtime
     if ($LASTEXITCODE -ne 0) { throw 'Bundled input inventory failed' }
     & python "$repo/scripts/s760_package_audit.py" --repo $repo --package $package --prepare

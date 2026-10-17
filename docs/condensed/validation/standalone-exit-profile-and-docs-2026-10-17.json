@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-17",
+  "bugs": [
+    "BUG-106",
+    "BUG-107",
+    "BUG-108"
+  ],
+  "archive": {
+    "archive": "D:\\S-760\\artifacts\\standalone\\s760-standalone-acceptance-2026-10-17-v3.zip",
+    "bytes": 287314183,
+    "sha256": "632c103488a0d7ef14b409928af2c6d24e1b888da8d5eadbc30cfcc54e3d82bb"
+  },
+  "package_review": {
+    "distribution_qualified": true,
+    "exe_sha256": "43b44cb98535a145bbf8f651979c1c1b2019eba6ca7f40e26fae271e65177c6e",
+    "package_files": 616,
+    "policy": "docs/distribution/windows-standalone-2026-10-17-exit-profile.json",
+    "source_correspondence": true,
+    "source_files": 316
+  },
+  "archive_scan": {
+    "nested_archives_scanned": 5,
+    "findings_or_raw_disk_entries": [],
+    "known_firmware_matches": [],
+    "reviewed_upstream_nonfirmware_fixture": [
+      {
+        "path": "s760-standalone-acceptance-2026-10-17-v3/S760Studio/corresponding-source/mame-source.zip!/mame-source/3rdparty/lua-zlib/tom_macwright.out",
+        "bytes": 245,
+        "sha256": "233f2806d39ce3460e386dfc4e30ad111ca61fbf911705e9fce9b7ee676e1788",
+        "kind": "Existing upstream lua-zlib test fixture, not an OS disk"
+      }
+    ],
+    "user_documentation": [
+      "s760-standalone-acceptance-2026-10-17-v3/S760Studio/docs/controls.md",
+      "s760-standalone-acceptance-2026-10-17-v3/S760Studio/docs/quick-start.md",
+      "s760-standalone-acceptance-2026-10-17-v3/S760Studio/docs/README.md",
+      "s760-standalone-acceptance-2026-10-17-v3/S760Studio/docs/troubleshooting.md",
+      "s760-standalone-acceptance-2026-10-17-v3/S760Studio/docs/user-guide.md"
+    ]
+  },
+  "real_packaged_exit": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "missing-firmware-close",
+        "mode": "unconfigured",
+        "exitCode": 0,
+        "nativeChildrenStopped": 0,
+        "profile": "D:\\S-760\\temp\\exit-profile-2026-10-17\\real-exit-qa-v3\\empty-local\\S760Studio\\default",
+        "docsUnchanged": true
+      },
+      {
+        "name": "boot-save-quit",
+        "mode": "safe",
+        "exitCode": 0,
+        "nativeChildrenStopped": 1,
+        "profile": "D:\\S-760\\temp\\exit-profile-2026-10-17\\real-exit-qa-v3\\boot-local\\S760Studio\\default",
+        "docsUnchanged": true
+      },
+      {
+        "name": "existing-recovery-close-discard",
+        "mode": "blocked",
+        "exitCode": 0,
+        "nativeChildrenStopped": 1,
+        "profile": "D:\\S-760\\temp\\exit-profile-2026-10-17\\real-exit-qa-v3\\boot-local\\S760Studio\\default",
+        "docsUnchanged": true
+      }
+    ]
+  },
+  "tests": {
+    "backend_passed": 548,
+    "frontend_passed": 128,
+    "browser_passed": 9,
+    "browser_environment_skips": 25,
+    "focused_backend_documentation_passed": 64
+  },
+  "private_default": "%LOCALAPPDATA%/S760Studio/default",
+  "build_default": "build/standalone-package",
+  "current_qa_outputs": "temp/exit-profile-2026-10-17",
+  "legacy_profiles_preserved": true,
+  "user_docs_only": true,
+  "clean_machine_handoff": "Prior user-accepted reduced scope unchanged; new v3 execution is workstation evidence"
+}

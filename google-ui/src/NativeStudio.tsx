@@ -25,6 +25,10 @@ export default function NativeStudio() {
   const [restorePrompt, setRestorePrompt] = useState(false);
   const [recovery,setRecovery]=useState<{available:boolean;pending:boolean;savedAt:number|null;message:string}|null>(null);
   const [recoveryAction,setRecoveryAction]=useState<'restore'|'start'|'quit'|null>(null);
+  const [quitPrompt,setQuitPrompt]=useState(false);
+  const [quitPending,setQuitPending]=useState(false);
+  const [quitError,setQuitError]=useState('');
+  const [quitDiscard,setQuitDiscard]=useState(false);
   const [media, setMedia] = useState<string[]>([]);
   const [midiDevices, setMidiDevices] = useState<string[]>([]);
   const [midiInput,setMidiInput]=useState('');
@@ -95,7 +99,9 @@ export default function NativeStudio() {
       if(data.type==='AUDIO_OUTPUT_DEVICES')setAudioOutputDevices(data.audioOutputDevices??[]);
       if(data.type==='AUDIO_REOPENED'){setRecordingStatus(data.recordingStatus);setSettingsPending(false);setError('');}
       if(data.recordingStatus){setRecordingStatus(data.recordingStatus);if(data.recordingStatus.state==='failed')setError(data.recordingStatus.message);}
-      if (data.type === 'ERROR') {setError(data.message);setSettingsPending(false);setProtectionPending(false);}
+      if (data.type === 'ERROR') {setError(data.message);setSettingsPending(false);setProtectionPending(false);setQuitPending(false);setQuitError(data.message);}
+      if(data.type==='QUIT_BLOCKED'){setQuitPending(false);setQuitError(data.message);setQuitPrompt(true);}
+      if(data.type==='CLOSING'){setStatus('Closing sampler…');setQuitPending(true);}
       if(data.type==='ERROR') setPreferencePending(false);
       if(data.type==='MIDI_DEVICE_SELECTED' && typeof data.name==='string') setMidiInput(data.name);
       if(data.type==='STANDALONE_PREFERENCES' && typeof data.preferences?.showKeyboard==='boolean') {
@@ -117,6 +123,12 @@ export default function NativeStudio() {
     if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({type, payload}));
   }, [socket]);
   useNativeKeyboard(send);
+  const requestQuit=()=>{setQuitPrompt(true);setQuitError('');setQuitDiscard(false);};
+  useEffect(()=>{
+    const request=(event:Event)=>{event.preventDefault();requestQuit();};
+    window.addEventListener('s760-request-quit',request);
+    return ()=>window.removeEventListener('s760-request-quit',request);
+  },[]);
   const press = (id: string, down: boolean) => send(down ? 'BUTTON_PRESS' : 'BUTTON_RELEASE', {id});
   const releaseNote = () => {
     setKeyboardEpoch(n=>n+1);
@@ -133,6 +145,7 @@ export default function NativeStudio() {
   return <BridgeProvider client={client} autoConnect={false}>
     <main className="bg-[#0a0c0f] text-neutral-100 p-6 flex flex-col items-center gap-5">
       <span role="status" className="sr-only">{status}</span>
+      <button type="button" className="fixed top-4 left-4 z-20 rounded border border-neutral-700 bg-neutral-900 px-3 py-2" onClick={requestQuit}>Quit application</button>
       {configuration && <button type="button" aria-label="Configuration" title="Configuration" className="fixed top-4 right-4 z-20 p-2 rounded border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-white" onClick={()=>{releaseNote();setSettingsOpen(true);}}><Settings2 size={18}/></button>}
       {configuration && settingsOpen && <RuntimeSettings title="Standalone configuration" initialPanel={needsConfiguration?'firmware':undefined} configuration={configuration} pending={settingsPending} recordingDevices={recordingDevices} onRefreshRecordingDevices={()=>send('RECORDING_DEVICES',{})} asioDevices={asioDevices} onRefreshAsioDevices={()=>send('ASIO_DEVICES',{})} audioOutputDevices={audioOutputDevices} onRefreshAudioOutputDevices={()=>send('AUDIO_OUTPUT_DEVICES',{})}
         onCancel={()=>setSettingsOpen(false)} onApply={value=>{
@@ -197,7 +210,15 @@ export default function NativeStudio() {
           </fieldset>
 </>},
 ]} />}
-      <div className="contents" inert={settingsOpen}>
+      {quitPrompt && <SettingsLayer title="Quit S760Studio" onClose={quitPending?undefined:()=>setQuitPrompt(false)}>
+        <p>Save a recovery checkpoint and quit. If recovery cannot be saved, the application stays open so you can save or export your work.</p>
+        {quitError && <p role="alert">{quitError}</p>}
+        <button type="button" disabled={quitPending || socket?.readyState!==WebSocket.OPEN} onClick={()=>{releaseNote();setQuitPending(true);setQuitError('');send('QUIT_APPLICATION',{});}}>Save recovery and quit</button>
+        <label className="block"><input type="checkbox" checked={quitDiscard} disabled={quitPending} onChange={e=>setQuitDiscard(e.target.checked)}/>I understand changes since the last save or recovery will be lost.</label>
+        <button type="button" disabled={!quitDiscard || quitPending || socket?.readyState!==WebSocket.OPEN} onClick={()=>{releaseNote();setQuitPending(true);send('QUIT_WITHOUT_RECOVERY',{discard:true});}}>Quit without saving</button>
+        <button type="button" disabled={quitPending} onClick={()=>setQuitPrompt(false)}>Keep working</button>
+      </SettingsLayer>}
+      <div className="contents" inert={settingsOpen || quitPrompt}>
       <NativeDisplays send={send}/>
       <NativeRackStack>
           <NativeRack send={send} mountedDisk={mountedDisk} outputLevel={outputLevel} inputLevel={inputLevel} connected={socket?.readyState===WebSocket.OPEN} media={media} selectedDisk={disk} onSelectDisk={setDisk}/>

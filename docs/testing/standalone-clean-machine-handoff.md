@@ -17,12 +17,12 @@ user acceptance above closes the handoff without inventing those observations.
 
 ## What to provide
 
-Download the [complete standalone acceptance kit](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17-v2/s760-standalone-acceptance-2026-10-17-v2.zip)
-from the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v2).
+Download the [complete standalone acceptance kit](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17-v3/s760-standalone-acceptance-2026-10-17-v3.zip)
+from the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v3).
 The [artifact directory](../../artifacts/standalone/README.md) records its checksum
 and local download location. No findings-folder access or source checkout is
-needed. The v2 ZIP adds default ROM folders and IMG/OUT discovery; its own workstation
-checks are recorded in [media-defaults verification](standalone-media-defaults.md).
+needed. The v3 ZIP includes portable ROM folders, IMG/OUT discovery, working Quit,
+Local AppData profiles and offline user docs. See [v3 verification](standalone-exit-profile-and-docs.md).
 The clean-machine user acceptance above identifies the original v1 ZIP.
 
 Before File Explorer extraction, verify the ZIP against the artifact checksum,

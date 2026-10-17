@@ -1,5 +1,8 @@
 # S760Studio Windows development package
 
+[Quick Start](docs/quick-start.md) · [User guide](docs/user-guide.md) ·
+[Controls](docs/controls.md) · [Troubleshooting](docs/troubleshooting.md)
+
 Keep the entire extracted folder together. Run `S760Studio.exe` from a writable
 folder. Python, Node, CMake and the source checkout are not needed to run this
 package. This is a development artifact; final installation and clean-machine
@@ -68,8 +71,12 @@ required; PowerShell is included with Windows.
 
 Use a distinct writable state directory for each simultaneous instance. To reuse
 saved settings, launch with the same `--state-dir`; explicit firmware/media
-arguments override saved paths. Double-clicking uses a package-relative default
-profile, so the application folder must be writable for that launch method.
+arguments override saved paths. Double-clicking uses
+`%LOCALAPPDATA%\S760Studio\default` for private runtime state, logs and recovery.
+Staged firmware stays there; the package's `docs/` tree is documentation only.
+Older versions created a profile under `docs/ic20-hle-findings/chatGPT-work/standalone-state`.
+Keep that old folder if it contains sessions you need; use its path explicitly
+with `--state-dir` to open it. Updating the app does not delete or migrate it.
 
 If paths are missing, Configuration remains available. Enter **Boot ROM (32KB)**,
 **System disk (1.44MB)** and **Media directory**. Choose Wave memory8,16 or32MB
@@ -121,6 +128,14 @@ Automatic recovery runs periodically and on normal close. If a prior recovery is
 offered, restore it or explicitly start a new recovery history. Recovery is bounded
 by its last save; changes since that save can be lost. Export disks and save a
 session before deliberately restarting or replacing settings.
+
+## Quit
+
+Use **Quit application** at the top of the window, or the window's **X** button.
+Both open the same dialog. **Save recovery and quit** saves first; if saving
+fails, the application stays open and explains the error. You can keep working,
+or explicitly acknowledge possible loss of unsaved changes and choose **Quit
+without saving**. Accepted closure stops the application and its native process.
 
 ## Troubleshooting
 

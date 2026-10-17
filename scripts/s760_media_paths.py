@@ -1,8 +1,15 @@
 """Default user-supplied media locations in a portable standalone package."""
 from pathlib import Path
+import os
 import shutil
 
 ROM_FOLDERS = ('BOOT', 'System', 'FDD', 'SCSI')
+
+
+def default_state_directory():
+    """Keep private sessions and staged firmware outside the installed package."""
+    local = Path(os.environ.get('LOCALAPPDATA', Path.home() / 'AppData' / 'Local'))
+    return local / 'S760Studio' / 'default'
 
 
 def discover_image(folder, preferred, suffixes, size):
