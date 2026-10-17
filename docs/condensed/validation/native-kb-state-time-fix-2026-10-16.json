@@ -1,0 +1,259 @@
+{
+  "date": "2026-10-16",
+  "bug_fixed": "BUG-091",
+  "filter_bug_status": "BUG-005 remains OPEN; fresh hardware diagnostic comparison mixed, not closed",
+  "change": "NativeKB only:CLRC SETC DI EI CLRVT NOP use2states instead of4. Legacy branch retains4. Clock, firmware, DSP equations and rearm policy unchanged.",
+  "intel_source": {
+    "url": "https://www.syndex.org/kernels/196/27065103.pdf",
+    "document": "Intel80C196KB User Guide270651-003 Table3-3B, printed21/PDFpage24 zero-based",
+    "expected_states": 2
+  },
+  "isolated_cpu_before": {
+    "cpu": "I80C196KB",
+    "error": "instruction state times differ from Intel KB Table3-3B",
+    "results": [
+      {
+        "elapsed_seconds": 8.75e-07,
+        "name": "marker_baseline",
+        "count": 0
+      },
+      {
+        "expected_seconds": 0.000512,
+        "elapsed_seconds": 0.001024875,
+        "name": "CLRC",
+        "count": 2048,
+        "differential_seconds": 0.001024
+      },
+      {
+        "expected_seconds": 0.000512,
+        "elapsed_seconds": 0.001024875,
+        "name": "SETC",
+        "count": 2048,
+        "differential_seconds": 0.001024
+      },
+      {
+        "expected_seconds": 0.000512,
+        "elapsed_seconds": 0.001024875,
+        "name": "DI",
+        "count": 2048,
+        "differential_seconds": 0.001024
+      },
+      {
+        "expected_seconds": 0.000512,
+        "elapsed_seconds": 0.001024875,
+        "name": "EI",
+        "count": 2048,
+        "differential_seconds": 0.001024
+      },
+      {
+        "expected_seconds": 0.000512,
+        "elapsed_seconds": 0.001024875,
+        "name": "CLRVT",
+        "count": 2048,
+        "differential_seconds": 0.001024
+      },
+      {
+        "expected_seconds": 0.000512,
+        "elapsed_seconds": 0.001024875,
+        "name": "NOP",
+        "count": 2048,
+        "differential_seconds": 0.001024
+      }
+    ],
+    "states_per_instruction": 2,
+    "oscillator_cycles_per_state": 2,
+    "clock_hz": 16000000,
+    "passed": false
+  },
+  "isolated_cpu_after": {
+    "passed": true,
+    "states_per_instruction": 2,
+    "cpu": "I80C196KB",
+    "error": "",
+    "results": [
+      {
+        "name": "marker_baseline",
+        "elapsed_seconds": 8.75e-07,
+        "count": 0
+      },
+      {
+        "differential_seconds": 0.000512,
+        "expected_seconds": 0.000512,
+        "name": "CLRC",
+        "count": 2048,
+        "elapsed_seconds": 0.000512875
+      },
+      {
+        "differential_seconds": 0.000512,
+        "expected_seconds": 0.000512,
+        "name": "SETC",
+        "count": 2048,
+        "elapsed_seconds": 0.000512875
+      },
+      {
+        "differential_seconds": 0.000512,
+        "expected_seconds": 0.000512,
+        "name": "DI",
+        "count": 2048,
+        "elapsed_seconds": 0.000512875
+      },
+      {
+        "differential_seconds": 0.000512,
+        "expected_seconds": 0.000512,
+        "name": "EI",
+        "count": 2048,
+        "elapsed_seconds": 0.000512875
+      },
+      {
+        "differential_seconds": 0.000512,
+        "expected_seconds": 0.000512,
+        "name": "CLRVT",
+        "count": 2048,
+        "elapsed_seconds": 0.000512875
+      },
+      {
+        "differential_seconds": 0.000512,
+        "expected_seconds": 0.000512,
+        "name": "NOP",
+        "count": 2048,
+        "elapsed_seconds": 0.000512875
+      }
+    ],
+    "oscillator_cycles_per_state": 2,
+    "clock_hz": 16000000
+  },
+  "before_identities": {
+    "D:\\S-760\\mame-source\\mames760.exe": "09b5d0c0f84bf8b885069ea262a4de7533509cdb3cd4b384af1bb7567e1600e8",
+    "D:\\S-760\\mame-source\\src\\devices\\cpu\\mcs96\\mcs96ops.lst": "acac8260af59ed844beac3cbafff10419e2dd02fd3cfab881312881644ad0abb"
+  },
+  "after_identities": {
+    "mame-source\\mames760.exe": "19503340c6ac0cdfc6baaecfcfad4d2aa1892761a190a66f2fc204618d74e500",
+    "mame-source\\src\\devices\\cpu\\mcs96\\mcs96ops.lst": "3a55f9adc587b65adebc8daede464991735eb19a9264e58488f7cb132d09d294",
+    "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "scripts\\verify_native_cpu_state_times.py": "f79918ca770b668baaf4c53302f62f4b3cd2196d177f7bc4c074b042624a35bf",
+    "tests\\test_native_cpu_state_times.py": "51f98cb02dbb61efe1e5c85f6fb52148b5179c7a0d355f0d5988c218bff53c40"
+  },
+  "native_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 79.083333333333,
+    "note_release": 81.233333333333,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    }
+  },
+  "full_tests": "478 passed,4 expected source-builder failures, no ordinary test failures",
+  "build_logs": {
+    "build-cpu.log": "MSBuild version 17.13.19+0d9f5a35a for .NET Framework\n\n  Generating mcs96 source file...\n  Generating i8x9x source file...\n  Generating i8xc196 source file...\ncl : command line  warning D9002: ignoring unknown option '/Zc:u8EscapeEncoding' [D:\\S-760\\mame-source\\build\\projects\\windows\\mames760\\vs2022\\optional.vcxproj]\ncl : command line  warning D9002: ignoring unknown option '/Zc:u8EscapeEncoding' [D:\\S-760\\mame-source\\build\\projects\\windows\\mames760\\vs2022\\optional.vcxproj]\ncl : command line  warning D9002: ignoring unknown option '/Zc:u8EscapeEncoding' [D:\\S-760\\mame-source\\build\\projects\\windows\\mames760\\vs2022\\optional.vcxproj]\n  i8x9x.cpp\ncl : command line  warning D9002: ignoring unknown option '/Zc:u8EscapeEncoding' [D:\\S-760\\mame-source\\build\\projects\\windows\\mames760\\vs2022\\optional.vcxproj]\n  i8xc196.cpp\n  mcs96.cpp\n  optional.vcxproj -> D:\\S-760\\mame-source\\build\\vs2022\\bin\\x64\\Release\\mame_s760\\optional.lib\n",
+    "build-exe.log": "MSBuild version 17.13.19+0d9f5a35a for .NET Framework\n\n  Emitting mame_s760_vers.rc...\n     Creating library ..\\..\\..\\..\\..\\mames760.lib and object ..\\..\\..\\..\\..\\mames760.exp\ndasm.lib(i8x9xd.obj) : warning LNK4206: precompiled type information not found; '' not linked or overwritten; linking object as if no debug info [D:\\S-760\\mame-source\\build\\projects\\windows\\mames760\\vs2022\\mames760.vcxproj]\n  mames760.vcxproj -> D:\\S-760\\mame-source\\mames760.exe\n"
+  },
+  "source_diff": "diff --git a/mame-source/src/devices/cpu/mcs96/mcs96ops.lst b/mame-source/src/devices/cpu/mcs96/mcs96ops.lst\nindex 4704103c..246ebb6a 100644\n--- a/mame-source/src/devices/cpu/mcs96/mcs96ops.lst\n+++ b/mame-source/src/devices/cpu/mcs96/mcs96ops.lst\n@@ -1944,28 +1944,29 @@ f7    trap  none\n \n f8    clrc  none\n \tPSW &= ~F_C;\n-\tnext(4);\n+\t// Intel 80C196KB Table 3-3B: two states; retain legacy 8097 timing.\n+\tnext(m_kb_mode ? 2 : 4);\n \n f9    setc  none\n \tPSW |= F_C;\n-\tnext(4);\n+\tnext(m_kb_mode ? 2 : 4);\n \n fa    di    none\n \tPSW &= ~F_I;\n \tcheck_irq();\n-\tnext_noirq(4);\n+\tnext_noirq(m_kb_mode ? 2 : 4);\n \n fb    ei    none\n \tPSW |= F_I;\n \tcheck_irq();\n-\tnext_noirq(4);\n+\tnext_noirq(m_kb_mode ? 2 : 4);\n \n fc    clrvt none\n \tPSW &= ~F_VT;\n-\tnext(4);\n+\tnext(m_kb_mode ? 2 : 4);\n \n fd    nop   none\n-\tnext(4);\n+\tnext(m_kb_mode ? 2 : 4);\n \n ff    rst   none\n \tPC = 0x2080;\n",
+  "paired_scheduler_before": [
+    {
+      "direction": "up",
+      "rows": 53796,
+      "timer_intervals": 24,
+      "rearms_exact_20000": 24,
+      "mean_period_ms": 20.071802083333406,
+      "mean_delivery_delay_us": 63.0781249988388,
+      "maximum_delivery_delay_us": 130.37499999768443,
+      "mean_prologue_us": 9.125000000646347,
+      "handshake_delayed_intervals": 12,
+      "all_delayed_intervals_match_mouse_handshake": true,
+      "csv_sha256": "c0f208b009e5a87649a16f7503f1452b193a012bdf7a6df4b812345a88db83e3"
+    },
+    {
+      "direction": "down",
+      "rows": 53797,
+      "timer_intervals": 24,
+      "rearms_exact_20000": 24,
+      "mean_period_ms": 20.06825520833348,
+      "mean_delivery_delay_us": 59.562500000609475,
+      "maximum_delivery_delay_us": 123.12500000177806,
+      "mean_prologue_us": 9.12499999946211,
+      "handshake_delayed_intervals": 12,
+      "all_delayed_intervals_match_mouse_handshake": true,
+      "csv_sha256": "203339ced22a93f3904d69780bd7d362f4d41e0f8eb42422e3b46bc42bfda263"
+    }
+  ],
+  "paired_scheduler_after": [
+    {
+      "direction": "up",
+      "rows": 54126,
+      "timer_intervals": 24,
+      "rearms_exact_20000": 24,
+      "mean_period_ms": 20.009265624999866,
+      "mean_delivery_delay_us": 0.74999999929067,
+      "maximum_delivery_delay_us": 5.50000000032469,
+      "mean_prologue_us": 8.874999998909061,
+      "handshake_delayed_intervals": 0,
+      "delayed_delivery_contexts": [
+        {
+          "code_page": 219,
+          "curpc": 37626,
+          "delay_us": 5.50000000032469
+        },
+        {
+          "code_page": 219,
+          "curpc": 37626,
+          "delay_us": 2.7499999930569174
+        }
+      ],
+      "csv_sha256": "99dc8d6e8e9f07d7680e2f5406d9c81aa1273c4ade257326b6585788a63869b6"
+    },
+    {
+      "direction": "down",
+      "rows": 54161,
+      "timer_intervals": 24,
+      "rearms_exact_20000": 24,
+      "mean_period_ms": 20.00907812500034,
+      "mean_delivery_delay_us": 0.6093750002378329,
+      "maximum_delivery_delay_us": 4.500000002849447,
+      "mean_prologue_us": 8.875000001277536,
+      "handshake_delayed_intervals": 0,
+      "delayed_delivery_contexts": [
+        {
+          "code_page": 219,
+          "curpc": 37626,
+          "delay_us": 4.500000002849447
+        }
+      ],
+      "csv_sha256": "04173fb34d0f302e5a95d83af78a0c1dd1512b0647f2ba9c01bf4c8d3227de54"
+    }
+  ],
+  "qualifications": [
+    "Each observed native window matches its same-build unobserved/repeated baseline exactly.",
+    "Before/after runs have different fresh setup/control phases; mean cadence change is descriptive, not a matched cross-build trajectory or hardware waveform score.",
+    "The native ISR prologue drops9.125->8.875us, matching one EI instruction correction.",
+    "The mouse critical section remains part of original firmware; no delay bypass or hardcoded filter speed applied.",
+    "Other instructions, external bus waits and full IRQ cycle fidelity remain to audit.",
+    "Broader filter BUG-005 requires original resonant/ramp/step/static/bypass hardware comparisons on the new build."
+  ],
+  "fixture_source": "\"\"\"Isolated CPU state-time regression against Intel KB Table3-3B.\n\nPrivate synthetic instruction blocks only; not original-firmware acceptance.\nDifferential timestamps cancel the identical marker instructions. No IRQ source\nis enabled, including during the EI block.\n\"\"\"\nfrom verify_bmovi_fetch import main\n\nLUA = r'''\nlocal m=manager.machine local cpu=m.devices[':maincpu']\nlocal p=cpu.spaces['program'] local r=cpu.spaces['register'] local json=require('json')\nlocal cases={{name='marker_baseline',opcode=0xfd,count=0},\n {name='CLRC',opcode=0xf8,count=2048},{name='SETC',opcode=0xf9,count=2048},\n {name='DI',opcode=0xfa,count=2048},{name='EI',opcode=0xfb,count=2048},\n {name='CLRVT',opcode=0xfc,count=2048},{name='NOP',opcode=0xfd,count=2048}}\nlocal index=1 local begin_time=nil local end_time=nil local results={}\nlocal function setup()\n for slot=0,3 do p:write_u16(0x100+slot*2,slot*16);p:write_u16(0x108+slot*2,slot*16) end\n r:write_u8(0x14,0);r:write_u8(8,0);r:write_u8(0x13,0);cpu.state['PSW'].value=0;r:write_u8(0x48,1)\n local code={0xc7,1,0,0x60,0x48}\n for i=1,cases[index].count do code[#code+1]=cases[index].opcode end\n for _,b in ipairs({0xc7,1,2,0x60,0x48,0x27,0xfe}) do code[#code+1]=b end\n for i,b in ipairs(code) do p:write_u8(0x3000+i-1,b) end\n begin_time=nil end_time=nil cpu.state['PC'].value=0x3000\nend\nmarker=p:install_write_tap(0x6000,0x6003,'state-time-markers',function(a,d,mask)\n if a==0x6000 then begin_time=m.time:as_double() elseif a==0x6002 then end_time=m.time:as_double() end\nend)\nsetup()\nemu.register_frame_done(function()\n if not end_time then return end\n local elapsed=end_time-begin_time\n results[#results+1]={name=cases[index].name,count=cases[index].count,elapsed_seconds=elapsed}\n if index<#cases then index=index+1 setup() return end\n local passed=true\n for i=2,#results do\n  local measured=results[i].elapsed_seconds-results[1].elapsed_seconds\n  results[i].differential_seconds=measured\n  results[i].expected_seconds=results[i].count*2*2/16000000\n  if math.abs(measured-results[i].expected_seconds)>1e-9 then passed=false end\n end\n local f=assert(io.open('result.json','w'));f:write(json.stringify({passed=passed,cpu='I80C196KB',clock_hz=16000000,\n  states_per_instruction=2,oscillator_cycles_per_state=2,results=results,error=passed and '' or 'instruction state times differ from Intel KB Table3-3B'}));f:close();m:exit()\nend)\n'''\n\nif __name__ == '__main__':\n    main(LUA, native_only=True)\n",
+  "metrics": {
+    "os_classified_bytes": 77680,
+    "os_total_bytes": 1032192,
+    "os_percent": 7.525731646825397,
+    "os_percentage_point_change": 0,
+    "rom_classified_bytes": 26277,
+    "rom_total_bytes": 32768,
+    "rom_percent": 80.1910400390625,
+    "rom_percentage_point_change": 0,
+    "functional_scope_acceptance": "82/156=52.56%, unchanged",
+    "overall_semantic_decoding_completion": "not yet quantifiable"
+  },
+  "hardware_followup": "Frozen10.844ms offline diagnostic law, scale1:current closing evaluation2.870/2.831/4.961%,opening6.281/6.155/4.934%; historical closing7.830/7.779/10.188%,opening2.756/2.143/2.105%. Not independent held-out waveform acceptance or pureCPU causality."
+}

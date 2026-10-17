@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-15",
+  "flag": "S760_NATIVE_CUTOFF_RAMP_CANDIDATE",
+  "default": "off",
+  "scope": "Supported44100Hz LP;882-sample causal ramps on changed quantized cutoff targets written under control001B; initial101020 pair initializes current coefficient; fast-command targets remain immediate.",
+  "disabled_path": {
+    "old-common-to-new-common": {
+      "frames": 1234800,
+      "rows": [
+        {
+          "name": "moving-note40",
+          "frames": 308700,
+          "pcm_exact": true
+        },
+        {
+          "name": "moving-note43",
+          "frames": 308700,
+          "pcm_exact": true
+        },
+        {
+          "name": "moving-note47",
+          "frames": 308700,
+          "pcm_exact": true
+        },
+        {
+          "name": "moving-note51",
+          "frames": 308700,
+          "pcm_exact": true
+        }
+      ]
+    },
+    "new-on-to-new-on-final": {
+      "frames": 1234800,
+      "rows": [
+        {
+          "name": "moving-note40",
+          "frames": 308700,
+          "pcm_exact": true
+        },
+        {
+          "name": "moving-note43",
+          "frames": 308700,
+          "pcm_exact": true
+        },
+        {
+          "name": "moving-note47",
+          "frames": 308700,
+          "pcm_exact": true
+        },
+        {
+          "name": "moving-note51",
+          "frames": 308700,
+          "pcm_exact": true
+        }
+      ]
+    },
+    "resonant-enabled-final": {
+      "frames": 2249100,
+      "pcm_exact": true
+    }
+  },
+  "enabled_replay": [
+    {
+      "folder": "new-on",
+      "name": "moving-note40",
+      "ramp_segments": 12,
+      "max_coefficient_recurrence_error": 6.356026815979021e-15,
+      "audio_replay_error": 4.986414478725353e-08
+    },
+    {
+      "folder": "new-on",
+      "name": "moving-note43",
+      "ramp_segments": 24,
+      "max_coefficient_recurrence_error": 4.9682480351975755e-15,
+      "audio_replay_error": 4.987231014448259e-08
+    },
+    {
+      "folder": "new-on",
+      "name": "moving-note47",
+      "ramp_segments": 36,
+      "max_coefficient_recurrence_error": 4.052314039881821e-15,
+      "audio_replay_error": 4.97650236232813e-08
+    },
+    {
+      "folder": "new-on",
+      "name": "moving-note51",
+      "ramp_segments": 60,
+      "max_coefficient_recurrence_error": 2.0261570199409107e-15,
+      "audio_replay_error": 4.9977499744883356e-08
+    },
+    {
+      "folder": "resonant-on",
+      "name": "static64-r64",
+      "ramp_segments": 1,
+      "max_coefficient_recurrence_error": 0.0,
+      "audio_replay_error": 4.945675992757885e-08
+    },
+    {
+      "folder": "resonant-on",
+      "name": "sweep-r64",
+      "ramp_segments": 107,
+      "max_coefficient_recurrence_error": 3.7470027081099033e-16,
+      "audio_replay_error": 4.982828065436642e-08
+    }
+  ],
+  "original_resonant": {
+    "clock_ratio": 1.0000213476698374,
+    "gain": 1,
+    "damping": 85,
+    "results": [
+      {
+        "candidate": false,
+        "label": "quiet",
+        "parameters": [
+          0.9305805197398174,
+          1543.7809526726567
+        ],
+        "training_error_percent": 51.53623729544489,
+        "evaluation_error_percent": 44.12931779546699
+      },
+      {
+        "candidate": false,
+        "label": "repeat",
+        "parameters": [
+          0.3885727959360616,
+          1795.1536251709297
+        ],
+        "training_error_percent": 43.34933026381495,
+        "evaluation_error_percent": 46.309539587737184
+      },
+      {
+        "candidate": true,
+        "label": "quiet",
+        "parameters": [
+          0.9412001275477562,
+          1543.7627470530222
+        ],
+        "training_error_percent": 25.219411294744596,
+        "evaluation_error_percent": 19.987652628916624
+      },
+      {
+        "candidate": true,
+        "label": "repeat",
+        "parameters": [
+          0.3982773715552876,
+          1795.0735585954994
+        ],
+        "training_error_percent": 19.19202852687922,
+        "evaluation_error_percent": 21.345114700660616
+      }
+    ],
+    "limits": "Actual native coefficients through recording-band fractional-phase recurrence lanes; analog-chain approximation, not direct WAV acceptance. Constant alignment/source phase fitted only on training blocks; no envelope time scale or damping fit."
+  },
+  "static_controls": [
+    {
+      "name": "bypass",
+      "frames": 749700,
+      "pcm_exact": true
+    },
+    {
+      "name": "static64-r64",
+      "frames": 749700,
+      "pcm_exact": true
+    }
+  ],
+  "active_checkpoint": {
+    "frames_exact": 4096,
+    "managed_current_build_roundtrip": true,
+    "initial_cross_build_guard_asserted": true
+  },
+  "runtime_contract": {
+    "pcm_frames_exact": 131072,
+    "displays_exact": true,
+    "trace_rows": 256,
+    "trace_dropped": 513,
+    "pcm_sha256": "f1bdbb3a4f8613ce8f7fc23598a6eb71bf10ff53ac5043be9ae8e11d9f4ac00f"
+  },
+  "tests": {
+    "pytest": "404 passed;0 skipped",
+    "core": true,
+    "plugin": true,
+    "native_driver_build": true,
+    "native_link": true
+  },
+  "limits": [
+    "Private raw-state regressions assert managed cross-build identity rejection and check all other identities/integrity before calling the existing native endpoint. No supported session migration or guest edits.",
+    "Earlier fresh-boot bit-identity attempts are excluded because boot/media timing varies control-tick phase. Same-state comparison is authoritative.",
+    "Experimental saved states require the same opt-in ramp profile; default native save registry stays unchanged.",
+    "Original resonant comparison uses actual native coefficient trajectories through the existing recording-band source model, not direct native WAV acceptance.",
+    "Encoded command001B is used only to scope the diagnostic; no ASIC law or exact hardware20ms duration is claimed.",
+    "Fast Time4,other clocks/modes and full hardware parity remain unqualified. No default or filter-equation change."
+  ],
+  "hashes": {
+    "mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "34b8d5906c85d9417538412c8099f2dc08b6b5fa0e6b34c8bd9743350d6b2749",
+    "docs\\ic20-hle-findings\\chatGPT-work\\native-cutoff-ramp-2026-10-15\\mames760-before-ramp.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\native-cutoff-ramp-2026-10-15\\new-common\\capture.json": "53cac760618a9becd1f112d7387652f5d1432d2a775fb14cc831e94a78822655",
+    "docs\\ic20-hle-findings\\chatGPT-work\\native-cutoff-ramp-2026-10-15\\new-on-final\\application.csv": "42aa7d6e3f66b0d632fd1d2cc6d0ed38231042164aade2df65bacdc1e12c289d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\native-cutoff-ramp-2026-10-15\\resonant-on-final\\application.csv": "c0bc2d0decb4267c799b4dbba8f43a2a8044f0c0951766f587404595b152f241",
+    "docs\\ic20-hle-findings\\chatGPT-work\\native-cutoff-ramp-2026-10-15\\pytest-final.log": "0c0fd1058314f4e1a5cd2f0c3eb822bcf3e22a6226e41f3faec079efdb7ebf9d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\native-cutoff-ramp-2026-10-15\\runtime-final\\bus-trace-result.json": "cc1699ecbeacb8e543c03415084ee184fc4f8cb5d1b28cbf53b104de8c511e90"
+  }
+}

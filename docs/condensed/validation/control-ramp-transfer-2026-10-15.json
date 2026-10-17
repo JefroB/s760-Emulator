@@ -1,0 +1,173 @@
+{
+  "date": "2026-10-15",
+  "status": "Frozen model transfer; diagnostic only",
+  "selection": "Fixed20ms causal linear coefficient ramp selected before rendering these notes from the Time8 selection set MIDI37\u201339; no duration/shape fitting on transfer notes.",
+  "native_causality_check": true,
+  "clock_ratio": 1.0000215,
+  "source_alignment_and_gain_seconds": [
+    1.5,
+    2.7
+  ],
+  "control_phase_training": "Alternating5ms blocks in5\u2013500ms; per-recording constant control phase only",
+  "evaluation": "Other5ms blocks; all four notes/settings unused by preceding model-selection experiment",
+  "rows": [
+    {
+      "note": 40,
+      "time": 8,
+      "native_replay_error": 4.975031610532143e-08,
+      "steady_training_error": 0.015786169740620276,
+      "audio_alignment_frames": 154.17767223992573,
+      "gain": 0.011132081454000516,
+      "models": [
+        {
+          "model": "native-trajectory",
+          "training_error": 0.17564514028381517,
+          "evaluation_error": 0.23918562258253842,
+          "full_window_error": 0.21033259705535523
+        },
+        {
+          "model": "immediate-phase",
+          "control_phase_ms": 9.954677214087159,
+          "training_error": 0.11327082887146303,
+          "evaluation_error": 0.1174355096694211,
+          "full_window_error": 0.11540502433319455
+        },
+        {
+          "model": "frozen-causal-linear20ms-zero-phase",
+          "training_error": 0.020846530133632402,
+          "evaluation_error": 0.02301729601392682,
+          "full_window_error": 0.021975963966516843
+        },
+        {
+          "model": "frozen-causal-linear20ms",
+          "control_phase_ms": -0.43899931904273404,
+          "training_error": 0.019024660943834502,
+          "evaluation_error": 0.02039483892927309,
+          "full_window_error": 0.01973252380190259
+        }
+      ]
+    },
+    {
+      "note": 43,
+      "time": 12,
+      "native_replay_error": 4.980976973585846e-08,
+      "steady_training_error": 0.015831691096282623,
+      "audio_alignment_frames": 153.55644686264108,
+      "gain": 0.011134526229585285,
+      "models": [
+        {
+          "model": "native-trajectory",
+          "training_error": 0.20447024225570962,
+          "evaluation_error": 0.27479449955131363,
+          "full_window_error": 0.24447294184676036
+        },
+        {
+          "model": "immediate-phase",
+          "control_phase_ms": 14.569265808604488,
+          "training_error": 0.09156719070023288,
+          "evaluation_error": 0.12046401083026814,
+          "full_window_error": 0.10793192306191433
+        },
+        {
+          "model": "frozen-causal-linear20ms-zero-phase",
+          "training_error": 0.058494675236676785,
+          "evaluation_error": 0.06036218861920534,
+          "full_window_error": 0.05949706456236991
+        },
+        {
+          "model": "frozen-causal-linear20ms",
+          "control_phase_ms": 3.0127258883033803,
+          "training_error": 0.028048548521867948,
+          "evaluation_error": 0.025949466947333067,
+          "full_window_error": 0.02695042142461019
+        }
+      ]
+    },
+    {
+      "note": 47,
+      "time": 16,
+      "native_replay_error": 4.974431041116199e-08,
+      "steady_training_error": 0.017886960586452297,
+      "audio_alignment_frames": 182.2209176343285,
+      "gain": 0.011132303970629871,
+      "models": [
+        {
+          "model": "native-trajectory",
+          "training_error": 0.20355776685529836,
+          "evaluation_error": 0.22936766863439997,
+          "full_window_error": 0.21717474368643302
+        },
+        {
+          "model": "immediate-phase",
+          "control_phase_ms": 15.527517950019906,
+          "training_error": 0.08008286496804516,
+          "evaluation_error": 0.07406513890189072,
+          "full_window_error": 0.07705613518637904
+        },
+        {
+          "model": "frozen-causal-linear20ms-zero-phase",
+          "training_error": 0.07981302379849406,
+          "evaluation_error": 0.08047504203183962,
+          "full_window_error": 0.08015314234857751
+        },
+        {
+          "model": "frozen-causal-linear20ms",
+          "control_phase_ms": 5.749181933269032,
+          "training_error": 0.036244201116435164,
+          "evaluation_error": 0.030534507013628177,
+          "full_window_error": 0.03343868989415206
+        }
+      ]
+    },
+    {
+      "note": 51,
+      "time": 24,
+      "native_replay_error": 4.993147791494119e-08,
+      "steady_training_error": 0.019275116214193037,
+      "audio_alignment_frames": 74.09106856904555,
+      "gain": 0.011125732723026402,
+      "models": [
+        {
+          "model": "native-trajectory",
+          "training_error": 0.06409164934881846,
+          "evaluation_error": 0.09144834569690151,
+          "full_window_error": 0.07895179677052372
+        },
+        {
+          "model": "immediate-phase",
+          "control_phase_ms": 9.095837183506584,
+          "training_error": 0.04914625438527942,
+          "evaluation_error": 0.05056253077432494,
+          "full_window_error": 0.04985879471107279
+        },
+        {
+          "model": "frozen-causal-linear20ms-zero-phase",
+          "training_error": 0.03083828123856031,
+          "evaluation_error": 0.032274151409884676,
+          "full_window_error": 0.031563746701303984
+        },
+        {
+          "model": "frozen-causal-linear20ms",
+          "control_phase_ms": -1.9094579497112583,
+          "training_error": 0.027597872100115942,
+          "evaluation_error": 0.029247064172988987,
+          "full_window_error": 0.028433697539687105
+        }
+      ]
+    }
+  ],
+  "hashes": {
+    "tests\\hardware_recordings\\s760_01 Survey_20261015_161418.zip": "b08ca7b4e50cdfdeb6dd14ae919b5e5ef701da4f0c5ac63b86a84addaa2eea78",
+    "docs\\ic20-hle-findings\\chatGPT-work\\control-ramp-transfer-2026-10-15\\application.csv": "080224a611da05cce91d8c9baac32aa49580564fc2501a57920638c8f4625cf4",
+    "docs\\ic20-hle-findings\\chatGPT-work\\control-ramp-transfer-2026-10-15\\firmware-inputs.csv": "a05c14b05d034ac32811195503486121742dc8545e10395199b4a541d8207103",
+    "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\check_control_ramp_transfer.py": "a5230f0eb737e0f45ce0cb93ddcf863b5341924c02190ef34e7d3b8e394666b0"
+  },
+  "limits": [
+    "A diagnostic control-phase fit is not hardware MIDI latency or a measured timer phase. Negative offsets shift native traces for comparison only and must not be implemented as future-write lookahead.",
+    "Coefficient smoothing is not assigned to a decoded ASIC command; firmware and renderer unchanged.",
+    "No new hardware take, bypass calibration or independent session; existing recordings reused.",
+    "Native source replay qualifies implementation agreement, not hardware source parity.",
+    "Historical Time80 resonant results remain separate; this does not qualify all filter modes/resonance."
+  ]
+}

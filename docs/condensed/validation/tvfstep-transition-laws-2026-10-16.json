@@ -1,0 +1,1172 @@
+{
+  "date": "2026-10-16",
+  "bug": "BUG-005",
+  "status": "OPEN; tested transition laws insufficient, production unchanged",
+  "increment_precision": {
+    "rows": [
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "linear10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": null,
+        "rounding": "none",
+        "offset_ms": 35.004427666757465,
+        "training_error_percent": 1.8637704275492535,
+        "evaluation_error_percent": 2.7550996772089724
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "linear20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": null,
+        "rounding": "none",
+        "offset_ms": 30.313544281314943,
+        "training_error_percent": 2.527652280624687,
+        "evaluation_error_percent": 2.9974842126929184
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor4-10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": 4,
+        "rounding": "floor",
+        "offset_ms": 29.60633078668415,
+        "training_error_percent": 2.543568745865976,
+        "evaluation_error_percent": 3.501460933697732
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor4-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 4,
+        "rounding": "floor",
+        "offset_ms": 20.459646910789267,
+        "training_error_percent": 2.543294257412636,
+        "evaluation_error_percent": 3.5007344272278194
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor8-10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 34.64013851379904,
+        "training_error_percent": 1.8620079600222676,
+        "evaluation_error_percent": 2.7277726147405814
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor8-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 28.876492896390555,
+        "training_error_percent": 2.8122078422135233,
+        "evaluation_error_percent": 3.207021140555142
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor12-10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": 12,
+        "rounding": "floor",
+        "offset_ms": 34.98010162180406,
+        "training_error_percent": 1.8753367737842814,
+        "evaluation_error_percent": 2.764931173061241
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor12-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 12,
+        "rounding": "floor",
+        "offset_ms": 30.200326698704547,
+        "training_error_percent": 2.5272795413864433,
+        "evaluation_error_percent": 3.0248585057509163
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "trunc4-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 4,
+        "rounding": "trunc",
+        "offset_ms": 20.459646910789267,
+        "training_error_percent": 2.543294257412636,
+        "evaluation_error_percent": 3.5007344272278194
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "trunc8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "trunc",
+        "offset_ms": 28.876492896390555,
+        "training_error_percent": 2.8122078422135233,
+        "evaluation_error_percent": 3.207021140555142
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "linear10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": null,
+        "rounding": "none",
+        "offset_ms": 44.54052079510705,
+        "training_error_percent": 6.614316779185934,
+        "evaluation_error_percent": 7.842503769868975
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "linear20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": null,
+        "rounding": "none",
+        "offset_ms": 39.886580030980966,
+        "training_error_percent": 6.69193038916386,
+        "evaluation_error_percent": 7.880857323562256
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor4-10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": 4,
+        "rounding": "floor",
+        "offset_ms": 47.92149081658905,
+        "training_error_percent": 4.8699848814609,
+        "evaluation_error_percent": 5.9543795711714305
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor4-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 4,
+        "rounding": "floor",
+        "offset_ms": 47.92149081658905,
+        "training_error_percent": 4.8699848814609,
+        "evaluation_error_percent": 5.9543795711714305
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor8-10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 45.15607002781038,
+        "training_error_percent": 5.722059349305573,
+        "evaluation_error_percent": 6.748612738679079
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor8-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 41.632451569216094,
+        "training_error_percent": 4.385311816740314,
+        "evaluation_error_percent": 4.954455245014589
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor12-10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": 12,
+        "rounding": "floor",
+        "offset_ms": 44.57762051841038,
+        "training_error_percent": 6.564486101541876,
+        "evaluation_error_percent": 7.771584684342208
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor12-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 12,
+        "rounding": "floor",
+        "offset_ms": 40.01144479114618,
+        "training_error_percent": 6.53700566881662,
+        "evaluation_error_percent": 7.675570413058418
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "trunc4-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 4,
+        "rounding": "trunc",
+        "offset_ms": 49.882949015720705,
+        "training_error_percent": 6.706040096559164,
+        "evaluation_error_percent": 7.964527148729398
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "trunc8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "trunc",
+        "offset_ms": 38.48065053874493,
+        "training_error_percent": 6.733073123542379,
+        "evaluation_error_percent": 7.939729769411568
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "model": "floor8-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 40.50717174581366,
+        "training_error_percent": 4.3729786402922235,
+        "evaluation_error_percent": 4.951684369899168
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "model": "floor8-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 46.638513063631514,
+        "training_error_percent": 2.796715319238856,
+        "evaluation_error_percent": 2.9026547065146038
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "model": "floor8-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 42.41304906530936,
+        "training_error_percent": 2.6026670874295905,
+        "evaluation_error_percent": 3.181684144140015
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "model": "floor8-20.000",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 49.603050540002116,
+        "training_error_percent": 5.736721919888212,
+        "evaluation_error_percent": 7.293004636869357
+      }
+    ],
+    "selected_by_first_pair_training": "floor8-20.000",
+    "first_pair_training_scores": {
+      "linear10.844": 47.22282666202772,
+      "linear20": 51.17095838516196,
+      "floor4-10.844": 30.186494710603952,
+      "floor4-20.000": 30.18509842544583,
+      "floor8-10.844": 36.2090368401616,
+      "floor8-20.000": 27.139472677849476,
+      "floor12-10.844": 46.609365792444095,
+      "floor12-20.000": 49.119584994451095,
+      "trunc4-20": 51.439319456447336,
+      "trunc8-20": 53.24278663477597
+    },
+    "contracts": [
+      {
+        "model": "linear10.844",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "linear20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor4-10.844",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor4-20.000",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor8-10.844",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor8-20.000",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor12-10.844",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor12-20.000",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "trunc4-20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "trunc8-20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      }
+    ],
+    "limits": [
+      "Diagnostic per-source-sample increment quantization, integrated over fractional lanes; not a literal fixed-point ASIC implementation.",
+      "No control speed fitting; original timestamps, source/phase/gain/damping fixed.",
+      "Candidates selected only by normalized training error on first up/down pair; subsequent four takes transfer fixed candidate.",
+      "Slew snaps to target at duration deadline and clamps overshoot.",
+      "Historical evaluation blocks reused."
+    ]
+  },
+  "increment_refinement": {
+    "rows": [
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "linear10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": null,
+        "rounding": "none",
+        "offset_ms": 35.004427666757465,
+        "training_error_percent": 1.8637704275492535,
+        "evaluation_error_percent": 2.7550996772089724
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor6-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 6,
+        "rounding": "floor",
+        "offset_ms": 29.31847839352857,
+        "training_error_percent": 4.890320013175232,
+        "evaluation_error_percent": 6.1457501713563385
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor6-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 6,
+        "rounding": "floor",
+        "offset_ms": 23.27453629550856,
+        "training_error_percent": 8.709952249048937,
+        "evaluation_error_percent": 9.77830286052788
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor6-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 6,
+        "rounding": "floor",
+        "offset_ms": 9.387953632045386,
+        "training_error_percent": 25.609440153179175,
+        "evaluation_error_percent": 22.23974884605464
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor7-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 7,
+        "rounding": "floor",
+        "offset_ms": 30.88606091939313,
+        "training_error_percent": 4.247422544462938,
+        "evaluation_error_percent": 4.61235430616531
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor7-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 7,
+        "rounding": "floor",
+        "offset_ms": 26.50411868404197,
+        "training_error_percent": 4.755895422809592,
+        "evaluation_error_percent": 5.7272302175907885
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor7-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 7,
+        "rounding": "floor",
+        "offset_ms": 17.02626237539734,
+        "training_error_percent": 12.701858543978327,
+        "evaluation_error_percent": 10.78228759090769
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor8-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 31.992542723340478,
+        "training_error_percent": 2.2987663387420993,
+        "evaluation_error_percent": 3.165366322063052
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 28.876492896390555,
+        "training_error_percent": 2.8122078422135233,
+        "evaluation_error_percent": 3.207021140555142
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor8-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 20.946450223043204,
+        "training_error_percent": 6.957363357590961,
+        "evaluation_error_percent": 6.8249667144648285
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor9-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 9,
+        "rounding": "floor",
+        "offset_ms": 32.62769355507463,
+        "training_error_percent": 2.059672845043863,
+        "evaluation_error_percent": 2.7270048292774893
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor9-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 9,
+        "rounding": "floor",
+        "offset_ms": 29.315889073017516,
+        "training_error_percent": 2.9177845855246582,
+        "evaluation_error_percent": 3.4685565502404763
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor9-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 9,
+        "rounding": "floor",
+        "offset_ms": 23.165845185036176,
+        "training_error_percent": 3.954955847547333,
+        "evaluation_error_percent": 4.899324088103148
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor10-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 10,
+        "rounding": "floor",
+        "offset_ms": 32.63476655631293,
+        "training_error_percent": 2.060779664939894,
+        "evaluation_error_percent": 2.8374385186928164
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor10-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 10,
+        "rounding": "floor",
+        "offset_ms": 29.809033858337283,
+        "training_error_percent": 2.7008446736384286,
+        "evaluation_error_percent": 3.2534033560954576
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "floor10-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 10,
+        "rounding": "floor",
+        "offset_ms": 24.39200412433895,
+        "training_error_percent": 2.9311844315597146,
+        "evaluation_error_percent": 3.6048478203687586
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "linear10.844",
+        "duration_ms": 10.844412349537208,
+        "fractional_word_increment_bits": null,
+        "rounding": "none",
+        "offset_ms": 44.54052079510705,
+        "training_error_percent": 6.614316779185934,
+        "evaluation_error_percent": 7.842503769868975
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor6-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 6,
+        "rounding": "floor",
+        "offset_ms": 44.93687890699386,
+        "training_error_percent": 5.401934833958654,
+        "evaluation_error_percent": 6.875463997537236
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor6-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 6,
+        "rounding": "floor",
+        "offset_ms": 43.26808786748178,
+        "training_error_percent": 5.264669598434492,
+        "evaluation_error_percent": 5.117468412155774
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor6-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 6,
+        "rounding": "floor",
+        "offset_ms": 42.17619774504378,
+        "training_error_percent": 4.2379983461892055,
+        "evaluation_error_percent": 4.441597449373131
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor7-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 7,
+        "rounding": "floor",
+        "offset_ms": 44.07319905247764,
+        "training_error_percent": 6.227842002484353,
+        "evaluation_error_percent": 7.643555471971238
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor7-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 7,
+        "rounding": "floor",
+        "offset_ms": 42.463159334492275,
+        "training_error_percent": 4.357699485101998,
+        "evaluation_error_percent": 4.782809044030324
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor7-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 7,
+        "rounding": "floor",
+        "offset_ms": 39.894992355592855,
+        "training_error_percent": 6.328889778973155,
+        "evaluation_error_percent": 6.713161682812421
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor8-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 43.45781580430347,
+        "training_error_percent": 5.557006827237282,
+        "evaluation_error_percent": 6.454732188355655
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 41.632451569216094,
+        "training_error_percent": 4.385311816740314,
+        "evaluation_error_percent": 4.954455245014589
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor8-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 38.4809571144921,
+        "training_error_percent": 5.59547748269443,
+        "evaluation_error_percent": 7.118693734000448
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor9-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 9,
+        "rounding": "floor",
+        "offset_ms": 43.14099625873407,
+        "training_error_percent": 5.713442967183408,
+        "evaluation_error_percent": 6.6733730547118775
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor9-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 9,
+        "rounding": "floor",
+        "offset_ms": 40.50749582662853,
+        "training_error_percent": 5.775215698358903,
+        "evaluation_error_percent": 6.437204803994398
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor9-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 9,
+        "rounding": "floor",
+        "offset_ms": 37.371625739117256,
+        "training_error_percent": 4.844672466628136,
+        "evaluation_error_percent": 6.258587693233682
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor10-15",
+        "duration_ms": 15.0,
+        "fractional_word_increment_bits": 10,
+        "rounding": "floor",
+        "offset_ms": 42.689613801885095,
+        "training_error_percent": 6.091318571974955,
+        "evaluation_error_percent": 7.130901419445891
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor10-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 10,
+        "rounding": "floor",
+        "offset_ms": 40.24667349213555,
+        "training_error_percent": 6.228523078591231,
+        "evaluation_error_percent": 7.173026052032456
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "floor10-25",
+        "duration_ms": 25.0,
+        "fractional_word_increment_bits": 10,
+        "rounding": "floor",
+        "offset_ms": 35.88854546108901,
+        "training_error_percent": 5.481413324425925,
+        "evaluation_error_percent": 6.112719175450463
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "model": "floor8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 40.50717174581366,
+        "training_error_percent": 4.3729786402922235,
+        "evaluation_error_percent": 4.951684369899168
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "model": "floor8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 46.638513063631514,
+        "training_error_percent": 2.796715319238856,
+        "evaluation_error_percent": 2.9026547065146038
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "model": "floor8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 42.41304906530936,
+        "training_error_percent": 2.6026670874295905,
+        "evaluation_error_percent": 3.181684144140015
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "model": "floor8-20",
+        "duration_ms": 20.0,
+        "fractional_word_increment_bits": 8,
+        "rounding": "floor",
+        "offset_ms": 49.603050540002116,
+        "training_error_percent": 5.736721919888212,
+        "evaluation_error_percent": 7.293004636869357
+      }
+    ],
+    "selected_by_first_pair_training": "floor8-20",
+    "first_pair_training_scores": {
+      "linear10.844": 47.22282666202772,
+      "floor6-15": 53.09612978159811,
+      "floor6-20": 103.58001416139302,
+      "floor6-25": 673.8040549415682,
+      "floor7-15": 56.826614279120335,
+      "floor7-20": 41.60808607515945,
+      "floor7-25": 201.39205630562608,
+      "floor8-15": 36.164651558095514,
+      "floor8-20": 27.139472677849476,
+      "floor8-25": 79.71427314888976,
+      "floor9-15": 36.88568276786862,
+      "floor9-20": 41.86658325009642,
+      "floor9-25": 39.112527064953596,
+      "floor10-15": 41.35097477271678,
+      "floor10-20": 46.08906169166466,
+      "floor10-25": 38.63773420501212
+    },
+    "contracts": [
+      {
+        "model": "linear10.844",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor6-15",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor6-20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor6-25",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor7-15",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor7-20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor7-25",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor8-15",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor8-20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor8-25",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor9-15",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor9-20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor9-25",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor10-15",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor10-20",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      },
+      {
+        "model": "floor10-25",
+        "held_exact": true,
+        "future_write_causality_exact": true
+      }
+    ],
+    "limits": [
+      "Diagnostic per-source-sample increment quantization, integrated over fractional lanes; not a literal fixed-point ASIC implementation.",
+      "No control speed fitting; original timestamps, source/phase/gain/damping fixed.",
+      "Candidates selected only by normalized training error on first up/down pair; subsequent four takes transfer fixed candidate.",
+      "Slew snaps to target at duration deadline and clamps overshoot.",
+      "Historical evaluation blocks reused."
+    ]
+  },
+  "cutoff_dependent_slew": {
+    "duration_low_ms": 2.3255535220342094,
+    "duration_high_ms": 12.871510834286637,
+    "rows": [
+      {
+        "take": 2,
+        "direction": "up",
+        "offset_ms": 35.686049226806254,
+        "training_error_percent": 3.680330647632849,
+        "evaluation_error_percent": 3.8537504050519007
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "offset_ms": 45.80525795029179,
+        "training_error_percent": 3.5522169155963166,
+        "evaluation_error_percent": 3.9962265704781563
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "offset_ms": 44.668415929562535,
+        "training_error_percent": 3.5957460832785544,
+        "evaluation_error_percent": 3.952919010971168
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "offset_ms": 53.62027831998276,
+        "training_error_percent": 2.879218018473716,
+        "evaluation_error_percent": 3.1548709657607095
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "offset_ms": 49.33667022580982,
+        "training_error_percent": 4.243332478109952,
+        "evaluation_error_percent": 4.2189308883590515
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "offset_ms": 53.78366956805141,
+        "training_error_percent": 4.9721556695653835,
+        "evaluation_error_percent": 6.297739880639922
+      }
+    ],
+    "seeds": [
+      {
+        "parameters": [
+          0.035637912699044705,
+          0.04576177372275406,
+          0.0024449268598541653,
+          0.012952021598737257
+        ],
+        "score": 16.48482738341832,
+        "nfev": 19
+      },
+      {
+        "parameters": [
+          0.03568604922680625,
+          0.04580525795029179,
+          0.0023255535220342094,
+          0.012871510834286637
+        ],
+        "score": 16.483548159710566,
+        "nfev": 21
+      }
+    ],
+    "method": "One common linear slew duration interpolated in log target cutoff416..2612. First up/down training blocks fit two durations and two offsets; later takes freeze both durations and fit only alignment. Original clock/timestamps/filter/source/gain fixed.",
+    "limits": [
+      "Diagnostic law, not decoded ASIC behavior.",
+      "Two optimizer starts, not an exhaustive global search.",
+      "Existing evaluation blocks reused; no production change."
+    ],
+    "contracts": {
+      "held_exact": true,
+      "future_write_causality_exact": true
+    }
+  },
+  "isolated_step_check": {
+    "rows": [
+      {
+        "take": 4,
+        "duration_ms": 0.0,
+        "bits": 0,
+        "mode": 0,
+        "offset_ms": 51.7008474457309,
+        "same_window_fit_error_percent": 0.3176828667804923
+      },
+      {
+        "take": 4,
+        "duration_ms": 20.0,
+        "bits": 8,
+        "mode": 1,
+        "offset_ms": 33.1552765071391,
+        "same_window_fit_error_percent": 8.317927391466577
+      }
+    ],
+    "limits": [
+      "Same-window alignment fit, not held-out accuracy.",
+      "Full origin0 fractional lane renderer differs from prior origin6 reconstruction; compare candidates within this run.",
+      "Step cutoff is issued under command0 then restored to27, so a slow-command candidate must not be applied unconditionally."
+    ]
+  },
+  "step_command_transactions": [
+    {
+      "take": 4,
+      "cutoff_write_seconds": 139.062396875,
+      "step_words": [
+        416,
+        2613
+      ],
+      "commands": [
+        {
+          "seconds": "139.06233399999999",
+          "pc": "33276",
+          "word": "0",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "3",
+          "index_register": "0",
+          "result_register": "0",
+          "partial_time1": "96"
+        },
+        {
+          "seconds": "139.06239987500001",
+          "pc": "33298",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "3",
+          "index_register": "2613",
+          "result_register": "27",
+          "partial_time1": "96"
+        }
+      ]
+    },
+    {
+      "take": 5,
+      "cutoff_write_seconds": 156.05879,
+      "step_words": [
+        2613,
+        416
+      ],
+      "commands": [
+        {
+          "seconds": "156.05872637499999",
+          "pc": "33276",
+          "word": "0",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "4",
+          "index_register": "0",
+          "result_register": "0",
+          "partial_time1": "96"
+        },
+        {
+          "seconds": "156.05879300000001",
+          "pc": "33298",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "4",
+          "index_register": "416",
+          "result_register": "27",
+          "partial_time1": "96"
+        }
+      ]
+    },
+    {
+      "take": 8,
+      "cutoff_write_seconds": 207.052746375,
+      "step_words": [
+        416,
+        2613
+      ],
+      "commands": [
+        {
+          "seconds": "207.0526835",
+          "pc": "33276",
+          "word": "0",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "7",
+          "index_register": "0",
+          "result_register": "0",
+          "partial_time1": "96"
+        },
+        {
+          "seconds": "207.05274937499999",
+          "pc": "33298",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "7",
+          "index_register": "2613",
+          "result_register": "27",
+          "partial_time1": "96"
+        }
+      ]
+    },
+    {
+      "take": 9,
+      "cutoff_write_seconds": 224.059060625,
+      "step_words": [
+        2613,
+        416
+      ],
+      "commands": [
+        {
+          "seconds": "224.05899700000001",
+          "pc": "33276",
+          "word": "0",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "8",
+          "index_register": "0",
+          "result_register": "0",
+          "partial_time1": "96"
+        },
+        {
+          "seconds": "224.05906362499999",
+          "pc": "33298",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "8",
+          "index_register": "416",
+          "result_register": "27",
+          "partial_time1": "96"
+        }
+      ]
+    },
+    {
+      "take": 10,
+      "cutoff_write_seconds": 241.04493725,
+      "step_words": [
+        416,
+        2613
+      ],
+      "commands": [
+        {
+          "seconds": "241.04487437500001",
+          "pc": "33276",
+          "word": "0",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "9",
+          "index_register": "0",
+          "result_register": "0",
+          "partial_time1": "96"
+        },
+        {
+          "seconds": "241.04494025",
+          "pc": "33298",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "9",
+          "index_register": "2613",
+          "result_register": "27",
+          "partial_time1": "96"
+        }
+      ]
+    },
+    {
+      "take": 11,
+      "cutoff_write_seconds": 258.046720625,
+      "step_words": [
+        2613,
+        416
+      ],
+      "commands": [
+        {
+          "seconds": "258.04665699999998",
+          "pc": "33276",
+          "word": "0",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "10",
+          "index_register": "0",
+          "result_register": "0",
+          "partial_time1": "96"
+        },
+        {
+          "seconds": "258.04672362500003",
+          "pc": "33298",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "10",
+          "index_register": "416",
+          "result_register": "27",
+          "partial_time1": "96"
+        }
+      ]
+    }
+  ],
+  "identities": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_tvfstep_increment_precision.py": "7520207a318c132e76ea6e79b1f72502e7394185426ce9738594620ed761c791",
+    "docs\\ic20-hle-findings\\chatGPT-work\\refine_tvfstep_increment_precision.py": "3b69db5ed542f3f77442fb9a571d5ad404f152cc4b65075f6f6f94bcc4cadf8f",
+    "docs\\ic20-hle-findings\\chatGPT-work\\check_tvfstep_increment_steps.py": "6210569bd13b08661e3a160b8931f7e3ad81be65cec1fc1abe209a95169fb7fd",
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_tvfstep_cutoff_dependent_slew.py": "16f2d896ef9656a3118fbb05b20fe8bc2a66dc3ec38f939df97142ef174ed84d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\tvfstep-firmware-2026-10-16\\traced-local\\firmware-inputs.csv.controls.csv": "1cd6ced57ce23fc994e00d2f74aa6d600f6488708470607ce2720ad591ad585b",
+    "docs\\ic20-hle-findings\\chatGPT-work\\tvfstep-firmware-2026-10-16\\pack\\native-validation.json": "e91a619d6d572f3a2e718f53496cad03bea40bbdc0de3e243e29c33831fba502"
+  },
+  "selection": "Each sweep selects by sum of squared normalized training errors on first opening/closing takes2/3; remaining takes4..7 transfer the selected law with only alignment fitted.",
+  "limitations": [
+    "Parameter sweeps and evaluation reuse are exploratory; no new hardware control-word observations.",
+    "Increment quantization approximates a per-source-sample slope with fractional lanes, not a literal ASIC fixed-point accumulator.",
+    "Candidate clamps overshoot and snaps to target at the duration deadline; other accumulator/endpoint laws remain untested.",
+    "No inference that hardware has8 fractional increment bits or any particular slew law.",
+    "Command0 brackets all six observed isolated jumps; command physical semantics remain unqualified.",
+    "One isolated step compared quantitatively here; earlier immediate-step results cover all six.",
+    "These candidates help closing but worsen every opening; neither is a supported fix.",
+    "Existing default and experimental native code untouched."
+  ],
+  "next": "Audit firmware control-update scheduling and timer/counter cadence rather than applying a fitted speed correction."
+}

@@ -1,0 +1,216 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "anchors": [
+    {
+      "pc": 24891,
+      "page": 31,
+      "file_offset": 58683,
+      "bytes": "65060062",
+      "mnemonic": "ADD",
+      "operands": "RW62, #0x6"
+    },
+    {
+      "pc": 24928,
+      "page": 31,
+      "file_offset": 58720,
+      "bytes": "080162",
+      "mnemonic": "SHR",
+      "operands": "RW62, #0x1"
+    },
+    {
+      "pc": 25159,
+      "page": 31,
+      "file_offset": 58951,
+      "bytes": "385c03",
+      "mnemonic": "JBS",
+      "operands": "R5C, 0x0, 0x624d"
+    },
+    {
+      "pc": 25162,
+      "page": 31,
+      "file_offset": 58954,
+      "bytes": "18046a",
+      "mnemonic": "SHRB",
+      "operands": "R6A, #0x4"
+    },
+    {
+      "pc": 25142,
+      "page": 31,
+      "file_offset": 58934,
+      "bytes": "710f6a",
+      "mnemonic": "ANDB",
+      "operands": "R6A, #0xf"
+    },
+    {
+      "pc": 28628,
+      "page": 31,
+      "file_offset": 62420,
+      "bytes": "8900025c",
+      "mnemonic": "CMP",
+      "operands": "RW5C, #0x200"
+    },
+    {
+      "pc": 28651,
+      "page": 31,
+      "file_offset": 62443,
+      "bytes": "8b5c2a00",
+      "mnemonic": "CMP",
+      "operands": "ZR, 0x2a[RW5C]"
+    },
+    {
+      "pc": 27744,
+      "page": 31,
+      "file_offset": 61536,
+      "bytes": "6d30005c",
+      "mnemonic": "MULU",
+      "operands": "RL5C, #0x30"
+    },
+    {
+      "pc": 29931,
+      "page": 31,
+      "file_offset": 63723,
+      "bytes": "a106005c",
+      "mnemonic": "LD",
+      "operands": "RW5C, #0x6"
+    },
+    {
+      "pc": 26781,
+      "page": 31,
+      "file_offset": 60573,
+      "bytes": "c70116016a",
+      "mnemonic": "STB",
+      "operands": "R6A, 0x116, LOOKUP[ZR]"
+    },
+    {
+      "pc": 26791,
+      "page": 31,
+      "file_offset": 60583,
+      "bytes": "316af8",
+      "mnemonic": "JBC",
+      "operands": "R6A, 0x1, 0x68a2"
+    }
+  ],
+  "range_table": {
+    "data_page": 702,
+    "address": 44982,
+    "file_offset": 749494,
+    "records": [
+      {
+        "index": 0,
+        "base": 2195456,
+        "extent": 8064
+      },
+      {
+        "index": 1,
+        "base": 2162688,
+        "extent": 32512
+      },
+      {
+        "index": 2,
+        "base": 2129920,
+        "extent": 32768
+      },
+      {
+        "index": 3,
+        "base": 2113536,
+        "extent": 8064
+      },
+      {
+        "index": 4,
+        "base": 2097184,
+        "extent": 1
+      },
+      {
+        "index": 5,
+        "base": 2097176,
+        "extent": 1
+      },
+      {
+        "index": 6,
+        "base": 2097168,
+        "extent": 1
+      },
+      {
+        "index": 7,
+        "base": 2097160,
+        "extent": 1
+      },
+      {
+        "index": 8,
+        "base": 2097152,
+        "extent": 1
+      },
+      {
+        "index": 9,
+        "base": 260096,
+        "extent": 1900
+      },
+      {
+        "index": 10,
+        "base": 258048,
+        "extent": 1208
+      },
+      {
+        "index": 11,
+        "base": 249856,
+        "extent": 4268
+      },
+      {
+        "index": 12,
+        "base": 221184,
+        "extent": 24576
+      },
+      {
+        "index": 13,
+        "base": 196608,
+        "extent": 24576
+      },
+      {
+        "index": 14,
+        "base": 163840,
+        "extent": 32512
+      },
+      {
+        "index": 15,
+        "base": 131072,
+        "extent": 32768
+      },
+      {
+        "index": 16,
+        "base": 98304,
+        "extent": 32768
+      },
+      {
+        "index": 17,
+        "base": 65536,
+        "extent": 32768
+      },
+      {
+        "index": 18,
+        "base": 49152,
+        "extent": 16384
+      },
+      {
+        "index": 19,
+        "base": 16384,
+        "extent": 32768
+      },
+      {
+        "index": 20,
+        "base": 0,
+        "extent": 32
+      }
+    ],
+    "sha256": "ee7e8643cb5b4ba9608b4582095c424e0a08b188116c056a09941949f79b7e12"
+  },
+  "tests": {
+    "passed": 30,
+    "failed": 0
+  },
+  "qualification": "Static original-image analysis; no runtime table immutability or hardware transfer claim.",
+  "tool_identities": {
+    "scripts/analyze_firmware_routines.py": "72a1169cabf00162b1c5c7fc41bcfeb24896cf2c1052f8804e62dd32ebd51fe4",
+    "scripts/firmware_coverage.py": "fba6f2df31f4def948b411f2055584265e4e3c221b3fa321685c43cf00984b67",
+    "scripts/firmware_manifests/os_exploration.json": "2549d0c37295506b1236e04df39a648cd7a51ff55595536814e02b5420468140"
+  }
+}

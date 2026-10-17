@@ -1,0 +1,7192 @@
+{
+  "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "tool_sha256": "38917d105be8f2d45e1a49f4f7f7dda8ccb4dd931626cb92fe7b04a1ad64e686",
+  "manifest_sha256": "879a8350f1c6a2573535f62bb9158daccf883c94ebcb919163b771a8b6d06931",
+  "qualification": "Static byte checks under retained data010C=0798; no new native or hardware execution. Resource consumption is conditional on caller mapping and display gate4D2F.",
+  "anchors": [
+    {
+      "region": "rom_boot_services",
+      "pc": 18669,
+      "page": 1936,
+      "file_offset": 18669,
+      "bytes": "b2e3f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, [RWE2]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18672,
+      "page": 1936,
+      "file_offset": 18672,
+      "bytes": "b101f0",
+      "mnemonic": "LDB",
+      "operands": "RF0, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18675,
+      "page": 1936,
+      "file_offset": 18675,
+      "bytes": "b106f1",
+      "mnemonic": "LDB",
+      "operands": "RF1, #0x6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18678,
+      "page": 1936,
+      "file_offset": 18678,
+      "bytes": "ef6de6",
+      "mnemonic": "LCALL",
+      "operands": "0x2f66"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18681,
+      "page": 1936,
+      "file_offset": 18681,
+      "bytes": "b2e3f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, [RWE2]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18684,
+      "page": 1936,
+      "file_offset": 18684,
+      "bytes": "b000f0",
+      "mnemonic": "LDB",
+      "operands": "RF0, ZRlo"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18687,
+      "page": 1936,
+      "file_offset": 18687,
+      "bytes": "b111f1",
+      "mnemonic": "LDB",
+      "operands": "RF1, #0x11"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18690,
+      "page": 1936,
+      "file_offset": 18690,
+      "bytes": "ef46ef",
+      "mnemonic": "LCALL",
+      "operands": "0x384b"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18693,
+      "page": 1936,
+      "file_offset": 18693,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18694,
+      "page": 1936,
+      "file_offset": 18694,
+      "bytes": "2fe5",
+      "mnemonic": "SCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18696,
+      "page": 1936,
+      "file_offset": 18696,
+      "bytes": "a10040b0",
+      "mnemonic": "LD",
+      "operands": "RWB0, #0x4000"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18700,
+      "page": 1936,
+      "file_offset": 18700,
+      "bytes": "b110da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18703,
+      "page": 1936,
+      "file_offset": 18703,
+      "bytes": "e0dafd",
+      "mnemonic": "DJNZ",
+      "operands": "RDA, 0x490f"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18706,
+      "page": 1936,
+      "file_offset": 18706,
+      "bytes": "05b0",
+      "mnemonic": "DEC",
+      "operands": "RWB0"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18708,
+      "page": 1936,
+      "file_offset": 18708,
+      "bytes": "d7f6",
+      "mnemonic": "JNE",
+      "operands": "0x490c"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18710,
+      "page": 1936,
+      "file_offset": 18710,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19489,
+      "page": 1936,
+      "file_offset": 19489,
+      "bytes": "c701204800",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4820, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19494,
+      "page": 1936,
+      "file_offset": 19494,
+      "bytes": "f4",
+      "mnemonic": "PUSHA",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19495,
+      "page": 1936,
+      "file_offset": 19495,
+      "bytes": "b3011501da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19500,
+      "page": 1936,
+      "file_offset": 19500,
+      "bytes": "c8da",
+      "mnemonic": "PUSH",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19502,
+      "page": 1936,
+      "file_offset": 19502,
+      "bytes": "b111da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x11"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19505,
+      "page": 1936,
+      "file_offset": 19505,
+      "bytes": "c7011501da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19510,
+      "page": 1936,
+      "file_offset": 19510,
+      "bytes": "b10008",
+      "mnemonic": "LDB",
+      "operands": "INT_MASK, #0x0"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19513,
+      "page": 1936,
+      "file_offset": 19513,
+      "bytes": "b12013",
+      "mnemonic": "LDB",
+      "operands": "INT_MASK1, #0x20"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19516,
+      "page": 1936,
+      "file_offset": 19516,
+      "bytes": "fb",
+      "mnemonic": "EI",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19517,
+      "page": 1936,
+      "file_offset": 19517,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19522,
+      "page": 1936,
+      "file_offset": 19522,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19525,
+      "page": 1936,
+      "file_offset": 19525,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19528,
+      "page": 1936,
+      "file_offset": 19528,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4c3d"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19530,
+      "page": 1936,
+      "file_offset": 19530,
+      "bytes": "b107da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x7"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19533,
+      "page": 1936,
+      "file_offset": 19533,
+      "bytes": "c70102e0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xe002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19538,
+      "page": 1936,
+      "file_offset": 19538,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19543,
+      "page": 1936,
+      "file_offset": 19543,
+      "bytes": "71c0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x40"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19546,
+      "page": 1936,
+      "file_offset": 19546,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19549,
+      "page": 1936,
+      "file_offset": 19549,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4c52"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19551,
+      "page": 1936,
+      "file_offset": 19551,
+      "bytes": "c70102e000",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0xe002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19556,
+      "page": 1936,
+      "file_offset": 19556,
+      "bytes": "9b01204800",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x4820, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19561,
+      "page": 1936,
+      "file_offset": 19561,
+      "bytes": "dff9",
+      "mnemonic": "JE",
+      "operands": "0x4c64"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19563,
+      "page": 1936,
+      "file_offset": 19563,
+      "bytes": "fa",
+      "mnemonic": "DI",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19564,
+      "page": 1936,
+      "file_offset": 19564,
+      "bytes": "ccda",
+      "mnemonic": "POP",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19566,
+      "page": 1936,
+      "file_offset": 19566,
+      "bytes": "c7011501da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19571,
+      "page": 1936,
+      "file_offset": 19571,
+      "bytes": "f5",
+      "mnemonic": "POPA",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19572,
+      "page": 1936,
+      "file_offset": 19572,
+      "bytes": "b132da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x32"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19575,
+      "page": 1936,
+      "file_offset": 19575,
+      "bytes": "efddfd",
+      "mnemonic": "LCALL",
+      "operands": "0x4a57"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19578,
+      "page": 1936,
+      "file_offset": 19578,
+      "bytes": "e0dafa",
+      "mnemonic": "DJNZ",
+      "operands": "RDA, 0x4c77"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19581,
+      "page": 1936,
+      "file_offset": 19581,
+      "bytes": "11cc",
+      "mnemonic": "CLRB",
+      "operands": "RCC"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19583,
+      "page": 1936,
+      "file_offset": 19583,
+      "bytes": "c701214800",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4821, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19588,
+      "page": 1936,
+      "file_offset": 19588,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19589,
+      "page": 1936,
+      "file_offset": 19589,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19594,
+      "page": 1936,
+      "file_offset": 19594,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19597,
+      "page": 1936,
+      "file_offset": 19597,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19600,
+      "page": 1936,
+      "file_offset": 19600,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4c85"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19602,
+      "page": 1936,
+      "file_offset": 19602,
+      "bytes": "b11eda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x1e"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19605,
+      "page": 1936,
+      "file_offset": 19605,
+      "bytes": "c70100e0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19610,
+      "page": 1936,
+      "file_offset": 19610,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19615,
+      "page": 1936,
+      "file_offset": 19615,
+      "bytes": "7110d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19618,
+      "page": 1936,
+      "file_offset": 19618,
+      "bytes": "9910d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19621,
+      "page": 1936,
+      "file_offset": 19621,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4c9a"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19623,
+      "page": 1936,
+      "file_offset": 19623,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19628,
+      "page": 1936,
+      "file_offset": 19628,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19631,
+      "page": 1936,
+      "file_offset": 19631,
+      "bytes": "99d0d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19634,
+      "page": 1936,
+      "file_offset": 19634,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4ca7"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19636,
+      "page": 1936,
+      "file_offset": 19636,
+      "bytes": "b30102e0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xe002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19641,
+      "page": 1936,
+      "file_offset": 19641,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19646,
+      "page": 1936,
+      "file_offset": 19646,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19649,
+      "page": 1936,
+      "file_offset": 19649,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19652,
+      "page": 1936,
+      "file_offset": 19652,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4cb9"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19654,
+      "page": 1936,
+      "file_offset": 19654,
+      "bytes": "b104db",
+      "mnemonic": "LDB",
+      "operands": "RDB, #0x4"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19657,
+      "page": 1936,
+      "file_offset": 19657,
+      "bytes": "b17dda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x7d"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19660,
+      "page": 1936,
+      "file_offset": 19660,
+      "bytes": "ef88fd",
+      "mnemonic": "LCALL",
+      "operands": "0x4a57"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19663,
+      "page": 1936,
+      "file_offset": 19663,
+      "bytes": "e0dafa",
+      "mnemonic": "DJNZ",
+      "operands": "RDA, 0x4ccc"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19666,
+      "page": 1936,
+      "file_offset": 19666,
+      "bytes": "e0dbf4",
+      "mnemonic": "DJNZ",
+      "operands": "RDB, 0x4cc9"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19669,
+      "page": 1936,
+      "file_offset": 19669,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19670,
+      "page": 1936,
+      "file_offset": 19670,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19675,
+      "page": 1936,
+      "file_offset": 19675,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19678,
+      "page": 1936,
+      "file_offset": 19678,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19681,
+      "page": 1936,
+      "file_offset": 19681,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4cd6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19683,
+      "page": 1936,
+      "file_offset": 19683,
+      "bytes": "b10eda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0xe"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19686,
+      "page": 1936,
+      "file_offset": 19686,
+      "bytes": "c70100e0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19691,
+      "page": 1936,
+      "file_offset": 19691,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19696,
+      "page": 1936,
+      "file_offset": 19696,
+      "bytes": "7110d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19699,
+      "page": 1936,
+      "file_offset": 19699,
+      "bytes": "9910d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19702,
+      "page": 1936,
+      "file_offset": 19702,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4ceb"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19704,
+      "page": 1936,
+      "file_offset": 19704,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19709,
+      "page": 1936,
+      "file_offset": 19709,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19712,
+      "page": 1936,
+      "file_offset": 19712,
+      "bytes": "99d0d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19715,
+      "page": 1936,
+      "file_offset": 19715,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4cf8"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19717,
+      "page": 1936,
+      "file_offset": 19717,
+      "bytes": "b30102e0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xe002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19722,
+      "page": 1936,
+      "file_offset": 19722,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19727,
+      "page": 1936,
+      "file_offset": 19727,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19730,
+      "page": 1936,
+      "file_offset": 19730,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19733,
+      "page": 1936,
+      "file_offset": 19733,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4d0a"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19735,
+      "page": 1936,
+      "file_offset": 19735,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19736,
+      "page": 1936,
+      "file_offset": 19736,
+      "bytes": "9b012148cc",
+      "mnemonic": "CMPB",
+      "operands": "RCC, 0x4821, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19741,
+      "page": 1936,
+      "file_offset": 19741,
+      "bytes": "d702",
+      "mnemonic": "JNE",
+      "operands": "0x4d21"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19743,
+      "page": 1936,
+      "file_offset": 19743,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19744,
+      "page": 1936,
+      "file_offset": 19744,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19745,
+      "page": 1936,
+      "file_offset": 19745,
+      "bytes": "c7012148cc",
+      "mnemonic": "STB",
+      "operands": "RCC, 0x4821, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19750,
+      "page": 1936,
+      "file_offset": 19750,
+      "bytes": "c701204800",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4820, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19755,
+      "page": 1936,
+      "file_offset": 19755,
+      "bytes": "f4",
+      "mnemonic": "PUSHA",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19756,
+      "page": 1936,
+      "file_offset": 19756,
+      "bytes": "b3011501da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19761,
+      "page": 1936,
+      "file_offset": 19761,
+      "bytes": "c8da",
+      "mnemonic": "PUSH",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19763,
+      "page": 1936,
+      "file_offset": 19763,
+      "bytes": "b111da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x11"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19766,
+      "page": 1936,
+      "file_offset": 19766,
+      "bytes": "c7011501da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19771,
+      "page": 1936,
+      "file_offset": 19771,
+      "bytes": "b10008",
+      "mnemonic": "LDB",
+      "operands": "INT_MASK, #0x0"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19774,
+      "page": 1936,
+      "file_offset": 19774,
+      "bytes": "b12013",
+      "mnemonic": "LDB",
+      "operands": "INT_MASK1, #0x20"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19777,
+      "page": 1936,
+      "file_offset": 19777,
+      "bytes": "fb",
+      "mnemonic": "EI",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19778,
+      "page": 1936,
+      "file_offset": 19778,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19783,
+      "page": 1936,
+      "file_offset": 19783,
+      "bytes": "71d0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x30"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19786,
+      "page": 1936,
+      "file_offset": 19786,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19789,
+      "page": 1936,
+      "file_offset": 19789,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4d42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19791,
+      "page": 1936,
+      "file_offset": 19791,
+      "bytes": "b10fda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0xf"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19794,
+      "page": 1936,
+      "file_offset": 19794,
+      "bytes": "c70102e0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xe002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19799,
+      "page": 1936,
+      "file_offset": 19799,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19804,
+      "page": 1936,
+      "file_offset": 19804,
+      "bytes": "71c0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x40"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19807,
+      "page": 1936,
+      "file_offset": 19807,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19810,
+      "page": 1936,
+      "file_offset": 19810,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4d57"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19812,
+      "page": 1936,
+      "file_offset": 19812,
+      "bytes": "c70102e000",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0xe002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19817,
+      "page": 1936,
+      "file_offset": 19817,
+      "bytes": "b30100e0d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0xe000, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19822,
+      "page": 1936,
+      "file_offset": 19822,
+      "bytes": "71c0d4",
+      "mnemonic": "ANDB",
+      "operands": "RD4, #-0x40"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19825,
+      "page": 1936,
+      "file_offset": 19825,
+      "bytes": "9980d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19828,
+      "page": 1936,
+      "file_offset": 19828,
+      "bytes": "d7f3",
+      "mnemonic": "JNE",
+      "operands": "0x4d69"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19830,
+      "page": 1936,
+      "file_offset": 19830,
+      "bytes": "c70102e0cc",
+      "mnemonic": "STB",
+      "operands": "RCC, 0xe002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19835,
+      "page": 1936,
+      "file_offset": 19835,
+      "bytes": "9b01204800",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x4820, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19840,
+      "page": 1936,
+      "file_offset": 19840,
+      "bytes": "dff9",
+      "mnemonic": "JE",
+      "operands": "0x4d7b"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19842,
+      "page": 1936,
+      "file_offset": 19842,
+      "bytes": "fa",
+      "mnemonic": "DI",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19843,
+      "page": 1936,
+      "file_offset": 19843,
+      "bytes": "ccda",
+      "mnemonic": "POP",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19845,
+      "page": 1936,
+      "file_offset": 19845,
+      "bytes": "c7011501da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19850,
+      "page": 1936,
+      "file_offset": 19850,
+      "bytes": "f5",
+      "mnemonic": "POPA",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19851,
+      "page": 1936,
+      "file_offset": 19851,
+      "bytes": "b132da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x32"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19854,
+      "page": 1936,
+      "file_offset": 19854,
+      "bytes": "efc6fc",
+      "mnemonic": "LCALL",
+      "operands": "0x4a57"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19857,
+      "page": 1936,
+      "file_offset": 19857,
+      "bytes": "e0dafa",
+      "mnemonic": "DJNZ",
+      "operands": "RDA, 0x4d8e"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19860,
+      "page": 1936,
+      "file_offset": 19860,
+      "bytes": "b3010048d4",
+      "mnemonic": "LDB",
+      "operands": "RD4, 0x4800, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19865,
+      "page": 1936,
+      "file_offset": 19865,
+      "bytes": "9920d4",
+      "mnemonic": "CMPB",
+      "operands": "RD4, #0x20"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19868,
+      "page": 1936,
+      "file_offset": 19868,
+      "bytes": "d703",
+      "mnemonic": "JNE",
+      "operands": "0x4da1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19870,
+      "page": 1936,
+      "file_offset": 19870,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19871,
+      "page": 1936,
+      "file_offset": 19871,
+      "bytes": "2001",
+      "mnemonic": "SJMP",
+      "operands": "0x4da2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19873,
+      "page": 1936,
+      "file_offset": 19873,
+      "bytes": "f9",
+      "mnemonic": "SETC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19874,
+      "page": 1936,
+      "file_offset": 19874,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19875,
+      "page": 1936,
+      "file_offset": 19875,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19880,
+      "page": 1936,
+      "file_offset": 19880,
+      "bytes": "71fbda",
+      "mnemonic": "ANDB",
+      "operands": "RDA, #-0x5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19883,
+      "page": 1936,
+      "file_offset": 19883,
+      "bytes": "c70102f0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19888,
+      "page": 1936,
+      "file_offset": 19888,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19893,
+      "page": 1936,
+      "file_offset": 19893,
+      "bytes": "30da19",
+      "mnemonic": "JBC",
+      "operands": "RDA, 0x0, 0x4dd1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19896,
+      "page": 1936,
+      "file_offset": 19896,
+      "bytes": "b101da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19899,
+      "page": 1936,
+      "file_offset": 19899,
+      "bytes": "71facf",
+      "mnemonic": "ANDB",
+      "operands": "RCF, #-0x6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19902,
+      "page": 1936,
+      "file_offset": 19902,
+      "bytes": "90dacf",
+      "mnemonic": "ORB",
+      "operands": "RCF, RDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19905,
+      "page": 1936,
+      "file_offset": 19905,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19910,
+      "page": 1936,
+      "file_offset": 19910,
+      "bytes": "9104da",
+      "mnemonic": "ORB",
+      "operands": "RDA, #0x4"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19913,
+      "page": 1936,
+      "file_offset": 19913,
+      "bytes": "c70102f0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19918,
+      "page": 1936,
+      "file_offset": 19918,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19919,
+      "page": 1936,
+      "file_offset": 19919,
+      "bytes": "2048",
+      "mnemonic": "SJMP",
+      "operands": "0x4e19"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19921,
+      "page": 1936,
+      "file_offset": 19921,
+      "bytes": "9501cc",
+      "mnemonic": "XORB",
+      "operands": "RCC, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19924,
+      "page": 1936,
+      "file_offset": 19924,
+      "bytes": "994fcc",
+      "mnemonic": "CMPB",
+      "operands": "RCC, #0x4f"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19927,
+      "page": 1936,
+      "file_offset": 19927,
+      "bytes": "d102",
+      "mnemonic": "JNH",
+      "operands": "0x4ddb"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19929,
+      "page": 1936,
+      "file_offset": 19929,
+      "bytes": "11cc",
+      "mnemonic": "CLRB",
+      "operands": "RCC"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19931,
+      "page": 1936,
+      "file_offset": 19931,
+      "bytes": "2f3b",
+      "mnemonic": "SCALL",
+      "operands": "0x4d18"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19933,
+      "page": 1936,
+      "file_offset": 19933,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19938,
+      "page": 1936,
+      "file_offset": 19938,
+      "bytes": "71fbda",
+      "mnemonic": "ANDB",
+      "operands": "RDA, #-0x5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19941,
+      "page": 1936,
+      "file_offset": 19941,
+      "bytes": "c70102f0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19946,
+      "page": 1936,
+      "file_offset": 19946,
+      "bytes": "b105da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19949,
+      "page": 1936,
+      "file_offset": 19949,
+      "bytes": "90dacf",
+      "mnemonic": "ORB",
+      "operands": "RCF, RDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19952,
+      "page": 1936,
+      "file_offset": 19952,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19957,
+      "page": 1936,
+      "file_offset": 19957,
+      "bytes": "30da10",
+      "mnemonic": "JBC",
+      "operands": "RDA, 0x0, 0x4e08"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19960,
+      "page": 1936,
+      "file_offset": 19960,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19965,
+      "page": 1936,
+      "file_offset": 19965,
+      "bytes": "9104da",
+      "mnemonic": "ORB",
+      "operands": "RDA, #0x4"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19968,
+      "page": 1936,
+      "file_offset": 19968,
+      "bytes": "c70102f0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19973,
+      "page": 1936,
+      "file_offset": 19973,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19974,
+      "page": 1936,
+      "file_offset": 19974,
+      "bytes": "2011",
+      "mnemonic": "SJMP",
+      "operands": "0x4e19"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19976,
+      "page": 1936,
+      "file_offset": 19976,
+      "bytes": "71facf",
+      "mnemonic": "ANDB",
+      "operands": "RCF, #-0x6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19979,
+      "page": 1936,
+      "file_offset": 19979,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19984,
+      "page": 1936,
+      "file_offset": 19984,
+      "bytes": "9104da",
+      "mnemonic": "ORB",
+      "operands": "RDA, #0x4"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19987,
+      "page": 1936,
+      "file_offset": 19987,
+      "bytes": "c70102f0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19992,
+      "page": 1936,
+      "file_offset": 19992,
+      "bytes": "f9",
+      "mnemonic": "SETC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19993,
+      "page": 1936,
+      "file_offset": 19993,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19994,
+      "page": 1936,
+      "file_offset": 19994,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 19999,
+      "page": 1936,
+      "file_offset": 19999,
+      "bytes": "71fbda",
+      "mnemonic": "ANDB",
+      "operands": "RDA, #-0x5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20002,
+      "page": 1936,
+      "file_offset": 20002,
+      "bytes": "c70102f0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20007,
+      "page": 1936,
+      "file_offset": 20007,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20012,
+      "page": 1936,
+      "file_offset": 20012,
+      "bytes": "31da08",
+      "mnemonic": "JBC",
+      "operands": "RDA, 0x1, 0x4e37"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20015,
+      "page": 1936,
+      "file_offset": 20015,
+      "bytes": "9102cf",
+      "mnemonic": "ORB",
+      "operands": "RCF, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20018,
+      "page": 1936,
+      "file_offset": 20018,
+      "bytes": "b10b48",
+      "mnemonic": "LDB",
+      "operands": "R48, #0xb"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20021,
+      "page": 1936,
+      "file_offset": 20021,
+      "bytes": "2006",
+      "mnemonic": "SJMP",
+      "operands": "0x4e3d"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20023,
+      "page": 1936,
+      "file_offset": 20023,
+      "bytes": "71fdcf",
+      "mnemonic": "ANDB",
+      "operands": "RCF, #-0x3"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20026,
+      "page": 1936,
+      "file_offset": 20026,
+      "bytes": "b14b48",
+      "mnemonic": "LDB",
+      "operands": "R48, #0x4b"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20029,
+      "page": 1936,
+      "file_offset": 20029,
+      "bytes": "ef93fb",
+      "mnemonic": "LCALL",
+      "operands": "0x49d3"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20032,
+      "page": 1936,
+      "file_offset": 20032,
+      "bytes": "b30102f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20037,
+      "page": 1936,
+      "file_offset": 20037,
+      "bytes": "9104da",
+      "mnemonic": "ORB",
+      "operands": "RDA, #0x4"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20040,
+      "page": 1936,
+      "file_offset": 20040,
+      "bytes": "c70102f0da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0xf002, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20045,
+      "page": 1936,
+      "file_offset": 20045,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20046,
+      "page": 1936,
+      "file_offset": 20046,
+      "bytes": "11cc",
+      "mnemonic": "CLRB",
+      "operands": "RCC"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20048,
+      "page": 1936,
+      "file_offset": 20048,
+      "bytes": "11cd",
+      "mnemonic": "CLRB",
+      "operands": "RCD"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20050,
+      "page": 1936,
+      "file_offset": 20050,
+      "bytes": "b101ce",
+      "mnemonic": "LDB",
+      "operands": "RCE, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20053,
+      "page": 1936,
+      "file_offset": 20053,
+      "bytes": "b1ffda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #-0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20056,
+      "page": 1936,
+      "file_offset": 20056,
+      "bytes": "c701614cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4c61, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20061,
+      "page": 1936,
+      "file_offset": 20061,
+      "bytes": "2838",
+      "mnemonic": "SCALL",
+      "operands": "0x4e97"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20063,
+      "page": 1936,
+      "file_offset": 20063,
+      "bytes": "db35",
+      "mnemonic": "JC",
+      "operands": "0x4e96"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20065,
+      "page": 1936,
+      "file_offset": 20065,
+      "bytes": "b1feda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #-0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20068,
+      "page": 1936,
+      "file_offset": 20068,
+      "bytes": "c701614cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4c61, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20073,
+      "page": 1936,
+      "file_offset": 20073,
+      "bytes": "a1264850",
+      "mnemonic": "LD",
+      "operands": "RW50, #0x4826"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20077,
+      "page": 1936,
+      "file_offset": 20077,
+      "bytes": "a15a8352",
+      "mnemonic": "LD",
+      "operands": "RW52, #0x835a"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20081,
+      "page": 1936,
+      "file_offset": 20081,
+      "bytes": "b10ff4",
+      "mnemonic": "LDB",
+      "operands": "RF4, #0xf"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20084,
+      "page": 1936,
+      "file_offset": 20084,
+      "bytes": "b251da",
+      "mnemonic": "LDB",
+      "operands": "RDA, [RW50]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20087,
+      "page": 1936,
+      "file_offset": 20087,
+      "bytes": "b253db",
+      "mnemonic": "LDB",
+      "operands": "RDB, [RW52]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20090,
+      "page": 1936,
+      "file_offset": 20090,
+      "bytes": "98dbda",
+      "mnemonic": "CMPB",
+      "operands": "RDA, RDB"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20093,
+      "page": 1936,
+      "file_offset": 20093,
+      "bytes": "df03",
+      "mnemonic": "JE",
+      "operands": "0x4e82"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20095,
+      "page": 1936,
+      "file_offset": 20095,
+      "bytes": "f9",
+      "mnemonic": "SETC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20096,
+      "page": 1936,
+      "file_offset": 20096,
+      "bytes": "2014",
+      "mnemonic": "SJMP",
+      "operands": "0x4e96"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20098,
+      "page": 1936,
+      "file_offset": 20098,
+      "bytes": "e0f4ef",
+      "mnemonic": "DJNZ",
+      "operands": "RF4, 0x4e74"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20101,
+      "page": 1936,
+      "file_offset": 20101,
+      "bytes": "b250da",
+      "mnemonic": "LDB",
+      "operands": "RDA, [RW50]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20104,
+      "page": 1936,
+      "file_offset": 20104,
+      "bytes": "c701614cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4c61, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20109,
+      "page": 1936,
+      "file_offset": 20109,
+      "bytes": "9950da",
+      "mnemonic": "CMPB",
+      "operands": "RDA, #0x50"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20112,
+      "page": 1936,
+      "file_offset": 20112,
+      "bytes": "d703",
+      "mnemonic": "JNE",
+      "operands": "0x4e95"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20114,
+      "page": 1936,
+      "file_offset": 20114,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20115,
+      "page": 1936,
+      "file_offset": 20115,
+      "bytes": "2001",
+      "mnemonic": "SJMP",
+      "operands": "0x4e96"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20117,
+      "page": 1936,
+      "file_offset": 20117,
+      "bytes": "f9",
+      "mnemonic": "SETC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20118,
+      "page": 1936,
+      "file_offset": 20118,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20119,
+      "page": 1936,
+      "file_offset": 20119,
+      "bytes": "c701604c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4c60, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20124,
+      "page": 1936,
+      "file_offset": 20124,
+      "bytes": "2de7",
+      "mnemonic": "SCALL",
+      "operands": "0x4c85"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20126,
+      "page": 1936,
+      "file_offset": 20126,
+      "bytes": "2e78",
+      "mnemonic": "SCALL",
+      "operands": "0x4d18"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20128,
+      "page": 1936,
+      "file_offset": 20128,
+      "bytes": "a126484a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x4826"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20132,
+      "page": 1936,
+      "file_offset": 20132,
+      "bytes": "a1000248",
+      "mnemonic": "LD",
+      "operands": "RW48, #0x200"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20136,
+      "page": 1936,
+      "file_offset": 20136,
+      "bytes": "b3011d0100",
+      "mnemonic": "LDB",
+      "operands": "ZRlo, 0x11d, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20141,
+      "page": 1936,
+      "file_offset": 20141,
+      "bytes": "b1d74c",
+      "mnemonic": "LDB",
+      "operands": "R4C, #-0x29"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20144,
+      "page": 1936,
+      "file_offset": 20144,
+      "bytes": "28c2",
+      "mnemonic": "SCALL",
+      "operands": "0x4f74"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20146,
+      "page": 1936,
+      "file_offset": 20146,
+      "bytes": "2844",
+      "mnemonic": "SCALL",
+      "operands": "0x4ef8"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20148,
+      "page": 1936,
+      "file_offset": 20148,
+      "bytes": "d317",
+      "mnemonic": "JNC",
+      "operands": "0x4ecd"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20150,
+      "page": 1936,
+      "file_offset": 20150,
+      "bytes": "2819",
+      "mnemonic": "SCALL",
+      "operands": "0x4ed1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20152,
+      "page": 1936,
+      "file_offset": 20152,
+      "bytes": "b301604cda",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x4c60, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20157,
+      "page": 1936,
+      "file_offset": 20157,
+      "bytes": "17da",
+      "mnemonic": "INCB",
+      "operands": "RDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20159,
+      "page": 1936,
+      "file_offset": 20159,
+      "bytes": "c701604cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4c60, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20164,
+      "page": 1936,
+      "file_offset": 20164,
+      "bytes": "9908da",
+      "mnemonic": "CMPB",
+      "operands": "RDA, #0x8"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20167,
+      "page": 1936,
+      "file_offset": 20167,
+      "bytes": "d3d5",
+      "mnemonic": "JNC",
+      "operands": "0x4e9e"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20169,
+      "page": 1936,
+      "file_offset": 20169,
+      "bytes": "2e0b",
+      "mnemonic": "SCALL",
+      "operands": "0x4cd6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20171,
+      "page": 1936,
+      "file_offset": 20171,
+      "bytes": "f9",
+      "mnemonic": "SETC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20172,
+      "page": 1936,
+      "file_offset": 20172,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20173,
+      "page": 1936,
+      "file_offset": 20173,
+      "bytes": "2e07",
+      "mnemonic": "SCALL",
+      "operands": "0x4cd6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20175,
+      "page": 1936,
+      "file_offset": 20175,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20176,
+      "page": 1936,
+      "file_offset": 20176,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20177,
+      "page": 1936,
+      "file_offset": 20177,
+      "bytes": "b0cc28",
+      "mnemonic": "LDB",
+      "operands": "R28, RCC"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20180,
+      "page": 1936,
+      "file_offset": 20180,
+      "bytes": "b0cd29",
+      "mnemonic": "LDB",
+      "operands": "R29, RCD"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20183,
+      "page": 1936,
+      "file_offset": 20183,
+      "bytes": "b0ce2a",
+      "mnemonic": "LDB",
+      "operands": "R2A, RCE"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20186,
+      "page": 1936,
+      "file_offset": 20186,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20188,
+      "page": 1936,
+      "file_offset": 20188,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20190,
+      "page": 1936,
+      "file_offset": 20190,
+      "bytes": "34cf06",
+      "mnemonic": "JBC",
+      "operands": "RCF, 0x4, 0x4ee7"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20193,
+      "page": 1936,
+      "file_offset": 20193,
+      "bytes": "b10acc",
+      "mnemonic": "LDB",
+      "operands": "RCC, #0xa"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20196,
+      "page": 1936,
+      "file_offset": 20196,
+      "bytes": "ef31fe",
+      "mnemonic": "LCALL",
+      "operands": "0x4d18"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20199,
+      "page": 1936,
+      "file_offset": 20199,
+      "bytes": "ef37fd",
+      "mnemonic": "LCALL",
+      "operands": "0x4c21"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20202,
+      "page": 1936,
+      "file_offset": 20202,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20204,
+      "page": 1936,
+      "file_offset": 20204,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20206,
+      "page": 1936,
+      "file_offset": 20206,
+      "bytes": "b028cc",
+      "mnemonic": "LDB",
+      "operands": "RCC, R28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20209,
+      "page": 1936,
+      "file_offset": 20209,
+      "bytes": "b029cd",
+      "mnemonic": "LDB",
+      "operands": "RCD, R29"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20212,
+      "page": 1936,
+      "file_offset": 20212,
+      "bytes": "b02ace",
+      "mnemonic": "LDB",
+      "operands": "RCE, R2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20215,
+      "page": 1936,
+      "file_offset": 20215,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20216,
+      "page": 1936,
+      "file_offset": 20216,
+      "bytes": "a100484a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x4800"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20220,
+      "page": 1936,
+      "file_offset": 20220,
+      "bytes": "b146da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x46"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20223,
+      "page": 1936,
+      "file_offset": 20223,
+      "bytes": "c64bda",
+      "mnemonic": "STB",
+      "operands": "RDA, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20226,
+      "page": 1936,
+      "file_offset": 20226,
+      "bytes": "c64bcd",
+      "mnemonic": "STB",
+      "operands": "RCD, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20229,
+      "page": 1936,
+      "file_offset": 20229,
+      "bytes": "c64bcc",
+      "mnemonic": "STB",
+      "operands": "RCC, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20232,
+      "page": 1936,
+      "file_offset": 20232,
+      "bytes": "b0cdda",
+      "mnemonic": "LDB",
+      "operands": "RDA, RCD"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20235,
+      "page": 1936,
+      "file_offset": 20235,
+      "bytes": "1802da",
+      "mnemonic": "SHRB",
+      "operands": "RDA, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20238,
+      "page": 1936,
+      "file_offset": 20238,
+      "bytes": "c64bda",
+      "mnemonic": "STB",
+      "operands": "RDA, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20241,
+      "page": 1936,
+      "file_offset": 20241,
+      "bytes": "c64bce",
+      "mnemonic": "STB",
+      "operands": "RCE, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20244,
+      "page": 1936,
+      "file_offset": 20244,
+      "bytes": "b102da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20247,
+      "page": 1936,
+      "file_offset": 20247,
+      "bytes": "c64bda",
+      "mnemonic": "STB",
+      "operands": "RDA, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20250,
+      "page": 1936,
+      "file_offset": 20250,
+      "bytes": "39cf05",
+      "mnemonic": "JBS",
+      "operands": "RCF, 0x1, 0x4f22"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20253,
+      "page": 1936,
+      "file_offset": 20253,
+      "bytes": "b112da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x12"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20256,
+      "page": 1936,
+      "file_offset": 20256,
+      "bytes": "2003",
+      "mnemonic": "SJMP",
+      "operands": "0x4f25"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20258,
+      "page": 1936,
+      "file_offset": 20258,
+      "bytes": "b109da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x9"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20261,
+      "page": 1936,
+      "file_offset": 20261,
+      "bytes": "c64bda",
+      "mnemonic": "STB",
+      "operands": "RDA, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20264,
+      "page": 1936,
+      "file_offset": 20264,
+      "bytes": "b154da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x54"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20267,
+      "page": 1936,
+      "file_offset": 20267,
+      "bytes": "c64bda",
+      "mnemonic": "STB",
+      "operands": "RDA, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20270,
+      "page": 1936,
+      "file_offset": 20270,
+      "bytes": "c64b00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, [RW4A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20273,
+      "page": 1936,
+      "file_offset": 20273,
+      "bytes": "c701204800",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4820, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20278,
+      "page": 1936,
+      "file_offset": 20278,
+      "bytes": "f4",
+      "mnemonic": "PUSHA",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20279,
+      "page": 1936,
+      "file_offset": 20279,
+      "bytes": "b3011501da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20284,
+      "page": 1936,
+      "file_offset": 20284,
+      "bytes": "c8da",
+      "mnemonic": "PUSH",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20286,
+      "page": 1936,
+      "file_offset": 20286,
+      "bytes": "b111da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x11"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20289,
+      "page": 1936,
+      "file_offset": 20289,
+      "bytes": "c7011501da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20294,
+      "page": 1936,
+      "file_offset": 20294,
+      "bytes": "b10008",
+      "mnemonic": "LDB",
+      "operands": "INT_MASK, #0x0"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20297,
+      "page": 1936,
+      "file_offset": 20297,
+      "bytes": "b12013",
+      "mnemonic": "LDB",
+      "operands": "INT_MASK1, #0x20"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20300,
+      "page": 1936,
+      "file_offset": 20300,
+      "bytes": "fb",
+      "mnemonic": "EI",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20301,
+      "page": 1936,
+      "file_offset": 20301,
+      "bytes": "a100484a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x4800"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20305,
+      "page": 1936,
+      "file_offset": 20305,
+      "bytes": "b10948",
+      "mnemonic": "LDB",
+      "operands": "R48, #0x9"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20308,
+      "page": 1936,
+      "file_offset": 20308,
+      "bytes": "ef5bfa",
+      "mnemonic": "LCALL",
+      "operands": "0x49b2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20311,
+      "page": 1936,
+      "file_offset": 20311,
+      "bytes": "9b01204800",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x4820, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20316,
+      "page": 1936,
+      "file_offset": 20316,
+      "bytes": "dff9",
+      "mnemonic": "JE",
+      "operands": "0x4f57"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20318,
+      "page": 1936,
+      "file_offset": 20318,
+      "bytes": "fa",
+      "mnemonic": "DI",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20319,
+      "page": 1936,
+      "file_offset": 20319,
+      "bytes": "ccda",
+      "mnemonic": "POP",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20321,
+      "page": 1936,
+      "file_offset": 20321,
+      "bytes": "c7011501da",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x115, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20326,
+      "page": 1936,
+      "file_offset": 20326,
+      "bytes": "f5",
+      "mnemonic": "POPA",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20327,
+      "page": 1936,
+      "file_offset": 20327,
+      "bytes": "b3010048da",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x4800, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20332,
+      "page": 1936,
+      "file_offset": 20332,
+      "bytes": "36da03",
+      "mnemonic": "JBC",
+      "operands": "RDA, 0x6, 0x4f72"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20335,
+      "page": 1936,
+      "file_offset": 20335,
+      "bytes": "f9",
+      "mnemonic": "SETC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20336,
+      "page": 1936,
+      "file_offset": 20336,
+      "bytes": "2001",
+      "mnemonic": "SJMP",
+      "operands": "0x4f73"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20338,
+      "page": 1936,
+      "file_offset": 20338,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20339,
+      "page": 1936,
+      "file_offset": 20339,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20340,
+      "page": 1936,
+      "file_offset": 20340,
+      "bytes": "c301180148",
+      "mnemonic": "ST",
+      "operands": "RW48, 0x118, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20345,
+      "page": 1936,
+      "file_offset": 20345,
+      "bytes": "a04a54",
+      "mnemonic": "LD",
+      "operands": "RW54, RW4A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20348,
+      "page": 1936,
+      "file_offset": 20348,
+      "bytes": "a05456",
+      "mnemonic": "LD",
+      "operands": "RW56, RW54"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20351,
+      "page": 1936,
+      "file_offset": 20351,
+      "bytes": "6100c056",
+      "mnemonic": "AND",
+      "operands": "RW56, #0xc000"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20355,
+      "page": 1936,
+      "file_offset": 20355,
+      "bytes": "080d56",
+      "mnemonic": "SHR",
+      "operands": "RW56, #0xd"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20358,
+      "page": 1936,
+      "file_offset": 20358,
+      "bytes": "a357080150",
+      "mnemonic": "LD",
+      "operands": "RW50, 0x108, TABLE[RW56]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20363,
+      "page": 1936,
+      "file_offset": 20363,
+      "bytes": "a05052",
+      "mnemonic": "LD",
+      "operands": "RW52, RW50"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20366,
+      "page": 1936,
+      "file_offset": 20366,
+      "bytes": "080652",
+      "mnemonic": "SHR",
+      "operands": "RW52, #0x6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20369,
+      "page": 1936,
+      "file_offset": 20369,
+      "bytes": "090a50",
+      "mnemonic": "SHL",
+      "operands": "RW50, #0xa"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20372,
+      "page": 1936,
+      "file_offset": 20372,
+      "bytes": "61ff3f54",
+      "mnemonic": "AND",
+      "operands": "RW54, #0x3fff"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20376,
+      "page": 1936,
+      "file_offset": 20376,
+      "bytes": "645450",
+      "mnemonic": "ADD",
+      "operands": "RW50, RW54"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20379,
+      "page": 1936,
+      "file_offset": 20379,
+      "bytes": "a40052",
+      "mnemonic": "ADDC",
+      "operands": "RW52, ZR"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20382,
+      "page": 1936,
+      "file_offset": 20382,
+      "bytes": "c3011a0150",
+      "mnemonic": "ST",
+      "operands": "RW50, 0x11a, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20387,
+      "page": 1936,
+      "file_offset": 20387,
+      "bytes": "c7011c0152",
+      "mnemonic": "STB",
+      "operands": "R52, 0x11c, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20392,
+      "page": 1936,
+      "file_offset": 20392,
+      "bytes": "b180b3",
+      "mnemonic": "LDB",
+      "operands": "RB3, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20395,
+      "page": 1936,
+      "file_offset": 20395,
+      "bytes": "c7011d014c",
+      "mnemonic": "STB",
+      "operands": "R4C, 0x11d, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20400,
+      "page": 1936,
+      "file_offset": 20400,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20401,
+      "page": 1936,
+      "file_offset": 20401,
+      "bytes": "c301180148",
+      "mnemonic": "ST",
+      "operands": "RW48, 0x118, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20406,
+      "page": 1936,
+      "file_offset": 20406,
+      "bytes": "b180b3",
+      "mnemonic": "LDB",
+      "operands": "RB3, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20409,
+      "page": 1936,
+      "file_offset": 20409,
+      "bytes": "c7011d014c",
+      "mnemonic": "STB",
+      "operands": "R4C, 0x11d, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20414,
+      "page": 1936,
+      "file_offset": 20414,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20415,
+      "page": 1936,
+      "file_offset": 20415,
+      "bytes": "b1a0f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, #-0x60"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20418,
+      "page": 1936,
+      "file_offset": 20418,
+      "bytes": "2cc1",
+      "mnemonic": "SCALL",
+      "operands": "0x4c85"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20420,
+      "page": 1936,
+      "file_offset": 20420,
+      "bytes": "b101cc",
+      "mnemonic": "LDB",
+      "operands": "RCC, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20423,
+      "page": 1936,
+      "file_offset": 20423,
+      "bytes": "11cd",
+      "mnemonic": "CLRB",
+      "operands": "RCD"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20425,
+      "page": 1936,
+      "file_offset": 20425,
+      "bytes": "b101ce",
+      "mnemonic": "LDB",
+      "operands": "RCE, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20428,
+      "page": 1936,
+      "file_offset": 20428,
+      "bytes": "c301224800",
+      "mnemonic": "ST",
+      "operands": "ZR, 0x4822, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20433,
+      "page": 1936,
+      "file_offset": 20433,
+      "bytes": "c301244800",
+      "mnemonic": "ST",
+      "operands": "ZR, 0x4824, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20438,
+      "page": 1936,
+      "file_offset": 20438,
+      "bytes": "39cf0c",
+      "mnemonic": "JBS",
+      "operands": "RCF, 0x1, 0x4fe5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20441,
+      "page": 1936,
+      "file_offset": 20441,
+      "bytes": "a100242e",
+      "mnemonic": "LD",
+      "operands": "RW2E, #0x2400"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20445,
+      "page": 1936,
+      "file_offset": 20445,
+      "bytes": "b1382c",
+      "mnemonic": "LDB",
+      "operands": "R2C, #0x38"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20448,
+      "page": 1936,
+      "file_offset": 20448,
+      "bytes": "b1392d",
+      "mnemonic": "LDB",
+      "operands": "R2D, #0x39"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20451,
+      "page": 1936,
+      "file_offset": 20451,
+      "bytes": "280c",
+      "mnemonic": "SCALL",
+      "operands": "0x4ff1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20453,
+      "page": 1936,
+      "file_offset": 20453,
+      "bytes": "2cef",
+      "mnemonic": "SCALL",
+      "operands": "0x4cd6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20455,
+      "page": 1936,
+      "file_offset": 20455,
+      "bytes": "99a0f2",
+      "mnemonic": "CMPB",
+      "operands": "RF2, #-0x60"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20458,
+      "page": 1936,
+      "file_offset": 20458,
+      "bytes": "d703",
+      "mnemonic": "JNE",
+      "operands": "0x4fef"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20460,
+      "page": 1936,
+      "file_offset": 20460,
+      "bytes": "f8",
+      "mnemonic": "CLRC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20461,
+      "page": 1936,
+      "file_offset": 20461,
+      "bytes": "2001",
+      "mnemonic": "SJMP",
+      "operands": "0x4ff0"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20463,
+      "page": 1936,
+      "file_offset": 20463,
+      "bytes": "f9",
+      "mnemonic": "SETC",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20464,
+      "page": 1936,
+      "file_offset": 20464,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20465,
+      "page": 1936,
+      "file_offset": 20465,
+      "bytes": "c701604c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4c60, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20470,
+      "page": 1936,
+      "file_offset": 20470,
+      "bytes": "2d20",
+      "mnemonic": "SCALL",
+      "operands": "0x4d18"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20472,
+      "page": 1936,
+      "file_offset": 20472,
+      "bytes": "a301224828",
+      "mnemonic": "LD",
+      "operands": "RW28, 0x4822, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20477,
+      "page": 1936,
+      "file_offset": 20477,
+      "bytes": "a30124482a",
+      "mnemonic": "LD",
+      "operands": "RW2A, 0x4824, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20482,
+      "page": 1936,
+      "file_offset": 20482,
+      "bytes": "c3011a0128",
+      "mnemonic": "ST",
+      "operands": "RW28, 0x11a, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20487,
+      "page": 1936,
+      "file_offset": 20487,
+      "bytes": "c7011c012a",
+      "mnemonic": "STB",
+      "operands": "R2A, 0x11c, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20492,
+      "page": 1936,
+      "file_offset": 20492,
+      "bytes": "a02e48",
+      "mnemonic": "LD",
+      "operands": "RW48, RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20495,
+      "page": 1936,
+      "file_offset": 20495,
+      "bytes": "b1d74c",
+      "mnemonic": "LDB",
+      "operands": "R4C, #-0x29"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20498,
+      "page": 1936,
+      "file_offset": 20498,
+      "bytes": "2f9d",
+      "mnemonic": "SCALL",
+      "operands": "0x4fb1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20500,
+      "page": 1936,
+      "file_offset": 20500,
+      "bytes": "2ee2",
+      "mnemonic": "SCALL",
+      "operands": "0x4ef8"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20502,
+      "page": 1936,
+      "file_offset": 20502,
+      "bytes": "d32b",
+      "mnemonic": "JNC",
+      "operands": "0x5043"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20504,
+      "page": 1936,
+      "file_offset": 20504,
+      "bytes": "2877",
+      "mnemonic": "SCALL",
+      "operands": "0x5091"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20506,
+      "page": 1936,
+      "file_offset": 20506,
+      "bytes": "b301604cda",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x4c60, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20511,
+      "page": 1936,
+      "file_offset": 20511,
+      "bytes": "17da",
+      "mnemonic": "INCB",
+      "operands": "RDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20513,
+      "page": 1936,
+      "file_offset": 20513,
+      "bytes": "c701604cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4c60, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20518,
+      "page": 1936,
+      "file_offset": 20518,
+      "bytes": "9908da",
+      "mnemonic": "CMPB",
+      "operands": "RDA, #0x8"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20521,
+      "page": 1936,
+      "file_offset": 20521,
+      "bytes": "d3cb",
+      "mnemonic": "JNC",
+      "operands": "0x4ff6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20523,
+      "page": 1936,
+      "file_offset": 20523,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20525,
+      "page": 1936,
+      "file_offset": 20525,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20527,
+      "page": 1936,
+      "file_offset": 20527,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20529,
+      "page": 1936,
+      "file_offset": 20529,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20531,
+      "page": 1936,
+      "file_offset": 20531,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20533,
+      "page": 1936,
+      "file_offset": 20533,
+      "bytes": "efa200",
+      "mnemonic": "LCALL",
+      "operands": "0x50da"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20536,
+      "page": 1936,
+      "file_offset": 20536,
+      "bytes": "cc42",
+      "mnemonic": "POP",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20538,
+      "page": 1936,
+      "file_offset": 20538,
+      "bytes": "cc2e",
+      "mnemonic": "POP",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20540,
+      "page": 1936,
+      "file_offset": 20540,
+      "bytes": "cc2c",
+      "mnemonic": "POP",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20542,
+      "page": 1936,
+      "file_offset": 20542,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20544,
+      "page": 1936,
+      "file_offset": 20544,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20546,
+      "page": 1936,
+      "file_offset": 20546,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20547,
+      "page": 1936,
+      "file_offset": 20547,
+      "bytes": "2831",
+      "mnemonic": "SCALL",
+      "operands": "0x5076"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20549,
+      "page": 1936,
+      "file_offset": 20549,
+      "bytes": "3acd05",
+      "mnemonic": "JBS",
+      "operands": "RCD, 0x2, 0x504d"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20552,
+      "page": 1936,
+      "file_offset": 20552,
+      "bytes": "b104cd",
+      "mnemonic": "LDB",
+      "operands": "RCD, #0x4"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20555,
+      "page": 1936,
+      "file_offset": 20555,
+      "bytes": "27a9",
+      "mnemonic": "SJMP",
+      "operands": "0x4ff6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20557,
+      "page": 1936,
+      "file_offset": 20557,
+      "bytes": "b02cf3",
+      "mnemonic": "LDB",
+      "operands": "RF3, R2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20560,
+      "page": 1936,
+      "file_offset": 20560,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20562,
+      "page": 1936,
+      "file_offset": 20562,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20564,
+      "page": 1936,
+      "file_offset": 20564,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20566,
+      "page": 1936,
+      "file_offset": 20566,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20568,
+      "page": 1936,
+      "file_offset": 20568,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20570,
+      "page": 1936,
+      "file_offset": 20570,
+      "bytes": "ef5b00",
+      "mnemonic": "LCALL",
+      "operands": "0x50b8"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20573,
+      "page": 1936,
+      "file_offset": 20573,
+      "bytes": "cc42",
+      "mnemonic": "POP",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20575,
+      "page": 1936,
+      "file_offset": 20575,
+      "bytes": "cc2e",
+      "mnemonic": "POP",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20577,
+      "page": 1936,
+      "file_offset": 20577,
+      "bytes": "cc2c",
+      "mnemonic": "POP",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20579,
+      "page": 1936,
+      "file_offset": 20579,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20581,
+      "page": 1936,
+      "file_offset": 20581,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20583,
+      "page": 1936,
+      "file_offset": 20583,
+      "bytes": "11cd",
+      "mnemonic": "CLRB",
+      "operands": "RCD"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20585,
+      "page": 1936,
+      "file_offset": 20585,
+      "bytes": "17cc",
+      "mnemonic": "INCB",
+      "operands": "RCC"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20587,
+      "page": 1936,
+      "file_offset": 20587,
+      "bytes": "c701604c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4c60, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20592,
+      "page": 1936,
+      "file_offset": 20592,
+      "bytes": "982dcc",
+      "mnemonic": "CMPB",
+      "operands": "RCC, R2D"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20595,
+      "page": 1936,
+      "file_offset": 20595,
+      "bytes": "d781",
+      "mnemonic": "JNE",
+      "operands": "0x4ff6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20597,
+      "page": 1936,
+      "file_offset": 20597,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20598,
+      "page": 1936,
+      "file_offset": 20598,
+      "bytes": "a301224828",
+      "mnemonic": "LD",
+      "operands": "RW28, 0x4822, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20603,
+      "page": 1936,
+      "file_offset": 20603,
+      "bytes": "a30124482a",
+      "mnemonic": "LD",
+      "operands": "RW2A, 0x4824, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20608,
+      "page": 1936,
+      "file_offset": 20608,
+      "bytes": "642e28",
+      "mnemonic": "ADD",
+      "operands": "RW28, RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20611,
+      "page": 1936,
+      "file_offset": 20611,
+      "bytes": "a4002a",
+      "mnemonic": "ADDC",
+      "operands": "RW2A, ZR"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20614,
+      "page": 1936,
+      "file_offset": 20614,
+      "bytes": "c301224828",
+      "mnemonic": "ST",
+      "operands": "RW28, 0x4822, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20619,
+      "page": 1936,
+      "file_offset": 20619,
+      "bytes": "c30124482a",
+      "mnemonic": "ST",
+      "operands": "RW2A, 0x4824, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20624,
+      "page": 1936,
+      "file_offset": 20624,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20625,
+      "page": 1936,
+      "file_offset": 20625,
+      "bytes": "b0cc28",
+      "mnemonic": "LDB",
+      "operands": "R28, RCC"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20628,
+      "page": 1936,
+      "file_offset": 20628,
+      "bytes": "b0cd29",
+      "mnemonic": "LDB",
+      "operands": "R29, RCD"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20631,
+      "page": 1936,
+      "file_offset": 20631,
+      "bytes": "b0ce2a",
+      "mnemonic": "LDB",
+      "operands": "R2A, RCE"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20634,
+      "page": 1936,
+      "file_offset": 20634,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20636,
+      "page": 1936,
+      "file_offset": 20636,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20638,
+      "page": 1936,
+      "file_offset": 20638,
+      "bytes": "34cf06",
+      "mnemonic": "JBC",
+      "operands": "RCF, 0x4, 0x50a7"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20641,
+      "page": 1936,
+      "file_offset": 20641,
+      "bytes": "b10acc",
+      "mnemonic": "LDB",
+      "operands": "RCC, #0xa"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20644,
+      "page": 1936,
+      "file_offset": 20644,
+      "bytes": "ef71fc",
+      "mnemonic": "LCALL",
+      "operands": "0x4d18"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20647,
+      "page": 1936,
+      "file_offset": 20647,
+      "bytes": "ef77fb",
+      "mnemonic": "LCALL",
+      "operands": "0x4c21"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20650,
+      "page": 1936,
+      "file_offset": 20650,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20652,
+      "page": 1936,
+      "file_offset": 20652,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20654,
+      "page": 1936,
+      "file_offset": 20654,
+      "bytes": "b028cc",
+      "mnemonic": "LDB",
+      "operands": "RCC, R28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20657,
+      "page": 1936,
+      "file_offset": 20657,
+      "bytes": "b029cd",
+      "mnemonic": "LDB",
+      "operands": "RCD, R29"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20660,
+      "page": 1936,
+      "file_offset": 20660,
+      "bytes": "b02ace",
+      "mnemonic": "LDB",
+      "operands": "RCE, R2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20663,
+      "page": 1936,
+      "file_offset": 20663,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20664,
+      "page": 1936,
+      "file_offset": 20664,
+      "bytes": "b0f328",
+      "mnemonic": "LDB",
+      "operands": "R28, RF3"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20667,
+      "page": 1936,
+      "file_offset": 20667,
+      "bytes": "78cc28",
+      "mnemonic": "SUBB",
+      "operands": "R28, RCC"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20670,
+      "page": 1936,
+      "file_offset": 20670,
+      "bytes": "b11af0",
+      "mnemonic": "LDB",
+      "operands": "RF0, #0x1a"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20673,
+      "page": 1936,
+      "file_offset": 20673,
+      "bytes": "b111f1",
+      "mnemonic": "LDB",
+      "operands": "RF1, #0x11"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20676,
+      "page": 1936,
+      "file_offset": 20676,
+      "bytes": "b028f3",
+      "mnemonic": "LDB",
+      "operands": "RF3, R28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20679,
+      "page": 1936,
+      "file_offset": 20679,
+      "bytes": "ef71e8",
+      "mnemonic": "LCALL",
+      "operands": "0x393b"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20682,
+      "page": 1936,
+      "file_offset": 20682,
+      "bytes": "b113f0",
+      "mnemonic": "LDB",
+      "operands": "RF0, #0x13"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20685,
+      "page": 1936,
+      "file_offset": 20685,
+      "bytes": "b106f1",
+      "mnemonic": "LDB",
+      "operands": "RF1, #0x6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20688,
+      "page": 1936,
+      "file_offset": 20688,
+      "bytes": "b028f3",
+      "mnemonic": "LDB",
+      "operands": "RF3, R28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20691,
+      "page": 1936,
+      "file_offset": 20691,
+      "bytes": "b103f4",
+      "mnemonic": "LDB",
+      "operands": "RF4, #0x3"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20694,
+      "page": 1936,
+      "file_offset": 20694,
+      "bytes": "ef40df",
+      "mnemonic": "LCALL",
+      "operands": "0x3019"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20697,
+      "page": 1936,
+      "file_offset": 20697,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20698,
+      "page": 1936,
+      "file_offset": 20698,
+      "bytes": "a11100f8",
+      "mnemonic": "LD",
+      "operands": "RWF8, #0x11"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20702,
+      "page": 1936,
+      "file_offset": 20702,
+      "bytes": "a10100e8",
+      "mnemonic": "LD",
+      "operands": "RWE8, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20706,
+      "page": 1936,
+      "file_offset": 20706,
+      "bytes": "a19e00ea",
+      "mnemonic": "LD",
+      "operands": "RWEA, #0x9e"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20710,
+      "page": 1936,
+      "file_offset": 20710,
+      "bytes": "b101e1",
+      "mnemonic": "LDB",
+      "operands": "RE1, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20713,
+      "page": 1936,
+      "file_offset": 20713,
+      "bytes": "efd7e1",
+      "mnemonic": "LCALL",
+      "operands": "0x32c3"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20716,
+      "page": 1936,
+      "file_offset": 20716,
+      "bytes": "b101f0",
+      "mnemonic": "LDB",
+      "operands": "RF0, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20719,
+      "page": 1936,
+      "file_offset": 20719,
+      "bytes": "b102f1",
+      "mnemonic": "LDB",
+      "operands": "RF1, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20722,
+      "page": 1936,
+      "file_offset": 20722,
+      "bytes": "b101f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20725,
+      "page": 1936,
+      "file_offset": 20725,
+      "bytes": "a1e187e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x87e1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20729,
+      "page": 1936,
+      "file_offset": 20729,
+      "bytes": "ef6ade",
+      "mnemonic": "LCALL",
+      "operands": "0x2f66"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20732,
+      "page": 1936,
+      "file_offset": 20732,
+      "bytes": "b000f0",
+      "mnemonic": "LDB",
+      "operands": "RF0, ZRlo"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20735,
+      "page": 1936,
+      "file_offset": 20735,
+      "bytes": "b000f1",
+      "mnemonic": "LDB",
+      "operands": "RF1, ZRlo"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20738,
+      "page": 1936,
+      "file_offset": 20738,
+      "bytes": "b190f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, #-0x70"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20741,
+      "page": 1936,
+      "file_offset": 20741,
+      "bytes": "a1e187e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x87e1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20745,
+      "page": 1936,
+      "file_offset": 20745,
+      "bytes": "ef3fe7",
+      "mnemonic": "LCALL",
+      "operands": "0x384b"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20748,
+      "page": 1936,
+      "file_offset": 20748,
+      "bytes": "a1004828",
+      "mnemonic": "LD",
+      "operands": "RW28, #0x4800"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20752,
+      "page": 1936,
+      "file_offset": 20752,
+      "bytes": "b10cf0",
+      "mnemonic": "LDB",
+      "operands": "RF0, #0xc"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20755,
+      "page": 1936,
+      "file_offset": 20755,
+      "bytes": "b0f0da",
+      "mnemonic": "LDB",
+      "operands": "RDA, RF0"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20758,
+      "page": 1936,
+      "file_offset": 20758,
+      "bytes": "c8da",
+      "mnemonic": "PUSH",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20760,
+      "page": 1936,
+      "file_offset": 20760,
+      "bytes": "11f1",
+      "mnemonic": "CLRB",
+      "operands": "RF1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20762,
+      "page": 1936,
+      "file_offset": 20762,
+      "bytes": "17f0",
+      "mnemonic": "INCB",
+      "operands": "RF0"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20764,
+      "page": 1936,
+      "file_offset": 20764,
+      "bytes": "b190f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, #-0x70"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20767,
+      "page": 1936,
+      "file_offset": 20767,
+      "bytes": "b228f3",
+      "mnemonic": "LDB",
+      "operands": "RF3, [RW28]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20770,
+      "page": 1936,
+      "file_offset": 20770,
+      "bytes": "ef86e7",
+      "mnemonic": "LCALL",
+      "operands": "0x38ab"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20773,
+      "page": 1936,
+      "file_offset": 20773,
+      "bytes": "ccda",
+      "mnemonic": "POP",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20775,
+      "page": 1936,
+      "file_offset": 20775,
+      "bytes": "b0daf0",
+      "mnemonic": "LDB",
+      "operands": "RF0, RDA"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20778,
+      "page": 1936,
+      "file_offset": 20778,
+      "bytes": "b102f1",
+      "mnemonic": "LDB",
+      "operands": "RF1, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20781,
+      "page": 1936,
+      "file_offset": 20781,
+      "bytes": "b101f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20784,
+      "page": 1936,
+      "file_offset": 20784,
+      "bytes": "b229f3",
+      "mnemonic": "LDB",
+      "operands": "RF3, [RW28]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20787,
+      "page": 1936,
+      "file_offset": 20787,
+      "bytes": "ef52df",
+      "mnemonic": "LCALL",
+      "operands": "0x3088"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20790,
+      "page": 1936,
+      "file_offset": 20790,
+      "bytes": "89074828",
+      "mnemonic": "CMP",
+      "operands": "RW28, #0x4807"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20794,
+      "page": 1936,
+      "file_offset": 20794,
+      "bytes": "d7d7",
+      "mnemonic": "JNE",
+      "operands": "0x5113"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20796,
+      "page": 1936,
+      "file_offset": 20796,
+      "bytes": "b190f2",
+      "mnemonic": "LDB",
+      "operands": "RF2, #-0x70"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20799,
+      "page": 1936,
+      "file_offset": 20799,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20800,
+      "page": 1936,
+      "file_offset": 20800,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20802,
+      "page": 1936,
+      "file_offset": 20802,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20804,
+      "page": 1936,
+      "file_offset": 20804,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20806,
+      "page": 1936,
+      "file_offset": 20806,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20808,
+      "page": 1936,
+      "file_offset": 20808,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20810,
+      "page": 1936,
+      "file_offset": 20810,
+      "bytes": "efe001",
+      "mnemonic": "LCALL",
+      "operands": "0x532d"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20813,
+      "page": 1936,
+      "file_offset": 20813,
+      "bytes": "cc42",
+      "mnemonic": "POP",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20815,
+      "page": 1936,
+      "file_offset": 20815,
+      "bytes": "cc2e",
+      "mnemonic": "POP",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20817,
+      "page": 1936,
+      "file_offset": 20817,
+      "bytes": "cc2c",
+      "mnemonic": "POP",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20819,
+      "page": 1936,
+      "file_offset": 20819,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20821,
+      "page": 1936,
+      "file_offset": 20821,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20823,
+      "page": 1936,
+      "file_offset": 20823,
+      "bytes": "b301b14cda",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x4cb1, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20828,
+      "page": 1936,
+      "file_offset": 20828,
+      "bytes": "1901da",
+      "mnemonic": "SHLB",
+      "operands": "RDA, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20831,
+      "page": 1936,
+      "file_offset": 20831,
+      "bytes": "7580da",
+      "mnemonic": "ADDB",
+      "operands": "RDA, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20834,
+      "page": 1936,
+      "file_offset": 20834,
+      "bytes": "c417da",
+      "mnemonic": "STB",
+      "operands": "RDA, IOS2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20837,
+      "page": 1936,
+      "file_offset": 20837,
+      "bytes": "b301aa4cda",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x4caa, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20842,
+      "page": 1936,
+      "file_offset": 20842,
+      "bytes": "9902da",
+      "mnemonic": "CMPB",
+      "operands": "RDA, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20845,
+      "page": 1936,
+      "file_offset": 20845,
+      "bytes": "df02",
+      "mnemonic": "JE",
+      "operands": "0x5171"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20847,
+      "page": 1936,
+      "file_offset": 20847,
+      "bytes": "2875",
+      "mnemonic": "SCALL",
+      "operands": "0x51e6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20849,
+      "page": 1936,
+      "file_offset": 20849,
+      "bytes": "a1028328",
+      "mnemonic": "LD",
+      "operands": "RW28, #0x8302"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20853,
+      "page": 1936,
+      "file_offset": 20853,
+      "bytes": "a1ba4c2a",
+      "mnemonic": "LD",
+      "operands": "RW2A, #0x4cba"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20857,
+      "page": 1936,
+      "file_offset": 20857,
+      "bytes": "112c",
+      "mnemonic": "CLRB",
+      "operands": "R2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20859,
+      "page": 1936,
+      "file_offset": 20859,
+      "bytes": "b11042",
+      "mnemonic": "LDB",
+      "operands": "R42, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20862,
+      "page": 1936,
+      "file_offset": 20862,
+      "bytes": "b229da",
+      "mnemonic": "LDB",
+      "operands": "RDA, [RW28]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20865,
+      "page": 1936,
+      "file_offset": 20865,
+      "bytes": "9a2bda",
+      "mnemonic": "CMPB",
+      "operands": "RDA, [RW2A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20868,
+      "page": 1936,
+      "file_offset": 20868,
+      "bytes": "d702",
+      "mnemonic": "JNE",
+      "operands": "0x5188"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20870,
+      "page": 1936,
+      "file_offset": 20870,
+      "bytes": "172c",
+      "mnemonic": "INCB",
+      "operands": "R2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20872,
+      "page": 1936,
+      "file_offset": 20872,
+      "bytes": "e042f3",
+      "mnemonic": "DJNZ",
+      "operands": "R42, 0x517e"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20875,
+      "page": 1936,
+      "file_offset": 20875,
+      "bytes": "99102c",
+      "mnemonic": "CMPB",
+      "operands": "R2C, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20878,
+      "page": 1936,
+      "file_offset": 20878,
+      "bytes": "df02",
+      "mnemonic": "JE",
+      "operands": "0x5192"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20880,
+      "page": 1936,
+      "file_offset": 20880,
+      "bytes": "2854",
+      "mnemonic": "SCALL",
+      "operands": "0x51e6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20882,
+      "page": 1936,
+      "file_offset": 20882,
+      "bytes": "11db",
+      "mnemonic": "CLRB",
+      "operands": "RDB"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20884,
+      "page": 1936,
+      "file_offset": 20884,
+      "bytes": "b301b24cda",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x4cb2, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20889,
+      "page": 1936,
+      "file_offset": 20889,
+      "bytes": "9902da",
+      "mnemonic": "CMPB",
+      "operands": "RDA, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20892,
+      "page": 1936,
+      "file_offset": 20892,
+      "bytes": "d107",
+      "mnemonic": "JNH",
+      "operands": "0x51a5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20894,
+      "page": 1936,
+      "file_offset": 20894,
+      "bytes": "c701b24c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4cb2, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20899,
+      "page": 1936,
+      "file_offset": 20899,
+      "bytes": "17db",
+      "mnemonic": "INCB",
+      "operands": "RDB"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20901,
+      "page": 1936,
+      "file_offset": 20901,
+      "bytes": "9b012f4d00",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x4d2f, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20906,
+      "page": 1936,
+      "file_offset": 20906,
+      "bytes": "d721",
+      "mnemonic": "JNE",
+      "operands": "0x51cd"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20908,
+      "page": 1936,
+      "file_offset": 20908,
+      "bytes": "9b01ae4c00",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x4cae, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20913,
+      "page": 1936,
+      "file_offset": 20913,
+      "bytes": "df07",
+      "mnemonic": "JE",
+      "operands": "0x51ba"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20915,
+      "page": 1936,
+      "file_offset": 20915,
+      "bytes": "c701ae4c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4cae, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20920,
+      "page": 1936,
+      "file_offset": 20920,
+      "bytes": "17db",
+      "mnemonic": "INCB",
+      "operands": "RDB"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20922,
+      "page": 1936,
+      "file_offset": 20922,
+      "bytes": "b301b24cda",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x4cb2, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20927,
+      "page": 1936,
+      "file_offset": 20927,
+      "bytes": "9800da",
+      "mnemonic": "CMPB",
+      "operands": "RDA, ZRlo"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20930,
+      "page": 1936,
+      "file_offset": 20930,
+      "bytes": "df07",
+      "mnemonic": "JE",
+      "operands": "0x51cb"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20932,
+      "page": 1936,
+      "file_offset": 20932,
+      "bytes": "c701b24c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4cb2, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20937,
+      "page": 1936,
+      "file_offset": 20937,
+      "bytes": "17db",
+      "mnemonic": "INCB",
+      "operands": "RDB"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20939,
+      "page": 1936,
+      "file_offset": 20939,
+      "bytes": "2011",
+      "mnemonic": "SJMP",
+      "operands": "0x51de"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20941,
+      "page": 1936,
+      "file_offset": 20941,
+      "bytes": "9b01ae4c00",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x4cae, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20946,
+      "page": 1936,
+      "file_offset": 20946,
+      "bytes": "d70a",
+      "mnemonic": "JNE",
+      "operands": "0x51de"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20948,
+      "page": 1936,
+      "file_offset": 20948,
+      "bytes": "b101da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20951,
+      "page": 1936,
+      "file_offset": 20951,
+      "bytes": "c701ae4cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4cae, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20956,
+      "page": 1936,
+      "file_offset": 20956,
+      "bytes": "17db",
+      "mnemonic": "INCB",
+      "operands": "RDB"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20958,
+      "page": 1936,
+      "file_offset": 20958,
+      "bytes": "9800db",
+      "mnemonic": "CMPB",
+      "operands": "RDB, ZRlo"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20961,
+      "page": 1936,
+      "file_offset": 20961,
+      "bytes": "df02",
+      "mnemonic": "JE",
+      "operands": "0x51e5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20963,
+      "page": 1936,
+      "file_offset": 20963,
+      "bytes": "2898",
+      "mnemonic": "SCALL",
+      "operands": "0x527d"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20965,
+      "page": 1936,
+      "file_offset": 20965,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20966,
+      "page": 1936,
+      "file_offset": 20966,
+      "bytes": "a11b84e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x841b"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20970,
+      "page": 1936,
+      "file_offset": 20970,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20972,
+      "page": 1936,
+      "file_offset": 20972,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20974,
+      "page": 1936,
+      "file_offset": 20974,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20976,
+      "page": 1936,
+      "file_offset": 20976,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20978,
+      "page": 1936,
+      "file_offset": 20978,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20980,
+      "page": 1936,
+      "file_offset": 20980,
+      "bytes": "eff6f6",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20983,
+      "page": 1936,
+      "file_offset": 20983,
+      "bytes": "cc42",
+      "mnemonic": "POP",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20985,
+      "page": 1936,
+      "file_offset": 20985,
+      "bytes": "cc2e",
+      "mnemonic": "POP",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20987,
+      "page": 1936,
+      "file_offset": 20987,
+      "bytes": "cc2c",
+      "mnemonic": "POP",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20989,
+      "page": 1936,
+      "file_offset": 20989,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20991,
+      "page": 1936,
+      "file_offset": 20991,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20993,
+      "page": 1936,
+      "file_offset": 20993,
+      "bytes": "a1aa4c28",
+      "mnemonic": "LD",
+      "operands": "RW28, #0x4caa"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 20997,
+      "page": 1936,
+      "file_offset": 20997,
+      "bytes": "c22900",
+      "mnemonic": "ST",
+      "operands": "ZR, [RW28]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21000,
+      "page": 1936,
+      "file_offset": 21000,
+      "bytes": "892a4d28",
+      "mnemonic": "CMP",
+      "operands": "RW28, #0x4d2a"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21004,
+      "page": 1936,
+      "file_offset": 21004,
+      "bytes": "d3f7",
+      "mnemonic": "JNC",
+      "operands": "0x5205"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21006,
+      "page": 1936,
+      "file_offset": 21006,
+      "bytes": "b102da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21009,
+      "page": 1936,
+      "file_offset": 21009,
+      "bytes": "c701aa4cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4caa, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21014,
+      "page": 1936,
+      "file_offset": 21014,
+      "bytes": "b107da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x7"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21017,
+      "page": 1936,
+      "file_offset": 21017,
+      "bytes": "c701ab4cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4cab, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21022,
+      "page": 1936,
+      "file_offset": 21022,
+      "bytes": "c701b14c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4cb1, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21027,
+      "page": 1936,
+      "file_offset": 21027,
+      "bytes": "b180da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21030,
+      "page": 1936,
+      "file_offset": 21030,
+      "bytes": "c417da",
+      "mnemonic": "STB",
+      "operands": "RDA, IOS2"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21033,
+      "page": 1936,
+      "file_offset": 21033,
+      "bytes": "c701af4c00",
+      "mnemonic": "STB",
+      "operands": "ZRlo, 0x4caf, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21038,
+      "page": 1936,
+      "file_offset": 21038,
+      "bytes": "a1028328",
+      "mnemonic": "LD",
+      "operands": "RW28, #0x8302"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21042,
+      "page": 1936,
+      "file_offset": 21042,
+      "bytes": "a1ba4c2a",
+      "mnemonic": "LD",
+      "operands": "RW2A, #0x4cba"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21046,
+      "page": 1936,
+      "file_offset": 21046,
+      "bytes": "b11042",
+      "mnemonic": "LDB",
+      "operands": "R42, #0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21049,
+      "page": 1936,
+      "file_offset": 21049,
+      "bytes": "b229da",
+      "mnemonic": "LDB",
+      "operands": "RDA, [RW28]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21052,
+      "page": 1936,
+      "file_offset": 21052,
+      "bytes": "c62bda",
+      "mnemonic": "STB",
+      "operands": "RDA, [RW2A]+"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21055,
+      "page": 1936,
+      "file_offset": 21055,
+      "bytes": "e042f7",
+      "mnemonic": "DJNZ",
+      "operands": "R42, 0x5239"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21058,
+      "page": 1936,
+      "file_offset": 21058,
+      "bytes": "b101da",
+      "mnemonic": "LDB",
+      "operands": "RDA, #0x1"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21061,
+      "page": 1936,
+      "file_offset": 21061,
+      "bytes": "c701b44cda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x4cb4, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21066,
+      "page": 1936,
+      "file_offset": 21066,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21068,
+      "page": 1936,
+      "file_offset": 21068,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21070,
+      "page": 1936,
+      "file_offset": 21070,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21072,
+      "page": 1936,
+      "file_offset": 21072,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21074,
+      "page": 1936,
+      "file_offset": 21074,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21076,
+      "page": 1936,
+      "file_offset": 21076,
+      "bytes": "eff900",
+      "mnemonic": "LCALL",
+      "operands": "0x5350"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21079,
+      "page": 1936,
+      "file_offset": 21079,
+      "bytes": "cc42",
+      "mnemonic": "POP",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21081,
+      "page": 1936,
+      "file_offset": 21081,
+      "bytes": "cc2e",
+      "mnemonic": "POP",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21083,
+      "page": 1936,
+      "file_offset": 21083,
+      "bytes": "cc2c",
+      "mnemonic": "POP",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21085,
+      "page": 1936,
+      "file_offset": 21085,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21087,
+      "page": 1936,
+      "file_offset": 21087,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21089,
+      "page": 1936,
+      "file_offset": 21089,
+      "bytes": "a1d683e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x83d6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21093,
+      "page": 1936,
+      "file_offset": 21093,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21095,
+      "page": 1936,
+      "file_offset": 21095,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21097,
+      "page": 1936,
+      "file_offset": 21097,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21099,
+      "page": 1936,
+      "file_offset": 21099,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21101,
+      "page": 1936,
+      "file_offset": 21101,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21103,
+      "page": 1936,
+      "file_offset": 21103,
+      "bytes": "ef7bf6",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21106,
+      "page": 1936,
+      "file_offset": 21106,
+      "bytes": "cc42",
+      "mnemonic": "POP",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21108,
+      "page": 1936,
+      "file_offset": 21108,
+      "bytes": "cc2e",
+      "mnemonic": "POP",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21110,
+      "page": 1936,
+      "file_offset": 21110,
+      "bytes": "cc2c",
+      "mnemonic": "POP",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21112,
+      "page": 1936,
+      "file_offset": 21112,
+      "bytes": "cc2a",
+      "mnemonic": "POP",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21114,
+      "page": 1936,
+      "file_offset": 21114,
+      "bytes": "cc28",
+      "mnemonic": "POP",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21116,
+      "page": 1936,
+      "file_offset": 21116,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18749,
+      "page": 1936,
+      "file_offset": 18749,
+      "bytes": "a1d683e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x83d6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18753,
+      "page": 1936,
+      "file_offset": 18753,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18755,
+      "page": 1936,
+      "file_offset": 18755,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18757,
+      "page": 1936,
+      "file_offset": 18757,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18759,
+      "page": 1936,
+      "file_offset": 18759,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18761,
+      "page": 1936,
+      "file_offset": 18761,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18763,
+      "page": 1936,
+      "file_offset": 18763,
+      "bytes": "ef9fff",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21173,
+      "page": 1936,
+      "file_offset": 21173,
+      "bytes": "a1d683e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x83d6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21177,
+      "page": 1936,
+      "file_offset": 21177,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21179,
+      "page": 1936,
+      "file_offset": 21179,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21181,
+      "page": 1936,
+      "file_offset": 21181,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21183,
+      "page": 1936,
+      "file_offset": 21183,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21185,
+      "page": 1936,
+      "file_offset": 21185,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21187,
+      "page": 1936,
+      "file_offset": 21187,
+      "bytes": "ef27f6",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21117,
+      "page": 1936,
+      "file_offset": 21117,
+      "bytes": "a16084e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8460"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21121,
+      "page": 1936,
+      "file_offset": 21121,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21123,
+      "page": 1936,
+      "file_offset": 21123,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21125,
+      "page": 1936,
+      "file_offset": 21125,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21127,
+      "page": 1936,
+      "file_offset": 21127,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21129,
+      "page": 1936,
+      "file_offset": 21129,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 21131,
+      "page": 1936,
+      "file_offset": 21131,
+      "bytes": "ef5ff6",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22007,
+      "page": 1936,
+      "file_offset": 22007,
+      "bytes": "a16084e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8460"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22011,
+      "page": 1936,
+      "file_offset": 22011,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22013,
+      "page": 1936,
+      "file_offset": 22013,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22015,
+      "page": 1936,
+      "file_offset": 22015,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22017,
+      "page": 1936,
+      "file_offset": 22017,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22019,
+      "page": 1936,
+      "file_offset": 22019,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22021,
+      "page": 1936,
+      "file_offset": 22021,
+      "bytes": "efe5f2",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22951,
+      "page": 1936,
+      "file_offset": 22951,
+      "bytes": "a16084e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8460"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22955,
+      "page": 1936,
+      "file_offset": 22955,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22957,
+      "page": 1936,
+      "file_offset": 22957,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22959,
+      "page": 1936,
+      "file_offset": 22959,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22961,
+      "page": 1936,
+      "file_offset": 22961,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22963,
+      "page": 1936,
+      "file_offset": 22963,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 22965,
+      "page": 1936,
+      "file_offset": 22965,
+      "bytes": "ef35ef",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18714,
+      "page": 1936,
+      "file_offset": 18714,
+      "bytes": "a1a584e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x84a5"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18718,
+      "page": 1936,
+      "file_offset": 18718,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18720,
+      "page": 1936,
+      "file_offset": 18720,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18722,
+      "page": 1936,
+      "file_offset": 18722,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18724,
+      "page": 1936,
+      "file_offset": 18724,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18726,
+      "page": 1936,
+      "file_offset": 18726,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18728,
+      "page": 1936,
+      "file_offset": 18728,
+      "bytes": "efc2ff",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17070,
+      "page": 1936,
+      "file_offset": 17070,
+      "bytes": "a1ea84e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x84ea"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17074,
+      "page": 1936,
+      "file_offset": 17074,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17076,
+      "page": 1936,
+      "file_offset": 17076,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17078,
+      "page": 1936,
+      "file_offset": 17078,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17080,
+      "page": 1936,
+      "file_offset": 17080,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17082,
+      "page": 1936,
+      "file_offset": 17082,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17084,
+      "page": 1936,
+      "file_offset": 17084,
+      "bytes": "ef2e06",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16385,
+      "page": 1936,
+      "file_offset": 16385,
+      "bytes": "a12f85e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x852f"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16389,
+      "page": 1936,
+      "file_offset": 16389,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16391,
+      "page": 1936,
+      "file_offset": 16391,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16393,
+      "page": 1936,
+      "file_offset": 16393,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16395,
+      "page": 1936,
+      "file_offset": 16395,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16397,
+      "page": 1936,
+      "file_offset": 16397,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16399,
+      "page": 1936,
+      "file_offset": 16399,
+      "bytes": "efdb08",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17236,
+      "page": 1936,
+      "file_offset": 17236,
+      "bytes": "a17485e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8574"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17240,
+      "page": 1936,
+      "file_offset": 17240,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17242,
+      "page": 1936,
+      "file_offset": 17242,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17244,
+      "page": 1936,
+      "file_offset": 17244,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17246,
+      "page": 1936,
+      "file_offset": 17246,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17248,
+      "page": 1936,
+      "file_offset": 17248,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17250,
+      "page": 1936,
+      "file_offset": 17250,
+      "bytes": "efa105",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17313,
+      "page": 1936,
+      "file_offset": 17313,
+      "bytes": "a1b985e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x85b9"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17317,
+      "page": 1936,
+      "file_offset": 17317,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17319,
+      "page": 1936,
+      "file_offset": 17319,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17321,
+      "page": 1936,
+      "file_offset": 17321,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17323,
+      "page": 1936,
+      "file_offset": 17323,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17325,
+      "page": 1936,
+      "file_offset": 17325,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17327,
+      "page": 1936,
+      "file_offset": 17327,
+      "bytes": "ef5405",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17489,
+      "page": 1936,
+      "file_offset": 17489,
+      "bytes": "a1fe85e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x85fe"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17493,
+      "page": 1936,
+      "file_offset": 17493,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17495,
+      "page": 1936,
+      "file_offset": 17495,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17497,
+      "page": 1936,
+      "file_offset": 17497,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17499,
+      "page": 1936,
+      "file_offset": 17499,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17501,
+      "page": 1936,
+      "file_offset": 17501,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17503,
+      "page": 1936,
+      "file_offset": 17503,
+      "bytes": "efa404",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17367,
+      "page": 1936,
+      "file_offset": 17367,
+      "bytes": "a14386e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8643"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17371,
+      "page": 1936,
+      "file_offset": 17371,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17373,
+      "page": 1936,
+      "file_offset": 17373,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17375,
+      "page": 1936,
+      "file_offset": 17375,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17377,
+      "page": 1936,
+      "file_offset": 17377,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17379,
+      "page": 1936,
+      "file_offset": 17379,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17381,
+      "page": 1936,
+      "file_offset": 17381,
+      "bytes": "ef0505",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17419,
+      "page": 1936,
+      "file_offset": 17419,
+      "bytes": "a18886e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8688"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17423,
+      "page": 1936,
+      "file_offset": 17423,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17425,
+      "page": 1936,
+      "file_offset": 17425,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17427,
+      "page": 1936,
+      "file_offset": 17427,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17429,
+      "page": 1936,
+      "file_offset": 17429,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17431,
+      "page": 1936,
+      "file_offset": 17431,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17433,
+      "page": 1936,
+      "file_offset": 17433,
+      "bytes": "efea04",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17608,
+      "page": 1936,
+      "file_offset": 17608,
+      "bytes": "a1cd86e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x86cd"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17612,
+      "page": 1936,
+      "file_offset": 17612,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17614,
+      "page": 1936,
+      "file_offset": 17614,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17616,
+      "page": 1936,
+      "file_offset": 17616,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17618,
+      "page": 1936,
+      "file_offset": 17618,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17620,
+      "page": 1936,
+      "file_offset": 17620,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17622,
+      "page": 1936,
+      "file_offset": 17622,
+      "bytes": "ef1404",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17989,
+      "page": 1936,
+      "file_offset": 17989,
+      "bytes": "a11287e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8712"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17993,
+      "page": 1936,
+      "file_offset": 17993,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17995,
+      "page": 1936,
+      "file_offset": 17995,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17997,
+      "page": 1936,
+      "file_offset": 17997,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 17999,
+      "page": 1936,
+      "file_offset": 17999,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18001,
+      "page": 1936,
+      "file_offset": 18001,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18003,
+      "page": 1936,
+      "file_offset": 18003,
+      "bytes": "ef9702",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18122,
+      "page": 1936,
+      "file_offset": 18122,
+      "bytes": "a11287e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8712"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18126,
+      "page": 1936,
+      "file_offset": 18126,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18128,
+      "page": 1936,
+      "file_offset": 18128,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18130,
+      "page": 1936,
+      "file_offset": 18130,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18132,
+      "page": 1936,
+      "file_offset": 18132,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18134,
+      "page": 1936,
+      "file_offset": 18134,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18136,
+      "page": 1936,
+      "file_offset": 18136,
+      "bytes": "ef1202",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18021,
+      "page": 1936,
+      "file_offset": 18021,
+      "bytes": "a15787e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8757"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18025,
+      "page": 1936,
+      "file_offset": 18025,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18027,
+      "page": 1936,
+      "file_offset": 18027,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18029,
+      "page": 1936,
+      "file_offset": 18029,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18031,
+      "page": 1936,
+      "file_offset": 18031,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18033,
+      "page": 1936,
+      "file_offset": 18033,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18035,
+      "page": 1936,
+      "file_offset": 18035,
+      "bytes": "ef9002",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18154,
+      "page": 1936,
+      "file_offset": 18154,
+      "bytes": "a15787e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8757"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18158,
+      "page": 1936,
+      "file_offset": 18158,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18160,
+      "page": 1936,
+      "file_offset": 18160,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18162,
+      "page": 1936,
+      "file_offset": 18162,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18164,
+      "page": 1936,
+      "file_offset": 18164,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18166,
+      "page": 1936,
+      "file_offset": 18166,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18168,
+      "page": 1936,
+      "file_offset": 18168,
+      "bytes": "ef0b02",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18091,
+      "page": 1936,
+      "file_offset": 18091,
+      "bytes": "a19c87e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x879c"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18095,
+      "page": 1936,
+      "file_offset": 18095,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18097,
+      "page": 1936,
+      "file_offset": 18097,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18099,
+      "page": 1936,
+      "file_offset": 18099,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18101,
+      "page": 1936,
+      "file_offset": 18101,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18103,
+      "page": 1936,
+      "file_offset": 18103,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18105,
+      "page": 1936,
+      "file_offset": 18105,
+      "bytes": "ef4a02",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18224,
+      "page": 1936,
+      "file_offset": 18224,
+      "bytes": "a19c87e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x879c"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18228,
+      "page": 1936,
+      "file_offset": 18228,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18230,
+      "page": 1936,
+      "file_offset": 18230,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18232,
+      "page": 1936,
+      "file_offset": 18232,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18234,
+      "page": 1936,
+      "file_offset": 18234,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18236,
+      "page": 1936,
+      "file_offset": 18236,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18238,
+      "page": 1936,
+      "file_offset": 18238,
+      "bytes": "efc501",
+      "mnemonic": "LCALL",
+      "operands": "0x4906"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16424,
+      "page": 1936,
+      "file_offset": 16424,
+      "bytes": "a1ef87e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x87ef"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16428,
+      "page": 1936,
+      "file_offset": 16428,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16430,
+      "page": 1936,
+      "file_offset": 16430,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16432,
+      "page": 1936,
+      "file_offset": 16432,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16434,
+      "page": 1936,
+      "file_offset": 16434,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16436,
+      "page": 1936,
+      "file_offset": 16436,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16438,
+      "page": 1936,
+      "file_offset": 16438,
+      "bytes": "efb408",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16519,
+      "page": 1936,
+      "file_offset": 16519,
+      "bytes": "a13488e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8834"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16523,
+      "page": 1936,
+      "file_offset": 16523,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16525,
+      "page": 1936,
+      "file_offset": 16525,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16527,
+      "page": 1936,
+      "file_offset": 16527,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16529,
+      "page": 1936,
+      "file_offset": 16529,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16531,
+      "page": 1936,
+      "file_offset": 16531,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16533,
+      "page": 1936,
+      "file_offset": 16533,
+      "bytes": "ef5508",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16617,
+      "page": 1936,
+      "file_offset": 16617,
+      "bytes": "a17988e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8879"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16621,
+      "page": 1936,
+      "file_offset": 16621,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16623,
+      "page": 1936,
+      "file_offset": 16623,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16625,
+      "page": 1936,
+      "file_offset": 16625,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16627,
+      "page": 1936,
+      "file_offset": 16627,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16629,
+      "page": 1936,
+      "file_offset": 16629,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16631,
+      "page": 1936,
+      "file_offset": 16631,
+      "bytes": "eff307",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16965,
+      "page": 1936,
+      "file_offset": 16965,
+      "bytes": "a1be88e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x88be"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16969,
+      "page": 1936,
+      "file_offset": 16969,
+      "bytes": "c828",
+      "mnemonic": "PUSH",
+      "operands": "RW28"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16971,
+      "page": 1936,
+      "file_offset": 16971,
+      "bytes": "c82a",
+      "mnemonic": "PUSH",
+      "operands": "RW2A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16973,
+      "page": 1936,
+      "file_offset": 16973,
+      "bytes": "c82c",
+      "mnemonic": "PUSH",
+      "operands": "RW2C"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16975,
+      "page": 1936,
+      "file_offset": 16975,
+      "bytes": "c82e",
+      "mnemonic": "PUSH",
+      "operands": "RW2E"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16977,
+      "page": 1936,
+      "file_offset": 16977,
+      "bytes": "c842",
+      "mnemonic": "PUSH",
+      "operands": "RW42"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16979,
+      "page": 1936,
+      "file_offset": 16979,
+      "bytes": "ef9706",
+      "mnemonic": "LCALL",
+      "operands": "0x48ed"
+    }
+  ],
+  "dual_display_resources": [
+    {
+      "file_start": 25558,
+      "file_end": 25627,
+      "sha256": "2eaf61b041a5f20bacddd865fb91cf8dc48f8d24748a640ee12950998f20c15b",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 25559,
+          "text_file_end": 25585,
+          "text_ascii": "                         "
+        },
+        {
+          "attribute": 240,
+          "text_file_start": 25586,
+          "text_file_end": 25627,
+          "text_ascii": "                                        "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 18749,
+          "call_pc": 18763,
+          "consumer": "0x48ed"
+        },
+        {
+          "load_pc": 21089,
+          "call_pc": 21103,
+          "consumer": "0x48ed"
+        },
+        {
+          "load_pc": 21173,
+          "call_pc": 21187,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 25627,
+      "file_end": 25696,
+      "sha256": "1bf0439f8ae6e4c7af5b36d264bf1365a9abeac0856fdda3e0622e4dbcb017eb",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 25628,
+          "text_file_end": 25654,
+          "text_ascii": " EEPROM Initializing.... "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 25655,
+          "text_file_end": 25696,
+          "text_ascii": "       EEPROM initializing...           "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 20966,
+          "call_pc": 20980,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 25696,
+      "file_end": 25765,
+      "sha256": "7996aa1877d5f4e3bc3f148774caec264b7ba31652b0aa09291729365fdaa64f",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 25697,
+          "text_file_end": 25723,
+          "text_ascii": " EEPROM Renewing........ "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 25724,
+          "text_file_end": 25765,
+          "text_ascii": "       EEPROM Renewing.......           "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 21117,
+          "call_pc": 21131,
+          "consumer": "0x48ed"
+        },
+        {
+          "load_pc": 22007,
+          "call_pc": 22021,
+          "consumer": "0x48ed"
+        },
+        {
+          "load_pc": 22951,
+          "call_pc": 22965,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 25765,
+      "file_end": 25834,
+      "sha256": "5636c539a248e6bf93839a7d3ac89e604a3b9725d5d333bc3138aa10f73e66b7",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 25766,
+          "text_file_end": 25792,
+          "text_ascii": " S-760 Monitor Ver. 1.11 "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 25793,
+          "text_file_end": 25834,
+          "text_ascii": "        S-760 Monitor Ver. 1.11         "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 18714,
+          "call_pc": 18728,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 25834,
+      "file_end": 25903,
+      "sha256": "b379e827baa19f9d5d71256ed81d608679acd6566856f56c5c1ccd818c28f6a2",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 25835,
+          "text_file_end": 25861,
+          "text_ascii": "  System Initializing..  "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 25862,
+          "text_file_end": 25903,
+          "text_ascii": "      System Initialize in progress     "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17070,
+          "call_pc": 17084,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 25903,
+      "file_end": 25972,
+      "sha256": "58990a4541950732ee0178e837bd855636d3f8dea4ab8459b739a4abb3212f89",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 25904,
+          "text_file_end": 25930,
+          "text_ascii": " Hello, I am a Monitor.  "
+        },
+        {
+          "attribute": 144,
+          "text_file_start": 25931,
+          "text_file_end": 25972,
+          "text_ascii": "          Hello, I am a Monitor.        "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 16385,
+          "call_pc": 16399,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 25972,
+      "file_end": 26041,
+      "sha256": "c3c12050c7135553ca7b122aada4d5183a10bb801f724d932fbbf2346b380f88",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 25973,
+          "text_file_end": 25999,
+          "text_ascii": "Please Insert System Disk"
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26000,
+          "text_file_end": 26041,
+          "text_ascii": "        Please Insert System Disk       "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17236,
+          "call_pc": 17250,
+          "consumer": "0x4906"
+        }
+      ]
+    },
+    {
+      "file_start": 26041,
+      "file_end": 26110,
+      "sha256": "24d74cc7ef764835654d294ec1a31994e6fd48165b2afd87f5e6517aa26ccc47",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26042,
+          "text_file_end": 26068,
+          "text_ascii": " Not S-760 System Disk ! "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26069,
+          "text_file_end": 26110,
+          "text_ascii": "         Not S-760 System Disk !        "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17313,
+          "call_pc": 17327,
+          "consumer": "0x4906"
+        }
+      ]
+    },
+    {
+      "file_start": 26110,
+      "file_end": 26179,
+      "sha256": "7b4fdba6d102e2992ccbeb852e7fb4d5974efd1ec1e26ffe6813538be68c1b65",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26111,
+          "text_file_end": 26137,
+          "text_ascii": "   Please Change Disk    "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26138,
+          "text_file_end": 26179,
+          "text_ascii": "           Please Change Disk           "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17489,
+          "call_pc": 17503,
+          "consumer": "0x4906"
+        }
+      ]
+    },
+    {
+      "file_start": 26179,
+      "file_end": 26248,
+      "sha256": "91bb28b020499a1a9ca85aef5c6bf75fdb832d88f558fcc2b1395c3fcc559954",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26180,
+          "text_file_end": 26206,
+          "text_ascii": "   System Loading        "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26207,
+          "text_file_end": 26248,
+          "text_ascii": "           System Loading               "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17367,
+          "call_pc": 17381,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 26248,
+      "file_end": 26317,
+      "sha256": "129688c484d4db39d562b95ef342f8cb2b9b85ff9df90ac8a1eee241ba439310",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26249,
+          "text_file_end": 26275,
+          "text_ascii": " Floppy Disk Read Error  "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26276,
+          "text_file_end": 26317,
+          "text_ascii": "        Floppy Disk Read Error          "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17419,
+          "call_pc": 17433,
+          "consumer": "0x4906"
+        }
+      ]
+    },
+    {
+      "file_start": 26317,
+      "file_end": 26386,
+      "sha256": "fb20c7c4b54221873b5d3fd77580c59ae6b54ab375e71e32e015ddd3a2c2fc64",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26318,
+          "text_file_end": 26344,
+          "text_ascii": " SCSI Scanning           "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26345,
+          "text_file_end": 26386,
+          "text_ascii": "     SCSI Device Scanning               "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17608,
+          "call_pc": 17622,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 26386,
+      "file_end": 26455,
+      "sha256": "49f14de9673e06cc754a06e4c95b51d0a1b4eef28d3727af4afc79c1f0ab2971",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26387,
+          "text_file_end": 26413,
+          "text_ascii": "System Loading from SCSI "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26414,
+          "text_file_end": 26455,
+          "text_ascii": "        System Loading from SCSI        "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 17989,
+          "call_pc": 18003,
+          "consumer": "0x48ed"
+        },
+        {
+          "load_pc": 18122,
+          "call_pc": 18136,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 26455,
+      "file_end": 26524,
+      "sha256": "a5f7b10dfab05f577c8ef5f39ec4c2a815cae693ffddf9896fd673d124a2be75",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26456,
+          "text_file_end": 26482,
+          "text_ascii": " SCSI Comunication Error "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26483,
+          "text_file_end": 26524,
+          "text_ascii": "        SCSI Comunication Error         "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 18021,
+          "call_pc": 18035,
+          "consumer": "0x4906"
+        },
+        {
+          "load_pc": 18154,
+          "call_pc": 18168,
+          "consumer": "0x4906"
+        }
+      ]
+    },
+    {
+      "file_start": 26524,
+      "file_end": 26593,
+      "sha256": "f99d4a644d4755d9c2afde8c0af47eba4e5406005d58d57751a35d785dba7b58",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26525,
+          "text_file_end": 26551,
+          "text_ascii": "        Complete         "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26552,
+          "text_file_end": 26593,
+          "text_ascii": "               Complete                 "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 18091,
+          "call_pc": 18105,
+          "consumer": "0x4906"
+        },
+        {
+          "load_pc": 18224,
+          "call_pc": 18238,
+          "consumer": "0x4906"
+        }
+      ]
+    },
+    {
+      "file_start": 26607,
+      "file_end": 26676,
+      "sha256": "b4519732cd3a8554fb7fa433c2ed260bd38af2fec897a6383b5d9371f3f714f3",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26608,
+          "text_file_end": 26634,
+          "text_ascii": "      Check Memory       "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26635,
+          "text_file_end": 26676,
+          "text_ascii": "             Check Memory               "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 16424,
+          "call_pc": 16438,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 26676,
+      "file_end": 26745,
+      "sha256": "3a9170be58753290548773f81495771f36a1ad824d0fc72754dc1e2edac07017",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26677,
+          "text_file_end": 26703,
+          "text_ascii": "      Check Memory  OK!  "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26704,
+          "text_file_end": 26745,
+          "text_ascii": "             Check Memory  OK!          "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 16519,
+          "call_pc": 16533,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 26745,
+      "file_end": 26814,
+      "sha256": "08863ae3a7ad62b6dc6de71429e5c7242531cefd90425f9311b7c929bff93b10",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26746,
+          "text_file_end": 26772,
+          "text_ascii": "      Check Memory  NG!  "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26773,
+          "text_file_end": 26814,
+          "text_ascii": "             Check Memory  NG!          "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 16617,
+          "call_pc": 16631,
+          "consumer": "0x48ed"
+        }
+      ]
+    },
+    {
+      "file_start": 26814,
+      "file_end": 26883,
+      "sha256": "cc8d436a1e30db0c9cc8d0c5a6c8a0f85fbd763318d9680aaef4234e44cc9793",
+      "parts": [
+        {
+          "attribute": 1,
+          "text_file_start": 26815,
+          "text_file_end": 26841,
+          "text_ascii": " Setup Menu in progress. "
+        },
+        {
+          "attribute": 208,
+          "text_file_start": 26842,
+          "text_file_end": 26883,
+          "text_ascii": "         Setup Menu in progress         "
+        }
+      ],
+      "references": [
+        {
+          "load_pc": 16965,
+          "call_pc": 16979,
+          "consumer": "0x48ed"
+        }
+      ]
+    }
+  ],
+  "disk_signature": {
+    "file_start": 25434,
+    "length": 15,
+    "bytes": "0000000053373730204d5232354100",
+    "next_incoming_byte_required": 80
+  },
+  "config_identity": {
+    "file_start": 25346,
+    "length": 16,
+    "bytes": "526f6c616e645665722e20312e313136"
+  }
+}

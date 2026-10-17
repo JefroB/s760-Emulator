@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-15",
+  "image": "MODV2.IMG",
+  "image_sha256": "d4538f1ddd5446885349e25f18432d59552a4fdc6ac53abc4d1bfcdcf9608793",
+  "pcm_multiplier": 15,
+  "source_gain_db": 23.521825181113627,
+  "native_checks": {
+    "passed": true,
+    "cases": [
+      {
+        "program": 0,
+        "note": 60,
+        "peak": 0.012855403125286102,
+        "peak_dbfs": -37.818286000271186,
+        "clipped_samples": 0
+      },
+      {
+        "program": 0,
+        "note": 21,
+        "peak": 0.030925525352358818,
+        "peak_dbfs": -30.193658279769853,
+        "clipped_samples": 0
+      },
+      {
+        "program": 0,
+        "note": 108,
+        "peak": 0.004744208883494139,
+        "peak_dbfs": -46.47672395210125,
+        "clipped_samples": 0
+      },
+      {
+        "program": 1,
+        "note": 108,
+        "peak": 0.013904815539717674,
+        "peak_dbfs": -37.136695361619026,
+        "clipped_samples": 0
+      },
+      {
+        "program": 2,
+        "note": 108,
+        "peak": 0.01210414245724678,
+        "peak_dbfs": -38.341319472281484,
+        "clipped_samples": 0
+      },
+      {
+        "program": 3,
+        "note": 108,
+        "peak": 0.012599227949976921,
+        "peak_dbfs": -37.99312133151804,
+        "clipped_samples": 0
+      },
+      {
+        "program": 4,
+        "note": 108,
+        "peak": 0.005679492373019457,
+        "peak_dbfs": -44.91380958665442,
+        "clipped_samples": 0
+      },
+      {
+        "program": 5,
+        "note": 108,
+        "peak": 0.005521650426089764,
+        "peak_dbfs": -45.15862183740453,
+        "clipped_samples": 0
+      },
+      {
+        "program": 6,
+        "note": 89,
+        "peak": 0.004744208883494139,
+        "peak_dbfs": -46.47672395210125,
+        "clipped_samples": 0
+      },
+      {
+        "program": 6,
+        "note": 108,
+        "peak": 0.004744208883494139,
+        "peak_dbfs": -46.47672395210125,
+        "clipped_samples": 0
+      },
+      {
+        "program": 21,
+        "note": 60,
+        "peak": 0.005220707505941391,
+        "peak_dbfs": -45.645412755644,
+        "clipped_samples": 0
+      }
+    ],
+    "limits": "Original firmware Load and11 representative gain/headroom checks. Hardware gain and timing remain unqualified."
+  },
+  "peak_gain_ratio_range": [
+    14.78609333283421,
+    15.097058917909814
+  ],
+  "byte_validation": {
+    "passed": true,
+    "pcm_multiplier": 15,
+    "gain_db": 23.5218251811,
+    "exact_scaled_pcm_words": 105984,
+    "unchanged_patch_and_partial_records": true,
+    "only_other_changes": "Volume/performance labels",
+    "original_sha256": "2698485cfaec42a098556c3ddf168cac0051162b08739c44ed54c23244cb7be3",
+    "revision_sha256": "d4538f1ddd5446885349e25f18432d59552a4fdc6ac53abc4d1bfcdcf9608793"
+  },
+  "hardware_volume_validation": "Pending one-note gain pilot; no hardware level guarantee",
+  "capture_format": [
+    "WAV",
+    "SFZ",
+    "metadata.json",
+    "metadata.txt"
+  ],
+  "scope": "Louder revision of the existing TVF survey, not completion of the full envelope/LFO plan"
+}

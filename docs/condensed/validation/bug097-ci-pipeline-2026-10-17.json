@@ -1,0 +1,59 @@
+{
+  "bug": "BUG-097",
+  "date": "2026-10-17",
+  "remote": {
+    "run_url": "https://github.com/JefroB/s760-Emulator/actions/runs/38674599814",
+    "commit": "fdc6488cd971a4c5304e4462c76d2b2e07508a3a",
+    "backend_failure": "ModuleNotFoundError: No module named 'soundfile'",
+    "frontend_failures": [
+      "Removed 1U labels expected twice",
+      "No chromium-linux visual baseline"
+    ]
+  },
+  "changes": [
+    "Install soundfile in CI",
+    "Windows frontend runner matches existing chromium-win32 baseline",
+    "Check both accessible rack ears",
+    "Upload browser failure evidence",
+    "Explicit prerequisite skips for private artifact integrations",
+    "Synthetic ROM/OS bytes for scope-rule tests with committed evidence metadata"
+  ],
+  "checks": {
+    "clean_backend": {
+      "passed": 447,
+      "skipped": 67,
+      "failed": 0,
+      "log": "temp/ci-clean-final.log",
+      "notes": "Repository export excludes ignored firmware, data blocks, extracted binaries and .kiro; current pybind module provisioned to match CMake output."
+    },
+    "vitest": {
+      "files": 24,
+      "passed": 126,
+      "log": "temp/ci-vitest2.log"
+    },
+    "playwright": {
+      "passed": 9,
+      "skipped": 18,
+      "notes": "Windows Chromium, existing baseline unchanged; native/package tests require explicit environment inputs."
+    },
+    "cpp": [
+      "s760_core_tests",
+      "s760_plugin_tests",
+      "s760_bridge_tests",
+      "s760_native_audio_queue_tests",
+      "s760_native_rate_converter_tests",
+      "s760_native_stream_tests"
+    ],
+    "provisioned_backend": {
+      "passed": 514,
+      "skipped": 0,
+      "notes": "506 passed initially; eight screenshot checks rerun and passed after correcting the temporary runner SNAP_DIR to end in snap/s760. No product or assertion change for the retry.",
+      "logs": [
+        "temp/ci-provisioned.log",
+        "temp/ci-provisioned-retry.log"
+      ]
+    }
+  },
+  "remote_rerun": "Changes are local; remote CI has not run this revision.",
+  "baseline_sha256": "71143adaa6fc5efd6ece78312ad56a903e4b4f1cd0a9922779c1327924b9f4f7"
+}

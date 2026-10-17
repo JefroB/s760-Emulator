@@ -1,0 +1,337 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Diagnostic source hypothesis supported at MIDI73\u201376; not production or full-chip qualification",
+  "outcome": "Hardware bypass through unchanged LP predicts static ripple. Existing fixed cubic kernel plus effective1-source-sample offset predicts moving RMS with unchanged native cutoff trace. No envelope-speed correction is required to explain this specific ripple.",
+  "constants": {
+    "pitch_word_midi73": 34716,
+    "source_loop_samples": 4096,
+    "source_pcm_gain_v2": 15,
+    "B": 1.042273935870565,
+    "C": -0.022841914081554338,
+    "phase_quantization": 128,
+    "inverse_kernel_half_width": 12,
+    "static_c": 0.0634765625,
+    "damping": 0.999755859375,
+    "source_clock_ratio_from_bypass": 1.0000215
+  },
+  "alias_explanation": {
+    "source_fundamental_hz": 22.813314199447632,
+    "source_harmonics": [
+      18,
+      1915,
+      1951
+    ],
+    "source_frequencies_hz": [
+      193.798828125,
+      20618.0419921875,
+      21005.6396484375
+    ],
+    "folded_frequencies_hz": [
+      410.6396555900574,
+      412.50330805778503,
+      408.7760031223297
+    ],
+    "beat_hz": 1.8636524677276611
+  },
+  "native_replay": {
+    "static": {
+      "lag_frames": 6751,
+      "gain": 0.02829257398110932,
+      "training_relative_rms_error": 5.0188549077133936e-08,
+      "B": 1.042273935870565,
+      "C": -0.022841914081554338,
+      "pitch_word": 34716
+    },
+    "moving": {
+      "audio_file_source_start_frame": 7483,
+      "stream_source_start_frame": 3508142,
+      "evaluation_relative_rms": 5.0030571465911305e-08,
+      "gain": 0.02829257398573427,
+      "note": "One integer capture-origin alignment; source/coefficients unchanged; WAV origin is not inferred solely from machine status."
+    }
+  },
+  "own_bypass_static_prediction": [
+    {
+      "input": "hardware",
+      "training_gain_offset_db": 0.05506051623706046,
+      "evaluation_rms_curve_error_db": 0.1492884484837034,
+      "unfitted_evaluation_error_db": 0.16541644300849248,
+      "limits": "Evaluation window from already inspected recordings, not independent hardware validation. No filter parameter or time fitting."
+    },
+    {
+      "input": "native",
+      "training_gain_offset_db": -0.007365035876202321,
+      "evaluation_rms_curve_error_db": 0.08284906886389225,
+      "unfitted_evaluation_error_db": 0.0822852257613362,
+      "limits": "Evaluation window from already inspected recordings, not independent hardware validation. No filter parameter or time fitting."
+    }
+  ],
+  "bypass_source_candidates": [
+    {
+      "model": "linear",
+      "start_source_offset": 0,
+      "clock_ratio": 1.0000215,
+      "band_hz": [
+        30,
+        1500
+      ],
+      "delay_frames_48k": 2116.9999858863134,
+      "gain": 0.10042352198803518,
+      "training_relative_rms": 0.7171474203068616,
+      "evaluation_relative_rms": 0.7237725451390334
+    },
+    {
+      "model": "cubic",
+      "start_source_offset": 0,
+      "clock_ratio": 1.0000215,
+      "band_hz": [
+        30,
+        1500
+      ],
+      "delay_frames_48k": 12.840985076934441,
+      "gain": 0.1431793754998072,
+      "training_relative_rms": 0.5084424760904818,
+      "evaluation_relative_rms": 0.5129775707235023
+    },
+    {
+      "model": "linear",
+      "start_source_offset": 1,
+      "clock_ratio": 1.0000215,
+      "band_hz": [
+        30,
+        1500
+      ],
+      "delay_frames_48k": 13.257378176972667,
+      "gain": 0.13693915762380637,
+      "training_relative_rms": 0.3191906582693925,
+      "evaluation_relative_rms": 0.31797648814459273
+    },
+    {
+      "model": "cubic",
+      "start_source_offset": 1,
+      "clock_ratio": 1.0000215,
+      "band_hz": [
+        30,
+        1500
+      ],
+      "delay_frames_48k": 13.28495598759455,
+      "gain": 0.1657794548169962,
+      "training_relative_rms": 0.0761302185472777,
+      "evaluation_relative_rms": 0.0758658649357781
+    }
+  ],
+  "static_source_candidates": [
+    {
+      "model": "linear",
+      "source_offset": 0,
+      "static_waveform_relative_rms": 1.1580468210861354,
+      "static_rms_curve_error_db": 3.9446583065182383,
+      "calibration": "All clock/gain/delay frozen from bypass training0.2..1.2s; no static fitting"
+    },
+    {
+      "model": "cubic",
+      "source_offset": 0,
+      "static_waveform_relative_rms": 1.230992413914813,
+      "static_rms_curve_error_db": 1.991233458282093,
+      "calibration": "All clock/gain/delay frozen from bypass training0.2..1.2s; no static fitting"
+    },
+    {
+      "model": "linear",
+      "source_offset": 1,
+      "static_waveform_relative_rms": 1.29945247861402,
+      "static_rms_curve_error_db": 0.8464166803771243,
+      "calibration": "All clock/gain/delay frozen from bypass training0.2..1.2s; no static fitting"
+    },
+    {
+      "model": "cubic",
+      "source_offset": 1,
+      "static_waveform_relative_rms": 1.3208363266898384,
+      "static_rms_curve_error_db": 0.14550322005112645,
+      "calibration": "All clock/gain/delay frozen from bypass training0.2..1.2s; no static fitting"
+    }
+  ],
+  "static_extra_alignment": {
+    "classification": "Diagnostic extra static alignment only; not session-aligned acceptance",
+    "delay_frames": 149.87944291799496,
+    "bypass_delay_frames": 13.28495598759455,
+    "gain": 0.16740442113157544,
+    "bypass_gain": 0.1657794548169962,
+    "train_error": 0.03062014946788992,
+    "evaluation_error": 0.030453765439003844
+  },
+  "moving_source_candidates": [
+    {
+      "model": "linear",
+      "source_offset": 0,
+      "rms_curve_error_db": 3.799304108621258,
+      "mean_error_db": -3.557873564602231,
+      "limits": "Gain/clock/delay frozen from bypass; original native cutoff trace unchanged. No moving-capture calibration."
+    },
+    {
+      "model": "cubic",
+      "source_offset": 0,
+      "rms_curve_error_db": 1.7513113080305045,
+      "mean_error_db": -1.4562153590628493,
+      "limits": "Gain/clock/delay frozen from bypass; original native cutoff trace unchanged. No moving-capture calibration."
+    },
+    {
+      "model": "linear",
+      "source_offset": 1,
+      "rms_curve_error_db": 0.7005503551603466,
+      "mean_error_db": -0.5711984392690499,
+      "limits": "Gain/clock/delay frozen from bypass; original native cutoff trace unchanged. No moving-capture calibration."
+    },
+    {
+      "model": "cubic",
+      "source_offset": 1,
+      "rms_curve_error_db": 0.08576476640049607,
+      "mean_error_db": -0.0753271520246555,
+      "limits": "Gain/clock/delay frozen from bypass; original native cutoff trace unchanged. No moving-capture calibration."
+    }
+  ],
+  "adjacent_key_evaluation": [
+    {
+      "note": 74,
+      "native": {
+        "pitch_word": 36780,
+        "replay_evaluation_relative_rms": 5.0137129238859624e-08,
+        "file_source_start_frame": 7483,
+        "stream_source_start_frame": 3508142
+      },
+      "candidates": [
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "rms_curve_error_db": 3.2795616684324673,
+          "mean_error_db": -3.2578830509879735
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "rms_curve_error_db": 1.4243186221038586,
+          "mean_error_db": -1.3273673194823203
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "rms_curve_error_db": 0.5445177279605666,
+          "mean_error_db": -0.47509409470590863
+        },
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "rms_curve_error_db": 0.12970513899035585,
+          "mean_error_db": -0.04719136036994665
+        }
+      ]
+    },
+    {
+      "note": 75,
+      "native": {
+        "pitch_word": 38967,
+        "replay_evaluation_relative_rms": 4.978302499009526e-08,
+        "file_source_start_frame": 6747,
+        "stream_source_start_frame": 3816106
+      },
+      "candidates": [
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "rms_curve_error_db": 3.260640956345352,
+          "mean_error_db": -3.2430863522241413
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "rms_curve_error_db": 1.37284570012672,
+          "mean_error_db": -1.3084301910172684
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "rms_curve_error_db": 0.45824037135327794,
+          "mean_error_db": -0.4272919239542991
+        },
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "rms_curve_error_db": 0.10441117152403898,
+          "mean_error_db": -0.022265972666889056
+        }
+      ]
+    },
+    {
+      "note": 76,
+      "native": {
+        "pitch_word": 41285,
+        "replay_evaluation_relative_rms": 5.0266781478935334e-08,
+        "file_source_start_frame": 6747,
+        "stream_source_start_frame": 4124806
+      },
+      "candidates": [
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "rms_curve_error_db": 2.9982641897548308,
+          "mean_error_db": -2.983070813513778
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "rms_curve_error_db": 1.281458351301307,
+          "mean_error_db": -1.2211142102810995
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "rms_curve_error_db": 0.43790179905940774,
+          "mean_error_db": -0.3834094232562741
+        },
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "rms_curve_error_db": 0.2064312187943299,
+          "mean_error_db": -0.016066068559043512
+        }
+      ]
+    }
+  ],
+  "alignment_issue": {
+    "status": "OPEN; tracked separately as BUG-076",
+    "native_moving_status_inferred_source_start_frame": 6602,
+    "observed_file_source_start_frame": 7483,
+    "difference_frames": 881,
+    "difference_ms": 19.977324263038547,
+    "statement": "Machine-time origin is not automatically WAV-frame origin. Early overlays are approximate, not absolute MIDI latency qualification. Inter-extrema intervals cancel constant origin shifts."
+  },
+  "source_hashes": {
+    "tests\\hardware_recordings\\s760_BYPASS_20261015_173238.zip": "f3b7556c7bb50c5389e238a4f61912fd89c94a8820d4adb69601f3faeb3dc6a0",
+    "tests\\hardware_recordings\\s760_STATIC L80_20261015_173215.zip": "1400663309737cbc7a1f04d0f0bb3106b8277fcef078caed6455dd1f3dc21f17",
+    "tests\\hardware_recordings\\s760_MIDI 73_20261015_170426.zip": "86d405065d09901f4f4f627576e30c65a372133b736942f5cc4d9048919a0714",
+    "tests\\hardware_recordings\\s760_01 Survey_20261015_161418.zip": "b08ca7b4e50cdfdeb6dd14ae919b5e5ef701da4f0c5ac63b86a84addaa2eea78",
+    "mame-source\\mames760.exe": "0b6d0d9bcc133dca21b44b20e000f3a3abd00f1afa8097374b4c09016d99e920",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "d96d13cb195128b5f8eb3c91bc3b5fb749937f96d4d44c96743e095be39bcebd",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-v2-loud-2026-10-15\\MODV2.IMG": "d4538f1ddd5446885349e25f18432d59552a4fdc6ac53abc4d1bfcdcf9608793",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-application-2026-10-15\\common-traced\\application.csv": "d13553230492f3581f0d8a7b7c0e16a767c5968b2a4ee614610adbbbbddd65fd",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-source-isolation-2026-10-15\\adjacent-native\\application.csv": "e7a1daaaaa7005c74bb7473693546de259ab7f3eecb98bfb6184df24816e7616",
+    "docs\\ic20-hle-findings\\chatGPT-work\\predict_static73_from_bypass.py": "b1c5a276f359f6fdf383c3c3c509a76a783482991aab172879024337f719278a",
+    "docs\\ic20-hle-findings\\chatGPT-work\\reconstruct_source73.py": "c97613a64699ca207a64b0afe95caf58b1a1c006582cb66d683371e02e39af4d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\reconstruct_source73_offset1.py": "6a2d578a8bc77d443b24b5412a599fd34c8a25ef36f2929f8388392a21c3f893",
+    "docs\\ic20-hle-findings\\chatGPT-work\\fit_bypass73_source.py": "2989b2f2ea9eaac02040560de0dd47210128d393b8844f17c9d8836ff518755a",
+    "docs\\ic20-hle-findings\\chatGPT-work\\evaluate_source73_static.py": "679ebdf6dd5512940df062888e8efcd6b9503f4ca1a78efddd2993223bb9689f",
+    "docs\\ic20-hle-findings\\chatGPT-work\\predict_moving73_source.py": "bd09f4f26dfae8822b7137afb98d2939dd29cee37696c7b8a60aea6064e5c06a",
+    "docs\\ic20-hle-findings\\chatGPT-work\\source_reconstruction_model.py": "d819e5459c49c36054346579015e17c527368c80ce50db3d7df6aec3eb5f0650",
+    "docs\\ic20-hle-findings\\chatGPT-work\\evaluate_adjacent73_source.py": "cb6ae5fc2431b4367de5cc34d7954f5b2ca62f059f7b44b85ba410cdbdf9e982"
+  },
+  "limits": [
+    "RMS curve errors in dB are not normalized waveform errors or envelope-duration pass criteria.",
+    "The cubic extension above pitch word32768 and effective source offset1 are offline candidates only. They do not prove literal ASIC read-before-increment semantics or a universal interpolator.",
+    "Kernel coefficients are from the existing renderer, not refitted. Source offset choice was informed by already inspected MIDI73 data. Static/moving cases are therefore not independent blind validation.",
+    "Bypass waveform comparisons use30\u20131500Hz; clock/gain/constant delay calibrated0.2\u20131.2s, evaluated1.5\u20132.7s. No nonlinear time warp.",
+    "Static waveform residual remains132% with bypass-only global alignment; fitting an additional2.846ms static delay gives3.05% residual. That extra alignment is diagnostic only and cannot distinguish capture jitter from physical path delay.",
+    "Adjacent MIDI74\u201376 were not used to choose the source candidate; recordings are from the same survey session, not independent power-cycle validation.",
+    "No runtime filter equations, timing policy or source playback behavior changed in this turn. Only the diagnostic verifier gained an adjacent-key option.",
+    "No LFO, full TVA/release, polyphony, arbitrary-pitch or original resonant-case accuracy qualification. BUG-005 remains OPEN."
+  ]
+}

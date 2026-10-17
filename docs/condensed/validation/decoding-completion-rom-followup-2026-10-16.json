@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-16",
+  "metrics": {
+    "os": {
+      "classified_bytes": 62649,
+      "total_bytes": 1032192,
+      "percent": 6.069510323660714,
+      "baseline_classified_bytes": 62649,
+      "percentage_point_change": 0.0,
+      "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "inventory": "docs/condensed/validation/os-exploration-coverage-2026-10-16.json"
+    },
+    "boot_rom": {
+      "classified_bytes": 26101,
+      "total_bytes": 32768,
+      "percent": 79.6539306640625,
+      "baseline_classified_bytes": 25162,
+      "percentage_point_change": 2.8656005859375,
+      "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "inventory": "docs/condensed/validation/ic15-exploration-coverage-2026-10-16.json"
+    }
+  },
+  "overall_decoding_completion": "not yet quantifiable",
+  "rubric": "Separate region/root coverage, semantics, mutable addressing/dispatch and native critical-path qualification; no evidence-backed weighting yet. Assembler/rebuild and physical parity remain separate.",
+  "tool_identities": {
+    "scripts/analyze_firmware_routines.py": "38917d105be8f2d45e1a49f4f7f7dda8ccb4dd931626cb92fe7b04a1ad64e686",
+    "scripts/firmware_coverage.py": "689518d401121fe4756a0bfec4f77f24dd9b159f7a58e0df6d2f04c4f1ea140c",
+    "scripts/firmware_manifests/ic15_exploration.json": "88de4d5a670b4b63301f483c38d2f3e740be18f3ad057c1a61454a471528ac1c",
+    "scripts/firmware_manifests/os_exploration.json": "c185fc99a345bd323cd494dcd3c408022b0b8e24f22e1454e81ad958ebc6c4e9"
+  },
+  "tests": "47 existing firmware tests passed; zero ROM decoder warnings",
+  "baseline": "Immediately preceding ROM audit25162; OS62649. Inventories regenerated in this run.",
+  "native_qualification": [
+    "112 payload DMA rows and handoff",
+    "invalid signature rejection",
+    "2789 exact audio writes",
+    "64 EEPROM words save/verify/restart/process reboot",
+    "extended TV setting and gate bit5"
+  ],
+  "remaining_blockers": [
+    "BUG-080 native SCSI command-phase SSTS81 versus B0 gate",
+    "large IC4 low-count0 semantics unqualified",
+    "179 nonuniform bytes lack justified references",
+    "6488 uniformFF bytes usage unresolved",
+    "physical reset/IRQ and dormant invocation evidence missing",
+    "genuine transport retry path not qualified"
+  ]
+}

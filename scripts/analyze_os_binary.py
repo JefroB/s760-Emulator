@@ -9,7 +9,7 @@ import json
 from collections import defaultdict
 
 OS_IMG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "S760224.IMG"))
-REPORT_TXT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs", "OS_STRING_CATALOG.md"))
+REPORT_TXT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs", "os-string-catalog.md"))
 
 def extract_strings(data, min_len=3):
     """Extract printable ASCII strings with their byte offsets."""

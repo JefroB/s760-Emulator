@@ -1,0 +1,384 @@
+{
+  "schema": 1,
+  "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "payload_offset": "0x4800",
+  "regions": [
+    {
+      "name": "timer_isr",
+      "page": "0x0",
+      "start": "0xcad1",
+      "end": "0xcbcf",
+      "entries": [
+        "0xcad1"
+      ],
+      "evidence": "modulation-firmware-path.md: timer trace identifies page 0 ISR and CB00 TIMER1 sample. Cross-window calls remain unresolved.",
+      "summary": [
+        "CB00 samples TIMER1 before control service. Normal rearm uses saved TIMER1 + 20000; fallback uses current TIMER1 + 1000.",
+        "CB17/CB20 install fetch pages 001F/002D; CB2A/CB31 restore previous selectors after the service call."
+      ]
+    },
+    {
+      "name": "mouse_handshake",
+      "page": "0x4b",
+      "start": "0x57b4",
+      "end": "0x58ab",
+      "entries": [
+        "0x57b4"
+      ],
+      "evidence": "Matched scheduler trace identifies page 4B; PUSHA at 57B4 and POPA at 5811. Native driver maps F008 mouse four-nibble handshake. Region is a bounded analysis window, not an asserted function extent.",
+      "summary": [
+        "PUSHA at 57B4 starts the masked section; POPA at 5811 restores flags.",
+        "Writes to F008 alternate the handshake bit while four input nibbles are read; 586F and 57C2 contain counted delay loops."
+      ]
+    },
+    {
+      "name": "tvf_dispatch",
+      "page": "0x2d",
+      "start": "0x8000",
+      "end": "0x8300",
+      "entries": [
+        "0x8000"
+      ],
+      "evidence": "modulation-firmware-path.md: corrected dispatcher origin 002D:8000; fast command store at 8106 and restore at 8125. Indirect dispatch is deliberately unresolved.",
+      "indirect_targets": {
+        "0x800c": {
+          "targets": [
+            "0x800e",
+            "0x8010",
+            "0x8012",
+            "0x8014",
+            "0x8016",
+            "0x8018",
+            "0x801a",
+            "0x801c"
+          ],
+          "evidence": "Immutable instructions at 8000-800C compute 800E + 2*stage. Eight entries correspond to audited envelope stages 0-7. Other stage values remain unresolved; these are code stubs, not pointer words."
+        }
+      },
+      "summary": [
+        "Stage index selects an instruction stub at 800E + 2*stage. Annotated values 0-7 cover known envelope stages; other values remain unknown.",
+        "Fast path writes a companion command at 8106, calls cutoff calculation at 811E, and restores command 001B at 8125. Physical command semantics remain unqualified."
+      ]
+    },
+    {
+      "name": "cutoff_calculation",
+      "page": "0x1f",
+      "start": "0x46f1",
+      "end": "0x480c",
+      "entries": [
+        "0x46f1"
+      ],
+      "evidence": "modulation-firmware-path.md: exact integer replay of cutoff calculation 001F:46F1-480B. Data page 02BE must not be confused with instruction page 001F."
+    },
+    {
+      "name": "initial_cutoff",
+      "page": "0x2d",
+      "start": "0x925c",
+      "end": "0x92a8",
+      "entries": [
+        "0x925c"
+      ],
+      "evidence": "modulation-firmware-path.md: 002D:9270 calls cutoff calculation and writes initial cutoff companion pair. Bounded analysis window only. Expanded backward from known 9270 boundary to counter branch at 925C; both successor paths decode to tail jumps, with no guessed jump targets.",
+      "summary": [
+        "Reads initial TVF counter at data[83C6 + RW86]. A zero value selects data[8306 + RW86] as current envelope value and jumps to stage continuation 8048.",
+        "A nonzero counter stores stage 2 to data[8C1E + RW84], selects data[8396 + RW86] as current envelope value, and jumps to dispatcher 8000.",
+        "Both branches call 46F1 then delay 46C2, and write D022=0 / D020=calculated cutoff. These companion writes are not exclusive to the zero-counter path."
+      ]
+    },
+    {
+      "name": "control_service",
+      "page": "0x1f",
+      "start": "0x4000",
+      "end": "0x46c2",
+      "entries": [
+        "0x4000"
+      ],
+      "evidence": "Timer ISR CB13-CB25 selects instruction page 001F for 4000 and 002D for 8000 before calling 4000. Local direct calls lead to 43A3 and the voice loop at 43E5; cross-window destinations require context.",
+      "summary": [
+        "Saves data selectors 010A/010C; selects data page 02BE at 010C, then restores selectors on return (4000-405B).",
+        "Under the active service branch, 442D calls TVF dispatcher 8000. Other calls in the voice loop remain explicitly unresolved where their regions are not covered."
+      ]
+    },
+    {
+      "name": "dsp_delay",
+      "page": "0x1f",
+      "start": "0x46c2",
+      "end": "0x46d1",
+      "entries": [
+        "0x46c2"
+      ],
+      "evidence": "Immutable page 001F bytes at 46C2-46D0: fourteen NOP instructions then RET. Called by the initial-cutoff routine in the page-001F context.",
+      "summary": [
+        "Fourteen NOPs followed by RET. This is an explicit firmware delay; its physical purpose and timing are not inferred from the name."
+      ]
+    },
+    {
+      "name": "voice_parameter_setup",
+      "page": "0x1f",
+      "start": "0x4c9e",
+      "end": "0x4f05",
+      "entries": [
+        "0x4c9e"
+      ],
+      "evidence": "Direct call targets from control_service at 4415/446E etc under fetch page 001F. Bounded analysis window; no assertion of complete function extent.",
+      "summary": [
+        "Selects data page 032A or 033A according to voice metadata, or 0356 in the R9D=5 branch. These writes target data selector 010A, not instruction selector 0102.",
+        "Prepares data[8A56 + RW86] from existing waveform state at 8A86 and fade state, before dispatching the next waveform-state update at 4DCA.",
+        "Eight masked dispatch cases include direction-switching ramps, wrapping ramps, a table-interpolated path, a binary-output path, a recurrence updated at phase endpoints, and bounded one-way ramps. User-facing waveform-name mapping is not established here."
+      ],
+      "indirect_targets": {
+        "0x4dca": {
+          "targets": [
+            "0x4dcc",
+            "0x4dce",
+            "0x4dd0",
+            "0x4dd2",
+            "0x4dd4",
+            "0x4dd6",
+            "0x4dd8",
+            "0x4dda"
+          ],
+          "evidence": "4DC0 masks index with 7; 4DC3 doubles it; 4DC6 adds 4DCC before indirect branch. Eight bounded index values; code stubs verified by decoding."
+        }
+      }
+    },
+    {
+      "name": "amplitude_write",
+      "page": "0x1f",
+      "start": "0x46d1",
+      "end": "0x46f1",
+      "entries": [
+        "0x46d1"
+      ],
+      "evidence": "Direct call target from control_service at 4485 etc under fetch page 001F; writes D036/D034 after channel selection and delay.",
+      "summary": [
+        "Scales two per-voice words, selects channel at D040, calls delay 46C2, then writes D036=0 and D034=scaled result."
+      ]
+    },
+    {
+      "name": "filter_modulation_mix",
+      "page": "0x2d",
+      "start": "0x83a5",
+      "end": "0x84c7",
+      "entries": [
+        "0x83a5"
+      ],
+      "evidence": "Control service calls 83A5 at 4422 before TVF dispatcher 442D. Under fetch 0104=002D, decoded routine writes per-voice 8516, read by cutoff calculation at 4795/47A3.",
+      "summary": [
+        "Combines base words 8546/8576, contributions 8966/86F6/8846, key-related arithmetic, and scaled modulation input 8A56.",
+        "Signed depth sum uses 4077/8667/88A7/87B7, clamped to -63..63 before multiplication by 8A56.",
+        "Saturates the accumulated result to 0..32767 and writes data[8516 + RW86]; cutoff calculation consumes this word. Field names beyond this dataflow remain provisional."
+      ]
+    }
+  ],
+  "bank_links": [
+    {
+      "source": "timer_isr",
+      "pc": "0xcb25",
+      "target": "control_service",
+      "destination": "0x4000",
+      "context": "Timer software-service branch after CB17/CB20",
+      "evidence": "CB13 loads 001F; CB17 stores fetch selector 0102; CB1C loads 002D; CB20 stores selector 0104."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x442d",
+      "target": "tvf_dispatch",
+      "destination": "0x8000",
+      "context": "Invocation from timer with fetch selectors 0102=001F and 0104=002D preserved by intervening callees",
+      "evidence": "Direct LCALL at 442D; timer entry establishes selectors. Callee preservation is an explicit context requirement, not whole-program analysis."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x8262",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x8045",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x8159",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x825f",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x82a6",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x80ef",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x8206",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "tvf_dispatch",
+      "pc": "0x811e",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "initial_cutoff",
+      "pc": "0x9270",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct destination plus cutoff routine identity from integer-replay audit; no inference from data selector 010A."
+    },
+    {
+      "source": "initial_cutoff",
+      "pc": "0x9273",
+      "target": "dsp_delay",
+      "destination": "0x46c2",
+      "context": "Fetch selector 0102=001F",
+      "evidence": "Direct LCALL; page 001F delay bytes decoded separately."
+    },
+    {
+      "source": "initial_cutoff",
+      "pc": "0x9280",
+      "target": "tvf_dispatch",
+      "destination": "0x8048",
+      "context": "Fetch selector 0104 remains 002D",
+      "evidence": "Direct LJMP within the same CPU fetch window; target is a decoded instruction boundary."
+    },
+    {
+      "source": "initial_cutoff",
+      "pc": "0x9295",
+      "target": "cutoff_calculation",
+      "destination": "0x46f1",
+      "context": "Fetch selector 0102=001F and 0104=002D",
+      "evidence": "Direct edge in newly decoded nonzero-counter initialization branch."
+    },
+    {
+      "source": "initial_cutoff",
+      "pc": "0x9298",
+      "target": "dsp_delay",
+      "destination": "0x46c2",
+      "context": "Fetch selector 0102=001F and 0104=002D",
+      "evidence": "Direct edge in newly decoded nonzero-counter initialization branch."
+    },
+    {
+      "source": "initial_cutoff",
+      "pc": "0x92a5",
+      "target": "tvf_dispatch",
+      "destination": "0x8000",
+      "context": "Fetch selector 0102=001F and 0104=002D",
+      "evidence": "Direct edge in newly decoded nonzero-counter initialization branch."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x446e",
+      "target": "voice_parameter_setup",
+      "destination": "0x4c9e",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x4415",
+      "target": "voice_parameter_setup",
+      "destination": "0x4c9e",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x454f",
+      "target": "voice_parameter_setup",
+      "destination": "0x4c9e",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x450b",
+      "target": "voice_parameter_setup",
+      "destination": "0x4c9e",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x4485",
+      "target": "amplitude_write",
+      "destination": "0x46d1",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x45a6",
+      "target": "amplitude_write",
+      "destination": "0x46d1",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x455b",
+      "target": "amplitude_write",
+      "destination": "0x46d1",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x462b",
+      "target": "amplitude_write",
+      "destination": "0x46d1",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct same-window destination under the declared fetch mapping."
+    },
+    {
+      "source": "amplitude_write",
+      "pc": "0x46e4",
+      "target": "dsp_delay",
+      "destination": "0x46c2",
+      "context": "Fetch selector 0102 remains 001F",
+      "evidence": "Direct SCALL in amplitude writer."
+    },
+    {
+      "source": "control_service",
+      "pc": "0x4422",
+      "target": "filter_modulation_mix",
+      "destination": "0x83a5",
+      "context": "Fetch selector 0104 remains 002D",
+      "evidence": "Direct LCALL between modulation setup and TVF dispatcher in the active voice-service branch."
+    }
+  ]
+}

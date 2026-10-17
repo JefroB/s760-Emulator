@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "outcome": "Native RMS ripple persists at constant cutoff, so this ripple alone does not establish modulation timing error. Native completed active coefficient changes take effect within one44.1kHz frame. Hardware application timing remains unknown.",
+  "trace": {
+    "rows": 5226,
+    "dropped": 0,
+    "changed_active_sets": 166,
+    "word_mismatches": 0,
+    "coefficient_scaling_verified": true,
+    "write_to_first_changed_frame_seconds": [
+      3.996599673428136e-08,
+      2.255158729269624e-05
+    ],
+    "firmware_cutoff_write_interval_ms_min_median_max": [
+      18.510000000006244,
+      20.010874999996986,
+      21.509374999993724
+    ],
+    "static_controls": [
+      {
+        "case": "static64",
+        "cutoff_word": 416
+      },
+      {
+        "case": "static80",
+        "cutoff_word": 1042
+      },
+      {
+        "case": "static96",
+        "cutoff_word": 2613
+      }
+    ]
+  },
+  "native_rms_diagnostics": [
+    {
+      "name": "moving",
+      "linear_trend_db_per_second": 3.0538435285947836,
+      "ripple_1_85hz_amplitude_db": 1.3537822940938689,
+      "ripple_phase_degrees": -88.78717952373415,
+      "held_db_std": 2.3767459414000225
+    },
+    {
+      "name": "static64",
+      "linear_trend_db_per_second": -0.015848400813383456,
+      "ripple_1_85hz_amplitude_db": 1.615247060269442,
+      "ripple_phase_degrees": -89.95480777834435,
+      "held_db_std": 1.2016779032082312
+    },
+    {
+      "name": "static80",
+      "linear_trend_db_per_second": -0.001127555380235911,
+      "ripple_1_85hz_amplitude_db": 1.5815486675612116,
+      "ripple_phase_degrees": -86.35819475238804,
+      "held_db_std": 1.1604897092580109
+    },
+    {
+      "name": "static96",
+      "linear_trend_db_per_second": -0.001185055631864284,
+      "ripple_1_85hz_amplitude_db": 0.6914055916404682,
+      "ripple_phase_degrees": -101.66616980778215,
+      "held_db_std": 0.5056967907322906
+    },
+    {
+      "name": "bypass",
+      "linear_trend_db_per_second": 0.00029326911049462726,
+      "ripple_1_85hz_amplitude_db": 0.08731756608253337,
+      "ripple_phase_degrees": 116.97196763274145,
+      "held_db_std": 0.07223060143350243
+    }
+  ],
+  "trace_on_off_same_checkpoint": {
+    "passed": true,
+    "cases": [
+      {
+        "case": "moving",
+        "frames": 308700,
+        "pcm_sha256": "c2b52c7a3fcb600afdd242a1207d98969e9f2a748beb1b5063dc97f12bdc75ea"
+      },
+      {
+        "case": "static64",
+        "frames": 308700,
+        "pcm_sha256": "57c51941c03aaf5fc821930260839b33ad3aa0575eb70a2f02fa852032f0b161"
+      },
+      {
+        "case": "static80",
+        "frames": 308700,
+        "pcm_sha256": "b80f38209218c42aecd72253f29b54abf5433c1dd7e65d9b050d7493b9c4b234"
+      },
+      {
+        "case": "static96",
+        "frames": 308700,
+        "pcm_sha256": "4d689011f589c5683c2081d342cd1b1d5e544c4520448f1d44b1c6bb7f52c6a4"
+      },
+      {
+        "case": "bypass",
+        "frames": 308700,
+        "pcm_sha256": "36d9e2a4dd53880980186d703a57e48674ffe019cf1a164314b186b318cdfdf7"
+      }
+    ],
+    "total_exact_stereo_frames": 1543500
+  },
+  "tests": {
+    "core": "PASS",
+    "plugins": "PASS",
+    "pytest": "404 passed across full run plus rerun of failed harness setup cases; no skips",
+    "native_runtime": "PASS:131072 exact observed/unobserved PCM frames and matching CRT/LCD"
+  },
+  "exact_loaded_pcm_bytes": 9216,
+  "source_hashes": {
+    "mame-source\\mames760.exe": "0b6d0d9bcc133dca21b44b20e000f3a3abd00f1afa8097374b4c09016d99e920",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "d96d13cb195128b5f8eb3c91bc3b5fb749937f96d4d44c96743e095be39bcebd",
+    "scripts\\verify_modulation_application.py": "bd377b7d38ff8fa052b6fbb67cf04941de118fbdb5b109eec58dd30a25766498",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-application-2026-10-15\\MODDIAG.IMG": "e459f11534ca054529a0baa7eeee72158c77f0132056d14c65f84e67279ef6ee",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-application-2026-10-15\\common-traced\\application.csv": "d13553230492f3581f0d8a7b7c0e16a767c5968b2a4ee614610adbbbbddd65fd"
+  },
+  "limits": [
+    "Write-frame column is floor(machine_time*44100); applied-frame is observed sound_stream.start_index. Latency pairs only changed coefficient sets in active voices; inactive writes are excluded.",
+    "Static controls are native-only. Hardware static/bypass controls are still needed to distinguish playback, filter and measurement effects.",
+    "The MIDI73 pitch-interpolation fallback above+12semitones is a candidate confound, not an isolated cause.",
+    "RMS sinusoid fits are descriptive audio metrics, not decoded LFO/envelope rates.",
+    "No filter equation, timing policy, clock, interpolation model or guest-state forcing was changed. Instrumentation is bounded, buffered, opt-in and flushed at exit."
+  ]
+}

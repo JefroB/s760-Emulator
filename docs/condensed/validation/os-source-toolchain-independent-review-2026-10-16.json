@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-16",
+  "cases": [
+    {
+      "case": "unchanged",
+      "reported_exact_match": true,
+      "length": 1474560,
+      "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "diff_offsets": [],
+      "exception": null
+    },
+    {
+      "case": "mnemonic_only_NOP",
+      "reported_exact_match": true,
+      "length": 1474560,
+      "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "diff_offsets": [],
+      "exception": null
+    },
+    {
+      "case": "byte_comment_only_FD",
+      "reported_exact_match": false,
+      "length": 1474560,
+      "sha256": "9c8d42ed244bfc7bf24d3589776f8ff1478350a208dfd8ef8c0cbd034881523c",
+      "diff_offsets": [
+        21201
+      ],
+      "exception": null
+    },
+    {
+      "case": "invalid_mnemonic",
+      "reported_exact_match": true,
+      "length": 1474560,
+      "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "diff_offsets": [],
+      "exception": null
+    },
+    {
+      "case": "origin_only",
+      "reported_exact_match": true,
+      "length": 1474560,
+      "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "diff_offsets": [],
+      "exception": null
+    },
+    {
+      "case": "raw_byte_directive",
+      "reported_exact_match": false,
+      "length": 1474560,
+      "sha256": "1881c70f2ef8d852483e4b813fb370f6145074b31cbc1e1569c980927606c4f6",
+      "diff_offsets": [
+        21201
+      ],
+      "exception": null
+    }
+  ],
+  "target_line": "    PUSHA                                       ; [0052D1: F4]",
+  "qualification": "Private source copy and private rebuilt files only. Original firmware and Gemini source project untouched. No modified firmware executed.",
+  "identities": {
+    "scripts\\build_firmware_image.py": "1a440cc58ddf765ca2f7380114e8659c546b2911da9b7f883d5140f2f4d0c614",
+    "scripts\\export_firmware_source.py": "cb34bccd2b51d5182ce1eb131b0e4810e93cdde5a04a713a9343070a140e6a5b",
+    "tests\\test_source_export_and_rebuild.py": "495af75ecd48b646b910c4149fbc3f3d59f2e243b5852cca7dab569bf6dbd0ee",
+    "firmware_source\\os_disk\\layout.json": "945da303b9b334a6103abb5d6e98b050b754e120c5d14679e1498f22bfd61b1e",
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "layout_cases": [
+    {
+      "case": "conflicting_alias",
+      "reported_exact_match": true,
+      "length": 1474560,
+      "diff_offsets": [],
+      "tail": "0f0f0f0f",
+      "byte_52d1": 244,
+      "physical_offset": 87886,
+      "edited_source": "frontier_p3b_6294.asm",
+      "later_overwriting_source": "frontier_p3b_64c9.asm"
+    },
+    {
+      "case": "out_of_bounds_offset",
+      "reported_exact_match": false,
+      "length": 1474561,
+      "diff_offsets": [
+        21201
+      ],
+      "tail": "0f0f0ffd",
+      "byte_52d1": 0
+    }
+  ],
+  "raw_directive_observed_byte": 0,
+  "source_file_count": 126,
+  "data_block_count": 304,
+  "layout_entries": 673,
+  "test_result": "4 existing project/export tests pass; these assert byte reconstruction and comment editing, not instruction assembly.",
+  "fresh_export_rebuild_exact": true,
+  "deterministic_export_except_destination_README": true,
+  "fresh_export_input_analysis_sha256": "c3d46977067c54432f19127ad89d6c2b11cd2cc82924ab5af64eaaedae486264",
+  "fresh_export_logs": [
+    "[*] Exporting 126 routine source files...\n[*] Partitioning non-code segments into data blocks...\n[+] Successfully exported editable source project to: D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-source-toolchain-review-2026-10-16\\fresh-export-a\n    Code routines exported: 126\n    Data blocks created: 547\n    Total layout entries: 673\n",
+    "[*] Exporting 126 routine source files...\n[*] Partitioning non-code segments into data blocks...\n[+] Successfully exported editable source project to: D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-source-toolchain-review-2026-10-16\\fresh-export-b\n    Code routines exported: 126\n    Data blocks created: 547\n    Total layout entries: 673\n"
+  ],
+  "test_acceptance": "4 existing tests pass;4 new strict expected-failure acceptance tests reproduce BUG-088/089. No modified firmware executed.",
+  "equate_findings": {
+    "WDT_at_0014": "Native CPU/manual identify0014 asWSR. Include omitsWSR and gives misleadingWDT name.",
+    "LCD_REG_BASE_E000": "Native ROM/OS FDC routines useE000/E002 forFDC, notLCD. Native LCD usesF800/F802. MMIO equates need mapping/profile evidence before real assembly.",
+    "include_currently_ignored": "Current builder ignores.include/.equ, so bad definitions are concealed by comment-byte reconstruction."
+  },
+  "regression_tests_source": "\"\"\"Unmet source-toolchain acceptance gates from independent review.\n\nStrict xfails preserve known defects without claiming comment reconstruction is\ninstruction assembly. Remove xfail only after implementing and qualifying fixes.\n\"\"\"\nfrom pathlib import Path\nimport shutil\nimport sys\nimport pytest\n\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT / 'scripts'))\nfrom build_firmware_image import build_image\n\n\n@pytest.fixture\ndef project(tmp_path):\n    target = tmp_path / 'project'\n    shutil.copytree(ROOT / 'firmware_source/os_disk', target)\n    return target\n\n\n@pytest.mark.xfail(strict=True, reason='BUG-088: builder ignores instruction text')\ndef test_mnemonic_only_edit_encodes_new_instruction(project, tmp_path):\n    source = project / 'src/timer_isr.asm'\n    text = source.read_text(encoding='utf-8')\n    line = next(l for l in text.splitlines() if 'PUSHA' in l and '[0052D1: F4]' in l)\n    source.write_text(text.replace(line, line.replace('PUSHA', 'NOP')), encoding='utf-8')\n    output = tmp_path / 'edited.IMG'\n    build_image(project, output)\n    before, after = (ROOT / 'S760224.IMG').read_bytes(), output.read_bytes()\n    assert len(before) == len(after)\n    assert [i for i, (a, b) in enumerate(zip(before, after)) if a != b] == [0x52d1]\n    assert after[0x52d1] == 0xfd\n\n\n@pytest.mark.xfail(strict=True, reason='BUG-088: invalid mnemonics accepted with byte comments')\ndef test_invalid_instruction_is_rejected(project, tmp_path):\n    source = project / 'src/timer_isr.asm'\n    source.write_text(source.read_text(encoding='utf-8').replace('PUSHA', 'NOT_AN_INSTRUCTION'), encoding='utf-8')\n    with pytest.raises(ValueError):\n        build_image(project, tmp_path / 'invalid.IMG')\n\n\n@pytest.mark.xfail(strict=True, reason='BUG-089: conflicting alias writes silently overwrite')\ndef test_conflicting_physical_alias_edit_is_rejected(project, tmp_path):\n    source = project / 'src/frontier_p3b_6294.asm'\n    text = source.read_text(encoding='utf-8')\n    import re\n    offset = 87886\n    pattern = re.compile(r'(\\[' + f'{offset:06X}' + r':\\s*)([0-9A-F]{2})')\n    assert pattern.search(text)\n    source.write_text(pattern.sub(lambda m: m[1] + f'{int(m[2],16)^1:02X}', text), encoding='utf-8')\n    with pytest.raises(ValueError):\n        build_image(project, tmp_path / 'alias-conflict.IMG')\n\n\n@pytest.mark.xfail(strict=True, reason='BUG-089: out-of-bounds offsets silently resize image')\ndef test_out_of_bounds_write_is_rejected(project, tmp_path):\n    source = project / 'src/timer_isr.asm'\n    text = source.read_text(encoding='utf-8')\n    assert '[0052D1: F4]' in text\n    source.write_text(text.replace('[0052D1: F4]', '[168010: FD]'), encoding='utf-8')\n    with pytest.raises(ValueError):\n        build_image(project, tmp_path / 'out-of-bounds.IMG')\n",
+  "regression_tests_sha256": "e181d6bd74b97e4149d821d11de786df32cf238252029438de5920f07528f607"
+}

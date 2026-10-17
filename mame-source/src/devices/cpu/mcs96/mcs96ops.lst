@@ -259,22 +259,22 @@ macro post_indexed $cycles1 $cycles2
 	next(OPI & 0x01 ? $cycles2 : $cycles1);
 
 00    skip  immed_1b
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 01    clr   direct_1w
 	reg_w16(OP1, 0x0000);
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 02    not   direct_1w
 	TMP = ~reg_r16(OP1);
 	set_nz16(TMP);
 	reg_w16(OP1, TMP);
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 03    neg   direct_1w
 	TMP = reg_r16(OP1);
 	reg_w16(OP1, do_sub(0, TMP));
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 04    xch   direct_2w
 	TMP = reg_r16(OP1);
@@ -285,7 +285,7 @@ macro post_indexed $cycles1 $cycles2
 05    dec   direct_1w
 	TMP = reg_r16(OP1);
 	reg_w16(OP1, do_sub(TMP, 1));
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 06    ext   direct_1w
 	OP1 &= 0xfc;
@@ -297,7 +297,7 @@ macro post_indexed $cycles1 $cycles2
 07    inc   direct_1w
 	TMP = reg_r16(OP1);
 	reg_w16(OP1, do_add(TMP, 1));
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 08    shr   immed_or_reg_2w
 	TMP = reg_r16(OP2);
@@ -312,7 +312,7 @@ macro post_indexed $cycles1 $cycles2
 	else if(int16_t(TMP) < 0)
 		PSW |= F_N;
 	reg_w16(OP2, TMP);
-	next(OP1 ? 7+OP1 : 8);
+	next(m_kb_mode ? (OP1 ? 6+OP1 : 7) : (OP1 ? 7+OP1 : 8));
 
 09    shl   immed_or_reg_2w
 	TMP = reg_r16(OP2);
@@ -327,7 +327,7 @@ macro post_indexed $cycles1 $cycles2
 	else if(int16_t(TMP) < 0)
 		PSW |= F_N;
 	reg_w16(OP2, TMP);
-	next(OP1 ? 7+OP1 : 8);
+	next(m_kb_mode ? (OP1 ? 6+OP1 : 7) : (OP1 ? 7+OP1 : 8));
 
 0a    shra  immed_or_reg_2w
 	TMP = reg_r16(OP2);
@@ -342,7 +342,7 @@ macro post_indexed $cycles1 $cycles2
 	else if(int16_t(TMP) < 0)
 		PSW |= F_N;
 	reg_w16(OP2, TMP);
-	next(OP1 ? 7+OP1 : 8);
+	next(m_kb_mode ? (OP1 ? 6+OP1 : 7) : (OP1 ? 7+OP1 : 8));
 
 0c    shrl  immed_or_reg_2w
 	OP2 &= 0xfc;
@@ -409,22 +409,22 @@ macro post_indexed $cycles1 $cycles2
 	reg_w8(OP1, OP3);
 	reg_w16(OP2, TMP);
 	reg_w16(OP2+2, TMP >> 16);
-	next(11+OP3);
+	next(m_kb_mode ? (OP3 ? 8+OP3 : 9) : 11+OP3);
 
 11    clrb  direct_1b
 	reg_w8(OP1, 0x00);
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 12    notb  direct_1b
 	TMP = ~reg_r8(OP1);
 	set_nz8(TMP);
 	reg_w8(OP1, TMP);
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 13    negb  direct_1b
 	TMP = reg_r8(OP1);
 	reg_w8(OP1, do_subb(0, TMP));
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 14    xchb  direct_2b
 	TMP = reg_r8(OP1);
@@ -435,7 +435,7 @@ macro post_indexed $cycles1 $cycles2
 15    decb  direct_1b
 	TMP = reg_r8(OP1);
 	reg_w8(OP1, do_subb(TMP, 1));
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 16    extb  direct_1b
 	OP1 &= 0xfe;
@@ -447,7 +447,7 @@ macro post_indexed $cycles1 $cycles2
 17    incb  direct_1b
 	TMP = reg_r8(OP1);
 	reg_w8(OP1, do_addb(TMP, 1));
-	next(4);
+	next(m_kb_mode ? 3 : 4);
 
 18    shrb  immed_or_reg_2b
 	TMP = reg_r8(OP2);
@@ -462,7 +462,7 @@ macro post_indexed $cycles1 $cycles2
 	else if(int8_t(TMP) < 0)
 		PSW |= F_N;
 	reg_w8(OP2, TMP);
-	next(OP1 ? 7+OP1 : 8);
+	next(m_kb_mode ? (OP1 ? 6+OP1 : 7) : (OP1 ? 7+OP1 : 8));
 
 19    shlb  immed_or_reg_2b
 	TMP = reg_r8(OP2);
@@ -477,7 +477,7 @@ macro post_indexed $cycles1 $cycles2
 	else if(int8_t(TMP) < 0)
 		PSW |= F_N;
 	reg_w8(OP2, TMP);
-	next(OP1 ? 7+OP1 : 8);
+	next(m_kb_mode ? (OP1 ? 6+OP1 : 7) : (OP1 ? 7+OP1 : 8));
 
 1a    shrab immed_or_reg_2b
 	TMP = reg_r8(OP2);
@@ -492,11 +492,11 @@ macro post_indexed $cycles1 $cycles2
 	else if(int8_t(TMP) < 0)
 		PSW |= F_N;
 	reg_w8(OP2, TMP);
-	next(OP1 ? 7+OP1 : 8);
+	next(m_kb_mode ? (OP1 ? 6+OP1 : 7) : (OP1 ? 7+OP1 : 8));
 
 20-27 sjmp  rel11
 	PC += OP1;
-	next(8);
+	next(m_kb_mode ? 7 : 8);
 
 28-2f scall rel11
 	TMP = reg_r16(0x18);
@@ -504,7 +504,7 @@ macro post_indexed $cycles1 $cycles2
 	reg_w16(0x18, TMP);
 	any_w16(TMP, PC);
 	PC += OP1;
-	next(13); // real is 13/16 depending on sp's position
+	next(m_kb_mode ? (TMP < 0x100 ? 11 : 13) : 13);
 
 30-37 jbc   brrel8
 	TMP = reg_r8(OP2);
@@ -1886,18 +1886,18 @@ e1    djnzw wrrel8 196
 	reg_w16(OP2, TMP);
 	if(TMP) {
 		PC += OP1;
-		next(10);
+		next(m_kb_mode ? 9 : 10);
 	} else {
-		next(6);
+		next(m_kb_mode ? 5 : 6);
 	}
 
 e3    br    indirect_1n
 	PC = OP1;
-	next(8);
+	next(m_kb_mode ? 7 : 8);
 
 e7    ljmp  rel16
 	PC += OP1;
-	next(8);
+	next(m_kb_mode ? 7 : 8);
 
 ef    lcall rel16
 	TMP = reg_r16(0x18);
@@ -1905,31 +1905,35 @@ ef    lcall rel16
 	reg_w16(0x18, TMP);
 	any_w16(TMP, PC);
 	PC += OP1;
-	next(13); // +3 for external sp
+	next(m_kb_mode ? (TMP < 0x100 ? 11 : 13) : 13);
 
 f0    ret   none
 	TMP = reg_r16(0x18);
 	reg_w16(0x18, TMP+2);
 	PC = any_r16(TMP);
-	next(12); // +4 for external sp
+	next(m_kb_mode ? (TMP < 0x100 ? 11 : 14) : 12);
 
 f2    pushf none
+ OP3 = m_kb_mode ? ((u16(reg_r16(0x18)-2) < 0x100) ? 6 : 8) : 8;
  if (m_kb_mode) kb_push_flags(false);
  else { PSW = 0; check_irq(); } // historical flat bring-up workaround
- next_noirq(8);
+ next_noirq(OP3);
 
 f3    popf none
+ OP3 = m_kb_mode ? ((u16(reg_r16(0x18)) < 0x100) ? 7 : 10) : 9;
  if (m_kb_mode) kb_pop_flags(false);
  else check_irq();
- next_noirq(9);
+ next_noirq(OP3);
 
 f4    pusha none 196
+ OP3 = m_kb_mode ? ((u16(reg_r16(0x18)-2) < 0x100 && u16(reg_r16(0x18)-4) < 0x100) ? 12 : 18) : 18;
  if (m_kb_mode) kb_push_flags(true);
- next_noirq(18);
+ next_noirq(OP3);
 
 f5    popa none 196
+ OP3 = m_kb_mode ? ((u16(reg_r16(0x18)) < 0x100 && u16(reg_r16(0x18)+2) < 0x100) ? 12 : 18) : 18;
  if (m_kb_mode) kb_pop_flags(true);
- next_noirq(18);
+ next_noirq(OP3);
 
 f6    idlpd none 196
 	next_noirq(8);
@@ -1940,32 +1944,33 @@ f7    trap  none
 	reg_w16(0x18, TMP);
 	any_w16(TMP, PC);
 	PC  = any_r16(0x2010);
-	next_noirq(21); // +3 for external sp
+	next_noirq(m_kb_mode ? (TMP < 0x100 ? 16 : 18) : 21);
 
 f8    clrc  none
 	PSW &= ~F_C;
-	next(4);
+	// Intel 80C196KB Table 3-3B: two states; retain legacy 8097 timing.
+	next(m_kb_mode ? 2 : 4);
 
 f9    setc  none
 	PSW |= F_C;
-	next(4);
+	next(m_kb_mode ? 2 : 4);
 
 fa    di    none
 	PSW &= ~F_I;
 	check_irq();
-	next_noirq(4);
+	next_noirq(m_kb_mode ? 2 : 4);
 
 fb    ei    none
 	PSW |= F_I;
 	check_irq();
-	next_noirq(4);
+	next_noirq(m_kb_mode ? 2 : 4);
 
 fc    clrvt none
 	PSW &= ~F_VT;
-	next(4);
+	next(m_kb_mode ? 2 : 4);
 
 fd    nop   none
-	next(4);
+	next(m_kb_mode ? 2 : 4);
 
 ff    rst   none
 	PC = 0x2080;

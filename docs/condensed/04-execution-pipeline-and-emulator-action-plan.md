@@ -14,16 +14,31 @@ pass. Finding133 connects an explicitly configured VST3 processor to that same
 machine for displays, timestamped note events and PCM. Ten-second fixed/varied
 wall-clock harness runs pass; callbacks do no native I/O. Unsupported native
 input rejects instead of using another core; floppy-profile plugin state now has exact cold replay acceptance. Production factory selection,
-DAW/editor acceptance, calibrated latency, sampling and full recall remain open. See [the C++ runtime](../NATIVE_CPP_RUNTIME.md)
-and [the standalone runbook](../STANDALONE_PLAYER.md).
+DAW/editor acceptance, calibrated latency, sampling and full recall remain open. See [the C++ runtime](../emulator/runtime/native-cpp-runtime.md)
+and [the standalone runbook](../emulator/guides/standalone-player.md).
 
-See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+See the [completion roadmap](../project/completion-roadmap.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
 Finding134 adds versioned native floppy-runtime checkpoints: a cold process
 replays active PCM exactly, restores refreshed CRT/LCD frames and preserves dirty
 controller media. Serial transmission in progress is covered by an additional
 replay test. This is a paused runtime boundary, not complete plugin project state.
-See [checkpoint scope](../NATIVE_CHECKPOINTS.md).
+See [checkpoint scope](../emulator/runtime/native-checkpoints.md).
+
+## Debugger fetch view — 2026-10-17
+
+BUG-085 is repaired: the native MCS96 debugger opcode space reads through the
+same board fetch callback used by execution. Debugger fetch translation selects
+that space; ordinary program-data reads retain their data selectors and low
+register mapping. Unbanked CPUs fall back to program memory. Execution fetching,
+PC advancement and fetch tracing are unchanged.
+
+An original-ROM boot regression checks divergent fetch/data selectors at the
+FDC template read: history at `4B1D` displays `ldb da, [28]+` from bytes `b2 29 da`,
+while the program-data view at the same address remains `00 00 00`. History uses
+the selectors current when it is displayed; it does not save historical bank
+selectors per entry. This is a debugger correctness result, not new CPU timing
+or physical hardware parity evidence. [Validation and identities](validation/bug085-debugger-fetch-2026-10-17.json).
 
 ## Technical reference and dated milestone history
 
@@ -299,5 +314,10 @@ commands/transfers and startup-sized media buffers. External SCSI files are
 limited to 64 MiB total and pinned to startup identities. Native cold audio and
 refreshed displays match; all-rate plugin replay passes. SCSI writeback remains
 broken (BUG-015), and actual DAW compatibility remains unqualified.
-See the [state contract](../NATIVE_PLUGIN_STATE.md) and
+See the [state contract](../emulator/runtime/native-plugin-state.md) and
 [validation](validation/native-plugin-state-2026-10-11.json).
+
+
+## Further native KB base-state repair (2026-10-16)
+
+BUG-092 fixes30 control/unary/shift/stack opcode groups against Intel270651-003 Table3.3B;42 formerly failing isolated cases become49/49passing, with39 legacy cases exact before/after. Internal fixtures use register RAM below0x100 and external fixtures use0x7000, without crossings. No full wait-state/prefetch/bus/IRQ timing claim. Both dependency and executable built,495 full tests and original-firmware native acceptance pass. BUG-093 replaces periodic transient-stage sampling in two SCSI fallback tests with direct selection observation at ordinary Exit, retaining fallback/handoff/media assertions. Firmware hashes are unchanged. Additional CPU correctness does not close BUG-005: matched frozen-model ramp means2.024%opening/1.930%closing. [Execution, source/build identities, regression and capture evidence](validation/native-kb-control-state-time-fix-2026-10-16.json).

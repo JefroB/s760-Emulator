@@ -1,0 +1,908 @@
+{
+  "date": "2026-10-15",
+  "note": 73,
+  "velocity": 127,
+  "hold_seconds": 3,
+  "release_seconds": 3,
+  "rows": [
+    {
+      "case": "moving",
+      "label": "Hardware",
+      "peak_dbfs": -25.434754046714186,
+      "clip_count": 0,
+      "duration_seconds": 5.966104166666667,
+      "held_rms_dbfs": -37.93599163123564,
+      "diagnostic_ripple_1_86hz_amplitude_db": 0.7923886690375795,
+      "diagnostic_ripple_phase_degrees": 99.35158466377469,
+      "linear_trend_db_per_second": 2.880005758880908
+    },
+    {
+      "case": "moving",
+      "label": "Native",
+      "peak_dbfs": -39.8344471389095,
+      "clip_count": 0,
+      "duration_seconds": 6.853560090702948,
+      "held_rms_dbfs": -52.226060639042714,
+      "diagnostic_ripple_1_86hz_amplitude_db": 1.3544166115496414,
+      "diagnostic_ripple_phase_degrees": -100.3865571076388,
+      "linear_trend_db_per_second": 3.0716407809802337
+    },
+    {
+      "case": "static80",
+      "label": "Hardware",
+      "peak_dbfs": -28.685851424824065,
+      "clip_count": 0,
+      "duration_seconds": 5.96575,
+      "held_rms_dbfs": -38.21998329579834,
+      "diagnostic_ripple_1_86hz_amplitude_db": 0.90835352800734,
+      "diagnostic_ripple_phase_degrees": 107.06568334913291,
+      "linear_trend_db_per_second": 0.011651808638761845
+    },
+    {
+      "case": "static80",
+      "label": "Native",
+      "peak_dbfs": -42.36425236022075,
+      "clip_count": 0,
+      "duration_seconds": 6.853560090702948,
+      "held_rms_dbfs": -52.499983724749484,
+      "diagnostic_ripple_1_86hz_amplitude_db": 1.5787026479731823,
+      "diagnostic_ripple_phase_degrees": -87.00921312535124,
+      "linear_trend_db_per_second": 0.011752668578558414
+    },
+    {
+      "case": "bypass",
+      "label": "Hardware",
+      "peak_dbfs": -12.583419775748668,
+      "clip_count": 0,
+      "duration_seconds": 5.9688125,
+      "held_rms_dbfs": -24.213227749076488,
+      "diagnostic_ripple_1_86hz_amplitude_db": 0.08585702141217909,
+      "diagnostic_ripple_phase_degrees": -38.76866477212786,
+      "linear_trend_db_per_second": -0.000990174723433311
+    },
+    {
+      "case": "bypass",
+      "label": "Native",
+      "peak_dbfs": -31.52827618267937,
+      "clip_count": 0,
+      "duration_seconds": 6.853560090702948,
+      "held_rms_dbfs": -37.99102779583117,
+      "diagnostic_ripple_1_86hz_amplitude_db": 0.08715759076924132,
+      "diagnostic_ripple_phase_degrees": 115.74992205378028,
+      "linear_trend_db_per_second": -0.0013778086152177397
+    }
+  ],
+  "archives": {
+    "s760_MIDI 73_20261015_170426.zip": "86d405065d09901f4f4f627576e30c65a372133b736942f5cc4d9048919a0714",
+    "s760_STATIC L80_20261015_173215.zip": "1400663309737cbc7a1f04d0f0bb3106b8277fcef078caed6455dd1f3dc21f17",
+    "s760_BYPASS_20261015_173238.zip": "f3b7556c7bb50c5389e238a4f61912fd89c94a8820d4adb69601f3faeb3dc6a0"
+  },
+  "limits": "Single take per case, recording gain assumed unchanged per instructions; no hardware MIDI timestamp or phase clock alignment. RMS sinusoid amplitudes describe audio, not physical cutoff or LFO modulation. Bypass RMS agreement does not establish source waveform/phase agreement. Static control is encoded with four equal TVF levels80, zero times and zero LFO depths; constant physical cutoff is inferred from this configuration, not measured bus writes. No DSP changes or new hardware requests.",
+  "integrity": [
+    {
+      "archive": "s760_MIDI 73_20261015_170426.zip",
+      "note": 73,
+      "velocity": 127,
+      "sample_rate": 48000,
+      "channels": 2,
+      "frames": 286373,
+      "finite": true,
+      "full_scale_clipping": false
+    },
+    {
+      "archive": "s760_STATIC L80_20261015_173215.zip",
+      "note": 73,
+      "velocity": 127,
+      "sample_rate": 48000,
+      "channels": 2,
+      "frames": 286356,
+      "finite": true,
+      "full_scale_clipping": false
+    },
+    {
+      "archive": "s760_BYPASS_20261015_173238.zip",
+      "note": 73,
+      "velocity": 127,
+      "sample_rate": 48000,
+      "channels": 2,
+      "frames": 286503,
+      "finite": true,
+      "full_scale_clipping": false
+    }
+  ],
+  "outcome": "Static hardware reproduces the slow ripple and native/hardware disagreement while TVF envelope is constant. The observed MIDI73 ripple cannot by itself establish moving-cutoff timing error. Bypass strongly reduces this audio-level ripple in both.",
+  "native_source_trace_facts": {
+    "pitch_word": 34716,
+    "pitch_step": 2.118896484375,
+    "measured_interpolator_upper_pitch_word": 32768,
+    "selected_interpolation_path": "linear fallback; source reconstruction is a candidate confound, not proven cause"
+  },
+  "static_transfer_diagnostic": {
+    "hardware": [
+      {
+        "hz": 22.8,
+        "observed_db": -0.057773370202733675,
+        "predicted_db": 0.010642785311015127,
+        "difference_db": -0.0684161555137488
+      },
+      {
+        "hz": 45.6,
+        "observed_db": 0.7959820222239173,
+        "predicted_db": 0.04239035447311478,
+        "difference_db": 0.7535916677508026
+      },
+      {
+        "hz": 68.4,
+        "observed_db": 0.3858305301925455,
+        "predicted_db": 0.09468322244205428,
+        "difference_db": 0.2911473077504912
+      },
+      {
+        "hz": 91.30000000000001,
+        "observed_db": 0.47671791485268555,
+        "predicted_db": 0.16688730348475334,
+        "difference_db": 0.3098306113679322
+      },
+      {
+        "hz": 114.10000000000001,
+        "observed_db": -0.0616497091402293,
+        "predicted_db": 0.2568551075053463,
+        "difference_db": -0.3185048166455756
+      },
+      {
+        "hz": 136.9,
+        "observed_db": 0.5807635054209016,
+        "predicted_db": 0.36269878385782334,
+        "difference_db": 0.21806472156307827
+      },
+      {
+        "hz": 159.70000000000002,
+        "observed_db": 0.6869887310135734,
+        "predicted_db": 0.4814398411900982,
+        "difference_db": 0.2055488898234752
+      },
+      {
+        "hz": 182.5,
+        "observed_db": 1.100119934670595,
+        "predicted_db": 0.6090765183602067,
+        "difference_db": 0.4910434163103883
+      },
+      {
+        "hz": 205.3,
+        "observed_db": 1.4599183009154837,
+        "predicted_db": 0.740352770492001,
+        "difference_db": 0.7195655304234827
+      },
+      {
+        "hz": 228.10000000000002,
+        "observed_db": 0.6478785466267154,
+        "predicted_db": 0.8685306132487964,
+        "difference_db": -0.22065206662208103
+      },
+      {
+        "hz": 251.0,
+        "observed_db": 1.124264162795249,
+        "predicted_db": 0.9856913433266135,
+        "difference_db": 0.13857281946863553
+      },
+      {
+        "hz": 273.8,
+        "observed_db": 0.963851934440199,
+        "predicted_db": 1.0806978791010886,
+        "difference_db": -0.1168459446608896
+      },
+      {
+        "hz": 296.6,
+        "observed_db": 1.3293880661639923,
+        "predicted_db": 1.142557607601372,
+        "difference_db": 0.18683045856262037
+      },
+      {
+        "hz": 319.40000000000003,
+        "observed_db": 1.3746341489870153,
+        "predicted_db": 1.1588777244564668,
+        "difference_db": 0.21575642453054855
+      },
+      {
+        "hz": 342.20000000000005,
+        "observed_db": 1.3564793558408264,
+        "predicted_db": 1.1174450333203616,
+        "difference_db": 0.23903432252046475
+      },
+      {
+        "hz": 365.0,
+        "observed_db": 1.0949482901287688,
+        "predicted_db": 1.0076327390829878,
+        "difference_db": 0.08731555104578104
+      },
+      {
+        "hz": 387.8,
+        "observed_db": 0.9250737309147418,
+        "predicted_db": 0.8219235392021617,
+        "difference_db": 0.10315019171258011
+      },
+      {
+        "hz": 410.6,
+        "observed_db": 0.5130162216523795,
+        "predicted_db": 0.5571405878471829,
+        "difference_db": -0.04412436619480342
+      },
+      {
+        "hz": 433.5,
+        "observed_db": -0.24670920823673836,
+        "predicted_db": 0.21331736514748478,
+        "difference_db": -0.46002657338422315
+      },
+      {
+        "hz": 456.3,
+        "observed_db": -0.2724648890299068,
+        "predicted_db": -0.2002993123774313,
+        "difference_db": -0.0721655766524755
+      },
+      {
+        "hz": 479.1,
+        "observed_db": -0.6500317146259043,
+        "predicted_db": -0.6754219823738843,
+        "difference_db": 0.025390267747980033
+      },
+      {
+        "hz": 501.90000000000003,
+        "observed_db": -1.127042138390066,
+        "predicted_db": -1.2005377843498644,
+        "difference_db": 0.0734956459597984
+      },
+      {
+        "hz": 524.7,
+        "observed_db": -1.5290545215473652,
+        "predicted_db": -1.7637003396803368,
+        "difference_db": 0.23464581813297158
+      },
+      {
+        "hz": 547.5,
+        "observed_db": -3.30138527996815,
+        "predicted_db": -2.35365105206169,
+        "difference_db": -0.94773422790646
+      },
+      {
+        "hz": 570.3000000000001,
+        "observed_db": -4.6502139174352095,
+        "predicted_db": -2.9605030723693275,
+        "difference_db": -1.689710845065882
+      },
+      {
+        "hz": 593.2,
+        "observed_db": -3.8741802832785917,
+        "predicted_db": -3.578741210501726,
+        "difference_db": -0.2954390727768659
+      },
+      {
+        "hz": 616.0,
+        "observed_db": -3.8318644794871566,
+        "predicted_db": -4.196395454516409,
+        "difference_db": 0.3645309750292527
+      },
+      {
+        "hz": 636.9000000000001,
+        "observed_db": -4.356675444146962,
+        "predicted_db": -4.7601108766996845,
+        "difference_db": 0.4034354325527225
+      },
+      {
+        "hz": 661.6,
+        "observed_db": -5.2343195580384645,
+        "predicted_db": -5.419209499032246,
+        "difference_db": 0.18488994099378164
+      },
+      {
+        "hz": 684.4000000000001,
+        "observed_db": -6.127762483570487,
+        "predicted_db": -6.017960586815887,
+        "difference_db": -0.10980189675460039
+      },
+      {
+        "hz": 707.2,
+        "observed_db": -6.596910941984327,
+        "predicted_db": -6.605533262746357,
+        "difference_db": 0.008622320762030178
+      },
+      {
+        "hz": 731.9000000000001,
+        "observed_db": -7.2531618510195015,
+        "predicted_db": -7.228064985382963,
+        "difference_db": -0.0250968656365389
+      },
+      {
+        "hz": 752.9000000000001,
+        "observed_db": -7.795656097411553,
+        "predicted_db": -7.7452224778524155,
+        "difference_db": -0.05043361955913728
+      },
+      {
+        "hz": 775.7,
+        "observed_db": -8.12538173968431,
+        "predicted_db": -8.293747309854238,
+        "difference_db": 0.1683655701699287
+      },
+      {
+        "hz": 798.5,
+        "observed_db": -8.830693224456951,
+        "predicted_db": -8.82868047356413,
+        "difference_db": -0.002012750892820492
+      },
+      {
+        "hz": 821.3000000000001,
+        "observed_db": -9.121516333141845,
+        "predicted_db": -9.350104125773695,
+        "difference_db": 0.22858779263185092
+      },
+      {
+        "hz": 844.1,
+        "observed_db": -9.406392616630686,
+        "predicted_db": -9.858233133944132,
+        "difference_db": 0.4518405173134461
+      },
+      {
+        "hz": 866.9000000000001,
+        "observed_db": -10.114299770359676,
+        "predicted_db": -10.353373522901858,
+        "difference_db": 0.23907375254218266
+      },
+      {
+        "hz": 889.7,
+        "observed_db": -11.064232723851415,
+        "predicted_db": -10.835891607868637,
+        "difference_db": -0.2283411159827775
+      },
+      {
+        "hz": 912.6,
+        "observed_db": -11.540390908217738,
+        "predicted_db": -11.308227660044693,
+        "difference_db": -0.23216324817304468
+      },
+      {
+        "hz": 935.4000000000001,
+        "observed_db": -11.818737676620572,
+        "predicted_db": -11.766682778156623,
+        "difference_db": -0.05205489846394862
+      },
+      {
+        "hz": 958.2,
+        "observed_db": -12.25643232953868,
+        "predicted_db": -12.213779602931309,
+        "difference_db": -0.042652726607370184
+      },
+      {
+        "hz": 979.1,
+        "observed_db": -12.550004935839059,
+        "predicted_db": -12.614010892948034,
+        "difference_db": 0.06400595710897505
+      },
+      {
+        "hz": 1003.8000000000001,
+        "observed_db": -12.813197405994025,
+        "predicted_db": -13.075627118378401,
+        "difference_db": 0.2624297123843764
+      },
+      {
+        "hz": 1026.6000000000001,
+        "observed_db": -13.230037864291152,
+        "predicted_db": -13.491223062966233,
+        "difference_db": 0.26118519867508105
+      },
+      {
+        "hz": 1049.4,
+        "observed_db": -13.891259119463776,
+        "predicted_db": -13.897144207350802,
+        "difference_db": 0.005885087887026685
+      },
+      {
+        "hz": 1072.2,
+        "observed_db": -14.228469911936497,
+        "predicted_db": -14.293780350598237,
+        "difference_db": 0.06531043866174002
+      },
+      {
+        "hz": 1095.1000000000001,
+        "observed_db": -14.584653509301704,
+        "predicted_db": -14.683186953568107,
+        "difference_db": 0.09853344426640298
+      },
+      {
+        "hz": 1117.9,
+        "observed_db": -14.64910837958471,
+        "predicted_db": -15.062322089063429,
+        "difference_db": 0.41321370947871827
+      },
+      {
+        "hz": 1140.7,
+        "observed_db": -15.713162075986952,
+        "predicted_db": -15.43324678818358,
+        "difference_db": -0.27991528780337305
+      },
+      {
+        "hz": 1163.5,
+        "observed_db": -15.72099547548326,
+        "predicted_db": -15.796286168183709,
+        "difference_db": 0.07529069270044886
+      },
+      {
+        "hz": 1186.3,
+        "observed_db": -15.63772441262218,
+        "predicted_db": -16.15174955233418,
+        "difference_db": 0.5140251397120004
+      },
+      {
+        "hz": 1209.1000000000001,
+        "observed_db": -16.507109810248586,
+        "predicted_db": -16.49993098259308,
+        "difference_db": -0.007178827655504705
+      },
+      {
+        "hz": 1231.9,
+        "observed_db": -16.990557688182513,
+        "predicted_db": -16.841109815871185,
+        "difference_db": -0.1494478723113275
+      },
+      {
+        "hz": 1254.8000000000002,
+        "observed_db": -17.700573383608358,
+        "predicted_db": -17.17700375452826,
+        "difference_db": -0.5235696290800966
+      },
+      {
+        "hz": 1277.6000000000001,
+        "observed_db": -17.257176862785247,
+        "predicted_db": -17.504932068250692,
+        "difference_db": 0.24775520546544527
+      },
+      {
+        "hz": 1300.4,
+        "observed_db": -17.631448788407894,
+        "predicted_db": -17.82661532728226,
+        "difference_db": 0.1951665388743642
+      },
+      {
+        "hz": 1323.2,
+        "observed_db": -18.328897463852137,
+        "predicted_db": -18.14228071098434,
+        "difference_db": -0.18661675286779555
+      },
+      {
+        "hz": 1346.0,
+        "observed_db": -19.84163330954608,
+        "predicted_db": -18.452144031528405,
+        "difference_db": -1.389489278017674
+      },
+      {
+        "hz": 1368.8000000000002,
+        "observed_db": -19.452134698221496,
+        "predicted_db": -18.756410365911172,
+        "difference_db": -0.6957243323103235
+      },
+      {
+        "hz": 1391.6000000000001,
+        "observed_db": -19.081349230778454,
+        "predicted_db": -19.055274662257453,
+        "difference_db": -0.02607456852100043
+      },
+      {
+        "hz": 1414.5,
+        "observed_db": -19.420090812627258,
+        "predicted_db": -19.350199018959856,
+        "difference_db": -0.06989179366740217
+      },
+      {
+        "hz": 1437.3000000000002,
+        "observed_db": -19.6076388498142,
+        "predicted_db": -19.63878469954708,
+        "difference_db": 0.031145849732880038
+      },
+      {
+        "hz": 1460.1000000000001,
+        "observed_db": -19.746163399369077,
+        "predicted_db": -19.922498767414368,
+        "difference_db": 0.17633536804529015
+      },
+      {
+        "hz": 1482.9,
+        "observed_db": -20.458871310820147,
+        "predicted_db": -20.20150110974049,
+        "difference_db": -0.2573702010796559
+      }
+    ],
+    "native": [
+      {
+        "hz": 22.8,
+        "observed_db": 0.010653084714083709,
+        "predicted_db": 0.010642785311015127,
+        "difference_db": 1.0299403068582055e-05
+      },
+      {
+        "hz": 47.5,
+        "observed_db": 0.04310258955641004,
+        "predicted_db": 0.045973994224131856,
+        "difference_db": -0.0028714046677218164
+      },
+      {
+        "hz": 68.4,
+        "observed_db": 0.09550593372446572,
+        "predicted_db": 0.09468322244205428,
+        "difference_db": 0.0008227112824114452
+      },
+      {
+        "hz": 91.30000000000001,
+        "observed_db": 0.16616235036909427,
+        "predicted_db": 0.16688730348475334,
+        "difference_db": -0.0007249531156590661
+      },
+      {
+        "hz": 115.9,
+        "observed_db": 0.2583247223950288,
+        "predicted_db": 0.26466730250349946,
+        "difference_db": -0.0063425801084706634
+      },
+      {
+        "hz": 136.9,
+        "observed_db": 0.3620940123720415,
+        "predicted_db": 0.36269878385782334,
+        "difference_db": -0.0006047714857818631
+      },
+      {
+        "hz": 159.70000000000002,
+        "observed_db": 0.4817966024933396,
+        "predicted_db": 0.4814398411900982,
+        "difference_db": 0.0003567613032414152
+      },
+      {
+        "hz": 182.5,
+        "observed_db": 0.6128252157644061,
+        "predicted_db": 0.6090765183602067,
+        "difference_db": 0.0037486974041993637
+      },
+      {
+        "hz": 203.5,
+        "observed_db": 0.7310829940118456,
+        "predicted_db": 0.7300033435781651,
+        "difference_db": 0.0010796504336805235
+      },
+      {
+        "hz": 228.10000000000002,
+        "observed_db": 0.8677479654483465,
+        "predicted_db": 0.8685306132487964,
+        "difference_db": -0.0007826478004498982
+      },
+      {
+        "hz": 249.10000000000002,
+        "observed_db": 0.981439462103741,
+        "predicted_db": 0.9766489398361734,
+        "difference_db": 0.0047905222675675985
+      },
+      {
+        "hz": 273.8,
+        "observed_db": 1.080708430445836,
+        "predicted_db": 1.0806978791010886,
+        "difference_db": 1.0551344747478097e-05
+      },
+      {
+        "hz": 296.6,
+        "observed_db": 1.1419712064738212,
+        "predicted_db": 1.142557607601372,
+        "difference_db": -0.0005864011275507064
+      },
+      {
+        "hz": 319.40000000000003,
+        "observed_db": 1.1588083405690943,
+        "predicted_db": 1.1588777244564668,
+        "difference_db": -6.938388737243173e-05
+      },
+      {
+        "hz": 342.20000000000005,
+        "observed_db": 1.1173950404599193,
+        "predicted_db": 1.1174450333203616,
+        "difference_db": -4.999286044227169e-05
+      },
+      {
+        "hz": 365.0,
+        "observed_db": 1.006891216914621,
+        "predicted_db": 1.0076327390829878,
+        "difference_db": -0.0007415221683668705
+      },
+      {
+        "hz": 389.70000000000005,
+        "observed_db": 0.8146482418164359,
+        "predicted_db": 0.8028875034273758,
+        "difference_db": 0.01176073838906011
+      },
+      {
+        "hz": 410.6,
+        "observed_db": 0.5580336630172017,
+        "predicted_db": 0.5571405878471829,
+        "difference_db": 0.0008930751700187978
+      },
+      {
+        "hz": 433.5,
+        "observed_db": 0.21171804345408232,
+        "predicted_db": 0.21331736514748478,
+        "difference_db": -0.0015993216934024612
+      },
+      {
+        "hz": 456.3,
+        "observed_db": -0.20662825992427344,
+        "predicted_db": -0.2002993123774313,
+        "difference_db": -0.006328947546842156
+      },
+      {
+        "hz": 479.1,
+        "observed_db": -0.6849060130533929,
+        "predicted_db": -0.6754219823738843,
+        "difference_db": -0.009484030679508648
+      },
+      {
+        "hz": 501.90000000000003,
+        "observed_db": -1.2116544065265757,
+        "predicted_db": -1.2005377843498644,
+        "difference_db": -0.011116622176711388
+      },
+      {
+        "hz": 524.7,
+        "observed_db": -1.7714095641585417,
+        "predicted_db": -1.7637003396803368,
+        "difference_db": -0.007709224478204879
+      },
+      {
+        "hz": 549.4,
+        "observed_db": -2.37787316628161,
+        "predicted_db": -2.403701266133857,
+        "difference_db": 0.0258280998522471
+      },
+      {
+        "hz": 572.2,
+        "observed_db": -2.9915679163513396,
+        "predicted_db": -3.0115669054145484,
+        "difference_db": 0.01999898906320885
+      },
+      {
+        "hz": 593.1,
+        "observed_db": -3.5802481463448537,
+        "predicted_db": -3.5760326325002096,
+        "difference_db": -0.0042155138446440255
+      },
+      {
+        "hz": 616.0,
+        "observed_db": -4.19581428139306,
+        "predicted_db": -4.196395454516409,
+        "difference_db": 0.0005811731233489326
+      },
+      {
+        "hz": 636.9000000000001,
+        "observed_db": -4.77906923377173,
+        "predicted_db": -4.7601108766996845,
+        "difference_db": -0.018958357072045295
+      },
+      {
+        "hz": 661.6,
+        "observed_db": -5.416002773873324,
+        "predicted_db": -5.419209499032246,
+        "difference_db": 0.0032067251589218415
+      },
+      {
+        "hz": 684.4000000000001,
+        "observed_db": -6.024421345765829,
+        "predicted_db": -6.017960586815887,
+        "difference_db": -0.006460758949941692
+      },
+      {
+        "hz": 709.1,
+        "observed_db": -6.628734420832616,
+        "predicted_db": -6.653951303503794,
+        "difference_db": 0.025216882671177387
+      },
+      {
+        "hz": 731.9000000000001,
+        "observed_db": -7.190178065598452,
+        "predicted_db": -7.228064985382963,
+        "difference_db": 0.0378869197845102
+      },
+      {
+        "hz": 752.8000000000001,
+        "observed_db": -7.742310471627096,
+        "predicted_db": -7.742786802635623,
+        "difference_db": 0.0004763310085262873
+      },
+      {
+        "hz": 775.7,
+        "observed_db": -8.296109572511856,
+        "predicted_db": -8.293747309854238,
+        "difference_db": -0.002362262657618075
+      },
+      {
+        "hz": 798.5,
+        "observed_db": -8.831554137955147,
+        "predicted_db": -8.82868047356413,
+        "difference_db": -0.0028736643910161064
+      },
+      {
+        "hz": 821.3000000000001,
+        "observed_db": -9.347386433493051,
+        "predicted_db": -9.350104125773695,
+        "difference_db": 0.002717692280644002
+      },
+      {
+        "hz": 842.2,
+        "observed_db": -9.844631548446866,
+        "predicted_db": -9.816389835113362,
+        "difference_db": -0.028241713333503782
+      },
+      {
+        "hz": 866.9000000000001,
+        "observed_db": -10.352993852595793,
+        "predicted_db": -10.353373522901858,
+        "difference_db": 0.0003796703060654494
+      },
+      {
+        "hz": 889.7,
+        "observed_db": -10.847231542443165,
+        "predicted_db": -10.835891607868637,
+        "difference_db": -0.011339934574527533
+      },
+      {
+        "hz": 912.5,
+        "observed_db": -11.306027883447667,
+        "predicted_db": -11.306191234446123,
+        "difference_db": 0.00016335099845576906
+      },
+      {
+        "hz": 935.3000000000001,
+        "observed_db": -11.764124074239286,
+        "predicted_db": -11.76469712740145,
+        "difference_db": 0.0005730531621637169
+      },
+      {
+        "hz": 958.2,
+        "observed_db": -12.21092386614955,
+        "predicted_db": -12.213779602931309,
+        "difference_db": 0.0028557367817594326
+      },
+      {
+        "hz": 979.1,
+        "observed_db": -12.643761035280455,
+        "predicted_db": -12.614010892948034,
+        "difference_db": -0.029750142332421348
+      },
+      {
+        "hz": 1003.8000000000001,
+        "observed_db": -13.072650546379867,
+        "predicted_db": -13.075627118378401,
+        "difference_db": 0.002976571998534183
+      },
+      {
+        "hz": 1028.5,
+        "observed_db": -13.507526021496082,
+        "predicted_db": -13.525413871071319,
+        "difference_db": 0.017887849575236814
+      },
+      {
+        "hz": 1051.3,
+        "observed_db": -13.90797933582082,
+        "predicted_db": -13.93054658995366,
+        "difference_db": 0.02256725413284144
+      },
+      {
+        "hz": 1072.2,
+        "observed_db": -14.301938947667036,
+        "predicted_db": -14.293780350598237,
+        "difference_db": -0.008158597068799622
+      },
+      {
+        "hz": 1095.0,
+        "observed_db": -14.67225760985439,
+        "predicted_db": -14.681505499582379,
+        "difference_db": 0.009247889727989289
+      },
+      {
+        "hz": 1116.0,
+        "observed_db": -15.051548224202831,
+        "predicted_db": -15.03104568703639,
+        "difference_db": -0.02050253716644157
+      },
+      {
+        "hz": 1142.5,
+        "observed_db": -15.446997229963737,
+        "predicted_db": -15.462190338444978,
+        "difference_db": 0.01519310848124178
+      },
+      {
+        "hz": 1163.5,
+        "observed_db": -15.801839494334027,
+        "predicted_db": -15.796286168183709,
+        "difference_db": -0.005553326150318227
+      },
+      {
+        "hz": 1184.4,
+        "observed_db": -16.141243015500248,
+        "predicted_db": -16.122409690617054,
+        "difference_db": -0.018833324883193114
+      },
+      {
+        "hz": 1209.1000000000001,
+        "observed_db": -16.500261882711598,
+        "predicted_db": -16.49993098259308,
+        "difference_db": -0.00033090011851655277
+      },
+      {
+        "hz": 1231.9,
+        "observed_db": -16.84404168822391,
+        "predicted_db": -16.841109815871185,
+        "difference_db": -0.0029318723527254065
+      },
+      {
+        "hz": 1254.7,
+        "observed_db": -17.18125814309258,
+        "predicted_db": -17.175551369625584,
+        "difference_db": -0.005706773466997106
+      },
+      {
+        "hz": 1277.5,
+        "observed_db": -17.50344204523831,
+        "predicted_db": -17.503507591771065,
+        "difference_db": 6.554653275614442e-05
+      },
+      {
+        "hz": 1300.4,
+        "observed_db": -17.822959090341396,
+        "predicted_db": -17.82661532728226,
+        "difference_db": 0.0036562369408628115
+      },
+      {
+        "hz": 1323.2,
+        "observed_db": -18.142768875800574,
+        "predicted_db": -18.14228071098434,
+        "difference_db": -0.00048816481623248364
+      },
+      {
+        "hz": 1346.0,
+        "observed_db": -18.45049732989813,
+        "predicted_db": -18.452144031528405,
+        "difference_db": 0.001646701630274805
+      },
+      {
+        "hz": 1366.9,
+        "observed_db": -18.743365079578652,
+        "predicted_db": -18.731263790025032,
+        "difference_db": -0.012101289553619665
+      },
+      {
+        "hz": 1391.6000000000001,
+        "observed_db": -19.05500287157799,
+        "predicted_db": -19.055274662257453,
+        "difference_db": 0.00027179067946292434
+      },
+      {
+        "hz": 1414.4,
+        "observed_db": -19.34742905660422,
+        "predicted_db": -19.348922318053123,
+        "difference_db": 0.0014932614489033824
+      },
+      {
+        "hz": 1437.2,
+        "observed_db": -19.642750155489928,
+        "predicted_db": -19.637529729113826,
+        "difference_db": -0.005220426376101983
+      },
+      {
+        "hz": 1458.2,
+        "observed_db": -19.91102445200333,
+        "predicted_db": -19.899038044408258,
+        "difference_db": -0.011986407595070858
+      },
+      {
+        "hz": 1482.9,
+        "observed_db": -20.199868206485093,
+        "predicted_db": -20.20150110974049,
+        "difference_db": 0.0016329032553983325
+      }
+    ],
+    "method": "Hann power spectra0.2..2.7s; independently selected source peaks below1500Hz, integrate +/-4Hz bands. Compare static/bypass power ratio with unchanged LP coefficient1040/16384 and damping4095/4096.",
+    "status": "Exploratory only; no fitted gain/time-warp, no independent validation. Band ratios have window/interference sensitivity and are not a waveform accuracy gate."
+  }
+}

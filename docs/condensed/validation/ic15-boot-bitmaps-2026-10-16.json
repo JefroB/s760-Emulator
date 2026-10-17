@@ -1,0 +1,977 @@
+{
+  "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "manifest_sha256": "95bbf0d21f866545ef2ce7242074f4dc10ff29bd6689d63e2da87bb7accb90c3",
+  "qualification": "Static byte checks and consumer-derived bounds; MSB-first rendering inspected locally. No physical-screen parity claim. Declared data010C=0798 condition applies.",
+  "anchors": [
+    {
+      "region": "rom_boot_services",
+      "pc": 18284,
+      "page": 1936,
+      "file_offset": 18284,
+      "bytes": "a10680e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8006"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18288,
+      "page": 1936,
+      "file_offset": 18288,
+      "bytes": "0148",
+      "mnemonic": "CLR",
+      "operands": "RW48"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18290,
+      "page": 1936,
+      "file_offset": 18290,
+      "bytes": "014a",
+      "mnemonic": "CLR",
+      "operands": "RW4A"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18292,
+      "page": 1936,
+      "file_offset": 18292,
+      "bytes": "efbbee",
+      "mnemonic": "LCALL",
+      "operands": "0x3632"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18295,
+      "page": 1936,
+      "file_offset": 18295,
+      "bytes": "a18882e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8288"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18299,
+      "page": 1936,
+      "file_offset": 18299,
+      "bytes": "a15a0048",
+      "mnemonic": "LD",
+      "operands": "RW48, #0x5a"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18303,
+      "page": 1936,
+      "file_offset": 18303,
+      "bytes": "a106004a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x6"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18307,
+      "page": 1936,
+      "file_offset": 18307,
+      "bytes": "efacee",
+      "mnemonic": "LCALL",
+      "operands": "0x3632"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18310,
+      "page": 1936,
+      "file_offset": 18310,
+      "bytes": "a10881e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8108"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18314,
+      "page": 1936,
+      "file_offset": 18314,
+      "bytes": "0148",
+      "mnemonic": "CLR",
+      "operands": "RW48"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18316,
+      "page": 1936,
+      "file_offset": 18316,
+      "bytes": "a120004a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x20"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18320,
+      "page": 1936,
+      "file_offset": 18320,
+      "bytes": "ef9fee",
+      "mnemonic": "LCALL",
+      "operands": "0x3632"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18323,
+      "page": 1936,
+      "file_offset": 18323,
+      "bytes": "a17282e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8272"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18327,
+      "page": 1936,
+      "file_offset": 18327,
+      "bytes": "0148",
+      "mnemonic": "CLR",
+      "operands": "RW48"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18329,
+      "page": 1936,
+      "file_offset": 18329,
+      "bytes": "a132004a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x32"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18333,
+      "page": 1936,
+      "file_offset": 18333,
+      "bytes": "ef92ee",
+      "mnemonic": "LCALL",
+      "operands": "0x3632"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18336,
+      "page": 1936,
+      "file_offset": 18336,
+      "bytes": "a10881e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8108"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18340,
+      "page": 1936,
+      "file_offset": 18340,
+      "bytes": "a1520048",
+      "mnemonic": "LD",
+      "operands": "RW48, #0x52"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18344,
+      "page": 1936,
+      "file_offset": 18344,
+      "bytes": "a10c004a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0xc"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18348,
+      "page": 1936,
+      "file_offset": 18348,
+      "bytes": "b1804e",
+      "mnemonic": "LDB",
+      "operands": "R4E, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18351,
+      "page": 1936,
+      "file_offset": 18351,
+      "bytes": "ef2bf4",
+      "mnemonic": "LCALL",
+      "operands": "0x3bdd"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18354,
+      "page": 1936,
+      "file_offset": 18354,
+      "bytes": "a10881e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8108"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18358,
+      "page": 1936,
+      "file_offset": 18358,
+      "bytes": "a1500048",
+      "mnemonic": "LD",
+      "operands": "RW48, #0x50"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18362,
+      "page": 1936,
+      "file_offset": 18362,
+      "bytes": "a10a004a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0xa"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18366,
+      "page": 1936,
+      "file_offset": 18366,
+      "bytes": "b1f04e",
+      "mnemonic": "LDB",
+      "operands": "R4E, #-0x10"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18369,
+      "page": 1936,
+      "file_offset": 18369,
+      "bytes": "ef19f4",
+      "mnemonic": "LCALL",
+      "operands": "0x3bdd"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18372,
+      "page": 1936,
+      "file_offset": 18372,
+      "bytes": "a18882e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8288"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18376,
+      "page": 1936,
+      "file_offset": 18376,
+      "bytes": "a18e0048",
+      "mnemonic": "LD",
+      "operands": "RW48, #0x8e"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18380,
+      "page": 1936,
+      "file_offset": 18380,
+      "bytes": "a122004a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x22"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18384,
+      "page": 1936,
+      "file_offset": 18384,
+      "bytes": "b1804e",
+      "mnemonic": "LDB",
+      "operands": "R4E, #-0x80"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18387,
+      "page": 1936,
+      "file_offset": 18387,
+      "bytes": "ef07f4",
+      "mnemonic": "LCALL",
+      "operands": "0x3bdd"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18390,
+      "page": 1936,
+      "file_offset": 18390,
+      "bytes": "a18882e2",
+      "mnemonic": "LD",
+      "operands": "RWE2, #0x8288"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18394,
+      "page": 1936,
+      "file_offset": 18394,
+      "bytes": "a18c0048",
+      "mnemonic": "LD",
+      "operands": "RW48, #0x8c"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18398,
+      "page": 1936,
+      "file_offset": 18398,
+      "bytes": "a120004a",
+      "mnemonic": "LD",
+      "operands": "RW4A, #0x20"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18402,
+      "page": 1936,
+      "file_offset": 18402,
+      "bytes": "b1b04e",
+      "mnemonic": "LDB",
+      "operands": "R4E, #-0x50"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18405,
+      "page": 1936,
+      "file_offset": 18405,
+      "bytes": "eff5f3",
+      "mnemonic": "LCALL",
+      "operands": "0x3bdd"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13874,
+      "page": 1920,
+      "file_offset": 13874,
+      "bytes": "b2e321",
+      "mnemonic": "LDB",
+      "operands": "R21, [RWE2]+"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13877,
+      "page": 1920,
+      "file_offset": 13877,
+      "bytes": "b2e320",
+      "mnemonic": "LDB",
+      "operands": "R20, [RWE2]+"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13880,
+      "page": 1920,
+      "file_offset": 13880,
+      "bytes": "a04824",
+      "mnemonic": "LD",
+      "operands": "RW24, RW48"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13883,
+      "page": 1920,
+      "file_offset": 13883,
+      "bytes": "a04a26",
+      "mnemonic": "LD",
+      "operands": "RW26, RW4A"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13886,
+      "page": 1920,
+      "file_offset": 13886,
+      "bytes": "b02040",
+      "mnemonic": "LDB",
+      "operands": "R40, R20"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13889,
+      "page": 1920,
+      "file_offset": 13889,
+      "bytes": "a024f6",
+      "mnemonic": "LD",
+      "operands": "RWF6, RW24"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13892,
+      "page": 1920,
+      "file_offset": 13892,
+      "bytes": "a026f8",
+      "mnemonic": "LD",
+      "operands": "RWF8, RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13895,
+      "page": 1920,
+      "file_offset": 13895,
+      "bytes": "b02141",
+      "mnemonic": "LDB",
+      "operands": "R41, R21"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13898,
+      "page": 1920,
+      "file_offset": 13898,
+      "bytes": "b2e322",
+      "mnemonic": "LDB",
+      "operands": "R22, [RWE2]+"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13901,
+      "page": 1920,
+      "file_offset": 13901,
+      "bytes": "b10823",
+      "mnemonic": "LDB",
+      "operands": "R23, #0x8"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13904,
+      "page": 1920,
+      "file_offset": 13904,
+      "bytes": "372205",
+      "mnemonic": "JBC",
+      "operands": "R22, 0x7, 0x3658"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13907,
+      "page": 1920,
+      "file_offset": 13907,
+      "bytes": "b100e1",
+      "mnemonic": "LDB",
+      "operands": "RE1, #0x0"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13910,
+      "page": 1920,
+      "file_offset": 13910,
+      "bytes": "2003",
+      "mnemonic": "SJMP",
+      "operands": "0x365b"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13912,
+      "page": 1920,
+      "file_offset": 13912,
+      "bytes": "b101e1",
+      "mnemonic": "LDB",
+      "operands": "RE1, #0x1"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13915,
+      "page": 1920,
+      "file_offset": 13915,
+      "bytes": "c820",
+      "mnemonic": "PUSH",
+      "operands": "RW20"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13917,
+      "page": 1920,
+      "file_offset": 13917,
+      "bytes": "c822",
+      "mnemonic": "PUSH",
+      "operands": "RW22"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13919,
+      "page": 1920,
+      "file_offset": 13919,
+      "bytes": "c824",
+      "mnemonic": "PUSH",
+      "operands": "RW24"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13921,
+      "page": 1920,
+      "file_offset": 13921,
+      "bytes": "c826",
+      "mnemonic": "PUSH",
+      "operands": "RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13923,
+      "page": 1920,
+      "file_offset": 13923,
+      "bytes": "c840",
+      "mnemonic": "PUSH",
+      "operands": "RW40"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13925,
+      "page": 1920,
+      "file_offset": 13925,
+      "bytes": "ef48fa",
+      "mnemonic": "LCALL",
+      "operands": "0x30b0"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13928,
+      "page": 1920,
+      "file_offset": 13928,
+      "bytes": "cc40",
+      "mnemonic": "POP",
+      "operands": "RW40"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13930,
+      "page": 1920,
+      "file_offset": 13930,
+      "bytes": "cc26",
+      "mnemonic": "POP",
+      "operands": "RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13932,
+      "page": 1920,
+      "file_offset": 13932,
+      "bytes": "cc24",
+      "mnemonic": "POP",
+      "operands": "RW24"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13934,
+      "page": 1920,
+      "file_offset": 13934,
+      "bytes": "cc22",
+      "mnemonic": "POP",
+      "operands": "RW22"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13936,
+      "page": 1920,
+      "file_offset": 13936,
+      "bytes": "cc20",
+      "mnemonic": "POP",
+      "operands": "RW20"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13938,
+      "page": 1920,
+      "file_offset": 13938,
+      "bytes": "07f6",
+      "mnemonic": "INC",
+      "operands": "RWF6"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13940,
+      "page": 1920,
+      "file_offset": 13940,
+      "bytes": "190122",
+      "mnemonic": "SHLB",
+      "operands": "R22, #0x1"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13943,
+      "page": 1920,
+      "file_offset": 13943,
+      "bytes": "e023d6",
+      "mnemonic": "DJNZ",
+      "operands": "R23, 0x3650"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13946,
+      "page": 1920,
+      "file_offset": 13946,
+      "bytes": "e041cd",
+      "mnemonic": "DJNZ",
+      "operands": "R41, 0x364a"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13949,
+      "page": 1920,
+      "file_offset": 13949,
+      "bytes": "0726",
+      "mnemonic": "INC",
+      "operands": "RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13951,
+      "page": 1920,
+      "file_offset": 13951,
+      "bytes": "e040bf",
+      "mnemonic": "DJNZ",
+      "operands": "R40, 0x3641"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 13954,
+      "page": 1920,
+      "file_offset": 13954,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15325,
+      "page": 1920,
+      "file_offset": 15325,
+      "bytes": "9b012f4d00",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x4d2f, LOOKUP[ZR]"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15330,
+      "page": 1920,
+      "file_offset": 15330,
+      "bytes": "d701",
+      "mnemonic": "JNE",
+      "operands": "0x3be5"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15332,
+      "page": 1920,
+      "file_offset": 15332,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15333,
+      "page": 1920,
+      "file_offset": 15333,
+      "bytes": "b2e321",
+      "mnemonic": "LDB",
+      "operands": "R21, [RWE2]+"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15336,
+      "page": 1920,
+      "file_offset": 15336,
+      "bytes": "b2e320",
+      "mnemonic": "LDB",
+      "operands": "R20, [RWE2]+"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15339,
+      "page": 1920,
+      "file_offset": 15339,
+      "bytes": "a04824",
+      "mnemonic": "LD",
+      "operands": "RW24, RW48"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15342,
+      "page": 1920,
+      "file_offset": 15342,
+      "bytes": "a04a26",
+      "mnemonic": "LD",
+      "operands": "RW26, RW4A"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15345,
+      "page": 1920,
+      "file_offset": 15345,
+      "bytes": "b04e22",
+      "mnemonic": "LDB",
+      "operands": "R22, R4E"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15348,
+      "page": 1920,
+      "file_offset": 15348,
+      "bytes": "b02040",
+      "mnemonic": "LDB",
+      "operands": "R40, R20"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15351,
+      "page": 1920,
+      "file_offset": 15351,
+      "bytes": "a024f6",
+      "mnemonic": "LD",
+      "operands": "RWF6, RW24"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15354,
+      "page": 1920,
+      "file_offset": 15354,
+      "bytes": "a026f8",
+      "mnemonic": "LD",
+      "operands": "RWF8, RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15357,
+      "page": 1920,
+      "file_offset": 15357,
+      "bytes": "b02141",
+      "mnemonic": "LDB",
+      "operands": "R41, R21"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15360,
+      "page": 1920,
+      "file_offset": 15360,
+      "bytes": "b2e3da",
+      "mnemonic": "LDB",
+      "operands": "RDA, [RWE2]+"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15363,
+      "page": 1920,
+      "file_offset": 15363,
+      "bytes": "b10823",
+      "mnemonic": "LDB",
+      "operands": "R23, #0x8"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15366,
+      "page": 1920,
+      "file_offset": 15366,
+      "bytes": "37da1e",
+      "mnemonic": "JBC",
+      "operands": "RDA, 0x7, 0x3c27"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15369,
+      "page": 1920,
+      "file_offset": 15369,
+      "bytes": "b022e1",
+      "mnemonic": "LDB",
+      "operands": "RE1, R22"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15372,
+      "page": 1920,
+      "file_offset": 15372,
+      "bytes": "c8da",
+      "mnemonic": "PUSH",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15374,
+      "page": 1920,
+      "file_offset": 15374,
+      "bytes": "c820",
+      "mnemonic": "PUSH",
+      "operands": "RW20"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15376,
+      "page": 1920,
+      "file_offset": 15376,
+      "bytes": "c822",
+      "mnemonic": "PUSH",
+      "operands": "RW22"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15378,
+      "page": 1920,
+      "file_offset": 15378,
+      "bytes": "c824",
+      "mnemonic": "PUSH",
+      "operands": "RW24"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15380,
+      "page": 1920,
+      "file_offset": 15380,
+      "bytes": "c826",
+      "mnemonic": "PUSH",
+      "operands": "RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15382,
+      "page": 1920,
+      "file_offset": 15382,
+      "bytes": "c840",
+      "mnemonic": "PUSH",
+      "operands": "RW40"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15384,
+      "page": 1920,
+      "file_offset": 15384,
+      "bytes": "efe4fd",
+      "mnemonic": "LCALL",
+      "operands": "0x39ff"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15387,
+      "page": 1920,
+      "file_offset": 15387,
+      "bytes": "cc40",
+      "mnemonic": "POP",
+      "operands": "RW40"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15389,
+      "page": 1920,
+      "file_offset": 15389,
+      "bytes": "cc26",
+      "mnemonic": "POP",
+      "operands": "RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15391,
+      "page": 1920,
+      "file_offset": 15391,
+      "bytes": "cc24",
+      "mnemonic": "POP",
+      "operands": "RW24"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15393,
+      "page": 1920,
+      "file_offset": 15393,
+      "bytes": "cc22",
+      "mnemonic": "POP",
+      "operands": "RW22"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15395,
+      "page": 1920,
+      "file_offset": 15395,
+      "bytes": "cc20",
+      "mnemonic": "POP",
+      "operands": "RW20"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15397,
+      "page": 1920,
+      "file_offset": 15397,
+      "bytes": "ccda",
+      "mnemonic": "POP",
+      "operands": "RWDA"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15399,
+      "page": 1920,
+      "file_offset": 15399,
+      "bytes": "07f6",
+      "mnemonic": "INC",
+      "operands": "RWF6"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15401,
+      "page": 1920,
+      "file_offset": 15401,
+      "bytes": "1901da",
+      "mnemonic": "SHLB",
+      "operands": "RDA, #0x1"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15404,
+      "page": 1920,
+      "file_offset": 15404,
+      "bytes": "e023d7",
+      "mnemonic": "DJNZ",
+      "operands": "R23, 0x3c06"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15407,
+      "page": 1920,
+      "file_offset": 15407,
+      "bytes": "e041ce",
+      "mnemonic": "DJNZ",
+      "operands": "R41, 0x3c00"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15410,
+      "page": 1920,
+      "file_offset": 15410,
+      "bytes": "0726",
+      "mnemonic": "INC",
+      "operands": "RW26"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15412,
+      "page": 1920,
+      "file_offset": 15412,
+      "bytes": "e040c0",
+      "mnemonic": "DJNZ",
+      "operands": "R40, 0x3bf7"
+    },
+    {
+      "region": "rom_low_services",
+      "pc": 15415,
+      "page": 1920,
+      "file_offset": 15415,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    }
+  ],
+  "resources": [
+    {
+      "file_start": 24582,
+      "file_end": 24840,
+      "byte_columns": 8,
+      "rows": 32,
+      "sha256": "93dca721b9fed567ec60c268c1ce78770fb45197ba4833fc1b546a5577ad4e25"
+    },
+    {
+      "file_start": 24840,
+      "file_end": 25202,
+      "byte_columns": 20,
+      "rows": 18,
+      "sha256": "812a0a19184d791de0ee9e49982102d71958c45c4b7045d591063a1243b36a05"
+    },
+    {
+      "file_start": 25202,
+      "file_end": 25224,
+      "byte_columns": 20,
+      "rows": 1,
+      "sha256": "f458a6583fbf25ceeb6b7b6acf403f33a153d63b17e83f85e3d6ac5008d2e17b"
+    },
+    {
+      "file_start": 25224,
+      "file_end": 25316,
+      "byte_columns": 5,
+      "rows": 18,
+      "sha256": "239efa93cd1f8d2fb448a4378338b85546ad8224b034e51d467cb9b2b511a0bf"
+    }
+  ],
+  "observed_rendering": {
+    "6108": "Roland DIGITAL SAMPLER",
+    "6288": "S760"
+  }
+}

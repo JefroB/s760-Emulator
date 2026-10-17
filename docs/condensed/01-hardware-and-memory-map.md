@@ -4,7 +4,7 @@
 
 Native ROM boot now reaches a colour, mouse-interactive Perform Play screen and loads samples. The banked physical map below is the native reference; flat/HLE mappings and bring-up workarounds are separate historical paths. Peripheral timing and full CPU fidelity remain incomplete.
 
-See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+See the [completion roadmap](../project/completion-roadmap.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
 ## Native wave-memory configurations — 2026-10-14
 

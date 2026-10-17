@@ -1,0 +1,458 @@
+{
+  "date": "2026-10-16",
+  "bug": "BUG-005",
+  "status": "Accepted repeat capture; discrepancy repeats, production fix unresolved",
+  "integrity": {
+    "path": "tests\\hardware_recordings\\1-Audio 0001 [2026-10-16 064504].wav",
+    "sha256": "96dcb1f879b6b2c37078610eb3974c43517ba079366525c35f6da1711fd480cd",
+    "sample_rate": 48000,
+    "channels": 1,
+    "frames": 6629376,
+    "duration_seconds": 138.112,
+    "peak": 0.04569292068481445,
+    "peak_dbfs": -26.803021620344303,
+    "finite": true,
+    "fullscale_samples": 0,
+    "activity_spans_seconds": [
+      [
+        1.05,
+        13.26
+      ],
+      [
+        18.05,
+        30.32
+      ],
+      [
+        35.05,
+        47.21
+      ],
+      [
+        52.05,
+        64.21
+      ],
+      [
+        69.05,
+        81.32
+      ],
+      [
+        86.05,
+        98.31
+      ],
+      [
+        103.05,
+        115.21
+      ],
+      [
+        120.05,
+        132.25
+      ]
+    ],
+    "accepted": true
+  },
+  "qualified_analysis": {
+    "bypass_period_errors_percent": [
+      1.9358486634155607,
+      1.9622349660715495
+    ],
+    "source_rate_start": 44100.94839212053,
+    "source_rate_end": 44100.94772918929,
+    "source_clock_change_ppm": -0.01503213120646052,
+    "plateau_calibrations": [
+      {
+        "take": 2,
+        "direction": "up",
+        "phase": 3212.8183789999457,
+        "gain": 0.9998666026731583,
+        "plateau_error_percent": 0.0700771849709709
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "phase": 3202.6871385406703,
+        "gain": 1.0001745677091618,
+        "plateau_error_percent": 0.17223973760062092
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "phase": 3202.558855436917,
+        "gain": 1.000282077646103,
+        "plateau_error_percent": 0.1780372407135683
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "phase": 3260.427881779091,
+        "gain": 0.9998774149497763,
+        "plateau_error_percent": 0.06776115611493666
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "phase": 3213.3000468946993,
+        "gain": 0.9998764059727511,
+        "plateau_error_percent": 0.06938869825484087
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "phase": 3258.173243408848,
+        "gain": 1.0002974892753194,
+        "plateau_error_percent": 0.1759516939248066
+      }
+    ],
+    "rows": [
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "baseline",
+        "offset_ms": 35.00017074583815,
+        "time_scale": 1.0,
+        "training_error_percent": 1.8638073828813793,
+        "evaluation_error_percent": 2.7563670069169977
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "time-scale",
+        "offset_ms": 35.01827842180617,
+        "time_scale": 1.0000027949273396,
+        "training_error_percent": 1.8630110045292605,
+        "evaluation_error_percent": 2.754922854149729
+      },
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "uniform20ms",
+        "offset_ms": 41.75614625743515,
+        "time_scale": 1.0,
+        "training_error_percent": 7.293558629357511,
+        "evaluation_error_percent": 8.202450513947834
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "baseline",
+        "offset_ms": 44.524225102895755,
+        "time_scale": 1.0,
+        "training_error_percent": 6.614518747136089,
+        "evaluation_error_percent": 7.8303780333254815
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "time-scale",
+        "offset_ms": 48.95055735277711,
+        "time_scale": 1.0023538623071688,
+        "training_error_percent": 1.6623998808143303,
+        "evaluation_error_percent": 1.7720731157437397
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "uniform20ms",
+        "offset_ms": 48.63235589067547,
+        "time_scale": 1.0,
+        "training_error_percent": 1.710557459695575,
+        "evaluation_error_percent": 1.8967980678591023
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "model": "baseline",
+        "offset_ms": 43.409723071747656,
+        "time_scale": 1.0,
+        "training_error_percent": 6.655637741151008,
+        "evaluation_error_percent": 7.778867331045076
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "model": "time-scale",
+        "offset_ms": 47.82938278748588,
+        "time_scale": 1.0023629309035726,
+        "training_error_percent": 1.700345068433519,
+        "evaluation_error_percent": 1.7494867545474155
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "model": "uniform20ms",
+        "offset_ms": 47.49273186992354,
+        "time_scale": 1.0,
+        "training_error_percent": 1.7426584894520198,
+        "evaluation_error_percent": 1.8716597335590175
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "model": "frozen-direction",
+        "offset_ms": 47.813353445355744,
+        "time_scale": 1.0023538623071688,
+        "training_error_percent": 1.7004959030456888,
+        "evaluation_error_percent": 1.74575528334009
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "model": "baseline",
+        "offset_ms": 52.639917744253914,
+        "time_scale": 1.0,
+        "training_error_percent": 2.1405352015983783,
+        "evaluation_error_percent": 2.142601864593351
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "model": "time-scale",
+        "offset_ms": 51.563452233219664,
+        "time_scale": 0.9996017646289311,
+        "training_error_percent": 1.8382052879172097,
+        "evaluation_error_percent": 2.054752231554905
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "model": "uniform20ms",
+        "offset_ms": 58.877210212081856,
+        "time_scale": 1.0,
+        "training_error_percent": 8.58241526938345,
+        "evaluation_error_percent": 8.212143112185105
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "model": "frozen-direction",
+        "offset_ms": 52.64935837335932,
+        "time_scale": 1.0000027949273396,
+        "training_error_percent": 2.144568057359075,
+        "evaluation_error_percent": 2.1450938484704043
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "model": "baseline",
+        "offset_ms": 48.39585669454454,
+        "time_scale": 1.0,
+        "training_error_percent": 1.9839339850236541,
+        "evaluation_error_percent": 2.1053922023795684
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "model": "time-scale",
+        "offset_ms": 48.87676308354869,
+        "time_scale": 1.0001789316168357,
+        "training_error_percent": 1.9197207454010659,
+        "evaluation_error_percent": 2.012034059605212
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "model": "uniform20ms",
+        "offset_ms": 54.68713614895209,
+        "time_scale": 1.0,
+        "training_error_percent": 6.941133672739517,
+        "evaluation_error_percent": 6.9542108340814535
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "model": "frozen-direction",
+        "offset_ms": 48.39856834394303,
+        "time_scale": 1.0000027949273396,
+        "training_error_percent": 1.9820410405983866,
+        "evaluation_error_percent": 2.10163179878984
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "model": "baseline",
+        "offset_ms": 52.43941359872792,
+        "time_scale": 1.0,
+        "training_error_percent": 8.0530212507976,
+        "evaluation_error_percent": 10.188391407255397
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "model": "time-scale",
+        "offset_ms": 58.27307741704873,
+        "time_scale": 1.0030185623689207,
+        "training_error_percent": 1.4881202015629524,
+        "evaluation_error_percent": 1.678295408462772
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "model": "uniform20ms",
+        "offset_ms": 56.678587491389614,
+        "time_scale": 1.0,
+        "training_error_percent": 2.0127465567431293,
+        "evaluation_error_percent": 2.3991366397656906
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "model": "frozen-direction",
+        "offset_ms": 56.990924515696825,
+        "time_scale": 1.0023538623071688,
+        "training_error_percent": 2.277258521397766,
+        "evaluation_error_percent": 2.759988434103779
+      }
+    ],
+    "duration_ms": 10.844412349537208,
+    "scales_selected_on_first_take": {
+      "up": 1.0000027949273396,
+      "down": 1.0023538623071688
+    },
+    "limits": [
+      "Baseline slew10.844ms frozen from prior recording.",
+      "Source clock from starting bypass; phase/gain from each later9..11s plateau.",
+      "Alternating200ms training/evaluation blocks; scale and alignment use training only.",
+      "First take of each direction selects its scale; frozen-direction refits only alignment on later takes.",
+      "Native targets from original verified seven-channel run, not hardware bus timestamps.",
+      "Fractional lane/analog chain model remains approximate."
+    ]
+  },
+  "previous_recording_transfer": {
+    "rows": [
+      {
+        "take": 2,
+        "direction": "up",
+        "model": "frozen-prior",
+        "offset_ms": 35.22018842750041,
+        "time_scale": 1.00007148864,
+        "training_error_percent": 1.871884968844203,
+        "evaluation_error_percent": 2.7980216530584037
+      },
+      {
+        "take": 3,
+        "direction": "down",
+        "model": "frozen-prior",
+        "offset_ms": 50.4342025631389,
+        "time_scale": 1.0031403397863239,
+        "training_error_percent": 2.674560647722787,
+        "evaluation_error_percent": 3.3276123556449875
+      },
+      {
+        "take": 4,
+        "direction": "down",
+        "model": "frozen-prior",
+        "offset_ms": 49.289640553587496,
+        "time_scale": 1.0031403397863239,
+        "training_error_percent": 2.703638010857424,
+        "evaluation_error_percent": 3.3071210614322406
+      },
+      {
+        "take": 5,
+        "direction": "up",
+        "model": "frozen-prior",
+        "offset_ms": 52.83466525958283,
+        "time_scale": 1.00007148864,
+        "training_error_percent": 2.248737416120738,
+        "evaluation_error_percent": 2.213595252486363
+      },
+      {
+        "take": 6,
+        "direction": "up",
+        "model": "frozen-prior",
+        "offset_ms": 48.5873832764838,
+        "time_scale": 1.00007148864,
+        "training_error_percent": 1.9439592064645768,
+        "evaluation_error_percent": 2.054686965811523
+      },
+      {
+        "take": 7,
+        "direction": "down",
+        "model": "frozen-prior",
+        "offset_ms": 58.50762275584725,
+        "time_scale": 1.0031403397863239,
+        "training_error_percent": 1.5206043848063155,
+        "evaluation_error_percent": 1.7407022322409265
+      }
+    ],
+    "opening_scale_source": "Prior recording opening-training fit1.00007148864",
+    "closing_scale_source": "Prior recording independent closing-training diagnostic1.0031403397863239",
+    "selection": "Scales fixed before this recording; new per-take source phase/gain calibrated from9..11s plateau and only control alignment fitted on new training blocks."
+  },
+  "summary": [
+    {
+      "take": 2,
+      "direction": "up",
+      "baseline_evaluation_percent": 2.7563670069169977,
+      "independent_fit_evaluation_percent": 2.754922854149729,
+      "independent_fit_scale": 1.0000027949273396,
+      "prior_recording_scale": 1.00007148864,
+      "prior_recording_scale_evaluation_percent": 2.7980216530584037,
+      "first_same_direction_scale_evaluation_percent": null
+    },
+    {
+      "take": 3,
+      "direction": "down",
+      "baseline_evaluation_percent": 7.8303780333254815,
+      "independent_fit_evaluation_percent": 1.7720731157437397,
+      "independent_fit_scale": 1.0023538623071688,
+      "prior_recording_scale": 1.0031403397863239,
+      "prior_recording_scale_evaluation_percent": 3.3276123556449875,
+      "first_same_direction_scale_evaluation_percent": null
+    },
+    {
+      "take": 4,
+      "direction": "down",
+      "baseline_evaluation_percent": 7.778867331045076,
+      "independent_fit_evaluation_percent": 1.7494867545474155,
+      "independent_fit_scale": 1.0023629309035726,
+      "prior_recording_scale": 1.0031403397863239,
+      "prior_recording_scale_evaluation_percent": 3.3071210614322406,
+      "first_same_direction_scale_evaluation_percent": 1.74575528334009
+    },
+    {
+      "take": 5,
+      "direction": "up",
+      "baseline_evaluation_percent": 2.142601864593351,
+      "independent_fit_evaluation_percent": 2.054752231554905,
+      "independent_fit_scale": 0.9996017646289311,
+      "prior_recording_scale": 1.00007148864,
+      "prior_recording_scale_evaluation_percent": 2.213595252486363,
+      "first_same_direction_scale_evaluation_percent": 2.1450938484704043
+    },
+    {
+      "take": 6,
+      "direction": "up",
+      "baseline_evaluation_percent": 2.1053922023795684,
+      "independent_fit_evaluation_percent": 2.012034059605212,
+      "independent_fit_scale": 1.0001789316168357,
+      "prior_recording_scale": 1.00007148864,
+      "prior_recording_scale_evaluation_percent": 2.054686965811523,
+      "first_same_direction_scale_evaluation_percent": 2.10163179878984
+    },
+    {
+      "take": 7,
+      "direction": "down",
+      "baseline_evaluation_percent": 10.188391407255397,
+      "independent_fit_evaluation_percent": 1.678295408462772,
+      "independent_fit_scale": 1.0030185623689207,
+      "prior_recording_scale": 1.0031403397863239,
+      "prior_recording_scale_evaluation_percent": 1.7407022322409265,
+      "first_same_direction_scale_evaluation_percent": 2.759988434103779
+    }
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\analyze_tvfstep_repeat_qualified.py": "ca002ccfa2e094df95d85a46ae8c3c4537060fd9ad1037a91d1fcbce77a57c3d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\analyze_tvfstep_repeat_prior_transfer.py": "a41834fa9fa508138be153bdabfa156461c46f2d96549e80550b33567f444298",
+    "docs\\ic20-hle-findings\\chatGPT-work\\tvfstep-multichannel-2026-10-16\\pack\\native-validation.json": "5f05d37d7ed74492ceb5c800b5e99787d3e32678727a91a7602caa0f2061f4c3",
+    "tests\\hardware_recordings\\TVFSTEP_RAMP_REPEAT\\TVFSTEP_RAMP_REPEAT.mid": "540fcd9406c83ac2b24a911a333e063af23e62ce897cb315e1dbca0d3d29e1d9"
+  },
+  "supersession": "Initial private single-start bypass clock search selected a false minimum and its ramp fits are rejected. Qualified script uses coarse global lag search then refinement, requires bypass repeat residual below2%, and verifies independent end bypass. No earlier capture results superseded.",
+  "limits": [
+    "Repeatable direction-associated mismatch within this fixture, not a proven physical direction-dependent envelope clock.",
+    "Best closing scales vary1.002354..1.003019 in new takes; prior1.003140 remains useful but is not an exact universal law.",
+    "Scale can absorb cutoff-map, dynamic-state, slew and analog-model errors; do not hardcode it into CPU/envelope clocks.",
+    "Static endpoint residual is folded plateau calibration error, not direct whole-WAV parity.",
+    "Eight fractional recurrence lanes approximate recording-chain response.",
+    "Uniform20ms hypothesis remains rejected because it worsens all opening takes.",
+    "No emulator, ROM or firmware behavior changed."
+  ],
+  "next": "Use repeated ramps and prior isolated steps as regressions to test a causal control-transition model; avoid per-direction fitted clock hacks. No further capture requested now."
+}

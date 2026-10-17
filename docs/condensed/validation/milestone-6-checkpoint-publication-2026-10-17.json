@@ -1,0 +1,403 @@
+{
+  "date": "2026-10-17",
+  "completed_gate": "Bounded checkpoint-publication fault recovery: opened zero-byte temporary archive termination, Windows replacement denial and successful retry",
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "scripts/interrupt_checkpoint_publication.py": "cc64bbcd8a3611530959380d14b621396a0cec8ae4b14b15d60c5ae8a07411b5",
+    "scripts/verify_packaged_crash_recovery.py": "fd49dbef461b4d2abad4dd784215007fbcdd0a690cb8dd1e3681ae56a9586608",
+    "scripts/verify_packaged_edit_audio.py": "fdd909adf098849414aed448ef36b06a5aab50d23ef6fb14693b9d5f81b541e6",
+    "google-ui/e2e/packaged-media.spec.ts": "01ff45b5dd8a678a2ca2ec58f46f762767dec37af46d502d969c8e4d27553538",
+    "google-ui/e2e/native-controls.ts": "8cff868e1b4f672c0556e4ecdeafc9e59f5f59ac27b4c36affbf0f2fa284fe33",
+    "google-ui/playwright.packaged.config.ts": "6d3906fd63401a78c43a95466a805966dda1c7407e6d02398aa0db950122a3bb",
+    "tests/test_native_checkpoint.py": "f29bb5e7ca14c106b0a8bd5e945bd8ff843eb85b7a989d1b58c62c56ad83a716",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2"
+  },
+  "product_runtime_sources_unchanged_from_prior_gate": {
+    "scripts/s760_standalone.py": true,
+    "scripts/s760_runtime.py": true,
+    "scripts/s760_runtime.lua": true
+  },
+  "package_sha256": {
+    "S760Studio.exe": "dfde510d10a1ccbed6d966c04e848805cd897ca7a466cdd9f42c3f8b941cd236",
+    "mame-source/mames760.exe": "6db47405d446fe365cc9f581a2d0745651f8e25897ccaabc0a765c565c323b96",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+    "README.md": "2652ea93f36a4ee93bd7ec95cb76da6add68f8ea633684cff233f67849968a04",
+    "PACKAGE-AUDIT.json": "ca6ec8f420273b3dab968ebd45a53064550caa1989111b03b7967cc9c0610a7d",
+    "BUNDLED-INPUTS.json": "a9fee01bf7a3e8a43e9c701c8dea63053fd95ebadfbfcc987db1d66f17a1dc87",
+    "DEPENDENCY-INVENTORY.json": "0122915d202d104d8caac88ec92ef23a269b5ceac13dad51c2d4b5629c921a0e"
+  },
+  "fixture_sha256": {
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "seed": {
+    "origin_validation": "milestone-6-crash-recovery-2026-10-17.json",
+    "sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2",
+    "scope": "Previously UI-created production-timer checkpoint: Level64, dirty ROBOFULL controller media"
+  },
+  "prerequisites": [
+    "Existing Windows x64 development workstation and desktop runtimes",
+    "Same frozen package as preceding crash qualification",
+    "Hash-identified private checkpoint, IC15 v1.11, OS 2.24 and ROBOFULL",
+    "Chromium, Python for QA and localhost access"
+  ],
+  "commands": {
+    "browser": "From google-ui: S760_MEDIA_PACKAGE=<qualified-package>; S760_MEDIA_WORK=<fresh-private-work>; S760_INTERRUPT_SEED=<qualified-archive>; S760_QA_PYTHON=<python.exe>; node node_modules/@playwright/test/cli.js test packaged-media.spec.ts --grep \"incomplete checkpoint\" --config=playwright.packaged.config.ts --output=<private-results>",
+    "native": "python scripts/verify_packaged_crash_recovery.py --package <package> --browser-work <private-work>/publication --state-dir <fresh-native-work>",
+    "checkpoint_unit": "python -m pytest tests/test_native_checkpoint.py -q --basetemp=<private-unit> -o cache_dir=<private-cache>",
+    "full_regression": "Python stdin runner sets TEMP/TMP to private work, redirects mame_harness.SCRATCH_DIR and SNAP_DIR (ending snap/s760), creates both; pytest.main([tests,-q,--tb=short,--basetemp=<private>/tmp,-o,cache_dir=<private>/cache])",
+    "typescript": "node google-ui/node_modules/typescript/bin/tsc --project google-ui/tsconfig.json --noEmit"
+  },
+  "browser": {
+    "passed": true,
+    "seconds": 48.7,
+    "result": {
+      "passed": true,
+      "cycles": [
+        {
+          "passed": true,
+          "service_pid": 20672,
+          "terminated_pids": [
+            19256,
+            20672,
+            31452
+          ],
+          "pending_name": "recovery.s760state.8b87ffed27682c9c.tmp",
+          "observed_bytes": 0,
+          "retained_bytes": 0,
+          "incomplete_archive": true,
+          "phase": "Incomplete pending archive exists; replacement has not been published",
+          "cycle": 0,
+          "pid": 20672,
+          "table": 3384624565,
+          "saved_field": 3401795101,
+          "unsaved_field": 2142688365,
+          "restored_field": 3401795101,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "passed": true,
+          "service_pid": 4044,
+          "terminated_pids": [
+            4044,
+            21372,
+            30692
+          ],
+          "pending_name": "recovery.s760state.85ba39d7d5747ec3.tmp",
+          "observed_bytes": 0,
+          "retained_bytes": 0,
+          "incomplete_archive": true,
+          "phase": "Incomplete pending archive exists; replacement has not been published",
+          "cycle": 1,
+          "pid": 4044,
+          "table": 3384624565,
+          "saved_field": 3401795101,
+          "unsaved_field": 2142688365,
+          "restored_field": 3401795101,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "passed": true,
+          "service_pid": 30992,
+          "terminated_pids": [
+            2336,
+            24508,
+            30992
+          ],
+          "pending_name": "recovery.s760state.f2d5dca254cd998e.tmp",
+          "observed_bytes": 0,
+          "retained_bytes": 0,
+          "incomplete_archive": true,
+          "phase": "Incomplete pending archive exists; replacement has not been published",
+          "cycle": 2,
+          "pid": 30992,
+          "table": 3384624565,
+          "saved_field": 3401795101,
+          "unsaved_field": 2142688365,
+          "restored_field": 3401795101,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        }
+      ],
+      "checkpoint_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2",
+      "edited_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+      "unchanged_sample_bytes": 119808,
+      "replace_denied_preserves_previous": true,
+      "failed_save_preserves_live_field": 2142688365,
+      "retry_restored_field": 2142688365,
+      "retry_sha256": "a0ed093ec8cc8cad9e8de13efbe0d0e3f1ddca72062eed0af95d219c604ef6f9",
+      "scope": "Unmodified frozen writer interrupted after pending file creation, before publication; prior Level64 checkpoint survives unsaved Level63 replacement"
+    }
+  },
+  "independent_native": {
+    "passed": true,
+    "cycles": [
+      {
+        "cycle": 0,
+        "archive_sha256": "38e71df7e64707cc9e21b6f8ea2001b5a3ccc196e34ce7f1188ac7a528c117f9",
+        "wave_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+        "exact_sample_bytes": 119808,
+        "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+        "dirty_restored": true,
+        "audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ]
+      },
+      {
+        "cycle": 1,
+        "archive_sha256": "8a56370eb5eef18180ee2275c303f5994d90de5d334c585cbe33700730d2f366",
+        "wave_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+        "exact_sample_bytes": 119808,
+        "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+        "dirty_restored": true,
+        "audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ]
+      },
+      {
+        "cycle": 2,
+        "archive_sha256": "3256cf3d2a106a79e07261f4c5d67c80b1e7b35ac3b3f80686a835c977ceaff7",
+        "wave_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+        "exact_sample_bytes": 119808,
+        "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+        "dirty_restored": true,
+        "audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ]
+      }
+    ],
+    "baseline_audio": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.01694745011627674,
+        "silent_release": true
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.01694745011627674,
+        "silent_release": true
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.01694745011627674,
+        "silent_release": true
+      }
+    ],
+    "cold_disk_audio": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.008537158370018005,
+        "silent_release": true
+      }
+    ],
+    "native_processes": 10,
+    "browser_result": {
+      "passed": true,
+      "cycles": [
+        {
+          "passed": true,
+          "service_pid": 20672,
+          "terminated_pids": [
+            19256,
+            20672,
+            31452
+          ],
+          "pending_name": "recovery.s760state.8b87ffed27682c9c.tmp",
+          "observed_bytes": 0,
+          "retained_bytes": 0,
+          "incomplete_archive": true,
+          "phase": "Incomplete pending archive exists; replacement has not been published",
+          "cycle": 0,
+          "pid": 20672,
+          "table": 3384624565,
+          "saved_field": 3401795101,
+          "unsaved_field": 2142688365,
+          "restored_field": 3401795101,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "passed": true,
+          "service_pid": 4044,
+          "terminated_pids": [
+            4044,
+            21372,
+            30692
+          ],
+          "pending_name": "recovery.s760state.85ba39d7d5747ec3.tmp",
+          "observed_bytes": 0,
+          "retained_bytes": 0,
+          "incomplete_archive": true,
+          "phase": "Incomplete pending archive exists; replacement has not been published",
+          "cycle": 1,
+          "pid": 4044,
+          "table": 3384624565,
+          "saved_field": 3401795101,
+          "unsaved_field": 2142688365,
+          "restored_field": 3401795101,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "passed": true,
+          "service_pid": 30992,
+          "terminated_pids": [
+            2336,
+            24508,
+            30992
+          ],
+          "pending_name": "recovery.s760state.f2d5dca254cd998e.tmp",
+          "observed_bytes": 0,
+          "retained_bytes": 0,
+          "incomplete_archive": true,
+          "phase": "Incomplete pending archive exists; replacement has not been published",
+          "cycle": 2,
+          "pid": 30992,
+          "table": 3384624565,
+          "saved_field": 3401795101,
+          "unsaved_field": 2142688365,
+          "restored_field": 3401795101,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        }
+      ],
+      "checkpoint_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2",
+      "edited_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+      "unchanged_sample_bytes": 119808,
+      "replace_denied_preserves_previous": true,
+      "failed_save_preserves_live_field": 2142688365,
+      "retry_restored_field": 2142688365,
+      "retry_sha256": "a0ed093ec8cc8cad9e8de13efbe0d0e3f1ddca72062eed0af95d219c604ef6f9",
+      "scope": "Unmodified frozen writer interrupted after pending file creation, before publication; prior Level64 checkpoint survives unsaved Level63 replacement"
+    },
+    "retry": {
+      "passed": true,
+      "archive_sha256": "a0ed093ec8cc8cad9e8de13efbe0d0e3f1ddca72062eed0af95d219c604ef6f9",
+      "wave_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+      "exact_sample_bytes": 119808,
+      "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+      "dirty_restored": true,
+      "audio": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008404435589909554,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.008404435589909554,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.008404435589909554,
+          "silent_release": true
+        }
+      ]
+    },
+    "scope": "Cold native validation of frozen browser crash recovery; physical power loss and device audio excluded"
+  },
+  "regression": {
+    "passed": 519,
+    "skipped": 0,
+    "seconds": 98.88,
+    "checkpoint_subset_passed": 21
+  },
+  "injected_unit_failures": [
+    "os.fsync raises OSError after staging",
+    "os.replace raises OSError after fsync; previous destination exact and temporary cleaned"
+  ],
+  "actual_windows_failure": "CreateFileW existing archive with FILE_SHARE_READ and no delete sharing; real packaged os.replace reports WinError5; handle release allows UI retry",
+  "trial_notes": [
+    "Initial three-interruption case passed in45.5seconds.",
+    "Replacement-denial extension initially retried while the observer repeatedly opened the destination archive; a second access-denied error occurred. Final harness waits for UI completed-save status before reading. Tiny-file OS probe independently confirmed sharing denial and successful replacement after handle release."
+  ],
+  "evidence_logs": {
+    "browser": "browser-03.log",
+    "native": "native.log",
+    "backend": "regression.log"
+  },
+  "limitations": [
+    "All three killed writers had an opened zero-byte temporary archive; no claim about interruption at arbitrary partial-payload offsets.",
+    "No forced interruption during flush/fsync or atomic rename; injected fsync/replace exceptions are separate unit evidence.",
+    "No physical power-loss, storage-hardware failure, device audio, final WebView, installer or clean-machine qualification.",
+    "Work newer than the previous completed checkpoint is intentionally lost on an interrupted save.",
+    "Existing development package; final standalone/VST3 source/dependency release qualification remains open."
+  ]
+}

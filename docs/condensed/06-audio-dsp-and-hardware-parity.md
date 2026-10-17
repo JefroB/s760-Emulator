@@ -8,7 +8,7 @@ Static C64/R64 BP/HP capture comparison now passes the1% waveform target:0.07924
 
 Finding124 establishes sub-1% normalized RMS agreement for the documented interpolation captures and settings, with an opt-in native implementation. Loop/envelope and filter audition work has progressed beyond the earlier raw monitor. Physical dynamic-resonance fidelity remains open. Normal-default combined-path qualification is recorded below alongside historical diagnostic evidence. Dated findings below preserve the investigation history; early claims that interpolation is unresolved or filters are absent are superseded within the tested domains by the later findings.
 
-See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+See the [completion roadmap](../project/completion-roadmap.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
 ## Normal filter profile — 2026-10-14
 
@@ -69,7 +69,7 @@ dropped rows. This establishes bounded native allocation/release behavior, not
 exact hardware steal priority, arbitrary layered-patch behavior, concurrent disk
 activity or a spectral proof of every mixed voice.
 [Measured rows, identities and reproduction command](validation/milestone-5-polyphony-2026-10-14.json).
-The [workflow matrix](../MILESTONE_5_ACCEPTANCE.md) separates completed and pending
+The [workflow matrix](../testing/milestone-5-acceptance.md) separates completed and pending
 product coverage.
 
 ## Native loop/pitch acceptance — 2026-10-14
@@ -300,6 +300,73 @@ covered. Stereo regression is unchanged; this establishes firmware allocation
 and register coverage, not24-voice audio parity. Remaining101018 and companion
 transactions still need interpretation. See finding80 in the shared index.
 
+The2026-10-15 exact-fixture audit verifies1336 firmware cutoff calculations and
+raw-word deliveries,456 envelope counter calculations, and7133 applied native
+word/coefficient rows.413 scored active changes apply within one native frame;
+first/inactive sets are excluded. Read-only observation preserves2,249,100
+resonant/control stereo frames exactly. This establishes native implementation
+agreement, not physical envelope timing or ASIC arithmetic. The active rise and
+first decay in that fixture are linear; its later quadratic/release segments
+have zero delta and do not qualify nonzero quadratic behavior.
+
+Companion DSP control101018 remains uninterpreted in the native audio paths.
+Firmware short-table words at02BE:AC7A begin0000/000E/0014/0018/001A/001B.
+Survey Time4 takes a zero-software-counter,001A-command path, whereas Time8/72
+use software divisors4/139.21 observed lookup rows match the original table;
+926,100 survey stereo frames remain exact under the observer. This supports
+investigating hardware-assisted fast transitions, not assigning command values
+to milliseconds or implementing guessed latching/slew behavior. It does not
+prove the cause of the separate Time80 resonant residual. BUG-005 remains OPEN.
+[Firmware arithmetic/application validation](validation/resonant-firmware-path-2026-10-15.json)
+and [companion-control validation](validation/modulation-firmware-controls-2026-10-15.json).
+
+Ordered write observation additionally confirms five initial101020 cutoff words
+equal the preceding101030 word, with command-scoped fast target writes and TVA
+target writes sharing101018. This establishes transaction ordering, not a slew
+law. An offline onset check retaining the initial cutoff improves Time4 MIDI35
+startup error35.285% to1.840%, but fails transfer to MIDI36 (54.754% to48.736%).
+Longer ramps also damage later onset windows that already match. These two
+low-note comparisons use an offline source outside the native candidate's
+coverage; they are not direct native audio acceptance. Existing silence-trimmed
+captures do not separate initial filter state, TVA onset and command behavior.
+No shared command law or production change is qualified.
+[Ordered transactions](validation/dsp-companion-transactions-2026-10-15.json)
+and [onset discrimination](validation/fast-command-discrimination-2026-10-15.json).
+
+Software-counted LP/R0 transitions have a stronger diagnostic candidate:
+a causal20ms linear coefficient ramp selected on Time8 MIDI37–39 transfers
+unchanged to previously unused MIDI40/43/47/51 (Time8/12/16/24). Evaluation
+waveform residuals fall23.92/27.48/22.94/9.14% to2.04/2.60/3.05/2.92% with a
+training-only constant control-phase offset per recording. The zero-phase
+ramp alone yields2.30/6.04/8.05/3.23%. Native source replay matches within5.02e-8
+for all four notes; future-target perturbation preserves earlier ramp output.
+Initial-state and amplitude-only corrections explain much less of the Time8
+onset mismatch. This supports investigating a missing cutoff transition,
+not assigning a physical latency or decoding101018. Negative diagnostic phase
+offsets must never become future-write lookahead. No native behavior changed;
+fast Time4 commands and the separate Time80 resonant residual remain open.
+[Time8 separation](validation/time8-onset-discrimination-2026-10-15.json)
+and [frozen ramp transfer](validation/control-ramp-transfer-2026-10-15.json).
+
+The native driver now exposes this as off-by-default
+S760_NATIVE_CUTOFF_RAMP_CANDIDATE: changed LP targets under control001B ramp over
+882 active44100Hz samples, initialized from101020; fast-command targets remain
+immediate. No filter equation or default playback change. Same-state disabled
+PCM matches1,234,800 prior-build stereo frames exactly. Enabled replay matches
+offline reconstruction around5e-8; active-ramp save/restore reproduces4096
+stereo frames. Original bypass/static controls remain exact. Experimental save
+state requires its matching flag profile; default native save registration and
+managed cross-build identity rejection remain unchanged.404 tests and native
+runtime PCM/display checks pass.
+
+Using the actually rendered coefficients in the existing recording-band model,
+the accepted original resonant captures improve44.13/46.31% to19.99/21.35%
+evaluation residual. This is a native-trajectory diagnostic with training-only
+alignment/source phase, not direct WAV acceptance or a fix for the remaining
+resonant error. The earlier roughly18% inferred/interpolated-trajectory result
+is a different baseline. BUG-005 remains OPEN.
+[Native ramp validation](validation/native-cutoff-ramp-2026-10-15.json).
+
 Finding66 implements the observed wave selector/data write banks and enable mask;1,080 runtime updates match independent replay. Wave reads, synthesis, loop modes and downstream filtering/mixing are still incomplete. Native reset suppresses the independent host audition; the raw diagnostic output described below is now established, while complete native synthesis remains unfinished. CMPL decode and sticky VT are now corrected,
 including the opcode used by alternate loop setup; those complete loop paths
 still need runtime coverage.
@@ -528,7 +595,7 @@ implemented; extraction uses positional image and `--out`.
 Capture organization:
 `tests/hardware_recordings/{input_tones,gotek_extracted,robosampler_out}` with
 stage-specific recording subfolders. Full detailed procedures remain in
-[hardware recording methodology](../HARDWARE_RECORDING_PARITY_METHODOLOGY.md).
+[hardware recording methodology](../hardware/captures/hardware-recording-parity-methodology.md).
 
 
 
@@ -624,7 +691,7 @@ ADC capture remains open: input meter0x10001C and recording-position0x100010/12
 return unmapped values. Arming observes slots4/20 with mode8, which is a constraint
 rather than a qualified input model. No captured signal, recorded PCM integrity,
 physical timing, packaged acceptance or full sampling workflow is claimed.
-See [sampling contract](../NATIVE_SAMPLING.md) and
+See [sampling contract](../emulator/guides/native-sampling.md) and
 [validation](validation/native-sampling-dma-2026-10-12.json).
 
 
@@ -640,7 +707,7 @@ capture or hardware parity. Default launches keep ADC disabled. Capture-device
 selection, analog gain calibration, alternate capture clocks, hardware meter/interrupt
 semantics and realtime timing remain open. See
 [validation](validation/native-sampling-input-2026-10-12.json) and
-[sampling contract](../NATIVE_SAMPLING.md).
+[sampling contract](../emulator/guides/native-sampling.md).
 
 
 Standalone Input Level now controls0–100% linear recording gain separately from
@@ -734,7 +801,7 @@ amplitude parity across the musical range.
 A controlled sustain-held trial establishes that CC121 does not release the
 note or restore CC7 volume on this fixture. Same-channel CC123 leaves held-pedal
 audio sounding; CC64 up releases it. The later supported-message controller qualification below resolves this
-Milestone4 gate without claiming rawCC120/121 support. [Contract](../NATIVE_VST3_MIDI.md) and
+Milestone4 gate without claiming rawCC120/121 support. [Contract](../emulator/runtime/native-vst3-midi.md) and
 [measured evidence](validation/milestone-4-configured-bend-2026-10-13.json).
 
 
@@ -774,7 +841,7 @@ preserves pending input PCM; older formats remain decodable with zero input.
 Live Sampler FX remains unadvertised. Other input clocks, physical ADC fidelity,
 other DAWs and release qualification remain open. Actual DAW project portability
 is the sole remaining Milestone 4 checkbox. See the
-[host sampling contract](../NATIVE_VST3_SAMPLING.md) and
+[host sampling contract](../emulator/runtime/native-vst3-sampling.md) and
 [exact source/binary validation](validation/milestone-4-host-sampling-2026-10-13.json).
 
 
@@ -791,3 +858,147 @@ Run `python scripts/verify_static_filter_captures.py --state-dir <fresh-private-
 ### Moving-filter remainder: negative diagnostics (2026-10-14)
 
 The accepted quiet and repeat LP R64 recordings were rechecked with the same85 damping/unity calibrated gain and original inferred coefficient trajectory. Fourier fractional excitation alignment changes evaluation error from17.627% to17.898% (quiet) and18.444% to18.038% (repeat); it is not a consistent correction. Diagnostic stepped writes and32/64/128-sample coefficient cadences are worse. These reused evaluation blocks do not provide fresh independent validation. No native renderer or coefficient change was made, and BUG-005 stays open for moving/sweep response. Static agreement from the corrected recording-band analysis above remains valid. [Commands, candidate parameters, capture identities and next evidence](validation/moving-filter-investigation-2026-10-14.json).
+
+
+Current-build matched modulation timing localizes all24 delayed timer deliveries in48 measured intervals to theF008 mouse handshake ending004B:5811POPA. Native periods average20.071802/20.068255ms opening/closing, with constant9.125us ISR prologue; observed/unobserved/repeated PCM windows are exact. Original code rearms from service-timeTIMER1+20,000, so delay accumulates. This is not measured hardware cadence and does not explain every direction-dependent analog residual; BUG-005 remainsOPEN and no production timing/filter constants changed. [Exact evidence](validation/filter-scheduler-localization-2026-10-16.json), [decoded path and limits](../firmware/os/modulation-firmware-path.md).
+
+
+## Verified CPU state-time correction (2026-10-16)
+
+The follow-up found a real emulator defect beyond the original firmware's mouse masking: nativeKB CLRC,SETC,DI,EI,CLRVT,NOP used4states, whereas Intel270651-003 Table3-3B specifies2. The native path now uses2; the legacy path retains4. No CPU clock, OS/ROM, rearm policy, filter equation, cutoff map or hardcoded rate adjustment changed. BUG-091 isFIXED.
+
+An isolated CPU execution fixture cancels identical marker overhead. For each opcode,2048 repetitions measured1024us before and512us after, exactly matching16MHz/two oscillator cycles per state. This proves the changed instruction timing under the model; full CPU bus/IRQ timing remains outside the result.478 full regressions pass, with4 previously documented source-builder expected failures. Native original-firmware boot, mouse input, playback, zero release tail and clean shutdown pass.
+
+Fresh paired observer/baseline/repeat audio windows again match exactly, with no dropped rows. Opening/closing mean control periods are now20.009266/20.009078ms; ISR prologue8.875us versus9.125us before, consistent with itsEI correction. In these particular half-second windows, no delivery ends at the mouse handshake; the few delays above2us occur at00DB:92FA. Before/after runs have different setup/tick phases, so the dramatic mean-delay reduction is descriptive and is not proof that mouse blocking never recurs or that hardware waveform error is fixed.
+
+BUG-005 remainsOPEN. The next acceptance operation is to regenerate the same TVFSTEP/resonant native reference on this new executable and apply the existing frozen ramp/step/static/bypass comparison rules against hardware recordings. Previous native coefficient schedules and checkpoints belong to their recorded build; do not reuse them as if current. The still-uninterpreted101018 control register remains a separate potential transition-law dependency. [Exact code change, Intel source, measured before/after, builds, regression results and limitations](validation/native-kb-state-time-fix-2026-10-16.json), [after-fix matched scheduler rows](validation/filter-scheduler-after-state-time-fix-2026-10-16.json).
+
+
+## Native short-smoothing trial (2026-10-16)
+
+The workspace emulator now supports `S760_NATIVE_CUTOFF_SHORT_CANDIDATE`: a separate, disabled-by-default diagnostic path using 478 native samples (10.839002ms), nearest to the frozen 10.844412ms offline model. It reuses the existing command 0x001B / LP gate and preserves immediate initialization/fast writes. The existing 20ms candidate stays at 882 samples when used alone; the short flag wins if both flags are supplied. Neither flag changes firmware or CPU scheduling. The normal Python runtime sanitizes these environment flags; this trial explicitly injects the short flag in a private launch harness. Packaged application artifacts are unchanged.
+
+Four original-firmware native takes cover both ramps and both abrupt steps, with deterministic paused setup and pull rendering. With the flag disabled, all 2,998,800 stereo PCM frames match the prior executable exactly. Enabled and disabled guest cutoff trajectories and note times are identical. Both enabled ramp outputs change. Full sample allocation, MIDI delivery, unchanged-media and silent-release checks pass.
+
+Step PCM is not entirely identical because smoothing changes the preceding filter state. In the first 200ms after each jump, peak differences are 0.0000139% and 0.001404% of the corresponding baseline take peak. A separate read-only applied-coefficient trace proves both fast target jumps reach the exact target on the next native audio frame, with no smoothing ramp. The observer preserves 1,499,400 stereo PCM frames exactly and drops no rows.
+
+The driver/executable builds pass, all 488 current regression tests pass, and native boot/input/playback/release/clean-shutdown acceptance passes. This qualifies an opt-in implementation trial, not a new measured hardware improvement or resonant-filter repair. The motivating offline short-smoothing comparison was 6.181% to 5.795% opening and 3.783% to 3.552% closing; those numbers are not native analog acceptance. BUG-005 remains OPEN. Next compare the actual native trial against analog recordings with source/clock/alignment rules frozen, including resonant and static controls before considering any default change.
+
+[Native comparisons, applied rows, build identities, regression and runtime evidence](validation/native-short-cutoff-trial-2026-10-16.json).
+
+
+## Short smoothing plus rounded increments (2026-10-16)
+
+The user's proposed combination was replayed with the short duration (10.844412ms), eight fractional cutoff-word bits and all source/clock/gain/damping rules fixed. Only constant control alignment is fitted on training blocks. Mean evaluation waveform residual over three takes per direction is:
+
+| Model | Opening | Closing |
+| --- | --- | --- |
+| Short smoothing alone | 5.795% | 3.552% |
+| Short smoothing + downward-rounded increments | 5.774% | 2.659% |
+| Short smoothing + truncation toward zero | 5.774% | 3.566% |
+
+The combination lowers closing residual by approximately25.1% relative to short smoothing alone, with essentially unchanged opening error. Signed floor rounding supplies the closing improvement; truncation toward zero does not. This is reused analog research data, not fresh validation or established ASIC arithmetic. Stationary identity and future-target causality checks pass for all three frozen models.
+
+A separate opt-in native implementation, `S760_NATIVE_CUTOFF_SHORT_ROUNDED_CANDIDATE`, is now built. It implies the 478-sample short transition and floors each signed coefficient increment to 1/4194304 (1/256 cutoff-word unit), clamps overshoot and snaps to the target at the deadline. Existing command0x001B/LP gating and immediate fast/initialization writes remain. It takes precedence over the other cutoff candidate flags. The ordinary runtime sanitizes diagnostic environment flags; the private qualification harness explicitly injected this flag. Packaged application artifacts are unchanged.
+
+Native disabled output matches 2,998,800 prior stereo PCM frames exactly. Enabled/disabled firmware cutoff trajectories and note times agree. Applied trace has18,371rows, zero drops and1,703 intermediate coefficient rows; every applied coefficient lies on the expected increment grid. Both abrupt target changes apply exactly on the next audio frame. Recursive filter state from the changed lead-in means step PCM is not entirely identical: first200ms post-jump peak differences are0.0000139% opening and0.001532% closing relative to baseline take peak. Full loaded samples, MIDI delivery, unchanged-media and silent tails pass. Both native builds, all488 regression tests and native runtime boot/input/playback/release/clean shutdown pass.
+
+BUG-005 remains OPEN. These results support retaining the combination as an opt-in trial; actual native analog accuracy, resonant behavior and physical command/rounding semantics still need qualification before changing defaults. [Frozen rows, native comparisons, raw applied step rows, input/build identities and limits](validation/native-short-rounded-cutoff-trial-2026-10-16.json).
+
+
+## Third-method combinations (2026-10-16)
+
+With short smoothing and eight-bit signed-floor increments frozen, three additional candidates were tested: an endpoint-preserving cutoff-map correction, a shared target-progression adjustment, and both. The map adds beta*(high-low)*u*(1-u), u clipped to0..1 between cutoff words416 and2612. Beta is bounded to+/-0.01; the selected map-only beta0.00174037 shifts the midpoint by less than one cutoff-word unit. The shared scale is bounded to+/-500ppm. These parameters use only first opening/closing training blocks, then freeze for the four later takes. Source clock, phase, gain, damping, recurrence and the two established transition parameters remain fixed; constant alignment is fitted per take on training blocks.
+
+| Added method | Opening mean evaluation residual | Closing mean evaluation residual |
+| --- | --- | --- |
+| None | 5.771% | 2.660% |
+| Endpoint-preserving cutoff map | 4.790% | 3.173% |
+| Shared target progression adjustment | 4.549% | 3.985% |
+| Map and progression adjustment | 3.913% | 4.058% |
+
+The new methods offer useful tradeoffs rather than improving both directions relative to the current two-method candidate. Map-only improves opening by about17% while increasing closing error by about19%; it still beats the earlier immediate-change reference in both direction averages. Combining map and progression substantially improves opening but gives up more closing accuracy. The fitted scales are approximately0.999501, near the lower search bound; these are effective model fits and do not establish a CPU/OS/audio clock defect. Retain these as exploratory alternatives, rather than rejecting every tradeoff or declaring a universally superior correction.
+
+A correction to the analysis separates target progression from coefficient slew: the final replay keeps the physical short-transition duration fixed. Parameter selection used the historical scaled-slew implementation on training blocks; the final replay reuses those frozen parameters without evaluation-driven refitting. The180-evaluation bounded optimizers hit their budgets, so no global/converged optimum is claimed. Exact endpoint/held-anchor and future-target causality checks pass. The map only preserves the two tested static anchors; other stationary cutoffs remain unqualified. Evaluation blocks are reused research data. No additional native rendering change or new hardware parity claim follows from this batch.
+
+Other concrete follow-up experiments are fractional-increment error feedback (retain discarded remainder instead of permanent bias), rounding of recursive filter state, and command-dependent transition shape/latching. Each needs stationary and fast-command controls as well as both ramp directions; none is established ASIC behavior. BUG-005 stays OPEN. [Fit parameters, training/evaluation rows, corrected fixed-duration replay, contracts, identities and limitations](validation/filter-third-method-combinations-2026-10-16.json).
+
+
+## Direction-specific progression transfer (2026-10-16)
+
+To test whether the approximately4% shared-fit residual was a compromise, the preceding map-plus-short-slew-plus-floor model was retained and only its progression scale was fitted separately for opening and closing. Map beta0.00108703928, physical slew duration10.844412ms, eight fractional increment bits, source clock/phase/gain, damping and recurrence remain frozen. A coarse17-point scale search over0.998..1.002 followed by local refinement uses only take2 opening/take3 closing training blocks. Constant control alignment is profiled on training samples. The resulting direction scales are0.9983235600 opening and1.0004058684 closing. Both refinements converge. These scales are diagnostic trajectory fits, not measured CPU/audio clock ratios.
+
+| Take | Direction | Shared scale evaluation residual | Frozen direction scale evaluation residual |
+| --- | --- | --- | --- |
+|2|Opening|4.355%|2.309%|
+|3|Closing|3.354%|2.265%|
+|4|Closing|3.316%|2.264%|
+|5|Opening|4.308%|1.935%|
+|6|Opening|3.074%|1.885%|
+|7|Closing|5.504%|2.945%|
+
+Mean opening residual falls3.913% to2.043%; closing4.058% to2.491%. All six takes improve. All four later takes improve with the direction scales frozen; only their constant alignment is fitted on training blocks. This supports a useful direction-dependent correction even though residual error remains. Historical research evaluation samples have been reused, so this is not new analog hardware acceptance. The map still only qualifies its two static anchors.
+
+No native change was made. Implementing a direction-dependent real-time response requires a causal law that handles direction reversals and command/voice changes. Offline scale greater than1 can advance a write relative to the original input stream; its future-target check in retimed coordinates does not prove live-stream causality. It must not be implemented by changing CPU clocks or reading future writes. Treat these fits as a target for a causal coefficient/state model and independent native/hardware testing, rather than calling them a complete hardware fix. BUG-005 stays OPEN. [Search profiles, frozen fit parameters, all rows, contracts, identities and limitations](validation/filter-direction-transfer-2026-10-16.json).
+
+
+## Below-one-percent acceptance target (2026-10-16)
+
+The user accepts below1% waveform residual in both directions as the practical completion target. Use the established evaluation RMS waveform percentage, and continue reporting repeated-take results; do not substitute correlation or redefine the error. Static and fast-command controls must remain acceptable, with native implementation and independent hardware qualification distinguished from offline fits. The target has not yet been achieved.
+
+Direction-specific endpoint-preserving map curvature was trained only on take2/take3 training blocks with the learned direction scales, slew, floor increments, source clock/phase/gain, damping and recurrence fixed. Opening beta0.00123606798 and closing beta-0.000488061945 give mean evaluation residual2.0139% opening/2.0007% closing, versus2.0430%/2.4914% previously. The midpoint target shifts are+0.67860/-0.26795 cutoff-word units. Parameters transfer frozen to later takes; only constant alignment is fitted on their training blocks. Intermediate stationary cutoff accuracy is still unqualified.
+
+Retesting physical transition duration over2..30ms with coarse search/local refinement selected the existing10.844412ms duration for both directions, adding no improvement. Testing target precision with all other corrections frozen gives:
+
+| Target conversion before smoothing | Opening mean residual | Closing mean residual |
+| --- | --- | --- |
+| Existing truncate bottom two bits | 2.014% | 2.001% |
+| Retain raw target bits | 4.029% | 6.456% |
+| Round to nearest multiple of four | 6.572% | 9.564% |
+
+The existing conversion wins first-pair training selection and later evaluation in this fixed combination. This does not rule out every refitted model or prove physical target precision. No native change was made. Further useful work is residual localization against update/latching timing and a causal dynamic coefficient/state response; avoid adding unrestricted waveform correction parameters merely to force a number below1%. BUG-005 remains OPEN. [Acceptance threshold, full curvature/duration/precision rows, frozen fits, identities and limits](validation/filter-sub-one-percent-target-2026-10-16.json).
+
+
+## Dynamic residual tests and further CPU repair (2026-10-16)
+
+Residual localization on the historical corrected model shows similar errors during coefficient transitions and between them: mean opening2.077%/1.960%, closing2.007%/1.980%. Bounded derivative-shape changes produce no meaningful improvement after signed-floor quantization. Alternative stationary-equivalent state forms are also worse: SVF2.014%opening/2.001%closing, direct-I2.061%/2.136%, direct-II2.361%/2.699%, transposed-II2.061%/2.136%. Stationary anchor predictions agree within1e-10 relative RMS. For fixed ceil-latching grids of1/4/16/64frames at phases0/half-grid, first-pair training selects4frames/phase2, which worsens means to2.016%/2.006%. The unselected1frame/half-frame variant gives tiny exploratory gains to2.013%/1.999%; it does not approach1%. Only these phase/period variants are tested, not every possible hardware latch. Models selected using first-pair training; later research evaluation blocks reused.
+
+A new documented CPU defect was found during timing follow-up. Native SKIP, selected unary/word-byte-shift/NORML/unconditional-jump/DJNZW and stack operations retained legacy base-state assumptions. Intel270651-003 Table3.3B and isolated execution disagree in42 of49cases. BUG-092 corrects30 opcode groups for native KB, with actual internal/external stack accesses distinguished. All49 cases now pass, and all39 tested legacy timing cases retain exact before/after durations. This does not qualify wait states, prefetch, bus width, every opcode or complete physical IRQ timing. Stack fixtures avoid boundaries.
+
+Both CPU dependency and workspace executable were rebuilt. All495 current regressions pass; native boot/input/MIDI/playback/zero-release/clean-shutdown checks and four new original-firmware step/ramp captures pass. The initial suite had two false failures: ROM SCSI tests sampled a transient observer stage every60frames. Actual SCSI attempt, timeout/bad-header and floppy handoff still occurred. BUG-093 now observes boot selection at the ordinary Exit input event, retaining every timeout/header/handoff/media assertion. Archived observer sources and firmware are unchanged.
+
+| Deterministic target capture, same frozen filter corrections | Opening mean residual | Closing mean residual |
+| --- | --- | --- |
+| Before additional CPU repair | 2.000% | 1.934% |
+| After additional CPU repair | 2.024% | 1.930% |
+
+These matched captures share original-firmware setup and note times. Frozen direction/map corrections were selected on an earlier capture; only constant alignment is fitted here. The repair fixes CPU correctness but does not solve the filter residual. Without the progression/map correction, the new-build diagnostic gives5.995%opening/2.343%closing. Reusing old-build checkpoints was avoided. Packaged application artifacts were not rebuilt.
+
+The new captured updates have mean periods20.013618msopening/20.014148msclosing, with affine timing residual RMS63.063/53.909microseconds. Replacing native timestamps by an offline affine schedule barely changes waveform errors:2.024%to2.021%opening and1.930%to1.927%closing. This excludes recorded update irregularity as a substantial explanation under the tested model; no guest timer/events were changed.
+
+The below1% target remains unmet. Intermediate stationary cutoff measurements are the next useful discriminator: current map corrections preserve only two measured endpoints and cannot independently distinguish cutoff-map error from moving-state behavior. [All dynamic variant/localization/jitter rows](validation/filter-dynamic-residual-tests-2026-10-16.json), [CPU/test repairs, raw before/after, builds,495 regressions, native acceptance and fresh captures](validation/native-kb-control-state-time-fix-2026-10-16.json).
+
+
+## Prepared hardware midpoint calibration (2026-10-16)
+
+The remaining below1% target needs independent constraints between the two static endpoints. `scripts/build_tvf_midpoint_capture.py --out-dir <fresh-private-folder>` reproduces the private720KB TVFGRID.IMG, TVFGRID_CAPTURE.mid and instructions. The disk extends the unchanged seven TVFSTEP controls with seven stationary holds at envelope levels68,72,76,80,84,88,92; all use LP/resonance64 and the original deterministic noise source. Fourteen performance parts receive on MIDI channels1..14; no program changes are used. The19-take sequence lasts257seconds (4m17s): initial bypass/endpoint/midpoint controls, three opening/closing pairs, two fast steps, final bypass.
+
+Two fresh builds produce byte-identical image, MIDI, PCM source, spec and sequence. Image size737280bytes and performance routing are checked. Normal native protocol validation loads the image through original firmware and plays all14 parts.129024 allocated sample bytes match exactly; MIDI delivery, finite nonclipping audio, static midpoint words, both ramps, both fast jumps,44100-frame silent tails and unchanged exported media pass. The measured midpoint effective words are524,656,828,1040,1312,1648,2076. These are native stimulus checks, not physical cutoff measurements. The initial long run with broad research observers disconnected during the eighth note. BUG-094 is repaired for the maintained diagnostic path (2026-10-17): removed native taps no longer retain their own Lua trace tables; the optional probes cache a live PC state handle and filter unrelated writes before exporting state. `scripts/verify_tvf_midpoint_capture.py --pack <pack> --state-dir <fresh-state> --research-observers` retains all original observer fields and all14 acceptance cases. Under a controlled2GiB process-memory budget, original probes reproduce a socket reset with a native Lua out-of-memory panic after11 completed takes; repaired probes complete14 at about1727MiB and exit normally. The historical unconstrained eighth-take failure's resource conditions remain unknown. [Controlled failure, repair, matching data and limits](validation/bug094-observer-capture-2026-10-17.json).
+
+For physical capture, load the TVF GRID performance, retain all14 original MIDI channels, and record the whole257second sequence as one mono48kHz/24bit WAV with the previous input gain and no normalization/dynamics/effects/sample-rate conversion. Preserve the starting/ending bypass and release gaps. This recording can independently test whether the fitted cutoff curve is a stationary transfer correction or compensation for moving behavior. Do not apply the system-disk repacker to this720KB sample disk. Generated template-derived media remains private. [Reproduction hashes, full stimulus/spec/sequence, exact native checks and limits](validation/filter-midpoint-capture-2026-10-16.json).
+
+A prior native short-smoothing validation limit mislabeled TVFSTEP as R0. Its spec actually uses resonance64/damping85; that limit is corrected, with source hashes/results unchanged. The distinct earlier software-counted R0 experiments remain separate.
+
+## Observed native PCM origin (2026-10-17)
+
+BUG-076 is repaired: speaker-hook metadata supplies the absolute frame index of
+returned PCM rather than inferring WAV frame zero from machine status. The
+modulation verifier records contiguous block mappings and rejects unqualified
+origins. A fresh five-case capture reproduces an881-frame first-case origin error
+and146-frame later offsets; all four filtered source-trace starts map to WAV
+exactly with the expected one-frame LP startup and no fitted shift. Varied pulls,
+capture reset and buffered checkpoint recall pass. This changes diagnostic
+indexing, not renderer behavior or physical latency claims. Historical captures
+without metadata still need independent alignment. See the
+[transport contract](../emulator/runtime/native-runtime-protocol.md) and
+[raw rows, origins and identities](validation/bug076-pcm-origin-2026-10-17.json).

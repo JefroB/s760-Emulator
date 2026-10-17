@@ -7,6 +7,7 @@ test('standalone audio settings apply and survive display reconnect', async ({pa
   await page.goto(process.env.S760_NATIVE_AUDIO_SETTINGS_URL!);
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.', {timeout:40000});
   await page.getByRole('button', {name:'Configuration',exact:true}).click();
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await page.getByLabel('Audio output backend').selectOption('wasapi');
   await page.getByLabel('Audio buffer target (ms)').fill('60');
   await expect(page.getByText('Apply settings and start')).toBeDisabled();
@@ -17,7 +18,8 @@ test('standalone audio settings apply and survive display reconnect', async ({pa
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.', {timeout:40000});
   await openNativeUtilities(page);
   await page.getByText('Reconnect display').click();
-  await page.getByRole('button', {name:'Configuration',exact:true}).click();
+  await openNativeUtilities(page);
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await expect(page.getByLabel('Audio output backend')).toHaveValue('wasapi');
   await expect(page.getByLabel('Audio buffer target (ms)')).toHaveValue('60');
   await expect(page.getByRole('alert')).toHaveCount(0);

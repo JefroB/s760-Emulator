@@ -6,7 +6,7 @@ retained as research input only; they do not drive coverage or ownership claims.
 
 import os
 
-OUTPUT_PATH = "docs/UI_TEST_COVERAGE_MATRIX.md"
+OUTPUT_PATH = "docs/testing/ui-test-coverage-matrix.md"
 
 TESTED = "Unverified"
 UNTESTED = "Unverified"
@@ -231,7 +231,7 @@ def generate_markdown():
     else:
         from coverage_report import write_report
     sections = [(s['category'], [(r[0], r[1]) for r in s['elements']]) for s in EXHAUSTIVE_UI_SECTIONS]
-    write_report(OUTPUT_PATH, 'UI research inventory', sections)
+    write_report(OUTPUT_PATH, 'UI research inventory', sections, document_dir="docs/testing")
 
 
 if __name__ == '__main__':

@@ -1,0 +1,2583 @@
+{
+  "date": "2026-10-15",
+  "status": "Diagnostic identifiability check; no command semantics or hardware duration qualified",
+  "band_hz": [
+    80,
+    1500
+  ],
+  "stable_alignment_training_seconds": [
+    0.2,
+    1.2
+  ],
+  "startup_evaluation_seconds": [
+    0.005,
+    0.08
+  ],
+  "clock_ratio": 1.0000215,
+  "conclusion": "Retaining the initial cutoff improves MIDI35 startup from35.285% to1.840%, but does not transfer to MIDI36 (54.754% to48.736%). No shared command law qualified.",
+  "hashes": {
+    "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\dsp-transactions-2026-10-15\\firmware-inputs.csv": "7a6ccad04c27392d545ded3f679d3d36b0a6738b55be77219271ef99f114a8d5",
+    "docs\\ic20-hle-findings\\chatGPT-work\\fast-command-neighbors-2026-10-15\\firmware-inputs.csv": "35dd040c17c2c7d0db67180efafa53a42b414a7ef87334e507e43274d9e00900",
+    "docs\\ic20-hle-findings\\chatGPT-work\\fast-command-neighbors-2026-10-15\\application.csv": "50a6e13692292e3b77f08e37b028938cae0d9fef61efee5daf4f939daf050f31",
+    "docs\\ic20-hle-findings\\chatGPT-work\\source_reconstruction_model.py": "d819e5459c49c36054346579015e17c527368c80ce50db3d7df6aec3eb5f0650"
+  },
+  "archive_sha256": "b08ca7b4e50cdfdeb6dd14ae919b5e5ef701da4f0c5ac63b86a84addaa2eea78",
+  "rows": [
+    {
+      "native_source_replay_error": 0.5375665239767818,
+      "time_setting": 4,
+      "note": 35,
+      "pitch_word": 3866,
+      "command_target_writes": [
+        [
+          -0.0004989654195100002,
+          0.025390625
+        ],
+        [
+          0.011514159580485739,
+          0.159423828125
+        ]
+      ],
+      "models": [
+        {
+          "source_model": "cubic",
+          "ramp_ms": null,
+          "model_label": "retain-initial-cutoff",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.01840148299478835,
+          "late_evaluation_error": 0.016246252642946827,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.02940530473082553,
+              "gain_ratio": 0.9977096649879333
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.01677917368255875,
+              "gain_ratio": 1.0001958582969694
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.01591221972890296,
+              "gain_ratio": 0.9983768274762166
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015421489625495765,
+              "gain_ratio": 0.9983409657718536
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01404009015592939,
+              "gain_ratio": 0.9987715241482017
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.017090860210336407,
+              "gain_ratio": 0.9988406962819496
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01717181769158537,
+              "gain_ratio": 1.0034128640421283
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.3528540831969516,
+          "late_evaluation_error": 0.01624625264297195,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9381222278829574,
+              "gain_ratio": 0.6634624138521666
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.018249083380444675,
+              "gain_ratio": 0.9994746476926675
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.01580662188383812,
+              "gain_ratio": 0.9983322969710113
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015481897472839857,
+              "gain_ratio": 0.9983577913153171
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.014046201239547864,
+              "gain_ratio": 0.9987747591372637
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.017088280929548682,
+              "gain_ratio": 0.9988413944669502
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.017171521294610602,
+              "gain_ratio": 1.003412842510543
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0.25,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.3529229584841714,
+          "late_evaluation_error": 0.01624625264297195,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9384388895606159,
+              "gain_ratio": 0.6638003858920605
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.018536138033724305,
+              "gain_ratio": 0.9994147373124667
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.015807500041036406,
+              "gain_ratio": 0.9983268121887504
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015486254713705133,
+              "gain_ratio": 0.9983597881471253
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01404621357887988,
+              "gain_ratio": 0.9987749343715066
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.01708807651161913,
+              "gain_ratio": 0.9988414207404082
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.017171508240481213,
+              "gain_ratio": 1.0034128410464704
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0.5,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.3525718480403683,
+          "late_evaluation_error": 0.016246252642960587,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9382322933987765,
+              "gain_ratio": 0.6696246306208803
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.019992972800048508,
+              "gain_ratio": 0.9991102643735784
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.015805083627434366,
+              "gain_ratio": 0.9983026933200995
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015507499231734678,
+              "gain_ratio": 0.9983685540447996
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.014046768635739351,
+              "gain_ratio": 0.9987758500078749
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.017087107534380034,
+              "gain_ratio": 0.9988415757232917
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01717143542972821,
+              "gain_ratio": 1.0034128338519575
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 1,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.3564993224318986,
+          "late_evaluation_error": 0.016246252642972542,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9461110117126585,
+              "gain_ratio": 0.6349932674845735
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.021981689534415157,
+              "gain_ratio": 0.9983160836031388
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.01563234196649311,
+              "gain_ratio": 0.9983236780481181
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015544346353648784,
+              "gain_ratio": 0.9983606180601741
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.014059873832147508,
+              "gain_ratio": 0.9987789962712141
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.0170860431526579,
+              "gain_ratio": 0.9988425127033728
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.017171080126672067,
+              "gain_ratio": 1.0034128195419294
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 2,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.35943042122369023,
+          "late_evaluation_error": 0.01624625264298913,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9606763605870243,
+              "gain_ratio": 0.6512298285276774
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.026034900595593123,
+              "gain_ratio": 0.9976695095220843
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.015697001572410635,
+              "gain_ratio": 0.9982477336585418
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015598776718214385,
+              "gain_ratio": 0.9983881956145962
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.014058351297188007,
+              "gain_ratio": 0.9987809177620894
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.01708346123274945,
+              "gain_ratio": 0.9988427401070245
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01717095276476938,
+              "gain_ratio": 1.003412801917211
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 4,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.3827602097590171,
+          "late_evaluation_error": 0.016246252642972542,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9981929923469,
+              "gain_ratio": 0.18026526746145513
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.043498673524276985,
+              "gain_ratio": 0.9973418899750252
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.015619569747673973,
+              "gain_ratio": 0.9982800811332209
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015598762630491605,
+              "gain_ratio": 0.998376062022765
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.014064704851912895,
+              "gain_ratio": 0.9987817298513106
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.017083786618550496,
+              "gain_ratio": 0.9988430891485339
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01717083319826189,
+              "gain_ratio": 1.0034128009803829
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 8,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.3839291641458048,
+          "late_evaluation_error": 0.01624625264297195,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9667609925722023,
+              "gain_ratio": 0.4443574813197966
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.24135497045118598,
+              "gain_ratio": 1.020276727949399
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.01550887023810391,
+              "gain_ratio": 0.9983932386986769
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015519846643683674,
+              "gain_ratio": 0.9983330078204042
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01406828813367333,
+              "gain_ratio": 0.9987790935597541
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.017087632242131272,
+              "gain_ratio": 0.9988428311268102
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.017170993909162012,
+              "gain_ratio": 1.0034128265531983
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 12,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.363596572621455,
+          "late_evaluation_error": 0.01624625264297195,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.8738030378642441,
+              "gain_ratio": 0.6957898086700292
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.4691831749506504,
+              "gain_ratio": 1.0327306840630663
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.015874320916843897,
+              "gain_ratio": 0.9981772818040032
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015599905897055002,
+              "gain_ratio": 0.9984121138281427
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.014045835194530225,
+              "gain_ratio": 0.9987793266790514
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.017082808900252246,
+              "gain_ratio": 0.9988420535576468
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.017171187725329863,
+              "gain_ratio": 1.003412803678895
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 20,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015364051081054127,
+          "stable_fit_delay_frames": 19.15258874608187,
+          "stable_fit_gain": 0.011129524784857875,
+          "startup_error": 0.28143107480887164,
+          "late_evaluation_error": 0.01624625264297195,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.6256324116619617,
+              "gain_ratio": 0.89699942820764
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.4727852400544309,
+              "gain_ratio": 1.0350250790822557
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.1170200231130172,
+              "gain_ratio": 1.0007405530337012
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.015496542772276982,
+              "gain_ratio": 0.998386890491777
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.014034961962582073,
+              "gain_ratio": 0.9987737608870949
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.017087182560143067,
+              "gain_ratio": 0.9988408420067404
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01717170024249664,
+              "gain_ratio": 1.0034128404321399
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": null,
+          "model_label": "retain-initial-cutoff",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.026094257608627432,
+          "late_evaluation_error": 0.023074968005557896,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.036211469745581336,
+              "gain_ratio": 0.99714650811745
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.02791865182400652,
+              "gain_ratio": 0.9979879193374697
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.021227680178342315,
+              "gain_ratio": 0.9952618267832113
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027491258649626874,
+              "gain_ratio": 0.9919600529109357
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019762449804129178,
+              "gain_ratio": 1.0024738813068732
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021828574588266137,
+              "gain_ratio": 1.0015203896716922
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026068556929740333,
+              "gain_ratio": 1.0092268495136643
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.35325614201710687,
+          "late_evaluation_error": 0.023074968005558895,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9382030652903696,
+              "gain_ratio": 0.6636938140942247
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.02818275573286442,
+              "gain_ratio": 0.9973894792880746
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.021093608286369196,
+              "gain_ratio": 0.9952266962119811
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027526867519854174,
+              "gain_ratio": 0.9919739399542675
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019768165284238762,
+              "gain_ratio": 1.0024767349264962
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02182696631336053,
+              "gain_ratio": 1.0015210183479908
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026068390015932735,
+              "gain_ratio": 1.009226829648253
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0.25,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.35273928026282897,
+          "late_evaluation_error": 0.023074968005565397,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.937505956118467,
+              "gain_ratio": 0.6699909107371024
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.028441803920829303,
+              "gain_ratio": 0.9972707919633255
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.021081842826751566,
+              "gain_ratio": 0.9952169581370376
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027533849800657748,
+              "gain_ratio": 0.9919775196507434
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019768532010622467,
+              "gain_ratio": 1.002477113720009
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021826656840372636,
+              "gain_ratio": 1.0015210826370957
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026068370007411,
+              "gain_ratio": 1.0092268265704232
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0.5,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.3523366952890044,
+          "late_evaluation_error": 0.023074968005589006,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9371765588240497,
+              "gain_ratio": 0.6762900819214126
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.029162193805859632,
+              "gain_ratio": 0.9969919788630413
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.02105584096681828,
+              "gain_ratio": 0.9951949979160698
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.02754970954442032,
+              "gain_ratio": 0.991985573916968
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019769400719177845,
+              "gain_ratio": 1.00247797994549
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02182595627099214,
+              "gain_ratio": 1.0015212310769863
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026068324092317966,
+              "gain_ratio": 1.0092268195643033
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 1,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.35624311652965124,
+          "late_evaluation_error": 0.023074968005578303,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9449757545909397,
+              "gain_ratio": 0.641401179601944
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.030190853893877958,
+              "gain_ratio": 0.9962272223039166
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.02089594029937801,
+              "gain_ratio": 0.9952152805471471
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027561562589707544,
+              "gain_ratio": 0.9919789573994945
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01978042385673672,
+              "gain_ratio": 1.0024810458507483
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021825414991492407,
+              "gain_ratio": 1.001522143604228
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026068118188320246,
+              "gain_ratio": 1.0092268036539522
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 2,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.3590055612096592,
+          "late_evaluation_error": 0.023074968005563374,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9595392612137346,
+              "gain_ratio": 0.6652666029711041
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.032855584927374594,
+              "gain_ratio": 0.995620445314857
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.02087881937640814,
+              "gain_ratio": 0.995143789438908
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.02760708722110554,
+              "gain_ratio": 0.9920048770294317
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019780289636775944,
+              "gain_ratio": 1.0024828875253975
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021823438576960716,
+              "gain_ratio": 1.0015223620011857
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.02606803146457537,
+              "gain_ratio": 1.0092267865189648
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 4,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.382325091799362,
+          "late_evaluation_error": 0.02307496800557316,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.998001499780404,
+              "gain_ratio": 0.19213651946031285
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.048277537729269945,
+              "gain_ratio": 0.9952683790937434
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.020824934707584696,
+              "gain_ratio": 0.9951767006231965
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027597518942271113,
+              "gain_ratio": 0.991993048225589
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019785478265983314,
+              "gain_ratio": 1.0024836949380407
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02182385249775825,
+              "gain_ratio": 1.0015227135129052
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026067964776009592,
+              "gain_ratio": 1.0092267848787715
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 8,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.3830600399640406,
+          "late_evaluation_error": 0.02307496800557316,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9662399333427972,
+              "gain_ratio": 0.4525817658489241
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.2399087766773729,
+              "gain_ratio": 1.0214609739042475
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.020838684416813913,
+              "gain_ratio": 0.9952837307250859
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027528914797836136,
+              "gain_ratio": 0.9919524554270672
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019786679664640552,
+              "gain_ratio": 1.0024811383695733
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021826844106333978,
+              "gain_ratio": 1.0015224597217816
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026068079630016297,
+              "gain_ratio": 1.009226809800674
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 12,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.36281400138399017,
+          "late_evaluation_error": 0.023074968005563374,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.8728449147848094,
+              "gain_ratio": 0.7038418306666494
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.46713573126526486,
+              "gain_ratio": 1.0391722220306618
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.02099465561542668,
+              "gain_ratio": 0.9950776339299243
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027624779754883713,
+              "gain_ratio": 0.9920264143225356
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.019770714484930164,
+              "gain_ratio": 1.0024813814558675
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021822690223490985,
+              "gain_ratio": 1.0015217110340504
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.02606815533093452,
+              "gain_ratio": 1.009226789682229
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 20,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.02332358359730624,
+          "stable_fit_delay_frames": 19.175532915621297,
+          "stable_fit_gain": 0.010931582788017188,
+          "startup_error": 0.28072705296943945,
+          "late_evaluation_error": 0.02307496800557316,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.6239144176772976,
+              "gain_ratio": 0.9038685394263752
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.47015487964751507,
+              "gain_ratio": 1.043076773398796
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.11833200864014912,
+              "gain_ratio": 0.9978049396045375
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027559461845889255,
+              "gain_ratio": 0.9920032713442247
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01975979450626229,
+              "gain_ratio": 1.0024760043149015
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02182569141234159,
+              "gain_ratio": 1.0015205215962413
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.026068470285596865,
+              "gain_ratio": 1.009226826981031
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "native_source_replay_error": 5.012059221600433e-08,
+      "time_setting": 8,
+      "note": 39,
+      "pitch_word": 4870,
+      "command_target_writes": [],
+      "models": [
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.054134185573451496,
+          "stable_fit_delay_frames": 160.14246601288147,
+          "stable_fit_gain": 0.011094124930383767,
+          "startup_error": 0.7774061655223558,
+          "late_evaluation_error": 0.018316942469393405,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.8004989044843445,
+              "gain_ratio": 0.37286832560961203
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.651730460588978,
+              "gain_ratio": 0.63731933749619
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.7623143045108178,
+              "gain_ratio": 0.42539257876915926
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.6502700269203833,
+              "gain_ratio": 0.5305839664522043
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.7985918880428247,
+              "gain_ratio": 0.43236379914422135
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.5371513136964268,
+              "gain_ratio": 0.794721202739983
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.40448267134313104,
+              "gain_ratio": 0.9806366980048568
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.05646928403119628,
+          "stable_fit_delay_frames": 160.16525364410583,
+          "stable_fit_gain": 0.010967387875393522,
+          "startup_error": 0.7778156714664657,
+          "late_evaluation_error": 0.02439147062700074,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.7988440858411899,
+              "gain_ratio": 0.37627428065390944
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.6556067151862698,
+              "gain_ratio": 0.6411417677358862
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.7631653476648408,
+              "gain_ratio": 0.4262261024198462
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.651859439192816,
+              "gain_ratio": 0.5323050091627086
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.7997444537820853,
+              "gain_ratio": 0.43044783219959365
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.5442297115815972,
+              "gain_ratio": 0.7912016390278016
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.4073887511627751,
+              "gain_ratio": 0.9863081872436341
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "native_source_replay_error": 0.5071960185473816,
+      "time_setting": 4,
+      "note": 36,
+      "pitch_word": 4096,
+      "command_target_writes": [
+        [
+          -0.0004989654195100002,
+          0.025390625
+        ],
+        [
+          0.011513659580487001,
+          0.159423828125
+        ]
+      ],
+      "models": [
+        {
+          "source_model": "cubic",
+          "ramp_ms": null,
+          "model_label": "retain-initial-cutoff",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.48735530517874226,
+          "late_evaluation_error": 0.01486280836289897,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.6905214284767386,
+              "gain_ratio": 0.595415133379113
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9060680159379055,
+              "gain_ratio": 0.27780417656478273
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.4998244325324018,
+              "gain_ratio": 0.7474192123411776
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.018052740292627087,
+              "gain_ratio": 0.9975825514313076
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01241020393718816,
+              "gain_ratio": 1.0008019647635946
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021179149291416448,
+              "gain_ratio": 1.0016368133112163
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.018660062014245717,
+              "gain_ratio": 1.0000308211491817
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.5475403823692407,
+          "late_evaluation_error": 0.014862808362893993,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9968816059235401,
+              "gain_ratio": 0.1305894851200608
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9051137874515628,
+              "gain_ratio": 0.2784055430648269
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.49972278970720957,
+              "gain_ratio": 0.7473175130367045
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.018112184177863443,
+              "gain_ratio": 0.9976249787005104
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012384560382021834,
+              "gain_ratio": 1.000804156159305
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02117723232649713,
+              "gain_ratio": 1.0016363595216624
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.018660778523848044,
+              "gain_ratio": 1.0000304946665346
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0.25,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.5458485678321024,
+          "late_evaluation_error": 0.01486280836289842,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9976343862920259,
+              "gain_ratio": 0.11924504687166373
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9048873525272942,
+              "gain_ratio": 0.2785443217686428
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.49970586247404825,
+              "gain_ratio": 0.7472998799621502
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.018115832130503363,
+              "gain_ratio": 0.9976369929679916
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012379921603716629,
+              "gain_ratio": 1.0008039178489747
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021177168089281075,
+              "gain_ratio": 1.001636225476487
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01866093082909403,
+              "gain_ratio": 1.0000304532103594
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0.5,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.5425778829683844,
+          "late_evaluation_error": 0.014862808362895687,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9983466186397485,
+              "gain_ratio": 0.10819313940641824
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9046880848591391,
+              "gain_ratio": 0.2786543510360874
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.49968948191094664,
+              "gain_ratio": 0.7472825134330298
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.01812188061606941,
+              "gain_ratio": 0.9976473412093007
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012375477129392675,
+              "gain_ratio": 1.0008038581910033
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021177031586333113,
+              "gain_ratio": 1.0016361106797946
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01866107094316964,
+              "gain_ratio": 1.0000304087328824
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 1,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.5358934190957072,
+          "late_evaluation_error": 0.014862808362916974,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9994614772163755,
+              "gain_ratio": 0.07624514988418545
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9051237968597211,
+              "gain_ratio": 0.27823603356338167
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.49968107268563383,
+              "gain_ratio": 0.7472711869388308
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.01819695149214155,
+              "gain_ratio": 0.9976068739438859
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012375631923961104,
+              "gain_ratio": 1.0008097137173224
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021174431036134214,
+              "gain_ratio": 1.0016365906141995
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.0186608609376119,
+              "gain_ratio": 1.0000302464326205
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 2,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.5242721866159666,
+          "late_evaluation_error": 0.014862808362919566,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9900452180652549,
+              "gain_ratio": 0.3520320175931139
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9047887930488484,
+              "gain_ratio": 0.2784515585257088
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.49966350717077224,
+              "gain_ratio": 0.7472534544557741
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.01817232181732257,
+              "gain_ratio": 0.9976374698611676
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012369846526760205,
+              "gain_ratio": 1.0008071392763862
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021175364243208507,
+              "gain_ratio": 1.0016362381750712
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.018661130843763665,
+              "gain_ratio": 1.0000302584183045
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 4,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.5248435957245979,
+          "late_evaluation_error": 0.014862808362907431,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.997036873483752,
+              "gain_ratio": 0.21806048845929576
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.90215973147119,
+              "gain_ratio": 0.28406903617348506
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.49966874213582047,
+              "gain_ratio": 0.7472588577431235
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.018179036456931134,
+              "gain_ratio": 0.9976287112961513
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012371528393410422,
+              "gain_ratio": 1.0008078687032078
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021175101257074096,
+              "gain_ratio": 1.0016363391314962
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01866105300203554,
+              "gain_ratio": 1.000030255477052
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 8,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.47563310389790886,
+          "late_evaluation_error": 0.014862808362931263,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.860838421933212,
+              "gain_ratio": 0.7052485605958094
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.8740596671322179,
+              "gain_ratio": 0.3411926843464007
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.49970114116030045,
+              "gain_ratio": 0.7472920400759872
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.018204086463146568,
+              "gain_ratio": 0.9975857562292242
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012381560403053417,
+              "gain_ratio": 1.0008108500736197
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021174143955944708,
+              "gain_ratio": 1.0016368294773181
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.018660637168044725,
+              "gain_ratio": 1.0000302761336308
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 12,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.37269301668697197,
+          "late_evaluation_error": 0.014862808362926128,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.5220241343090466,
+              "gain_ratio": 1.0082876233532598
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.7863870634054755,
+              "gain_ratio": 0.48668829015658294
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.4997218144305277,
+              "gain_ratio": 0.7473052950335678
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.018113458655471038,
+              "gain_ratio": 0.9976333731774875
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012381530443692071,
+              "gain_ratio": 1.0008039116434997
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021177229897987662,
+              "gain_ratio": 1.0016362647650072
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.018660881091212504,
+              "gain_ratio": 1.000030470082992
+            }
+          ]
+        },
+        {
+          "source_model": "cubic",
+          "ramp_ms": 20,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.015096538924278464,
+          "stable_fit_delay_frames": 42.8056469125925,
+          "stable_fit_gain": 0.011132214017820894,
+          "startup_error": 0.30128614798364045,
+          "late_evaluation_error": 0.014862808362920059,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.19442188169991592,
+              "gain_ratio": 0.9395200544835631
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.7910136063716888,
+              "gain_ratio": 0.46979644332242504
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.3791921094000437,
+              "gain_ratio": 0.8147356996645452
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.018114748173076366,
+              "gain_ratio": 0.9976048601256778
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.012391424031182844,
+              "gain_ratio": 1.0008049748338366
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.021177105362768966,
+              "gain_ratio": 1.0016365975068402
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.01866053667535162,
+              "gain_ratio": 1.0000305417568538
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": null,
+          "model_label": "retain-initial-cutoff",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.4906211051648505,
+          "late_evaluation_error": 0.02089624186883495,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.6946406003742273,
+              "gain_ratio": 0.5919954172764954
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9090026138906517,
+              "gain_ratio": 0.273370556342534
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5017639023766417,
+              "gain_ratio": 0.7442931078638114
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.02723540708215062,
+              "gain_ratio": 0.9940982088629172
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.018218666784393985,
+              "gain_ratio": 1.003978498384698
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.028097603217031992,
+              "gain_ratio": 1.002959960527891
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836084017959257,
+              "gain_ratio": 1.0026757803615407
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.5496476235336263,
+          "late_evaluation_error": 0.020896241868835947,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9968995720191216,
+              "gain_ratio": 0.1298065265030931
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9080685679324714,
+              "gain_ratio": 0.2740105532952818
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5016595616955277,
+              "gain_ratio": 0.744201209473365
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027310612532597797,
+              "gain_ratio": 0.9941376754578165
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01820252947865651,
+              "gain_ratio": 1.0039805379687836
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02809548890762685,
+              "gain_ratio": 1.0029595529528712
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836460014167113,
+              "gain_ratio": 1.002675470516015
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0.25,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.5481361151983283,
+          "late_evaluation_error": 0.020896241868835947,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9976310468800271,
+              "gain_ratio": 0.11850725528569216
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9078654756680145,
+              "gain_ratio": 0.2741470312032324
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5016438237016708,
+              "gain_ratio": 0.744186756274016
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027321454684268286,
+              "gain_ratio": 0.9941479697708827
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.018199523709968406,
+              "gain_ratio": 1.003980297947584
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.028095304093555887,
+              "gain_ratio": 1.002959439982402
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836545112208872,
+              "gain_ratio": 1.002675435553171
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0.5,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.5445591054772213,
+          "late_evaluation_error": 0.020896241868831465,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.998364179484129,
+              "gain_ratio": 0.10748675118950529
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9076546038386751,
+              "gain_ratio": 0.27427588950913406
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5016255333928701,
+              "gain_ratio": 0.7441696831896407
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027334912816672236,
+              "gain_ratio": 0.9941583181675413
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.018196217453562046,
+              "gain_ratio": 1.0039802378278637
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02809503179120452,
+              "gain_ratio": 1.0029593276842563
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836633938774104,
+              "gain_ratio": 1.0026753895061764
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 1,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.5375511679158693,
+          "late_evaluation_error": 0.020896241868824328,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.999439694336687,
+              "gain_ratio": 0.07819182018258584
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.908081644758051,
+              "gain_ratio": 0.27385140182601825
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5016166935881821,
+              "gain_ratio": 0.7441598490408988
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027355140148382886,
+              "gain_ratio": 0.9941203264664739
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.018199882517170557,
+              "gain_ratio": 1.0039858825828905
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.028093447266133303,
+              "gain_ratio": 1.0029597819886642
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836402831386033,
+              "gain_ratio": 1.0026752340883454
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 2,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.5258976195645483,
+          "late_evaluation_error": 0.020896241868835947,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.9899333362238846,
+              "gain_ratio": 0.358251739744415
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9077610243317065,
+              "gain_ratio": 0.27406114406915394
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5015985327750555,
+              "gain_ratio": 0.7441434479843049
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.02736231693509243,
+              "gain_ratio": 0.9941489414681656
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.018194367197355,
+              "gain_ratio": 1.0039833989217872
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02809379857266822,
+              "gain_ratio": 1.0029594536929258
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836607732292893,
+              "gain_ratio": 1.0026752454626
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 4,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.5263615807737524,
+          "late_evaluation_error": 0.020896241868835947,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.99694192883006,
+              "gain_ratio": 0.22470085042338425
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.9051539563152393,
+              "gain_ratio": 0.2797407719142613
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5016030790119101,
+              "gain_ratio": 0.7441475904231826
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.02736084934844447,
+              "gain_ratio": 0.9941407255425005
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01819586384958567,
+              "gain_ratio": 1.0039841689717575
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02809367067022462,
+              "gain_ratio": 1.0029595484940224
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836549824376098,
+              "gain_ratio": 1.0026752388277882
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 8,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.47663443910624104,
+          "late_evaluation_error": 0.020896241868844326,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.860187719527926,
+              "gain_ratio": 0.7145079852908782
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.8772224275703634,
+              "gain_ratio": 0.33784360566389515
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5016361379373575,
+              "gain_ratio": 0.7441776720353498
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027344403596999245,
+              "gain_ratio": 0.9941007318014835
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01820445713912261,
+              "gain_ratio": 1.003987060549605
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.028093454579570836,
+              "gain_ratio": 1.002960001953791
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.024836253970518873,
+              "gain_ratio": 1.0026752572482152
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 12,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.3736828041534569,
+          "late_evaluation_error": 0.02089624186883652,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.5204642050125552,
+              "gain_ratio": 1.0165639250446545
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.789548666377239,
+              "gain_ratio": 0.4868708613785011
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.5016580698645927,
+              "gain_ratio": 0.7441884995291903
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.02731906745898594,
+              "gain_ratio": 0.99414532455851
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.01820023407740359,
+              "gain_ratio": 1.003980387326872
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.0280953367652603,
+              "gain_ratio": 1.0029594686382333
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.0248365242019974,
+              "gain_ratio": 1.0026754426173956
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 20,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.021959516837907728,
+          "stable_fit_delay_frames": 42.80285594659656,
+          "stable_fit_gain": 0.010943545788149543,
+          "startup_error": 0.30233753455826956,
+          "late_evaluation_error": 0.02089624186883495,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.1962183423057812,
+              "gain_ratio": 0.9435492261719536
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.7938065116840965,
+              "gain_ratio": 0.4703170534040717
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.3815887054430532,
+              "gain_ratio": 0.8118263505044334
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.027297099241098365,
+              "gain_ratio": 0.9941187039283942
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.018207668290691828,
+              "gain_ratio": 1.0039813995813498
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.02809564217095953,
+              "gain_ratio": 1.0029597744122574
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.02483630315138869,
+              "gain_ratio": 1.002675512418582
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "native_source_replay_error": 5.0095871634111293e-08,
+      "time_setting": 8,
+      "note": 37,
+      "pitch_word": 4339,
+      "command_target_writes": [],
+      "models": [
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.025805744332294003,
+          "stable_fit_delay_frames": 149.2219621276422,
+          "stable_fit_gain": 0.011123279949180522,
+          "startup_error": 0.6058834700114805,
+          "late_evaluation_error": 0.01502901719971565,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.8201471836425559,
+              "gain_ratio": 0.3307094050617084
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.3525637607910752,
+              "gain_ratio": 0.8571937009083397
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.631283903670834,
+              "gain_ratio": 0.5005607049228241
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.2999011229096531,
+              "gain_ratio": 0.8695707255554034
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.6037487726218352,
+              "gain_ratio": 0.7121961560733555
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.2856673467538314,
+              "gain_ratio": 0.9098522127156736
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.48774014380417385,
+              "gain_ratio": 0.9753175755347504
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.030143921617925708,
+          "stable_fit_delay_frames": 149.24068321612032,
+          "stable_fit_gain": 0.010965873800756878,
+          "startup_error": 0.6061398088469733,
+          "late_evaluation_error": 0.020888287773132917,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.8203702563698541,
+              "gain_ratio": 0.33253041683001155
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.352418447579266,
+              "gain_ratio": 0.8654432545302154
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.6360645363353048,
+              "gain_ratio": 0.49900742293709743
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.30576437621735847,
+              "gain_ratio": 0.8730832936589823
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.6045616179640961,
+              "gain_ratio": 0.7134504687859193
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.29013246668919646,
+              "gain_ratio": 0.9116013793697177
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.48779261635317267,
+              "gain_ratio": 0.9782682173206178
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "native_source_replay_error": 5.0046575415634374e-08,
+      "time_setting": 8,
+      "note": 38,
+      "pitch_word": 4597,
+      "command_target_writes": [],
+      "models": [
+        {
+          "source_model": "cubic",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.0385408502219443,
+          "stable_fit_delay_frames": 174.26398283011736,
+          "stable_fit_gain": 0.011107826813387036,
+          "startup_error": 0.412316880853878,
+          "late_evaluation_error": 0.016513095355611556,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.41271388687731525,
+              "gain_ratio": 0.7390884277081803
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.5495322955601498,
+              "gain_ratio": 0.7393046559536224
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.2514947367980995,
+              "gain_ratio": 0.8578874553481283
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.39036594832447524,
+              "gain_ratio": 0.7703622639961087
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.41282776843182384,
+              "gain_ratio": 0.8065780810025632
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.3307788661000405,
+              "gain_ratio": 0.9149247791916405
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.24729928119436803,
+              "gain_ratio": 0.9217008481605221
+            }
+          ]
+        },
+        {
+          "source_model": "linear",
+          "ramp_ms": 0,
+          "model_label": "linear-command-ramp",
+          "stable_fit_error": 0.04225530909864821,
+          "stable_fit_delay_frames": 174.28119026012575,
+          "stable_fit_gain": 0.01096747281458986,
+          "startup_error": 0.41240932984632966,
+          "late_evaluation_error": 0.022334921921102258,
+          "local_windows": [
+            {
+              "start_ms": 5,
+              "end_ms": 15,
+              "relative_error": 0.41434346022407986,
+              "gain_ratio": 0.746893308207955
+            },
+            {
+              "start_ms": 15,
+              "end_ms": 25,
+              "relative_error": 0.5478839248741038,
+              "gain_ratio": 0.7491309963689964
+            },
+            {
+              "start_ms": 25,
+              "end_ms": 35,
+              "relative_error": 0.25464802678159115,
+              "gain_ratio": 0.8632596090944521
+            },
+            {
+              "start_ms": 35,
+              "end_ms": 45,
+              "relative_error": 0.3929547847498516,
+              "gain_ratio": 0.7740431199875231
+            },
+            {
+              "start_ms": 45,
+              "end_ms": 55,
+              "relative_error": 0.4175344593267587,
+              "gain_ratio": 0.8048856572357331
+            },
+            {
+              "start_ms": 55,
+              "end_ms": 65,
+              "relative_error": 0.3259007224960538,
+              "gain_ratio": 0.9178257860293052
+            },
+            {
+              "start_ms": 65,
+              "end_ms": 75,
+              "relative_error": 0.256413264958126,
+              "gain_ratio": 0.9143357428428587
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "RoboSampler trims leading silence; no MIDI time anchor.",
+    "Offline cubic source is outside the native candidate coverage below pitch4096 and at exact quarter speed; those rows isolate cutoff trajectories and are not direct native waveform acceptance.",
+    "No low-note bypass capture; source reconstruction and analog response are not independently calibrated at these pitches.",
+    "TVA fast commands also affect onset and are unmodeled; cutoff-only ramps cannot isolate them.",
+    "Linear coefficient ramps are candidate tests, not decoded hardware semantics.",
+    "Startup is one take per note; no independent validation or runtime change."
+  ]
+}

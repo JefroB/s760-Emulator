@@ -1,0 +1,67 @@
+{
+  "rubric_version": "ic15-native-decoding-v1",
+  "score_name": "Boot-ROM functional-scope acceptance",
+  "passed_gates": 46,
+  "total_gates": 60,
+  "percent": 76.66666666666667,
+  "gate_counts": {
+    "context": 11,
+    "layout": 15,
+    "behavior": 12,
+    "execution": 8
+  },
+  "path_count": 15,
+  "metrics": {
+    "boot_rom": {
+      "classified_bytes": 26277,
+      "total_bytes": 32768,
+      "percent": 80.1910400390625,
+      "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "presumed_unused_bytes": 6490,
+      "accounted_including_assumption_bytes": 32767,
+      "unresolved_other_bytes": 1
+    },
+    "os": {
+      "classified_bytes": 77680,
+      "total_bytes": 1032192,
+      "percent": 7.525731646825397,
+      "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    }
+  },
+  "scope_sha256": "34317d092d847e1396668b4cf33bd9cae2b37f257e00f109c11dee68f16cb5f8",
+  "evidence_sha256": {
+    "docs/condensed/validation/ic15-root-and-hex-audit-2026-10-16.json": "d98adefa3f064396d56b9071bb1a9950b7ebee1916dfa2cabb91f72e55f48591",
+    "docs/condensed/validation/ic15-native-handoff-2026-10-16.json": "1b8efaa1305c49f72551436f5988a07e2fddcaff7d7fd0ac768a4c28ec3398f2",
+    "docs/condensed/validation/ic15-byte6903-floppy-load-trace-2026-10-16.json": "a107f7cd63a32061c2eb2969ab595e2fd48d70ed2e7736e3da2d8082be41c27a",
+    "docs/condensed/validation/ic15-loader-recovery-2026-10-16.json": "631cead7a330599e6b3b663002122c27bb3c706b98883a2e3bd99d6c3bf697f5",
+    "docs/condensed/validation/ic15-native-invalid-media-2026-10-16.json": "cc2702b2d7813e21b74ecaed02d47e81f692292bd54d3ae6eb2c90275baa0a9a",
+    "docs/condensed/validation/ic15-native-short-density-2026-10-16.json": "9358ada29d87d5c6192a3a84191b91a346662ba20a1acbf8a965c8c1e8ba2a22",
+    "docs/condensed/validation/ic15-native-scsi-command-contract-2026-10-16.json": "be16967f035e1b8902083300fe9caacda9aae2c0151050faf9538227e6f83376",
+    "docs/condensed/validation/ic15-native-scsi-absent-fallback-2026-10-16.json": "2bd027e8494dfe52477396ee2984cf110d14ee19af06af43ba77f82f493d4074",
+    "docs/condensed/validation/ic15-native-scsi-bad-header-fallback-2026-10-16.json": "65fc9052d595eed217dc889f5b822856235b353dc9c570ebf046c574580ffebe",
+    "docs/condensed/validation/ic15-native-scsi-valid-header-2026-10-16.json": "a24fb19c41b9879f835ade24c3fa9d66d61c6d16d1548efe806a01656ed3b42e",
+    "docs/condensed/validation/ic15-scsi-records-and-transfer-2026-10-16.json": "df079e8ac706e8af9a53466d658ae4cf09c316c5b0499db883f2ef6cd1b8186a",
+    "docs/condensed/validation/ic15-scsi-transport-validation-2026-10-16.json": "84e7d3628b152b31c2333969a41f370f8e6718c1b0912c8b18b75427208d6e8e",
+    "docs/condensed/validation/ic15-native-menu-bounds-2026-10-16.json": "f9787c07477f342f3c12b71c516a1b7bf716542fd01fdd8fcf8a55e470729db6",
+    "docs/condensed/validation/ic15-native-contrast-bounds-encoder-2026-10-16.json": "fc6318d6ff27ce05c53c73538aead18b7d750029ec6f62673f2ba304b824f8cf",
+    "docs/condensed/validation/ic15-native-tv-bounds-2026-10-16.json": "21e1da859d960b1a8debbc4bba63c250f03ebff93208e6329e23f24f5fb1320d",
+    "docs/condensed/validation/ic15-native-setup-eeprom-2026-10-16.json": "2088cdeee48b3cd5fa198116be917cf745439dfe348b14f97a0353921c03fec4",
+    "docs/condensed/validation/ic15-native-eeprom-2026-10-16.json": "88d2c42d69e73166d39531bda89fc45f0ac9cd3ff79984a1209c4784aa76cb12",
+    "docs/condensed/validation/ic15-display-resource-2026-10-16.json": "b9c2e84aaee08444b0a5f904810e99933da1935e18dce110cfe549cf174ef78b",
+    "docs/condensed/validation/ic15-native-upload-2026-10-16.json": "04a0556f12ed9dfd77b98930ea2313aa22f642c5bd53e8fb88895bd673afdadd",
+    "docs/condensed/validation/ic15-pixel-upload-contract-2026-10-16.json": "db7d27e3f2114eedd82956a4428fcaabe651be89d437dc580d885b85dbda8eee",
+    "docs/condensed/validation/ic15-native-audio-init-2026-10-16.json": "4c388336b7ec32badf46ccc4911e1da841fce09b29255d0d20a2a8d156a7e344",
+    "docs/condensed/validation/ic15-indirect-store-contracts-2026-10-16.json": "9fdca83db4f29617c7c5c4b8ee7b09412dbf368399850ba523e457d010fae537",
+    "docs/condensed/validation/ic15-residual-helpers-2026-10-16.json": "b3920370087b4a2989604a704fdcb36f38d2088f13fc6d7ade6e5432d4502482",
+    "docs/condensed/validation/ic15-local-stack-balance-2026-10-16.json": "042f67e00a4ed475ca7dedb056efa0c8303aafc9e3ad9bd74348c532f17b1a20",
+    "docs/condensed/validation/ic15-stack-cpu-validation-2026-10-16.json": "e66287fe28ce9ec9e4a204b999a1ad707eb950af70667108f1b0bcb047568175",
+    "docs/condensed/validation/ic15-native-stack-after-cpu-2026-10-16.json": "ba44107106a6d33819a2361ef0b45e6da1367109690e13bd9bb85825f7f0c174",
+    "docs/condensed/validation/ic15-native-stack-irq-reconciliation-2026-10-16.json": "93a912d30fc3aad2efb0d56c7feb8dbbf505403ddec3c734e08d0f930028712b",
+    "docs/condensed/validation/ic15-decoding-2026-10-16.json": "cdac69d10f662d5a99b401e26e97b4c29e82a06d659a55a1f7212954147b7070",
+    "docs/condensed/validation/ic15-final-static-frontier-2026-10-16.json": "15604d43318acd43a7877176b4d092e16729016f1b13cb13c4d0b5c4a0541ed5",
+    "docs/condensed/validation/ic15-residual-text-classification-2026-10-16.json": "2baa695c218ae4660d9c08bd4fbb07c50e2ca638e7673a97410ba3a8b4aec831",
+    "docs/condensed/validation/ic15-residual-byte-history-2026-10-16.json": "3ca5654042724516c5a181634f9d5e8c3f081302a8918b55cb75df6aec030d5b"
+  },
+  "overall_firmware_decoding_completion": "not yet quantifiable",
+  "limitation": "Acceptance against this fixed boot-ROM scope; not effort remaining, overall firmware completion, hardware fidelity or rebuild acceptance."
+}

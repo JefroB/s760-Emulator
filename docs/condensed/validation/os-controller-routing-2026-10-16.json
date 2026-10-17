@@ -1,0 +1,178 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "decoder": "pypcode 4.0.0",
+  "anchors": [
+    {
+      "region": "resident_services",
+      "pc": 10955,
+      "page": 15,
+      "file_offset": 44747,
+      "bytes": "5d21785c",
+      "mnemonic": "MULUB",
+      "operands": "RW5C, R78, #0x21"
+    },
+    {
+      "region": "resident_services",
+      "pc": 10964,
+      "page": 15,
+      "file_offset": 44756,
+      "bytes": "99ff98",
+      "mnemonic": "CMPB",
+      "operands": "R98, #-0x1"
+    },
+    {
+      "region": "resident_services",
+      "pc": 11071,
+      "page": 15,
+      "file_offset": 44863,
+      "bytes": "9b7df04076",
+      "mnemonic": "CMPB",
+      "operands": "R76, 0x40f0, LOOKUP[RW7C]"
+    },
+    {
+      "region": "resident_services",
+      "pc": 11694,
+      "page": 15,
+      "file_offset": 45486,
+      "bytes": "71066b",
+      "mnemonic": "ANDB",
+      "operands": "R6B, #0x6"
+    },
+    {
+      "region": "resident_services",
+      "pc": 11719,
+      "page": 15,
+      "file_offset": 45511,
+      "bytes": "91046b",
+      "mnemonic": "ORB",
+      "operands": "R6B, #0x4"
+    },
+    {
+      "region": "resident_services",
+      "pc": 11749,
+      "page": 15,
+      "file_offset": 45541,
+      "bytes": "91026b",
+      "mnemonic": "ORB",
+      "operands": "R6B, #0x2"
+    },
+    {
+      "region": "resident_services",
+      "pc": 11834,
+      "page": 15,
+      "file_offset": 45626,
+      "bytes": "88005e",
+      "mnemonic": "CMP",
+      "operands": "RW5E, ZR"
+    },
+    {
+      "region": "resident_services",
+      "pc": 11839,
+      "page": 15,
+      "file_offset": 45631,
+      "bytes": "8901005e",
+      "mnemonic": "CMP",
+      "operands": "RW5E, #0x1"
+    },
+    {
+      "region": "resident_services",
+      "pc": 12095,
+      "page": 15,
+      "file_offset": 45887,
+      "bytes": "99306a",
+      "mnemonic": "CMPB",
+      "operands": "R6A, #0x30"
+    },
+    {
+      "region": "resident_refresh_callees",
+      "pc": 45710,
+      "page": 45,
+      "file_offset": 77454,
+      "bytes": "89080060",
+      "mnemonic": "CMP",
+      "operands": "RW60, #0x8"
+    },
+    {
+      "region": "resident_refresh_callees",
+      "pc": 46305,
+      "page": 45,
+      "file_offset": 78049,
+      "bytes": "89020060",
+      "mnemonic": "CMP",
+      "operands": "RW60, #0x2"
+    },
+    {
+      "region": "resident_refresh_callees",
+      "pc": 45874,
+      "page": 45,
+      "file_offset": 77618,
+      "bytes": "d703",
+      "mnemonic": "JNE",
+      "operands": "0xb337"
+    },
+    {
+      "region": "resident_refresh_callees",
+      "pc": 45876,
+      "page": 45,
+      "file_offset": 77620,
+      "bytes": "b1106a",
+      "mnemonic": "LDB",
+      "operands": "R6A, #0x10"
+    },
+    {
+      "region": "resident_refresh_callees",
+      "pc": 45879,
+      "page": 45,
+      "file_offset": 77623,
+      "bytes": "99186a",
+      "mnemonic": "CMPB",
+      "operands": "R6A, #0x18"
+    }
+  ],
+  "bounded_tag_tables": [
+    {
+      "data_page": 678,
+      "cpu_address": 33976,
+      "file_offset": 713912,
+      "count": 8,
+      "initial_image_values": [
+        188,
+        93,
+        189,
+        94,
+        29,
+        126,
+        30,
+        127
+      ],
+      "sha256": "dda9cafe0a81f243c1154bd21b376ebddd028a65cb8eb4d422d2f9cce422916e",
+      "qualification": "Initial image bytes only; no runtime immutability proof."
+    },
+    {
+      "data_page": 678,
+      "cpu_address": 34156,
+      "file_offset": 714092,
+      "count": 2,
+      "initial_image_values": [
+        118,
+        122
+      ],
+      "sha256": "9685c81b76accc50694909aed78fa64a4cfa14a92c2f347785ef06b7840815a7",
+      "qualification": "Initial image bytes only; no runtime immutability proof."
+    }
+  ],
+  "qualification": "Static decoding under timer-service fetch mapping. Hardware behavior and other calling contexts remain unqualified.",
+  "identities": {
+    "scripts/analyze_firmware_routines.py": "66a2f8b8e4de1df537284db328ed8c42b714ef739867bbaa8404ee0ce3dfef7b",
+    "scripts/firmware_manifests/os_exploration.json": "d780688d8762e0935d725d6fa517762893b69caf6bac4f34230a12e040ee9ec5"
+  },
+  "tests": {
+    "passed": 28,
+    "failed": 0
+  },
+  "tool_identities": {
+    "scripts/analyze_firmware_routines.py": "66a2f8b8e4de1df537284db328ed8c42b714ef739867bbaa8404ee0ce3dfef7b",
+    "scripts/firmware_coverage.py": "147c119197aa0cddddabe18e57e69a199b5a8178e9ba75f4cc389553414ab617",
+    "scripts/firmware_manifests/os_exploration.json": "d780688d8762e0935d725d6fa517762893b69caf6bac4f34230a12e040ee9ec5"
+  }
+}

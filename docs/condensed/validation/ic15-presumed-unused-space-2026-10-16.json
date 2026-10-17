@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-16",
+  "authority": "Explicit user direction: operate on the assumption that the remaining empty-looking ROM space is empty unless proven otherwise.",
+  "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "presumed_unused_ff_ranges": [
+    [
+      0,
+      288
+    ],
+    [
+      776,
+      2048
+    ],
+    [
+      8212,
+      8240
+    ],
+    [
+      8256,
+      8320
+    ],
+    [
+      8601,
+      8602
+    ],
+    [
+      13955,
+      13956
+    ],
+    [
+      15545,
+      16384
+    ],
+    [
+      23898,
+      24576
+    ],
+    [
+      25433,
+      25434
+    ],
+    [
+      26903,
+      26904
+    ],
+    [
+      29453,
+      32768
+    ]
+  ],
+  "presumed_unused_bytes": 6488,
+  "verified_code_and_data_bytes": 26101,
+  "remaining_unresolved_bytes": 179,
+  "total_bytes": 32768,
+  "accounted_including_assumption_percent": 99.4537353515625,
+  "verified_classified_percent": 79.6539306640625,
+  "qualification": "Working assumption, not independently established unused-space semantics. Reopen any interval if a credible code, data, copy, checksum, or runtime dependency is found. Original bytes and strict coverage inventory unchanged."
+}

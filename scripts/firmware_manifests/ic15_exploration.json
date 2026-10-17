@@ -1,0 +1,1289 @@
+{
+  "schema": 1,
+  "sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "mapping": {
+    "kind": "mirrored_rom",
+    "physical_aperture": [
+      1966080,
+      2097152
+    ],
+    "mirror_size": 32768
+  },
+  "regions": [
+    {
+      "name": "rom_reset",
+      "page": "0x780",
+      "start": "0x2080",
+      "end": "0x219a",
+      "entries": [
+        "0x2080"
+      ],
+      "evidence": "IC15 contract identifies reset2080. Page0780 is a representative native ROM mirror alias, not a claim of physical power-on selector value. 209B/209F installs0790 for4000window;2187 jumps4140. Other selectors and data maps are distinct."
+    },
+    {
+      "name": "rom_boot_services",
+      "page": "0x790",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x4140",
+        "0x52d1",
+        "0x580a",
+        "0x5bdb",
+        "0x4283",
+        "0x4321",
+        "0x433a",
+        "0x5655",
+        "0x5a0e"
+      ],
+      "evidence": "ROM reset209B/209F selects fetch0102=0790;2187 jumps4140. Stop annotations will retain any later current-window remaps. Structural-only52D1: read counterpart to rooted52FE single-word EEPROM write helper, same4CAA..4D2A bounds and aligned RAM word index, calls established53EC/53C5/53F6, RET52FD. Invocation unresolved. Structural-only residuals: 580A and5BDB are identical bounded nested byte-delay loops (50*255 PUSH/POP pairs), each immediately follows established return and ends before next rooted routine; invocation unresolved. Structural-only residuals: Redundant SJMP/RET encodings immediately after unconditional transfers within boot/menu bodies, all targets independently decoded; static residual encodings only."
+    },
+    {
+      "name": "rom_low_services",
+      "page": "0x780",
+      "start": "0x219a",
+      "end": "0x4000",
+      "entries": [
+        "0x219a",
+        "0x2705",
+        "0x273a",
+        "0x2752",
+        "0x2764",
+        "0x2798",
+        "0x28ab",
+        "0x28c5",
+        "0x29bc",
+        "0x2d64",
+        "0x2f66",
+        "0x2f73",
+        "0x2f89",
+        "0x2fb0",
+        "0x3019",
+        "0x3088",
+        "0x3267",
+        "0x32c3",
+        "0x3415",
+        "0x34ed",
+        "0x354f",
+        "0x3632",
+        "0x3684",
+        "0x380c",
+        "0x384b",
+        "0x38ab",
+        "0x393b",
+        "0x3a96",
+        "0x3aad",
+        "0x3ac5",
+        "0x3b5f",
+        "0x3bdd",
+        "0x3c68",
+        "0x3c96",
+        "0x2768",
+        "0x3ac6",
+        "0x2274",
+        "0x245e",
+        "0x2480",
+        "0x248f",
+        "0x25f8",
+        "0x280a",
+        "0x2871",
+        "0x2f98",
+        "0x317c",
+        "0x3496",
+        "0x35bc",
+        "0x3aae",
+        "0x3c38",
+        "0x2375",
+        "0x2451",
+        "0x2473",
+        "0x2532",
+        "0x253f",
+        "0x31a7"
+      ],
+      "evidence": "Direct targets from rom_boot_services under retained reset-window ROM alias0780. Physical reset selector remains uncertain; callee/interrupt preservation not assumed proven. Below2080 targets remain unresolved. Structural-only residual bodies2768 and3AC6 are explicitly qualified as uninvoked: each follows an established immediate-return bypass stub (2764..2767 or3AC5), references established RAM/device interfaces, and closes at RET before next independently rooted entry2798/3B5F. No caller, indirect dispatch or execution is established for these bodies; their entry annotations classify coherent residual code, not reachable behavior. Structural-only follow-up roots: 2274: Two adjacent 512-byte fill operations, SCALL2280 shared loop; RET2292 precedes independently decoded2293.; 245E: Phase-zero polling counterpart to rooted243C phase-one helper; shared call249E and RET247F.; 2480: Phase-three polling, RET248E immediately before phase-seven helper248F.; 248F: Phase-seven polling, RET249D before independently rooted249E.; 25F8: PUSHF/POPF balanced diagnostic RBB display wrapper, call38AB; RET261B before independently decoded261C.; 280A: Storage command body follows rooted2798 display helper RET path; references copied records4C77/4C7E/4C85 and established command helpers; RET2870.; 2871: Adjacent storage command body uses copied record4C8C and established helpers; RET28AA immediately before rooted28AB.; 2F98: Positioned counted-string counterpart to rooted2F73 and2F89; three advancing header reads; RET2FAF.; 317C: Bounded 192x64 coordinate helper between rooted30B0 pixel path and3267; explicit branches to existing30B0/327A/32D6; RET3266.; 3496: Bounded 192x64 row fill helper after rooted3415 and before34ED; calls established32D6 and returns34EC.; 35BC: Character-frame helper after rooted354F RET35BB; calls established2D64 with balanced register preservation, ends3631 before rooted3632.. These roots establish bounded coherent residual code only; no runtime invocation or caller is claimed. Structural-only residuals: 3AAE follows immediate RET3AAD and gates E816/E814 writes by4D2F, returns3AC4. 3C38 follows RET3C37 and uses same F00A interface as rooted3C68, maps masked38 values28/10/00 to1/2/3, otherwise0; RET3C67. Invocation unresolved. Structural-only residuals: Redundant two-byte SJMP stubs immediately follow unconditional jumps within established routines, target independently decoded instruction boundaries; static residual encodings only, no incoming execution proved."
+    },
+    {
+      "name": "rom_low_monitor_vectors",
+      "page": "0x780",
+      "start": "0x120",
+      "end": "0x308",
+      "entries": [
+        "0x120",
+        "0x13e",
+        "0x1a0",
+        "0x2a0",
+        "0x124",
+        "0x128",
+        "0x12c",
+        "0x130",
+        "0x134",
+        "0x138",
+        "0x1f3"
+      ],
+      "evidence": "Direct branch0790:4025 to01A0 plus initial vector words2000..2013 and2030..203F under native reset fetch/data page0780. Native banked_address applies fetch selectors also below2000. Physical reset defaults remain unqualified. Structural-only roots0124..0138: six contiguous four-byte PUSHF/LJMP stubs adjoining vector-proven0120, each targets shared013C or02E0. Invocation of these six stubs is unqualified. Explicit0131 branch justifies02E0..0307 closure;0308 begins FF content. Structural-only residuals: 01F3 is a redundant SJMP to following01F5, immediately follows decoded unconditional transfer and lies within established monitor body; no reachable incoming edge proven.",
+      "summary": [
+        "01A0 serial monitor recognizes slash,R/r,W/w,G/g;02A0 initial vector target emitsF4 then enters same monitor.",
+        "Read/write commands receive24-bit physical address MSB first and8-bit count, remap data010C per byte, and finish with slash. No monitor commands executed by analysis.",
+        "0120 FDC interrupt stub reaches013F, drains FIFO to4800 and sets4820 before restoring registers/flags."
+      ]
+    }
+  ],
+  "bank_links": [
+    {
+      "source": "rom_reset",
+      "pc": "0x2187",
+      "target": "rom_boot_services",
+      "destination": "0x4140",
+      "context": "Reset explicitly sets0102=0790; no intervening0102write in reset closure.",
+      "evidence": "Original ROM209B/209F and2187."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4140",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x48f6",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4902",
+      "target": "rom_low_services",
+      "destination": "0x384b",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x41ed",
+      "target": "rom_low_services",
+      "destination": "0x3c96",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x41f0",
+      "target": "rom_low_services",
+      "destination": "0x3684",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x41f3",
+      "target": "rom_low_services",
+      "destination": "0x29bc",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x41f6",
+      "target": "rom_low_services",
+      "destination": "0x3ac5",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x41f9",
+      "target": "rom_low_services",
+      "destination": "0x3aad",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4769",
+      "target": "rom_low_services",
+      "destination": "0x3415",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4774",
+      "target": "rom_low_services",
+      "destination": "0x3632",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4783",
+      "target": "rom_low_services",
+      "destination": "0x3632",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4882",
+      "target": "rom_low_services",
+      "destination": "0x384b",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x422a",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4790",
+      "target": "rom_low_services",
+      "destination": "0x3632",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4892",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x479d",
+      "target": "rom_low_services",
+      "destination": "0x3632",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x47af",
+      "target": "rom_low_services",
+      "destination": "0x3bdd",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x48b5",
+      "target": "rom_low_services",
+      "destination": "0x384b",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x47c1",
+      "target": "rom_low_services",
+      "destination": "0x3bdd",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x42ce",
+      "target": "rom_low_services",
+      "destination": "0x219a",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x48c3",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x47d3",
+      "target": "rom_low_services",
+      "destination": "0x3bdd",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x47e5",
+      "target": "rom_low_services",
+      "destination": "0x3bdd",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x47e8",
+      "target": "rom_low_services",
+      "destination": "0x3a96",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x48da",
+      "target": "rom_low_services",
+      "destination": "0x380c",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x47f6",
+      "target": "rom_low_services",
+      "destination": "0x3b5f",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4112",
+      "target": "rom_low_services",
+      "destination": "0x3088",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x48e9",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x42f3",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4118",
+      "target": "rom_low_services",
+      "destination": "0x3088",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x411e",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4124",
+      "target": "rom_low_services",
+      "destination": "0x3088",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x412a",
+      "target": "rom_low_services",
+      "destination": "0x3088",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x432b",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4130",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x55b3",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4816",
+      "target": "rom_low_services",
+      "destination": "0x34ed",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5973",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4136",
+      "target": "rom_low_services",
+      "destination": "0x3088",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x481b",
+      "target": "rom_low_services",
+      "destination": "0x354f",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x413c",
+      "target": "rom_low_services",
+      "destination": "0x3088",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4858",
+      "target": "rom_low_services",
+      "destination": "0x3632",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5671",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x55c3",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4847",
+      "target": "rom_low_services",
+      "destination": "0x3267",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5a2a",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x485f",
+      "target": "rom_low_services",
+      "destination": "0x2f73",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4862",
+      "target": "rom_low_services",
+      "destination": "0x2f73",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x598f",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x55df",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5b5f",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5b38",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4660",
+      "target": "rom_low_services",
+      "destination": "0x2705",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4545",
+      "target": "rom_low_services",
+      "destination": "0x2752",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x44f6",
+      "target": "rom_low_services",
+      "destination": "0x2798",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x578e",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5767",
+      "target": "rom_low_services",
+      "destination": "0x3c68",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4548",
+      "target": "rom_low_services",
+      "destination": "0x2764",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x454b",
+      "target": "rom_low_services",
+      "destination": "0x2752",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5a5c",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4505",
+      "target": "rom_low_services",
+      "destination": "0x28ab",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x56a3",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5a73",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4581",
+      "target": "rom_low_services",
+      "destination": "0x380c",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5a7e",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x56ba",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4600",
+      "target": "rom_low_services",
+      "destination": "0x28c5",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x46e5",
+      "target": "rom_low_services",
+      "destination": "0x273a",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x56c5",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4592",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5a96",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x497f",
+      "target": "rom_low_services",
+      "destination": "0x384b",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x56dd",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5aaa",
+      "target": "rom_low_services",
+      "destination": "0x2fb0",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x498f",
+      "target": "rom_low_services",
+      "destination": "0x384b",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x56f1",
+      "target": "rom_low_services",
+      "destination": "0x2fb0",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5ac2",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x49a2",
+      "target": "rom_low_services",
+      "destination": "0x2f89",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x49ae",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5718",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x572f",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5726",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5ae9",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5b00",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5af7",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x573d",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5b0e",
+      "target": "rom_low_services",
+      "destination": "0x2d64",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x50c7",
+      "target": "rom_low_services",
+      "destination": "0x393b",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x50e9",
+      "target": "rom_low_services",
+      "destination": "0x32c3",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x50d6",
+      "target": "rom_low_services",
+      "destination": "0x3019",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x50f9",
+      "target": "rom_low_services",
+      "destination": "0x2f66",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5109",
+      "target": "rom_low_services",
+      "destination": "0x384b",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5122",
+      "target": "rom_low_services",
+      "destination": "0x38ab",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x5133",
+      "target": "rom_low_services",
+      "destination": "0x3088",
+      "context": "Retained reset-window native ROM mirror alias0780; requires no intervening remap.",
+      "evidence": "Direct decoded ROM call/branch; reset window and ROM aperture from IC15 manifest."
+    },
+    {
+      "source": "rom_boot_services",
+      "pc": "0x4025",
+      "target": "rom_low_monitor_vectors",
+      "destination": "0x1a0",
+      "context": "Retained native reset fetch0100=0780 maps low-address code to ROM.",
+      "evidence": "Native set_board_fetch/banked_address routes instruction fetches through selector even below2000; direct ROM branch4025."
+    },
+    {
+      "source": "rom_low_monitor_vectors",
+      "pc": "0x20f",
+      "target": "rom_boot_services",
+      "destination": "0x474f",
+      "context": "Retained fetch0102=0790; monitor itself changes only data010C.",
+      "evidence": "Direct020F jump474F; reset209B/209F establishes0790."
+    }
+  ],
+  "data_regions": [
+    {
+      "name": "boot_text_636a",
+      "file_start": 25450,
+      "file_end": 25491,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=836A followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 18558, 18562)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_text_6393",
+      "file_start": 25491,
+      "file_end": 25518,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=8393 followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 18574, 18578)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_text_67e1",
+      "file_start": 26593,
+      "file_end": 26607,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=87E1 followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 20725, 20729), ('rom_boot_services', 20741, 20745)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_text_727c",
+      "file_start": 29308,
+      "file_end": 29325,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=927C followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 21935, 21939), ('rom_boot_services', 22895, 22899)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_text_728d",
+      "file_start": 29325,
+      "file_end": 29352,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=928D followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 21951, 21955)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_text_72fc",
+      "file_start": 29436,
+      "file_end": 29443,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=92FC followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 22198, 22202), ('rom_boot_services', 22315, 22319), ('rom_boot_services', 23151, 23155), ('rom_boot_services', 23292, 23296)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_text_72ec",
+      "file_start": 29420,
+      "file_end": 29428,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=92EC followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 22292, 22296), ('rom_boot_services', 23269, 23273)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_text_72f4",
+      "file_start": 29428,
+      "file_end": 29436,
+      "encoding": "NUL-terminated display bytes",
+      "evidence": "Immediate RWE2=92F4 followed by call to decoded NUL consumer2F66/384B at[('rom_boot_services', 22306, 22310), ('rom_boot_services', 23283, 23287)]; data010C=0798 from20A4..20B6, retained-map condition. Bound to first NUL within256bytes; raw encoding retained."
+    },
+    {
+      "name": "boot_vector_words_2000",
+      "file_start": 8192,
+      "file_end": 8212,
+      "encoding": "Little-endian16-bit initial vector words",
+      "evidence": "IC15 import contract identifies vector area2000..203F; native CPU vector fetch2000+2*level and native reset data0108=0780. Reserved gap2014..202F not classified."
+    },
+    {
+      "name": "boot_vector_words_2030",
+      "file_start": 8240,
+      "file_end": 8256,
+      "encoding": "Little-endian16-bit initial vector words",
+      "evidence": "IC15 import contract identifies vector area2000..203F; native CPU vector fetch2000+2*level and native reset data0108=0780. Reserved gap2014..202F not classified."
+    },
+    {
+      "name": "boot_display_glyph_rows",
+      "file_start": 2048,
+      "file_end": 4096,
+      "encoding": "256 records of eight source bytes; output=(byte<<2)&FC",
+      "evidence": "ROM29BC called at41F3;2BAC setsRW22=0800;2BC0 R40=0 and2BC3 R41=8; byte DJNZ loops2BE1/2BE4 perform256*8 sequential reads at2BC6. Native reset data0108=0780 retained; physical power-on selector unqualified. No current decoded direct0108 stores found; indirect effects remain open."
+    },
+    {
+      "name": "boot_dual_display_message_63d6",
+      "file_start": 25558,
+      "file_end": 25627,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 18749, 'call_pc': 18763, 'consumer': '0x48ed'}, {'load_pc': 21089, 'call_pc': 21103, 'consumer': '0x48ed'}, {'load_pc': 21173, 'call_pc': 21187, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_641b",
+      "file_start": 25627,
+      "file_end": 25696,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 20966, 'call_pc': 20980, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6460",
+      "file_start": 25696,
+      "file_end": 25765,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 21117, 'call_pc': 21131, 'consumer': '0x48ed'}, {'load_pc': 22007, 'call_pc': 22021, 'consumer': '0x48ed'}, {'load_pc': 22951, 'call_pc': 22965, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_64a5",
+      "file_start": 25765,
+      "file_end": 25834,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 18714, 'call_pc': 18728, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_64ea",
+      "file_start": 25834,
+      "file_end": 25903,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17070, 'call_pc': 17084, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_652f",
+      "file_start": 25903,
+      "file_end": 25972,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 16385, 'call_pc': 16399, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6574",
+      "file_start": 25972,
+      "file_end": 26041,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17236, 'call_pc': 17250, 'consumer': '0x4906'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_65b9",
+      "file_start": 26041,
+      "file_end": 26110,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17313, 'call_pc': 17327, 'consumer': '0x4906'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_65fe",
+      "file_start": 26110,
+      "file_end": 26179,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17489, 'call_pc': 17503, 'consumer': '0x4906'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6643",
+      "file_start": 26179,
+      "file_end": 26248,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17367, 'call_pc': 17381, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6688",
+      "file_start": 26248,
+      "file_end": 26317,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17419, 'call_pc': 17433, 'consumer': '0x4906'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_66cd",
+      "file_start": 26317,
+      "file_end": 26386,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17608, 'call_pc': 17622, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6712",
+      "file_start": 26386,
+      "file_end": 26455,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 17989, 'call_pc': 18003, 'consumer': '0x48ed'}, {'load_pc': 18122, 'call_pc': 18136, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6757",
+      "file_start": 26455,
+      "file_end": 26524,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 18021, 'call_pc': 18035, 'consumer': '0x4906'}, {'load_pc': 18154, 'call_pc': 18168, 'consumer': '0x4906'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_679c",
+      "file_start": 26524,
+      "file_end": 26593,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 18091, 'call_pc': 18105, 'consumer': '0x4906'}, {'load_pc': 18224, 'call_pc': 18238, 'consumer': '0x4906'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_67ef",
+      "file_start": 26607,
+      "file_end": 26676,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 16424, 'call_pc': 16438, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6834",
+      "file_start": 26676,
+      "file_end": 26745,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 16519, 'call_pc': 16533, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_6879",
+      "file_start": 26745,
+      "file_end": 26814,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 16617, 'call_pc': 16631, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_dual_display_message_68be",
+      "file_start": 26814,
+      "file_end": 26883,
+      "encoding": "attribute-byte + NUL text; attribute-byte + NUL text",
+      "evidence": "Contiguous pointer load and PUSH-only argument-preservation prefix to48ED/4906 at[{'load_pc': 16965, 'call_pc': 16979, 'consumer': '0x48ed'}];48ED consumes attr,LCD text,attr,CRT text (CRT gated4D2F). Data010C=0798 condition; first NUL bounds for each component. No whole resource dictionary bound inferred."
+    },
+    {
+      "name": "boot_disk_signature",
+      "file_start": 25434,
+      "file_end": 25449,
+      "encoding": "bounded byte identity",
+      "evidence": "4E69/4E6D/4E71 compares exactly15 incoming sector bytes4826..4834 against data0798:835A. Following incoming byte is separately tested50 at4E8D."
+    },
+    {
+      "name": "boot_config_identity",
+      "file_start": 25346,
+      "file_end": 25362,
+      "encoding": "bounded byte identity",
+      "evidence": "5171..518B compares16 bytes fromdata0798:8302 withRAM4CBA;522E..523F copies exactly16 default bytes to4CBA."
+    },
+    {
+      "name": "boot_audio_command_pairs",
+      "file_start": 26908,
+      "file_end": 28508,
+      "encoding": "Little-endian16-bit words",
+      "evidence": "54E5 setsRW2A=891C;54EB/54F3 load two words per loop;5507 compares16-bit count0190=400. Data010C=0798 condition.400*4=1600 bytes."
+    },
+    {
+      "name": "boot_audio_coefficients",
+      "file_start": 28508,
+      "file_end": 29308,
+      "encoding": "Little-endian16-bit words",
+      "evidence": "550E setsRW2A=8F5C;5514 loads one word per loop;552D compares0190=400. Data010C=0798 condition.400*2=800 bytes."
+    },
+    {
+      "name": "boot_audio_control_words",
+      "file_start": 26904,
+      "file_end": 26908,
+      "encoding": "Little-endian16-bit words",
+      "evidence": "5534 setsRW2A=8918;5538/5540 load exactly two words forDC08/DC0A. Data010C=0798 condition."
+    },
+    {
+      "name": "boot_setup_labels",
+      "file_start": 29352,
+      "file_end": 29408,
+      "encoding": "Four consecutive NUL-terminated strings",
+      "evidence": "55D2 sets92A8;55D6 count4;55DF calls2F66 with advancingRWE2;55E2 nextrow;55E4 repeats. Data010C=0798 retained condition. Four NUL boundaries end72E0."
+    },
+    {
+      "name": "boot_controller_mode_labels",
+      "file_start": 25518,
+      "file_end": 25548,
+      "encoding": "Three ten-byte NUL-terminated labels",
+      "evidence": "56D1..56DD selects83AE+10*4CB2; startup5194..51A3 constrains valid config0..2 and58BE..58F0 maintains valid starting states. Three stringsPanel+LCD/Mouse+CRT/RC100+CRT; arbitrary corrupt/invocation states not bounded."
+    },
+    {
+      "name": "boot_bitmap_6108",
+      "file_start": 24840,
+      "file_end": 25202,
+      "encoding": "byte-columns,rows,then row-major1-bit bitmap MSB-first",
+      "evidence": "47A0/47AF and47B2/47C1 pass8108 to3BDD; header20 byte-columns,18 rows; nested loops3BF4..3C34 consume20*18 data bytes,MSB first. Data010C=0798 and4D2F gate condition."
+    },
+    {
+      "name": "boot_bitmap_6288",
+      "file_start": 25224,
+      "file_end": 25316,
+      "encoding": "byte-columns,rows,then row-major1-bit bitmap MSB-first",
+      "evidence": "47C4/47D3 and47D6/47E5 pass8288 to3BDD; header5 byte-columns,18 rows; nested loops consume90 data bytes. Data010C=0798 and4D2F gate condition."
+    },
+    {
+      "name": "boot_bitmap_6006",
+      "file_start": 24582,
+      "file_end": 24840,
+      "encoding": "byte-columns,rows,then row-major1-bit bitmap MSB-first",
+      "evidence": "476C/4774 pass8006 to3632; header8 byte-columns,32 rows;3632..3682 consumes256 bitmapbytes. Data010C=0798 condition."
+    },
+    {
+      "name": "boot_bitmap_6272",
+      "file_start": 25202,
+      "file_end": 25224,
+      "encoding": "byte-columns,rows,then row-major1-bit bitmap MSB-first",
+      "evidence": "4793/479D pass8272 to3632; header20 byte-columns,1 row;3632..3682 consumes20 bitmapbytes. Data010C=0798 condition."
+    },
+    {
+      "name": "crt_pixel_masks",
+      "file_start": 25316,
+      "file_end": 25324,
+      "encoding": "Eight pixel bit masks",
+      "evidence": "39FF/3A07 AND RW20=x&7;3A0C readsdata0798:82E4+index. Bound8 independently of coordinates. Consumed by3BDD bitmap plotter."
+    },
+    {
+      "name": "native_contract_vdp_upload_words",
+      "file_start": 4096,
+      "file_end": 8192,
+      "encoding": "2048 little-endian16-bit sequential upload words (native-contract conditional)",
+      "evidence": "ROM371C..3725 setsVDPwordaddress0;372A source1000;3736..3744 stopsatwordaddress0800;3746 increments source2 bytes per word. Current native_vdp_w(offset0) increments addressonce perlow-bytewrite;offset4/6 reads reportaddress. Under that explicit native device contract andretained data0108=0780 sourceextent1000..1FFF. Static model-qualified, no ordinary trace or physical counter parity. OrdinarynativeROMboot2026-10-16 nowobserves2048wordaddresses0000..07FFand4096bytewritesexactlymatchingfile1000..1FFF;durableic15-native-upload-2026-10-16.json recordsbinary/inputidentities andmatchedrows. Physicalcounter/timingparityremainsunqualified."
+    },
+    {
+      "name": "boot_digital_sampler_positioned_text",
+      "file_start": 25324,
+      "file_end": 25346,
+      "encoding": "Two x,y,attribute,NUL-text records",
+      "evidence": "485B selects82EC;485F/4862 call2F73 consecutively, consumingthree headerbytes andfirstNUL text. Data010C=0798 condition. Bounds end6302."
+    },
+    {
+      "name": "signed_byte_minimum_text",
+      "file_start": 24576,
+      "file_end": 24580,
+      "encoding": "Four counted ASCII digits/sign, no terminator included",
+      "evidence": "2FCC handlesRF3=80;2FD1..2FE1 usesoffset4-width whenwidth<=4;2F89 consumesexactlyRF4 bytes. Forwidth<=4 reads lie8000..8003. Width>4 deliberatelyunbounded here; followingNUL/FF not classified."
+    },
+    {
+      "name": "boot_tv_system_label",
+      "file_start": 29408,
+      "file_end": 29420,
+      "encoding": "NUL-terminatedtext",
+      "evidence": "Extendedsetup5941 selectedby5574..557E when4D34=2;5982..5994 consumesfiveconsecutiveNULstringsfrom92A8,includingfifth92E0 TVSystem. Data010C=0798 condition."
+    },
+    {
+      "name": "boot_tv_system_values",
+      "file_start": 29443,
+      "file_end": 29453,
+      "encoding": "Two five-byteNULlabels",
+      "evidence": "5AB6..5AC2 selects9303+5*4CB5;5D20 validstatemenubounds0..1;51E6 resetbufferzeroes4CB5. Conditionalvalidstates,notarbitrarypersistedEEPROMvalues. LabelsNTSC/PAL."
+    },
+    {
+      "name": "rom_scsi_command_template_copy",
+      "file_start": "0x6312",
+      "file_end": "0x6359",
+      "encoding": "bytes",
+      "evidence": "0780:219A loads RW50=8312 and RW52=4C62;21A2 copies bytes until RW50=8359. Retained data010C=0798 maps this exact71-byte source to file6312..6358. This proves copy extent, not every record semantic or immutable RAM contents."
+    },
+    {
+      "name": "rom_fdc_specify_command",
+      "file_start": "0x6904",
+      "file_end": "0x6907",
+      "encoding": "bytes",
+      "evidence": "0790:4B09 loads RW28=8904;4B1A sets R42=3;4B1D..4B32 copies exactly3 bytes to E002 under retained data010C=0798. Original bytes03 BF02 are FDC SPECIFY opcode and two parameter bytes. Adjacent hexadecimal text is not included."
+    },
+    {
+      "name": "rom_hexadecimal_digits",
+      "file_start": "0x6907",
+      "file_end": "0x6917",
+      "encoding": "16 ASCII hex digit lookup bytes",
+      "evidence": "3088..309D separates RF3 high/low nibble, zero extends each toRW22 and reads8907+index underdata010C=0798; indices0..15 regardless inputRF3. File6907..6916; trailingFF unclassified."
+    },
+    {
+      "name": "rom_unreferenced_self_check_messages",
+      "file_start": "0x2918",
+      "file_end": "0x29bc",
+      "encoding": "NUL-terminated ASCII string data",
+      "evidence": "Structural data classification from complete printable ASCII strings and explicit NUL boundaries in original hash-checked ROM. No caller, display use, reachability or runtime invocation claimed. Self-check messages describe waiting for MIDI, RAM Check [0000], Peripheral Check and Now Initializing; placeholder contains nine question marks."
+    },
+    {
+      "name": "rom_unreferenced_question_placeholder",
+      "file_start": "0x63cc",
+      "file_end": "0x63d6",
+      "encoding": "NUL-terminated ASCII string data",
+      "evidence": "Structural data classification from complete printable ASCII strings and explicit NUL boundaries in original hash-checked ROM. No caller, display use, reachability or runtime invocation claimed. Self-check messages describe waiting for MIDI, RAM Check [0000], Peripheral Check and Now Initializing; placeholder contains nine question marks."
+    },
+    {
+      "name": "rom_signed_minimum_string_terminator",
+      "file_start": "0x6004",
+      "file_end": "0x6005",
+      "encoding": "ASCII string boundary",
+      "evidence": "NUL immediately after the existing -128 ASCII resource; structural string boundary only, counted-text reader does not consume this terminator."
+    },
+    {
+      "name": "rom_controller_label_leading_space",
+      "file_start": "0x6369",
+      "file_end": "0x636a",
+      "encoding": "ASCII string boundary",
+      "evidence": "First space of the contiguous four-space-prefixed Controller label; structural text extent, no new invocation claimed."
+    }
+  ]
+}

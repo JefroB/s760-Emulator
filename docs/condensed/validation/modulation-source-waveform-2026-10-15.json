@@ -1,0 +1,295 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Diagnostic per-recording constant alignment; not acceptance",
+  "band_hz": [
+    30,
+    1500
+  ],
+  "training_seconds": [
+    0.2,
+    1.2
+  ],
+  "evaluation_seconds": [
+    1.5,
+    2.7
+  ],
+  "calibration": {
+    "model": "cubic",
+    "start_source_offset": 1,
+    "clock_ratio": 1.0000215,
+    "band_hz": [
+      30,
+      1500
+    ],
+    "delay_frames_48k": 13.28495598759455,
+    "gain": 0.1657794548169962,
+    "training_relative_rms": 0.0761302185472777,
+    "evaluation_relative_rms": 0.0758658649357781
+  },
+  "rows": [
+    {
+      "note": 60,
+      "pitch_word": 16384,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.1901543351452153,
+          "diagnostic_delay_frames_48k": -1.9750385832070696,
+          "diagnostic_delay_ms": -0.04114663715014728,
+          "training_error_fixed_gain": 0.060313260208683356,
+          "evaluation_error_fixed_gain": 0.04177779988137124,
+          "training_gain_ratio_to_bypass": 1.0052698770247834,
+          "evaluation_error_training_gain": 0.04154349492015789
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.1901543478484118,
+          "diagnostic_delay_frames_48k": -1.975038568129807,
+          "diagnostic_delay_ms": -0.04114663683603765,
+          "training_error_fixed_gain": 0.06031327499612071,
+          "evaluation_error_fixed_gain": 0.041777820621329884,
+          "training_gain_ratio_to_bypass": 1.0052700277283964,
+          "evaluation_error_training_gain": 0.0415435061736594
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.2447887558678017,
+          "diagnostic_delay_frames_48k": -3.05944964943671,
+          "diagnostic_delay_ms": -0.06373853436326479,
+          "training_error_fixed_gain": 0.06036190576792175,
+          "evaluation_error_fixed_gain": 0.041722333720215755,
+          "training_gain_ratio_to_bypass": 1.0053201321791518,
+          "evaluation_error_training_gain": 0.04147486951558206
+        },
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.2447887668061153,
+          "diagnostic_delay_frames_48k": -3.0594496298852154,
+          "diagnostic_delay_ms": -0.06373853395594199,
+          "training_error_fixed_gain": 0.06036192044905347,
+          "evaluation_error_fixed_gain": 0.04172235415234132,
+          "training_gain_ratio_to_bypass": 1.0053202828415215,
+          "evaluation_error_training_gain": 0.04147488013284499
+        }
+      ]
+    },
+    {
+      "note": 72,
+      "pitch_word": 32768,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.4435276173804321,
+          "diagnostic_delay_frames_48k": -325.28196028981984,
+          "diagnostic_delay_ms": -6.776707506037913,
+          "training_error_fixed_gain": 0.04881419404330624,
+          "evaluation_error_fixed_gain": 0.04299619649236397,
+          "training_gain_ratio_to_bypass": 1.0074572640170714,
+          "evaluation_error_training_gain": 0.04194663014894738
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.8174541605089922,
+          "diagnostic_delay_frames_48k": 1901.1769911634806,
+          "diagnostic_delay_ms": 39.607853982572514,
+          "training_error_fixed_gain": 0.6635357162219674,
+          "evaluation_error_fixed_gain": 0.7275622286281349,
+          "training_gain_ratio_to_bypass": 0.6515933984487012,
+          "evaluation_error_training_gain": 0.48214923342271354
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.3580709955767922,
+          "diagnostic_delay_frames_48k": 1904.431150860239,
+          "diagnostic_delay_ms": 39.67564897625498,
+          "training_error_fixed_gain": 0.5988280328279344,
+          "evaluation_error_fixed_gain": 0.6253109260871964,
+          "training_gain_ratio_to_bypass": 0.8624438751001295,
+          "evaluation_error_training_gain": 0.601663779525636
+        },
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.58306521496379,
+          "diagnostic_delay_frames_48k": 1909.427532682231,
+          "diagnostic_delay_ms": 39.779740264213146,
+          "training_error_fixed_gain": 1.2501781256270263,
+          "evaluation_error_fixed_gain": 1.3095553199766456,
+          "training_gain_ratio_to_bypass": 0.33278766835833784,
+          "evaluation_error_training_gain": 0.908456349099323
+        }
+      ]
+    },
+    {
+      "note": 73,
+      "pitch_word": 34716,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 0.8480323816964456,
+          "diagnostic_delay_frames_48k": 24.94716164625074,
+          "diagnostic_delay_ms": 0.5197325342968905,
+          "training_error_fixed_gain": 0.042396314602568305,
+          "evaluation_error_fixed_gain": 0.04601305376781066,
+          "training_gain_ratio_to_bypass": 1.012439228312648,
+          "evaluation_error_training_gain": 0.04514261391343236
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 0.9600330278475295,
+          "diagnostic_delay_frames_48k": 25.17661696911214,
+          "diagnostic_delay_ms": 0.5245128535231696,
+          "training_error_fixed_gain": 0.3444233100023525,
+          "evaluation_error_fixed_gain": 0.365194137562781,
+          "training_gain_ratio_to_bypass": 0.8422935405398635,
+          "evaluation_error_training_gain": 0.3079051450143092
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 0.9277773729941848,
+          "diagnostic_delay_frames_48k": 2127.4309579267347,
+          "diagnostic_delay_ms": 44.321478290140305,
+          "training_error_fixed_gain": 0.47142909699986485,
+          "evaluation_error_fixed_gain": 0.5145360494393035,
+          "training_gain_ratio_to_bypass": 0.9274718151104733,
+          "evaluation_error_training_gain": 0.5043693060583333
+        },
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.1504375264530151,
+          "diagnostic_delay_frames_48k": 2127.474842354651,
+          "diagnostic_delay_ms": 44.32239254905524,
+          "training_error_fixed_gain": 0.795930139507995,
+          "evaluation_error_fixed_gain": 0.8622975315238299,
+          "training_gain_ratio_to_bypass": 0.6562543988017926,
+          "evaluation_error_training_gain": 0.7395560765947066
+        }
+      ]
+    },
+    {
+      "note": 77,
+      "pitch_word": 43740,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.372850622413174,
+          "diagnostic_delay_frames_48k": -273.60060134213825,
+          "diagnostic_delay_ms": -5.7000125279612135,
+          "training_error_fixed_gain": 0.06972995490154758,
+          "evaluation_error_fixed_gain": 0.05769060747918333,
+          "training_gain_ratio_to_bypass": 1.0056151057820628,
+          "evaluation_error_training_gain": 0.05712390181997587
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.5149689816093963,
+          "diagnostic_delay_frames_48k": -273.6059233339236,
+          "diagnostic_delay_ms": -5.700123402790076,
+          "training_error_fixed_gain": 0.3332670825458354,
+          "evaluation_error_fixed_gain": 0.3243294669594284,
+          "training_gain_ratio_to_bypass": 0.8279573022744148,
+          "evaluation_error_training_gain": 0.25903670282130625
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.3340378402693058,
+          "diagnostic_delay_frames_48k": 1395.0644884662654,
+          "diagnostic_delay_ms": 29.063843509713863,
+          "training_error_fixed_gain": 0.2999942757660932,
+          "evaluation_error_fixed_gain": 0.3010919138945718,
+          "training_gain_ratio_to_bypass": 0.9677989487736154,
+          "evaluation_error_training_gain": 0.2998676333698426
+        },
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.4556374060826849,
+          "diagnostic_delay_frames_48k": 1394.7536782653403,
+          "diagnostic_delay_ms": 29.057368297194593,
+          "training_error_fixed_gain": 0.5016913414353015,
+          "evaluation_error_fixed_gain": 0.49850639089230614,
+          "training_gain_ratio_to_bypass": 0.7795119325720071,
+          "evaluation_error_training_gain": 0.43185297115664145
+        }
+      ]
+    },
+    {
+      "note": 83,
+      "pitch_word": 61857,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.4129375085134832,
+          "diagnostic_delay_frames_48k": 144.02189992889802,
+          "diagnostic_delay_ms": 3.000456248518709,
+          "training_error_fixed_gain": 0.08727032744487323,
+          "evaluation_error_fixed_gain": 0.07665358852514165,
+          "training_gain_ratio_to_bypass": 1.004025426433132,
+          "evaluation_error_training_gain": 0.0764869226213638
+        },
+        {
+          "model": "linear",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.53022191215116,
+          "diagnostic_delay_frames_48k": 144.14431660623882,
+          "diagnostic_delay_ms": 3.0030065959633085,
+          "training_error_fixed_gain": 0.29627041370296886,
+          "evaluation_error_fixed_gain": 0.31157272174535366,
+          "training_gain_ratio_to_bypass": 0.842797669953269,
+          "evaluation_error_training_gain": 0.23793381676025427
+        },
+        {
+          "model": "cubic",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.4099060038609204,
+          "diagnostic_delay_frames_48k": -2216.645112422056,
+          "diagnostic_delay_ms": -46.18010650879284,
+          "training_error_fixed_gain": 0.3195164935527457,
+          "evaluation_error_fixed_gain": 0.3319671476958663,
+          "training_gain_ratio_to_bypass": 0.9518601688882532,
+          "evaluation_error_training_gain": 0.3280770051354838
+        },
+        {
+          "model": "linear",
+          "source_offset": 0,
+          "frozen_bypass_alignment_evaluation_error": 1.5259403243197411,
+          "diagnostic_delay_frames_48k": -2216.5078935651313,
+          "diagnostic_delay_ms": -46.1772477826069,
+          "training_error_fixed_gain": 0.4738966206129389,
+          "evaluation_error_fixed_gain": 0.49773367909966443,
+          "training_gain_ratio_to_bypass": 0.7886414441588896,
+          "evaluation_error_training_gain": 0.4191593161498319
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Per-recording delay fitted only on training window; cannot distinguish recording origin from physical signal-path latency.",
+    "No envelope time warp, cutoff shift or filter coefficient fitting.",
+    "Both source models use identical bypass gain and clock, unlike earlier separately calibrated model rankings.",
+    "Not independent-session hardware validation. No runtime behavior change."
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\evaluate_source_waveforms.py": "31f9738b515c44e47e65f43605b5467310055d0da26f39d0ec7cbf6f52e75415",
+    "docs\\ic20-hle-findings\\chatGPT-work\\source_reconstruction_model.py": "d819e5459c49c36054346579015e17c527368c80ce50db3d7df6aec3eb5f0650",
+    "mame-source\\mames760.exe": "0b6d0d9bcc133dca21b44b20e000f3a3abd00f1afa8097374b4c09016d99e920",
+    "tests\\hardware_recordings\\s760_01 Survey_20261015_161418.zip": "b08ca7b4e50cdfdeb6dd14ae919b5e5ef701da4f0c5ac63b86a84addaa2eea78",
+    "tests\\hardware_recordings\\s760_MIDI 73_20261015_170426.zip": "86d405065d09901f4f4f627576e30c65a372133b736942f5cc4d9048919a0714"
+  }
+}

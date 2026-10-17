@@ -218,7 +218,9 @@ describe('NativeStudio real-machine controls', () => {
     act(()=>Socket.current.onmessage?.({data:JSON.stringify({type:'SESSION',media:[],midiDevices:['USB MIDI'],configuration:{bootRom:'boot',systemDisk:'sys',mediaDirectory:'media',sound:true,audioBackend:'auto'}})}));
     expect(screen.queryByRole('region',{name:'On-screen keyboard'})).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button',{name:'Configuration'}));
+    fireEvent.click(screen.getByRole('button',{name:'Audio'}));
     expect(screen.getByLabelText('Audio output backend')).toBeVisible();
+    fireEvent.click(screen.getByRole('button',{name:'MIDI & display'}));
     fireEvent.change(screen.getByLabelText('MIDI input'),{target:{value:'USB MIDI'}});
     expect(Socket.current.sent.at(-1)).toEqual({type:'MIDI_DEVICE',payload:{name:'USB MIDI'}});
     act(()=>Socket.current.onmessage?.({data:JSON.stringify({type:'MIDI_DEVICE_SELECTED',name:'USB MIDI'})}));

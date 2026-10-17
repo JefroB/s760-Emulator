@@ -22,6 +22,17 @@ Detailed source docs retain per-screen wireframes, labels, and example values.
 Example values are the captured state, not defaults or allowed ranges. The
 system photos document this unit's 32 MB expansion and SCSI host ID 7.
 
+## Packaged editing review — 2026-10-15
+
+The actual local photos perform-1, patch-3, partial-1 and sample-11 were visually
+compared with the named packaged Perform Play1, Patch Control, Partial Common
+and Area Erase screens. Titles, relevant parameter labels/order, modulation
+matrix, keyboard and waveform/Exec structures correspond. The white selection
+row is visible on physical Patch Control; acceptance comparisons select the same
+field and keep the crosshair outside the compared region. Different piano versus
+ROBOFULL programs, parameters, camera perspective and CRT optics prevent an exact
+pixel/color-parity claim. [Workflow and limits](../testing/milestone-6-packaged-editing.md).
+
 ## Common visual structure
 
 Six persistent tabs: Perform, Patch, Partial, Sample, Disk, System. Above them

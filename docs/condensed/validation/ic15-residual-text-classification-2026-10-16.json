@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-16",
+  "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "code_bytes": 15060,
+  "data_bytes": 11217,
+  "classified_bytes": 26277,
+  "total_bytes": 32768,
+  "classified_percent": 80.1910400390625,
+  "baseline_classified_bytes": 26101,
+  "percentage_point_change": 0.537109375,
+  "presumed_unused_ff_bytes": 6490,
+  "accounted_including_assumption_bytes": 32767,
+  "accounted_including_assumption_percent": 99.9969482421875,
+  "remaining_unknown": [
+    {
+      "file_offset": "0x6903",
+      "byte": "08",
+      "qualification": "Adjacent to FDC SPECIFY template, no established use."
+    }
+  ],
+  "qualification": "Added 176 structurally identifiable ASCII/string-boundary bytes. Runtime references and diagnostic invocation remain unresolved. FF unused-space classification is explicitly assumed by user, not proven.",
+  "os": {
+    "classified_bytes": 62736,
+    "total_bytes": 1032192,
+    "percent": 6.077938988095238,
+    "percentage_point_change": 0
+  },
+  "overall_decoding_completion": "not yet quantifiable",
+  "last_byte_investigation": {
+    "hypothesis": "08 is a prefix consumed by the following FDC SPECIFY record",
+    "result": "Not supported by the established consumer",
+    "anchors": {
+      "4B09": "RW28=8904, after candidate byte8903",
+      "4B1A": "R42=3",
+      "4B1D": "postincrement source load",
+      "4B32": "DJNZ exactly three loads"
+    },
+    "consumed_file_offsets": [
+      "6904",
+      "6905",
+      "6906"
+    ],
+    "consumed_bytes": "03 BF 02",
+    "unknown_retained": true
+  },
+  "native_diagnostic_gate": {
+    "rom_conditions": "4285 requires R48 bit5; then R4A bit0 selects4917, else R4B bit0 selects4000, else R4A bit1 selects4028.",
+    "native_constraint": "PANEL0 bit20 belongs to IPT_UNUSED maskE0; no named ordinary input is available for the required diagnostic gate. No input model or guest state modified.",
+    "qualification": "Static reachability conditions; physical service-input mapping and ordinary native invocation remain unresolved."
+  }
+}

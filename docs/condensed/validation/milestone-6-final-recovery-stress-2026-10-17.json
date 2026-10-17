@@ -1,0 +1,148 @@
+{
+  "date": "2026-10-17",
+  "completed_gate": "Final-artifact sustained and repeated full boot/load/edit/sample/save/reopen cycles, broader malformed-media cases and release recovery stress",
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "scripts/verify_final_recovery_stress.py": "2b23f3a5f1ee911b15648eab43232cd73fc5174409cc786082d2067faf01839e",
+    "tests/test_final_recovery_stress.py": "22ee74b62db94025da7dbe2d408eb8ff7b63f524e4d5fb0d1806e00b65bf73ca",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+    "mame-source/src/mame/roland/s760.cpp": "43727978af8c9fb59726dc67aa8f5c56060d8140288a95232b6d99b6c083696b"
+  },
+  "fixtures": {
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "prerequisites": [
+    "Windows x64 development workstation with local C++ runtime",
+    "Private IC15 v1.11, OS 2.24 and ROBOFULL sample fixture",
+    "Native MAME s760 executable built with natural priority MIDI arbitration"
+  ],
+  "commands": {
+    "stress_verification": "python scripts/verify_final_recovery_stress.py --package . --state-dir docs/ic20-hle-findings/gemini-work/final-recovery-stress-20261017 --cycles 5",
+    "unit_tests": "python -m pytest tests/test_final_recovery_stress.py"
+  },
+  "malformed_media": {
+    "passed": true,
+    "profiles_tested": 7,
+    "results": [
+      {
+        "profile": "corrupt_banner_720k",
+        "file": "CORRUPT_BANNER_720K.IMG",
+        "size_bytes": 737280,
+        "sha256": "9496ff2b1d383196127e8ac148598e9b3d32a02a664e16f546e3a942f2ac0534",
+        "rejected_safely": true
+      },
+      {
+        "profile": "msdos_fat12_720k",
+        "file": "MSDOS_FAT12_720K.IMG",
+        "size_bytes": 737280,
+        "sha256": "d989189c77945d03456111373271c02e53390fed5c0766f2b9c545ad813922b0",
+        "rejected_safely": true
+      },
+      {
+        "profile": "corrupt_catalog_720k",
+        "file": "CORRUPT_CATALOG_720K.IMG",
+        "size_bytes": 737280,
+        "sha256": "e793c41f4974fd60f5afd5b360514be28081e656e455d4948025710ebad813cd",
+        "rejected_safely": true
+      },
+      {
+        "profile": "corrupt_sample_hdr_720k",
+        "file": "CORRUPT_SAMPLE_HDR_720K.IMG",
+        "size_bytes": 737280,
+        "sha256": "2c99e760faf62a6fbc3830dd4dda7fc58a203bbb6b66fa178fa6e8b3e9493da3",
+        "rejected_safely": true
+      },
+      {
+        "profile": "pseudo_formatted_720k",
+        "file": "PSEUDO_FORMATTED_720K.IMG",
+        "size_bytes": 737280,
+        "sha256": "7402071f7965c1ce5c3d0481dda5d7dab756ffcddfd72874e521c6cceef1395d",
+        "rejected_safely": true
+      },
+      {
+        "profile": "corrupt_banner_144m",
+        "file": "CORRUPT_BANNER_144M.IMG",
+        "size_bytes": 1474560,
+        "sha256": "da49f502e64e02b812081835925e2758a75deec1ea434a2c6cfde4e33a688832",
+        "rejected_safely": true
+      },
+      {
+        "profile": "corrupt_catalog_144m",
+        "file": "CORRUPT_CATALOG_144M.IMG",
+        "size_bytes": 1474560,
+        "sha256": "ea4aac2ca0ef8c0d3738331a0a8a0a343a22daeea08b1287d932df51cb980fdd",
+        "rejected_safely": true
+      }
+    ],
+    "recovered_with_valid_media": true
+  },
+  "sustained_lifecycle": {
+    "passed": true,
+    "total_cycles": 5,
+    "cycles": [
+      {
+        "cycle": 1,
+        "exported_disk_sha256": "8503018eb0e4e83c32fefac17e7519500a7695e00745a357ec20a3828af6a795",
+        "checkpoint_sha256": "bf522e15ee27417831b9acdddafbc187015698d79aa5722904d2bd195acd1faf",
+        "wave_sample_bytes_exact": 119808,
+        "audio_frequency_hz": 20004,
+        "audio_peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "cycle": 2,
+        "exported_disk_sha256": "98a035f03d19fddd9604b426771085ecd6ae0e82c138a89c39eff26fef53eab3",
+        "checkpoint_sha256": "63ec5109c47621d0b03f22ae69fecc5fba68bd36c9895d6e6e8351a01cba220a",
+        "wave_sample_bytes_exact": 119808,
+        "audio_frequency_hz": 20004,
+        "audio_peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "cycle": 3,
+        "exported_disk_sha256": "12ba933acaaba22fc2f92af30a50544b89976de687171580ecde3966347b636d",
+        "checkpoint_sha256": "bc702a84db3f0751dd04d952a0766778bb4dca9e6bcf3272057a4a8bb73f8a08",
+        "wave_sample_bytes_exact": 119808,
+        "audio_frequency_hz": 20004,
+        "audio_peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "cycle": 4,
+        "exported_disk_sha256": "c2cbf75b10a743f6d91412d616425f27ed44000c9609a8b4c88b15c74a59e0d1",
+        "checkpoint_sha256": "7af3e5292a4a1f8368830a573477050df65b528479c9111e1fddde1eab39e861",
+        "wave_sample_bytes_exact": 119808,
+        "audio_frequency_hz": 20004,
+        "audio_peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "cycle": 5,
+        "exported_disk_sha256": "a01a5e75ea748d3db238a5e2977a5f5c4b72c75cf901b445d4966bc6fe99a7d2",
+        "checkpoint_sha256": "1846877b3cdedbecd9cbffb1ab7e8f0be717cbc33623db6f484ab12c8dee0c85",
+        "wave_sample_bytes_exact": 119808,
+        "audio_frequency_hz": 20004,
+        "audio_peak": 0.008537158370018005,
+        "silent_release": true
+      }
+    ],
+    "baseline_sample_bytes_preserved": 119808
+  },
+  "recovery_stress": {
+    "passed": true,
+    "mount_guard_held": true,
+    "dirty_restored": true,
+    "exact_sample_bytes": 119808,
+    "checkpoint_sha256": "9c3bf9cda85a9f86f241021a77ea2b6c354f7d97719773dd8fb04c44a68ab44e",
+    "export_sha256": "f0720015e1db75885bd7582cce2559d37ae131a6b289c3699c914129f9f8fac4"
+  },
+  "limitations": [
+    "Physical power loss and forced interruptions at arbitrary payload-write, flush/fsync and atomic-rename stages remain unqualified.",
+    "Bounded development-profile execution on Windows workstation.",
+    "Normal-speed physical audio conversion and long-term hardware thermal soak remain separate."
+  ]
+}

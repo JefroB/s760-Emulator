@@ -1,0 +1,176 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Diagnostic residual attribution, not production or hardware timing qualification",
+  "causal_ramp_ms": 20,
+  "gain": 1,
+  "damping_word": 85,
+  "baseline_clock_ratio": 1.0000213476698374,
+  "zero_drift_baseline_pcm_prediction_exact": true,
+  "source_phase_pivot_seconds": 3.8,
+  "source_phase_drift_bounds_ppm": [
+    -20,
+    20
+  ],
+  "cutoff_time_scale_bounds": [
+    0.995,
+    1.005
+  ],
+  "rows": [
+    {
+      "label": "quiet",
+      "model": "fixed",
+      "alignment_seconds": 0.9403862309187374,
+      "source_phase": 1543.76301811102,
+      "source_phase_drift_ppm": 0.0,
+      "cutoff_time_scale": 1.0,
+      "training_error_percent": 25.225640130393572,
+      "evaluation_error_percent": 20.004249819935435,
+      "rise_evaluation_error_percent": 14.849390855189046,
+      "fall_evaluation_error_percent": 23.506748738233075,
+      "optimizer_status": 0,
+      "optimizer_evaluations": 0
+    },
+    {
+      "label": "quiet",
+      "model": "source-drift",
+      "alignment_seconds": 0.940351184581901,
+      "source_phase": 1543.746863342465,
+      "source_phase_drift_ppm": -1.0139463961596755,
+      "cutoff_time_scale": 1.0,
+      "training_error_percent": 25.21959758368315,
+      "evaluation_error_percent": 20.04487120095339,
+      "rise_evaluation_error_percent": 14.932098768553468,
+      "fall_evaluation_error_percent": 23.526255597985976,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 7
+    },
+    {
+      "label": "quiet",
+      "model": "cutoff-scale",
+      "alignment_seconds": 0.9291318578807357,
+      "source_phase": 1543.8296831316,
+      "source_phase_drift_ppm": 0.0,
+      "cutoff_time_scale": 1.0025161169492316,
+      "training_error_percent": 20.326943760478716,
+      "evaluation_error_percent": 17.66957321634731,
+      "rise_evaluation_error_percent": 16.064589774748114,
+      "fall_evaluation_error_percent": 18.92456559096275,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 12
+    },
+    {
+      "label": "quiet",
+      "model": "both",
+      "alignment_seconds": 0.9290349751612607,
+      "source_phase": 1543.8485229961798,
+      "source_phase_drift_ppm": 1.1447746002007047,
+      "cutoff_time_scale": 1.0025465292081117,
+      "training_error_percent": 20.309983427061365,
+      "evaluation_error_percent": 17.727685735312306,
+      "rise_evaluation_error_percent": 16.286643804467428,
+      "fall_evaluation_error_percent": 18.863923314167433,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 14
+    },
+    {
+      "label": "repeat",
+      "model": "fixed",
+      "alignment_seconds": 0.3974623483204678,
+      "source_phase": 1795.0734008423121,
+      "source_phase_drift_ppm": 0.0,
+      "cutoff_time_scale": 1.0,
+      "training_error_percent": 19.222757406555253,
+      "evaluation_error_percent": 21.334261738515156,
+      "rise_evaluation_error_percent": 17.241711966672696,
+      "fall_evaluation_error_percent": 24.868256505450773,
+      "optimizer_status": 0,
+      "optimizer_evaluations": 0
+    },
+    {
+      "label": "repeat",
+      "model": "source-drift",
+      "alignment_seconds": 0.39769384919638856,
+      "source_phase": 1795.0361886556218,
+      "source_phase_drift_ppm": 4.955368805115134,
+      "cutoff_time_scale": 1.0,
+      "training_error_percent": 19.070662344126955,
+      "evaluation_error_percent": 21.428868278544492,
+      "rise_evaluation_error_percent": 17.70643258709028,
+      "fall_evaluation_error_percent": 24.690324350543,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 7
+    },
+    {
+      "label": "repeat",
+      "model": "cutoff-scale",
+      "alignment_seconds": 0.39443064866724514,
+      "source_phase": 1795.1188604960976,
+      "source_phase_drift_ppm": 0.0,
+      "cutoff_time_scale": 1.0007265934000418,
+      "training_error_percent": 18.33432477248556,
+      "evaluation_error_percent": 17.936631342887992,
+      "rise_evaluation_error_percent": 15.039046692645355,
+      "fall_evaluation_error_percent": 20.504702265407406,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 9
+    },
+    {
+      "label": "repeat",
+      "model": "both",
+      "alignment_seconds": 0.3946234483911807,
+      "source_phase": 1795.0833442899186,
+      "source_phase_drift_ppm": 4.791380867745575,
+      "cutoff_time_scale": 1.000731860116797,
+      "training_error_percent": 18.177397928044048,
+      "evaluation_error_percent": 18.04882593993013,
+      "rise_evaluation_error_percent": 15.459202153187983,
+      "fall_evaluation_error_percent": 20.37786295188649,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 11
+    }
+  ],
+  "limits": [
+    "Source-drift changes excitation phase slope only. It does not measure physical oscillator error or modify the filter sample clock.",
+    "Cutoff-scale changes only the timing of received cutoff targets and ramp clock. It is not a measured hardware envelope-rate correction.",
+    "All added parameters fitted on alternating training blocks only; evaluation blocks historically reused, not fresh validation.",
+    "Per-recording parameter fits diagnose causes; differing parameters across takes do not define a shared hardware correction.",
+    "Gain, damping, ramp duration and filter equation unchanged. Fractional-phase lane recording-chain approximation retained.",
+    "Silence-trimmed WAV start is an audio origin, not a MIDI timestamp. No native runtime behavior changed.",
+    "Quiet-selected cutoff scale transfers to repeat evaluation with only repeat training alignment/phase fitted. This does not independently validate physical modulation speed or exclude trajectory/coefficient-map/transition-law compensation."
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\separate_resonant_phase_trajectory.py": "4872d5f4e17919bb505fd9cf9e5685ac06f1934f9d72e22ef599f5501cffead4",
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_causal_cutoff_transitions.py": "53a00309e9037475fa6760e0afa22710d88c4fac7d5201512372e03338c18c78",
+    "docs\\condensed\\validation\\causal-cutoff-transitions-2026-10-15.json": "a4a28c9ad86ecb6de1f1eb33acaa3b8bcbe66b58800fef685daa5fed0a28bddb",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\on\\application.csv": "3723b9ee084534b0df33e866b4cdf5a9cdf2d604c685a858ec863a2c27795086",
+    "docs\\ic20-hle-findings\\chatGPT-work\\transfer_resonant_cutoff_scale.py": "b35033ea47dcf5333e05739ead6339451d6f6a49f01a56938c14cce89ac7ae5b"
+  },
+  "cross_recording_scale_transfer": [
+    {
+      "scale_selected_on": "quiet",
+      "evaluated_on": "repeat",
+      "shared_cutoff_scale": 1.0025161169492316,
+      "target_training_error_percent": 21.934434641919864,
+      "target_evaluation_error_percent": 16.41746429389345,
+      "target_alignment_seconds": 0.38684613571424536,
+      "target_source_phase": 1795.223412564336,
+      "optimizer_status": 3
+    },
+    {
+      "scale_selected_on": "repeat",
+      "evaluated_on": "quiet",
+      "shared_cutoff_scale": 1.0007265934000418,
+      "target_training_error_percent": 23.047623672374048,
+      "target_evaluation_error_percent": 18.044029778267838,
+      "target_alignment_seconds": 0.9370953620288395,
+      "target_source_phase": 1543.782376953773,
+      "optimizer_status": 3
+    }
+  ],
+  "shared_quiet_selected_scale": {
+    "scale": 1.0025161169492316,
+    "quiet_evaluation_error_percent": 17.66957321634731,
+    "repeat_evaluation_error_percent": 16.41746429389345
+  }
+}

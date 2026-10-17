@@ -6,6 +6,7 @@ test('standalone selects a recording input and retains it after display reconnec
   await page.goto(process.env.S760_NATIVE_RECORDING_URL!);
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.', {timeout:40000});
   await page.getByRole('button', {name:'Configuration',exact:true}).click();
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await page.getByText('Refresh recording devices').click();
   const devices=page.getByLabel('Recording device');
   const input=devices.locator('option').filter({hasText:'Stereo In 1-2 (MOTU'});
@@ -19,6 +20,7 @@ test('standalone selects a recording input and retains it after display reconnec
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.', {timeout:40000});
   await page.reload();
   await page.getByRole('button', {name:'Configuration',exact:true}).click();
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await expect(devices).toHaveValue(id!);
   await expect(page.getByLabel('Recording input status')).toContainText('44.1 kHz stereo PCM16');
   await expect(page.getByRole('alert')).toHaveCount(0);

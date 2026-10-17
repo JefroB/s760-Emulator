@@ -824,6 +824,14 @@ void lua_engine::on_sound_update(const std::map<std::string, std::vector<std::pa
 				ctable[i+1] = info.first[i];
 			dtable[channel+1] = ctable;
 		}
+		// Speaker buffers may contain PCM generated before the current machine
+		// time. Export the observed buffer origin, not a status-time estimate.
+		device_t *device = m_machine->root_device().subdevice(e.first.c_str());
+		if (device && device->type() == SPEAKER && channels) {
+			auto *stream = static_cast<speaker_device &>(*device).stream();
+			dtable["first_sample"] = stream->start_index() - e.second.front().second;
+			dtable["sample_rate"] = stream->sample_rate();
+		}
 		stable[e.first] = dtable;
 	}
 

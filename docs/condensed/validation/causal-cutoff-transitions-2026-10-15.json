@@ -1,0 +1,1753 @@
+{
+  "date": "2026-10-15",
+  "status": "Offline causal transition discrimination only",
+  "clock_ratio": 1.0000213476698374,
+  "gain": 1,
+  "damping_word": 85,
+  "causality_future_write_check": true,
+  "selection": "Choose shared model/duration on quiet training blocks only; transfer that setting to repeat with repeat training-only constant alignment/phase.",
+  "selected_model": {
+    "model": "linear-ramp",
+    "transition_ms": 20.0,
+    "recordings": [
+      {
+        "label": "quiet",
+        "alignment_seconds": 0.9403862309187374,
+        "source_phase": 1543.76301811102,
+        "training_error_percent": 25.225640130393572,
+        "evaluation_error_percent": 20.004249819935435,
+        "windows": [
+          {
+            "start": 1.5,
+            "end": 1.9,
+            "relative_rms_percent": 57.742364771929935
+          },
+          {
+            "start": 1.9,
+            "end": 2.3,
+            "relative_rms_percent": 45.79766304328543
+          },
+          {
+            "start": 2.3,
+            "end": 2.6999999999999997,
+            "relative_rms_percent": 20.20078473068545
+          },
+          {
+            "start": 2.6999999999999997,
+            "end": 3.0999999999999996,
+            "relative_rms_percent": 17.00959532863101
+          },
+          {
+            "start": 3.0999999999999996,
+            "end": 3.4999999999999996,
+            "relative_rms_percent": 8.494057149297321
+          },
+          {
+            "start": 3.4999999999999996,
+            "end": 3.8999999999999995,
+            "relative_rms_percent": 6.727287015703243
+          },
+          {
+            "start": 3.8999999999999995,
+            "end": 4.3,
+            "relative_rms_percent": 16.166568914100832
+          },
+          {
+            "start": 4.299999999999999,
+            "end": 4.699999999999999,
+            "relative_rms_percent": 26.69858802135722
+          },
+          {
+            "start": 4.699999999999999,
+            "end": 5.1,
+            "relative_rms_percent": 41.71510794066792
+          },
+          {
+            "start": 5.1,
+            "end": 5.5,
+            "relative_rms_percent": 44.96966171154965
+          },
+          {
+            "start": 5.499999999999999,
+            "end": 5.8999999999999995,
+            "relative_rms_percent": 97.84077788299061
+          },
+          {
+            "start": 5.899999999999999,
+            "end": 6.299999999999999,
+            "relative_rms_percent": 160.2296943599738
+          }
+        ],
+        "optimizer_evaluations": 9,
+        "optimizer_status": 3
+      },
+      {
+        "label": "repeat",
+        "alignment_seconds": 0.3974623483204678,
+        "source_phase": 1795.0734008423121,
+        "training_error_percent": 19.222757406555253,
+        "evaluation_error_percent": 21.334261738515156,
+        "windows": [
+          {
+            "start": 1.5,
+            "end": 1.9,
+            "relative_rms_percent": 25.720636021015757
+          },
+          {
+            "start": 1.9,
+            "end": 2.3,
+            "relative_rms_percent": 29.22051793059951
+          },
+          {
+            "start": 2.3,
+            "end": 2.6999999999999997,
+            "relative_rms_percent": 64.8457508747976
+          },
+          {
+            "start": 2.6999999999999997,
+            "end": 3.0999999999999996,
+            "relative_rms_percent": 16.087945748717466
+          },
+          {
+            "start": 3.0999999999999996,
+            "end": 3.4999999999999996,
+            "relative_rms_percent": 16.31409059165051
+          },
+          {
+            "start": 3.4999999999999996,
+            "end": 3.8999999999999995,
+            "relative_rms_percent": 9.372087876823745
+          },
+          {
+            "start": 3.8999999999999995,
+            "end": 4.3,
+            "relative_rms_percent": 12.467746861240641
+          },
+          {
+            "start": 4.299999999999999,
+            "end": 4.699999999999999,
+            "relative_rms_percent": 16.47187071533345
+          },
+          {
+            "start": 4.699999999999999,
+            "end": 5.1,
+            "relative_rms_percent": 19.932238421008737
+          },
+          {
+            "start": 5.1,
+            "end": 5.5,
+            "relative_rms_percent": 40.80314335926731
+          },
+          {
+            "start": 5.499999999999999,
+            "end": 5.8999999999999995,
+            "relative_rms_percent": 33.41454787990244
+          },
+          {
+            "start": 5.899999999999999,
+            "end": 6.299999999999999,
+            "relative_rms_percent": 86.70761775749591
+          }
+        ],
+        "optimizer_evaluations": 10,
+        "optimizer_status": 3
+      }
+    ]
+  },
+  "results": [
+    {
+      "model": "one-pole",
+      "transition_ms": 5.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9350779170650446,
+          "source_phase": 1543.7316850908574,
+          "training_error_percent": 32.1980085981272,
+          "evaluation_error_percent": 27.65587217632096,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 57.444207371723444
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 43.70156647207021
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 23.09903113983571
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 23.428513090109714
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 25.89224676798012
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 25.91161181021872
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 23.620754658354468
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 29.40749156717664
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 42.58289859905909
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 44.41520694147824
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 99.55517060473636
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 163.41632520325857
+            }
+          ],
+          "optimizer_evaluations": 13,
+          "optimizer_status": 3
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.39228199615535786,
+          "source_phase": 1795.1172582272447,
+          "training_error_percent": 27.35790953558597,
+          "evaluation_error_percent": 30.37558332915021,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 27.92176345946506
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 28.11445965429901
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 65.2653824470631
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 20.118479055939737
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 22.2892418441237
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 26.577381759573377
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 26.525303212173093
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 29.124503590658787
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 25.29400192819437
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 42.326970418354755
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 34.77081736923384
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 87.22539219839408
+            }
+          ],
+          "optimizer_evaluations": 14,
+          "optimizer_status": 2
+        }
+      ]
+    },
+    {
+      "model": "one-pole",
+      "transition_ms": 10.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9401993823989114,
+          "source_phase": 1543.7595419419201,
+          "training_error_percent": 28.31060869559029,
+          "evaluation_error_percent": 22.958598532227033,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 57.38465422110763
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 46.12289924317583
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 21.475566424800196
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 19.613056596673616
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 17.373725199755626
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 16.495620912605403
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 18.872945138558133
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 29.178827587015462
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 41.06094573865482
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 44.08466702770247
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 98.51663603969124
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 162.16359708049347
+            }
+          ],
+          "optimizer_evaluations": 11,
+          "optimizer_status": 3
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.3973212043496487,
+          "source_phase": 1795.0739651864644,
+          "training_error_percent": 22.73634776668831,
+          "evaluation_error_percent": 28.01353641097919,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 26.94371884392489
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 28.979532355662474
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 64.81513797348238
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 19.664677397564606
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 19.144251758817337
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 17.68957826435878
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 23.440875014407364
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 24.13382460737913
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 23.710745187069982
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 42.167436406531515
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 35.343944913781414
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 88.0438753514777
+            }
+          ],
+          "optimizer_evaluations": 11,
+          "optimizer_status": 3
+        }
+      ]
+    },
+    {
+      "model": "one-pole",
+      "transition_ms": 20.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9503332386304659,
+          "source_phase": 1543.8122205342074,
+          "training_error_percent": 32.69647972521639,
+          "evaluation_error_percent": 23.293426357385982,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 58.199249946414376
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 46.82869980152212
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 22.625212410518802
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 21.793593404457933
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 28.118022304775945
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 12.855885704460942
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 21.979418675537953
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 28.57640217434921
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 42.96402122168207
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 44.28693442363446
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 98.97411879420272
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 161.97622981528463
+            }
+          ],
+          "optimizer_evaluations": 12,
+          "optimizer_status": 3
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.4074487004624214,
+          "source_phase": 1795.0515684252957,
+          "training_error_percent": 22.0421571539449,
+          "evaluation_error_percent": 33.207638909803904,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 22.63777084551263
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 30.571863282494668
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 66.11940978605826
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 16.49704148258533
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 19.004840928751825
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 12.595490449589779
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 39.10639535200475
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 17.636830761867174
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 21.92302812419833
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 43.329322220431116
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 33.68112644628264
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 87.63889450932129
+            }
+          ],
+          "optimizer_evaluations": 10,
+          "optimizer_status": 2
+        }
+      ]
+    },
+    {
+      "model": "one-pole",
+      "transition_ms": 40.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9698685677299423,
+          "source_phase": 1543.84880672089,
+          "training_error_percent": 48.96390776591361,
+          "evaluation_error_percent": 31.337464914120485,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 60.24154655635171
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 49.56260459770584
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 26.266067081609137
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 26.112019579866207
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 53.63950281033144
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 25.670828792876186
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 36.46739475150342
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 39.62155766119933
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 49.878120620220976
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 42.976379948128674
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 105.96378747470472
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 172.21779153103788
+            }
+          ],
+          "optimizer_evaluations": 12,
+          "optimizer_status": 3
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.42694566905356485,
+          "source_phase": 1795.0883362501195,
+          "training_error_percent": 36.40877106706992,
+          "evaluation_error_percent": 42.538914976571675,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 17.201754299108647
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 33.504687917820974
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 68.90220684841965
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 19.833579764014715
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 22.528521166302067
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 13.041442860842233
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 59.27861213265064
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 31.84381329041696
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 35.255219279639675
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 55.90071382440262
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 41.464521865270775
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 97.95487133363073
+            }
+          ],
+          "optimizer_evaluations": 10,
+          "optimizer_status": 2
+        }
+      ]
+    },
+    {
+      "model": "linear-ramp",
+      "transition_ms": 5.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9328020126283526,
+          "source_phase": 1543.747477770142,
+          "training_error_percent": 44.41890354565366,
+          "evaluation_error_percent": 38.42961371451358,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 58.866765941016936
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 45.35800810381242
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 31.369091448080383
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 34.06350182130032
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 45.334752397838194
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 43.18271713055708
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 34.37117249928906
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 31.360010954573994
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 44.00514637040743
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 45.1073881406063
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 99.28551517453934
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 162.17133129232678
+            }
+          ],
+          "optimizer_evaluations": 23,
+          "optimizer_status": 2
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.3901617026875946,
+          "source_phase": 1795.1481208200528,
+          "training_error_percent": 38.32139407550714,
+          "evaluation_error_percent": 40.918193499907765,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 23.867095124108676
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 31.30294213729622
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 68.63071698406863
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 23.81764030702414
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 31.806361041641665
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 45.11746021267749
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 42.66304412020532
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 39.13424754699779
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 28.811842375761035
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 41.60709724112205
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 33.547630873282024
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 84.06374693592679
+            }
+          ],
+          "optimizer_evaluations": 22,
+          "optimizer_status": 3
+        }
+      ]
+    },
+    {
+      "model": "linear-ramp",
+      "transition_ms": 10.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9353987767146601,
+          "source_phase": 1543.7513437589773,
+          "training_error_percent": 34.0103631205692,
+          "evaluation_error_percent": 29.852990844132556,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 58.68306294038665
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 45.032147806442325
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 25.42343924910393
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 26.337957941906662
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 28.71635110444408
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 29.50964621314842
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 25.41975072408513
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 28.14268717766178
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 43.379426838529476
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 45.68594375392726
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 98.31384671349927
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 161.34847392910345
+            }
+          ],
+          "optimizer_evaluations": 13,
+          "optimizer_status": 3
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.3925318623275873,
+          "source_phase": 1795.1131844814297,
+          "training_error_percent": 29.40027354704089,
+          "evaluation_error_percent": 32.24188580636153,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 25.156575048776535
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 29.640367348118563
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 66.69209121736436
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 19.34391248040174
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 24.758017416362534
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 31.696983150655097
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 29.839995417028707
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 30.088729173459797
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 24.558495605924765
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 41.243257018663066
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 33.279128355491906
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 85.0317041534512
+            }
+          ],
+          "optimizer_evaluations": 15,
+          "optimizer_status": 3
+        }
+      ]
+    },
+    {
+      "model": "linear-ramp",
+      "transition_ms": 20.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9403862309187374,
+          "source_phase": 1543.76301811102,
+          "training_error_percent": 25.225640130393572,
+          "evaluation_error_percent": 20.004249819935435,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 57.742364771929935
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 45.79766304328543
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 20.20078473068545
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 17.00959532863101
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 8.494057149297321
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 6.727287015703243
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 16.166568914100832
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 26.69858802135722
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 41.71510794066792
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 44.96966171154965
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 97.84077788299061
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 160.2296943599738
+            }
+          ],
+          "optimizer_evaluations": 9,
+          "optimizer_status": 3
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.3974623483204678,
+          "source_phase": 1795.0734008423121,
+          "training_error_percent": 19.222757406555253,
+          "evaluation_error_percent": 21.334261738515156,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 25.720636021015757
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 29.22051793059951
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 64.8457508747976
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 16.087945748717466
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 16.31409059165051
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 9.372087876823745
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 12.467746861240641
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 16.47187071533345
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 19.932238421008737
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 40.80314335926731
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 33.41454787990244
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 86.70761775749591
+            }
+          ],
+          "optimizer_evaluations": 10,
+          "optimizer_status": 3
+        }
+      ]
+    },
+    {
+      "model": "linear-ramp",
+      "transition_ms": 40.0,
+      "recordings": [
+        {
+          "label": "quiet",
+          "alignment_seconds": 0.9600621122321408,
+          "source_phase": 1543.8254650527813,
+          "training_error_percent": 39.56920590087021,
+          "evaluation_error_percent": 24.956297192058052,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 58.75227457050891
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 47.50027778424624
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 23.291146954603352
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 21.42048869688438
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 40.61521645603559
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 16.67819433827598
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 25.89125370011087
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 32.844021170261286
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 44.53453528128808
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 42.835070041698835
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 101.53310193822185
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 165.7415673844915
+            }
+          ],
+          "optimizer_evaluations": 17,
+          "optimizer_status": 3
+        },
+        {
+          "label": "repeat",
+          "alignment_seconds": 0.4170874357583668,
+          "source_phase": 1795.0655962410658,
+          "training_error_percent": 26.530699645120645,
+          "evaluation_error_percent": 37.199301881187495,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 22.502097472915292
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 30.671419813723105
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 66.48426711119355
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 17.741225612984067
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 18.408903052797708
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 10.075346986511683
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 46.823204142746405
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 24.22674117818174
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 27.496126849722057
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 48.516593623317604
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 36.94416327911489
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 92.25571373579204
+            }
+          ],
+          "optimizer_evaluations": 16,
+          "optimizer_status": 3
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "No future endpoint; inputs are quantized received cutoff words; smoothing is in coefficient space.",
+    "No filter equation, damping, gain or envelope-speed fit.",
+    "Each recording fits only constant alignment and source phase on training blocks; these offsets are not physical latency.",
+    "Fractional-phase lanes approximate the analog recording chain; not literal ASIC arithmetic.",
+    "Historical evaluation blocks are reused, not independent hardware validation.",
+    "No native playback changes; neither source nor transition model is production qualification."
+  ],
+  "native_changed_value_interval_median_ms": 20.090702947845806,
+  "baseline": {
+    "results": [
+      {
+        "label": "quiet",
+        "source_reference": "s760_01 REF NOISE 2_20261010_130755.zip",
+        "capture": "s760_04 LP SW R64_20261010_130922.zip",
+        "parameters": [
+          0.929801420245456,
+          1543.7770930194629,
+          1.0000213476708353
+        ],
+        "training_relative_rms_percent": 51.508966169147186,
+        "evaluation_relative_rms_percent": 44.030689248231425,
+        "windows": [
+          {
+            "start": 1.5,
+            "end": 1.9,
+            "relative_rms_percent": 56.673627462947664,
+            "observed_rms": 0.0020035293842566764
+          },
+          {
+            "start": 1.9,
+            "end": 2.3,
+            "relative_rms_percent": 44.622536496030335,
+            "observed_rms": 0.002497079921727358
+          },
+          {
+            "start": 2.3,
+            "end": 2.6999999999999997,
+            "relative_rms_percent": 33.35832504793232,
+            "observed_rms": 0.0036940458016930327
+          },
+          {
+            "start": 2.6999999999999997,
+            "end": 3.0999999999999996,
+            "relative_rms_percent": 38.678499850564236,
+            "observed_rms": 0.006231967637177614
+          },
+          {
+            "start": 3.0999999999999996,
+            "end": 3.4999999999999996,
+            "relative_rms_percent": 55.21243987247193,
+            "observed_rms": 0.007394000798785587
+          },
+          {
+            "start": 3.4999999999999996,
+            "end": 3.8999999999999995,
+            "relative_rms_percent": 52.147367772860264,
+            "observed_rms": 0.006608725377466391
+          },
+          {
+            "start": 3.8999999999999995,
+            "end": 4.3,
+            "relative_rms_percent": 40.16788627931283,
+            "observed_rms": 0.0060519848748867185
+          },
+          {
+            "start": 4.299999999999999,
+            "end": 4.699999999999999,
+            "relative_rms_percent": 35.72574990209509,
+            "observed_rms": 0.003860048585585551
+          },
+          {
+            "start": 4.699999999999999,
+            "end": 5.1,
+            "relative_rms_percent": 45.798182180871045,
+            "observed_rms": 0.002462690645883282
+          },
+          {
+            "start": 5.1,
+            "end": 5.5,
+            "relative_rms_percent": 44.758633390164064,
+            "observed_rms": 0.001274272309082721
+          },
+          {
+            "start": 5.499999999999999,
+            "end": 5.8999999999999995,
+            "relative_rms_percent": 102.35455389512006,
+            "observed_rms": 0.0013376643590326763
+          },
+          {
+            "start": 5.899999999999999,
+            "end": 6.299999999999999,
+            "relative_rms_percent": 164.99871462508128,
+            "observed_rms": 0.0007604507302094562
+          }
+        ]
+      },
+      {
+        "label": "repeat",
+        "source_reference": "s760_01 REF NOISE_20261010_121558.zip",
+        "capture": "s760_04 LP SW R64_20261010_133400.zip",
+        "parameters": [
+          0.38770067810964143,
+          1795.1507206950166,
+          1.0000213476708368
+        ],
+        "training_relative_rms_percent": 43.36498000804491,
+        "evaluation_relative_rms_percent": 46.24565924890618,
+        "windows": [
+          {
+            "start": 1.5,
+            "end": 1.9,
+            "relative_rms_percent": 23.729061346652983,
+            "observed_rms": 0.014826571044249616
+          },
+          {
+            "start": 1.9,
+            "end": 2.3,
+            "relative_rms_percent": 31.807531550694335,
+            "observed_rms": 0.012978572345887408
+          },
+          {
+            "start": 2.3,
+            "end": 2.6999999999999997,
+            "relative_rms_percent": 69.4185621771592,
+            "observed_rms": 0.017224195158058765
+          },
+          {
+            "start": 2.6999999999999997,
+            "end": 3.0999999999999996,
+            "relative_rms_percent": 26.18448591134598,
+            "observed_rms": 0.028524401352597893
+          },
+          {
+            "start": 3.0999999999999996,
+            "end": 3.4999999999999996,
+            "relative_rms_percent": 36.15987092905857,
+            "observed_rms": 0.048201249677233056
+          },
+          {
+            "start": 3.4999999999999996,
+            "end": 3.8999999999999995,
+            "relative_rms_percent": 52.97130066623282,
+            "observed_rms": 0.05021652428236643
+          },
+          {
+            "start": 3.8999999999999995,
+            "end": 4.3,
+            "relative_rms_percent": 49.81702035731955,
+            "observed_rms": 0.05916989887522061
+          },
+          {
+            "start": 4.299999999999999,
+            "end": 4.699999999999999,
+            "relative_rms_percent": 43.7618529045811,
+            "observed_rms": 0.05395544613407516
+          },
+          {
+            "start": 4.699999999999999,
+            "end": 5.1,
+            "relative_rms_percent": 31.795027393280186,
+            "observed_rms": 0.03538428992612302
+          },
+          {
+            "start": 5.1,
+            "end": 5.5,
+            "relative_rms_percent": 42.39353556616447,
+            "observed_rms": 0.022187865370084364
+          },
+          {
+            "start": 5.499999999999999,
+            "end": 5.8999999999999995,
+            "relative_rms_percent": 33.840564010749475,
+            "observed_rms": 0.011845704969464368
+          },
+          {
+            "start": 5.899999999999999,
+            "end": 6.299999999999999,
+            "relative_rms_percent": 83.84830437757306,
+            "observed_rms": 0.008875574010064257
+          }
+        ]
+      }
+    ],
+    "controls": {
+      "damping": 85,
+      "gain": 1,
+      "source_rate": 44100.94143223983,
+      "phase_lanes": 8,
+      "trajectory": "native-hold-fixed-clock"
+    },
+    "limits": [
+      "Analog recordings; trimmed start is audio origin, not MIDI timestamp.",
+      "Train/evaluation alternating blocks have been reused in historical exploration, not fresh validation.",
+      "Source phase, constant trim and envelope time-scale fitted on training only.",
+      "Fractional-phase lanes approximate commuting slowly changing native recurrence with the recording chain; not literal hardware or a DSP correction."
+    ]
+  },
+  "noncausal_reference": {
+    "results": [
+      {
+        "label": "quiet",
+        "source_reference": "s760_01 REF NOISE 2_20261010_130755.zip",
+        "capture": "s760_04 LP SW R64_20261010_130922.zip",
+        "parameters": [
+          0.9203515229169236,
+          1543.764414562014,
+          1.0000213476708344
+        ],
+        "training_relative_rms_percent": 24.604017319362768,
+        "evaluation_relative_rms_percent": 19.141519240976017,
+        "windows": [
+          {
+            "start": 1.5,
+            "end": 1.9,
+            "relative_rms_percent": 56.38004599070046,
+            "observed_rms": 0.0020035293842566764
+          },
+          {
+            "start": 1.9,
+            "end": 2.3,
+            "relative_rms_percent": 45.207613788073225,
+            "observed_rms": 0.002497079921727358
+          },
+          {
+            "start": 2.3,
+            "end": 2.6999999999999997,
+            "relative_rms_percent": 20.348423273022597,
+            "observed_rms": 0.0036940458016930327
+          },
+          {
+            "start": 2.6999999999999997,
+            "end": 3.0999999999999996,
+            "relative_rms_percent": 16.682094809331467,
+            "observed_rms": 0.006231967637177614
+          },
+          {
+            "start": 3.0999999999999996,
+            "end": 3.4999999999999996,
+            "relative_rms_percent": 8.332632559864061,
+            "observed_rms": 0.007394000798785587
+          },
+          {
+            "start": 3.4999999999999996,
+            "end": 3.8999999999999995,
+            "relative_rms_percent": 6.953300316395229,
+            "observed_rms": 0.006608725377466391
+          },
+          {
+            "start": 3.8999999999999995,
+            "end": 4.3,
+            "relative_rms_percent": 15.894637106655308,
+            "observed_rms": 0.0060519848748867185
+          },
+          {
+            "start": 4.299999999999999,
+            "end": 4.699999999999999,
+            "relative_rms_percent": 25.535710716139715,
+            "observed_rms": 0.003860048585585551
+          },
+          {
+            "start": 4.699999999999999,
+            "end": 5.1,
+            "relative_rms_percent": 39.63006207278402,
+            "observed_rms": 0.002462690645883282
+          },
+          {
+            "start": 5.1,
+            "end": 5.5,
+            "relative_rms_percent": 41.55377572799281,
+            "observed_rms": 0.001274272309082721
+          },
+          {
+            "start": 5.499999999999999,
+            "end": 5.8999999999999995,
+            "relative_rms_percent": 90.7467996198561,
+            "observed_rms": 0.0013376643590326763
+          },
+          {
+            "start": 5.899999999999999,
+            "end": 6.299999999999999,
+            "relative_rms_percent": 160.00251314062527,
+            "observed_rms": 0.0007604507302094562
+          }
+        ]
+      },
+      {
+        "label": "repeat",
+        "source_reference": "s760_01 REF NOISE_20261010_121558.zip",
+        "capture": "s760_04 LP SW R64_20261010_133400.zip",
+        "parameters": [
+          0.37745385556066513,
+          1795.0789969606628,
+          1.0000213476708373
+        ],
+        "training_relative_rms_percent": 19.02792451107042,
+        "evaluation_relative_rms_percent": 20.593362636687377,
+        "windows": [
+          {
+            "start": 1.5,
+            "end": 1.9,
+            "relative_rms_percent": 29.83830899144923,
+            "observed_rms": 0.014826571044249616
+          },
+          {
+            "start": 1.9,
+            "end": 2.3,
+            "relative_rms_percent": 27.754938839482396,
+            "observed_rms": 0.012978572345887408
+          },
+          {
+            "start": 2.3,
+            "end": 2.6999999999999997,
+            "relative_rms_percent": 63.64385291009669,
+            "observed_rms": 0.017224195158058765
+          },
+          {
+            "start": 2.6999999999999997,
+            "end": 3.0999999999999996,
+            "relative_rms_percent": 16.323933234503404,
+            "observed_rms": 0.028524401352597893
+          },
+          {
+            "start": 3.0999999999999996,
+            "end": 3.4999999999999996,
+            "relative_rms_percent": 16.189412936070145,
+            "observed_rms": 0.048201249677233056
+          },
+          {
+            "start": 3.4999999999999996,
+            "end": 3.8999999999999995,
+            "relative_rms_percent": 9.136787787068855,
+            "observed_rms": 0.05021652428236643
+          },
+          {
+            "start": 3.8999999999999995,
+            "end": 4.3,
+            "relative_rms_percent": 12.079519354451982,
+            "observed_rms": 0.05916989887522061
+          },
+          {
+            "start": 4.299999999999999,
+            "end": 4.699999999999999,
+            "relative_rms_percent": 16.289327824985346,
+            "observed_rms": 0.05395544613407516
+          },
+          {
+            "start": 4.699999999999999,
+            "end": 5.1,
+            "relative_rms_percent": 19.736800895763512,
+            "observed_rms": 0.03538428992612302
+          },
+          {
+            "start": 5.1,
+            "end": 5.5,
+            "relative_rms_percent": 38.54955263641603,
+            "observed_rms": 0.022187865370084364
+          },
+          {
+            "start": 5.499999999999999,
+            "end": 5.8999999999999995,
+            "relative_rms_percent": 31.24102467491582,
+            "observed_rms": 0.011845704969464368
+          },
+          {
+            "start": 5.899999999999999,
+            "end": 6.299999999999999,
+            "relative_rms_percent": 81.34852143591732,
+            "observed_rms": 0.008875574010064257
+          }
+        ]
+      }
+    ],
+    "controls": {
+      "damping": 85,
+      "gain": 1,
+      "source_rate": 44100.94143223983,
+      "phase_lanes": 8,
+      "trajectory": "native-linear-fixed-clock"
+    },
+    "limits": [
+      "Analog recordings; trimmed start is audio origin, not MIDI timestamp.",
+      "Train/evaluation alternating blocks have been reused in historical exploration, not fresh validation.",
+      "Source phase, constant trim and envelope time-scale fitted on training only.",
+      "Fractional-phase lanes approximate commuting slowly changing native recurrence with the recording chain; not literal hardware or a DSP correction."
+    ]
+  },
+  "selected_directional_evaluation": [
+    {
+      "label": "quiet",
+      "diagnostic_apex_audio_seconds": 3.412967547140263,
+      "rise_error_percent": 14.849390855189046,
+      "fall_error_percent": 23.506748738233075
+    },
+    {
+      "label": "repeat",
+      "diagnostic_apex_audio_seconds": 3.955891429738533,
+      "rise_error_percent": 17.241711966672696,
+      "fall_error_percent": 24.868256505450773
+    }
+  ],
+  "static_endpoint_contract": "Both models preserve an already stationary coefficient exactly; a finite ramp reaches its commanded endpoint, and a one-pole approaches it asymptotically. No stationary coefficient/damping remapping.",
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_causal_cutoff_transitions.py": "53a00309e9037475fa6760e0afa22710d88c4fac7d5201512372e03338c18c78",
+    "docs\\ic20-hle-findings\\chatGPT-work\\check_resonant_recording_band.py": "344ba499d8ca55d0824ad28cc2bb31b6cd1ad5b469664b1c70d14eeddff2d2eb",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\causal-cutoff-results.json": "905cbef6f1e8fcbf3185d9e0fe70dd1ad98df1ee5dac7ccd5d9bdbe00c638300",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\on\\application.csv": "3723b9ee084534b0df33e866b4cdf5a9cdf2d604c685a858ec863a2c27795086",
+    "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+    "docs\\condensed\\validation\\resonant-source-control-2026-10-15.json": "7acd1343a35ab20ca9b616a4ef5ba5403014247012d234c4e694bb41d55f0128"
+  }
+}

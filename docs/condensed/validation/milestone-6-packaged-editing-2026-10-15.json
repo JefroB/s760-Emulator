@@ -1,0 +1,464 @@
+{
+  "date": "2026-10-15",
+  "revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "worktree": "dirty; hashes identify tested sources, package, test suite and private artifacts; no final revision frozen",
+  "evidence_classes": [
+    "real Chromium packaged UI acceptance",
+    "native PCM from package executable with source controller and byte-identical Lua",
+    "bounded packaged WebView2 pixel readback",
+    "backend regression",
+    "physical photo structural review only"
+  ],
+  "host": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.0",
+    "node": "22.17.1",
+    "playwright": "1.64.0",
+    "browser_cache": "chromium_headless_shell-1248"
+  },
+  "prerequisites": [
+    "User-supplied IC15v1.11, OS2.24 and ROBOFULL; SHA256 identities below",
+    "Windows development host with WebView2 and local loopback permitted",
+    "Fresh private state/media copies; no firmware embedded in the package",
+    "Build PYTHONPATH set to private package-deps195 for installed pywebview dependencies"
+  ],
+  "commands": {
+    "build": "$env:PYTHONPATH=(Resolve-Path docs/ic20-hle-findings/chatGPT-work/package-deps195).Path; ./scripts/build_standalone.ps1 -OutputDirectory docs/ic20-hle-findings/chatGPT-work/m6-edit-package-20261015",
+    "browser": "From google-ui: PLAYWRIGHT_BROWSERS_PATH=C:/Users/jborn/AppData/Local/ms-playwright; S760_EDIT_PACKAGE=<package>; S760_EDIT_WORK=<fresh work>; node node_modules/@playwright/test/cli.js test --config=playwright.packaged.config.ts --output=<private results>",
+    "browser_runs": [
+      "m6-edit-browser-results-09: performance, patch and partial pass; erase fails because test parks pointer outside clipped canvas, leaving crosshair in compared waveform",
+      "m6-edit-browser-results-10: --grep packaged erase passes after test-only header parking correction; first three case behavior unchanged"
+    ],
+    "audio": "python scripts/verify_packaged_edit_audio.py --package docs/ic20-hle-findings/chatGPT-work/m6-edit-package-20261015/dist/S760Studio --browser-work docs/ic20-hle-findings/chatGPT-work/m6-edit-browser-09 --erase-work docs/ic20-hle-findings/chatGPT-work/m6-edit-browser-10/erase --state-dir docs/ic20-hle-findings/chatGPT-work/m6-edit-audio-20261015",
+    "webview": "S760Studio.exe --verify-desktop --no-sound --fast --state-dir <private m6-edit-webview-20261015> --boot-rom <IC15> --system-disk <OS2.24> --media-dir <private copied library>",
+    "typescript": "npm run lint (google-ui)",
+    "python_regression": "Python stdin runner imports tests/mame_harness; redirects SCRATCH_DIR to private m6-edit-pytest-final2/harness and SNAP_DIR to private m6-edit-pytest-final2/snapshots/s760; creates both; pytest.main([tests,-q,--basetemp=<private tmp>,-o,cache_dir=<private cache>])"
+  },
+  "result": {
+    "browser_qualified_cases": 4,
+    "invalid_media_sizes_rejected": [
+      0,
+      737279,
+      737281,
+      1474559,
+      1474561
+    ],
+    "backend": {
+      "passed": 397,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 98.03
+    },
+    "typescript": "pass",
+    "webview": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 225776
+    },
+    "native_audio": {
+      "baseline60": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        }
+      ],
+      "baseline21": [
+        {
+          "bend": "centre",
+          "frequency_hz": 248,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 248,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 248,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        }
+      ],
+      "perform": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      ],
+      "perform_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      ],
+      "patch": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 4107,
+          "peak": 0.007702201139181852,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 10002,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        }
+      ],
+      "patch_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 4107,
+          "peak": 0.007702201139181852,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 10002,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        }
+      ],
+      "partial": [
+        {
+          "bend": "centre",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        }
+      ],
+      "partial_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        }
+      ],
+      "erase": [
+        {
+          "bend": "centre",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        }
+      ],
+      "erase_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        }
+      ],
+      "passed": true,
+      "scope": "Cold native PCM from packaged-browser-exported media; no physical audio or clean-machine claim"
+    }
+  },
+  "browser": {
+    "perform": {
+      "result": {
+        "scenario": "perform",
+        "passed": true,
+        "before": 3403796005,
+        "edited": 1664581997,
+        "persisted": 1664581997,
+        "rejected_media_sizes": [
+          0,
+          737279,
+          737281,
+          1474559,
+          1474561
+        ],
+        "saved_sha256": "853e005c3660a000e726d252be815bdb549a5f4cf786959abf1552517af06f75",
+        "limits": "Packaged browser controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+      },
+      "private_case_directory": "docs/ic20-hle-findings/chatGPT-work/m6-edit-browser-09/perform",
+      "result_sha256": "b3fc661cf98144a8b88378f741022f4ec20d274772f7088220b9cac3ac42788f",
+      "session_sha256": "c502a71a079666f3814fba2773334d8b55285e095dab7d2f05bbc08e676ae4b8",
+      "captures_sha256": {
+        "before.png": "113fa4800f30f25ec47822311ae55c6db10111a6ed6dcfc4f3bb714d83a381f4",
+        "edited.png": "9a10c1d547665f4ce92d2499a5dead20c9aa8b999d61f71cdc161bb59c7859ca",
+        "saved-screen.png": "38be6c855a082bb7e5bdf80b72e0fed9a968d01ec2c60e718841f8cc1bb5ba57",
+        "restored.png": "38be6c855a082bb7e5bdf80b72e0fed9a968d01ec2c60e718841f8cc1bb5ba57",
+        "cold.png": "38be6c855a082bb7e5bdf80b72e0fed9a968d01ec2c60e718841f8cc1bb5ba57"
+      }
+    },
+    "patch": {
+      "result": {
+        "scenario": "patch",
+        "passed": true,
+        "before": 500076997,
+        "edited": 4068560837,
+        "persisted": 4068560837,
+        "rejected_media_sizes": [],
+        "saved_sha256": "73c5012b364704b295ddeb556501a482629b301b7de60b61491ef98acfd71cac",
+        "limits": "Packaged browser controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+      },
+      "private_case_directory": "docs/ic20-hle-findings/chatGPT-work/m6-edit-browser-09/patch",
+      "result_sha256": "b9a4d4f4215edcd02914324d76b3feed3b6eb88db46f03c75b107004182a144c",
+      "session_sha256": "b2127c77b089692c05ec13ff40768c3712c00284bd940aec05b080e95b44fa7b",
+      "captures_sha256": {
+        "before.png": "14fdd457a9f5abe373e4767ba5ba5f197cfef0d5a39dbcf15488e01a7637723e",
+        "edited.png": "90bbd806ee2ccd72a14154cc39693ff85916804c5a5ee05aa9155ed822e538d5",
+        "saved-screen.png": "90bbd806ee2ccd72a14154cc39693ff85916804c5a5ee05aa9155ed822e538d5",
+        "restored.png": "90bbd806ee2ccd72a14154cc39693ff85916804c5a5ee05aa9155ed822e538d5",
+        "cold.png": "90bbd806ee2ccd72a14154cc39693ff85916804c5a5ee05aa9155ed822e538d5"
+      }
+    },
+    "partial": {
+      "result": {
+        "scenario": "partial",
+        "passed": true,
+        "before": 313467589,
+        "edited": 1297015181,
+        "persisted": 1297015181,
+        "rejected_media_sizes": [],
+        "saved_sha256": "e90b1f4d7e7f2e5f63accc5d3acbdb4a2d5458ac4b85b5321ee66127308608dc",
+        "limits": "Packaged browser controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+      },
+      "private_case_directory": "docs/ic20-hle-findings/chatGPT-work/m6-edit-browser-09/partial",
+      "result_sha256": "a5d61577bafaf9dbd285118f0add1a366f3f745eaed80ca08944e185f5002fc5",
+      "session_sha256": "814f6b033fea7e45d016f9d8627be285f8b91ed7ed51598e418c7ac8eff6e878",
+      "captures_sha256": {
+        "before.png": "30709b09161350395dd6c75e781ad112469296c02cb0efcb7780338a4059e423",
+        "edited.png": "11a5c118f4127706889b476b2a9c3adf0f3066b1718bcb3dc21f735f0fddad8c",
+        "saved-screen.png": "11a5c118f4127706889b476b2a9c3adf0f3066b1718bcb3dc21f735f0fddad8c",
+        "restored.png": "11a5c118f4127706889b476b2a9c3adf0f3066b1718bcb3dc21f735f0fddad8c",
+        "cold.png": "11a5c118f4127706889b476b2a9c3adf0f3066b1718bcb3dc21f735f0fddad8c"
+      }
+    },
+    "erase": {
+      "result": {
+        "scenario": "erase",
+        "passed": true,
+        "before": 1153106405,
+        "edited": 3027321573,
+        "persisted": 3027321573,
+        "rejected_media_sizes": [],
+        "saved_sha256": "610dcf06d455e5cb0810df964dbd1beb80cec9a77304918d291da208e786fa9e",
+        "limits": "Packaged browser controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+      },
+      "private_case_directory": "docs/ic20-hle-findings/chatGPT-work/m6-edit-browser-10/erase",
+      "result_sha256": "19decf420da69f6c7cb4c10a3c217688e93127baf4eb78da6920b0f7c818638e",
+      "session_sha256": "2e1d63f426c9787728f354f0ed65ef30b13ba69ebff14395b3f796b67e6fe85a",
+      "captures_sha256": {
+        "before.png": "22e1b01c03d16f1706adf29873df9778510931a24ac08a1a41633b679f592693",
+        "edited.png": "fb354111cf5f291e776e24a60ced0679abdf4287589e7de118c73600330e6efc",
+        "saved-screen.png": "51714f2f7f9fed8d8dd2b93e4eccd4c0db0f46feef6f76b9f2d60bfb0d39bac7",
+        "restored.png": "fb354111cf5f291e776e24a60ced0679abdf4287589e7de118c73600330e6efc",
+        "cold.png": "fb354111cf5f291e776e24a60ced0679abdf4287589e7de118c73600330e6efc"
+      }
+    }
+  },
+  "source_sha256": {
+    "google-ui/e2e/packaged-editing.spec.ts": "71694a9e82938cac6180b4197cdd03441634098f0c3440ba6d7385f4fada79a3",
+    "google-ui/playwright.packaged.config.ts": "381880041b9ec88d113289a756c6cc8c0725289e7d9e1492190e47b6627d04c4",
+    "scripts/verify_packaged_edit_audio.py": "fdd909adf098849414aed448ef36b06a5aab50d23ef6fb14693b9d5f81b541e6",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "scripts/build_standalone.ps1": "8ef09b7f47d9a9f12d6e6c22db36268428373e044c8ae226c26c87784b81498b",
+    "mame-source/src/mame/roland/s760.cpp": "b4e21396a32c3b4c89942790754be6155f7f383faa4cfa66cb2000c5438e5023",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "test_suite_sha256": {
+    "tests/conftest.py": "2ff2278932d8d74e3742693f23b2280e3694221640dfaac0f673c0662e3287d7",
+    "tests/disk_formats.py": "29fd89a55ff64e11448e510a039ec0122252b9862388be155990be819fca41a4",
+    "tests/dsp_tools.py": "0c3a8d67ba892c9ac699f21fe82fe341a684febb478dd3d0c01a7b9ceced18c3",
+    "tests/mame_harness.py": "6e994c9eebf29ad633abdd7ef85e00f59d45994a772c2ed88d08464aa2ecdbae",
+    "tests/test_adversarial_review.py": "cb9c97873d8c0a6835b2c7f255c0e46bfb47f1c78427ceb38a424387bbbfa1bd",
+    "tests/test_asio.py": "f6ed3dd2430bb67dd2d612ebd48d8f1fc27ac94ada88513484d0c02de7edc61e",
+    "tests/test_audio_capture_reference.py": "0687b0f0bf6b6ee5d3308495c1635acff727bda62c8d5766a9b1a81fce7d66ef",
+    "tests/test_audio_recovery.py": "af2b0a6aa1ab0b05ea04ccb783a2f28df72f0ecb02fa17445ad7f90e20e2e3d2",
+    "tests/test_calibration_tools.py": "07cce3c8ed9759632ef7e7f80a7170348fc41ac26489fb170e33293c2d7d20c0",
+    "tests/test_capture.py": "e22394ac2f9acc8ce117dc2db6dedeffda75489ef8b9f28db22affa7fd16e05e",
+    "tests/test_coverage_reports.py": "d160e9e6800265ef9abff21948eec29337780fbefa3673864e6fd92698207c1f",
+    "tests/test_cpp_parity.py": "c73e2211ec27d520e15296665c64aa17e5cfab06bb046d158d91bf6a988f1492",
+    "tests/test_disk_conversion.py": "216764f3330b311b60a821ae14ecaf5ac3fc586eabe57743a86b987b3c16c598",
+    "tests/test_distribution_inventory.py": "6253f4f68d0e60e7a7dbe6bc2520700cc78fba2e25c04cb144a7bb0229b9f4a6",
+    "tests/test_dsp_mame.py": "b54b17126c25a0ae75fbc8a42b7466a14f92280badb52897158f9f062715bfa6",
+    "tests/test_dsp_tools.py": "6530145946690195b09f5676855283fbb980207c0d2e736385326a926b105464",
+    "tests/test_fdc_mame.py": "e3f647dbc7da0600b01e3dff52dd062a87cd00c8ef62c7e6cd16850a3b736e9f",
+    "tests/test_firmware_readiness.py": "09540630ec339f3b40d08a921cca78de5c619f8b9a6f1119f1ccad7a8807de95",
+    "tests/test_gate_array_mame.py": "a118cec9ed75efef93468b460b41817d4da12960688f181347d0f7b9ea78b7e8",
+    "tests/test_gb6_os_patch.py": "4425ba8fe5d33b639753b9d83e99fdc3d77461d4db75a14ee8c69a607b953d45",
+    "tests/test_image_invariants.py": "e1cf37c8f7de68755eafae9f87fa6f1be022bf50b03114ee4e43d1dc1206717e",
+    "tests/test_interactive_ui.py": "7412b1f08ffd4709e495120d0e28ff2315978de96476db04021af67e8e294535",
+    "tests/test_lcd_mame.py": "740463e3b091a36f2fb5e2e204509230da62ac8a0098656dda831ed46fcbffc3",
+    "tests/test_mame_integration.py": "a57f247aa9d770d633b82513736a2cfc6e644358038236f08ab3fdc6cafabe96",
+    "tests/test_mame_invariants.py": "33ebab7a6e7c44f5ec85cc875582c113f7ee4f00291665eb975842f569cb78d7",
+    "tests/test_native_checkpoint.py": "ff48a58d4216f0b2f073cdced6e56878ae9036006144d1a41ef67cecb59863d5",
+    "tests/test_native_media_export.py": "a4b5b693ba25fde1f785a02d864523d2b36502c423c6d5f81bbb140077380092",
+    "tests/test_native_media_lifecycle.py": "be6d23e8e6a7309d0152c7e6e4ec03e02c208b5789ec67f717d61c47d01d98ff",
+    "tests/test_native_runtime.py": "b0d05517467245cf620e10eb981d105a8626f6fb5ce3c5df35125cd0f1112b09",
+    "tests/test_native_scsi_export.py": "7b8bef294cdb2911cd5afc359f948d53a58f6700f0d6116a17cede8f1896bc81",
+    "tests/test_native_source_bundle.py": "570189982f44a530a81350d0b19631d998a62599f065464e636288ccef26b90c",
+    "tests/test_package_audit.py": "c10de1920dbc0af4ddf78f3e0112ceae67b24dcdfa2244cf462e9e186e8a07c7",
+    "tests/test_sample_disk_envelope.py": "f54c3764cd511c3fe945d7ccbf0bdbe096b98add0f831dcc5ba4052723f85015",
+    "tests/test_scsi_mame.py": "08c9c3dfa608c0ca2bda2a7599020a961bea9b8be8b35cc4532e34f99f45ec90",
+    "tests/test_soundcheck_project.py": "63a1f4ee91975953da2947785f0ced86c8f1ec752ee9b886de8886f6161aa7ce",
+    "tests/test_standalone_configuration.py": "6e3be8e6570fc65b53394c622f50bbd4b43f3ad7f415a2d613bf70417596da25",
+    "tests/test_standalone_inputs.py": "34223de2d88b7128fa698d9bc3b0bd2b3c8806badc25215901da3a4561d02c0e",
+    "tests/test_standalone_sessions.py": "fad122cc90578db7a2654d3eebba7403bab4b8e3afad288b822e7aa9376b4124",
+    "tests/test_static_filter_capture_phase.py": "f04f6eeaae64d266d89eaaff56dd82df3f9b599c07165f43900b7bf47e5345d7",
+    "tests/test_steering_f2_correction.py": "9e29b20cf8985ff7cc4c882e1da5ed1b624741f34d508bf5b4a901100e2822a4",
+    "tests/test_unified_core.py": "d1156d60d60290198ef984a294bc527050caab165c200c7e86d008cf4104add0",
+    "tests/test_vdp_mame.py": "4a9243c6f0ea7c1a9f1fbf50d555b4b149a1172f2a4fa88b263ef9a101aec332",
+    "tests/test_verification_result.py": "951e2a5a102ced3a7cd2da0afaa4775c90592d01a8c1db30290fead1f13cc185",
+    "tests/test_vst3_configuration.py": "495ad83b4b980e168804d13ad7def554a73f14ce08e24837632acfb7206194fe",
+    "tests/test_wave_media_comparison.py": "a5a47490fb2411ea6006a1b4b6bf979858e03b5f8d09cd846d179ab3a2333bf5",
+    "tests/test_wave_memory.py": "2c03548eeb374ed3dc91e5c72bc64b02969b49c1c0668241b6a0a619aec7660f"
+  },
+  "package_sha256": {
+    "S760Studio.exe": "a9efc5ee27fb49288224353d455ec6e5fd1ec1c724c865203dfcdcba00d39cd3",
+    "PACKAGE-AUDIT.json": "0fd3ca27f59c85637785d494fbbdb6b3db87f571432daa33d32ae24815320fa2",
+    "BUNDLED-INPUTS.json": "23afcd51bf428df4be6984a7ef9af93e59b83afe2d12ad51ee98fdc3d677359d",
+    "DEPENDENCY-INVENTORY.json": "0122915d202d104d8caac88ec92ef23a269b5ceac13dad51c2d4b5629c921a0e",
+    "SYSTEM-PREREQUISITES.json": "8f4d8362fc91f05946d77643103cf6cf207aac8a40f0c271539aba92c3131c73",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "google-ui/dist/index.html": "1296db1a5762c3f5bfab63b44eb2ed23af0d46bf6d366d138f50d7e798da50af"
+  },
+  "package_audit": {
+    "development_package_ok": true,
+    "errors": [],
+    "limitations": [
+      "Hash scan detects exact local ROM/media files and forbidden extensions; it is not a general secret or transformed-content detector.",
+      "Attribution of bundled DLLs and source correspondence require release review."
+    ],
+    "release_blockers": [
+      "project_license_scope_not_reviewed",
+      "corresponding_source_not_qualified",
+      "bundled_dependency_rights_not_qualified",
+      "artifact_differs_from_reviewed_distribution"
+    ],
+    "release_ready": false,
+    "schema": 1
+  },
+  "physical_photo_review": {
+    "scope": "Visually inspected labels/order/structure, not pixel or audio parity; different libraries and camera/CRT optics",
+    "sha256": {
+      "perform-1.jpeg": "47e06e744756901175c656a5c820dcecb40865f15fc387fc3ee52c77e53fa686",
+      "patch-3.jpeg": "81adc2df4b0cef74a5707295e04bedbdb47df7d32777fa8a034bb77cf3194ed5",
+      "partial-1.jpeg": "c1cb5c9077a786f4d22c1d4d799b28003538cfc04bd22d34bd5027fa546b128f",
+      "sample-11.jpeg": "85e7de074eb931f7a69c191d8b169d05cf15950f225d27b22a822a145e5b2152"
+    }
+  },
+  "limitations": [
+    "Silent unthrottled development browser profile; WebView check verifies boot pixels only",
+    "Native audio is from independent cold MAME processes using exported disks and browser-created checkpoints, not a browser audio-device measurement",
+    "Only four named editing commands and five invalid sizes; no correct-size malformed-sector qualification",
+    "No clean-machine, installer, final-release, sustained normal-speed recording, physical audio or exhaustive screen parity claim",
+    "Changed package remains development-only; distribution/source/dependency requalification and final artifact freeze remain open"
+  ]
+}

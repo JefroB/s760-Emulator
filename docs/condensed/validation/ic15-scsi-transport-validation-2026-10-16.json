@@ -1,0 +1,78 @@
+{
+  "tests": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "452",
+    "time": "40.771",
+    "timestamp": "2026-10-16T18:37:03.754570-06:00",
+    "hostname": "DESKTOP-1DUCQK3"
+  },
+  "native_command_contract": "[COMMAND-CONTRACT] active=9 completed=9",
+  "native_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.966666666667,
+    "note_release": 81.166666666667,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    }
+  },
+  "sources": [
+    "https://ftp.netbsd.org/pub/NetBSD/NetBSD-release-10/src/sys/dev/ic/mb89352reg.h",
+    "https://ftp.netbsd.org/pub/NetBSD/NetBSD-release-10/src/sys/dev/ic/mb89352.c"
+  ],
+  "scope": "Independent command-phase model repair and ordinary unchanged-ROM qualification. Payload DMA is still blocked by BUG-082. Original library media and firmware immutable; test HD layout is private synthetic data.",
+  "source_identities": {
+    "mame-source/src/mame/roland/s760.cpp": "d5d2947e0938fc8cfb1a71ae08f8c30e48d16c2083282c2339e80b962ec5cd2a",
+    "mame-source/mames760.exe": "b4dde5003f10718f4ae62f141ea58ec9479ab75812875a82a890fe1d988832da",
+    "mame-source/src/devices/machine/mb87030.cpp": "277f8bfadf53569826f79b3fbda3ede6beb0567db5d7a97454cf8688baab94b1",
+    "mame-source/src/devices/machine/mb87030.h": "c242cce26638118da30ced15e2b0a82798332914055de9206b11de31f29dcfc6",
+    "tests/test_native_rom_scsi_command.py": "8c73548ea5ab2106d2cbbda07eef07c69d5bda49e3a602d25eb6b1a61a101733",
+    "Manuals/ROLAND_S-760_SERVICE_NOTES.pdf": "9657ce49efe297d04ffe0ab57ae47aab19cde3f72c7e38162c1208081b66a4a5",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/SCSI/HD00_512.img": "8a940c7f114326aedbeb457ed3ed83bc7dbc4b2000ac552d8ff7c410bba43a6c",
+    "docs\\condensed\\validation\\ic15-cpu-gate-2026-10-16.png": "2ad7a0b0c768e92ba68f3b5b0db43b6529882b276e2adfbb2ac332295da64ed6",
+    "docs\\condensed\\validation\\ic15-scsi-wiring-2026-10-16.png": "97acf439d71566bb05ba204978889197fcecf2cb378b39052b8de49f4166260c"
+  },
+  "test_source": "\"\"\"Original ROM command-phase transfer regression using ordinary setup input.\"\"\"\nimport json\nimport os\nfrom pathlib import Path\nimport shutil\nimport subprocess\n\nimport pytest\n\nROOT = Path(__file__).resolve().parents[1]\n\n\ndef test_rom_scsi_command_counter_and_completion(tmp_path):\n    exe = Path(os.environ.get('S760_MAME_EXE', ROOT / 'mame-source/mames760.exe'))\n    rom = ROOT / 'roms/BOOT/Roland_S-760_v1.11.BIN'\n    os_image = ROOT / 'S760224.IMG'\n    hd = ROOT / 'roms/SCSI/HD00_512.img'\n    if not all(p.is_file() for p in (exe, rom, os_image, hd)):\n        pytest.skip('Native MAME, original boot ROM, OS and HD fixture required')\n    # Reuse the recorded ordinary panel sequence, not saved guest RAM or PC.\n    evidence = json.loads((ROOT / 'docs/condensed/validation/ic15-native-scsi-command-contract-2026-10-16.json').read_text())\n    source = evidence['observer_and_input_source']\n    source += r'''\nlocal completed=0 local active=0\ncontract_status=space:install_read_tap(0xe408,0xe40d,'command-contract',function(a,d,m)\n local pc=cpu.state['PC'].value\n if a==0xe40c and pc==0x25b8 and (d&0xf0)==0xb0 then active=active+1 end\n if a==0xe408 and pc==0x2586 and (d&0x10)~=0 then\n  assert(space:read_u8(0xe418)==0 and space:read_u8(0xe41a)==0 and space:read_u8(0xe41c)==0,'SPC command counter did not complete')\n  completed=completed+1\n end\nend)\nemu.register_frame_done(function()\n if frames==1740 then\n  assert(active>0 and completed>0,'ROM command transfer never completed')\n  print(string.format('[COMMAND-CONTRACT] active=%d completed=%d',active,completed))\n end\nend)\n'''\n    lua = tmp_path / 'command.lua'\n    lua.write_text(source)\n    rd = tmp_path / 'roms/s760'\n    rd.mkdir(parents=True)\n    shutil.copyfile(os_image, rd / 's760224.img')\n    (rd / 'invalid.img').write_bytes(bytes(1474560))\n    sd = tmp_path / 'roms/SCSI'\n    sd.mkdir()\n    shutil.copyfile(hd, sd / hd.name)\n    env = {k: v for k, v in os.environ.items() if not k.startswith('S760_')}\n    env.update(S760_ROM_BOOT=str(rom), S760_FLOPPY=str(rd / 'invalid.img'), S760_NATIVE_VALUE_ENCODER='1')\n    cmd = [str(exe), 's760', '-rompath', str(tmp_path / 'roms'), '-nvram_directory', str(tmp_path / 'nvram'),\n           '-cfg_directory', str(tmp_path / 'cfg'), '-video', 'none', '-sound', 'none', '-skip_gameinfo',\n           '-nothrottle', '-seconds_to_run', '30', '-autoboot_delay', '0', '-autoboot_script', str(lua)]\n    p = subprocess.run(cmd, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=90,\n                       creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))\n    output = p.stdout + p.stderr\n    (tmp_path / 'console.log').write_text(output)\n    assert p.returncode == 0, output[-4000:]\n    assert '[COMMAND-CONTRACT]' in output, output[-4000:]\n    assert 'LUA ERROR' not in output.upper(), output[-4000:]\n    assert 'pc=25f2 addr=e414' in output\n    assert 'pc=24c7 addr=e404 value=00e0' in output\n",
+  "test_runner": "from pathlib import Path\nimport sys,os\nroot=Path.cwd();base=Path(__file__).parent.resolve()/os.environ.get('S760_TEST_RUN','suite')\nbase.mkdir(parents=True,exist_ok=True)\nsys.path.insert(0,str(root/'tests'));sys.path.insert(0,str(root))\nimport mame_harness\nmame_harness.SCRATCH_DIR=str(base/'pytest-mame');mame_harness.SNAP_DIR=str(base/'pytest-snap/s760')\nPath(mame_harness.SCRATCH_DIR).mkdir(exist_ok=True);Path(mame_harness.SNAP_DIR).mkdir(parents=True,exist_ok=True)\nimport pytest\nraise SystemExit(pytest.main(['tests','-q','--basetemp',str(base/'pytest-temp'),'-o','cache_dir='+str(base/'pytest-cache'),'--junitxml',str(base/'pytest.xml')]))\n",
+  "runtime_command": "python scripts/verify_native_runtime.py --state-dir D:/S-760/docs/ic20-hle-findings/chatGPT-work/rom-scsi-contract-2026-10-16/runtime-verification-approved",
+  "tests_command": "python docs/ic20-hle-findings/chatGPT-work/rom-scsi-contract-2026-10-16/run_tests.py (S760_TEST_RUN=suite-final; approved loopback access)",
+  "build_commands": [
+    "MSBuild mame_s760.vcxproj /p:Configuration=Release /p:Platform=x64 /m:2",
+    "MSBuild mames760.vcxproj /p:Configuration=Release /p:Platform=x64 /p:BuildProjectReferences=false /m:1 /nr:false; changed driver dependency had already been built successfully"
+  ],
+  "attempts": "Parallel executable dependency build stalled and was interrupted; single-node executable link used already-built unchanged dependencies. Sandbox runtime sockets failed permission denied; approved native runtime passed. First approved suite444pass/8fail due private SNAP_DIR missing required s760 leaf; corrected runner452pass. No production screenshot logic or tests weakened.",
+  "schematic": {
+    "printed_page": 18,
+    "zero_based_page": 17,
+    "cpu_gate_clip": [
+      230,
+      150,
+      420,
+      365
+    ],
+    "scsi_clip": [
+      785,
+      580,
+      1030,
+      750
+    ],
+    "observed": "IC25 INT36 toINT1; DACK4 toXDACK0; DREQ3 viaIC6 inverter toXDREQ0. Does not specify IC4 internal DMA vector or full-count semantics."
+  }
+}

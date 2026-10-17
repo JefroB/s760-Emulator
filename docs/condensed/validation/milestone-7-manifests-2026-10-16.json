@@ -1,0 +1,39 @@
+{
+  "objective": "Milestone 7: separate versioned import/build manifests",
+  "status": "complete",
+  "validator_sha256": "7ddf47732be554872be2d6fd7d2ff6d1f4539fb2d363a63aa1142d44d1464ec2",
+  "targets": [
+    {
+      "target": "os_disk",
+      "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "size": 1474560,
+      "layout_bytes_covered": 1474560,
+      "annotations": 7,
+      "entry_points": 1,
+      "build_implemented": false,
+      "manifest_sha256": "3b51ae88ec992c0264511953428e37e125680e5788a3ff2eac2f06c3bc3aa4b5",
+      "input_unchanged_after_validation": true
+    },
+    {
+      "target": "ic15_rom",
+      "sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "size": 32768,
+      "layout_bytes_covered": 32768,
+      "annotations": 1,
+      "entry_points": 1,
+      "build_implemented": false,
+      "manifest_sha256": "c24029b0d6504d8dbc54624a9a1dfa497d72a781112ac6b546895b1397df1915",
+      "input_unchanged_after_validation": true
+    }
+  ],
+  "tests": {
+    "manifest_passed": 11,
+    "routine_analysis_passed": 12,
+    "failed": 0
+  },
+  "limitations": [
+    "Metadata contracts only; no assembler, linker, source rebuild or round trip claimed.",
+    "Unannotated bytes remain unknown and preserved.",
+    "Physical reset-bank defaults and complete integrity rules remain unqualified."
+  ]
+}

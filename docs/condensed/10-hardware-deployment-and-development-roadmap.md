@@ -1,6 +1,75 @@
 # Hardware Deployment & Development Roadmap
 
-Current product status (2026-10-14): Milestones1–5 are complete within their documented Windows development profiles; final shipped-artifact/clean-machine qualification remains Milestone6. [Current roadmap](../COMPLETION_ROADMAP.md). Dated reconciliation below predates the subsequent native editing/SCSI/concurrency results.
+The final source-built standalone archive is now promoted and revalidated on the
+workstation (2026-10-17): two complete normal-speed workflows run from the final
+extracted611-file tree, with twelve independent native readbacks and exact
+original/new sample retention. MAME, the audio bridge and the GPLv3 ASIO
+dependency rebuild from accompanying source. The final archive has its own
+trusted distribution manifest;532 backend tests pass. Source/dependency
+qualification and final-artifact workstation repetition are complete. Separate
+clean-machine prerequisite/install/workflow acceptance remains open, with no
+clean Windows machine/VM available. The tested PowerShell handoff retains
+INCOMPLETE status; static reports no longer claim unrun DAWs/machines qualified.
+[Current artifact and evidence](../testing/standalone-release-promotion.md).
+
+The following572-file checkpoint is the earlier candidate, superseded for
+current distribution bytes by the source-built archive above.
+
+The complete frozen-candidate standalone workstation workflow is now repeated
+(2026-10-17): two normal-speed load/play/edit/sample/save/restore/cold-reopen
+cycles pass with the layered WebView2 UI, measured Windows-device output and
+physical MOTU input. Four frozen launches, eight output captures and twelve
+independent native readbacks preserve the edited program and original/new sample
+data. All572 application files remain unchanged. A private handoff archive and
+full file manifest identify that candidate; its re-extracted Windows PowerShell
+launcher boots without child development-tool paths. BUG-101 corrects the kit's
+default path resolution. A separate clean Windows machine/VM is unavailable by
+user confirmation; clean-machine prerequisite/install/workflow acceptance remains
+unqualified. Final artifact promotion is recorded above. [Earlier complete workflow](../testing/milestone-6-complete-standalone-workflow.md),
+[handoff](../testing/standalone-clean-machine-handoff.md).
+
+Milestone 6 bounded WebView2 physical sampling objective completed (2026-10-17):
+normal-speed MOTU stereo input, firmware Sample Save/export and session
+restart/restore retain 46,387 frames/channel with the known 440/880 Hz tones.
+Both 101,376-byte allocations match exported media exactly after recorded-state
+readback, UI restore and independent cold firmware Sample Load. The final
+packaged case, 93 focused backend tests and TypeScript pass. Physical driver
+loss/latency, longer capture, final artifacts and clean-machine qualification
+remain open. [Acceptance](../testing/milestone-6-webview-sampling.md).
+
+Milestone 6 named WebView2 editing objective completed (2026-10-17): all four
+previously qualified browser edit/persistence workflows now pass in the actual
+packaged desktop renderer (155.0.4283.60). Eight frozen launches and ten native
+readbacks preserve field/wave pixels, edit bytes, sample neighbors and expected
+playback/release; 519 backend tests pass. Bounded physical sampling is separately
+qualified above; final-artifact repetition and clean-machine release acceptance
+remain open. [Acceptance](../testing/milestone-6-webview-editing.md).
+
+Milestone 6 bounded checkpoint-publication fault objective completed (2026-10-17):
+three forced exits after zero-byte pending-file creation preserve the previous
+checkpoint; Windows replacement denial preserves both it and live unsaved work,
+and retry successfully publishes the newer edit. Ten native readback processes
+verify exact sample/disk retention, dirty protection and playback/release;
+519 backend tests pass. Arbitrary payload-write/flush/rename interruption and
+physical power loss remain open. [Acceptance](../testing/milestone-6-checkpoint-publication.md).
+
+Milestone 6 bounded crash-recovery objective completed (2026-10-17): three
+forced process-tree terminations and cold launches of the dated development
+package retain the automatic checkpoint, dirty floppy state, exact edited disk
+and all sample bytes. Eight independent native readbacks preserve pitch, the
+Level 64 attenuation and silent release; 515 backend tests pass. Physical power
+loss, unqualified later publication stages and final-artifact/clean-machine
+release stress remain open. [Acceptance](../testing/milestone-6-crash-recovery.md).
+
+Milestone6 named packaged media/recovery subsets completed (2026-10-15): four correct-size unformatted profiles pass eight firmware directory/Load-attempt/reinsert/confirmed-reload cycles. Dirty-session recall reinstates replacement guards and preserves an exact737280-byte export. All119808 sample bytes survive; native pitch/level/release checks pass in21 fresh processes.404 backend regressions pass. Arbitrary malformed FAT structures, physical power loss, unqualified later publication stages and final-artifact stress remain open. [Acceptance](../testing/milestone-6-media-recovery.md).
+
+Milestone6 package setup subset completed (2026-10-15): package-specific README replaces checkout-dependent instructions; local-link audit fixes BUG-074. Relocated frozen-process setup, invalid-ROM repair, saved settings and actual WebView pixels pass with development environment removed.404 backend tests pass. Installed Visual C++/WebView prerequisites, final clean-machine artifacts and full release acceptance remain open. [Acceptance](../testing/milestone-6-package-setup.md).
+
+Milestone6 packaged editing subsets completed (2026-10-15): four real-browser workflows drive the frozen development service through performance Level, patch Bend Up/Down, partial Coarse Tune and sample Area Erase, firmware Save/export, session restart/restore and separate-process cold Load. Five invalid floppy sizes reject while preserving loaded field pixels.397 backend tests and packaged WebView pixel readback pass. Final-artifact, normal-speed device workflow and clean-machine qualification remain open. [Acceptance](../testing/milestone-6-packaged-editing.md).
+
+Milestone6 historical coverage-claim audit completed (2026-10-15): generated inventories retain unverified scope and pass five reproducibility/selector checks. Old CPU/display completion and inferred-screen parity claims are withdrawn or labelled historical. Final-artifact workflow, installation and setup validation remain open. [Audit](../testing/milestone-6-coverage-audit.md).
+
+Current product status (2026-10-14): Milestones1–5 are complete within their documented Windows development profiles; final shipped-artifact/clean-machine qualification remains Milestone6. [Current roadmap](../project/completion-roadmap.md). Dated reconciliation below predates the subsequent native editing/SCSI/concurrency results.
 
 Milestones5/6 evidence reconciliation (2026-10-14): the roadmap now exposes
 completed native controller/stereo-routing and720KB floppy/sampling workflows,
@@ -12,7 +81,7 @@ existing dated evidence, with no new execution or hardware measurements. CPU/IC4
 audits, full editing/SCSI workflows, physical DSP/ADC fidelity, longer release
 stress, final artifacts and clean-machine acceptance remain open. Neither
 Milestone5 nor Milestone6 is closed. See the
-[updated objectives](../COMPLETION_ROADMAP.md#milestone-5--hardware-coverage-and-supported-defaults).
+[updated objectives](../project/completion-roadmap.md#milestone-5--hardware-coverage-and-supported-defaults).
 
 Condensed from HIL deployment, LLE fidelity assessment, and next-generation OS
 proposal, reconciled with current source and hardware specifications.
@@ -25,7 +94,7 @@ L/R-average frames; variable callback sizes also match. Changed builds, host
 rates or negotiated maxima reject explicitly; migration and stock-GUI/other-DAW
 containers remain unsupported. Dated statements below about the remaining
 project gate are superseded for this scope. BUG-060 remains an open intermittent
-controller-QA reliability defect. See the [project contract](../SOUNDCHECK_PROJECTS.md)
+controller-QA reliability defect. See the [project contract](../testing/soundcheck-projects.md)
 and [validation](validation/milestone-4-soundcheck-project-2026-10-14.json).
 
 Milestone 1 is complete for the Windows native-engine integration profile.
@@ -34,7 +103,7 @@ project state have acceptance evidence; graphical configuration/editor delivery,
 native sampling and actual DAW qualification remain open in Milestones 2–4.
 The fresh module test passes 480000 exact stereo frames at48kHz with no missed
 deadlines, and current identities match the accepted SCSI/host-state record.
-See the [closure review](../MILESTONE_1_COMPLETION.md) and
+See the [closure review](../testing/milestone-1-completion.md) and
 [closure evidence](validation/milestone-1-completion-2026-10-11.json).
 
 ## Physical deployment
@@ -46,7 +115,7 @@ independent native reference replay passes at44.1/48/96kHz. Actual SDK latency
 reports and potentially infinite voice-tail reporting are qualified. This closes
 the scoped Milestone4 output-rendering gate; host sampling input, graphical
 plugin configuration, broader controller semantics and DAW project portability
-remain separately scoped. See the [rendering contract](../NATIVE_VST3_RENDERING.md).
+remain separately scoped. See the [rendering contract](../emulator/runtime/native-vst3-rendering.md).
 
 Graphical native VST3 configuration now shares the firmware/media form and shows
 startup errors in a silent native recovery instance. SoundCheck verifies invalid
@@ -55,11 +124,11 @@ loaded playback/release. Saving settings does not replace a processing machine;
 the host must reload to apply. Installed editor assets are required for recovery.
 This closes the scoped Milestone4 configuration gate; full MIDI semantics, host
 sampling input and DAW project portability remain open. See the
-[configuration contract](../NATIVE_VST3_CONFIGURATION.md).
+[configuration contract](../emulator/runtime/native-vst3-configuration.md).
 
 The Windows native boundary passes crash cleanup/reopen, saved-session recovery
 and host-clocked module audio acceptance. The exact Windows standalone package
-now has a [distribution qualification](../DISTRIBUTION_QUALIFICATION.md): actual
+now has a [distribution qualification](../testing/distribution-qualification.md): actual
 frozen dependencies and vendor DLLs are attributed, notices retained, copied
 Windows runtime DLLs excluded, and the delivered MAME source snapshot rebuilt
 cleanly. That rebuilt engine passes native boot/audio and packaged desktop
@@ -71,7 +140,7 @@ manifest; changed artifacts require a new review. This completes the separated
 Milestone 1 standalone distribution objective, not clean-machine installation,
 finished sampler workflows or actual VST3/DAW/editor qualification. See the
 [distribution evidence](validation/distribution-2026-10-11.json) and
-[remaining roadmap](../COMPLETION_ROADMAP.md).
+[remaining roadmap](../project/completion-roadmap.md).
 
 The project has a proven raw-IMG → Gotek → physical S-760 boot loop. Use copies
 of `S760224.IMG`, keep total size `0x168000`, verify patch bytes/diffs, and retain
@@ -167,8 +236,8 @@ release**:
 
 Validation JSON for these lives under `docs/condensed/validation/` (e.g.
 `native-cpp-runtime-2026-10-11.json`, `native-plugin-stream-2026-10-11.json`,
-`native-checkpoint-2026-10-11.json`); design notes in `docs/NATIVE_CPP_RUNTIME.md`
-and `docs/NATIVE_CHECKPOINTS.md`.
+`native-checkpoint-2026-10-11.json`); design notes in `docs/emulator/runtime/native-cpp-runtime.md`
+and `docs/emulator/runtime/native-checkpoints.md`.
 
 ## Ordered development work
 
@@ -212,7 +281,7 @@ commands/transfers and startup-sized media buffers. External SCSI files are
 limited to 64 MiB total and pinned to startup identities. Native cold audio and
 refreshed displays match; all-rate plugin replay passes. SCSI writeback remains
 broken (BUG-015), and actual DAW compatibility remains unqualified.
-See the [state contract](../NATIVE_PLUGIN_STATE.md) and
+See the [state contract](../emulator/runtime/native-plugin-state.md) and
 [validation](validation/native-plugin-state-2026-10-11.json).
 
 
@@ -228,7 +297,7 @@ ADC capture remains open: input meter0x10001C and recording-position0x100010/12
 return unmapped values. Arming observes slots4/20 with mode8, which is a constraint
 rather than a qualified input model. No captured signal, recorded PCM integrity,
 physical timing, packaged acceptance or full sampling workflow is claimed.
-See [sampling contract](../NATIVE_SAMPLING.md) and
+See [sampling contract](../emulator/guides/native-sampling.md) and
 [validation](validation/native-sampling-dma-2026-10-12.json).
 
 
@@ -239,7 +308,7 @@ visibility per instance; note holds release on blur/hide/teardown.312 backend,
 117 React, packaged native browser preference/audio-restart and actual WebView
 boot checks pass. The VST editor remains host-driven. Subsequent physical sampling
 qualification below leaves two Milestone3 objectives: device qualification and
-production ADC semantics/rates. See [standalone configuration](../STANDALONE_PLAYER.md) and
+production ADC semantics/rates. See [standalone configuration](../emulator/guides/standalone-player.md) and
 [validation](validation/standalone-configuration-2026-10-12.json).
 
 
@@ -324,7 +393,7 @@ centre20004Hz, folded upward4108Hz, downward10002Hz, restored centre20004Hz
 and silent release. The supported original-firmware controller gate is now qualified below.
 Raw CC120/121 are unsupported; explicit supported-message macros provide panic
 and neutral-controller reset. CC123 retains held-pedal audio until CC64 up. Firmware
-bytes are unchanged. See the [controller contract](../NATIVE_VST3_MIDI.md),
+bytes are unchanged. See the [controller contract](../emulator/runtime/native-vst3-midi.md),
 [text/audio report](validation/milestone-4-midi-automation-2026-10-12.txt) and
 [source/binary evidence](validation/milestone-4-midi-2026-10-12.json).
 
@@ -337,7 +406,7 @@ frames exactly, including a silent release tail; corrupted-file rejection
 preserves another exact replay. This is same-build native QA component-state
 file acceptance; actual DAW project containers, per-project firmware overrides,
 other hosts and cross-build/rate/block migration remain open. No proprietary
-state/media is committed. [State contract](../NATIVE_PLUGIN_STATE.md) and
+state/media is committed. [State contract](../emulator/runtime/native-plugin-state.md) and
 [project evidence](validation/milestone-4-project-portability-2026-10-13.json).
 
 
@@ -358,7 +427,7 @@ fresh48kHz state recall reproduces240000 stereo frames. Core/plugin tests,
 software/controller profile, not hardware gain/LFO/filter/alias fidelity or other
 DAWs. Existing same-build constraints reject older-module snapshots after rebuild.
 Host ADC/input is qualified below; actual DAW project portability is the remaining
-Milestone4 objective. [Controller contract](../NATIVE_VST3_MIDI.md) and
+Milestone4 objective. [Controller contract](../emulator/runtime/native-vst3-midi.md) and
 [complete evidence](validation/milestone-4-controller-semantics-2026-10-13.json).
 
 
@@ -388,5 +457,8 @@ preserves pending input PCM; older formats remain decodable with zero input.
 Live Sampler FX remains unadvertised. Other input clocks, physical ADC fidelity,
 other DAWs and release qualification remain open. Actual DAW project portability
 is the sole remaining Milestone 4 checkbox. See the
-[host sampling contract](../NATIVE_VST3_SAMPLING.md) and
+[host sampling contract](../emulator/runtime/native-vst3-sampling.md) and
 [exact source/binary validation](validation/milestone-4-host-sampling-2026-10-13.json).
+
+
+[Versioned firmware acceptance scopes](../firmware/firmware-completion-matrix.md) provide a separate decoding research metric:ROM46/60=76.67%,OS36/96=37.50%,combined82/156=52.56% at the initial2026-10-16 baseline. These are binary documented-context/layout/behavior/native-execution gates, not estimated effort or complete hardware fidelity. Unmapped functional families and unknown payload remain open; historical catalogue addresses/status are not credited. Physical parity and Milestone7 source/rebuild acceptance retain their own criteria. [Machine score](validation/firmware-completion-score-v1-2026-10-16.json).

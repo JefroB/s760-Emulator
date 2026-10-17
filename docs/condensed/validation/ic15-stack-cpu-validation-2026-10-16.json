@@ -1,0 +1,1177 @@
+{
+  "date": "2026-10-16",
+  "qualification": "Ordinary unchanged-ROM stack observation plus separately isolated CPU component tests. Component tests initialize private synthetic code/registers; no original monitor invocation or physical parity is claimed. Installed SLEIGH issue is specific to its hashed version and does not negate disassembly agreement.",
+  "checks": {
+    "irq_count": 171,
+    "all_irq_stack_events_matched": true,
+    "irq_level": 13,
+    "irq_vector": 8250,
+    "irq_target": 288,
+    "classified_stack_write_bytes": 2620856,
+    "interrupt_stack_write_bytes": 342,
+    "classified_stack_read_bytes": 2621196,
+    "remaining_stack_bytes": 2,
+    "lowest_observed_stack": 18390,
+    "handoff_sp": 18430,
+    "handoff_word": 17208,
+    "handoff_word_source": "Return after SCALL4336; nonreturning loader leaves this one caller frame."
+  },
+  "irq_records": [
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18410
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19556,
+      "sp": 18410
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 19835,
+      "sp": 18406
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    },
+    {
+      "vector": 8250,
+      "target": 288,
+      "return_pc": 18895,
+      "sp": 18404
+    }
+  ],
+  "component_results": {
+    "cpu-before": {
+      "pusha_popa": true,
+      "manual_frame": false,
+      "pushf_popf": true,
+      "error": "...GPT-work\\rom-stack-audit-2026-10-16\\cpu-before\\probe.lua:40: Mask/window word: WSR must be low byte",
+      "passed": false,
+      "interrupts": false,
+      "cpu": "I80C196KB"
+    },
+    "manual-before": {
+      "wsr": 69,
+      "error": "...-work\\rom-stack-audit-2026-10-16\\manual-before\\probe.lua:50: POP mask/window restore",
+      "cpu": "I80C196KB",
+      "interrupts": false,
+      "pusha_popa": true,
+      "mask1": 14,
+      "saved_extension": 17678,
+      "manual_frame": true,
+      "pushf_popf": true,
+      "passed": false
+    },
+    "cpu-after": {
+      "cpu": "I80C196KB",
+      "saved_extension": 17678,
+      "wsr": 14,
+      "passed": true,
+      "pushf_popf": true,
+      "manual_frame": true,
+      "mask1": 69,
+      "interrupts": false,
+      "pusha_popa": true,
+      "error": ""
+    }
+  },
+  "component_fixture_source": "\"\"\"Isolated native CPU stack regression; no original firmware is executed.\n\nQualifies the KB-mode flag-stack contract against Intel270651-003 and the\noriginal ROM's manual WSR-low/INT_MASK1-high frame. The legacy flat-mode\ncompatibility stubs are intentionally outside this test.\n\"\"\"\nfrom verify_bmovi_fetch import main\n\nLUA = r'''\nlocal m=manager.machine\nlocal cpu=m.devices[':maincpu']\nlocal p=cpu.spaces['program'];local r=cpu.spaces['register']\nlocal json=require('json')\nlocal all=false\nlocal manual=false\nlocal phase=0\nlocal frames=0\nlocal function setup()\n for slot=0,3 do\n  p:write_u16(0x100+slot*2,slot*16);p:write_u16(0x108+slot*2,slot*16)\n end\n r:write_u8(8,0);r:write_u8(0x12,0)\n r:write_u16(0x18,0x5000)\n p:write_u16(0x4ffa,0xdead);p:write_u16(0x5000,0xbeef)\n p:write_u8(0x3000,all and 0xf4 or 0xf2)\n p:write_u8(0x3001,0x27);p:write_u8(0x3002,0xfe)\n p:write_u8(0x3020,all and 0xf5 or 0xf3)\n p:write_u8(0x3021,0x27);p:write_u8(0x3022,0xfe)\n if manual then\n  -- Original ROM1A0..1AA: PUSHF; saveWSR/mask inRW3E; PUSH; clear mask.\n  local code={0xf2,0xb0,0x14,0x3e,0xb0,0x13,0x3f,0xc8,0x3e,0x11,0x13,0x27,0xfe}\n  for i,b in ipairs(code) do p:write_u8(0x3000+i-1,b) end\n end\n r:write_u8(0x13,0x45);r:write_u8(0x14,0x0e) -- documented valid SFR window14\n cpu.state['PSW'].value=0x8005 -- interrupt enable clear\n cpu.state['PC'].value=0x3000\n phase=0\nend\nsetup()\nemu.register_frame_done(function()\n frames=frames+1;if frames%2~=0 then return end\n local ok,err=pcall(function()\n  if phase==0 then\n   assert(r:read_u16(0x18)==(all and 0x4ffc or 0x4ffe),'PUSH stack pointer')\n   assert(p:read_u16(0x4ffe)==0x8005,'PUSH PSW word')\n   assert(cpu.state['PSW'].value==0,'PUSH PSW not cleared')\n   if all then\n    assert(p:read_u16(0x4ffc)==0x450e,'Mask/window word: WSR must be low byte')\n    assert(r:read_u8(0x13)==0,'PUSHA/manual frame did not clear mask')\n    assert(r:read_u8(0x14)==0x0e,'PUSHA/manual frame must retain WSR')\n   else\n    assert(r:read_u8(0x13)==0x45 and r:read_u8(0x14)==0x0e,'PUSHF changed mask/window')\n   end\n   cpu.state['PC'].value=0x3020\n  else\n   assert(r:read_u16(0x18)==0x5000,'POP stack pointer')\n   assert(cpu.state['PSW'].value==0x8005,'POP PSW restore')\n   assert(r:read_u8(0x13)==0x45 and r:read_u8(0x14)==0x0e,'POP mask/window restore')\n   assert(p:read_u16(0x4ffa)==0xdead and p:read_u16(0x5000)==0xbeef,'Stack guard damaged')\n  end\n end)\n if not ok or (phase==1 and manual) then\n  local f=assert(io.open('result.json','w'))\n  f:write(json.stringify({passed=ok,error=ok and '' or tostring(err),cpu='I80C196KB',\n   pushf_popf=true,pusha_popa=true,manual_frame=manual,interrupts=false,\n   saved_extension=p:read_u16(0x4ffc),wsr=r:read_u8(0x14),mask1=r:read_u8(0x13)}));f:close();m:exit()\n elseif phase==0 then phase=1\n else if all then manual=true else all=true end setup() end\nend)\n'''\n\nif __name__ == '__main__':\n    main(LUA, native_only=True)\n",
+  "manual_before_fixture_source": "\nlocal m=manager.machine\nlocal cpu=m.devices[':maincpu']\nlocal p=cpu.spaces['program'];local r=cpu.spaces['register']\nlocal json=require('json')\nlocal all=true\nlocal manual=true\nlocal phase=0\nlocal frames=0\nlocal function setup()\n for slot=0,3 do\n  p:write_u16(0x100+slot*2,slot*16);p:write_u16(0x108+slot*2,slot*16)\n end\n r:write_u8(8,0);r:write_u8(0x12,0)\n r:write_u16(0x18,0x5000)\n p:write_u16(0x4ffa,0xdead);p:write_u16(0x5000,0xbeef)\n p:write_u8(0x3000,all and 0xf4 or 0xf2)\n p:write_u8(0x3001,0x27);p:write_u8(0x3002,0xfe)\n p:write_u8(0x3020,all and 0xf5 or 0xf3)\n p:write_u8(0x3021,0x27);p:write_u8(0x3022,0xfe)\n if manual then\n  -- Original ROM1A0..1AA: PUSHF; saveWSR/mask inRW3E; PUSH; clear mask.\n  local code={0xf2,0xb0,0x14,0x3e,0xb0,0x13,0x3f,0xc8,0x3e,0x11,0x13,0x27,0xfe}\n  for i,b in ipairs(code) do p:write_u8(0x3000+i-1,b) end\n end\n r:write_u8(0x13,0x45);r:write_u8(0x14,0x0e) -- documented valid SFR window14\n cpu.state['PSW'].value=0x8005 -- interrupt enable clear\n cpu.state['PC'].value=0x3000\n phase=0\nend\nsetup()\nemu.register_frame_done(function()\n frames=frames+1;if frames%2~=0 then return end\n local ok,err=pcall(function()\n  if phase==0 then\n   assert(r:read_u16(0x18)==(all and 0x4ffc or 0x4ffe),'PUSH stack pointer')\n   assert(p:read_u16(0x4ffe)==0x8005,'PUSH PSW word')\n   assert(cpu.state['PSW'].value==0,'PUSH PSW not cleared')\n   if all then\n    assert(p:read_u16(0x4ffc)==0x450e,'Mask/window word: WSR must be low byte')\n    assert(r:read_u8(0x13)==0,'PUSHA/manual frame did not clear mask')\n    assert(r:read_u8(0x14)==0x0e,'PUSHA/manual frame must retain WSR')\n   else\n    assert(r:read_u8(0x13)==0x45 and r:read_u8(0x14)==0x0e,'PUSHF changed mask/window')\n   end\n   cpu.state['PC'].value=0x3020\n  else\n   assert(r:read_u16(0x18)==0x5000,'POP stack pointer')\n   assert(cpu.state['PSW'].value==0x8005,'POP PSW restore')\n   assert(r:read_u8(0x13)==0x45 and r:read_u8(0x14)==0x0e,'POP mask/window restore')\n   assert(p:read_u16(0x4ffa)==0xdead and p:read_u16(0x5000)==0xbeef,'Stack guard damaged')\n  end\n end)\n if not ok or (phase==1 and manual) then\n  local f=assert(io.open('result.json','w'))\n  f:write(json.stringify({passed=ok,error=ok and '' or tostring(err),cpu='I80C196KB',\n   pushf_popf=true,pusha_popa=true,manual_frame=manual,interrupts=false,\n   saved_extension=p:read_u16(0x4ffc),wsr=r:read_u8(0x14),mask1=r:read_u8(0x13)}));f:close();m:exit()\n elseif phase==0 then phase=1\n else if all then manual=true else all=true end setup() end\nend)\n",
+  "tests": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "457",
+    "time": "40.112",
+    "timestamp": "2026-10-16T19:05:02.583008-06:00",
+    "hostname": "DESKTOP-1DUCQK3"
+  },
+  "additional_new_test": "tests/test_native_cpu_flag_frame.py passed separately after full-suite collection; 1 passed.",
+  "native_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.25,
+    "note_release": 80.483333333333,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    }
+  },
+  "intel_source": {
+    "url": "https://www.syndex.org/kernels/196/27065103.pdf",
+    "document": "Intel80C196KB User Guide270651-003, printed30/32",
+    "claim": "PUSHA flags word precedes extension; extension is INT_MASK1/WSR; detailed description clears mask. ROM manual frame independently establishes byte placement."
+  },
+  "rom_manual_frame": "f2b0143eb0133fc83e1113",
+  "installed_sleigh": {
+    "decoder": "pypcode4.0.0",
+    "source_path": "C:\\Users\\jborn\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\pypcode\\processors\\MCS96\\data\\languages\\MCS96.sinc",
+    "source_sha256": "31fd7a61c2bd756a2727bafb4ef96ad3fa804a84c2b8c7ddfcd9cdbf9af7f28f",
+    "pusha_constructor": ":PUSHA                              is op8=0xf4 {\n\tlocal val:2 = (zext(INT_MASK) << 8) | zext(WSR);\n\tpush(val);\n\tval = (zext(INT_MASK) << 8) | zext(PSW);\n\tpush(val);\n\tresetFlags();\n}\n\n@endif\n\n",
+    "pusha_pcode": [
+      "IMARK RAM[0:1]",
+      "unique[29900:2] = zext(RAM[8:1])",
+      "unique[29a00:2] = unique[29900:2] << 0x8",
+      "unique[29b00:2] = zext(RAM[14:1])",
+      "unique[29d00:2] = unique[29a00:2] | unique[29b00:2]",
+      "SP = SP - 0x2",
+      "*[RAM]SP = unique[29d00:2]",
+      "unique[29e00:2] = zext(RAM[8:1])",
+      "unique[29f00:2] = unique[29e00:2] << 0x8",
+      "unique[29d00:2] = unique[29f00:2] | PSW",
+      "SP = SP - 0x2",
+      "*[RAM]SP = unique[29d00:2]",
+      "PSW = 0x0"
+    ],
+    "popa_pcode": [
+      "IMARK RAM[0:1]",
+      "unique[28b00:2] = 0x0",
+      "unique[28b00:2] = *[RAM]SP",
+      "SP = SP + 0x2",
+      "RAM[14:1] = unique[28b00:1] & 0xff",
+      "unique[28e00:2] = unique[28b00:2] >> 0x8",
+      "RAM[13:1] = SUBPIECE unique[28e00:2], 0x0",
+      "unique[28b00:2] = *[RAM]SP",
+      "SP = SP + 0x2",
+      "RAM[8:1] = unique[28b00:1] & 0xff",
+      "unique[28e00:2] = unique[28b00:2] >> 0x8",
+      "PSW = unique[28e00:2]"
+    ]
+  },
+  "identities": {
+    "mame-source/src/devices/cpu/mcs96/mcs96.cpp": "da1513ff291609ad34a78d2be02d4ff2a72f7745fb8ff9471a2454ebfb3287bf",
+    "mame-source/src/devices/cpu/mcs96/mcs96ops.lst": "acac8260af59ed844beac3cbafff10419e2dd02fd3cfab881312881644ad0abb",
+    "mame-source/mames760.exe": "09b5d0c0f84bf8b885069ea262a4de7533509cdb3cd4b384af1bb7567e1600e8",
+    "scripts/verify_native_cpu_flags.py": "de0f9668132a16a39d649602482c6cdcdedeb60c7bb62023d662603941ae8db8",
+    "tests/test_native_cpu_flag_frame.py": "42c65493af252ac0b8ff6d5f67e9477a0ebbdae440bf0df7088b38ea67c01126",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "builds": [
+    "MSBuild optional.vcxproj Release/x64 /m:1 /nr:false succeeded; changed CPU dependency rebuilt",
+    "MSBuild mames760.vcxproj Release/x64 /m:1 /nr:false /p:BuildProjectReferences=false succeeded using rebuilt CPU and unchanged previously built dependencies"
+  ],
+  "commands": [
+    "python scripts/verify_native_cpu_flags.py --state-dir <fresh-private-dir>",
+    "python probe.py --after (passthrough original-ROM boot, logging enabled)",
+    "python scripts/verify_native_runtime.py --state-dir <absolute-fresh-private-dir>; approved local runtime socket access",
+    "S760_TEST_RUN=stack-cpu-final python rom-scsi-contract-2026-10-16/run_tests.py; approved local socket access"
+  ],
+  "failed_attempts": "Initial six-second stack probes did not reach boot handoff; accepted20-second fresh probes do. Network fetch of IntelPDF through sandbox Python failed DNS; primary PDF text was read successfully through the web tool. No failed attempt is substituted for acceptance."
+}

@@ -1,0 +1,2993 @@
+{
+  "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "qualification": "Local static stack accounting only: direct calls use assumed-return fallthrough with net0; called frames and interrupts are excluded. ROM declared fetch contexts are retained. A balanced result does not establish callee termination/preservation, hardware delivery or maximal total stack usage. SP reassignment terminates the local audit and is reported explicitly.",
+  "stack_effect_bytes": {
+    "PUSH": 2,
+    "PUSHF": 2,
+    "PUSHA": 4,
+    "POP": -2,
+    "POPF": -2,
+    "POPA": -4
+  },
+  "results": [
+    {
+      "entry": 288,
+      "visited_states": 26,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 292,
+      "visited_states": 4,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 296,
+      "visited_states": 4,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 300,
+      "visited_states": 4,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 304,
+      "visited_states": 16,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 308,
+      "visited_states": 4,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 312,
+      "visited_states": 4,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 318,
+      "visited_states": 1,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 386,
+      "visited_states": 9,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 416,
+      "visited_states": 50,
+      "peak_local_bytes": 16,
+      "return_heights": [],
+      "stack_resets": [],
+      "unknown_destinations": [
+        49152
+      ],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 499,
+      "visited_states": 39,
+      "peak_local_bytes": 0,
+      "return_heights": [],
+      "stack_resets": [],
+      "unknown_destinations": [
+        49152
+      ],
+      "negative_local_depth": [
+        [
+          503,
+          -2
+        ],
+        [
+          505,
+          -2
+        ],
+        [
+          510,
+          -4
+        ],
+        [
+          512,
+          -6
+        ],
+        [
+          514,
+          -8
+        ],
+        [
+          516,
+          -10
+        ],
+        [
+          518,
+          -12
+        ],
+        [
+          520,
+          -12
+        ],
+        [
+          523,
+          -12
+        ],
+        [
+          526,
+          -16
+        ],
+        [
+          527,
+          -16
+        ],
+        [
+          18255,
+          -16
+        ],
+        [
+          18256,
+          -16
+        ],
+        [
+          18261,
+          -16
+        ]
+      ],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 530,
+      "visited_states": 23,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 601,
+      "visited_states": 23,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 672,
+      "visited_states": 53,
+      "peak_local_bytes": 16,
+      "return_heights": [],
+      "stack_resets": [],
+      "unknown_destinations": [
+        49152
+      ],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 708,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 722,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8320,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [],
+      "stack_resets": [
+        {
+          "pc": 8330,
+          "page": 1920,
+          "file_offset": 8330,
+          "bytes": "a1004818",
+          "mnemonic": "LD",
+          "operands": "SP, #0x4800"
+        }
+      ],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 8586,
+      "visited_states": 7,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8602,
+      "visited_states": 53,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8799,
+      "visited_states": 9,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8820,
+      "visited_states": 8,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8824,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8851,
+      "visited_states": 25,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8914,
+      "visited_states": 18,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 8962,
+      "visited_states": 64,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9077,
+      "visited_states": 38,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9194,
+      "visited_states": 40,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9232,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9243,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9254,
+      "visited_states": 8,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9276,
+      "visited_states": 14,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9297,
+      "visited_states": 14,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9310,
+      "visited_states": 14,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9331,
+      "visited_states": 14,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9344,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9359,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9374,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9389,
+      "visited_states": 58,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9522,
+      "visited_states": 12,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9535,
+      "visited_states": 12,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9579,
+      "visited_states": 27,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9635,
+      "visited_states": 12,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9666,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9693,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9720,
+      "visited_states": 18,
+      "peak_local_bytes": 12,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9756,
+      "visited_states": 27,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9841,
+      "visited_states": 13,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9877,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9902,
+      "visited_states": 90,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 9989,
+      "visited_states": 15,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10042,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10066,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10084,
+      "visited_states": 3,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10088,
+      "visited_states": 18,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10136,
+      "visited_states": 22,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10194,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10213,
+      "visited_states": 19,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10250,
+      "visited_states": 36,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10353,
+      "visited_states": 21,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10411,
+      "visited_states": 11,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10437,
+      "visited_states": 27,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 10684,
+      "visited_states": 241,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 11620,
+      "visited_states": 44,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 11770,
+      "visited_states": 25,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 11842,
+      "visited_states": 24,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 11934,
+      "visited_states": 24,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12026,
+      "visited_states": 28,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12134,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12147,
+      "visited_states": 9,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12169,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12184,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12208,
+      "visited_states": 45,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12313,
+      "visited_states": 16,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12338,
+      "visited_states": 30,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12424,
+      "visited_states": 57,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12464,
+      "visited_states": 57,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12668,
+      "visited_states": 252,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12711,
+      "visited_states": 151,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12903,
+      "visited_states": 34,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12922,
+      "visited_states": 27,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 12995,
+      "visited_states": 84,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13014,
+      "visited_states": 77,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13160,
+      "visited_states": 30,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13182,
+      "visited_states": 18,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13252,
+      "visited_states": 21,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13333,
+      "visited_states": 80,
+      "peak_local_bytes": 8,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13462,
+      "visited_states": 35,
+      "peak_local_bytes": 8,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13549,
+      "visited_states": 27,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13647,
+      "visited_states": 30,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13756,
+      "visited_states": 27,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13774,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13798,
+      "visited_states": 9,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13841,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13850,
+      "visited_states": 12,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13874,
+      "visited_states": 32,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 13956,
+      "visited_states": 115,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 14348,
+      "visited_states": 18,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 14411,
+      "visited_states": 29,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 14507,
+      "visited_states": 39,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 14651,
+      "visited_states": 56,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 14847,
+      "visited_states": 41,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 14998,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15021,
+      "visited_states": 1,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15022,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15045,
+      "visited_states": 1,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15046,
+      "visited_states": 39,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15199,
+      "visited_states": 30,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15225,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15249,
+      "visited_states": 9,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15292,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15301,
+      "visited_states": 12,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15325,
+      "visited_states": 36,
+      "peak_local_bytes": 12,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15416,
+      "visited_states": 18,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15464,
+      "visited_states": 12,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 15510,
+      "visited_states": 8,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 16548,
+      "visited_states": 8,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 16575,
+      "visited_states": 16,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 16646,
+      "visited_states": 20,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 16704,
+      "visited_states": 276,
+      "peak_local_bytes": 10,
+      "return_heights": [],
+      "stack_resets": [
+        {
+          "pc": 16417,
+          "page": 1936,
+          "file_offset": 16417,
+          "bytes": "a1000118",
+          "mnemonic": "LD",
+          "operands": "SP, #0x100"
+        }
+      ],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 17027,
+      "visited_states": 72,
+      "peak_local_bytes": 10,
+      "return_heights": [],
+      "stack_resets": [
+        {
+          "pc": 16417,
+          "page": 1936,
+          "file_offset": 16417,
+          "bytes": "a1000118",
+          "mnemonic": "LD",
+          "operands": "SP, #0x100"
+        }
+      ],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 17185,
+      "visited_states": 24,
+      "peak_local_bytes": 10,
+      "return_heights": [],
+      "stack_resets": [
+        {
+          "pc": 16417,
+          "page": 1936,
+          "file_offset": 16417,
+          "bytes": "a1000118",
+          "mnemonic": "LD",
+          "operands": "SP, #0x100"
+        }
+      ],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 17210,
+      "visited_states": 1,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17211,
+      "visited_states": 131,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [
+        49152
+      ],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 17489,
+      "visited_states": 25,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17542,
+      "visited_states": 28,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17600,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17608,
+      "visited_states": 47,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17646,
+      "visited_states": 33,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17733,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17743,
+      "visited_states": 25,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17898,
+      "visited_states": 36,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 17989,
+      "visited_states": 61,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [
+        49152
+      ],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 18122,
+      "visited_states": 61,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [
+        49152
+      ],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": false
+    },
+    {
+      "entry": 18264,
+      "visited_states": 85,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18534,
+      "visited_states": 7,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18549,
+      "visited_states": 39,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18669,
+      "visited_states": 9,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18694,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18696,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18711,
+      "visited_states": 33,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18788,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18802,
+      "visited_states": 21,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18866,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18899,
+      "visited_states": 13,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 18944,
+      "visited_states": 30,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19031,
+      "visited_states": 8,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19047,
+      "visited_states": 9,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19077,
+      "visited_states": 20,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19143,
+      "visited_states": 20,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19209,
+      "visited_states": 18,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19267,
+      "visited_states": 20,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19333,
+      "visited_states": 20,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19399,
+      "visited_states": 28,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19489,
+      "visited_states": 32,
+      "peak_local_bytes": 6,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19589,
+      "visited_states": 25,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19670,
+      "visited_states": 20,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19736,
+      "visited_states": 46,
+      "peak_local_bytes": 6,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19875,
+      "visited_states": 36,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 19994,
+      "visited_states": 15,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20046,
+      "visited_states": 27,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20119,
+      "visited_states": 22,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20177,
+      "visited_states": 15,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20216,
+      "visited_states": 43,
+      "peak_local_bytes": 6,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20340,
+      "visited_states": 17,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20401,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20415,
+      "visited_states": 19,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20465,
+      "visited_states": 51,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20598,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20625,
+      "visited_states": 15,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20664,
+      "visited_states": 12,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20698,
+      "visited_states": 34,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20800,
+      "visited_states": 58,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 20966,
+      "visited_states": 56,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21117,
+      "visited_states": 39,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21201,
+      "visited_states": 18,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21246,
+      "visited_states": 17,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21293,
+      "visited_states": 16,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21328,
+      "visited_states": 15,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21365,
+      "visited_states": 20,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21408,
+      "visited_states": 17,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21445,
+      "visited_states": 10,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21465,
+      "visited_states": 10,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21484,
+      "visited_states": 6,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21494,
+      "visited_states": 6,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21504,
+      "visited_states": 13,
+      "peak_local_bytes": 4,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21530,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21555,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21578,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21601,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21611,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21621,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21639,
+      "visited_states": 7,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21657,
+      "visited_states": 4,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21666,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21681,
+      "visited_states": 5,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21701,
+      "visited_states": 10,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21733,
+      "visited_states": 12,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21774,
+      "visited_states": 11,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21812,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21833,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21844,
+      "visited_states": 8,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21865,
+      "visited_states": 6,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 21876,
+      "visited_states": 159,
+      "peak_local_bytes": 10,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22101,
+      "visited_states": 1,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22102,
+      "visited_states": 14,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22141,
+      "visited_states": 63,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22337,
+      "visited_states": 66,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22538,
+      "visited_states": 7,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22555,
+      "visited_states": 21,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22613,
+      "visited_states": 26,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22685,
+      "visited_states": 30,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 22771,
+      "visited_states": 27,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23054,
+      "visited_states": 1,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23055,
+      "visited_states": 14,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23094,
+      "visited_states": 70,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23314,
+      "visited_states": 66,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23515,
+      "visited_states": 7,
+      "peak_local_bytes": 2,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23532,
+      "visited_states": 21,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23590,
+      "visited_states": 26,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23662,
+      "visited_states": 30,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23748,
+      "visited_states": 32,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    },
+    {
+      "entry": 23840,
+      "visited_states": 21,
+      "peak_local_bytes": 0,
+      "return_heights": [
+        0
+      ],
+      "stack_resets": [],
+      "unknown_destinations": [],
+      "negative_local_depth": [],
+      "unbounded_or_large_depth": [],
+      "balanced_under_assumptions": true
+    }
+  ],
+  "balanced_count": 212,
+  "roots_examined": 222
+}

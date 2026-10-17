@@ -1,5 +1,6 @@
 """Shared reporting policy: a historical catalogue is not measured coverage."""
 from pathlib import Path
+from posixpath import relpath
 
 # Reviewed assertions, not a list of passing results or whole-feature mappings.
 # Keep a selector so existence alone cannot silently qualify another test file.
@@ -20,7 +21,7 @@ def cell(value):
     return str(value).replace('|', '&#124;').replace('\n', ' ')
 
 
-def write_report(destination, title, sections):
+def write_report(destination, title, sections, *, document_dir):
     """sections: (heading, [(historical item name, historical context), ...])."""
     count = sum(len(rows) for _, rows in sections)
     lines = [
@@ -44,11 +45,11 @@ def write_report(destination, title, sections):
     ]
     for layer, reference, assertion, limitation in EVIDENCE:
         path = reference.split('::', 1)[0]
-        lines.append(f'| {layer} | [{cell(reference)}](../{path}) | {assertion} | {limitation} |')
+        lines.append(f'| {layer} | [{cell(reference)}]({relpath(path, document_dir)}) | {assertion} | {limitation} |')
     lines += [
         '', 'For qualified native runtime, host and hardware results, use the',
-        '[testing guide](condensed/08-testing-coverage-and-verification.md),',
-        '[completion roadmap](COMPLETION_ROADMAP.md) and their dated validation records.',
+        f'[testing guide]({relpath("docs/condensed/08-testing-coverage-and-verification.md", document_dir)}),',
+        f'[completion roadmap]({relpath("docs/project/completion-roadmap.md", document_dir)}) and their dated validation records.',
         'Python peripheral mirrors and offline DSP tests are model evidence. A Lua',
         'completion flag or screenshot file alone is not a firmware workflow assertion.',
         'Hardware parity requires matched physical captures and stated tolerances.', '',

@@ -10,9 +10,11 @@ test('standalone config owns MIDI/audio and remembers hidden-by-default keyboard
   await expect(page.getByRole('region',{name:'On-screen keyboard'})).toHaveCount(0);
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
   const config=page.getByRole('dialog',{name:'Standalone configuration'});
-  await expect(config.getByLabel('MIDI input')).toBeVisible();
+  await config.getByRole('button',{name:'Audio',exact:true}).click();
   await expect(config.getByLabel('Audio output backend')).toBeVisible();
   await expect(config.getByLabel('Audio buffer target (ms)')).toBeVisible();
+  await config.getByRole('button',{name:'MIDI & display',exact:true}).click();
+  await expect(config.getByLabel('MIDI input')).toBeVisible();
   await config.getByLabel('MIDI input').selectOption('');
   await config.getByLabel('Show on-screen keyboard').click();
   await expect(config.getByLabel('Show on-screen keyboard')).toBeChecked();
@@ -43,6 +45,7 @@ test('standalone config owns MIDI/audio and remembers hidden-by-default keyboard
   await page.reload();
   await expect(page.getByRole('region',{name:'On-screen keyboard'})).toBeVisible();
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await config.getByRole('button',{name:'Audio',exact:true}).click();
   await config.getByLabel('Audio output backend').selectOption('wasapi');
   await config.getByLabel('Audio buffer target (ms)').fill('60');
   await config.getByLabel('Replace current sampler memory and restart').check();
@@ -50,8 +53,10 @@ test('standalone config owns MIDI/audio and remembers hidden-by-default keyboard
   await expect(config).toHaveCount(0,{timeout:15000});
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await config.getByRole('button',{name:'Audio',exact:true}).click();
   await expect(config.getByLabel('Audio output backend')).toHaveValue('wasapi');
   await expect(config.getByLabel('Audio buffer target (ms)')).toHaveValue('60');
+  await config.getByRole('button',{name:'MIDI & display',exact:true}).click();
   await config.getByLabel('Show on-screen keyboard').click();
   await expect(config.getByLabel('Show on-screen keyboard')).not.toBeChecked();
   await config.getByRole('button',{name:'Cancel settings'}).click();

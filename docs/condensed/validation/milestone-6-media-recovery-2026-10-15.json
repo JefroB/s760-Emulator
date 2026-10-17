@@ -1,0 +1,696 @@
+{
+  "date": "2026-10-15",
+  "revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "worktree": "dirty; exact production/test sources and package hashes below; no final release freeze",
+  "evidence_classes": [
+    "real Chromium/frozen-service firmware media acceptance",
+    "cold native checkpoint/sample RAM and PCM inspection with package MAME",
+    "backend regressions"
+  ],
+  "package_identity": "Same byte-identified development artifact as milestone-6-package-setup-2026-10-15; no production runtime or firmware changes for this task",
+  "prerequisites": [
+    "Windows development workstation with installed runtime prerequisites",
+    "User-supplied IC15v1.11/OS2.24 and hash-checked ROBOFULL",
+    "Playwright Chromium and local loopback access; fresh private state/media directories",
+    "Native inspection uses source controller with byte-identical package/source Lua"
+  ],
+  "commands": {
+    "browser": "From google-ui: PLAYWRIGHT_BROWSERS_PATH=C:/Users/jborn/AppData/Local/ms-playwright; S760_MEDIA_PACKAGE=<m6-guide-package-20261015/dist/S760Studio>; S760_MEDIA_WORK=<fresh private work>; node node_modules/@playwright/test/cli.js test packaged-media.spec.ts --config=playwright.packaged.config.ts --output=<private results>",
+    "cohorts": [
+      "m6-media-browser-results-01: dirty-session case passes; unformatted repeat Load times out at original firmware Clear Internal Memory confirmation",
+      "m6-media-browser-results-02: --grep correct-size passes eight cycles after explicit prompt identification/Yes; dirty case behavior unchanged by that unformatted-only helper branch"
+    ],
+    "native": "python scripts/verify_packaged_media_recovery.py --package docs/ic20-hle-findings/chatGPT-work/m6-guide-package-20261015/dist/S760Studio --browser-work docs/ic20-hle-findings/chatGPT-work/m6-media-browser-01 --unformatted-work docs/ic20-hle-findings/chatGPT-work/m6-media-browser-02/unformatted --state-dir docs/ic20-hle-findings/chatGPT-work/m6-media-native-20261015",
+    "backend": "Python stdin runner imports tests/mame_harness, redirects SCRATCH_DIR=<private m6-media-pytest>/harness and SNAP_DIR=<private>/snapshots/s760 and creates both; pytest.main([tests,-q,--basetemp=<private>/tmp,-o,cache_dir=<private>/cache])",
+    "typescript": "npm run lint (google-ui)"
+  },
+  "result": {
+    "browser_accepted_cases": 2,
+    "unformatted_cycles": 8,
+    "unformatted_reported_duration": "5.6 minutes",
+    "dirty_reported_duration": "1.1 minutes",
+    "native_instances": 21,
+    "backend": {
+      "passed": 404,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 68.92
+    },
+    "typescript": "pass",
+    "unformatted": {
+      "passed": true,
+      "cycles": [
+        {
+          "round": 0,
+          "file": "Z-737280-0.IMG",
+          "archive": "retained-0-Z-737280-0.IMG.s760state",
+          "fixture_sha256": "c2cd1bef7dc6c18e17bf73af17df105abd06d4232da1042d78396ff320e59587",
+          "export_sha256": "c2cd1bef7dc6c18e17bf73af17df105abd06d4232da1042d78396ff320e59587",
+          "loaded_table": 3384624565
+        },
+        {
+          "round": 0,
+          "file": "Z-737280-255.IMG",
+          "archive": "retained-0-Z-737280-255.IMG.s760state",
+          "fixture_sha256": "aff24efdb49871d80e39162bf3151944cf7547baa72ea60cd50da77c4d94849c",
+          "export_sha256": "aff24efdb49871d80e39162bf3151944cf7547baa72ea60cd50da77c4d94849c",
+          "loaded_table": 3384624565
+        },
+        {
+          "round": 0,
+          "file": "Z-1474560-0.IMG",
+          "archive": "retained-0-Z-1474560-0.IMG.s760state",
+          "fixture_sha256": "b6e6d0ef201c489c78b3d783aa4486909d2089fe2ef487dc331e1066e26c7cb8",
+          "export_sha256": "b6e6d0ef201c489c78b3d783aa4486909d2089fe2ef487dc331e1066e26c7cb8",
+          "loaded_table": 3384624565
+        },
+        {
+          "round": 0,
+          "file": "Z-1474560-255.IMG",
+          "archive": "retained-0-Z-1474560-255.IMG.s760state",
+          "fixture_sha256": "d3a97b1cf6929b20bd2eac5e10d1a02e647ba9366155ed017ba7c31b1c048a5c",
+          "export_sha256": "d3a97b1cf6929b20bd2eac5e10d1a02e647ba9366155ed017ba7c31b1c048a5c",
+          "loaded_table": 3384624565
+        },
+        {
+          "round": 1,
+          "file": "Z-737280-0.IMG",
+          "archive": "retained-1-Z-737280-0.IMG.s760state",
+          "fixture_sha256": "c2cd1bef7dc6c18e17bf73af17df105abd06d4232da1042d78396ff320e59587",
+          "export_sha256": "c2cd1bef7dc6c18e17bf73af17df105abd06d4232da1042d78396ff320e59587",
+          "loaded_table": 3384624565
+        },
+        {
+          "round": 1,
+          "file": "Z-737280-255.IMG",
+          "archive": "retained-1-Z-737280-255.IMG.s760state",
+          "fixture_sha256": "aff24efdb49871d80e39162bf3151944cf7547baa72ea60cd50da77c4d94849c",
+          "export_sha256": "aff24efdb49871d80e39162bf3151944cf7547baa72ea60cd50da77c4d94849c",
+          "loaded_table": 3384624565
+        },
+        {
+          "round": 1,
+          "file": "Z-1474560-0.IMG",
+          "archive": "retained-1-Z-1474560-0.IMG.s760state",
+          "fixture_sha256": "b6e6d0ef201c489c78b3d783aa4486909d2089fe2ef487dc331e1066e26c7cb8",
+          "export_sha256": "b6e6d0ef201c489c78b3d783aa4486909d2089fe2ef487dc331e1066e26c7cb8",
+          "loaded_table": 3384624565
+        },
+        {
+          "round": 1,
+          "file": "Z-1474560-255.IMG",
+          "archive": "retained-1-Z-1474560-255.IMG.s760state",
+          "fixture_sha256": "d3a97b1cf6929b20bd2eac5e10d1a02e647ba9366155ed017ba7c31b1c048a5c",
+          "export_sha256": "d3a97b1cf6929b20bd2eac5e10d1a02e647ba9366155ed017ba7c31b1c048a5c",
+          "loaded_table": 3384624565
+        }
+      ],
+      "scope": "Four correct-size unformatted profiles twice; firmware sentinel, exact unchanged exports, retained-memory sessions and good-disk reload"
+    },
+    "dirty": {
+      "passed": true,
+      "guards": [
+        "mount",
+        "eject",
+        "restart",
+        "mount after dirty recall"
+      ],
+      "saved_sha256": "e5ed4754558f2ee41050d3e605b7645062dc6478c5bd69734a0f6040b8a93087",
+      "recalled_sha256": "e5ed4754558f2ee41050d3e605b7645062dc6478c5bd69734a0f6040b8a93087",
+      "unchanged_sample_bytes": 119808
+    },
+    "native": {
+      "passed": true,
+      "baseline": {
+        "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+        "wave_bytes": 33554432,
+        "audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.01694745011627674,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.01694745011627674,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.01694745011627674,
+            "silent_release": true
+          }
+        ]
+      },
+      "retained": [
+        {
+          "round": 0,
+          "file": "Z-737280-0.IMG",
+          "archive_sha256": "a431e2910071d17268fc1ab8604a8dc5ce3472cb1bfc2185aded26da35a4a6cd",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        },
+        {
+          "round": 0,
+          "file": "Z-737280-255.IMG",
+          "archive_sha256": "ab2b6413e78b4026a67d65ae772f875c555beac65e946a330467f415ac057f60",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        },
+        {
+          "round": 0,
+          "file": "Z-1474560-0.IMG",
+          "archive_sha256": "e028a73d4046f531a84bc0142566692fb44da4715729670b77672cc56faa0942",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        },
+        {
+          "round": 0,
+          "file": "Z-1474560-255.IMG",
+          "archive_sha256": "93edc26948aa0627abb54d040d7cde14b1c420b7dcae70043b9a43288820c07f",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        },
+        {
+          "round": 1,
+          "file": "Z-737280-0.IMG",
+          "archive_sha256": "fff4c40fd9c5ba55b38b994966de9a85ad9e8fdef68520ed673cf57436aa0b48",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        },
+        {
+          "round": 1,
+          "file": "Z-737280-255.IMG",
+          "archive_sha256": "9251bab5a2ca333c7c8bc14d1310b57433d3119ce33e2ecd3bf6ad7572d5ff69",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        },
+        {
+          "round": 1,
+          "file": "Z-1474560-0.IMG",
+          "archive_sha256": "4a4a9e93d8d468bbaae1431f4acb570f25aa5c5cea49198b9e920fd587e6a72e",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        },
+        {
+          "round": 1,
+          "file": "Z-1474560-255.IMG",
+          "archive_sha256": "bcc1e9cd99a947a1c2ee7e690a0c870671ecbd4a074904b27e596b84abd321ba",
+          "exact_sample_bytes": 119808,
+          "wave_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "full_wave_comparison": {
+            "bytes": 33554432,
+            "equal": true,
+            "changed_bytes": 0,
+            "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "after_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+            "ranges": []
+          },
+          "audio": [
+            {
+              "bend": "centre",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "up",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            },
+            {
+              "bend": "down",
+              "frequency_hz": 20004,
+              "peak": 0.01694745011627674,
+              "silent_release": true
+            }
+          ]
+        }
+      ],
+      "dirty": {
+        "exact_sample_bytes": 119808,
+        "full_wave_comparison": {
+          "bytes": 33554432,
+          "equal": false,
+          "changed_bytes": 13,
+          "before_sha256": "a6a2fdc2e0afbbe863f1f64240c7627bf5fa309023a485884f7b143412d25699",
+          "after_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+          "ranges": [
+            {
+              "first": 33545122,
+              "last_exclusive": 33545123,
+              "before_hex": "00",
+              "after_hex": "05"
+            },
+            {
+              "first": 33545124,
+              "last_exclusive": 33545125,
+              "before_hex": "00",
+              "after_hex": "06"
+            },
+            {
+              "first": 33545126,
+              "last_exclusive": 33545127,
+              "before_hex": "00",
+              "after_hex": "07"
+            },
+            {
+              "first": 33545128,
+              "last_exclusive": 33545129,
+              "before_hex": "00",
+              "after_hex": "08"
+            },
+            {
+              "first": 33545130,
+              "last_exclusive": 33545131,
+              "before_hex": "00",
+              "after_hex": "09"
+            },
+            {
+              "first": 33545132,
+              "last_exclusive": 33545133,
+              "before_hex": "00",
+              "after_hex": "0a"
+            },
+            {
+              "first": 33545134,
+              "last_exclusive": 33545135,
+              "before_hex": "00",
+              "after_hex": "0b"
+            },
+            {
+              "first": 33545136,
+              "last_exclusive": 33545137,
+              "before_hex": "00",
+              "after_hex": "0c"
+            },
+            {
+              "first": 33545138,
+              "last_exclusive": 33545139,
+              "before_hex": "00",
+              "after_hex": "0d"
+            },
+            {
+              "first": 33545140,
+              "last_exclusive": 33545141,
+              "before_hex": "00",
+              "after_hex": "0e"
+            },
+            {
+              "first": 33545142,
+              "last_exclusive": 33545143,
+              "before_hex": "00",
+              "after_hex": "0f"
+            },
+            {
+              "first": 33545144,
+              "last_exclusive": 33545145,
+              "before_hex": "00",
+              "after_hex": "10"
+            },
+            {
+              "first": 33545146,
+              "last_exclusive": 33545147,
+              "before_hex": "00",
+              "after_hex": "11"
+            }
+          ]
+        },
+        "disk_audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ],
+        "session_audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ]
+      },
+      "scope": "Cold native readback of browser checkpoints and exported disk; no physical audio or realtime qualification"
+    }
+  },
+  "source_sha256": {
+    "google-ui/e2e/packaged-media.spec.ts": "6fa2734f708a6cb8b6263cbd66fce0edfb0899842fe08bc1a6f3e498fe14435e",
+    "google-ui/playwright.packaged.config.ts": "6d3906fd63401a78c43a95466a805966dda1c7407e6d02398aa0db950122a3bb",
+    "scripts/verify_packaged_media_recovery.py": "5097594865d4a4556540ed47f06f3a2bb4f11f4c2f11bc621a9cc34fe235c36f",
+    "scripts/verify_packaged_edit_audio.py": "fdd909adf098849414aed448ef36b06a5aab50d23ef6fb14693b9d5f81b541e6",
+    "scripts/verify_native_media.py": "287035d1a9c6278c9f1baed2488e17f4de8cbf7a67245076b54b30e87863ad57",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "mame-source/src/mame/roland/s760.cpp": "b4e21396a32c3b4c89942790754be6155f7f383faa4cfa66cb2000c5438e5023",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "test_suite_sha256": {
+    "tests/conftest.py": "2ff2278932d8d74e3742693f23b2280e3694221640dfaac0f673c0662e3287d7",
+    "tests/disk_formats.py": "29fd89a55ff64e11448e510a039ec0122252b9862388be155990be819fca41a4",
+    "tests/dsp_tools.py": "0c3a8d67ba892c9ac699f21fe82fe341a684febb478dd3d0c01a7b9ceced18c3",
+    "tests/mame_harness.py": "6e994c9eebf29ad633abdd7ef85e00f59d45994a772c2ed88d08464aa2ecdbae",
+    "tests/test_adversarial_review.py": "cb9c97873d8c0a6835b2c7f255c0e46bfb47f1c78427ceb38a424387bbbfa1bd",
+    "tests/test_asio.py": "f6ed3dd2430bb67dd2d612ebd48d8f1fc27ac94ada88513484d0c02de7edc61e",
+    "tests/test_audio_capture_reference.py": "0687b0f0bf6b6ee5d3308495c1635acff727bda62c8d5766a9b1a81fce7d66ef",
+    "tests/test_audio_recovery.py": "af2b0a6aa1ab0b05ea04ccb783a2f28df72f0ecb02fa17445ad7f90e20e2e3d2",
+    "tests/test_calibration_tools.py": "07cce3c8ed9759632ef7e7f80a7170348fc41ac26489fb170e33293c2d7d20c0",
+    "tests/test_capture.py": "e22394ac2f9acc8ce117dc2db6dedeffda75489ef8b9f28db22affa7fd16e05e",
+    "tests/test_coverage_reports.py": "d160e9e6800265ef9abff21948eec29337780fbefa3673864e6fd92698207c1f",
+    "tests/test_cpp_parity.py": "c73e2211ec27d520e15296665c64aa17e5cfab06bb046d158d91bf6a988f1492",
+    "tests/test_disk_conversion.py": "216764f3330b311b60a821ae14ecaf5ac3fc586eabe57743a86b987b3c16c598",
+    "tests/test_distribution_inventory.py": "6253f4f68d0e60e7a7dbe6bc2520700cc78fba2e25c04cb144a7bb0229b9f4a6",
+    "tests/test_dsp_mame.py": "b54b17126c25a0ae75fbc8a42b7466a14f92280badb52897158f9f062715bfa6",
+    "tests/test_dsp_tools.py": "6530145946690195b09f5676855283fbb980207c0d2e736385326a926b105464",
+    "tests/test_fdc_mame.py": "e3f647dbc7da0600b01e3dff52dd062a87cd00c8ef62c7e6cd16850a3b736e9f",
+    "tests/test_firmware_readiness.py": "09540630ec339f3b40d08a921cca78de5c619f8b9a6f1119f1ccad7a8807de95",
+    "tests/test_gate_array_mame.py": "a118cec9ed75efef93468b460b41817d4da12960688f181347d0f7b9ea78b7e8",
+    "tests/test_gb6_os_patch.py": "4425ba8fe5d33b639753b9d83e99fdc3d77461d4db75a14ee8c69a607b953d45",
+    "tests/test_image_invariants.py": "e1cf37c8f7de68755eafae9f87fa6f1be022bf50b03114ee4e43d1dc1206717e",
+    "tests/test_interactive_ui.py": "7412b1f08ffd4709e495120d0e28ff2315978de96476db04021af67e8e294535",
+    "tests/test_lcd_mame.py": "740463e3b091a36f2fb5e2e204509230da62ac8a0098656dda831ed46fcbffc3",
+    "tests/test_mame_integration.py": "a57f247aa9d770d633b82513736a2cfc6e644358038236f08ab3fdc6cafabe96",
+    "tests/test_mame_invariants.py": "33ebab7a6e7c44f5ec85cc875582c113f7ee4f00291665eb975842f569cb78d7",
+    "tests/test_native_checkpoint.py": "ff48a58d4216f0b2f073cdced6e56878ae9036006144d1a41ef67cecb59863d5",
+    "tests/test_native_media_export.py": "a4b5b693ba25fde1f785a02d864523d2b36502c423c6d5f81bbb140077380092",
+    "tests/test_native_media_lifecycle.py": "be6d23e8e6a7309d0152c7e6e4ec03e02c208b5789ec67f717d61c47d01d98ff",
+    "tests/test_native_runtime.py": "b0d05517467245cf620e10eb981d105a8626f6fb5ce3c5df35125cd0f1112b09",
+    "tests/test_native_scsi_export.py": "7b8bef294cdb2911cd5afc359f948d53a58f6700f0d6116a17cede8f1896bc81",
+    "tests/test_native_source_bundle.py": "570189982f44a530a81350d0b19631d998a62599f065464e636288ccef26b90c",
+    "tests/test_package_audit.py": "04f25b50a030578667416f4b05899e2b424b20f1678ac9f32ed04a0beed80b53",
+    "tests/test_sample_disk_envelope.py": "f54c3764cd511c3fe945d7ccbf0bdbe096b98add0f831dcc5ba4052723f85015",
+    "tests/test_scsi_mame.py": "08c9c3dfa608c0ca2bda2a7599020a961bea9b8be8b35cc4532e34f99f45ec90",
+    "tests/test_soundcheck_project.py": "63a1f4ee91975953da2947785f0ced86c8f1ec752ee9b886de8886f6161aa7ce",
+    "tests/test_standalone_configuration.py": "6e3be8e6570fc65b53394c622f50bbd4b43f3ad7f415a2d613bf70417596da25",
+    "tests/test_standalone_inputs.py": "34223de2d88b7128fa698d9bc3b0bd2b3c8806badc25215901da3a4561d02c0e",
+    "tests/test_standalone_sessions.py": "fad122cc90578db7a2654d3eebba7403bab4b8e3afad288b822e7aa9376b4124",
+    "tests/test_static_filter_capture_phase.py": "f04f6eeaae64d266d89eaaff56dd82df3f9b599c07165f43900b7bf47e5345d7",
+    "tests/test_steering_f2_correction.py": "9e29b20cf8985ff7cc4c882e1da5ed1b624741f34d508bf5b4a901100e2822a4",
+    "tests/test_unified_core.py": "d1156d60d60290198ef984a294bc527050caab165c200c7e86d008cf4104add0",
+    "tests/test_vdp_mame.py": "4a9243c6f0ea7c1a9f1fbf50d555b4b149a1172f2a4fa88b263ef9a101aec332",
+    "tests/test_verification_result.py": "951e2a5a102ced3a7cd2da0afaa4775c90592d01a8c1db30290fead1f13cc185",
+    "tests/test_vst3_configuration.py": "495ad83b4b980e168804d13ad7def554a73f14ce08e24837632acfb7206194fe",
+    "tests/test_wave_media_comparison.py": "a5a47490fb2411ea6006a1b4b6bf979858e03b5f8d09cd846d179ab3a2333bf5",
+    "tests/test_wave_memory.py": "2c03548eeb374ed3dc91e5c72bc64b02969b49c1c0668241b6a0a619aec7660f"
+  },
+  "package_sha256": {
+    "S760Studio.exe": "711de730991927a97217e4bd0f512ac3a1aa5b7f3f5cb182a285d16266307925",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "README.md": "f5e3aa24fa57af712a45fad60afb729e183c7c4a4c2386cea4e9fa9ba4d54b05",
+    "PACKAGE-AUDIT.json": "95eef5b2ba93ff657b75389e494cc032b4cb54e7a2d8cb24716dc7cbdac821fe",
+    "BUNDLED-INPUTS.json": "1e18ff023d1f6049bc7685dc8c5f095cb51c486f95036312dfbc62a2c655d225",
+    "DEPENDENCY-INVENTORY.json": "0122915d202d104d8caac88ec92ef23a269b5ceac13dad51c2d4b5629c921a0e",
+    "SYSTEM-PREREQUISITES.json": "0674fef1a03b42174adbd293dda1b73ada63226e96f3b99fa8e423b170846bb5"
+  },
+  "private_artifacts": {
+    "unformatted_directory": "docs/ic20-hle-findings/chatGPT-work/m6-media-browser-02/unformatted",
+    "dirty_directory": "docs/ic20-hle-findings/chatGPT-work/m6-media-browser-01/dirty",
+    "native_directory": "docs/ic20-hle-findings/chatGPT-work/m6-media-native-20261015",
+    "baseline_archive_sha256": "24673f8143f5830f5027f35529266341dbd0c7698e8725e64797421057e6f4c8",
+    "dirty_archive_sha256": "e532ec4c268f6f973a27de622bae46ce1f04049b07fafef520fa891f6003f77d",
+    "dirty_image_sha256": "e5ed4754558f2ee41050d3e605b7645062dc6478c5bd69734a0f6040b8a93087",
+    "unformatted_result_sha256": "e0c1538162a1522e6af8d1956373075f7963981486b40548186f07cb19ce0385",
+    "dirty_result_sha256": "b04efa118cdc66ab5b8ff889f5aad56c45572476d16b287a2c126d7c1d73964a",
+    "native_result_sha256": "7cfca0699f76a0adca8c30882360a0b86aafc1d83f17160a3762f24f08b22119",
+    "captures_sha256": {
+      "m6-media-browser-02/unformatted/0-Z-1474560-0.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-02/unformatted/0-Z-1474560-255.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-02/unformatted/0-Z-737280-0.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-02/unformatted/0-Z-737280-255.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-02/unformatted/1-Z-1474560-0.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-02/unformatted/1-Z-1474560-255.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-02/unformatted/1-Z-737280-0.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-02/unformatted/1-Z-737280-255.IMG.png": "30b705e9adcef64c57fef85cb4c8463d3f914b193a177d467e277b11ecd103a2",
+      "m6-media-browser-01/dirty/recalled-dirty.png": "453ab200dd6ab6c48260714be3db8fc2af88e8150866af0575e7d12157a402fb"
+    }
+  },
+  "observed_screen_references": {
+    "unknown_files": {
+      "region": [
+        0,
+        112,
+        160,
+        16
+      ],
+      "rgb_sha256": "17f623a13cbcd13333ccc406494b2b2977a34f39352d7f1506ecea7ed79c3d3d",
+      "observed_text": "xxxxxfiles; no valid directory rows; unknown Disk/Marked statistics",
+      "native_probe": "m6-malformed-probe-03 four frames manually inspected; compared against valid ROBOFULL directory as a negative control"
+    },
+    "clear_memory_confirmation": {
+      "region": [
+        144,
+        176,
+        336,
+        32
+      ],
+      "rgb_sha256": "96c78e8af1d2cccf9fa7a57f46f470cc1af160d4fec7bfbf650a8a0e56572032",
+      "observed_text": "Clear Internal Memory Before Loading",
+      "yes_pointer": [
+        54,
+        62
+      ],
+      "native_frame_sha256": "b2ef0beeac69091f8480185a0815be8ea85a84345ca9bdfff8346ccb02c631aa"
+    }
+  },
+  "limitations": [
+    "Silent/unthrottled development package; no realtime deadlines, physical audio or clean-machine acceptance",
+    "Named all00/allFF correct-size profiles only; no arbitrary corrupt FAT chains, malformed valid records or physical bad-sector qualification",
+    "Dirty sequence uses explicit guarded operations and controlled restart/restore, not power loss or native-child crash",
+    "Disk scans/edits may alter nonsample catalog records: full wave comparisons recorded, all independently identified sample allocations required exact",
+    "Eight retained sessions have full33554432-byte equality in this experiment; dirty session has13 differing nonsample bytes, not evidence of sample loss",
+    "PCM checks cover fixture note60 at velocity100 and three bend positions; no exhaustive musical program or hardware-fidelity claim",
+    "Initial timeout was an omitted genuine firmware confirmation; no emulator fix, forced guest state or deadline suppression applied",
+    "Final artifact stress, distribution requalification, installers and release freeze remain open"
+  ]
+}

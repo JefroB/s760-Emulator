@@ -17,6 +17,7 @@ mcs96_device::mcs96_device(const machine_config &mconfig, device_type type, cons
 	cpu_device(mconfig, type, tag, owner, clock),
 	program_config("program", ENDIANNESS_LITTLE, data_width, 16),
 	regs_config("register", ENDIANNESS_LITTLE, 16, 8, 0, regs_map),
+	opcodes_config("opcodes", ENDIANNESS_LITTLE, 8, 16, 0, address_map_constructor(FUNC(mcs96_device::opcodes_map), this)),
 	program(nullptr), regs(nullptr), register_file(*this, "register_file"),
 	icount(0), bcount(0), inst_state(0), cycles_scaling(0), pending_irq(0),
 	PC(0), PPC(0), PSW(0), OP1(0), OP2(0), OP3(0), OPI(0), TMP(0), irq_requested(false)
@@ -137,9 +138,10 @@ void mcs96_device::kb_push_flags(bool all)
  PSW = 0;
  if (all) {
   sp -= 2;
-  any_w16(sp, u16(m_mask1) | (u16(m_wsr) << 8));
+  // Intel INT_MASK1/WSR pair: WSR is the low byte. The S-760 ROM
+  // constructs this same frame manually before returning through POPA.
+  any_w16(sp, u16(m_wsr) | (u16(m_mask1) << 8));
   m_mask1 = 0;
-  m_wsr = 0;
  }
  reg_w16(0x18, sp);
  check_irq();
@@ -150,8 +152,8 @@ void mcs96_device::kb_pop_flags(bool all)
  u16 sp = reg_r16(0x18);
  if (all) {
   const u16 saved = any_r16(sp);
-  m_mask1 = u8(saved);
-  m_wsr = u8(saved >> 8);
+  m_wsr = u8(saved);
+  m_mask1 = u8(saved >> 8);
   sp += 2;
  }
  PSW = any_r16(sp);
@@ -207,8 +209,21 @@ device_memory_interface::space_config_vector mcs96_device::memory_space_config()
 {
 	return space_config_vector {
 		std::make_pair(AS_PROGRAM, &program_config),
-		std::make_pair(AS_DATA, &regs_config)
+		std::make_pair(AS_DATA, &regs_config),
+		std::make_pair(AS_OPCODES, &opcodes_config)
 	};
+}
+
+void mcs96_device::opcodes_map(address_map &map)
+{
+	map(0x0000, 0xffff).r(FUNC(mcs96_device::opcode_r));
+}
+
+u8 mcs96_device::opcode_r(offs_t address)
+{
+	// Debugger instruction bytes must use the same board mapping as read_pc(),
+	// without advancing PC or emitting execution-fetch trace events.
+	return m_board_fetch ? m_board_fetch(u16(address)) : program->read_byte(address);
 }
 
 void mcs96_device::state_import(const device_state_entry &entry)
@@ -398,7 +413,9 @@ u16 mcs96_device::any_r16(u16 adr)
 
 bool mcs96_device::memory_translate(int spacenum, int intention, offs_t &address, address_space *&target_space)
 {
-	if (spacenum == AS_PROGRAM && intention != TR_FETCH && address < 0x100)
+	if (spacenum == AS_PROGRAM && intention == TR_FETCH)
+		target_space = &space(AS_OPCODES);
+	else if (spacenum == AS_PROGRAM && address < 0x100)
 		target_space = regs;
 	else
 		target_space = &space(spacenum);

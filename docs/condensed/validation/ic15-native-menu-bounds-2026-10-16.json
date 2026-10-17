@@ -1,0 +1,1869 @@
+{
+  "command": [
+    "D:\\S-760\\mame-source\\mames760.exe",
+    "s760",
+    "-rompath",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-menu-bounds\\roms",
+    "-nvram_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-menu-bounds\\nvram",
+    "-cfg_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-menu-bounds\\cfg",
+    "-video",
+    "none",
+    "-sound",
+    "none",
+    "-skip_gameinfo",
+    "-nothrottle",
+    "-seconds_to_run",
+    "30",
+    "-autoboot_delay",
+    "0",
+    "-autoboot_script",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\menu-bounds.lua"
+  ],
+  "returncode": 0,
+  "observer_and_input_source": "local cpu=manager.machine.devices[':maincpu'] local space=cpu.spaces['program']\nlocal function field(port,name) for _,f in pairs(manager.machine.ioport.ports[port].fields) do if f.name==name then return f end end error('missing input') end\nlocal mode=field(':PANEL1','Mode') local dec=field(':PANEL0','S1') local inc=field(':PANEL0','S2') local up=field(':PANEL1','Panel Up') local down=field(':PANEL3','Panel Down')\nlocal frames,stage,cooldown,boundframe,current=0,0,0,0,1 local pulseheld=nil\nlocal tests={{selection=0,address=0x4cab,max=7,name='self_id'},{selection=1,address=0x4caf,max=9,name='boot_drive'},{selection=2,address=0x4cb2,max=2,name='controller'}}\nmode:set_value(1)\nmenu_write=space:install_write_tap(0x4caa,0x4cb3,'menu-bounds',function(a,d,m)\nlocal pc=cpu.state['PC'].value if pc>=0x581b and pc<0x58f3 then print(string.format('[EDIT] frame=%d pc=%04x addr=%04x value=%04x mask=%04x',frames,pc,a,d,m)) end\nend)\nlocal function pulse(f) f:set_value(1) pulseheld=f cooldown=30 end\nemu.register_frame_done(function()\nframes=frames+1 if pulseheld then pulseheld:set_value(0) pulseheld=nil end if cooldown>0 then cooldown=cooldown-1 end\nlocal pc=cpu.state['PC'].value local test=tests[current]\nif stage==0 then mode:set_value(1) if frames>90 and pc>=0x5741 and pc<=0x5809 then mode:set_value(0) stage=1 cooldown=30 print('[ENTERED] setup') end\nelseif stage==1 and cooldown==0 then\n local selection=space:read_u8(0x4d30)\n if selection>test.selection then pulse(up) elseif selection<test.selection then pulse(down) else dec:set_value(1) stage=2 boundframe=0 print('[INPUT] '..test.name..' S1 held') end\nelseif stage==2 and space:read_u8(test.address)==0 then\n if boundframe==0 then boundframe=frames end if frames-boundframe>=120 then dec:set_value(0) stage=3 cooldown=30 print('[LOWER] '..test.name) end\nelseif stage==3 and cooldown==0 then inc:set_value(1) stage=4 boundframe=0 print('[INPUT] '..test.name..' S2 held')\nelseif stage==4 and space:read_u8(test.address)==test.max then\n if boundframe==0 then boundframe=frames end if frames-boundframe>=120 then inc:set_value(0) current=current+1 cooldown=30 stage=current>#tests and 5 or 1 print('[UPPER] '..test.name) end end\nif frames%60==0 then print(string.format('[STATE] frame=%d stage=%d field=%02x id=%02x boot=%02x controller=%02x',frames,stage,space:read_u8(0x4d30),space:read_u8(0x4cab),space:read_u8(0x4caf),space:read_u8(0x4cb2))) end\nend)\n",
+  "identities": {
+    "D:\\S-760\\mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-menu-bounds\\roms\\s760\\s760224.img": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\menu-bounds.lua": "0dbf26b07c348efc77ebff66978ca8be8d4e9078272424c9998da9361845e360"
+  },
+  "encoder_enabled": true,
+  "rows": [
+    {
+      "frame": 238,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 1536,
+      "mask": 65280
+    },
+    {
+      "frame": 241,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 1280,
+      "mask": 65280
+    },
+    {
+      "frame": 245,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 1024,
+      "mask": 65280
+    },
+    {
+      "frame": 249,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 768,
+      "mask": 65280
+    },
+    {
+      "frame": 252,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 512,
+      "mask": 65280
+    },
+    {
+      "frame": 256,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 256,
+      "mask": 65280
+    },
+    {
+      "frame": 260,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 264,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 267,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 271,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 275,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 278,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 282,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 286,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 290,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 293,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 297,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 301,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 305,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 308,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 312,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 316,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 319,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 323,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 327,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 331,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 334,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 338,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 342,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 346,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 349,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 353,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 357,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 360,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 364,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 368,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 372,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 375,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 379,
+      "pc": 22610,
+      "addr": 19626,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 411,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 256,
+      "mask": 65280
+    },
+    {
+      "frame": 414,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 512,
+      "mask": 65280
+    },
+    {
+      "frame": 418,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 768,
+      "mask": 65280
+    },
+    {
+      "frame": 422,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1024,
+      "mask": 65280
+    },
+    {
+      "frame": 425,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1280,
+      "mask": 65280
+    },
+    {
+      "frame": 429,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1536,
+      "mask": 65280
+    },
+    {
+      "frame": 433,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 437,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 440,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 444,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 448,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 451,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 455,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 459,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 463,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 466,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 470,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 474,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 478,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 481,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 485,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 489,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 492,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 496,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 500,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 504,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 507,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 511,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 515,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 519,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 522,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 526,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 530,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 533,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 537,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 541,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 545,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 548,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 552,
+      "pc": 22591,
+      "addr": 19626,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 614,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 617,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 621,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 625,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 628,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 632,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 636,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 640,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 643,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 647,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 651,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 655,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 658,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 662,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 666,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 670,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 673,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 677,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 681,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 685,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 688,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 692,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 696,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 700,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 703,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 707,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 711,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 715,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 718,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 722,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 726,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 730,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 733,
+      "pc": 22682,
+      "addr": 19630,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 765,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 256,
+      "mask": 65280
+    },
+    {
+      "frame": 768,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 512,
+      "mask": 65280
+    },
+    {
+      "frame": 772,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 768,
+      "mask": 65280
+    },
+    {
+      "frame": 776,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 1024,
+      "mask": 65280
+    },
+    {
+      "frame": 779,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 1280,
+      "mask": 65280
+    },
+    {
+      "frame": 783,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 1536,
+      "mask": 65280
+    },
+    {
+      "frame": 787,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 1792,
+      "mask": 65280
+    },
+    {
+      "frame": 791,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2048,
+      "mask": 65280
+    },
+    {
+      "frame": 794,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 798,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 802,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 806,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 809,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 813,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 817,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 821,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 824,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 828,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 832,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 836,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 839,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 843,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 847,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 851,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 854,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 858,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 862,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 866,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 869,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 873,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 877,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 881,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 884,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 888,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 892,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 895,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 899,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 903,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 907,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 910,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 914,
+      "pc": 22663,
+      "addr": 19630,
+      "value": 2304,
+      "mask": 65280
+    },
+    {
+      "frame": 975,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 978,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 982,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 986,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 990,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 993,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 997,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1001,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1005,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1008,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1012,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1016,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1020,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1023,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1027,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1031,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1035,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1038,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1042,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1046,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1050,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1053,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1057,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1061,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1065,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1068,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1072,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1076,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1080,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1083,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1087,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1091,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1095,
+      "pc": 22768,
+      "addr": 19634,
+      "value": 0,
+      "mask": 255
+    },
+    {
+      "frame": 1126,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 1,
+      "mask": 255
+    },
+    {
+      "frame": 1129,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1133,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1137,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1141,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1144,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1148,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1152,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1156,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1159,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1163,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1167,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1171,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1174,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1178,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1182,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1186,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1189,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1193,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1197,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1201,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1204,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1208,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1212,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1216,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1219,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1223,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1227,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1231,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1234,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1238,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1242,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1246,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    },
+    {
+      "frame": 1249,
+      "pc": 22742,
+      "addr": 19634,
+      "value": 2,
+      "mask": 255
+    }
+  ],
+  "observations": [
+    "[STATE] frame=60 stage=0 field=00 id=07 boot=00 controller=01",
+    "[ENTERED] setup",
+    "[STATE] frame=120 stage=1 field=03 id=07 boot=00 controller=01",
+    "[STATE] frame=180 stage=1 field=01 id=07 boot=00 controller=01",
+    "[INPUT] self_id S1 held",
+    "[EDIT] frame=238 pc=5852 addr=4caa value=0600 mask=ff00",
+    "[STATE] frame=240 stage=2 field=00 id=06 boot=00 controller=01",
+    "[EDIT] frame=241 pc=5852 addr=4caa value=0500 mask=ff00",
+    "[EDIT] frame=245 pc=5852 addr=4caa value=0400 mask=ff00",
+    "[EDIT] frame=249 pc=5852 addr=4caa value=0300 mask=ff00",
+    "[EDIT] frame=252 pc=5852 addr=4caa value=0200 mask=ff00",
+    "[EDIT] frame=256 pc=5852 addr=4caa value=0100 mask=ff00",
+    "[EDIT] frame=260 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=264 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=267 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=271 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=275 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=278 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=282 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=286 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=290 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=293 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=297 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[STATE] frame=300 stage=2 field=00 id=00 boot=00 controller=01",
+    "[EDIT] frame=301 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=305 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=308 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=312 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=316 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=319 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=323 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=327 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=331 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=334 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=338 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=342 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=346 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=349 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=353 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=357 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[STATE] frame=360 stage=2 field=00 id=00 boot=00 controller=01",
+    "[EDIT] frame=360 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=364 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=368 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=372 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=375 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[EDIT] frame=379 pc=5852 addr=4caa value=0000 mask=ff00",
+    "[LOWER] self_id",
+    "[INPUT] self_id S2 held",
+    "[EDIT] frame=411 pc=583f addr=4caa value=0100 mask=ff00",
+    "[EDIT] frame=414 pc=583f addr=4caa value=0200 mask=ff00",
+    "[EDIT] frame=418 pc=583f addr=4caa value=0300 mask=ff00",
+    "[STATE] frame=420 stage=4 field=00 id=03 boot=00 controller=01",
+    "[EDIT] frame=422 pc=583f addr=4caa value=0400 mask=ff00",
+    "[EDIT] frame=425 pc=583f addr=4caa value=0500 mask=ff00",
+    "[EDIT] frame=429 pc=583f addr=4caa value=0600 mask=ff00",
+    "[EDIT] frame=433 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=437 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=440 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=444 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=448 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=451 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=455 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=459 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=463 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=466 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=470 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=474 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=478 pc=583f addr=4caa value=0700 mask=ff00",
+    "[STATE] frame=480 stage=4 field=00 id=07 boot=00 controller=01",
+    "[EDIT] frame=481 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=485 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=489 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=492 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=496 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=500 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=504 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=507 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=511 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=515 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=519 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=522 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=526 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=530 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=533 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=537 pc=583f addr=4caa value=0700 mask=ff00",
+    "[STATE] frame=540 stage=4 field=00 id=07 boot=00 controller=01",
+    "[EDIT] frame=541 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=545 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=548 pc=583f addr=4caa value=0700 mask=ff00",
+    "[EDIT] frame=552 pc=583f addr=4caa value=0700 mask=ff00",
+    "[UPPER] self_id",
+    "[STATE] frame=600 stage=1 field=01 id=07 boot=00 controller=01",
+    "[INPUT] boot_drive S1 held",
+    "[EDIT] frame=614 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=617 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=621 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=625 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=628 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=632 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=636 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=640 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=643 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=647 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=651 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=655 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=658 pc=589a addr=4cae value=0000 mask=ff00",
+    "[STATE] frame=660 stage=2 field=01 id=07 boot=00 controller=01",
+    "[EDIT] frame=662 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=666 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=670 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=673 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=677 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=681 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=685 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=688 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=692 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=696 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=700 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=703 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=707 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=711 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=715 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=718 pc=589a addr=4cae value=0000 mask=ff00",
+    "[STATE] frame=720 stage=2 field=01 id=07 boot=00 controller=01",
+    "[EDIT] frame=722 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=726 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=730 pc=589a addr=4cae value=0000 mask=ff00",
+    "[EDIT] frame=733 pc=589a addr=4cae value=0000 mask=ff00",
+    "[LOWER] boot_drive",
+    "[INPUT] boot_drive S2 held",
+    "[EDIT] frame=765 pc=5887 addr=4cae value=0100 mask=ff00",
+    "[EDIT] frame=768 pc=5887 addr=4cae value=0200 mask=ff00",
+    "[EDIT] frame=772 pc=5887 addr=4cae value=0300 mask=ff00",
+    "[EDIT] frame=776 pc=5887 addr=4cae value=0400 mask=ff00",
+    "[EDIT] frame=779 pc=5887 addr=4cae value=0500 mask=ff00",
+    "[STATE] frame=780 stage=4 field=01 id=07 boot=05 controller=01",
+    "[EDIT] frame=783 pc=5887 addr=4cae value=0600 mask=ff00",
+    "[EDIT] frame=787 pc=5887 addr=4cae value=0700 mask=ff00",
+    "[EDIT] frame=791 pc=5887 addr=4cae value=0800 mask=ff00",
+    "[EDIT] frame=794 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=798 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=802 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=806 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=809 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=813 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=817 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=821 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=824 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=828 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=832 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=836 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=839 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[STATE] frame=840 stage=4 field=01 id=07 boot=09 controller=01",
+    "[EDIT] frame=843 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=847 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=851 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=854 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=858 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=862 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=866 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=869 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=873 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=877 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=881 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=884 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=888 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=892 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=895 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=899 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[STATE] frame=900 stage=4 field=01 id=07 boot=09 controller=01",
+    "[EDIT] frame=903 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=907 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=910 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[EDIT] frame=914 pc=5887 addr=4cae value=0900 mask=ff00",
+    "[UPPER] boot_drive",
+    "[STATE] frame=960 stage=1 field=02 id=07 boot=09 controller=01",
+    "[INPUT] controller S1 held",
+    "[EDIT] frame=975 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=978 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=982 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=986 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=990 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=993 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=997 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1001 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1005 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1008 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1012 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1016 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[STATE] frame=1020 stage=2 field=02 id=07 boot=09 controller=00",
+    "[EDIT] frame=1020 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1023 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1027 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1031 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1035 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1038 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1042 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1046 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1050 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1053 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1057 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1061 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1065 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1068 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1072 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1076 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[STATE] frame=1080 stage=2 field=02 id=07 boot=09 controller=00",
+    "[EDIT] frame=1080 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1083 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1087 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1091 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[EDIT] frame=1095 pc=58f0 addr=4cb2 value=0000 mask=00ff",
+    "[LOWER] controller",
+    "[INPUT] controller S2 held",
+    "[EDIT] frame=1126 pc=58d6 addr=4cb2 value=0001 mask=00ff",
+    "[EDIT] frame=1129 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1133 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1137 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[STATE] frame=1140 stage=4 field=02 id=07 boot=09 controller=02",
+    "[EDIT] frame=1141 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1144 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1148 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1152 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1156 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1159 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1163 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1167 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1171 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1174 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1178 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1182 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1186 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1189 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1193 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1197 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[STATE] frame=1200 stage=4 field=02 id=07 boot=09 controller=02",
+    "[EDIT] frame=1201 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1204 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1208 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1212 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1216 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1219 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1223 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1227 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1231 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1234 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1238 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1242 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1246 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[EDIT] frame=1249 pc=58d6 addr=4cb2 value=0002 mask=00ff",
+    "[UPPER] controller",
+    "[STATE] frame=1260 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1320 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1380 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1440 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1500 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1560 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1620 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1680 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1740 stage=5 field=02 id=07 boot=09 controller=02",
+    "[STATE] frame=1800 stage=5 field=02 id=07 boot=09 controller=02"
+  ],
+  "checks": {
+    "self_id": {
+      "writes": 78,
+      "minimum": 0,
+      "maximum": 7,
+      "all_in_bounds": true,
+      "lower_clamp_writes": 33,
+      "upper_clamp_writes": 33,
+      "lower_held_acceptance": true,
+      "upper_held_acceptance": true
+    },
+    "boot_drive": {
+      "writes": 74,
+      "minimum": 0,
+      "maximum": 9,
+      "all_in_bounds": true,
+      "lower_clamp_writes": 33,
+      "upper_clamp_writes": 33,
+      "lower_held_acceptance": true,
+      "upper_held_acceptance": true
+    },
+    "controller": {
+      "writes": 67,
+      "minimum": 0,
+      "maximum": 2,
+      "all_in_bounds": true,
+      "lower_clamp_writes": 33,
+      "upper_clamp_writes": 33,
+      "lower_held_acceptance": true,
+      "upper_held_acceptance": true
+    }
+  },
+  "errors": [
+    "Connecting to WMI Server failed. Error: 0x80070005",
+    "XInput device detection failed. XInput won't be used. Error: 0x80070005"
+  ],
+  "qualification": "Ordinary native setup field selection and S1/S2 holds, fresh private state and existing encoder model. Valid starting values only; hardware display flag present. No save/boot attempt with edited settings, guest writes, status replacement or physical parity claim."
+}

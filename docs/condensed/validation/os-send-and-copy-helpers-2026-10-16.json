@@ -1,0 +1,3899 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "qualification": "Static-only; stop polls, stereo/copy UI and outgoing sample dump not executed.",
+  "anchor_count": 482,
+  "regions": [
+    {
+      "name": "copy_progress_service",
+      "page": 266,
+      "instructions": [
+        {
+          "pc": 32768,
+          "page": 266,
+          "file_offset": 290816,
+          "bytes": "efd578",
+          "mnemonic": "LCALL",
+          "operands": "0xf8d8"
+        },
+        {
+          "pc": 32771,
+          "page": 266,
+          "file_offset": 290819,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    },
+    {
+      "name": "copy_chunk_hook",
+      "page": 0,
+      "instructions": [
+        {
+          "pc": 63704,
+          "page": 0,
+          "file_offset": 32984,
+          "bytes": "9b01762400",
+          "mnemonic": "CMPB",
+          "operands": "ZRlo, 0x2476, LOOKUP[ZR]"
+        },
+        {
+          "pc": 63709,
+          "page": 0,
+          "file_offset": 32989,
+          "bytes": "df38",
+          "mnemonic": "JE",
+          "operands": "0xf917"
+        },
+        {
+          "pc": 63711,
+          "page": 0,
+          "file_offset": 32991,
+          "bytes": "b102f0",
+          "mnemonic": "LDB",
+          "operands": "RF0, #0x2"
+        },
+        {
+          "pc": 63714,
+          "page": 0,
+          "file_offset": 32994,
+          "bytes": "b102f1",
+          "mnemonic": "LDB",
+          "operands": "RF1, #0x2"
+        },
+        {
+          "pc": 63717,
+          "page": 0,
+          "file_offset": 32997,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 63721,
+          "page": 0,
+          "file_offset": 33001,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63726,
+          "page": 0,
+          "file_offset": 33006,
+          "bytes": "ef2f4a",
+          "mnemonic": "LCALL",
+          "operands": "0x14320"
+        },
+        {
+          "pc": 63729,
+          "page": 0,
+          "file_offset": 33009,
+          "bytes": "990df3",
+          "mnemonic": "CMPB",
+          "operands": "RF3, #0xd"
+        },
+        {
+          "pc": 63732,
+          "page": 0,
+          "file_offset": 33012,
+          "bytes": "d71f",
+          "mnemonic": "JNE",
+          "operands": "0xf915"
+        },
+        {
+          "pc": 63734,
+          "page": 0,
+          "file_offset": 33014,
+          "bytes": "b112f0",
+          "mnemonic": "LDB",
+          "operands": "RF0, #0x12"
+        },
+        {
+          "pc": 63737,
+          "page": 0,
+          "file_offset": 33017,
+          "bytes": "b102f1",
+          "mnemonic": "LDB",
+          "operands": "RF1, #0x2"
+        },
+        {
+          "pc": 63740,
+          "page": 0,
+          "file_offset": 33020,
+          "bytes": "b1f0f2",
+          "mnemonic": "LDB",
+          "operands": "RF2, #-0x10"
+        },
+        {
+          "pc": 63743,
+          "page": 0,
+          "file_offset": 33023,
+          "bytes": "7449f0",
+          "mnemonic": "ADDB",
+          "operands": "RF0, R49"
+        },
+        {
+          "pc": 63746,
+          "page": 0,
+          "file_offset": 33026,
+          "bytes": "710348",
+          "mnemonic": "ANDB",
+          "operands": "R48, #0x3"
+        },
+        {
+          "pc": 63749,
+          "page": 0,
+          "file_offset": 33029,
+          "bytes": "559148f3",
+          "mnemonic": "ADDB",
+          "operands": "RF3, R48, #-0x6f"
+        },
+        {
+          "pc": 63753,
+          "page": 0,
+          "file_offset": 33033,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 63757,
+          "page": 0,
+          "file_offset": 33037,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63762,
+          "page": 0,
+          "file_offset": 33042,
+          "bytes": "ef9249",
+          "mnemonic": "LCALL",
+          "operands": "0x142a7"
+        },
+        {
+          "pc": 63765,
+          "page": 0,
+          "file_offset": 33045,
+          "bytes": "2036",
+          "mnemonic": "SJMP",
+          "operands": "0xf94d"
+        },
+        {
+          "pc": 63767,
+          "page": 0,
+          "file_offset": 33047,
+          "bytes": "b102f0",
+          "mnemonic": "LDB",
+          "operands": "RF0, #0x2"
+        },
+        {
+          "pc": 63770,
+          "page": 0,
+          "file_offset": 33050,
+          "bytes": "b107f1",
+          "mnemonic": "LDB",
+          "operands": "RF1, #0x7"
+        },
+        {
+          "pc": 63773,
+          "page": 0,
+          "file_offset": 33053,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 63777,
+          "page": 0,
+          "file_offset": 33057,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63782,
+          "page": 0,
+          "file_offset": 33062,
+          "bytes": "efcd68",
+          "mnemonic": "LCALL",
+          "operands": "0x161f6"
+        },
+        {
+          "pc": 63785,
+          "page": 0,
+          "file_offset": 33065,
+          "bytes": "990df3",
+          "mnemonic": "CMPB",
+          "operands": "RF3, #0xd"
+        },
+        {
+          "pc": 63788,
+          "page": 0,
+          "file_offset": 33068,
+          "bytes": "d71f",
+          "mnemonic": "JNE",
+          "operands": "0xf94d"
+        },
+        {
+          "pc": 63790,
+          "page": 0,
+          "file_offset": 33070,
+          "bytes": "b112f0",
+          "mnemonic": "LDB",
+          "operands": "RF0, #0x12"
+        },
+        {
+          "pc": 63793,
+          "page": 0,
+          "file_offset": 33073,
+          "bytes": "b107f1",
+          "mnemonic": "LDB",
+          "operands": "RF1, #0x7"
+        },
+        {
+          "pc": 63796,
+          "page": 0,
+          "file_offset": 33076,
+          "bytes": "b100f2",
+          "mnemonic": "LDB",
+          "operands": "RF2, #0x0"
+        },
+        {
+          "pc": 63799,
+          "page": 0,
+          "file_offset": 33079,
+          "bytes": "7449f0",
+          "mnemonic": "ADDB",
+          "operands": "RF0, R49"
+        },
+        {
+          "pc": 63802,
+          "page": 0,
+          "file_offset": 33082,
+          "bytes": "710348",
+          "mnemonic": "ANDB",
+          "operands": "R48, #0x3"
+        },
+        {
+          "pc": 63805,
+          "page": 0,
+          "file_offset": 33085,
+          "bytes": "559148f3",
+          "mnemonic": "ADDB",
+          "operands": "RF3, R48, #-0x6f"
+        },
+        {
+          "pc": 63809,
+          "page": 0,
+          "file_offset": 33089,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 63813,
+          "page": 0,
+          "file_offset": 33093,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63818,
+          "page": 0,
+          "file_offset": 33098,
+          "bytes": "ef7a69",
+          "mnemonic": "LCALL",
+          "operands": "0x162c7"
+        },
+        {
+          "pc": 63821,
+          "page": 0,
+          "file_offset": 33101,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    },
+    {
+      "name": "crt_character_access",
+      "page": 75,
+      "instructions": [
+        {
+          "pc": 17063,
+          "page": 75,
+          "file_offset": 95911,
+          "bytes": "9b01762400",
+          "mnemonic": "CMPB",
+          "operands": "ZRlo, 0x2476, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17068,
+          "page": 75,
+          "file_offset": 95916,
+          "bytes": "d701",
+          "mnemonic": "JNE",
+          "operands": "0x42af"
+        },
+        {
+          "pc": 17070,
+          "page": 75,
+          "file_offset": 95918,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 17071,
+          "page": 75,
+          "file_offset": 95919,
+          "bytes": "5d28f128",
+          "mnemonic": "MULUB",
+          "operands": "RW28, RF1, #0x28"
+        },
+        {
+          "pc": 17075,
+          "page": 75,
+          "file_offset": 95923,
+          "bytes": "acf02a",
+          "mnemonic": "LDBZE",
+          "operands": "RW2A, RF0"
+        },
+        {
+          "pc": 17078,
+          "page": 75,
+          "file_offset": 95926,
+          "bytes": "642a28",
+          "mnemonic": "ADD",
+          "operands": "RW28, RW2A"
+        },
+        {
+          "pc": 17081,
+          "page": 75,
+          "file_offset": 95929,
+          "bytes": "65001028",
+          "mnemonic": "ADD",
+          "operands": "RW28, #0x1000"
+        },
+        {
+          "pc": 17085,
+          "page": 75,
+          "file_offset": 95933,
+          "bytes": "9900f2",
+          "mnemonic": "CMPB",
+          "operands": "RF2, #0x0"
+        },
+        {
+          "pc": 17088,
+          "page": 75,
+          "file_offset": 95936,
+          "bytes": "d727",
+          "mnemonic": "JNE",
+          "operands": "0x42e9"
+        },
+        {
+          "pc": 17090,
+          "page": 75,
+          "file_offset": 95938,
+          "bytes": "b30108e8d4",
+          "mnemonic": "LDB",
+          "operands": "RD4, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17095,
+          "page": 75,
+          "file_offset": 95943,
+          "bytes": "31d4f8",
+          "mnemonic": "JBC",
+          "operands": "RD4, 0x1, 0x42c2"
+        },
+        {
+          "pc": 17098,
+          "page": 75,
+          "file_offset": 95946,
+          "bytes": "b10ada",
+          "mnemonic": "LDB",
+          "operands": "RDA, #0xa"
+        },
+        {
+          "pc": 17101,
+          "page": 75,
+          "file_offset": 95949,
+          "bytes": "c70108e8da",
+          "mnemonic": "STB",
+          "operands": "RDA, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17106,
+          "page": 75,
+          "file_offset": 95954,
+          "bytes": "c70106e829",
+          "mnemonic": "STB",
+          "operands": "R29, 0xe806, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17111,
+          "page": 75,
+          "file_offset": 95959,
+          "bytes": "c70104e828",
+          "mnemonic": "STB",
+          "operands": "R28, 0xe804, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17116,
+          "page": 75,
+          "file_offset": 95964,
+          "bytes": "b30108e8d4",
+          "mnemonic": "LDB",
+          "operands": "RD4, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17121,
+          "page": 75,
+          "file_offset": 95969,
+          "bytes": "31d4f8",
+          "mnemonic": "JBC",
+          "operands": "RD4, 0x1, 0x42dc"
+        },
+        {
+          "pc": 17124,
+          "page": 75,
+          "file_offset": 95972,
+          "bytes": "b30102e8f2",
+          "mnemonic": "LDB",
+          "operands": "RF2, 0xe802, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17129,
+          "page": 75,
+          "file_offset": 95977,
+          "bytes": "b30108e8d4",
+          "mnemonic": "LDB",
+          "operands": "RD4, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17134,
+          "page": 75,
+          "file_offset": 95982,
+          "bytes": "31d4f8",
+          "mnemonic": "JBC",
+          "operands": "RD4, 0x1, 0x42e9"
+        },
+        {
+          "pc": 17137,
+          "page": 75,
+          "file_offset": 95985,
+          "bytes": "b108da",
+          "mnemonic": "LDB",
+          "operands": "RDA, #0x8"
+        },
+        {
+          "pc": 17140,
+          "page": 75,
+          "file_offset": 95988,
+          "bytes": "c70108e8da",
+          "mnemonic": "STB",
+          "operands": "RDA, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17145,
+          "page": 75,
+          "file_offset": 95993,
+          "bytes": "c70106e829",
+          "mnemonic": "STB",
+          "operands": "R29, 0xe806, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17150,
+          "page": 75,
+          "file_offset": 95998,
+          "bytes": "c70104e828",
+          "mnemonic": "STB",
+          "operands": "R28, 0xe804, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17155,
+          "page": 75,
+          "file_offset": 96003,
+          "bytes": "c70102e8f2",
+          "mnemonic": "STB",
+          "operands": "RF2, 0xe802, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17160,
+          "page": 75,
+          "file_offset": 96008,
+          "bytes": "c70100e8f3",
+          "mnemonic": "STB",
+          "operands": "RF3, 0xe800, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17165,
+          "page": 75,
+          "file_offset": 96013,
+          "bytes": "17f0",
+          "mnemonic": "INCB",
+          "operands": "RF0"
+        },
+        {
+          "pc": 17167,
+          "page": 75,
+          "file_offset": 96015,
+          "bytes": "9928f0",
+          "mnemonic": "CMPB",
+          "operands": "RF0, #0x28"
+        },
+        {
+          "pc": 17170,
+          "page": 75,
+          "file_offset": 96018,
+          "bytes": "d30b",
+          "mnemonic": "JNC",
+          "operands": "0x431f"
+        },
+        {
+          "pc": 17172,
+          "page": 75,
+          "file_offset": 96020,
+          "bytes": "11f0",
+          "mnemonic": "CLRB",
+          "operands": "RF0"
+        },
+        {
+          "pc": 17174,
+          "page": 75,
+          "file_offset": 96022,
+          "bytes": "17f1",
+          "mnemonic": "INCB",
+          "operands": "RF1"
+        },
+        {
+          "pc": 17176,
+          "page": 75,
+          "file_offset": 96024,
+          "bytes": "9919f1",
+          "mnemonic": "CMPB",
+          "operands": "RF1, #0x19"
+        },
+        {
+          "pc": 17179,
+          "page": 75,
+          "file_offset": 96027,
+          "bytes": "d302",
+          "mnemonic": "JNC",
+          "operands": "0x431f"
+        },
+        {
+          "pc": 17181,
+          "page": 75,
+          "file_offset": 96029,
+          "bytes": "11f1",
+          "mnemonic": "CLRB",
+          "operands": "RF1"
+        },
+        {
+          "pc": 17183,
+          "page": 75,
+          "file_offset": 96031,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 17184,
+          "page": 75,
+          "file_offset": 96032,
+          "bytes": "9b01762400",
+          "mnemonic": "CMPB",
+          "operands": "ZRlo, 0x2476, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17189,
+          "page": 75,
+          "file_offset": 96037,
+          "bytes": "d701",
+          "mnemonic": "JNE",
+          "operands": "0x4328"
+        },
+        {
+          "pc": 17191,
+          "page": 75,
+          "file_offset": 96039,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 17192,
+          "page": 75,
+          "file_offset": 96040,
+          "bytes": "5d28f128",
+          "mnemonic": "MULUB",
+          "operands": "RW28, RF1, #0x28"
+        },
+        {
+          "pc": 17196,
+          "page": 75,
+          "file_offset": 96044,
+          "bytes": "acf02a",
+          "mnemonic": "LDBZE",
+          "operands": "RW2A, RF0"
+        },
+        {
+          "pc": 17199,
+          "page": 75,
+          "file_offset": 96047,
+          "bytes": "642a28",
+          "mnemonic": "ADD",
+          "operands": "RW28, RW2A"
+        },
+        {
+          "pc": 17202,
+          "page": 75,
+          "file_offset": 96050,
+          "bytes": "65001028",
+          "mnemonic": "ADD",
+          "operands": "RW28, #0x1000"
+        },
+        {
+          "pc": 17206,
+          "page": 75,
+          "file_offset": 96054,
+          "bytes": "b30108e8d4",
+          "mnemonic": "LDB",
+          "operands": "RD4, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17211,
+          "page": 75,
+          "file_offset": 96059,
+          "bytes": "31d4f8",
+          "mnemonic": "JBC",
+          "operands": "RD4, 0x1, 0x4336"
+        },
+        {
+          "pc": 17214,
+          "page": 75,
+          "file_offset": 96062,
+          "bytes": "b10ada",
+          "mnemonic": "LDB",
+          "operands": "RDA, #0xa"
+        },
+        {
+          "pc": 17217,
+          "page": 75,
+          "file_offset": 96065,
+          "bytes": "c70108e8da",
+          "mnemonic": "STB",
+          "operands": "RDA, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17222,
+          "page": 75,
+          "file_offset": 96070,
+          "bytes": "c70106e829",
+          "mnemonic": "STB",
+          "operands": "R29, 0xe806, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17227,
+          "page": 75,
+          "file_offset": 96075,
+          "bytes": "c70104e828",
+          "mnemonic": "STB",
+          "operands": "R28, 0xe804, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17232,
+          "page": 75,
+          "file_offset": 96080,
+          "bytes": "b30108e8d4",
+          "mnemonic": "LDB",
+          "operands": "RD4, 0xe808, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17237,
+          "page": 75,
+          "file_offset": 96085,
+          "bytes": "31d4f8",
+          "mnemonic": "JBC",
+          "operands": "RD4, 0x1, 0x4350"
+        },
+        {
+          "pc": 17240,
+          "page": 75,
+          "file_offset": 96088,
+          "bytes": "b30102e8f2",
+          "mnemonic": "LDB",
+          "operands": "RF2, 0xe802, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17245,
+          "page": 75,
+          "file_offset": 96093,
+          "bytes": "b30100e8f3",
+          "mnemonic": "LDB",
+          "operands": "RF3, 0xe800, LOOKUP[ZR]"
+        },
+        {
+          "pc": 17250,
+          "page": 75,
+          "file_offset": 96098,
+          "bytes": "17f0",
+          "mnemonic": "INCB",
+          "operands": "RF0"
+        },
+        {
+          "pc": 17252,
+          "page": 75,
+          "file_offset": 96100,
+          "bytes": "9928f0",
+          "mnemonic": "CMPB",
+          "operands": "RF0, #0x28"
+        },
+        {
+          "pc": 17255,
+          "page": 75,
+          "file_offset": 96103,
+          "bytes": "d30b",
+          "mnemonic": "JNC",
+          "operands": "0x4374"
+        },
+        {
+          "pc": 17257,
+          "page": 75,
+          "file_offset": 96105,
+          "bytes": "11f0",
+          "mnemonic": "CLRB",
+          "operands": "RF0"
+        },
+        {
+          "pc": 17259,
+          "page": 75,
+          "file_offset": 96107,
+          "bytes": "17f1",
+          "mnemonic": "INCB",
+          "operands": "RF1"
+        },
+        {
+          "pc": 17261,
+          "page": 75,
+          "file_offset": 96109,
+          "bytes": "9919f1",
+          "mnemonic": "CMPB",
+          "operands": "RF1, #0x19"
+        },
+        {
+          "pc": 17264,
+          "page": 75,
+          "file_offset": 96112,
+          "bytes": "d302",
+          "mnemonic": "JNC",
+          "operands": "0x4374"
+        },
+        {
+          "pc": 17266,
+          "page": 75,
+          "file_offset": 96114,
+          "bytes": "11f1",
+          "mnemonic": "CLRB",
+          "operands": "RF1"
+        },
+        {
+          "pc": 17268,
+          "page": 75,
+          "file_offset": 96116,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    },
+    {
+      "name": "lcd_character_read",
+      "page": 59,
+      "instructions": [
+        {
+          "pc": 25078,
+          "page": 59,
+          "file_offset": 87542,
+          "bytes": "9b01762400",
+          "mnemonic": "CMPB",
+          "operands": "ZRlo, 0x2476, LOOKUP[ZR]"
+        },
+        {
+          "pc": 25083,
+          "page": 59,
+          "file_offset": 87547,
+          "bytes": "df01",
+          "mnemonic": "JE",
+          "operands": "0x61fe"
+        },
+        {
+          "pc": 25085,
+          "page": 59,
+          "file_offset": 87549,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 25086,
+          "page": 59,
+          "file_offset": 87550,
+          "bytes": "5d20f128",
+          "mnemonic": "MULUB",
+          "operands": "RW28, RF1, #0x20"
+        },
+        {
+          "pc": 25090,
+          "page": 59,
+          "file_offset": 87554,
+          "bytes": "acf02a",
+          "mnemonic": "LDBZE",
+          "operands": "RW2A, RF0"
+        },
+        {
+          "pc": 25093,
+          "page": 59,
+          "file_offset": 87557,
+          "bytes": "642a28",
+          "mnemonic": "ADD",
+          "operands": "RW28, RW2A"
+        },
+        {
+          "pc": 25096,
+          "page": 59,
+          "file_offset": 87560,
+          "bytes": "b3294e27f3",
+          "mnemonic": "LDB",
+          "operands": "RF3, 0x274e, LOOKUP[RW28]"
+        },
+        {
+          "pc": 25101,
+          "page": 59,
+          "file_offset": 87565,
+          "bytes": "b3294e28f2",
+          "mnemonic": "LDB",
+          "operands": "RF2, 0x284e, LOOKUP[RW28]"
+        },
+        {
+          "pc": 25106,
+          "page": 59,
+          "file_offset": 87570,
+          "bytes": "213a",
+          "mnemonic": "SJMP",
+          "operands": "0x634e"
+        }
+      ]
+    },
+    {
+      "name": "sample_send_voice_quiesce",
+      "page": 15,
+      "instructions": [
+        {
+          "pc": 9555,
+          "page": 15,
+          "file_offset": 43347,
+          "bytes": "0184",
+          "mnemonic": "CLR",
+          "operands": "RW84"
+        },
+        {
+          "pc": 9557,
+          "page": 15,
+          "file_offset": 43349,
+          "bytes": "9b85521f00",
+          "mnemonic": "CMPB",
+          "operands": "ZRlo, 0x1f52, LOOKUP[RW84]"
+        },
+        {
+          "pc": 9562,
+          "page": 15,
+          "file_offset": 43354,
+          "bytes": "df03",
+          "mnemonic": "JE",
+          "operands": "0x255f"
+        },
+        {
+          "pc": 9564,
+          "page": 15,
+          "file_offset": 43356,
+          "bytes": "efdc16",
+          "mnemonic": "LCALL",
+          "operands": "0x3c3b"
+        },
+        {
+          "pc": 9567,
+          "page": 15,
+          "file_offset": 43359,
+          "bytes": "0784",
+          "mnemonic": "INC",
+          "operands": "RW84"
+        },
+        {
+          "pc": 9569,
+          "page": 15,
+          "file_offset": 43361,
+          "bytes": "991884",
+          "mnemonic": "CMPB",
+          "operands": "R84, #0x18"
+        },
+        {
+          "pc": 9572,
+          "page": 15,
+          "file_offset": 43364,
+          "bytes": "d7ef",
+          "mnemonic": "JNE",
+          "operands": "0x2555"
+        },
+        {
+          "pc": 9574,
+          "page": 15,
+          "file_offset": 43366,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 12512,
+          "page": 15,
+          "file_offset": 46304,
+          "bytes": "99059d",
+          "mnemonic": "CMPB",
+          "operands": "R9D, #0x5"
+        },
+        {
+          "pc": 12515,
+          "page": 15,
+          "file_offset": 46307,
+          "bytes": "df3a",
+          "mnemonic": "JE",
+          "operands": "0x311f"
+        },
+        {
+          "pc": 12517,
+          "page": 15,
+          "file_offset": 46309,
+          "bytes": "af85ae8080",
+          "mnemonic": "LDBZE",
+          "operands": "RW80, 0x80ae, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12522,
+          "page": 15,
+          "file_offset": 46314,
+          "bytes": "61030080",
+          "mnemonic": "AND",
+          "operands": "RW80, #0x3"
+        },
+        {
+          "pc": 12526,
+          "page": 15,
+          "file_offset": 46318,
+          "bytes": "090480",
+          "mnemonic": "SHL",
+          "operands": "RW80, #0x4"
+        },
+        {
+          "pc": 12529,
+          "page": 15,
+          "file_offset": 46321,
+          "bytes": "65100080",
+          "mnemonic": "ADD",
+          "operands": "RW80, #0x10"
+        },
+        {
+          "pc": 12533,
+          "page": 15,
+          "file_offset": 46325,
+          "bytes": "b38596807d",
+          "mnemonic": "LDB",
+          "operands": "R7D, 0x8096, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12538,
+          "page": 15,
+          "file_offset": 46330,
+          "bytes": "117c",
+          "mnemonic": "CLRB",
+          "operands": "R7C"
+        },
+        {
+          "pc": 12540,
+          "page": 15,
+          "file_offset": 46332,
+          "bytes": "08017c",
+          "mnemonic": "SHR",
+          "operands": "RW7C, #0x1"
+        },
+        {
+          "pc": 12543,
+          "page": 15,
+          "file_offset": 46335,
+          "bytes": "3e7d0b",
+          "mnemonic": "JBS",
+          "operands": "R7D, 0x6, 0x310d"
+        },
+        {
+          "pc": 12546,
+          "page": 15,
+          "file_offset": 46338,
+          "bytes": "a12a031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x32a"
+        },
+        {
+          "pc": 12550,
+          "page": 15,
+          "file_offset": 46342,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 12555,
+          "page": 15,
+          "file_offset": 46347,
+          "bytes": "200d",
+          "mnemonic": "SJMP",
+          "operands": "0x311a"
+        },
+        {
+          "pc": 12557,
+          "page": 15,
+          "file_offset": 46349,
+          "bytes": "61ff3f7c",
+          "mnemonic": "AND",
+          "operands": "RW7C, #0x3fff"
+        },
+        {
+          "pc": 12561,
+          "page": 15,
+          "file_offset": 46353,
+          "bytes": "a13a031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x33a"
+        },
+        {
+          "pc": 12565,
+          "page": 15,
+          "file_offset": 46357,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 12570,
+          "page": 15,
+          "file_offset": 46362,
+          "bytes": "647c80",
+          "mnemonic": "ADD",
+          "operands": "RW80, RW7C"
+        },
+        {
+          "pc": 12573,
+          "page": 15,
+          "file_offset": 46365,
+          "bytes": "2020",
+          "mnemonic": "SJMP",
+          "operands": "0x313f"
+        },
+        {
+          "pc": 12575,
+          "page": 15,
+          "file_offset": 46367,
+          "bytes": "a156031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x356"
+        },
+        {
+          "pc": 12579,
+          "page": 15,
+          "file_offset": 46371,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 12584,
+          "page": 15,
+          "file_offset": 46376,
+          "bytes": "38840b",
+          "mnemonic": "JBS",
+          "operands": "R84, 0x0, 0x3136"
+        },
+        {
+          "pc": 12587,
+          "page": 15,
+          "file_offset": 46379,
+          "bytes": "a160307c",
+          "mnemonic": "LD",
+          "operands": "RW7C, #0x3060"
+        },
+        {
+          "pc": 12591,
+          "page": 15,
+          "file_offset": 46383,
+          "bytes": "4510007c80",
+          "mnemonic": "ADD",
+          "operands": "RW80, RW7C, #0x10"
+        },
+        {
+          "pc": 12596,
+          "page": 15,
+          "file_offset": 46388,
+          "bytes": "2009",
+          "mnemonic": "SJMP",
+          "operands": "0x313f"
+        },
+        {
+          "pc": 12598,
+          "page": 15,
+          "file_offset": 46390,
+          "bytes": "a1e0307c",
+          "mnemonic": "LD",
+          "operands": "RW7C, #0x30e0"
+        },
+        {
+          "pc": 12602,
+          "page": 15,
+          "file_offset": 46394,
+          "bytes": "4510007c80",
+          "mnemonic": "ADD",
+          "operands": "RW80, RW7C, #0x10"
+        },
+        {
+          "pc": 12607,
+          "page": 15,
+          "file_offset": 46399,
+          "bytes": "c785f68c00",
+          "mnemonic": "STB",
+          "operands": "ZRlo, 0x8cf6, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12612,
+          "page": 15,
+          "file_offset": 46404,
+          "bytes": "44848486",
+          "mnemonic": "ADD",
+          "operands": "RW86, RW84, RW84"
+        },
+        {
+          "pc": 12616,
+          "page": 15,
+          "file_offset": 46408,
+          "bytes": "a387b68462",
+          "mnemonic": "LD",
+          "operands": "RW62, 0x84b6, TABLE[RW86]"
+        },
+        {
+          "pc": 12621,
+          "page": 15,
+          "file_offset": 46413,
+          "bytes": "6b87968362",
+          "mnemonic": "SUB",
+          "operands": "RW62, 0x8396, TABLE[RW86]"
+        },
+        {
+          "pc": 12626,
+          "page": 15,
+          "file_offset": 46418,
+          "bytes": "c387868462",
+          "mnemonic": "ST",
+          "operands": "RW62, 0x8486, TABLE[RW86]"
+        },
+        {
+          "pc": 12631,
+          "page": 15,
+          "file_offset": 46423,
+          "bytes": "af7d7a405c",
+          "mnemonic": "LDBZE",
+          "operands": "RW5C, 0x407a, LOOKUP[RW7C]"
+        },
+        {
+          "pc": 12636,
+          "page": 15,
+          "file_offset": 46428,
+          "bytes": "fe7f85de8c5c",
+          "mnemonic": "MULB",
+          "operands": "RW5C, 0x8cde, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12642,
+          "page": 15,
+          "file_offset": 46434,
+          "bytes": "885c00",
+          "mnemonic": "CMP",
+          "operands": "ZR, RW5C"
+        },
+        {
+          "pc": 12645,
+          "page": 15,
+          "file_offset": 46437,
+          "bytes": "df1c",
+          "mnemonic": "JE",
+          "operands": "0x3183"
+        },
+        {
+          "pc": 12647,
+          "page": 15,
+          "file_offset": 46439,
+          "bytes": "fe9d3f5c",
+          "mnemonic": "DIVB",
+          "operands": "RW5C, #0x3f"
+        },
+        {
+          "pc": 12651,
+          "page": 15,
+          "file_offset": 46443,
+          "bytes": "165c",
+          "mnemonic": "EXTB",
+          "operands": "RW5C"
+        },
+        {
+          "pc": 12653,
+          "page": 15,
+          "file_offset": 46445,
+          "bytes": "6540005c",
+          "mnemonic": "ADD",
+          "operands": "RW5C, #0x40"
+        },
+        {
+          "pc": 12657,
+          "page": 15,
+          "file_offset": 46449,
+          "bytes": "fe6f8756845c",
+          "mnemonic": "MUL",
+          "operands": "RL5C, 0x8456, TABLE[RW86]"
+        },
+        {
+          "pc": 12663,
+          "page": 15,
+          "file_offset": 46455,
+          "bytes": "fe8d40005c",
+          "mnemonic": "DIV",
+          "operands": "RL5C, #0x40"
+        },
+        {
+          "pc": 12668,
+          "page": 15,
+          "file_offset": 46460,
+          "bytes": "c38756845c",
+          "mnemonic": "ST",
+          "operands": "RW5C, 0x8456, TABLE[RW86]"
+        },
+        {
+          "pc": 12673,
+          "page": 15,
+          "file_offset": 46465,
+          "bytes": "2005",
+          "mnemonic": "SJMP",
+          "operands": "0x3188"
+        },
+        {
+          "pc": 12675,
+          "page": 15,
+          "file_offset": 46467,
+          "bytes": "a38756845c",
+          "mnemonic": "LD",
+          "operands": "RW5C, 0x8456, TABLE[RW86]"
+        },
+        {
+          "pc": 12680,
+          "page": 15,
+          "file_offset": 46472,
+          "bytes": "b1076a",
+          "mnemonic": "LDB",
+          "operands": "R6A, #0x7"
+        },
+        {
+          "pc": 12683,
+          "page": 15,
+          "file_offset": 46475,
+          "bytes": "c7851e8c6a",
+          "mnemonic": "STB",
+          "operands": "R6A, 0x8c1e, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12688,
+          "page": 15,
+          "file_offset": 46480,
+          "bytes": "88005c",
+          "mnemonic": "CMP",
+          "operands": "RW5C, ZR"
+        },
+        {
+          "pc": 12691,
+          "page": 15,
+          "file_offset": 46483,
+          "bytes": "df09",
+          "mnemonic": "JE",
+          "operands": "0x319e"
+        },
+        {
+          "pc": 12693,
+          "page": 15,
+          "file_offset": 46485,
+          "bytes": "055c",
+          "mnemonic": "DEC",
+          "operands": "RW5C"
+        },
+        {
+          "pc": 12695,
+          "page": 15,
+          "file_offset": 46487,
+          "bytes": "c387e6845c",
+          "mnemonic": "ST",
+          "operands": "RW5C, 0x84e6, TABLE[RW86]"
+        },
+        {
+          "pc": 12700,
+          "page": 15,
+          "file_offset": 46492,
+          "bytes": "2049",
+          "mnemonic": "SJMP",
+          "operands": "0x31e7"
+        },
+        {
+          "pc": 12702,
+          "page": 15,
+          "file_offset": 46494,
+          "bytes": "af7d59405c",
+          "mnemonic": "LDBZE",
+          "operands": "RW5C, 0x4059, LOOKUP[RW7C]"
+        },
+        {
+          "pc": 12707,
+          "page": 15,
+          "file_offset": 46499,
+          "bytes": "98005c",
+          "mnemonic": "CMPB",
+          "operands": "R5C, ZRlo"
+        },
+        {
+          "pc": 12710,
+          "page": 15,
+          "file_offset": 46502,
+          "bytes": "d704",
+          "mnemonic": "JNE",
+          "operands": "0x31ac"
+        },
+        {
+          "pc": 12712,
+          "page": 15,
+          "file_offset": 46504,
+          "bytes": "a101005c",
+          "mnemonic": "LD",
+          "operands": "RW5C, #0x1"
+        },
+        {
+          "pc": 12716,
+          "page": 15,
+          "file_offset": 46508,
+          "bytes": "645c5c",
+          "mnemonic": "ADD",
+          "operands": "RW5C, RW5C"
+        },
+        {
+          "pc": 12719,
+          "page": 15,
+          "file_offset": 46511,
+          "bytes": "a35d7aac5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0xac7a, TABLE[RW5C]"
+        },
+        {
+          "pc": 12724,
+          "page": 15,
+          "file_offset": 46516,
+          "bytes": "c30118d05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xd018, TABLE[ZR]"
+        },
+        {
+          "pc": 12729,
+          "page": 15,
+          "file_offset": 46521,
+          "bytes": "a101005e",
+          "mnemonic": "LD",
+          "operands": "RW5E, #0x1"
+        },
+        {
+          "pc": 12733,
+          "page": 15,
+          "file_offset": 46525,
+          "bytes": "c38756845e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0x8456, TABLE[RW86]"
+        },
+        {
+          "pc": 12738,
+          "page": 15,
+          "file_offset": 46530,
+          "bytes": "a38796835e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x8396, TABLE[RW86]"
+        },
+        {
+          "pc": 12743,
+          "page": 15,
+          "file_offset": 46535,
+          "bytes": "c387b6845e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0x84b6, TABLE[RW86]"
+        },
+        {
+          "pc": 12748,
+          "page": 15,
+          "file_offset": 46540,
+          "bytes": "ef2215",
+          "mnemonic": "LCALL",
+          "operands": "0x46f1"
+        },
+        {
+          "pc": 12751,
+          "page": 15,
+          "file_offset": 46543,
+          "bytes": "a11b005e",
+          "mnemonic": "LD",
+          "operands": "RW5E, #0x1b"
+        },
+        {
+          "pc": 12755,
+          "page": 15,
+          "file_offset": 46547,
+          "bytes": "c30118d05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xd018, TABLE[ZR]"
+        },
+        {
+          "pc": 12760,
+          "page": 15,
+          "file_offset": 46552,
+          "bytes": "a38796835e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x8396, TABLE[RW86]"
+        },
+        {
+          "pc": 12765,
+          "page": 15,
+          "file_offset": 46557,
+          "bytes": "c387b6845e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0x84b6, TABLE[RW86]"
+        },
+        {
+          "pc": 12770,
+          "page": 15,
+          "file_offset": 46562,
+          "bytes": "c7851e8c00",
+          "mnemonic": "STB",
+          "operands": "ZRlo, 0x8c1e, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12775,
+          "page": 15,
+          "file_offset": 46567,
+          "bytes": "af7d7b4064",
+          "mnemonic": "LDBZE",
+          "operands": "RW64, 0x407b, LOOKUP[RW7C]"
+        },
+        {
+          "pc": 12780,
+          "page": 15,
+          "file_offset": 46572,
+          "bytes": "fe7f85de8c64",
+          "mnemonic": "MULB",
+          "operands": "RW64, 0x8cde, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12786,
+          "page": 15,
+          "file_offset": 46578,
+          "bytes": "886400",
+          "mnemonic": "CMP",
+          "operands": "ZR, RW64"
+        },
+        {
+          "pc": 12789,
+          "page": 15,
+          "file_offset": 46581,
+          "bytes": "df1c",
+          "mnemonic": "JE",
+          "operands": "0x3213"
+        },
+        {
+          "pc": 12791,
+          "page": 15,
+          "file_offset": 46583,
+          "bytes": "fe9d3f64",
+          "mnemonic": "DIVB",
+          "operands": "RW64, #0x3f"
+        },
+        {
+          "pc": 12795,
+          "page": 15,
+          "file_offset": 46587,
+          "bytes": "1664",
+          "mnemonic": "EXTB",
+          "operands": "RW64"
+        },
+        {
+          "pc": 12797,
+          "page": 15,
+          "file_offset": 46589,
+          "bytes": "65400064",
+          "mnemonic": "ADD",
+          "operands": "RW64, #0x40"
+        },
+        {
+          "pc": 12801,
+          "page": 15,
+          "file_offset": 46593,
+          "bytes": "fe6f87168264",
+          "mnemonic": "MUL",
+          "operands": "RL64, 0x8216, TABLE[RW86]"
+        },
+        {
+          "pc": 12807,
+          "page": 15,
+          "file_offset": 46599,
+          "bytes": "fe8d400064",
+          "mnemonic": "DIV",
+          "operands": "RL64, #0x40"
+        },
+        {
+          "pc": 12812,
+          "page": 15,
+          "file_offset": 46604,
+          "bytes": "c387168264",
+          "mnemonic": "ST",
+          "operands": "RW64, 0x8216, TABLE[RW86]"
+        },
+        {
+          "pc": 12817,
+          "page": 15,
+          "file_offset": 46609,
+          "bytes": "2005",
+          "mnemonic": "SJMP",
+          "operands": "0x3218"
+        },
+        {
+          "pc": 12819,
+          "page": 15,
+          "file_offset": 46611,
+          "bytes": "a387168264",
+          "mnemonic": "LD",
+          "operands": "RW64, 0x8216, TABLE[RW86]"
+        },
+        {
+          "pc": 12824,
+          "page": 15,
+          "file_offset": 46616,
+          "bytes": "c387a68264",
+          "mnemonic": "ST",
+          "operands": "RW64, 0x82a6, TABLE[RW86]"
+        },
+        {
+          "pc": 12829,
+          "page": 15,
+          "file_offset": 46621,
+          "bytes": "a38776825e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x8276, TABLE[RW86]"
+        },
+        {
+          "pc": 12834,
+          "page": 15,
+          "file_offset": 46626,
+          "bytes": "c38746825e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0x8246, TABLE[RW86]"
+        },
+        {
+          "pc": 12839,
+          "page": 15,
+          "file_offset": 46631,
+          "bytes": "b1076a",
+          "mnemonic": "LDB",
+          "operands": "R6A, #0x7"
+        },
+        {
+          "pc": 12842,
+          "page": 15,
+          "file_offset": 46634,
+          "bytes": "c785068c6a",
+          "mnemonic": "STB",
+          "operands": "R6A, 0x8c06, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12847,
+          "page": 15,
+          "file_offset": 46639,
+          "bytes": "880064",
+          "mnemonic": "CMP",
+          "operands": "RW64, ZR"
+        },
+        {
+          "pc": 12850,
+          "page": 15,
+          "file_offset": 46642,
+          "bytes": "d746",
+          "mnemonic": "JNE",
+          "operands": "0x327a"
+        },
+        {
+          "pc": 12852,
+          "page": 15,
+          "file_offset": 46644,
+          "bytes": "af7d6a405c",
+          "mnemonic": "LDBZE",
+          "operands": "RW5C, 0x406a, LOOKUP[RW7C]"
+        },
+        {
+          "pc": 12857,
+          "page": 15,
+          "file_offset": 46649,
+          "bytes": "98005c",
+          "mnemonic": "CMPB",
+          "operands": "R5C, ZRlo"
+        },
+        {
+          "pc": 12860,
+          "page": 15,
+          "file_offset": 46652,
+          "bytes": "d704",
+          "mnemonic": "JNE",
+          "operands": "0x3242"
+        },
+        {
+          "pc": 12862,
+          "page": 15,
+          "file_offset": 46654,
+          "bytes": "a101005c",
+          "mnemonic": "LD",
+          "operands": "RW5C, #0x1"
+        },
+        {
+          "pc": 12866,
+          "page": 15,
+          "file_offset": 46658,
+          "bytes": "645c5c",
+          "mnemonic": "ADD",
+          "operands": "RW5C, RW5C"
+        },
+        {
+          "pc": 12869,
+          "page": 15,
+          "file_offset": 46661,
+          "bytes": "a35d7aac5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0xac7a, TABLE[RW5C]"
+        },
+        {
+          "pc": 12874,
+          "page": 15,
+          "file_offset": 46666,
+          "bytes": "c30118d05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xd018, TABLE[ZR]"
+        },
+        {
+          "pc": 12879,
+          "page": 15,
+          "file_offset": 46671,
+          "bytes": "ef7014",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 12882,
+          "page": 15,
+          "file_offset": 46674,
+          "bytes": "c30140d084",
+          "mnemonic": "ST",
+          "operands": "RW84, 0xd040, TABLE[ZR]"
+        },
+        {
+          "pc": 12887,
+          "page": 15,
+          "file_offset": 46679,
+          "bytes": "ef6814",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 12890,
+          "page": 15,
+          "file_offset": 46682,
+          "bytes": "c30136d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd036, TABLE[ZR]"
+        },
+        {
+          "pc": 12895,
+          "page": 15,
+          "file_offset": 46687,
+          "bytes": "c30134d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd034, TABLE[ZR]"
+        },
+        {
+          "pc": 12900,
+          "page": 15,
+          "file_offset": 46692,
+          "bytes": "a11b005e",
+          "mnemonic": "LD",
+          "operands": "RW5E, #0x1b"
+        },
+        {
+          "pc": 12904,
+          "page": 15,
+          "file_offset": 46696,
+          "bytes": "c30118d05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xd018, TABLE[ZR]"
+        },
+        {
+          "pc": 12909,
+          "page": 15,
+          "file_offset": 46701,
+          "bytes": "c387768200",
+          "mnemonic": "ST",
+          "operands": "ZR, 0x8276, TABLE[RW86]"
+        },
+        {
+          "pc": 12914,
+          "page": 15,
+          "file_offset": 46706,
+          "bytes": "b1085c",
+          "mnemonic": "LDB",
+          "operands": "R5C, #0x8"
+        },
+        {
+          "pc": 12917,
+          "page": 15,
+          "file_offset": 46709,
+          "bytes": "c785068c5c",
+          "mnemonic": "STB",
+          "operands": "R5C, 0x8c06, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12922,
+          "page": 15,
+          "file_offset": 46714,
+          "bytes": "af85ca1e60",
+          "mnemonic": "LDBZE",
+          "operands": "RW60, 0x1eca, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12927,
+          "page": 15,
+          "file_offset": 46719,
+          "bytes": "990160",
+          "mnemonic": "CMPB",
+          "operands": "R60, #0x1"
+        },
+        {
+          "pc": 12930,
+          "page": 15,
+          "file_offset": 46722,
+          "bytes": "df06",
+          "mnemonic": "JE",
+          "operands": "0x328a"
+        },
+        {
+          "pc": 12932,
+          "page": 15,
+          "file_offset": 46724,
+          "bytes": "990360",
+          "mnemonic": "CMPB",
+          "operands": "R60, #0x3"
+        },
+        {
+          "pc": 12935,
+          "page": 15,
+          "file_offset": 46727,
+          "bytes": "df01",
+          "mnemonic": "JE",
+          "operands": "0x328a"
+        },
+        {
+          "pc": 12937,
+          "page": 15,
+          "file_offset": 46729,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 12938,
+          "page": 15,
+          "file_offset": 46730,
+          "bytes": "4504008460",
+          "mnemonic": "ADD",
+          "operands": "RW60, RW84, #0x4"
+        },
+        {
+          "pc": 12943,
+          "page": 15,
+          "file_offset": 46735,
+          "bytes": "990b84",
+          "mnemonic": "CMPB",
+          "operands": "R84, #0xb"
+        },
+        {
+          "pc": 12946,
+          "page": 15,
+          "file_offset": 46738,
+          "bytes": "d104",
+          "mnemonic": "JNH",
+          "operands": "0x3298"
+        },
+        {
+          "pc": 12948,
+          "page": 15,
+          "file_offset": 46740,
+          "bytes": "65040060",
+          "mnemonic": "ADD",
+          "operands": "RW60, #0x4"
+        },
+        {
+          "pc": 12952,
+          "page": 15,
+          "file_offset": 46744,
+          "bytes": "090460",
+          "mnemonic": "SHL",
+          "operands": "RW60, #0x4"
+        },
+        {
+          "pc": 12955,
+          "page": 15,
+          "file_offset": 46747,
+          "bytes": "a3875e929a",
+          "mnemonic": "LD",
+          "operands": "RW9A, 0x925e, TABLE[RW86]"
+        },
+        {
+          "pc": 12960,
+          "page": 15,
+          "file_offset": 46752,
+          "bytes": "9b858e9200",
+          "mnemonic": "CMPB",
+          "operands": "ZRlo, 0x928e, LOOKUP[RW84]"
+        },
+        {
+          "pc": 12965,
+          "page": 15,
+          "file_offset": 46757,
+          "bytes": "d727",
+          "mnemonic": "JNE",
+          "operands": "0x32ce"
+        },
+        {
+          "pc": 12967,
+          "page": 15,
+          "file_offset": 46759,
+          "bytes": "ac9a7c",
+          "mnemonic": "LDBZE",
+          "operands": "RW7C, R9A"
+        },
+        {
+          "pc": 12970,
+          "page": 15,
+          "file_offset": 46762,
+          "bytes": "7d307c",
+          "mnemonic": "MULUB",
+          "operands": "RW7C, #0x30"
+        },
+        {
+          "pc": 12973,
+          "page": 15,
+          "file_offset": 46765,
+          "bytes": "319b03",
+          "mnemonic": "JBC",
+          "operands": "R9B, 0x1, 0x32b3"
+        },
+        {
+          "pc": 12976,
+          "page": 15,
+          "file_offset": 46768,
+          "bytes": "75307d",
+          "mnemonic": "ADDB",
+          "operands": "R7D, #0x30"
+        },
+        {
+          "pc": 12979,
+          "page": 15,
+          "file_offset": 46771,
+          "bytes": "98009b",
+          "mnemonic": "CMPB",
+          "operands": "R9B, ZRlo"
+        },
+        {
+          "pc": 12982,
+          "page": 15,
+          "file_offset": 46774,
+          "bytes": "d70b",
+          "mnemonic": "JNE",
+          "operands": "0x32c3"
+        },
+        {
+          "pc": 12984,
+          "page": 15,
+          "file_offset": 46776,
+          "bytes": "a14a031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x34a"
+        },
+        {
+          "pc": 12988,
+          "page": 15,
+          "file_offset": 46780,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 12993,
+          "page": 15,
+          "file_offset": 46785,
+          "bytes": "2009",
+          "mnemonic": "SJMP",
+          "operands": "0x32cc"
+        },
+        {
+          "pc": 12995,
+          "page": 15,
+          "file_offset": 46787,
+          "bytes": "a156031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x356"
+        },
+        {
+          "pc": 12999,
+          "page": 15,
+          "file_offset": 46791,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 13004,
+          "page": 15,
+          "file_offset": 46796,
+          "bytes": "203a",
+          "mnemonic": "SJMP",
+          "operands": "0x3308"
+        },
+        {
+          "pc": 13006,
+          "page": 15,
+          "file_offset": 46798,
+          "bytes": "b38596807d",
+          "mnemonic": "LDB",
+          "operands": "R7D, 0x8096, LOOKUP[RW84]"
+        },
+        {
+          "pc": 13011,
+          "page": 15,
+          "file_offset": 46803,
+          "bytes": "117c",
+          "mnemonic": "CLRB",
+          "operands": "R7C"
+        },
+        {
+          "pc": 13013,
+          "page": 15,
+          "file_offset": 46805,
+          "bytes": "08017c",
+          "mnemonic": "SHR",
+          "operands": "RW7C, #0x1"
+        },
+        {
+          "pc": 13016,
+          "page": 15,
+          "file_offset": 46808,
+          "bytes": "3e7c0b",
+          "mnemonic": "JBS",
+          "operands": "R7C, 0x6, 0x32e6"
+        },
+        {
+          "pc": 13019,
+          "page": 15,
+          "file_offset": 46811,
+          "bytes": "a16b031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x36b"
+        },
+        {
+          "pc": 13023,
+          "page": 15,
+          "file_offset": 46815,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 13028,
+          "page": 15,
+          "file_offset": 46820,
+          "bytes": "200d",
+          "mnemonic": "SJMP",
+          "operands": "0x32f3"
+        },
+        {
+          "pc": 13030,
+          "page": 15,
+          "file_offset": 46822,
+          "bytes": "61ff3f7c",
+          "mnemonic": "AND",
+          "operands": "RW7C, #0x3fff"
+        },
+        {
+          "pc": 13034,
+          "page": 15,
+          "file_offset": 46826,
+          "bytes": "a17b031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x37b"
+        },
+        {
+          "pc": 13038,
+          "page": 15,
+          "file_offset": 46830,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 13043,
+          "page": 15,
+          "file_offset": 46835,
+          "bytes": "c86a",
+          "mnemonic": "PUSH",
+          "operands": "RW6A"
+        },
+        {
+          "pc": 13045,
+          "page": 15,
+          "file_offset": 46837,
+          "bytes": "af858e926a",
+          "mnemonic": "LDBZE",
+          "operands": "RW6A, 0x928e, LOOKUP[RW84]"
+        },
+        {
+          "pc": 13050,
+          "page": 15,
+          "file_offset": 46842,
+          "bytes": "056a",
+          "mnemonic": "DEC",
+          "operands": "RW6A"
+        },
+        {
+          "pc": 13052,
+          "page": 15,
+          "file_offset": 46844,
+          "bytes": "09056a",
+          "mnemonic": "SHL",
+          "operands": "RW6A, #0x5"
+        },
+        {
+          "pc": 13055,
+          "page": 15,
+          "file_offset": 46847,
+          "bytes": "646a7c",
+          "mnemonic": "ADD",
+          "operands": "RW7C, RW6A"
+        },
+        {
+          "pc": 13058,
+          "page": 15,
+          "file_offset": 46850,
+          "bytes": "cc6a",
+          "mnemonic": "POP",
+          "operands": "RW6A"
+        },
+        {
+          "pc": 13060,
+          "page": 15,
+          "file_offset": 46852,
+          "bytes": "6910007c",
+          "mnemonic": "SUB",
+          "operands": "RW7C, #0x10"
+        },
+        {
+          "pc": 13064,
+          "page": 15,
+          "file_offset": 46856,
+          "bytes": "fa",
+          "mnemonic": "DI",
+          "operands": ""
+        },
+        {
+          "pc": 13065,
+          "page": 15,
+          "file_offset": 46857,
+          "bytes": "a37d1c405c",
+          "mnemonic": "LD",
+          "operands": "RW5C, 0x401c, TABLE[RW7C]"
+        },
+        {
+          "pc": 13070,
+          "page": 15,
+          "file_offset": 46862,
+          "bytes": "a37d1e405e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x401e, TABLE[RW7C]"
+        },
+        {
+          "pc": 13075,
+          "page": 15,
+          "file_offset": 46867,
+          "bytes": "c36106c400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc406, TABLE[RW60]"
+        },
+        {
+          "pc": 13080,
+          "page": 15,
+          "file_offset": 46872,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13081,
+          "page": 15,
+          "file_offset": 46873,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13082,
+          "page": 15,
+          "file_offset": 46874,
+          "bytes": "c30114c05c",
+          "mnemonic": "ST",
+          "operands": "RW5C, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 13087,
+          "page": 15,
+          "file_offset": 46879,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13088,
+          "page": 15,
+          "file_offset": 46880,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13089,
+          "page": 15,
+          "file_offset": 46881,
+          "bytes": "c36108c400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc408, TABLE[RW60]"
+        },
+        {
+          "pc": 13094,
+          "page": 15,
+          "file_offset": 46886,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13095,
+          "page": 15,
+          "file_offset": 46887,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13096,
+          "page": 15,
+          "file_offset": 46888,
+          "bytes": "c30114c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 13101,
+          "page": 15,
+          "file_offset": 46893,
+          "bytes": "c3610ac400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc40a, TABLE[RW60]"
+        },
+        {
+          "pc": 13106,
+          "page": 15,
+          "file_offset": 46898,
+          "bytes": "a37d20405c",
+          "mnemonic": "LD",
+          "operands": "RW5C, 0x4020, TABLE[RW7C]"
+        },
+        {
+          "pc": 13111,
+          "page": 15,
+          "file_offset": 46903,
+          "bytes": "c30114c05c",
+          "mnemonic": "ST",
+          "operands": "RW5C, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 13116,
+          "page": 15,
+          "file_offset": 46908,
+          "bytes": "a37d22405e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x4022, TABLE[RW7C]"
+        },
+        {
+          "pc": 13121,
+          "page": 15,
+          "file_offset": 46913,
+          "bytes": "c3610cc400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc40c, TABLE[RW60]"
+        },
+        {
+          "pc": 13126,
+          "page": 15,
+          "file_offset": 46918,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13127,
+          "page": 15,
+          "file_offset": 46919,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13128,
+          "page": 15,
+          "file_offset": 46920,
+          "bytes": "c30114c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 13133,
+          "page": 15,
+          "file_offset": 46925,
+          "bytes": "6900015c",
+          "mnemonic": "SUB",
+          "operands": "RW5C, #0x100"
+        },
+        {
+          "pc": 13137,
+          "page": 15,
+          "file_offset": 46929,
+          "bytes": "a8005e",
+          "mnemonic": "SUBC",
+          "operands": "RW5E, ZR"
+        },
+        {
+          "pc": 13140,
+          "page": 15,
+          "file_offset": 46932,
+          "bytes": "0c085c",
+          "mnemonic": "SHRL",
+          "operands": "RL5C, #0x8"
+        },
+        {
+          "pc": 13143,
+          "page": 15,
+          "file_offset": 46935,
+          "bytes": "c36100c400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc400, TABLE[RW60]"
+        },
+        {
+          "pc": 13148,
+          "page": 15,
+          "file_offset": 46940,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13149,
+          "page": 15,
+          "file_offset": 46941,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13150,
+          "page": 15,
+          "file_offset": 46942,
+          "bytes": "c30114c05c",
+          "mnemonic": "ST",
+          "operands": "RW5C, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 13155,
+          "page": 15,
+          "file_offset": 46947,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13156,
+          "page": 15,
+          "file_offset": 46948,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13157,
+          "page": 15,
+          "file_offset": 46949,
+          "bytes": "c36102c400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc402, TABLE[RW60]"
+        },
+        {
+          "pc": 13162,
+          "page": 15,
+          "file_offset": 46954,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13163,
+          "page": 15,
+          "file_offset": 46955,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 13164,
+          "page": 15,
+          "file_offset": 46956,
+          "bytes": "c30114c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 13169,
+          "page": 15,
+          "file_offset": 46961,
+          "bytes": "fb",
+          "mnemonic": "EI",
+          "operands": ""
+        },
+        {
+          "pc": 13170,
+          "page": 15,
+          "file_offset": 46962,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 15303,
+          "page": 15,
+          "file_offset": 49095,
+          "bytes": "890c0084",
+          "mnemonic": "CMP",
+          "operands": "RW84, #0xc"
+        },
+        {
+          "pc": 15307,
+          "page": 15,
+          "file_offset": 49099,
+          "bytes": "db0f",
+          "mnemonic": "JC",
+          "operands": "0x3bdc"
+        },
+        {
+          "pc": 15309,
+          "page": 15,
+          "file_offset": 49101,
+          "bytes": "450400845c",
+          "mnemonic": "ADD",
+          "operands": "RW5C, RW84, #0x4"
+        },
+        {
+          "pc": 15314,
+          "page": 15,
+          "file_offset": 49106,
+          "bytes": "a301942a60",
+          "mnemonic": "LD",
+          "operands": "RW60, 0x2a94, TABLE[ZR]"
+        },
+        {
+          "pc": 15319,
+          "page": 15,
+          "file_offset": 49111,
+          "bytes": "085c60",
+          "mnemonic": "SHR",
+          "operands": "RW60, R5C"
+        },
+        {
+          "pc": 15322,
+          "page": 15,
+          "file_offset": 49114,
+          "bytes": "200d",
+          "mnemonic": "SJMP",
+          "operands": "0x3be9"
+        },
+        {
+          "pc": 15324,
+          "page": 15,
+          "file_offset": 49116,
+          "bytes": "490800845c",
+          "mnemonic": "SUB",
+          "operands": "RW5C, RW84, #0x8"
+        },
+        {
+          "pc": 15329,
+          "page": 15,
+          "file_offset": 49121,
+          "bytes": "a3018c2a60",
+          "mnemonic": "LD",
+          "operands": "RW60, 0x2a8c, TABLE[ZR]"
+        },
+        {
+          "pc": 15334,
+          "page": 15,
+          "file_offset": 49126,
+          "bytes": "085c60",
+          "mnemonic": "SHR",
+          "operands": "RW60, R5C"
+        },
+        {
+          "pc": 15337,
+          "page": 15,
+          "file_offset": 49129,
+          "bytes": "306012",
+          "mnemonic": "JBC",
+          "operands": "R60, 0x0, 0x3bfe"
+        },
+        {
+          "pc": 15340,
+          "page": 15,
+          "file_offset": 49132,
+          "bytes": "c30140d084",
+          "mnemonic": "ST",
+          "operands": "RW84, 0xd040, TABLE[ZR]"
+        },
+        {
+          "pc": 15345,
+          "page": 15,
+          "file_offset": 49137,
+          "bytes": "efce0a",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 15348,
+          "page": 15,
+          "file_offset": 49140,
+          "bytes": "c30136d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd036, TABLE[ZR]"
+        },
+        {
+          "pc": 15353,
+          "page": 15,
+          "file_offset": 49145,
+          "bytes": "c30134d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd034, TABLE[ZR]"
+        },
+        {
+          "pc": 15358,
+          "page": 15,
+          "file_offset": 49150,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 15419,
+          "page": 15,
+          "file_offset": 49211,
+          "bytes": "2f8a",
+          "mnemonic": "SCALL",
+          "operands": "0x3bc7"
+        },
+        {
+          "pc": 15421,
+          "page": 15,
+          "file_offset": 49213,
+          "bytes": "30602c",
+          "mnemonic": "JBC",
+          "operands": "R60, 0x0, 0x3c6c"
+        },
+        {
+          "pc": 15424,
+          "page": 15,
+          "file_offset": 49216,
+          "bytes": "c30140d084",
+          "mnemonic": "ST",
+          "operands": "RW84, 0xd040, TABLE[ZR]"
+        },
+        {
+          "pc": 15429,
+          "page": 15,
+          "file_offset": 49221,
+          "bytes": "ef7a0a",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 15432,
+          "page": 15,
+          "file_offset": 49224,
+          "bytes": "c30136d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd036, TABLE[ZR]"
+        },
+        {
+          "pc": 15437,
+          "page": 15,
+          "file_offset": 49229,
+          "bytes": "c30134d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd034, TABLE[ZR]"
+        },
+        {
+          "pc": 15442,
+          "page": 15,
+          "file_offset": 49234,
+          "bytes": "ef6d0a",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 15445,
+          "page": 15,
+          "file_offset": 49237,
+          "bytes": "c30164d084",
+          "mnemonic": "ST",
+          "operands": "RW84, 0xd064, TABLE[ZR]"
+        },
+        {
+          "pc": 15450,
+          "page": 15,
+          "file_offset": 49242,
+          "bytes": "ef650a",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 15453,
+          "page": 15,
+          "file_offset": 49245,
+          "bytes": "a30106d060",
+          "mnemonic": "LD",
+          "operands": "RW60, 0xd006, TABLE[ZR]"
+        },
+        {
+          "pc": 15458,
+          "page": 15,
+          "file_offset": 49250,
+          "bytes": "a30104d05c",
+          "mnemonic": "LD",
+          "operands": "RW5C, 0xd004, TABLE[ZR]"
+        },
+        {
+          "pc": 15463,
+          "page": 15,
+          "file_offset": 49255,
+          "bytes": "80605c",
+          "mnemonic": "OR",
+          "operands": "RW5C, RW60"
+        },
+        {
+          "pc": 15466,
+          "page": 15,
+          "file_offset": 49258,
+          "bytes": "d7e9",
+          "mnemonic": "JNE",
+          "operands": "0x3c55"
+        },
+        {
+          "pc": 15468,
+          "page": 15,
+          "file_offset": 49260,
+          "bytes": "ef420f",
+          "mnemonic": "LCALL",
+          "operands": "0x4bb1"
+        },
+        {
+          "pc": 15471,
+          "page": 15,
+          "file_offset": 49263,
+          "bytes": "c785de8c00",
+          "mnemonic": "STB",
+          "operands": "ZRlo, 0x8cde, LOOKUP[RW84]"
+        },
+        {
+          "pc": 15476,
+          "page": 15,
+          "file_offset": 49268,
+          "bytes": "e769f4",
+          "mnemonic": "LJMP",
+          "operands": "0x30e0"
+        }
+      ]
+    },
+    {
+      "name": "voice_stop_hardware_helpers",
+      "page": 31,
+      "instructions": [
+        {
+          "pc": 18114,
+          "page": 31,
+          "file_offset": 51906,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18115,
+          "page": 31,
+          "file_offset": 51907,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18116,
+          "page": 31,
+          "file_offset": 51908,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18117,
+          "page": 31,
+          "file_offset": 51909,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18118,
+          "page": 31,
+          "file_offset": 51910,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18119,
+          "page": 31,
+          "file_offset": 51911,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18120,
+          "page": 31,
+          "file_offset": 51912,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18121,
+          "page": 31,
+          "file_offset": 51913,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18122,
+          "page": 31,
+          "file_offset": 51914,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18123,
+          "page": 31,
+          "file_offset": 51915,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18124,
+          "page": 31,
+          "file_offset": 51916,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18125,
+          "page": 31,
+          "file_offset": 51917,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18126,
+          "page": 31,
+          "file_offset": 51918,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18127,
+          "page": 31,
+          "file_offset": 51919,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 18128,
+          "page": 31,
+          "file_offset": 51920,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 18161,
+          "page": 31,
+          "file_offset": 51953,
+          "bytes": "c30140d084",
+          "mnemonic": "ST",
+          "operands": "RW84, 0xd040, TABLE[ZR]"
+        },
+        {
+          "pc": 18166,
+          "page": 31,
+          "file_offset": 51958,
+          "bytes": "a387b6845e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x84b6, TABLE[RW86]"
+        },
+        {
+          "pc": 18171,
+          "page": 31,
+          "file_offset": 51963,
+          "bytes": "99059d",
+          "mnemonic": "CMPB",
+          "operands": "R9D, #0x5"
+        },
+        {
+          "pc": 18174,
+          "page": 31,
+          "file_offset": 51966,
+          "bytes": "df3a",
+          "mnemonic": "JE",
+          "operands": "0x473a"
+        },
+        {
+          "pc": 18176,
+          "page": 31,
+          "file_offset": 51968,
+          "bytes": "af85ae8080",
+          "mnemonic": "LDBZE",
+          "operands": "RW80, 0x80ae, LOOKUP[RW84]"
+        },
+        {
+          "pc": 18181,
+          "page": 31,
+          "file_offset": 51973,
+          "bytes": "61030080",
+          "mnemonic": "AND",
+          "operands": "RW80, #0x3"
+        },
+        {
+          "pc": 18185,
+          "page": 31,
+          "file_offset": 51977,
+          "bytes": "090480",
+          "mnemonic": "SHL",
+          "operands": "RW80, #0x4"
+        },
+        {
+          "pc": 18188,
+          "page": 31,
+          "file_offset": 51980,
+          "bytes": "65100080",
+          "mnemonic": "ADD",
+          "operands": "RW80, #0x10"
+        },
+        {
+          "pc": 18192,
+          "page": 31,
+          "file_offset": 51984,
+          "bytes": "b38596807d",
+          "mnemonic": "LDB",
+          "operands": "R7D, 0x8096, LOOKUP[RW84]"
+        },
+        {
+          "pc": 18197,
+          "page": 31,
+          "file_offset": 51989,
+          "bytes": "117c",
+          "mnemonic": "CLRB",
+          "operands": "R7C"
+        },
+        {
+          "pc": 18199,
+          "page": 31,
+          "file_offset": 51991,
+          "bytes": "08017c",
+          "mnemonic": "SHR",
+          "operands": "RW7C, #0x1"
+        },
+        {
+          "pc": 18202,
+          "page": 31,
+          "file_offset": 51994,
+          "bytes": "3e7d0b",
+          "mnemonic": "JBS",
+          "operands": "R7D, 0x6, 0x4728"
+        },
+        {
+          "pc": 18205,
+          "page": 31,
+          "file_offset": 51997,
+          "bytes": "a12a031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x32a"
+        },
+        {
+          "pc": 18209,
+          "page": 31,
+          "file_offset": 52001,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 18214,
+          "page": 31,
+          "file_offset": 52006,
+          "bytes": "200d",
+          "mnemonic": "SJMP",
+          "operands": "0x4735"
+        },
+        {
+          "pc": 18216,
+          "page": 31,
+          "file_offset": 52008,
+          "bytes": "61ff3f7c",
+          "mnemonic": "AND",
+          "operands": "RW7C, #0x3fff"
+        },
+        {
+          "pc": 18220,
+          "page": 31,
+          "file_offset": 52012,
+          "bytes": "a13a031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x33a"
+        },
+        {
+          "pc": 18224,
+          "page": 31,
+          "file_offset": 52016,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 18229,
+          "page": 31,
+          "file_offset": 52021,
+          "bytes": "647c80",
+          "mnemonic": "ADD",
+          "operands": "RW80, RW7C"
+        },
+        {
+          "pc": 18232,
+          "page": 31,
+          "file_offset": 52024,
+          "bytes": "2020",
+          "mnemonic": "SJMP",
+          "operands": "0x475a"
+        },
+        {
+          "pc": 18234,
+          "page": 31,
+          "file_offset": 52026,
+          "bytes": "a156031c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x356"
+        },
+        {
+          "pc": 18238,
+          "page": 31,
+          "file_offset": 52030,
+          "bytes": "c3010a011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x10a, TABLE[ZR]"
+        },
+        {
+          "pc": 18243,
+          "page": 31,
+          "file_offset": 52035,
+          "bytes": "38840b",
+          "mnemonic": "JBS",
+          "operands": "R84, 0x0, 0x4751"
+        },
+        {
+          "pc": 18246,
+          "page": 31,
+          "file_offset": 52038,
+          "bytes": "a160307c",
+          "mnemonic": "LD",
+          "operands": "RW7C, #0x3060"
+        },
+        {
+          "pc": 18250,
+          "page": 31,
+          "file_offset": 52042,
+          "bytes": "4510007c80",
+          "mnemonic": "ADD",
+          "operands": "RW80, RW7C, #0x10"
+        },
+        {
+          "pc": 18255,
+          "page": 31,
+          "file_offset": 52047,
+          "bytes": "2009",
+          "mnemonic": "SJMP",
+          "operands": "0x475a"
+        },
+        {
+          "pc": 18257,
+          "page": 31,
+          "file_offset": 52049,
+          "bytes": "a1e0307c",
+          "mnemonic": "LD",
+          "operands": "RW7C, #0x30e0"
+        },
+        {
+          "pc": 18261,
+          "page": 31,
+          "file_offset": 52053,
+          "bytes": "4510007c80",
+          "mnemonic": "ADD",
+          "operands": "RW80, RW7C, #0x10"
+        },
+        {
+          "pc": 18266,
+          "page": 31,
+          "file_offset": 52058,
+          "bytes": "b37d51405c",
+          "mnemonic": "LDB",
+          "operands": "R5C, 0x4051, LOOKUP[RW7C]"
+        },
+        {
+          "pc": 18271,
+          "page": 31,
+          "file_offset": 52063,
+          "bytes": "3f5c0a",
+          "mnemonic": "JBS",
+          "operands": "R5C, 0x7, 0x476c"
+        },
+        {
+          "pc": 18274,
+          "page": 31,
+          "file_offset": 52066,
+          "bytes": "b17f60",
+          "mnemonic": "LDB",
+          "operands": "R60, #0x7f"
+        },
+        {
+          "pc": 18277,
+          "page": 31,
+          "file_offset": 52069,
+          "bytes": "7b85368c60",
+          "mnemonic": "SUBB",
+          "operands": "R60, 0x8c36, LOOKUP[RW84]"
+        },
+        {
+          "pc": 18282,
+          "page": 31,
+          "file_offset": 52074,
+          "bytes": "2007",
+          "mnemonic": "SJMP",
+          "operands": "0x4773"
+        },
+        {
+          "pc": 18284,
+          "page": 31,
+          "file_offset": 52076,
+          "bytes": "b385368c60",
+          "mnemonic": "LDB",
+          "operands": "R60, 0x8c36, LOOKUP[RW84]"
+        },
+        {
+          "pc": 18289,
+          "page": 31,
+          "file_offset": 52081,
+          "bytes": "135c",
+          "mnemonic": "NEGB",
+          "operands": "R5C"
+        },
+        {
+          "pc": 18291,
+          "page": 31,
+          "file_offset": 52083,
+          "bytes": "7c605c",
+          "mnemonic": "MULUB",
+          "operands": "RW5C, R60"
+        },
+        {
+          "pc": 18294,
+          "page": 31,
+          "file_offset": 52086,
+          "bytes": "09025c",
+          "mnemonic": "SHL",
+          "operands": "RW5C, #0x2"
+        },
+        {
+          "pc": 18297,
+          "page": 31,
+          "file_offset": 52089,
+          "bytes": "a1ff7f60",
+          "mnemonic": "LD",
+          "operands": "RW60, #0x7fff"
+        },
+        {
+          "pc": 18301,
+          "page": 31,
+          "file_offset": 52093,
+          "bytes": "685c60",
+          "mnemonic": "SUB",
+          "operands": "RW60, RW5C"
+        },
+        {
+          "pc": 18304,
+          "page": 31,
+          "file_offset": 52096,
+          "bytes": "6c5e60",
+          "mnemonic": "MULU",
+          "operands": "RL60, RW5E"
+        },
+        {
+          "pc": 18307,
+          "page": 31,
+          "file_offset": 52099,
+          "bytes": "b37d5a405d",
+          "mnemonic": "LDB",
+          "operands": "R5D, 0x405a, LOOKUP[RW7C]"
+        },
+        {
+          "pc": 18312,
+          "page": 31,
+          "file_offset": 52104,
+          "bytes": "b05d5c",
+          "mnemonic": "LDB",
+          "operands": "R5C, R5D"
+        },
+        {
+          "pc": 18315,
+          "page": 31,
+          "file_offset": 52107,
+          "bytes": "fe6c625c",
+          "mnemonic": "MUL",
+          "operands": "RL5C, RW62"
+        },
+        {
+          "pc": 18319,
+          "page": 31,
+          "file_offset": 52111,
+          "bytes": "0d035c",
+          "mnemonic": "SHLL",
+          "operands": "RL5C, #0x3"
+        },
+        {
+          "pc": 18322,
+          "page": 31,
+          "file_offset": 52114,
+          "bytes": "3f5f0e",
+          "mnemonic": "JBS",
+          "operands": "R5F, 0x7, 0x47a3"
+        },
+        {
+          "pc": 18325,
+          "page": 31,
+          "file_offset": 52117,
+          "bytes": "678716855e",
+          "mnemonic": "ADD",
+          "operands": "RW5E, 0x8516, TABLE[RW86]"
+        },
+        {
+          "pc": 18330,
+          "page": 31,
+          "file_offset": 52122,
+          "bytes": "375f10",
+          "mnemonic": "JBC",
+          "operands": "R5F, 0x7, 0x47ad"
+        },
+        {
+          "pc": 18333,
+          "page": 31,
+          "file_offset": 52125,
+          "bytes": "a1ff7f5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, #0x7fff"
+        },
+        {
+          "pc": 18337,
+          "page": 31,
+          "file_offset": 52129,
+          "bytes": "200a",
+          "mnemonic": "SJMP",
+          "operands": "0x47ad"
+        },
+        {
+          "pc": 18339,
+          "page": 31,
+          "file_offset": 52131,
+          "bytes": "678716855e",
+          "mnemonic": "ADD",
+          "operands": "RW5E, 0x8516, TABLE[RW86]"
+        },
+        {
+          "pc": 18344,
+          "page": 31,
+          "file_offset": 52136,
+          "bytes": "375f02",
+          "mnemonic": "JBC",
+          "operands": "R5F, 0x7, 0x47ad"
+        },
+        {
+          "pc": 18347,
+          "page": 31,
+          "file_offset": 52139,
+          "bytes": "015e",
+          "mnemonic": "CLR",
+          "operands": "RW5E"
+        },
+        {
+          "pc": 18349,
+          "page": 31,
+          "file_offset": 52141,
+          "bytes": "b05f5c",
+          "mnemonic": "LDB",
+          "operands": "R5C, R5F"
+        },
+        {
+          "pc": 18352,
+          "page": 31,
+          "file_offset": 52144,
+          "bytes": "75055c",
+          "mnemonic": "ADDB",
+          "operands": "R5C, #0x5"
+        },
+        {
+          "pc": 18355,
+          "page": 31,
+          "file_offset": 52147,
+          "bytes": "99835c",
+          "mnemonic": "CMPB",
+          "operands": "R5C, #-0x7d"
+        },
+        {
+          "pc": 18358,
+          "page": 31,
+          "file_offset": 52150,
+          "bytes": "d106",
+          "mnemonic": "JNH",
+          "operands": "0x47be"
+        },
+        {
+          "pc": 18360,
+          "page": 31,
+          "file_offset": 52152,
+          "bytes": "b1835c",
+          "mnemonic": "LDB",
+          "operands": "R5C, #-0x7d"
+        },
+        {
+          "pc": 18363,
+          "page": 31,
+          "file_offset": 52155,
+          "bytes": "b1ff5e",
+          "mnemonic": "LDB",
+          "operands": "R5E, #-0x1"
+        },
+        {
+          "pc": 18366,
+          "page": 31,
+          "file_offset": 52158,
+          "bytes": "115d",
+          "mnemonic": "CLRB",
+          "operands": "R5D"
+        },
+        {
+          "pc": 18368,
+          "page": 31,
+          "file_offset": 52160,
+          "bytes": "9d0c5c",
+          "mnemonic": "DIVUB",
+          "operands": "RW5C, #0xc"
+        },
+        {
+          "pc": 18371,
+          "page": 31,
+          "file_offset": 52163,
+          "bytes": "115f",
+          "mnemonic": "CLRB",
+          "operands": "R5F"
+        },
+        {
+          "pc": 18373,
+          "page": 31,
+          "file_offset": 52165,
+          "bytes": "9d105e",
+          "mnemonic": "DIVUB",
+          "operands": "RW5E, #0x10"
+        },
+        {
+          "pc": 18376,
+          "page": 31,
+          "file_offset": 52168,
+          "bytes": "b05f6a",
+          "mnemonic": "LDB",
+          "operands": "R6A, R5F"
+        },
+        {
+          "pc": 18379,
+          "page": 31,
+          "file_offset": 52171,
+          "bytes": "5d105d60",
+          "mnemonic": "MULUB",
+          "operands": "RW60, R5D, #0x10"
+        },
+        {
+          "pc": 18383,
+          "page": 31,
+          "file_offset": 52175,
+          "bytes": "745e60",
+          "mnemonic": "ADDB",
+          "operands": "R60, R5E"
+        },
+        {
+          "pc": 18386,
+          "page": 31,
+          "file_offset": 52178,
+          "bytes": "090160",
+          "mnemonic": "SHL",
+          "operands": "RW60, #0x1"
+        },
+        {
+          "pc": 18389,
+          "page": 31,
+          "file_offset": 52181,
+          "bytes": "a361349d62",
+          "mnemonic": "LD",
+          "operands": "RW62, 0x9d34, TABLE[RW60]"
+        },
+        {
+          "pc": 18394,
+          "page": 31,
+          "file_offset": 52186,
+          "bytes": "a361369d60",
+          "mnemonic": "LD",
+          "operands": "RW60, 0x9d36, TABLE[RW60]"
+        },
+        {
+          "pc": 18399,
+          "page": 31,
+          "file_offset": 52191,
+          "bytes": "ac5c5c",
+          "mnemonic": "LDBZE",
+          "operands": "RW5C, R5C"
+        },
+        {
+          "pc": 18402,
+          "page": 31,
+          "file_offset": 52194,
+          "bytes": "b35dd89e5c",
+          "mnemonic": "LDB",
+          "operands": "R5C, 0x9ed8, LOOKUP[RW5C]"
+        },
+        {
+          "pc": 18407,
+          "page": 31,
+          "file_offset": 52199,
+          "bytes": "085c62",
+          "mnemonic": "SHR",
+          "operands": "RW62, R5C"
+        },
+        {
+          "pc": 18410,
+          "page": 31,
+          "file_offset": 52202,
+          "bytes": "085c60",
+          "mnemonic": "SHR",
+          "operands": "RW60, R5C"
+        },
+        {
+          "pc": 18413,
+          "page": 31,
+          "file_offset": 52205,
+          "bytes": "4862605c",
+          "mnemonic": "SUB",
+          "operands": "RW5C, RW60, RW62"
+        },
+        {
+          "pc": 18417,
+          "page": 31,
+          "file_offset": 52209,
+          "bytes": "015e",
+          "mnemonic": "CLR",
+          "operands": "RW5E"
+        },
+        {
+          "pc": 18419,
+          "page": 31,
+          "file_offset": 52211,
+          "bytes": "8d10005c",
+          "mnemonic": "DIVU",
+          "operands": "RL5C, #0x10"
+        },
+        {
+          "pc": 18423,
+          "page": 31,
+          "file_offset": 52215,
+          "bytes": "7c6a5c",
+          "mnemonic": "MULUB",
+          "operands": "RW5C, R6A"
+        },
+        {
+          "pc": 18426,
+          "page": 31,
+          "file_offset": 52218,
+          "bytes": "44625c5c",
+          "mnemonic": "ADD",
+          "operands": "RW5C, RW5C, RW62"
+        },
+        {
+          "pc": 18430,
+          "page": 31,
+          "file_offset": 52222,
+          "bytes": "08025c",
+          "mnemonic": "SHR",
+          "operands": "RW5C, #0x2"
+        },
+        {
+          "pc": 18433,
+          "page": 31,
+          "file_offset": 52225,
+          "bytes": "c30132d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd032, TABLE[ZR]"
+        },
+        {
+          "pc": 18438,
+          "page": 31,
+          "file_offset": 52230,
+          "bytes": "c30130d05c",
+          "mnemonic": "ST",
+          "operands": "RW5C, 0xd030, TABLE[ZR]"
+        },
+        {
+          "pc": 18443,
+          "page": 31,
+          "file_offset": 52235,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        },
+        {
+          "pc": 19377,
+          "page": 31,
+          "file_offset": 53169,
+          "bytes": "c785521f00",
+          "mnemonic": "STB",
+          "operands": "ZRlo, 0x1f52, LOOKUP[RW84]"
+        },
+        {
+          "pc": 19382,
+          "page": 31,
+          "file_offset": 53174,
+          "bytes": "890b0084",
+          "mnemonic": "CMP",
+          "operands": "RW84, #0xb"
+        },
+        {
+          "pc": 19386,
+          "page": 31,
+          "file_offset": 53178,
+          "bytes": "d91f",
+          "mnemonic": "JH",
+          "operands": "0x4bdb"
+        },
+        {
+          "pc": 19388,
+          "page": 31,
+          "file_offset": 53180,
+          "bytes": "fa",
+          "mnemonic": "DI",
+          "operands": ""
+        },
+        {
+          "pc": 19389,
+          "page": 31,
+          "file_offset": 53181,
+          "bytes": "450400845c",
+          "mnemonic": "ADD",
+          "operands": "RW5C, RW84, #0x4"
+        },
+        {
+          "pc": 19394,
+          "page": 31,
+          "file_offset": 53186,
+          "bytes": "09015c",
+          "mnemonic": "SHL",
+          "operands": "RW5C, #0x1"
+        },
+        {
+          "pc": 19397,
+          "page": 31,
+          "file_offset": 53189,
+          "bytes": "a301942a5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x2a94, TABLE[ZR]"
+        },
+        {
+          "pc": 19402,
+          "page": 31,
+          "file_offset": 53194,
+          "bytes": "635d121f5e",
+          "mnemonic": "AND",
+          "operands": "RW5E, 0x1f12, TABLE[RW5C]"
+        },
+        {
+          "pc": 19407,
+          "page": 31,
+          "file_offset": 53199,
+          "bytes": "c301942a5e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0x2a94, TABLE[ZR]"
+        },
+        {
+          "pc": 19412,
+          "page": 31,
+          "file_offset": 53204,
+          "bytes": "c30100c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc000, TABLE[ZR]"
+        },
+        {
+          "pc": 19417,
+          "page": 31,
+          "file_offset": 53209,
+          "bytes": "201d",
+          "mnemonic": "SJMP",
+          "operands": "0x4bf8"
+        },
+        {
+          "pc": 19419,
+          "page": 31,
+          "file_offset": 53211,
+          "bytes": "fa",
+          "mnemonic": "DI",
+          "operands": ""
+        },
+        {
+          "pc": 19420,
+          "page": 31,
+          "file_offset": 53212,
+          "bytes": "450800845c",
+          "mnemonic": "ADD",
+          "operands": "RW5C, RW84, #0x8"
+        },
+        {
+          "pc": 19425,
+          "page": 31,
+          "file_offset": 53217,
+          "bytes": "09015c",
+          "mnemonic": "SHL",
+          "operands": "RW5C, #0x1"
+        },
+        {
+          "pc": 19428,
+          "page": 31,
+          "file_offset": 53220,
+          "bytes": "a3018c2a5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x2a8c, TABLE[ZR]"
+        },
+        {
+          "pc": 19433,
+          "page": 31,
+          "file_offset": 53225,
+          "bytes": "635d121f5e",
+          "mnemonic": "AND",
+          "operands": "RW5E, 0x1f12, TABLE[RW5C]"
+        },
+        {
+          "pc": 19438,
+          "page": 31,
+          "file_offset": 53230,
+          "bytes": "c3018c2a5e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0x2a8c, TABLE[ZR]"
+        },
+        {
+          "pc": 19443,
+          "page": 31,
+          "file_offset": 53235,
+          "bytes": "c30102c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc002, TABLE[ZR]"
+        },
+        {
+          "pc": 19448,
+          "page": 31,
+          "file_offset": 53240,
+          "bytes": "09035c",
+          "mnemonic": "SHL",
+          "operands": "RW5C, #0x3"
+        },
+        {
+          "pc": 19451,
+          "page": 31,
+          "file_offset": 53243,
+          "bytes": "c35d00c200",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc200, TABLE[RW5C]"
+        },
+        {
+          "pc": 19456,
+          "page": 31,
+          "file_offset": 53248,
+          "bytes": "a100c05e",
+          "mnemonic": "LD",
+          "operands": "RW5E, #0xc000"
+        },
+        {
+          "pc": 19460,
+          "page": 31,
+          "file_offset": 53252,
+          "bytes": "c30110c000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc010, TABLE[ZR]"
+        },
+        {
+          "pc": 19465,
+          "page": 31,
+          "file_offset": 53257,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 19466,
+          "page": 31,
+          "file_offset": 53258,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 19467,
+          "page": 31,
+          "file_offset": 53259,
+          "bytes": "c30112c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc012, TABLE[ZR]"
+        },
+        {
+          "pc": 19472,
+          "page": 31,
+          "file_offset": 53264,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 19473,
+          "page": 31,
+          "file_offset": 53265,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 19474,
+          "page": 31,
+          "file_offset": 53266,
+          "bytes": "c35d0ac400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc40a, TABLE[RW5C]"
+        },
+        {
+          "pc": 19479,
+          "page": 31,
+          "file_offset": 53271,
+          "bytes": "a1ffff5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, #0xffff"
+        },
+        {
+          "pc": 19483,
+          "page": 31,
+          "file_offset": 53275,
+          "bytes": "c30114c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 19488,
+          "page": 31,
+          "file_offset": 53280,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 19489,
+          "page": 31,
+          "file_offset": 53281,
+          "bytes": "fd",
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 19490,
+          "page": 31,
+          "file_offset": 53282,
+          "bytes": "c35d0cc400",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xc40c, TABLE[RW5C]"
+        },
+        {
+          "pc": 19495,
+          "page": 31,
+          "file_offset": 53287,
+          "bytes": "a1ffff5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, #0xffff"
+        },
+        {
+          "pc": 19499,
+          "page": 31,
+          "file_offset": 53291,
+          "bytes": "c30114c05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xc014, TABLE[ZR]"
+        },
+        {
+          "pc": 19504,
+          "page": 31,
+          "file_offset": 53296,
+          "bytes": "fb",
+          "mnemonic": "EI",
+          "operands": ""
+        },
+        {
+          "pc": 19505,
+          "page": 31,
+          "file_offset": 53297,
+          "bytes": "a301942a5c",
+          "mnemonic": "LD",
+          "operands": "RW5C, 0x2a94, TABLE[ZR]"
+        },
+        {
+          "pc": 19510,
+          "page": 31,
+          "file_offset": 53302,
+          "bytes": "08045c",
+          "mnemonic": "SHR",
+          "operands": "RW5C, #0x4"
+        },
+        {
+          "pc": 19513,
+          "page": 31,
+          "file_offset": 53305,
+          "bytes": "a3018c2a5e",
+          "mnemonic": "LD",
+          "operands": "RW5E, 0x2a8c, TABLE[ZR]"
+        },
+        {
+          "pc": 19518,
+          "page": 31,
+          "file_offset": 53310,
+          "bytes": "905e5d",
+          "mnemonic": "ORB",
+          "operands": "R5D, R5E"
+        },
+        {
+          "pc": 19521,
+          "page": 31,
+          "file_offset": 53313,
+          "bytes": "ac5f5e",
+          "mnemonic": "LDBZE",
+          "operands": "RW5E, R5F"
+        },
+        {
+          "pc": 19524,
+          "page": 31,
+          "file_offset": 53316,
+          "bytes": "c30140d084",
+          "mnemonic": "ST",
+          "operands": "RW84, 0xd040, TABLE[ZR]"
+        },
+        {
+          "pc": 19529,
+          "page": 31,
+          "file_offset": 53321,
+          "bytes": "ef76fa",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 19532,
+          "page": 31,
+          "file_offset": 53324,
+          "bytes": "c30132d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd032, TABLE[ZR]"
+        },
+        {
+          "pc": 19537,
+          "page": 31,
+          "file_offset": 53329,
+          "bytes": "a1008060",
+          "mnemonic": "LD",
+          "operands": "RW60, #0x8000"
+        },
+        {
+          "pc": 19541,
+          "page": 31,
+          "file_offset": 53333,
+          "bytes": "c30130d060",
+          "mnemonic": "ST",
+          "operands": "RW60, 0xd030, TABLE[ZR]"
+        },
+        {
+          "pc": 19546,
+          "page": 31,
+          "file_offset": 53338,
+          "bytes": "ef65fa",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 19549,
+          "page": 31,
+          "file_offset": 53341,
+          "bytes": "c3010ad000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd00a, TABLE[ZR]"
+        },
+        {
+          "pc": 19554,
+          "page": 31,
+          "file_offset": 53346,
+          "bytes": "a1ff0f60",
+          "mnemonic": "LD",
+          "operands": "RW60, #0xfff"
+        },
+        {
+          "pc": 19558,
+          "page": 31,
+          "file_offset": 53350,
+          "bytes": "c30108d060",
+          "mnemonic": "ST",
+          "operands": "RW60, 0xd008, TABLE[ZR]"
+        },
+        {
+          "pc": 19563,
+          "page": 31,
+          "file_offset": 53355,
+          "bytes": "ef54fa",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 19566,
+          "page": 31,
+          "file_offset": 53358,
+          "bytes": "c30126d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd026, TABLE[ZR]"
+        },
+        {
+          "pc": 19571,
+          "page": 31,
+          "file_offset": 53363,
+          "bytes": "c30124d000",
+          "mnemonic": "ST",
+          "operands": "ZR, 0xd024, TABLE[ZR]"
+        },
+        {
+          "pc": 19576,
+          "page": 31,
+          "file_offset": 53368,
+          "bytes": "ef47fa",
+          "mnemonic": "LCALL",
+          "operands": "0x46c2"
+        },
+        {
+          "pc": 19579,
+          "page": 31,
+          "file_offset": 53371,
+          "bytes": "c30112d05c",
+          "mnemonic": "ST",
+          "operands": "RW5C, 0xd012, TABLE[ZR]"
+        },
+        {
+          "pc": 19584,
+          "page": 31,
+          "file_offset": 53376,
+          "bytes": "c30110d05e",
+          "mnemonic": "ST",
+          "operands": "RW5E, 0xd010, TABLE[ZR]"
+        },
+        {
+          "pc": 19589,
+          "page": 31,
+          "file_offset": 53381,
+          "bytes": "f0",
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,110 @@
 # Testing, Coverage & Verification
 
-## Current status — 2026-10-10 review
+## Final source-built standalone archive — 2026-10-17
+
+The611-file source/dependency-qualified archive now passes two complete
+normal-speed workflows from its final extracted bytes, with the layered
+WebView2 UI, measured Windows playback and physical MOTU recording. Four app
+launches, eight output captures and twelve fresh native readbacks preserve
+the Level64 program, all119,808 original sample bytes and both new allocations.
+Recorded markers are32,429/36,871 frames/channel; allocations are73,728/82,944
+bytes/channel. Native and device playback retain pitch, expected attenuation and
+silent release. All611 files remain unchanged.
+
+MAME and the audio bridge rebuild from delivered source; PortAudio19.7.0 uses
+ASIO SDK2.3.4's GPLv3 option with its source/notices. Python and native dependency
+sources accompany the host.532 backend regressions pass. The final extracted
+PowerShell handoff boots without child development-tool paths; its clean-machine
+collector remains INCOMPLETE because no separate clean machine/VM is available.
+Static PE/matrix checks cannot close that gate (BUG-104). This is bounded
+workstation acceptance, not analog parity, a duration guarantee or a release tag.
+[Current promotion and exact evidence](../testing/standalone-release-promotion.md).
+
+## Earlier572-file candidate workflow — 2026-10-17
+
+Two complete normal-speed workstation cycles pass through one unchanged572-file
+candidate and its actual layered WebView2 interface: load ROBOFULL, measure
+Windows-device play/release, edit Level127→64, firmware Save/export, create a new
+physical stereo recording while retaining the edited program, save all samples,
+save/restart/restore the combined session and cold-reopen/restore/play again.
+Four frozen-app launches and eight Windows output captures pass; the measured
+edited/baseline peak ratio is0.502703 with unchanged20,004.272Hz pitch and a
+released tail below1e-7. Twelve independent native processes preserve119,808
+original sample bytes and both new allocations exactly through session/cold
+Sample Load, and reproduce the edited program's pitch/level and native silence.
+New allocations are138,240 and175,104 bytes/channel in the two cycles, with
+440.085/879.833Hz tones. The second clip retains seven nonzero frames after its
+default loop-start marker but before serialized sample end; these bytes are
+preserved, rather than assumed to be padding.
+
+The re-extracted PowerShell handoff verifies all candidate files and boots the
+actual WebView2 UI from an unrelated directory with child development-tool paths
+removed; BUG-101 fixes default kit paths under Windows PowerShell5.1. This boot
+smoke remains an incomplete manual workflow report. The user has no clean Windows
+machine/VM available, so clean-machine acceptance remains open. Source-built
+artifact promotion is recorded above. Windows output measurements are digital endpoint loopback, not
+analog parity/latency or lossless-driver evidence. [Results and reproduction](../testing/milestone-6-complete-standalone-workflow.md),
+[handoff procedure](../testing/standalone-clean-machine-handoff.md).
+
+## WebView2 physical sampling — 2026-10-17
+
+The actual frozen WebView2 window passes a bounded normal-speed MOTU stereo
+recording, firmware Sample Save/export and session restart/restore. The final
+run retains 46,387 frames/channel (1.052 seconds), with 440.085/879.833 Hz tones
+and unclipped peaks of 2,287/2,297 PCM16 units. Both 101,376-byte allocations
+match disk exactly in three independent native processes: recorded checkpoint,
+fresh checkpoint after UI restore, and cold firmware Sample Load. The final UI
+case, 93 focused backend tests and TypeScript pass. The input-status snapshot
+reports 2,048 discarded frames across the workflow and no native recording
+underruns; physical driver loss, latency and continuous-stream integrity are
+not measured. This is short physical-input acceptance on the dated development
+package, with output disabled; final-artifact and clean-machine acceptance remain
+open. [Evidence and reproduction](../testing/milestone-6-webview-sampling.md).
+
+## Actual WebView2 editing — 2026-10-17
+
+The frozen package's real WebView2 window (155.0.4283.60) passes performance
+Level, patch bend, partial coarse-tune and whole-range sample Area Erase,
+including firmware Save/export, session restore and cold Load. Eight frozen
+launches preserve the relevant field/wave pixels and serialized edits. Ten
+independent native processes verify level, bend/tuning, erased-sample silence
+and note release; 519 backend tests and TypeScript pass. This closes the named
+WebView editing input/persistence subset. Physical sampling is separately
+qualified above; final artifact/clean-machine acceptance remains open.
+[Scope and reproduction](../testing/milestone-6-webview-editing.md).
+
+## Checkpoint-publication failures — 2026-10-17
+
+Three forced process-tree exits at the opened zero-byte temporary-file stage
+preserve the preceding recovery archive and Level 64 state. A real Windows
+replacement-denied error also preserves the archive and live Level 63 edit;
+retry after releasing the handle publishes and restores that new edit. Ten
+fresh native processes verify dirty exports, exact sample bytes and the expected
+pitch/level/release behavior; 519 backend tests pass. Later write/flush/rename
+interruption points and physical power loss remain unqualified.
+[Exact scope and evidence](../testing/milestone-6-checkpoint-publication.md).
+
+## Packaged crash-recovery checkpoint — 2026-10-17
+
+Three forced Windows process-tree exits and cold launches of the dated frozen
+development package pass recovery after a completed production-timer checkpoint.
+The first startup preserves that archive for 61 seconds. All three restores
+reinstate dirty-media protection and the Level 64 edit, export an identical
+737,280-byte disk and retain all 119,808 sample bytes. Eight independent native
+processes verify sample RAM, dirty exports, unchanged pitch, expected attenuation
+and silent note release; 515 backend regressions pass. This does not qualify
+physical power loss, interruption during archive publication, device audio or
+clean-machine/final release acceptance. [Reproduction and evidence](../testing/milestone-6-crash-recovery.md).
+
+## Current status — 2026-10-15 review
+
+Milestones1–5 have scoped Windows development-profile acceptance in the [current roadmap](../project/completion-roadmap.md) and [Milestone5 matrix](../testing/milestone-5-acceptance.md). SoundCheck is the accepted automated DAW framework. Final-artifact, final-interface and clean-machine qualification remains open. The [historical claim audit](../testing/milestone-6-coverage-audit.md) separates research inventories from execution evidence.
+
+## Historical 2026-10-10 checkpoint
 
 The finding124 checkpoint passed native/core/plugin builds, core/plugin executable checks and 152 Python tests. React was not retested for that checkpoint. Model and source-contract assertions are not hardware parity, and native executable validation is not packaged standalone/DAW validation. No tests were rerun for this documentation review.
 
-See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+See the [completion roadmap](../project/completion-roadmap.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
 ## Technical reference and dated milestone history
 
@@ -67,9 +167,9 @@ current source:
 
 ## Correct treatment of the matrices
 
-All four generated reports (`OS_TEST_COVERAGE_MATRIX.md`,
-`OS_EXHAUSTIVE_CODE_MATRIX.md`, `UI_TEST_COVERAGE_MATRIX.md`, and
-`MANUAL_FUNCTION_TEST_COVERAGE.md`) now publish **unverified historical
+All four generated reports (`os-test-coverage-matrix.md`,
+`os-exhaustive-code-matrix.md`, `ui-test-coverage-matrix.md`, and
+`manual-function-test-coverage.md`) now publish **unverified historical
 inventories**, not measured coverage (BUG-007). Broad feature claims, binary
 addresses, manual page ranges and ownership mappings in the old inputs were
 not individually validated. They must not become coverage merely because a

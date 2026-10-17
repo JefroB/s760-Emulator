@@ -1,0 +1,127 @@
+{
+  "rom": {
+    "rubric_version": "ic15-native-decoding-v1",
+    "score_name": "Boot-ROM functional-scope acceptance",
+    "passed_gates": 46,
+    "total_gates": 60,
+    "percent": 76.66666666666667,
+    "gate_counts": {
+      "context": 11,
+      "layout": 15,
+      "behavior": 12,
+      "execution": 8
+    },
+    "path_count": 15,
+    "metrics": {
+      "boot_rom": {
+        "classified_bytes": 26277,
+        "total_bytes": 32768,
+        "percent": 80.1910400390625,
+        "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "presumed_unused_bytes": 6490,
+        "accounted_including_assumption_bytes": 32767,
+        "unresolved_other_bytes": 1
+      },
+      "os": {
+        "classified_bytes": 77680,
+        "total_bytes": 1032192,
+        "percent": 7.525731646825397,
+        "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+      }
+    },
+    "scope_sha256": "34317d092d847e1396668b4cf33bd9cae2b37f257e00f109c11dee68f16cb5f8",
+    "evidence_sha256": {
+      "docs/condensed/validation/ic15-root-and-hex-audit-2026-10-16.json": "d98adefa3f064396d56b9071bb1a9950b7ebee1916dfa2cabb91f72e55f48591",
+      "docs/condensed/validation/ic15-native-handoff-2026-10-16.json": "1b8efaa1305c49f72551436f5988a07e2fddcaff7d7fd0ac768a4c28ec3398f2",
+      "docs/condensed/validation/ic15-byte6903-floppy-load-trace-2026-10-16.json": "a107f7cd63a32061c2eb2969ab595e2fd48d70ed2e7736e3da2d8082be41c27a",
+      "docs/condensed/validation/ic15-loader-recovery-2026-10-16.json": "631cead7a330599e6b3b663002122c27bb3c706b98883a2e3bd99d6c3bf697f5",
+      "docs/condensed/validation/ic15-native-invalid-media-2026-10-16.json": "cc2702b2d7813e21b74ecaed02d47e81f692292bd54d3ae6eb2c90275baa0a9a",
+      "docs/condensed/validation/ic15-native-short-density-2026-10-16.json": "9358ada29d87d5c6192a3a84191b91a346662ba20a1acbf8a965c8c1e8ba2a22",
+      "docs/condensed/validation/ic15-native-scsi-command-contract-2026-10-16.json": "be16967f035e1b8902083300fe9caacda9aae2c0151050faf9538227e6f83376",
+      "docs/condensed/validation/ic15-native-scsi-absent-fallback-2026-10-16.json": "2bd027e8494dfe52477396ee2984cf110d14ee19af06af43ba77f82f493d4074",
+      "docs/condensed/validation/ic15-native-scsi-bad-header-fallback-2026-10-16.json": "65fc9052d595eed217dc889f5b822856235b353dc9c570ebf046c574580ffebe",
+      "docs/condensed/validation/ic15-native-scsi-valid-header-2026-10-16.json": "a24fb19c41b9879f835ade24c3fa9d66d61c6d16d1548efe806a01656ed3b42e",
+      "docs/condensed/validation/ic15-scsi-records-and-transfer-2026-10-16.json": "df079e8ac706e8af9a53466d658ae4cf09c316c5b0499db883f2ef6cd1b8186a",
+      "docs/condensed/validation/ic15-scsi-transport-validation-2026-10-16.json": "84e7d3628b152b31c2333969a41f370f8e6718c1b0912c8b18b75427208d6e8e",
+      "docs/condensed/validation/ic15-native-menu-bounds-2026-10-16.json": "f9787c07477f342f3c12b71c516a1b7bf716542fd01fdd8fcf8a55e470729db6",
+      "docs/condensed/validation/ic15-native-contrast-bounds-encoder-2026-10-16.json": "fc6318d6ff27ce05c53c73538aead18b7d750029ec6f62673f2ba304b824f8cf",
+      "docs/condensed/validation/ic15-native-tv-bounds-2026-10-16.json": "21e1da859d960b1a8debbc4bba63c250f03ebff93208e6329e23f24f5fb1320d",
+      "docs/condensed/validation/ic15-native-setup-eeprom-2026-10-16.json": "2088cdeee48b3cd5fa198116be917cf745439dfe348b14f97a0353921c03fec4",
+      "docs/condensed/validation/ic15-native-eeprom-2026-10-16.json": "88d2c42d69e73166d39531bda89fc45f0ac9cd3ff79984a1209c4784aa76cb12",
+      "docs/condensed/validation/ic15-display-resource-2026-10-16.json": "b9c2e84aaee08444b0a5f904810e99933da1935e18dce110cfe549cf174ef78b",
+      "docs/condensed/validation/ic15-native-upload-2026-10-16.json": "04a0556f12ed9dfd77b98930ea2313aa22f642c5bd53e8fb88895bd673afdadd",
+      "docs/condensed/validation/ic15-pixel-upload-contract-2026-10-16.json": "db7d27e3f2114eedd82956a4428fcaabe651be89d437dc580d885b85dbda8eee",
+      "docs/condensed/validation/ic15-native-audio-init-2026-10-16.json": "4c388336b7ec32badf46ccc4911e1da841fce09b29255d0d20a2a8d156a7e344",
+      "docs/condensed/validation/ic15-indirect-store-contracts-2026-10-16.json": "9fdca83db4f29617c7c5c4b8ee7b09412dbf368399850ba523e457d010fae537",
+      "docs/condensed/validation/ic15-residual-helpers-2026-10-16.json": "b3920370087b4a2989604a704fdcb36f38d2088f13fc6d7ade6e5432d4502482",
+      "docs/condensed/validation/ic15-local-stack-balance-2026-10-16.json": "042f67e00a4ed475ca7dedb056efa0c8303aafc9e3ad9bd74348c532f17b1a20",
+      "docs/condensed/validation/ic15-stack-cpu-validation-2026-10-16.json": "e66287fe28ce9ec9e4a204b999a1ad707eb950af70667108f1b0bcb047568175",
+      "docs/condensed/validation/ic15-native-stack-after-cpu-2026-10-16.json": "ba44107106a6d33819a2361ef0b45e6da1367109690e13bd9bb85825f7f0c174",
+      "docs/condensed/validation/ic15-native-stack-irq-reconciliation-2026-10-16.json": "93a912d30fc3aad2efb0d56c7feb8dbbf505403ddec3c734e08d0f930028712b",
+      "docs/condensed/validation/ic15-decoding-2026-10-16.json": "cdac69d10f662d5a99b401e26e97b4c29e82a06d659a55a1f7212954147b7070",
+      "docs/condensed/validation/ic15-final-static-frontier-2026-10-16.json": "15604d43318acd43a7877176b4d092e16729016f1b13cb13c4d0b5c4a0541ed5",
+      "docs/condensed/validation/ic15-residual-text-classification-2026-10-16.json": "2baa695c218ae4660d9c08bd4fbb07c50e2ca638e7673a97410ba3a8b4aec831",
+      "docs/condensed/validation/ic15-residual-byte-history-2026-10-16.json": "3ca5654042724516c5a181634f9d5e8c3f081302a8918b55cb75df6aec030d5b"
+    },
+    "overall_firmware_decoding_completion": "not yet quantifiable",
+    "limitation": "Acceptance against this fixed boot-ROM scope; not effort remaining, overall firmware completion, hardware fidelity or rebuild acceptance."
+  },
+  "os": {
+    "rubric_version": "s760-os-decoding-v1",
+    "passed_gates": 36,
+    "total_gates": 96,
+    "percent": 37.5,
+    "gate_counts": {
+      "context": 15,
+      "layout": 14,
+      "behavior": 6,
+      "execution": 1
+    },
+    "path_count": 24,
+    "evidence_sha256": {
+      "docs/condensed/validation/os-reconciled-independent-review-2026-10-16.json": "d412219f95dfb62d7d45297a56e1ef2462fbf21276e56d0baaea0af6206f92f5",
+      "docs/condensed/validation/ic15-native-handoff-2026-10-16.json": "1b8efaa1305c49f72551436f5988a07e2fddcaff7d7fd0ac768a4c28ec3398f2",
+      "docs/condensed/validation/os-reconciled-frontier-promotion-2026-10-16.json": "e70be928dc40fd8b230d56584d65f25c497e2116c207d90866e84ab5538d6028",
+      "docs/condensed/validation/os-midi-decoding-2026-10-16.json": "d76eb96c5bb6177983de13195cd8d19dd0b16c5149f47e28a07bf6f01895014a",
+      "docs/condensed/validation/os-controller-routing-2026-10-16.json": "a37035692b86074d18c359f459d7733efc734d0e9e300735740005767b2d56ee",
+      "docs/condensed/validation/os-controller-session-pair-2026-10-16.json": "fbe7c67ac5c50242807b5f607710a6c6d85875e6eb86363998992db715ed7d91",
+      "docs/condensed/validation/os-system-message-decoding-2026-10-16.json": "08c3b34796e94589ef6c26f0812d8f2f6c9ec63fd4cec0b9124388f2b218a1c2",
+      "docs/condensed/validation/os-transfer-lifecycle-2026-10-16.json": "dc9da9615f0bf70cba4a48413897858b2d2fc0e9774749804d00fb046f4ea142",
+      "docs/condensed/validation/os-owner-callees-2026-10-16.json": "ff2cf0b7ef42cafef2529556277b2b80c72b64a06d4ccece308ca8d57099bb27",
+      "docs/condensed/validation/os-transfer-fields-2026-10-16.json": "dcddd8c12b9154ba686fd73f3ee7501a90266448fae41e6002206dadd69ff9a5",
+      "docs/condensed/validation/os-transfer-addressing-2026-10-16.json": "d29d9c10561053a383dcea23261952a0a7edcd29eb4e9f70eba15f37ad80c133",
+      "docs/condensed/validation/os-postprocess-full-fields-2026-10-16.json": "033ec0fc54e955005c27b631219f2f622b8e7abdee6ad6c3ac1fee12fbf766d8",
+      "docs/condensed/validation/os-send-and-copy-helpers-2026-10-16.json": "36f7481435fef07a51cc40950030ffac4a41ca671af0e51f263916ad3087bf17",
+      "docs/condensed/validation/os-scsi-session-2026-10-16.json": "3454a8ef0b4d24c2ee89a2c5346f1b5d9e7a3aa19486adaea60221d18134e029",
+      "docs/condensed/validation/os-scsi-request-dma-2026-10-16.json": "49a6abb9eb36ea46f3d5ec74c2444fd75c843da19e037342c8ca7e1895304563",
+      "docs/condensed/validation/os-scsi-transfer-delete-2026-10-16.json": "93a46382c653af27d05fd011b435fd8546bc643362a71406bc94bfa4a60a8a14",
+      "docs/condensed/validation/os-panel-fdc-startup-2026-10-16.json": "5aeb975ebb9f60a2e2a0767e1e3b2165d81e4fdf7c7de927fbc78d64a885f6a0",
+      "docs/condensed/validation/os-eeprom-services-2026-10-16.json": "2f6b334100444bb2d7b175a79d3a5b3e5646d525a0da8c2fabeff465885e2eeb",
+      "docs/condensed/validation/os-startup-audio-2026-10-16.json": "3b3b3e2cb89dfeb6ab8ec81d86f7374ccb0bc8b6958b32ce4d641f473d542ca5",
+      "docs/condensed/validation/os-ui-event-ring-2026-10-16.json": "cf538e346ab3c8e612fc0f56cd6aba56a1d429b357478eb022fd65e9cb3ea57a",
+      "docs/condensed/validation/os-ui-preservation-2026-10-16.json": "18f680b3dd41d567024bcac78b5f2624c426c6e5daecc38c4293086d1a826c65",
+      "docs/condensed/validation/os-screen-descriptor-loader-2026-10-16.json": "a9c4356e5341c48dc41358eb62e677e1e61eea9f1b5ff76699f101ffea2d6a53",
+      "docs/condensed/validation/os-selection-refresh-2026-10-16.json": "33a16b583c4f0217a794d2d439f805bc81697ab994dadbfdd4834ad031815b19",
+      "docs/condensed/validation/os-fixed-screen-callbacks-2026-10-16.json": "39c6223ae467fe46a2194b231c3eac0f8088a04875932f1bf34cabe9f4306b4b",
+      "docs/condensed/validation/os-ui-field-callbacks-2026-10-16.json": "695f3f16ce9aee9b2885604361b2152705f28ae7f047ab73945205cc76c1edab",
+      "docs/condensed/validation/os-ui-field-border-2026-10-16.json": "92be737bfb72415f7231aa9159f9a38b2dd4f8a082366ca9f17724df3ce9d4d4",
+      "docs/condensed/validation/os-exploration-coverage-2026-10-16.json": "123c6615b637abfb5d17157dd243e53bd964d822f668a66210224d00c9793aa4"
+    },
+    "scope_sha256": "4a7d3fc2d141b7768f7b77fea5800aa7c435f5704f24517d582d974ebcb6abcb"
+  },
+  "combined": {
+    "rubric_version": "s760-functional-acceptance-v1",
+    "passed_gates": 82,
+    "total_gates": 156,
+    "percent": 52.56410256410256,
+    "formula": "(ROM passed gates + OS passed gates) / (ROM gates + OS gates); not an average of percentages or byte coverage",
+    "limitation": "Published scope acceptance only. Equal gates do not weight code size, effort, uncertainty or hardware fidelity."
+  },
+  "initial_baseline": true,
+  "overall_semantic_decoding_completion": "not yet quantifiable",
+  "initial_score_delta": null,
+  "byte_coverage_percentage_point_change": {
+    "os": 0,
+    "boot_rom": 0
+  }
+}

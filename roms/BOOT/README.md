@@ -32,7 +32,7 @@ roms/BOOT/Roland_S-760_v1.11.HEX   Intel HEX of the same
 
 ## User-supplied firmware
 
-Follow [firmware setup and distribution policy](../../docs/FIRMWARE_SETUP.md)
+Follow [firmware setup and distribution policy](../../docs/emulator/guides/firmware-setup.md)
 for the tested files, hashes and paths. Supply firmware separately with the
 necessary rights; this project does not bundle or automatically download it.
 The previous download recommendations and blanket ownership-based permission

@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(S760WindowsAudioQA LANGUAGES CXX)
+if(NOT WIN32)
+  message(FATAL_ERROR "Windows endpoint loopback QA requires Windows")
+endif()
+add_executable(windows_loopback windows-loopback.cpp)
+target_compile_features(windows_loopback PRIVATE cxx_std_17)
+target_link_libraries(windows_loopback PRIVATE ole32 uuid)

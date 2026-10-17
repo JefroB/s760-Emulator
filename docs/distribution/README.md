@@ -2,8 +2,13 @@
 
 This directory retains verbatim upstream notices, byte-identity provenance and
 the exact reviewed Windows standalone file manifest. See
-[the qualification](../DISTRIBUTION_QUALIFICATION.md) for the component decisions,
+[the qualification](../testing/distribution-qualification.md) for the component decisions,
 source rebuild, runtime acceptance and limits.
+
+The [2026-10-17 source-built standalone review](../testing/standalone-release-promotion.md)
+adds a second exact dated tree, GPLv3 ASIO source delivery and a clean rebuild of
+the engine and audio bridge. Historical manifests continue to identify only
+their own bytes. Clean-machine acceptance remains a separate gate.
 
 For a new candidate:
 

@@ -1,0 +1,3680 @@
+{
+  "waves": [
+    {
+      "regions_before": 65,
+      "new_call_sites": 92,
+      "new_destinations": 54
+    },
+    {
+      "regions_before": 119,
+      "new_call_sites": 9,
+      "new_destinations": 7
+    },
+    {
+      "regions_before": 126,
+      "new_call_sites": 0,
+      "new_destinations": 0
+    }
+  ],
+  "new_links": [
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 49788,
+        "target": "frontier_p10a_8d2c",
+        "destination": 36140,
+        "context": "Conditional execution of adjacent LD atC273, ST atC277 selecting0104=010A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file047D2C."
+      },
+      "instructions": [
+        {
+          "pc": 49779,
+          "page": 0,
+          "file_offset": 19059,
+          "bytes": "a10a011c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x10a"
+        },
+        {
+          "pc": 49783,
+          "page": 0,
+          "file_offset": 19063,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 49788,
+          "page": 0,
+          "file_offset": 19068,
+          "bytes": "efadca",
+          "mnemonic": "LCALL",
+          "operands": "0x8d2c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50195,
+        "target": "frontier_p3b_41d5",
+        "destination": 16853,
+        "context": "Conditional execution of adjacent LD atC40A, ST atC40E selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0135D5."
+      },
+      "instructions": [
+        {
+          "pc": 50186,
+          "page": 0,
+          "file_offset": 19466,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 50190,
+          "page": 0,
+          "file_offset": 19470,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50195,
+          "page": 0,
+          "file_offset": 19475,
+          "bytes": "efbf7d",
+          "mnemonic": "LCALL",
+          "operands": "0x141d5"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50222,
+        "target": "frontier_p4b_40b3",
+        "destination": 16563,
+        "context": "Conditional execution of adjacent LD atC425, ST atC429 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0174B3."
+      },
+      "instructions": [
+        {
+          "pc": 50213,
+          "page": 0,
+          "file_offset": 19493,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 50217,
+          "page": 0,
+          "file_offset": 19497,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50222,
+          "page": 0,
+          "file_offset": 19502,
+          "bytes": "ef827c",
+          "mnemonic": "LCALL",
+          "operands": "0x140b3"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50234,
+        "target": "frontier_p3b_5b54",
+        "destination": 23380,
+        "context": "Conditional execution of adjacent LD atC431, ST atC435 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F54."
+      },
+      "instructions": [
+        {
+          "pc": 50225,
+          "page": 0,
+          "file_offset": 19505,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 50229,
+          "page": 0,
+          "file_offset": 19509,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50234,
+          "page": 0,
+          "file_offset": 19514,
+          "bytes": "ef1797",
+          "mnemonic": "LCALL",
+          "operands": "0x5b54"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50718,
+        "target": "frontier_p3b_64c9",
+        "destination": 25801,
+        "context": "Conditional execution of adjacent LD atC615, ST atC619 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0158C9."
+      },
+      "instructions": [
+        {
+          "pc": 50709,
+          "page": 0,
+          "file_offset": 19989,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 50713,
+          "page": 0,
+          "file_offset": 19993,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50718,
+          "page": 0,
+          "file_offset": 19998,
+          "bytes": "efa89e",
+          "mnemonic": "LCALL",
+          "operands": "0x64c9"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50741,
+        "target": "frontier_p4b_451f",
+        "destination": 17695,
+        "context": "Conditional execution of adjacent LD atC62C, ST atC630 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01791F."
+      },
+      "instructions": [
+        {
+          "pc": 50732,
+          "page": 0,
+          "file_offset": 20012,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 50736,
+          "page": 0,
+          "file_offset": 20016,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50741,
+          "page": 0,
+          "file_offset": 20021,
+          "bytes": "efe77e",
+          "mnemonic": "LCALL",
+          "operands": "0x1451f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50757,
+        "target": "frontier_p3b_6fb0",
+        "destination": 28592,
+        "context": "Conditional execution of adjacent LD atC63C, ST atC640 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0163B0."
+      },
+      "instructions": [
+        {
+          "pc": 50748,
+          "page": 0,
+          "file_offset": 20028,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 50752,
+          "page": 0,
+          "file_offset": 20032,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50757,
+          "page": 0,
+          "file_offset": 20037,
+          "bytes": "ef68a9",
+          "mnemonic": "LCALL",
+          "operands": "0x6fb0"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50769,
+        "target": "frontier_p3b_73b4",
+        "destination": 29620,
+        "context": "Conditional execution of adjacent LD atC648, ST atC64C selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0167B4."
+      },
+      "instructions": [
+        {
+          "pc": 50760,
+          "page": 0,
+          "file_offset": 20040,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 50764,
+          "page": 0,
+          "file_offset": 20044,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50769,
+          "page": 0,
+          "file_offset": 20049,
+          "bytes": "ef60ad",
+          "mnemonic": "LCALL",
+          "operands": "0x73b4"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50781,
+        "target": "frontier_p4b_794a",
+        "destination": 31050,
+        "context": "Conditional execution of adjacent LD atC654, ST atC658 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01AD4A."
+      },
+      "instructions": [
+        {
+          "pc": 50772,
+          "page": 0,
+          "file_offset": 20052,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 50776,
+          "page": 0,
+          "file_offset": 20056,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 50781,
+          "page": 0,
+          "file_offset": 20061,
+          "bytes": "efeab2",
+          "mnemonic": "LCALL",
+          "operands": "0x794a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 50822,
+        "target": "frontier_p10a_8d2c",
+        "destination": 36140,
+        "context": "Conditional execution of adjacent LD atC67D, ST atC681 selecting0104=010A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file047D2C."
+      },
+      "instructions": [
+        {
+          "pc": 50813,
+          "page": 0,
+          "file_offset": 20093,
+          "bytes": "a10a011c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x10a"
+        },
+        {
+          "pc": 50817,
+          "page": 0,
+          "file_offset": 20097,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 50822,
+          "page": 0,
+          "file_offset": 20102,
+          "bytes": "efa3c6",
+          "mnemonic": "LCALL",
+          "operands": "0x8d2c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51083,
+        "target": "frontier_p4b_407f",
+        "destination": 16511,
+        "context": "Conditional execution of adjacent LD atC782, ST atC786 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01747F."
+      },
+      "instructions": [
+        {
+          "pc": 51074,
+          "page": 0,
+          "file_offset": 20354,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 51078,
+          "page": 0,
+          "file_offset": 20358,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 51083,
+          "page": 0,
+          "file_offset": 20363,
+          "bytes": "eff178",
+          "mnemonic": "LCALL",
+          "operands": "0x1407f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51095,
+        "target": "frontier_p3b_5b20",
+        "destination": 23328,
+        "context": "Conditional execution of adjacent LD atC78E, ST atC792 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F20."
+      },
+      "instructions": [
+        {
+          "pc": 51086,
+          "page": 0,
+          "file_offset": 20366,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 51090,
+          "page": 0,
+          "file_offset": 20370,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 51095,
+          "page": 0,
+          "file_offset": 20375,
+          "bytes": "ef8693",
+          "mnemonic": "LCALL",
+          "operands": "0x5b20"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51107,
+        "target": "frontier_p4b_59a2",
+        "destination": 22946,
+        "context": "Conditional execution of adjacent LD atC79A, ST atC79E selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018DA2."
+      },
+      "instructions": [
+        {
+          "pc": 51098,
+          "page": 0,
+          "file_offset": 20378,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 51102,
+          "page": 0,
+          "file_offset": 20382,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 51107,
+          "page": 0,
+          "file_offset": 20387,
+          "bytes": "effc91",
+          "mnemonic": "LCALL",
+          "operands": "0x59a2"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51263,
+        "target": "frontier_p166_8176",
+        "destination": 33142,
+        "context": "Conditional execution of adjacent LD atC836, ST atC83A selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file05E176."
+      },
+      "instructions": [
+        {
+          "pc": 51254,
+          "page": 0,
+          "file_offset": 20534,
+          "bytes": "a166011c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x166"
+        },
+        {
+          "pc": 51258,
+          "page": 0,
+          "file_offset": 20538,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 51263,
+          "page": 0,
+          "file_offset": 20543,
+          "bytes": "ef34b9",
+          "mnemonic": "LCALL",
+          "operands": "0x8176"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51285,
+        "target": "frontier_p166_8f11",
+        "destination": 36625,
+        "context": "Conditional execution of adjacent LD atC84C, ST atC850 selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file05EF11."
+      },
+      "instructions": [
+        {
+          "pc": 51276,
+          "page": 0,
+          "file_offset": 20556,
+          "bytes": "a166011c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x166"
+        },
+        {
+          "pc": 51280,
+          "page": 0,
+          "file_offset": 20560,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 51285,
+          "page": 0,
+          "file_offset": 20565,
+          "bytes": "efb9c6",
+          "mnemonic": "LCALL",
+          "operands": "0x8f11"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51297,
+        "target": "frontier_p166_8000",
+        "destination": 32768,
+        "context": "Conditional execution of adjacent LD atC858, ST atC85C selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file05E000."
+      },
+      "instructions": [
+        {
+          "pc": 51288,
+          "page": 0,
+          "file_offset": 20568,
+          "bytes": "a166011c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x166"
+        },
+        {
+          "pc": 51292,
+          "page": 0,
+          "file_offset": 20572,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 51297,
+          "page": 0,
+          "file_offset": 20577,
+          "bytes": "ef9cb7",
+          "mnemonic": "LCALL",
+          "operands": "0x8000"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51651,
+        "target": "frontier_p74_64ea",
+        "destination": 25834,
+        "context": "Conditional execution of adjacent LD atC9BA, ST atC9BE selecting0102=0074, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file023CEA."
+      },
+      "instructions": [
+        {
+          "pc": 51642,
+          "page": 0,
+          "file_offset": 20922,
+          "bytes": "a174001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x74"
+        },
+        {
+          "pc": 51646,
+          "page": 0,
+          "file_offset": 20926,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 51651,
+          "page": 0,
+          "file_offset": 20931,
+          "bytes": "ef249b",
+          "mnemonic": "LCALL",
+          "operands": "0x64ea"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51720,
+        "target": "frontier_pb1_aab1",
+        "destination": 43697,
+        "context": "Conditional execution of adjacent LD atC9FF, ST atCA03 selecting0104=00B1, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0336B1."
+      },
+      "instructions": [
+        {
+          "pc": 51711,
+          "page": 0,
+          "file_offset": 20991,
+          "bytes": "a1b1001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0xb1"
+        },
+        {
+          "pc": 51715,
+          "page": 0,
+          "file_offset": 20995,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 51720,
+          "page": 0,
+          "file_offset": 21000,
+          "bytes": "efa6e0",
+          "mnemonic": "LCALL",
+          "operands": "0xaab1"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51737,
+        "target": "frontier_p166_a10d",
+        "destination": 41229,
+        "context": "Conditional execution of adjacent LD atCA10, ST atCA14 selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file06010D."
+      },
+      "instructions": [
+        {
+          "pc": 51728,
+          "page": 0,
+          "file_offset": 21008,
+          "bytes": "a166011c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x166"
+        },
+        {
+          "pc": 51732,
+          "page": 0,
+          "file_offset": 21012,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 51737,
+          "page": 0,
+          "file_offset": 21017,
+          "bytes": "eff1d6",
+          "mnemonic": "LCALL",
+          "operands": "0xa10d"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 51783,
+        "target": "frontier_pb1_ae95",
+        "destination": 44693,
+        "context": "Conditional execution of adjacent LD atCA3E, ST atCA42 selecting0104=00B1, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file033A95."
+      },
+      "instructions": [
+        {
+          "pc": 51774,
+          "page": 0,
+          "file_offset": 21054,
+          "bytes": "a1b1001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0xb1"
+        },
+        {
+          "pc": 51778,
+          "page": 0,
+          "file_offset": 21058,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 51783,
+          "page": 0,
+          "file_offset": 21063,
+          "bytes": "ef4be4",
+          "mnemonic": "LCALL",
+          "operands": "0xae95"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 53093,
+        "target": "frontier_p4b_4000",
+        "destination": 16384,
+        "context": "Conditional execution of adjacent LD atCF5C, ST atCF60 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file017400."
+      },
+      "instructions": [
+        {
+          "pc": 53084,
+          "page": 0,
+          "file_offset": 22364,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 53088,
+          "page": 0,
+          "file_offset": 22368,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 53093,
+          "page": 0,
+          "file_offset": 22373,
+          "bytes": "ef9870",
+          "mnemonic": "LCALL",
+          "operands": "0x14000"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 53324,
+        "target": "frontier_p4b_5b6f",
+        "destination": 23407,
+        "context": "Conditional execution of adjacent LD atD043, ST atD047 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+      },
+      "instructions": [
+        {
+          "pc": 53315,
+          "page": 0,
+          "file_offset": 22595,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 53319,
+          "page": 0,
+          "file_offset": 22599,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 53324,
+          "page": 0,
+          "file_offset": 22604,
+          "bytes": "ef208b",
+          "mnemonic": "LCALL",
+          "operands": "0x5b6f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 53680,
+        "target": "frontier_p4b_61d1",
+        "destination": 25041,
+        "context": "Conditional execution of adjacent LD atD1A7, ST atD1AB selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0195D1."
+      },
+      "instructions": [
+        {
+          "pc": 53671,
+          "page": 0,
+          "file_offset": 22951,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 53675,
+          "page": 0,
+          "file_offset": 22955,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 53680,
+          "page": 0,
+          "file_offset": 22960,
+          "bytes": "ef1e90",
+          "mnemonic": "LCALL",
+          "operands": "0x61d1"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 53695,
+        "target": "frontier_p4b_62d4",
+        "destination": 25300,
+        "context": "Conditional execution of adjacent LD atD1B6, ST atD1BA selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0196D4."
+      },
+      "instructions": [
+        {
+          "pc": 53686,
+          "page": 0,
+          "file_offset": 22966,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 53690,
+          "page": 0,
+          "file_offset": 22970,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 53695,
+          "page": 0,
+          "file_offset": 22975,
+          "bytes": "ef1291",
+          "mnemonic": "LCALL",
+          "operands": "0x62d4"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 53903,
+        "target": "frontier_p3b_45fe",
+        "destination": 17918,
+        "context": "Conditional execution of adjacent LD atD286, ST atD28A selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0139FE."
+      },
+      "instructions": [
+        {
+          "pc": 53894,
+          "page": 0,
+          "file_offset": 23174,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 53898,
+          "page": 0,
+          "file_offset": 23178,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 53903,
+          "page": 0,
+          "file_offset": 23183,
+          "bytes": "ef6c73",
+          "mnemonic": "LCALL",
+          "operands": "0x145fe"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 57067,
+        "target": "frontier_p4b_5601",
+        "destination": 22017,
+        "context": "Conditional execution of adjacent LD atDEE2, ST atDEE6 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018A01."
+      },
+      "instructions": [
+        {
+          "pc": 57058,
+          "page": 0,
+          "file_offset": 26338,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57062,
+          "page": 0,
+          "file_offset": 26342,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57067,
+          "page": 0,
+          "file_offset": 26347,
+          "bytes": "ef1377",
+          "mnemonic": "LCALL",
+          "operands": "0x15601"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 57081,
+        "target": "frontier_p4b_58ab",
+        "destination": 22699,
+        "context": "Conditional execution of adjacent LD atDEF0, ST atDEF4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018CAB."
+      },
+      "instructions": [
+        {
+          "pc": 57072,
+          "page": 0,
+          "file_offset": 26352,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57076,
+          "page": 0,
+          "file_offset": 26356,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57081,
+          "page": 0,
+          "file_offset": 26361,
+          "bytes": "efaf79",
+          "mnemonic": "LCALL",
+          "operands": "0x158ab"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 57130,
+        "target": "frontier_p4b_597b",
+        "destination": 22907,
+        "context": "Conditional execution of adjacent LD atDF21, ST atDF25 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D7B."
+      },
+      "instructions": [
+        {
+          "pc": 57121,
+          "page": 0,
+          "file_offset": 26401,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57125,
+          "page": 0,
+          "file_offset": 26405,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57130,
+          "page": 0,
+          "file_offset": 26410,
+          "bytes": "ef4e7a",
+          "mnemonic": "LCALL",
+          "operands": "0x1597b"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 57149,
+        "target": "frontier_p4b_598b",
+        "destination": 22923,
+        "context": "Conditional execution of adjacent LD atDF34, ST atDF38 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D8B."
+      },
+      "instructions": [
+        {
+          "pc": 57140,
+          "page": 0,
+          "file_offset": 26420,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57144,
+          "page": 0,
+          "file_offset": 26424,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57149,
+          "page": 0,
+          "file_offset": 26429,
+          "bytes": "ef4b7a",
+          "mnemonic": "LCALL",
+          "operands": "0x1598b"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 57207,
+        "target": "frontier_p3b_41f7",
+        "destination": 16887,
+        "context": "Conditional execution of adjacent LD atDF6E, ST atDF72 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0135F7."
+      },
+      "instructions": [
+        {
+          "pc": 57198,
+          "page": 0,
+          "file_offset": 26478,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 57202,
+          "page": 0,
+          "file_offset": 26482,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57207,
+          "page": 0,
+          "file_offset": 26487,
+          "bytes": "ef7d62",
+          "mnemonic": "LCALL",
+          "operands": "0x141f7"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 57263,
+        "target": "frontier_p1f_54a3",
+        "destination": 21667,
+        "context": "Conditional execution of adjacent LD atDFA6, ST atDFAA selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D8A3."
+      },
+      "instructions": [
+        {
+          "pc": 57254,
+          "page": 0,
+          "file_offset": 26534,
+          "bytes": "a11f001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x1f"
+        },
+        {
+          "pc": 57258,
+          "page": 0,
+          "file_offset": 26538,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57263,
+          "page": 0,
+          "file_offset": 26543,
+          "bytes": "eff174",
+          "mnemonic": "LCALL",
+          "operands": "0x154a3"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 57297,
+        "target": "frontier_p1f_5388",
+        "destination": 21384,
+        "context": "Conditional execution of adjacent LD atDFC8, ST atDFCC selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D788."
+      },
+      "instructions": [
+        {
+          "pc": 57288,
+          "page": 0,
+          "file_offset": 26568,
+          "bytes": "a11f001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x1f"
+        },
+        {
+          "pc": 57292,
+          "page": 0,
+          "file_offset": 26572,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57297,
+          "page": 0,
+          "file_offset": 26577,
+          "bytes": "efb473",
+          "mnemonic": "LCALL",
+          "operands": "0x15388"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 62863,
+        "target": "frontier_p4b_5b6f",
+        "destination": 23407,
+        "context": "Conditional execution of adjacent LD atF586, ST atF58A selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+      },
+      "instructions": [
+        {
+          "pc": 62854,
+          "page": 0,
+          "file_offset": 32134,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 62858,
+          "page": 0,
+          "file_offset": 32138,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 62863,
+          "page": 0,
+          "file_offset": 32143,
+          "bytes": "efdd65",
+          "mnemonic": "LCALL",
+          "operands": "0x15b6f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 63005,
+        "target": "frontier_p3b_489c",
+        "destination": 18588,
+        "context": "Conditional execution of adjacent LD atF614, ST atF618 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file013C9C."
+      },
+      "instructions": [
+        {
+          "pc": 62996,
+          "page": 0,
+          "file_offset": 32276,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 63000,
+          "page": 0,
+          "file_offset": 32280,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63005,
+          "page": 0,
+          "file_offset": 32285,
+          "bytes": "ef7c52",
+          "mnemonic": "LCALL",
+          "operands": "0x1489c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 63133,
+        "target": "frontier_p4b_40b3",
+        "destination": 16563,
+        "context": "Conditional execution of adjacent LD atF694, ST atF698 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0174B3."
+      },
+      "instructions": [
+        {
+          "pc": 63124,
+          "page": 0,
+          "file_offset": 32404,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 63128,
+          "page": 0,
+          "file_offset": 32408,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63133,
+          "page": 0,
+          "file_offset": 32413,
+          "bytes": "ef134a",
+          "mnemonic": "LCALL",
+          "operands": "0x140b3"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 63145,
+        "target": "frontier_p3b_5b54",
+        "destination": 23380,
+        "context": "Conditional execution of adjacent LD atF6A0, ST atF6A4 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F54."
+      },
+      "instructions": [
+        {
+          "pc": 63136,
+          "page": 0,
+          "file_offset": 32416,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 63140,
+          "page": 0,
+          "file_offset": 32420,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63145,
+          "page": 0,
+          "file_offset": 32425,
+          "bytes": "efa864",
+          "mnemonic": "LCALL",
+          "operands": "0x15b54"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "os_handoff_and_interrupts",
+        "pc": 63177,
+        "target": "frontier_p4b_59a2",
+        "destination": 22946,
+        "context": "Conditional execution of adjacent LD atF6C0, ST atF6C4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018DA2."
+      },
+      "instructions": [
+        {
+          "pc": 63168,
+          "page": 0,
+          "file_offset": 32448,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 63172,
+          "page": 0,
+          "file_offset": 32452,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63177,
+          "page": 0,
+          "file_offset": 32457,
+          "bytes": "efd662",
+          "mnemonic": "LCALL",
+          "operands": "0x159a2"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "transfer_owner",
+        "pc": 34808,
+        "target": "frontier_p3b_6f8a",
+        "destination": 28554,
+        "context": "Conditional execution of adjacent LD at87EF, ST at87F3 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01638A."
+      },
+      "instructions": [
+        {
+          "pc": 34799,
+          "page": 358,
+          "file_offset": 387055,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 34803,
+          "page": 358,
+          "file_offset": 387059,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34808,
+          "page": 358,
+          "file_offset": 387064,
+          "bytes": "ef8fe7",
+          "mnemonic": "LCALL",
+          "operands": "0x6f8a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "transfer_owner",
+        "pc": 34964,
+        "target": "frontier_p4b_4713",
+        "destination": 18195,
+        "context": "Conditional execution of adjacent LD at888B, ST at888F selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file017B13."
+      },
+      "instructions": [
+        {
+          "pc": 34955,
+          "page": 358,
+          "file_offset": 387211,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 34959,
+          "page": 358,
+          "file_offset": 387215,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34964,
+          "page": 358,
+          "file_offset": 387220,
+          "bytes": "ef7cbe",
+          "mnemonic": "LCALL",
+          "operands": "0x4713"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "transfer_owner",
+        "pc": 34987,
+        "target": "frontier_p3b_6698",
+        "destination": 26264,
+        "context": "Conditional execution of adjacent LD at88A2, ST at88A6 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file015A98."
+      },
+      "instructions": [
+        {
+          "pc": 34978,
+          "page": 358,
+          "file_offset": 387234,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 34982,
+          "page": 358,
+          "file_offset": 387238,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34987,
+          "page": 358,
+          "file_offset": 387243,
+          "bytes": "efeadd",
+          "mnemonic": "LCALL",
+          "operands": "0x6698"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "scsi_session_service",
+        "pc": 36228,
+        "target": "frontier_p3b_6f8a",
+        "destination": 28554,
+        "context": "Conditional execution of adjacent LD at8D7B, ST at8D7F selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01638A."
+      },
+      "instructions": [
+        {
+          "pc": 36219,
+          "page": 358,
+          "file_offset": 388475,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 36223,
+          "page": 358,
+          "file_offset": 388479,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 36228,
+          "page": 358,
+          "file_offset": 388484,
+          "bytes": "ef03e2",
+          "mnemonic": "LCALL",
+          "operands": "0x6f8a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 53931,
+        "target": "frontier_p4b_4000",
+        "destination": 16384,
+        "context": "Conditional execution of adjacent LD atD2A2, ST atD2A6 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file017400."
+      },
+      "instructions": [
+        {
+          "pc": 53922,
+          "page": 0,
+          "file_offset": 23202,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 53926,
+          "page": 0,
+          "file_offset": 23206,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 53931,
+          "page": 0,
+          "file_offset": 23211,
+          "bytes": "ef526d",
+          "mnemonic": "LCALL",
+          "operands": "0x14000"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 54169,
+        "target": "frontier_p4b_4000",
+        "destination": 16384,
+        "context": "Conditional execution of adjacent LD atD390, ST atD394 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file017400."
+      },
+      "instructions": [
+        {
+          "pc": 54160,
+          "page": 0,
+          "file_offset": 23440,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 54164,
+          "page": 0,
+          "file_offset": 23444,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 54169,
+          "page": 0,
+          "file_offset": 23449,
+          "bytes": "ef646c",
+          "mnemonic": "LCALL",
+          "operands": "0x14000"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 54302,
+        "target": "frontier_p4b_65b6",
+        "destination": 26038,
+        "context": "Conditional execution of adjacent LD atD415, ST atD419 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0199B6."
+      },
+      "instructions": [
+        {
+          "pc": 54293,
+          "page": 0,
+          "file_offset": 23573,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 54297,
+          "page": 0,
+          "file_offset": 23577,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 54302,
+          "page": 0,
+          "file_offset": 23582,
+          "bytes": "ef9591",
+          "mnemonic": "LCALL",
+          "operands": "0x65b6"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 54384,
+        "target": "frontier_p4b_5b6f",
+        "destination": 23407,
+        "context": "Conditional execution of adjacent LD atD467, ST atD46B selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+      },
+      "instructions": [
+        {
+          "pc": 54375,
+          "page": 0,
+          "file_offset": 23655,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 54379,
+          "page": 0,
+          "file_offset": 23659,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 54384,
+          "page": 0,
+          "file_offset": 23664,
+          "bytes": "effc86",
+          "mnemonic": "LCALL",
+          "operands": "0x5b6f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 55449,
+        "target": "frontier_p4b_5b6f",
+        "destination": 23407,
+        "context": "Conditional execution of adjacent LD atD890, ST atD894 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+      },
+      "instructions": [
+        {
+          "pc": 55440,
+          "page": 0,
+          "file_offset": 24720,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 55444,
+          "page": 0,
+          "file_offset": 24724,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 55449,
+          "page": 0,
+          "file_offset": 24729,
+          "bytes": "efd382",
+          "mnemonic": "LCALL",
+          "operands": "0x5b6f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 55623,
+        "target": "frontier_p3b_6d2f",
+        "destination": 27951,
+        "context": "Conditional execution of adjacent LD atD93E, ST atD942 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01612F."
+      },
+      "instructions": [
+        {
+          "pc": 55614,
+          "page": 0,
+          "file_offset": 24894,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 55618,
+          "page": 0,
+          "file_offset": 24898,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 55623,
+          "page": 0,
+          "file_offset": 24903,
+          "bytes": "efe593",
+          "mnemonic": "LCALL",
+          "operands": "0x6d2f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 55637,
+        "target": "frontier_p4b_61d1",
+        "destination": 25041,
+        "context": "Conditional execution of adjacent LD atD94C, ST atD950 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0195D1."
+      },
+      "instructions": [
+        {
+          "pc": 55628,
+          "page": 0,
+          "file_offset": 24908,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 55632,
+          "page": 0,
+          "file_offset": 24912,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 55637,
+          "page": 0,
+          "file_offset": 24917,
+          "bytes": "ef7988",
+          "mnemonic": "LCALL",
+          "operands": "0x61d1"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 55650,
+        "target": "frontier_p4b_64d0",
+        "destination": 25808,
+        "context": "Conditional execution of adjacent LD atD959, ST atD95D selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0198D0."
+      },
+      "instructions": [
+        {
+          "pc": 55641,
+          "page": 0,
+          "file_offset": 24921,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 55645,
+          "page": 0,
+          "file_offset": 24925,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 55650,
+          "page": 0,
+          "file_offset": 24930,
+          "bytes": "ef6b8b",
+          "mnemonic": "LCALL",
+          "operands": "0x64d0"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 55954,
+        "target": "frontier_p3b_45fe",
+        "destination": 17918,
+        "context": "Conditional execution of adjacent LD atDA89, ST atDA8D selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0139FE."
+      },
+      "instructions": [
+        {
+          "pc": 55945,
+          "page": 0,
+          "file_offset": 25225,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 55949,
+          "page": 0,
+          "file_offset": 25229,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 55954,
+          "page": 0,
+          "file_offset": 25234,
+          "bytes": "ef696b",
+          "mnemonic": "LCALL",
+          "operands": "0x145fe"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 56151,
+        "target": "frontier_p4b_6698",
+        "destination": 26264,
+        "context": "Conditional execution of adjacent LD atDB4E, ST atDB52 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file019A98."
+      },
+      "instructions": [
+        {
+          "pc": 56142,
+          "page": 0,
+          "file_offset": 25422,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 56146,
+          "page": 0,
+          "file_offset": 25426,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 56151,
+          "page": 0,
+          "file_offset": 25431,
+          "bytes": "ef3e8b",
+          "mnemonic": "LCALL",
+          "operands": "0x6698"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 56233,
+        "target": "frontier_p4b_5b6f",
+        "destination": 23407,
+        "context": "Conditional execution of adjacent LD atDBA0, ST atDBA4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+      },
+      "instructions": [
+        {
+          "pc": 56224,
+          "page": 0,
+          "file_offset": 25504,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 56228,
+          "page": 0,
+          "file_offset": 25508,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 56233,
+          "page": 0,
+          "file_offset": 25513,
+          "bytes": "efc37f",
+          "mnemonic": "LCALL",
+          "operands": "0x15b6f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 56691,
+        "target": "frontier_p3b_6f8a",
+        "destination": 28554,
+        "context": "Conditional execution of adjacent LD atDD6A, ST atDD6E selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+      },
+      "instructions": [
+        {
+          "pc": 56682,
+          "page": 0,
+          "file_offset": 25962,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 56686,
+          "page": 0,
+          "file_offset": 25966,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 56691,
+          "page": 0,
+          "file_offset": 25971,
+          "bytes": "ef1492",
+          "mnemonic": "LCALL",
+          "operands": "0x6f8a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 56828,
+        "target": "frontier_p3b_6f8a",
+        "destination": 28554,
+        "context": "Conditional execution of adjacent LD atDDF3, ST atDDF7 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+      },
+      "instructions": [
+        {
+          "pc": 56819,
+          "page": 0,
+          "file_offset": 26099,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 56823,
+          "page": 0,
+          "file_offset": 26103,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 56828,
+          "page": 0,
+          "file_offset": 26108,
+          "bytes": "ef8b91",
+          "mnemonic": "LCALL",
+          "operands": "0x6f8a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 56906,
+        "target": "frontier_p3b_6f8a",
+        "destination": 28554,
+        "context": "Conditional execution of adjacent LD atDE41, ST atDE45 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+      },
+      "instructions": [
+        {
+          "pc": 56897,
+          "page": 0,
+          "file_offset": 26177,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 56901,
+          "page": 0,
+          "file_offset": 26181,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 56906,
+          "page": 0,
+          "file_offset": 26186,
+          "bytes": "ef3d91",
+          "mnemonic": "LCALL",
+          "operands": "0x6f8a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 56984,
+        "target": "frontier_p3b_6f8a",
+        "destination": 28554,
+        "context": "Conditional execution of adjacent LD atDE8F, ST atDE93 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+      },
+      "instructions": [
+        {
+          "pc": 56975,
+          "page": 0,
+          "file_offset": 26255,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 56979,
+          "page": 0,
+          "file_offset": 26259,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 56984,
+          "page": 0,
+          "file_offset": 26264,
+          "bytes": "efef90",
+          "mnemonic": "LCALL",
+          "operands": "0x6f8a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 57067,
+        "target": "frontier_p4b_5601",
+        "destination": 22017,
+        "context": "Conditional execution of adjacent LD atDEE2, ST atDEE6 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018A01."
+      },
+      "instructions": [
+        {
+          "pc": 57058,
+          "page": 0,
+          "file_offset": 26338,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57062,
+          "page": 0,
+          "file_offset": 26342,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57067,
+          "page": 0,
+          "file_offset": 26347,
+          "bytes": "ef1377",
+          "mnemonic": "LCALL",
+          "operands": "0x15601"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 57081,
+        "target": "frontier_p4b_58ab",
+        "destination": 22699,
+        "context": "Conditional execution of adjacent LD atDEF0, ST atDEF4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018CAB."
+      },
+      "instructions": [
+        {
+          "pc": 57072,
+          "page": 0,
+          "file_offset": 26352,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57076,
+          "page": 0,
+          "file_offset": 26356,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57081,
+          "page": 0,
+          "file_offset": 26361,
+          "bytes": "efaf79",
+          "mnemonic": "LCALL",
+          "operands": "0x158ab"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 57130,
+        "target": "frontier_p4b_597b",
+        "destination": 22907,
+        "context": "Conditional execution of adjacent LD atDF21, ST atDF25 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D7B."
+      },
+      "instructions": [
+        {
+          "pc": 57121,
+          "page": 0,
+          "file_offset": 26401,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57125,
+          "page": 0,
+          "file_offset": 26405,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57130,
+          "page": 0,
+          "file_offset": 26410,
+          "bytes": "ef4e7a",
+          "mnemonic": "LCALL",
+          "operands": "0x1597b"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 57149,
+        "target": "frontier_p4b_598b",
+        "destination": 22923,
+        "context": "Conditional execution of adjacent LD atDF34, ST atDF38 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D8B."
+      },
+      "instructions": [
+        {
+          "pc": 57140,
+          "page": 0,
+          "file_offset": 26420,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 57144,
+          "page": 0,
+          "file_offset": 26424,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57149,
+          "page": 0,
+          "file_offset": 26429,
+          "bytes": "ef4b7a",
+          "mnemonic": "LCALL",
+          "operands": "0x1598b"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 57207,
+        "target": "frontier_p3b_41f7",
+        "destination": 16887,
+        "context": "Conditional execution of adjacent LD atDF6E, ST atDF72 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0135F7."
+      },
+      "instructions": [
+        {
+          "pc": 57198,
+          "page": 0,
+          "file_offset": 26478,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 57202,
+          "page": 0,
+          "file_offset": 26482,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57207,
+          "page": 0,
+          "file_offset": 26487,
+          "bytes": "ef7d62",
+          "mnemonic": "LCALL",
+          "operands": "0x141f7"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 57263,
+        "target": "frontier_p1f_54a3",
+        "destination": 21667,
+        "context": "Conditional execution of adjacent LD atDFA6, ST atDFAA selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D8A3."
+      },
+      "instructions": [
+        {
+          "pc": 57254,
+          "page": 0,
+          "file_offset": 26534,
+          "bytes": "a11f001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x1f"
+        },
+        {
+          "pc": 57258,
+          "page": 0,
+          "file_offset": 26538,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57263,
+          "page": 0,
+          "file_offset": 26543,
+          "bytes": "eff174",
+          "mnemonic": "LCALL",
+          "operands": "0x154a3"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 57297,
+        "target": "frontier_p1f_5388",
+        "destination": 21384,
+        "context": "Conditional execution of adjacent LD atDFC8, ST atDFCC selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D788."
+      },
+      "instructions": [
+        {
+          "pc": 57288,
+          "page": 0,
+          "file_offset": 26568,
+          "bytes": "a11f001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x1f"
+        },
+        {
+          "pc": 57292,
+          "page": 0,
+          "file_offset": 26572,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 57297,
+          "page": 0,
+          "file_offset": 26577,
+          "bytes": "efb473",
+          "mnemonic": "LCALL",
+          "operands": "0x15388"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 58591,
+        "target": "frontier_p3b_489c",
+        "destination": 18588,
+        "context": "Conditional execution of adjacent LD atE4D6, ST atE4DA selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file013C9C."
+      },
+      "instructions": [
+        {
+          "pc": 58582,
+          "page": 0,
+          "file_offset": 27862,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 58586,
+          "page": 0,
+          "file_offset": 27866,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 58591,
+          "page": 0,
+          "file_offset": 27871,
+          "bytes": "efba63",
+          "mnemonic": "LCALL",
+          "operands": "0x1489c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59337,
+        "target": "frontier_p3b_6214",
+        "destination": 25108,
+        "context": "Conditional execution of adjacent LD atE7C0, ST atE7C4 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015614."
+      },
+      "instructions": [
+        {
+          "pc": 59328,
+          "page": 0,
+          "file_offset": 28608,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 59332,
+          "page": 0,
+          "file_offset": 28612,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59337,
+          "page": 0,
+          "file_offset": 28617,
+          "bytes": "ef487a",
+          "mnemonic": "LCALL",
+          "operands": "0x16214"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59358,
+        "target": "frontier_p3b_6294",
+        "destination": 25236,
+        "context": "Conditional execution of adjacent LD atE7D5, ST atE7D9 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015694."
+      },
+      "instructions": [
+        {
+          "pc": 59349,
+          "page": 0,
+          "file_offset": 28629,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 59353,
+          "page": 0,
+          "file_offset": 28633,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59358,
+          "page": 0,
+          "file_offset": 28638,
+          "bytes": "efb37a",
+          "mnemonic": "LCALL",
+          "operands": "0x16294"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59417,
+        "target": "frontier_p3b_6214",
+        "destination": 25108,
+        "context": "Conditional execution of adjacent LD atE810, ST atE814 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015614."
+      },
+      "instructions": [
+        {
+          "pc": 59408,
+          "page": 0,
+          "file_offset": 28688,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 59412,
+          "page": 0,
+          "file_offset": 28692,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59417,
+          "page": 0,
+          "file_offset": 28697,
+          "bytes": "eff879",
+          "mnemonic": "LCALL",
+          "operands": "0x16214"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59438,
+        "target": "frontier_p3b_6294",
+        "destination": 25236,
+        "context": "Conditional execution of adjacent LD atE825, ST atE829 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015694."
+      },
+      "instructions": [
+        {
+          "pc": 59429,
+          "page": 0,
+          "file_offset": 28709,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 59433,
+          "page": 0,
+          "file_offset": 28713,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59438,
+          "page": 0,
+          "file_offset": 28718,
+          "bytes": "ef637a",
+          "mnemonic": "LCALL",
+          "operands": "0x16294"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59484,
+        "target": "frontier_p4b_4ce2",
+        "destination": 19682,
+        "context": "Conditional execution of adjacent LD atE853, ST atE857 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0180E2."
+      },
+      "instructions": [
+        {
+          "pc": 59475,
+          "page": 0,
+          "file_offset": 28755,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 59479,
+          "page": 0,
+          "file_offset": 28759,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59484,
+          "page": 0,
+          "file_offset": 28764,
+          "bytes": "ef8364",
+          "mnemonic": "LCALL",
+          "operands": "0x14ce2"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59505,
+        "target": "frontier_p4b_4c3c",
+        "destination": 19516,
+        "context": "Conditional execution of adjacent LD atE868, ST atE86C selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01803C."
+      },
+      "instructions": [
+        {
+          "pc": 59496,
+          "page": 0,
+          "file_offset": 28776,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 59500,
+          "page": 0,
+          "file_offset": 28780,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59505,
+          "page": 0,
+          "file_offset": 28785,
+          "bytes": "efc863",
+          "mnemonic": "LCALL",
+          "operands": "0x14c3c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59564,
+        "target": "frontier_p4b_4ce2",
+        "destination": 19682,
+        "context": "Conditional execution of adjacent LD atE8A3, ST atE8A7 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0180E2."
+      },
+      "instructions": [
+        {
+          "pc": 59555,
+          "page": 0,
+          "file_offset": 28835,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 59559,
+          "page": 0,
+          "file_offset": 28839,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59564,
+          "page": 0,
+          "file_offset": 28844,
+          "bytes": "ef3364",
+          "mnemonic": "LCALL",
+          "operands": "0x14ce2"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59585,
+        "target": "frontier_p4b_4c3c",
+        "destination": 19516,
+        "context": "Conditional execution of adjacent LD atE8B8, ST atE8BC selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01803C."
+      },
+      "instructions": [
+        {
+          "pc": 59576,
+          "page": 0,
+          "file_offset": 28856,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 59580,
+          "page": 0,
+          "file_offset": 28860,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59585,
+          "page": 0,
+          "file_offset": 28865,
+          "bytes": "ef7863",
+          "mnemonic": "LCALL",
+          "operands": "0x14c3c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59767,
+        "target": "frontier_p129_acdd",
+        "destination": 44253,
+        "context": "Conditional execution of adjacent LD atE96E, ST atE972 selecting0104=0129, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0518DD."
+      },
+      "instructions": [
+        {
+          "pc": 59758,
+          "page": 0,
+          "file_offset": 29038,
+          "bytes": "a129011c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x129"
+        },
+        {
+          "pc": 59762,
+          "page": 0,
+          "file_offset": 29042,
+          "bytes": "c30104011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x104, TABLE[ZR]"
+        },
+        {
+          "pc": 59767,
+          "page": 0,
+          "file_offset": 29047,
+          "bytes": "ef63c3",
+          "mnemonic": "LCALL",
+          "operands": "0xacdd"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 59931,
+        "target": "frontier_p3b_6065",
+        "destination": 24677,
+        "context": "Conditional execution of adjacent LD atEA12, ST atEA16 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015465."
+      },
+      "instructions": [
+        {
+          "pc": 59922,
+          "page": 0,
+          "file_offset": 29202,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 59926,
+          "page": 0,
+          "file_offset": 29206,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 59931,
+          "page": 0,
+          "file_offset": 29211,
+          "bytes": "ef4776",
+          "mnemonic": "LCALL",
+          "operands": "0x16065"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 61750,
+        "target": "frontier_p3b_6f8a",
+        "destination": 28554,
+        "context": "Conditional execution of adjacent LD atF12D, ST atF131 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+      },
+      "instructions": [
+        {
+          "pc": 61741,
+          "page": 0,
+          "file_offset": 31021,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 61745,
+          "page": 0,
+          "file_offset": 31025,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 61750,
+          "page": 0,
+          "file_offset": 31030,
+          "bytes": "ef517e",
+          "mnemonic": "LCALL",
+          "operands": "0x16f8a"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 62863,
+        "target": "frontier_p4b_5b6f",
+        "destination": 23407,
+        "context": "Conditional execution of adjacent LD atF586, ST atF58A selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+      },
+      "instructions": [
+        {
+          "pc": 62854,
+          "page": 0,
+          "file_offset": 32134,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 62858,
+          "page": 0,
+          "file_offset": 32138,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 62863,
+          "page": 0,
+          "file_offset": 32143,
+          "bytes": "efdd65",
+          "mnemonic": "LCALL",
+          "operands": "0x15b6f"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 63005,
+        "target": "frontier_p3b_489c",
+        "destination": 18588,
+        "context": "Conditional execution of adjacent LD atF614, ST atF618 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file013C9C."
+      },
+      "instructions": [
+        {
+          "pc": 62996,
+          "page": 0,
+          "file_offset": 32276,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 63000,
+          "page": 0,
+          "file_offset": 32280,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63005,
+          "page": 0,
+          "file_offset": 32285,
+          "bytes": "ef7c52",
+          "mnemonic": "LCALL",
+          "operands": "0x1489c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 63133,
+        "target": "frontier_p4b_40b3",
+        "destination": 16563,
+        "context": "Conditional execution of adjacent LD atF694, ST atF698 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0174B3."
+      },
+      "instructions": [
+        {
+          "pc": 63124,
+          "page": 0,
+          "file_offset": 32404,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 63128,
+          "page": 0,
+          "file_offset": 32408,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63133,
+          "page": 0,
+          "file_offset": 32413,
+          "bytes": "ef134a",
+          "mnemonic": "LCALL",
+          "operands": "0x140b3"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 63145,
+        "target": "frontier_p3b_5b54",
+        "destination": 23380,
+        "context": "Conditional execution of adjacent LD atF6A0, ST atF6A4 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F54."
+      },
+      "instructions": [
+        {
+          "pc": 63136,
+          "page": 0,
+          "file_offset": 32416,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 63140,
+          "page": 0,
+          "file_offset": 32420,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63145,
+          "page": 0,
+          "file_offset": 32425,
+          "bytes": "efa864",
+          "mnemonic": "LCALL",
+          "operands": "0x15b54"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "resident_event_service",
+        "pc": 63177,
+        "target": "frontier_p4b_59a2",
+        "destination": 22946,
+        "context": "Conditional execution of adjacent LD atF6C0, ST atF6C4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018DA2."
+      },
+      "instructions": [
+        {
+          "pc": 63168,
+          "page": 0,
+          "file_offset": 32448,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 63172,
+          "page": 0,
+          "file_offset": 32452,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 63177,
+          "page": 0,
+          "file_offset": 32457,
+          "bytes": "efd662",
+          "mnemonic": "LCALL",
+          "operands": "0x159a2"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "ui_descriptor_event_callbacks",
+        "pc": 40264,
+        "target": "frontier_p3b_6698",
+        "destination": 26264,
+        "context": "Conditional execution of adjacent LD at9D3F, ST at9D43 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file015A98."
+      },
+      "instructions": [
+        {
+          "pc": 40255,
+          "page": 492,
+          "file_offset": 529727,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 40259,
+          "page": 492,
+          "file_offset": 529731,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 40264,
+          "page": 492,
+          "file_offset": 529736,
+          "bytes": "ef4dc9",
+          "mnemonic": "LCALL",
+          "operands": "0x6698"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "ui_descriptor_event_callbacks",
+        "pc": 40281,
+        "target": "frontier_p4b_4713",
+        "destination": 18195,
+        "context": "Conditional execution of adjacent LD at9D50, ST at9D54 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file017B13."
+      },
+      "instructions": [
+        {
+          "pc": 40272,
+          "page": 492,
+          "file_offset": 529744,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 40276,
+          "page": 492,
+          "file_offset": 529748,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 40281,
+          "page": 492,
+          "file_offset": 529753,
+          "bytes": "efb7a9",
+          "mnemonic": "LCALL",
+          "operands": "0x4713"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "ui_descriptor_event_callbacks",
+        "pc": 40316,
+        "target": "frontier_p3b_680c",
+        "destination": 26636,
+        "context": "Conditional execution of adjacent LD at9D73, ST at9D77 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file015C0C."
+      },
+      "instructions": [
+        {
+          "pc": 40307,
+          "page": 492,
+          "file_offset": 529779,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 40311,
+          "page": 492,
+          "file_offset": 529783,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 40316,
+          "page": 492,
+          "file_offset": 529788,
+          "bytes": "ef8dca",
+          "mnemonic": "LCALL",
+          "operands": "0x680c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "ui_descriptor_event_callbacks",
+        "pc": 40344,
+        "target": "frontier_p4b_48b3",
+        "destination": 18611,
+        "context": "Conditional execution of adjacent LD at9D8F, ST at9D93 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file017CB3."
+      },
+      "instructions": [
+        {
+          "pc": 40335,
+          "page": 492,
+          "file_offset": 529807,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 40339,
+          "page": 492,
+          "file_offset": 529811,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 40344,
+          "page": 492,
+          "file_offset": 529816,
+          "bytes": "ef18ab",
+          "mnemonic": "LCALL",
+          "operands": "0x48b3"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 32895,
+        "target": "frontier_p4b_46a8",
+        "destination": 18088,
+        "context": "Conditional execution of adjacent LD at8076, ST at807A selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file017AA8."
+      },
+      "instructions": [
+        {
+          "pc": 32886,
+          "page": 297,
+          "file_offset": 322678,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 32890,
+          "page": 297,
+          "file_offset": 322682,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 32895,
+          "page": 297,
+          "file_offset": 322687,
+          "bytes": "ef26c6",
+          "mnemonic": "LCALL",
+          "operands": "0x46a8"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 32926,
+        "target": "frontier_p3b_6611",
+        "destination": 26129,
+        "context": "Conditional execution of adjacent LD at8095, ST at8099 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file015A11."
+      },
+      "instructions": [
+        {
+          "pc": 32917,
+          "page": 297,
+          "file_offset": 322709,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 32921,
+          "page": 297,
+          "file_offset": 322713,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 32926,
+          "page": 297,
+          "file_offset": 322718,
+          "bytes": "ef70e5",
+          "mnemonic": "LCALL",
+          "operands": "0x6611"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 34445,
+        "target": "frontier_p68_63ae",
+        "destination": 25518,
+        "context": "Conditional execution of adjacent LD at8684, ST at8688 selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file020BAE."
+      },
+      "instructions": [
+        {
+          "pc": 34436,
+          "page": 297,
+          "file_offset": 324228,
+          "bytes": "a168001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x68"
+        },
+        {
+          "pc": 34440,
+          "page": 297,
+          "file_offset": 324232,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34445,
+          "page": 297,
+          "file_offset": 324237,
+          "bytes": "ef1edd",
+          "mnemonic": "LCALL",
+          "operands": "0x63ae"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 34715,
+        "target": "frontier_p68_5508",
+        "destination": 21768,
+        "context": "Conditional execution of adjacent LD at8792, ST at8796 selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file01FD08."
+      },
+      "instructions": [
+        {
+          "pc": 34706,
+          "page": 297,
+          "file_offset": 324498,
+          "bytes": "a168001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x68"
+        },
+        {
+          "pc": 34710,
+          "page": 297,
+          "file_offset": 324502,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34715,
+          "page": 297,
+          "file_offset": 324507,
+          "bytes": "ef6acd",
+          "mnemonic": "LCALL",
+          "operands": "0x5508"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 35284,
+        "target": "frontier_p68_5c10",
+        "destination": 23568,
+        "context": "Conditional execution of adjacent LD at89CB, ST at89CF selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file020410."
+      },
+      "instructions": [
+        {
+          "pc": 35275,
+          "page": 297,
+          "file_offset": 325067,
+          "bytes": "a168001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x68"
+        },
+        {
+          "pc": 35279,
+          "page": 297,
+          "file_offset": 325071,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 35284,
+          "page": 297,
+          "file_offset": 325076,
+          "bytes": "ef39d2",
+          "mnemonic": "LCALL",
+          "operands": "0x5c10"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 35348,
+        "target": "frontier_p68_5c10",
+        "destination": 23568,
+        "context": "Conditional execution of adjacent LD at8A0B, ST at8A0F selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file020410."
+      },
+      "instructions": [
+        {
+          "pc": 35339,
+          "page": 297,
+          "file_offset": 325131,
+          "bytes": "a168001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x68"
+        },
+        {
+          "pc": 35343,
+          "page": 297,
+          "file_offset": 325135,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 35348,
+          "page": 297,
+          "file_offset": 325140,
+          "bytes": "eff9d1",
+          "mnemonic": "LCALL",
+          "operands": "0x5c10"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 35404,
+        "target": "frontier_p68_55be",
+        "destination": 21950,
+        "context": "Conditional execution of adjacent LD at8A43, ST at8A47 selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file01FDBE."
+      },
+      "instructions": [
+        {
+          "pc": 35395,
+          "page": 297,
+          "file_offset": 325187,
+          "bytes": "a168001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x68"
+        },
+        {
+          "pc": 35399,
+          "page": 297,
+          "file_offset": 325191,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 35404,
+          "page": 297,
+          "file_offset": 325196,
+          "bytes": "ef6fcb",
+          "mnemonic": "LCALL",
+          "operands": "0x55be"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "application_startup_0129",
+        "pc": 35584,
+        "target": "frontier_p68_5ca7",
+        "destination": 23719,
+        "context": "Conditional execution of adjacent LD at8AF7, ST at8AFB selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file0204A7."
+      },
+      "instructions": [
+        {
+          "pc": 35575,
+          "page": 297,
+          "file_offset": 325367,
+          "bytes": "a168001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x68"
+        },
+        {
+          "pc": 35579,
+          "page": 297,
+          "file_offset": 325371,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 35584,
+          "page": 297,
+          "file_offset": 325376,
+          "bytes": "efa4d1",
+          "mnemonic": "LCALL",
+          "operands": "0x5ca7"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p129_acdd",
+        "pc": 44296,
+        "target": "frontier_p4b_51b8",
+        "destination": 20920,
+        "context": "Conditional execution of adjacent LD atACFF, ST atAD03 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file0185B8."
+      },
+      "instructions": [
+        {
+          "pc": 44287,
+          "page": 297,
+          "file_offset": 334079,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 44291,
+          "page": 297,
+          "file_offset": 334083,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 44296,
+          "page": 297,
+          "file_offset": 334088,
+          "bytes": "efada4",
+          "mnemonic": "LCALL",
+          "operands": "0x51b8"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p129_acdd",
+        "pc": 44319,
+        "target": "frontier_p3b_61d2",
+        "destination": 25042,
+        "context": "Conditional execution of adjacent LD atAD16, ST atAD1A selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file0155D2."
+      },
+      "instructions": [
+        {
+          "pc": 44310,
+          "page": 297,
+          "file_offset": 334102,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 44314,
+          "page": 297,
+          "file_offset": 334106,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 44319,
+          "page": 297,
+          "file_offset": 334111,
+          "bytes": "efb0b4",
+          "mnemonic": "LCALL",
+          "operands": "0x61d2"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p166_8176",
+        "pc": 33505,
+        "target": "frontier_p5a_745c",
+        "destination": 29788,
+        "context": "Conditional execution of adjacent LD at82D8, ST at82DC selecting0102=005A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01E45C."
+      },
+      "instructions": [
+        {
+          "pc": 33496,
+          "page": 358,
+          "file_offset": 385752,
+          "bytes": "a15a001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x5a"
+        },
+        {
+          "pc": 33500,
+          "page": 358,
+          "file_offset": 385756,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 33505,
+          "page": 358,
+          "file_offset": 385761,
+          "bytes": "ef78f1",
+          "mnemonic": "LCALL",
+          "operands": "0x745c"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p166_8176",
+        "pc": 34225,
+        "target": "frontier_p5a_744d",
+        "destination": 29773,
+        "context": "Conditional execution of adjacent LD at85A8, ST at85AC selecting0102=005A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01E44D."
+      },
+      "instructions": [
+        {
+          "pc": 34216,
+          "page": 358,
+          "file_offset": 386472,
+          "bytes": "a15a001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x5a"
+        },
+        {
+          "pc": 34220,
+          "page": 358,
+          "file_offset": 386476,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34225,
+          "page": 358,
+          "file_offset": 386481,
+          "bytes": "ef99ee",
+          "mnemonic": "LCALL",
+          "operands": "0x744d"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p166_8176",
+        "pc": 34421,
+        "target": "frontier_p4b_4533",
+        "destination": 17715,
+        "context": "Conditional execution of adjacent LD at866C, ST at8670 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file017933."
+      },
+      "instructions": [
+        {
+          "pc": 34412,
+          "page": 358,
+          "file_offset": 386668,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 34416,
+          "page": 358,
+          "file_offset": 386672,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34421,
+          "page": 358,
+          "file_offset": 386677,
+          "bytes": "efbbbe",
+          "mnemonic": "LCALL",
+          "operands": "0x4533"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p166_8176",
+        "pc": 34452,
+        "target": "frontier_p4b_4533",
+        "destination": 17715,
+        "context": "Conditional execution of adjacent LD at868B, ST at868F selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file017933."
+      },
+      "instructions": [
+        {
+          "pc": 34443,
+          "page": 358,
+          "file_offset": 386699,
+          "bytes": "a14b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x4b"
+        },
+        {
+          "pc": 34447,
+          "page": 358,
+          "file_offset": 386703,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34452,
+          "page": 358,
+          "file_offset": 386708,
+          "bytes": "ef9cbe",
+          "mnemonic": "LCALL",
+          "operands": "0x4533"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p166_8176",
+        "pc": 34475,
+        "target": "frontier_p3b_64dd",
+        "destination": 25821,
+        "context": "Conditional execution of adjacent LD at86A2, ST at86A6 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file0158DD."
+      },
+      "instructions": [
+        {
+          "pc": 34466,
+          "page": 358,
+          "file_offset": 386722,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 34470,
+          "page": 358,
+          "file_offset": 386726,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34475,
+          "page": 358,
+          "file_offset": 386731,
+          "bytes": "ef2fde",
+          "mnemonic": "LCALL",
+          "operands": "0x64dd"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p166_8176",
+        "pc": 34496,
+        "target": "frontier_p3b_64dd",
+        "destination": 25821,
+        "context": "Conditional execution of adjacent LD at86B7, ST at86BB selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file0158DD."
+      },
+      "instructions": [
+        {
+          "pc": 34487,
+          "page": 358,
+          "file_offset": 386743,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 34491,
+          "page": 358,
+          "file_offset": 386747,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34496,
+          "page": 358,
+          "file_offset": 386752,
+          "bytes": "ef1ade",
+          "mnemonic": "LCALL",
+          "operands": "0x64dd"
+        }
+      ]
+    },
+    {
+      "link": {
+        "source": "frontier_p166_8176",
+        "pc": 34577,
+        "target": "frontier_p3b_6553",
+        "destination": 25939,
+        "context": "Conditional execution of adjacent LD at8708, ST at870C selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+        "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file015953."
+      },
+      "instructions": [
+        {
+          "pc": 34568,
+          "page": 358,
+          "file_offset": 386824,
+          "bytes": "a13b001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x3b"
+        },
+        {
+          "pc": 34572,
+          "page": 358,
+          "file_offset": 386828,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 34577,
+          "page": 358,
+          "file_offset": 386833,
+          "bytes": "ef3fde",
+          "mnemonic": "LCALL",
+          "operands": "0x6553"
+        }
+      ]
+    }
+  ],
+  "qualification": "Conditional caller contexts; not full runtime or callee-preservation proof.",
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "code_bytes": 74275,
+  "data_bytes": 3405,
+  "instruction_encodings": 23134,
+  "region_count": 126,
+  "independent_locations": 23134,
+  "independent_direct_targets": 6089,
+  "warnings": 0,
+  "boundary_conflicts": 0,
+  "disagreements": 0,
+  "focused_tests": "57 passed; initial3 temp-directory setup errors resolved by selecting a workspace --basetemp.",
+  "tests_command": "python -m pytest tests/test_firmware_bank_frontier.py tests/test_firmware_coverage.py tests/test_firmware_manifest.py tests/test_firmware_readiness.py tests/test_firmware_routines.py -q --basetemp <fresh-workspace-path>",
+  "limits": "Strict locally adjacent LD/ST/CALL frontier exhausted only; indirect calls, nonadjacent setup, trampolines, callee/interrupt clobbers and physical invocation are not exhausted. Incremental script relies on analyzer exceptions; it does not itself assert global collisions or empty warning lists. Independent full-result checks supply those guarantees for this snapshot.",
+  "identities": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "scripts\\analyze_firmware_routines.py": "5b432e56444486bf1838e1c48be687c0f360c1dc0ba11ba123e0a3c19ca19899",
+    "scripts\\firmware_bank_frontier.py": "71e55d27f21f07c7d28c5b2d73985a9d849eff52c19bd8aa840789120a65c9be",
+    "scripts\\firmware_manifests\\os_exploration.json": "ab0366ee28449c787c536bcc9c393c886800c6c4cd02d0cb5c05b2ea7d41e72b",
+    "docs\\ic20-hle-findings\\chatGPT-work\\os-reconciled-review-2026-10-16\\manifest.json": "c45df02e8159f3ed4431398641dba818f109f4f5512df913688da866a434599b",
+    "docs\\ic20-hle-findings\\chatGPT-work\\os-reconciled-review-2026-10-16\\promotion.py": "14064067978a29e48d248e247e3142ba38c9c2bb033a73cf6f5da33d47e674c6",
+    "docs\\ic20-hle-findings\\chatGPT-work\\os-reconciled-review-2026-10-16\\disasm_196.exe": "8ae83ee64a66a67ad3ae3d2e98aa8695439d14e058d22483e6b3f535b394c30a"
+  }
+}

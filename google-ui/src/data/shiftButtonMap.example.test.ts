@@ -28,7 +28,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
  */
 const MAPPING_DOC_PATH = path.resolve(
   here,
-  '../../../docs/front-panel-button-mapping.md',
+  '../../../docs/hardware/front-panel-button-mapping.md',
 );
 
 describe('Button_Mapping artifact schema (example test)', () => {

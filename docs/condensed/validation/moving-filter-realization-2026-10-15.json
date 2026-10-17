@@ -1,0 +1,176 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Offline equivalent-transfer state realization comparison",
+  "ramp_ms": 20,
+  "shared_cutoff_scale": 1.0025161169492316,
+  "damping_word": 85,
+  "gain": 1,
+  "baseline_exact": true,
+  "stationary_checks": [
+    {
+      "mode": "svf",
+      "cutoff": 428.0,
+      "stationary_relative_rms": 0.0
+    },
+    {
+      "mode": "direct-I",
+      "cutoff": 428.0,
+      "stationary_relative_rms": 1.423728893881812e-13
+    },
+    {
+      "mode": "direct-II",
+      "cutoff": 428.0,
+      "stationary_relative_rms": 2.1767049446568274e-13
+    },
+    {
+      "mode": "transposed-II",
+      "cutoff": 428.0,
+      "stationary_relative_rms": 1.9764914465582705e-13
+    },
+    {
+      "mode": "svf",
+      "cutoff": 2732.0,
+      "stationary_relative_rms": 0.0
+    },
+    {
+      "mode": "direct-I",
+      "cutoff": 2732.0,
+      "stationary_relative_rms": 9.312415875628069e-15
+    },
+    {
+      "mode": "direct-II",
+      "cutoff": 2732.0,
+      "stationary_relative_rms": 1.0004005969714771e-14
+    },
+    {
+      "mode": "transposed-II",
+      "cutoff": 2732.0,
+      "stationary_relative_rms": 1.0690332974487911e-14
+    }
+  ],
+  "rows": [
+    {
+      "label": "quiet",
+      "realization": "svf",
+      "alignment_seconds": 0.9291318578807357,
+      "source_phase": 1543.8296831316,
+      "training_error_percent": 20.326943760478716,
+      "evaluation_error_percent": 17.66957321634731,
+      "rise_error_percent": 16.064589774748114,
+      "fall_error_percent": 18.92456559096275,
+      "optimizer_status": 3
+    },
+    {
+      "label": "repeat",
+      "realization": "svf",
+      "alignment_seconds": 0.38684613571424536,
+      "source_phase": 1795.223412564336,
+      "training_error_percent": 21.934434641919864,
+      "evaluation_error_percent": 16.41746429389345,
+      "rise_error_percent": 15.620539313724082,
+      "fall_error_percent": 17.201021448941873,
+      "optimizer_status": 3
+    },
+    {
+      "label": "quiet",
+      "realization": "direct-I",
+      "alignment_seconds": 0.9291318578807357,
+      "source_phase": 1543.8296831316,
+      "training_error_percent": 20.6611925431844,
+      "evaluation_error_percent": 18.06925637615593,
+      "rise_error_percent": 15.87451219385089,
+      "fall_error_percent": 19.740545863318754,
+      "optimizer_status": 3
+    },
+    {
+      "label": "repeat",
+      "realization": "direct-I",
+      "alignment_seconds": 0.3868204928332291,
+      "source_phase": 1795.2229180205602,
+      "training_error_percent": 21.552443897141313,
+      "evaluation_error_percent": 16.317696972603127,
+      "rise_error_percent": 15.29560278109721,
+      "fall_error_percent": 17.30923309527906,
+      "optimizer_status": 3
+    },
+    {
+      "label": "quiet",
+      "realization": "direct-II",
+      "alignment_seconds": 0.9291146998145634,
+      "source_phase": 1543.8296195531257,
+      "training_error_percent": 19.93113895588021,
+      "evaluation_error_percent": 17.297174623753833,
+      "rise_error_percent": 16.65448026592328,
+      "fall_error_percent": 17.8241695440692,
+      "optimizer_status": 3
+    },
+    {
+      "label": "repeat",
+      "realization": "direct-II",
+      "alignment_seconds": 0.38678301077967064,
+      "source_phase": 1795.2210829081528,
+      "training_error_percent": 23.979206139914922,
+      "evaluation_error_percent": 17.648394568968047,
+      "rise_error_percent": 18.421993109043626,
+      "fall_error_percent": 16.81252447959981,
+      "optimizer_status": 3
+    },
+    {
+      "label": "quiet",
+      "realization": "transposed-II",
+      "alignment_seconds": 0.9291487679949828,
+      "source_phase": 1543.8294448586578,
+      "training_error_percent": 20.657080038743818,
+      "evaluation_error_percent": 18.069327948386164,
+      "rise_error_percent": 15.89832958117968,
+      "fall_error_percent": 19.72440211906945,
+      "optimizer_status": 3
+    },
+    {
+      "label": "repeat",
+      "realization": "transposed-II",
+      "alignment_seconds": 0.38684613571424536,
+      "source_phase": 1795.223412564336,
+      "training_error_percent": 21.54718231708113,
+      "evaluation_error_percent": 16.320005330168755,
+      "rise_error_percent": 15.292252460033987,
+      "fall_error_percent": 17.316554169562718,
+      "optimizer_status": 3
+    }
+  ],
+  "quiet_training_selected": {
+    "label": "quiet",
+    "realization": "direct-II",
+    "alignment_seconds": 0.9291146998145634,
+    "source_phase": 1543.8296195531257,
+    "training_error_percent": 19.93113895588021,
+    "evaluation_error_percent": 17.297174623753833,
+    "rise_error_percent": 16.65448026592328,
+    "fall_error_percent": 17.8241695440692,
+    "optimizer_status": 3
+  },
+  "repeat_same_realization": {
+    "label": "repeat",
+    "realization": "direct-II",
+    "alignment_seconds": 0.38678301077967064,
+    "source_phase": 1795.2210829081528,
+    "training_error_percent": 23.979206139914922,
+    "evaluation_error_percent": 17.648394568968047,
+    "rise_error_percent": 18.421993109043626,
+    "fall_error_percent": 16.81252447959981,
+    "optimizer_status": 3
+  },
+  "limits": [
+    "All four forms have the same constant-coefficient LP transfer function but different moving internal state.",
+    "20ms ramp, quiet-selected cutoff scale, gain and damping frozen. Per-recording training fits only alignment and source phase.",
+    "Forms use double precision; hardware arithmetic/state representation is unmeasured.",
+    "Fractional-phase recording-chain approximation and historically reused evaluation data remain.",
+    "No native filter implementation, source, firmware or production default changed."
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_moving_filter_realization.py": "99eb19b49ef1e1384864704e42339b160ef120d1b377abf1a7fe0703ae0df505",
+    "docs\\condensed\\validation\\resonant-phase-trajectory-2026-10-15.json": "4369d9cffd397f2697f4fb0b3727a59b50d115a7d998d03bdccd8fd29e6eaefd",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\on\\application.csv": "3723b9ee084534b0df33e866b4cdf5a9cdf2d604c685a858ec863a2c27795086"
+  }
+}
