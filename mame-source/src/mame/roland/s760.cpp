@@ -1077,6 +1077,15 @@ private:
 	u16 m_mouse_last_x = 0, m_mouse_last_y = 0;
 	u8 m_mouse_phase = 3, m_mouse_select = 0;
 	attotime m_mouse_edge_time;
+	enum class pointing_device_mode : u8
+	{
+		MOUSE = 0, // Roland MU-1 / MSX 4-nibble mouse
+		GB6   = 1, // Sony GB-6 4-bit offset-binary trackball
+		AUTO  = 2  // Follow guest controller mode (0x2476 == 3 -> GB-6, else MU-1)
+	};
+	pointing_device_mode m_pointing_device = pointing_device_mode::MOUSE;
+	bool is_gb6_pointing_active() const;
+	void load_emulator_config();
 	bool m_native_value_encoder = false;
 	u16 m_value_last = 0;
 	u8 m_value_latch = 0;
@@ -1571,6 +1580,7 @@ void s760_state::machine_start()
 	if (m_vdp_trace)
 		machine().add_notifier(MACHINE_NOTIFY_EXIT,
 			machine_notify_delegate(&s760_state::vdp_dump_vram_occupancy, this));
+	load_emulator_config();
 
 	// Board/controller config reported at 0xF00A (OP-760 video board + CRT
 	// controller). Override with S760_F00A=<hex> while decoding the exact bit
@@ -4487,10 +4497,27 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			val = m_sound ? m_sound->read_dsp_data() : m_dsp_cmd_latch;
 			break;
 
-		case 0x08: // Native mouse bus; legacy DSP address latch
-			val = m_banked_os ? ((m_mouse_buttons->read() & 0x30) |
-				((m_mouse_packet >> (4 * (3 - m_mouse_phase))) & 0x0f) |
-				(m_mouse_select << 6)) : m_dsp_addr_latch;
+		case 0x08: // Native mouse / Sony GB-6 trackball bus; legacy DSP address latch
+			if (!m_banked_os)
+			{
+				val = m_dsp_addr_latch;
+				break;
+			}
+			if (is_gb6_pointing_active())
+			{
+				const s16 raw_delta = m_mouse_select
+					? s16(m_mouse_y_port->read() - m_mouse_last_y)
+					: s16(m_mouse_x_port->read() - m_mouse_last_x);
+				const int clamped = std::clamp<int>(raw_delta, -8, 7);
+				const u8 nibble = u8((clamped + 8) & 0x0f);
+				val = (m_mouse_buttons->read() & 0x30) | nibble | (m_mouse_select << 6);
+			}
+			else
+			{
+				val = (m_mouse_buttons->read() & 0x30) |
+					((m_mouse_packet >> (4 * (3 - m_mouse_phase))) & 0x0f) |
+					(m_mouse_select << 6);
+			}
 			break;
 
 		case 0x0E: // EEPROM Latch
@@ -4537,13 +4564,149 @@ uint8_t s760_state::mmio_r(offs_t offset)
 	return val;
 }
 
+bool s760_state::is_gb6_pointing_active() const
+{
+	if (!m_banked_os)
+		return false;
+	if (m_pointing_device == pointing_device_mode::GB6)
+		return true;
+	if (m_pointing_device == pointing_device_mode::AUTO)
+	{
+		const u32 addr = banked_address(0x2476, false);
+		return addr < m_banked_ram.size() && m_banked_ram[addr] == 3;
+	}
+	return false;
+}
+
+void s760_state::load_emulator_config()
+{
+	m_pointing_device = pointing_device_mode::MOUSE;
+
+	auto parse_token = [this](const std::string &token) -> bool {
+		if (token == "gb6" || token == "gb-6" || token == "1" || token == "true")
+		{
+			m_pointing_device = pointing_device_mode::GB6;
+			return true;
+		}
+		if (token == "auto")
+		{
+			m_pointing_device = pointing_device_mode::AUTO;
+			return true;
+		}
+		if (token == "mouse" || token == "mu1" || token == "mu-1" || token == "0" || token == "false")
+		{
+			m_pointing_device = pointing_device_mode::MOUSE;
+			return true;
+		}
+		return false;
+	};
+
+	const char *cfg_paths[] = {
+		getenv("S760_CONFIG"),
+		getenv("S760_CONFIG_FILE"),
+		"s760_config.json",
+		"s760_config.cfg",
+		"s760.cfg"
+	};
+	for (const char *cfg_path : cfg_paths)
+	{
+		if (!cfg_path || !*cfg_path)
+			continue;
+		std::ifstream cfg_file(cfg_path);
+		if (!cfg_file.is_open())
+			continue;
+		std::string content((std::istreambuf_iterator<char>(cfg_file)), std::istreambuf_iterator<char>());
+		std::string compact;
+		compact.reserve(content.size());
+		for (char ch : content)
+		{
+			if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n' || ch == '"' || ch == '\'')
+				continue;
+			compact.push_back((ch >= 'A' && ch <= 'Z') ? char(ch - 'A' + 'a') : ch);
+		}
+		auto match_key = [&](const char *key) -> std::string {
+			for (char sep : { ':', '=' })
+			{
+				const std::string prefix = std::string(key) + sep;
+				const size_t pos = compact.find(prefix);
+				if (pos != std::string::npos)
+				{
+					const size_t start = pos + prefix.size();
+					size_t end = start;
+					while (end < compact.size() && compact[end] != ',' && compact[end] != '}' && compact[end] != ';')
+						++end;
+					return compact.substr(start, end - start);
+				}
+			}
+			return {};
+		};
+		bool matched = false;
+		for (const char *key : { "pointing_device", "controller_device", "gb6", "s760_gb6" })
+		{
+			const std::string val = match_key(key);
+			if (!val.empty() && parse_token(val))
+			{
+				matched = true;
+				break;
+			}
+		}
+		if (matched)
+			break;
+	}
+
+	for (const char *env_name : { "S760_POINTING_DEVICE", "S760_CONTROLLER_DEVICE", "S760_GB6" })
+	{
+		if (const char *env_val = getenv(env_name))
+		{
+			std::string token;
+			for (const char *p = env_val; *p; ++p)
+			{
+				const char ch = *p;
+				if (ch != ' ' && ch != '\t' && ch != '"' && ch != '\'')
+					token.push_back((ch >= 'A' && ch <= 'Z') ? char(ch - 'A' + 'a') : ch);
+			}
+			if (!token.empty())
+				parse_token(token);
+		}
+	}
+
+	if (m_pointing_device != pointing_device_mode::MOUSE || m_vdp_trace)
+	{
+		const char *mode_str = (m_pointing_device == pointing_device_mode::GB6) ? "gb6"
+			: (m_pointing_device == pointing_device_mode::AUTO) ? "auto" : "mouse";
+		logerror("[POINTER] mode=%s\n", mode_str);
+	}
+}
+
 // Four-nibble pin8 handshake follows bus/msx/ctrl/mouse.cpp (Wilbert Pol).
 // OS bank004F:87B4..880D selects MX6 and assembles/negates X then Y;
 // 8876..8880 reads active-low MX4/MX5 buttons. OP-760 CN1/JK1 wires MX6 to pin8.
 // The 3ms packet timeout is the shared MSX model, not a measured MU-1 timing.
+// When Sony GB-6 mode is active, Pin 8 selects X (0) or Y (1) 4-bit offset-binary
+// counter, resetting X on 0->1 rising edge and Y on 1->0 falling edge.
 void s760_state::native_mouse_w(u8 data)
 {
 	const u8 select = BIT(data, 6);
+	if (is_gb6_pointing_active())
+	{
+		if (select != m_mouse_select)
+		{
+			if (select)
+			{
+				// Rising edge (0 -> 1) on Pin 8 resets the GB-6 X axis counter
+				const int dx = std::clamp<int>(s16(m_mouse_x_port->read() - m_mouse_last_x), -8, 7);
+				m_mouse_last_x = u16(m_mouse_last_x + dx);
+			}
+			else
+			{
+				// Falling edge (1 -> 0) on Pin 8 resets the GB-6 Y axis counter
+				const int dy = std::clamp<int>(s16(m_mouse_y_port->read() - m_mouse_last_y), -8, 7);
+				m_mouse_last_y = u16(m_mouse_last_y + dy);
+			}
+		}
+		m_mouse_select = select;
+		return;
+	}
 	if (select != m_mouse_select)
 	{
 		const attotime now = machine().time();
