@@ -128,9 +128,31 @@ follow the schema so entries stay machine-greppable.
 | BUG-103 | FIXED | S3 | build | Documentation moves and mutable checkout checks invalidate historical artifact identity | 2026-10-17 | 2026-10-17 |
 | BUG-104 | FIXED | S3 | tests | Static artifact checker claims unobserved clean-machine and DAW qualification | 2026-10-17 | 2026-10-17 |
 
-<!-- NEXT-ID: BUG-105 -->
+| BUG-105 | IN-PROGRESS | S2 | build | Downloaded acceptance ZIP extracts blocked .NET assemblies and fails before UI startup | 2026-10-17 | |
+
+<!-- NEXT-ID: BUG-106 -->
 
 ## Details
+
+### BUG-105 — Downloaded acceptance kit fails at Python.Runtime startup
+
+- **Status:** IN-PROGRESS
+- **Severity:** S2
+- **Area:** build
+- **Opened:** 2026-10-17
+- **Reported by:** User clean-machine acceptance, File Explorer extraction
+
+**Summary:** The GitHub-downloaded frozen acceptance kit fails before opening the desktop interface on a separate clean Windows machine. The handoff omitted the downloaded ZIP unblocking step and did not qualify File Explorer mark-of-the-web propagation.
+
+**Repro:** Download the acceptance prerelease ZIP in a browser, extract with File Explorer on a clean Windows installation, then double-click S760Studio.exe.
+
+**Expected:** The documented installation path opens the interface, or explains how to resolve blocked downloaded assemblies.
+
+**Actual:** The startup dialog reports Failed to resolve Python.Runtime.Loader.Initialize from the extracted _internal/pythonnet/runtime/Python.Runtime.dll.
+
+**Evidence:** User screenshot dated 2026-10-17 14:00:41 and confirmation that the test used a clean Windows machine with File Explorer. The frozen archive identity remains b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9.
+
+**Notes:** Locally reproduced with the packaged DLL: Zone.Identifier ZoneId=3 causes .NET FileLoadException / HRESULT 0x80131515; scoped unblocking allows Loader.Initialize resolution. Added checksum-first extraction helper and download/remediation instructions. Three guardrail regressions and extraction of the actual unchanged archive pass; all611 package files verify and the initializer resolves. User clean-machine retest after unblocking/re-extraction remains pending; keep this bug IN-PROGRESS and clean-machine qualification incomplete. See the durable validation record in docs/condensed/validation/bug105-downloaded-assembly-2026-10-17.json.
 
 ### BUG-104 — Static artifact checks claim observed release acceptance
 

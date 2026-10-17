@@ -5,6 +5,13 @@ folder. Python, Node, CMake and the source checkout are not needed to run this
 package. This is a development artifact; final installation and clean-machine
 release qualification remain open.
 
+For a browser-downloaded ZIP, verify its published checksum, right-click the ZIP
+→ Properties → Unblock → Apply **before extracting with File Explorer**. If the
+desktop fails with `Failed to resolve Python.Runtime.Loader.Initialize`, keep
+the failed extraction as evidence, unblock the original ZIP and extract into a
+fresh folder. Windows may otherwise block the packaged .NET assemblies. Python
+does not need to be installed separately.
+
 ## Prerequisites and your files
 
 Use Windows x64 with the Microsoft Visual C++ v14 x64 runtime and Microsoft Edge

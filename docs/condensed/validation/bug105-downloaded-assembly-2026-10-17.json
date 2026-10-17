@@ -1,0 +1,20 @@
+{
+  "bug": "BUG-105",
+  "date": "2026-10-17",
+  "archive_sha256": "b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9",
+  "user_environment": "Separate clean Windows machine; browser ZIP extracted using File Explorer",
+  "observed_failure": "Failed to resolve Python.Runtime.Loader.Initialize; startup traceback supplied by user",
+  "local_reproduction": {
+    "method": "Packaged Python.Runtime.dll copied to private scratch; Zone.Identifier ZoneId=3 added; load in fresh Windows PowerShell 5.1 process",
+    "blocked_result": "FileLoadException / HRESULT 0x80131515",
+    "after_scoped_unblock": "Python.Runtime.Loader.Initialize resolves in a fresh process"
+  },
+  "helper": {
+    "script_sha256": "aadd26b5fd23f6cb0642b9571e5520633528a00913bd25d1ff3343ae191517de",
+    "tests_passed": 3,
+    "actual_frozen_zip_extraction": "passed; all 611 package files verified; initializer resolved",
+    "archive_bytes_changed": false
+  },
+  "clean_machine_retest": "PENDING_USER_OBSERVATION",
+  "full_clean_machine_workflow_qualified": false
+}

@@ -16,6 +16,15 @@ The [artifact directory](../../artifacts/standalone/README.md) records its check
 and local download location. No findings-folder access or source checkout is
 needed. This is the same frozen archive used for workstation qualification.
 
+Before File Explorer extraction, verify the ZIP against the artifact checksum,
+then right-click the ZIP → Properties → **Unblock** → Apply. Extract into a fresh
+folder. A browser-downloaded ZIP can pass Windows' internet-zone mark to .NET
+assemblies and fail with `Failed to resolve Python.Runtime.Loader.Initialize`.
+If that happens, retain the failed extraction/screenshot, unblock the original
+ZIP and extract again. The [verified extraction helper](../../artifacts/standalone/README.md#before-extracting-a-browser-download)
+provides an alternative without development tools. Record this remediation in
+the clean-machine evidence; a successful launch alone does not finish acceptance.
+
 Use a fresh Windows x64 installation or disposable VM without the source checkout,
 Python, Node, CMake or Visual Studio. Record the original machine/prerequisite
 state before installing anything. Extract the kit into a writable folder whose
