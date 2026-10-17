@@ -130,6 +130,8 @@ docs/ic20-hle-findings/
 # Hardware recording bundles and generated MAME UI preferences stay local.
 /tests/hardware_recordings/
 /ui.ini
+# Downloadable standalone binaries are GitHub release assets, not Git blobs.
+/artifacts/standalone/*.zip
 /error.log
 
 # OS metadata

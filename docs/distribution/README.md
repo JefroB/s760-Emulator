@@ -10,6 +10,11 @@ adds a second exact dated tree, GPLv3 ASIO source delivery and a clean rebuild o
 the engine and audio bridge. Historical manifests continue to identify only
 their own bytes. Clean-machine acceptance remains a separate gate.
 
+Downloadable frozen candidates live in [GitHub prerelease assets](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17).
+The tracked [artifact index and checksum](../../artifacts/standalone/README.md)
+identify the clean-machine kit; local ZIPs belong in `artifacts/standalone/`,
+outside private research/findings directories.
+
 For a new candidate:
 
 1. Build into a fresh output directory with `scripts/build_standalone.ps1`.
