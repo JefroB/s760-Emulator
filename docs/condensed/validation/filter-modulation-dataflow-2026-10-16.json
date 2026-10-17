@@ -1,0 +1,95 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "script_sha256": "88b1d7cf325d960af8d3e91d14f146c0edf22d616223d9b725cac3bb438e36fb",
+  "manifest_sha256": "89b96e8eee55c24427954251af7bc6ef84ea3c97c85fe12c499468d84c892a24",
+  "decoder": "pypcode 4.0.0",
+  "deterministic_analysis": true,
+  "instructions": 1121,
+  "regions": 10,
+  "bank_links": 26,
+  "decode_warnings": 0,
+  "anchors": [
+    {
+      "region": "voice_parameter_setup",
+      "pc": 19812,
+      "page": 31,
+      "file_offset": 53604,
+      "bytes": "6500805c",
+      "mnemonic": "ADD",
+      "operands": "RW5C, #0x8000"
+    },
+    {
+      "region": "voice_parameter_setup",
+      "pc": 19816,
+      "page": 31,
+      "file_offset": 53608,
+      "bytes": "c387568a5c",
+      "mnemonic": "ST",
+      "operands": "RW5C, 0x8a56, TABLE[RW86]"
+    },
+    {
+      "region": "voice_parameter_setup",
+      "pc": 19904,
+      "page": 31,
+      "file_offset": 53696,
+      "bytes": "71075c",
+      "mnemonic": "ANDB",
+      "operands": "R5C, #0x7"
+    },
+    {
+      "region": "filter_modulation_mix",
+      "pc": 33942,
+      "page": 45,
+      "file_offset": 65686,
+      "bytes": "fe6f87568a64",
+      "mnemonic": "MUL",
+      "operands": "RL64, 0x8a56, TABLE[RW86]"
+    },
+    {
+      "region": "filter_modulation_mix",
+      "pc": 33985,
+      "page": 45,
+      "file_offset": 65729,
+      "bytes": "c387168560",
+      "mnemonic": "ST",
+      "operands": "RW60, 0x8516, TABLE[RW86]"
+    },
+    {
+      "region": "cutoff_calculation",
+      "pc": 18325,
+      "page": 31,
+      "file_offset": 52117,
+      "bytes": "678716855e",
+      "mnemonic": "ADD",
+      "operands": "RW5E, 0x8516, TABLE[RW86]"
+    },
+    {
+      "region": "initial_cutoff",
+      "pc": 37476,
+      "page": 45,
+      "file_offset": 69220,
+      "bytes": "d71d",
+      "mnemonic": "JNE",
+      "operands": "0x9283"
+    },
+    {
+      "region": "initial_cutoff",
+      "pc": 37499,
+      "page": 45,
+      "file_offset": 69243,
+      "bytes": "c30120d05c",
+      "mnemonic": "ST",
+      "operands": "RW5C, 0xd020, TABLE[ZR]"
+    },
+    {
+      "region": "initial_cutoff",
+      "pc": 37536,
+      "page": 45,
+      "file_offset": 69280,
+      "bytes": "c30120d05c",
+      "mnemonic": "ST",
+      "operands": "RW5C, 0xd020, TABLE[ZR]"
+    }
+  ],
+  "qualification": "Static original-firmware dataflow; no new dynamic trace or hardware parity claim."
+}

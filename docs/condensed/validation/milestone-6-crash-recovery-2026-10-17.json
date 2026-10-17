@@ -1,0 +1,296 @@
+{
+  "date": "2026-10-17",
+  "completed_gate": "Bounded frozen Windows standalone abrupt process-tree termination/relaunch recovery after a completed automatic checkpoint",
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "working_tree_dirty": true,
+  "identities": {
+    "sources": {
+      "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+      "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+      "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+      "scripts/verify_packaged_crash_recovery.py": "3494bf5bbd380c80fcb9716214d7d83d1661cd775f850a716c66ce318cf47925",
+      "scripts/s760_package_audit.py": "514832c2e136cee6e304a78b8f1d4feb787c80a7d818e3b857b367d1b1fd8983",
+      "google-ui/e2e/packaged-media.spec.ts": "aa0274e2143159dfd8f7a54338aec26bbbcb6e5bfd41f45160841c3e5158162e",
+      "google-ui/e2e/native-controls.ts": "8cff868e1b4f672c0556e4ecdeafc9e59f5f59ac27b4c36affbf0f2fa284fe33",
+      "google-ui/playwright.packaged.config.ts": "6d3906fd63401a78c43a95466a805966dda1c7407e6d02398aa0db950122a3bb",
+      "google-ui/src/NativeStudio.tsx": "c580ea1a67a88ce72b5af2bea42e46c92f3a104c57a5b7565be80fa846ad9708",
+      "docs/emulator/guides/standalone-package-readme.md": "2652ea93f36a4ee93bd7ec95cb76da6add68f8ea633684cff233f67849968a04",
+      "tests/test_package_audit.py": "c72983bb123d15038cab37c0e9eb212f5420d22130671b1844559b36242b5589",
+      "mame-source/src/mame/roland/s760.cpp": "43727978af8c9fb59726dc67aa8f5c56060d8140288a95232b6d99b6c083696b",
+      "mame-source/src/frontend/mame/luaengine.cpp": "e38c3a5bcc4f9e5762916c57b10758425ab02d8c41bbf1b96751e59086168bc9",
+      "mame-source/src/devices/cpu/mcs96/mcs96.cpp": "040aa5fccff229628d82fe60c2df9124e9e8bbedd2a3b51dd863d4f1325f6982",
+      "scripts/verify_packaged_edit_audio.py": "fdd909adf098849414aed448ef36b06a5aab50d23ef6fb14693b9d5f81b541e6",
+      "scripts/build_standalone.ps1": "0593625997a7fb751d62fecee63bd14e8ca3510a81f71e9797d9d0e5c942cadf"
+    },
+    "package": {
+      "S760Studio.exe": "dfde510d10a1ccbed6d966c04e848805cd897ca7a466cdd9f42c3f8b941cd236",
+      "mame-source/mames760.exe": "6db47405d446fe365cc9f581a2d0745651f8e25897ccaabc0a765c565c323b96",
+      "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+      "README.md": "2652ea93f36a4ee93bd7ec95cb76da6add68f8ea633684cff233f67849968a04",
+      "PACKAGE-AUDIT.json": "ca6ec8f420273b3dab968ebd45a53064550caa1989111b03b7967cc9c0610a7d",
+      "BUNDLED-INPUTS.json": "a9fee01bf7a3e8a43e9c701c8dea63053fd95ebadfbfcc987db1d66f17a1dc87",
+      "DEPENDENCY-INVENTORY.json": "0122915d202d104d8caac88ec92ef23a269b5ceac13dad51c2d4b5629c921a0e"
+    },
+    "fixtures": {
+      "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+    }
+  },
+  "prerequisites": [
+    "Existing Windows x64 development workstation with desktop runtimes",
+    "Private IC15 v1.11, OS 2.24 and ROBOFULL",
+    "Chromium and localhost access for browser QA",
+    "Existing package-deps195 supplied to PyInstaller through build-only PYTHONPATH"
+  ],
+  "commands": {
+    "build": "PYTHONPATH=<private package-deps195>; scripts/build_standalone.ps1 -OutputDirectory <private-work>/package; stage corrected package README and rerun s760_package_audit.py --prepare",
+    "browser": "From google-ui: S760_MEDIA_PACKAGE=<package>; S760_MEDIA_WORK=<fresh-work>; node node_modules/@playwright/test/cli.js test packaged-media.spec.ts --grep \"abrupt process-tree\" --config=playwright.packaged.config.ts --output=<private-results>",
+    "native": "python scripts/verify_packaged_crash_recovery.py --package <package> --browser-work <browser-work>/crash --state-dir <fresh-native-work>",
+    "regression": "Python stdin runner sets TEMP/TMP to private work, redirects mame_harness.SCRATCH_DIR and SNAP_DIR (ending snap/s760), creates both; pytest.main([tests,-q,--tb=short,--basetemp=<private>/tmp,-o,cache_dir=<private>/cache])",
+    "typescript": "node google-ui/node_modules/typescript/bin/tsc --project google-ui/tsconfig.json --noEmit"
+  },
+  "browser": {
+    "passed": true,
+    "cases": 1,
+    "seconds_approx": 160,
+    "results": {
+      "passed": true,
+      "cycles": [
+        {
+          "cycle": 0,
+          "pid": 8416,
+          "table": 3384624565,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "cycle": 1,
+          "pid": 14552,
+          "table": 3384624565,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "cycle": 2,
+          "pid": 29004,
+          "table": 3384624565,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        }
+      ],
+      "checkpoint_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2",
+      "original_manual_sha256": "18b94e474aa29cb1f7da60bc8f501d0ae578700d4a3f914180206a2b37fc4535",
+      "edited_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+      "timer_seconds": 60,
+      "startup_preservation_seconds": 61,
+      "unchanged_sample_bytes": 119808,
+      "scope": "Abrupt Windows process-tree termination; no physical power loss or device audio"
+    },
+    "identical_recovered_screenshot_sha256": [
+      "453ab200dd6ab6c48260714be3db8fc2af88e8150866af0575e7d12157a402fb",
+      "453ab200dd6ab6c48260714be3db8fc2af88e8150866af0575e7d12157a402fb",
+      "453ab200dd6ab6c48260714be3db8fc2af88e8150866af0575e7d12157a402fb"
+    ]
+  },
+  "independent_native": {
+    "passed": true,
+    "cycles": [
+      {
+        "cycle": 0,
+        "archive_sha256": "a1abc37e82dd89fdb2cfe72cc608b9c2dc09cac8e6cdf3a7c35045533d6c7aac",
+        "wave_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+        "exact_sample_bytes": 119808,
+        "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+        "dirty_restored": true,
+        "audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ]
+      },
+      {
+        "cycle": 1,
+        "archive_sha256": "f4f7f5845a45f6a2055910297f846971b4fbeb42d705fa5e5588162051b5d6c2",
+        "wave_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+        "exact_sample_bytes": 119808,
+        "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+        "dirty_restored": true,
+        "audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ]
+      },
+      {
+        "cycle": 2,
+        "archive_sha256": "88a1a9ae9a06845dcfc8913e9fba97b6a09c9777579a11d5d008297658fff8cd",
+        "wave_sha256": "92799fb0e59e168df46d37ff171bcdb06b328861a83de8a79c6e62fcbc9dccf7",
+        "exact_sample_bytes": 119808,
+        "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+        "dirty_restored": true,
+        "audio": [
+          {
+            "bend": "centre",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "up",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          },
+          {
+            "bend": "down",
+            "frequency_hz": 20004,
+            "peak": 0.008537158370018005,
+            "silent_release": true
+          }
+        ]
+      }
+    ],
+    "baseline_audio": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.01694745011627674,
+        "silent_release": true
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.01694745011627674,
+        "silent_release": true
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.01694745011627674,
+        "silent_release": true
+      }
+    ],
+    "cold_disk_audio": [
+      {
+        "bend": "centre",
+        "frequency_hz": 20004,
+        "peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "bend": "up",
+        "frequency_hz": 20004,
+        "peak": 0.008537158370018005,
+        "silent_release": true
+      },
+      {
+        "bend": "down",
+        "frequency_hz": 20004,
+        "peak": 0.008537158370018005,
+        "silent_release": true
+      }
+    ],
+    "native_processes": 8,
+    "browser_result": {
+      "passed": true,
+      "cycles": [
+        {
+          "cycle": 0,
+          "pid": 8416,
+          "table": 3384624565,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "cycle": 1,
+          "pid": 14552,
+          "table": 3384624565,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        },
+        {
+          "cycle": 2,
+          "pid": 29004,
+          "table": 3384624565,
+          "export_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+          "recovery_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2"
+        }
+      ],
+      "checkpoint_sha256": "d3c34ed5aa9160b10ca305d45d29f7a9ab9d69446e357f463a566466d25f36d2",
+      "original_manual_sha256": "18b94e474aa29cb1f7da60bc8f501d0ae578700d4a3f914180206a2b37fc4535",
+      "edited_sha256": "f6b67606bee2008b1fb37da8dc36b6c1a0abd6a105fd9f245e8594c12e5363b9",
+      "timer_seconds": 60,
+      "startup_preservation_seconds": 61,
+      "unchanged_sample_bytes": 119808,
+      "scope": "Abrupt Windows process-tree termination; no physical power loss or device audio"
+    },
+    "scope": "Cold native validation of frozen browser crash recovery; physical power loss and device audio excluded"
+  },
+  "regression": {
+    "passed": 515,
+    "skipped": 0,
+    "seconds": 96.65
+  },
+  "package_audit": {
+    "development_package_ok": true,
+    "release_ready": false,
+    "errors": [],
+    "release_blockers": [
+      "project_license_scope_not_reviewed",
+      "corresponding_source_not_qualified",
+      "bundled_dependency_rights_not_qualified",
+      "artifact_differs_from_reviewed_distribution"
+    ]
+  },
+  "fixes": {
+    "BUG-098": "Six package-root README links restored; actual-template regression fails before correction;20 package-audit checks pass afterward.",
+    "BUG-099": "QA cleanup terminates only the spawned service PID and descendants; prior failed-trial orphan cleanup verified."
+  },
+  "trial_notes": [
+    "Initial browser probes used a stale MEDIA_INSERTED status; final test requests fresh status through Reconnect display. No guest/runtime change.",
+    "Initial independent readback paused MAME during peripheral acknowledgement. Final verifier resumes before media readback; all eight fresh-process checks pass."
+  ],
+  "evidence_logs": {
+    "browser": "browser-04.log",
+    "native": "native-02.log",
+    "regression": "regression.log",
+    "audit": "package-audit.log"
+  },
+  "limitations": [
+    "After a completed checkpoint only; changes afterward may be lost.",
+    "No physical power-loss or mid-publication interruption qualification.",
+    "Silent/unthrottled packaged Chromium acceptance and separate native PCM; no audio-device, final WebView-input, installer or clean-machine qualification.",
+    "Changed development artifact; final source/dependency and VST3 release qualification remain open."
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-17",
+  "completed_gate": "Bounded normal-speed physical stereo sampling/firmware Save/session restore in actual packaged WebView2, with independent cold Sample Load",
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "google-ui/e2e/packaged-sampling.spec.ts": "c2ba8a00eb9e949e9daf6c5370e850ed477ff34e0c65ae51912fef62945e9e77",
+    "google-ui/e2e/native-controls.ts": "8cff868e1b4f672c0556e4ecdeafc9e59f5f59ac27b4c36affbf0f2fa284fe33",
+    "google-ui/playwright.packaged.config.ts": "c79e667f42e8e366c2f2197a680c96fab3a24ce49da3488cd17a1c18dbe9444f",
+    "scripts/verify_packaged_sampling.py": "ee73c22334f53b3b9b0450d985a564b20092a738910b8fac6c7cd4fa55251450",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+    "scripts/s760_capture.py": "ad794bede82d0c7ad0f24e2adf42c97f7bbce842135fd6e9c63f4546a5efeea0",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "mame-source/src/mame/roland/s760.cpp": "43727978af8c9fb59726dc67aa8f5c56060d8140288a95232b6d99b6c083696b"
+  },
+  "package_sha256": {
+    "S760Studio.exe": "dfde510d10a1ccbed6d966c04e848805cd897ca7a466cdd9f42c3f8b941cd236",
+    "mame-source/mames760.exe": "6db47405d446fe365cc9f581a2d0745651f8e25897ccaabc0a765c565c323b96",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+    "README.md": "2652ea93f36a4ee93bd7ec95cb76da6add68f8ea633684cff233f67849968a04",
+    "PACKAGE-AUDIT.json": "ca6ec8f420273b3dab968ebd45a53064550caa1989111b03b7967cc9c0610a7d",
+    "BUNDLED-INPUTS.json": "a9fee01bf7a3e8a43e9c701c8dea63053fd95ebadfbfcc987db1d66f17a1dc87",
+    "DEPENDENCY-INVENTORY.json": "0122915d202d104d8caac88ec92ef23a269b5ceac13dad51c2d4b5629c921a0e"
+  },
+  "package_unchanged_from_webview_editing": true,
+  "fixture_sha256": {
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "private/firmware-formatted-blank.img": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b"
+  },
+  "original_firmware_and_blank_preserved": true,
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+    "node": "v22.17.1",
+    "playwright": "1.64.0"
+  },
+  "webview": {
+    "version": "155.0.4283.60",
+    "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+    "sha256": "a479cf008576c987fa50eaa648c1f40cc77c474bb61d84e7b11f155050d34026",
+    "observed_processes": [
+      {
+        "ProcessId": 29200,
+        "ParentProcessId": 2804,
+        "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=S760Studio.exe --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3\\state\\webview\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=1 --allow-file-access-from-files --disable-features=ElasticOverscroll --remote-debugging-address=127.0.0.1 --remote-debugging-port=55391 --mojo-named-platform-channel-pipe=2804.14124.4435275939962202430 /pfhostedapp:6cf1e356e619f00ca6100eb23ac10b5e4caf9678"
+      },
+      {
+        "ProcessId": 20312,
+        "ParentProcessId": 29200,
+        "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3\\state\\webview\\EBWebView /prefetch:4 /pfhostedapp:6cf1e356e619f00ca6100eb23ac10b5e4caf9678 --monitor-self-annotation=ptype=crashpad-handler --database=D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3\\state\\webview\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=155.0.8059.80 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=155.0.4283.60 --initial-client-data=0x178,0x17c,0x180,0x154,0x188,0x7ff8c64683e0,0x7ff8c64683f0,0x7ff8c6468400"
+      },
+      {
+        "ProcessId": 25208,
+        "ParentProcessId": 29200,
+        "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3\\state\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1808,i,11297560474035321854,11741455901246134351,262144 --field-trial-handle=1696,i,13473543769320957797,4777381910723822787,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1952,i,4939358622681655410,9561113219831345233,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1876 /prefetch:2 /pfhostedapp:6cf1e356e619f00ca6100eb23ac10b5e4caf9678"
+      },
+      {
+        "ProcessId": 30216,
+        "ParentProcessId": 29200,
+        "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3\\state\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --startup-read-main-dll --metrics-shmem-handle=2132,i,58574921349032694,4456077014739911232,524288 --field-trial-handle=1696,i,13473543769320957797,4777381910723822787,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1952,i,4939358622681655410,9561113219831345233,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2148 /prefetch:11 /pfhostedapp:6cf1e356e619f00ca6100eb23ac10b5e4caf9678"
+      },
+      {
+        "ProcessId": 26152,
+        "ParentProcessId": 29200,
+        "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=service --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3\\state\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --startup-read-main-dll --metrics-shmem-handle=2500,i,9507014094480260223,4030630624130608873,524288 --field-trial-handle=1696,i,13473543769320957797,4777381910723822787,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1952,i,4939358622681655410,9561113219831345233,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2524 /prefetch:13 /pfhostedapp:6cf1e356e619f00ca6100eb23ac10b5e4caf9678"
+      },
+      {
+        "ProcessId": 25744,
+        "ParentProcessId": 29200,
+        "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3\\state\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --allow-file-access-from-files --remote-debugging-port=55391 --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1.5 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --ssd-no-pressure-read-main-dll --launch-time-ticks=103448550712 --metrics-shmem-handle=3868,i,386483745948425124,9055907133235712140,1048576 --field-trial-handle=1696,i,13473543769320957797,4777381910723822787,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1952,i,4939358622681655410,9561113219831345233,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=1840 /pfhostedapp:6cf1e356e619f00ca6100eb23ac10b5e4caf9678 /prefetch:1"
+      }
+    ]
+  },
+  "profile": {
+    "driver": "MOTU Pro Audio v2 ASIO",
+    "outputs": [
+      3,
+      4
+    ],
+    "rate": 44100,
+    "tones_hz": [
+      440,
+      880
+    ],
+    "amplitude_pcm16": 256
+  },
+  "physical_route": "MOTU ASIO outputs 3/4 physically connected to Windows MME inputs 1/2, stereo PCM16 44100Hz",
+  "normal_speed_capture": true,
+  "sampler_output_disabled": true,
+  "ui_and_native_results": {
+    "passed": true,
+    "interface": {
+      "passed": true,
+      "interface": "Packaged WebView2",
+      "renderer": "Edg/155.0.4283.60",
+      "throttle": true,
+      "sound": false,
+      "recordingDevice": "3:Stereo In 1-2 (MOTU Pro Audio v",
+      "captureStatus": "Recording: Stereo In 1-2 (MOTU Pro Audio v \u2014 44.1 kHz stereo PCM16. Input frames discarded: 2048.",
+      "saved_sha256": "cb50122f933fc5a0fcd790bf9b6f51ad17cd2f80b1deac7121630d3bea60deb4",
+      "blank_sha256": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b"
+    },
+    "native_readback": [
+      {
+        "process": "recorded",
+        "channels": [
+          {
+            "channel": 0,
+            "frames": 46387,
+            "allocation_bytes": 101376,
+            "frequency_hz": 440.0848388671875,
+            "peak_pcm16": 2287.0,
+            "pcm_sha256": "8555cdb5da4bff25771e6e50ca37f0bc91cb8047813c52261c1f00907cb9f682",
+            "metadata_hex": "4e45573a556e6e616d65642020207f4c00020000000200000032b50000f8c50000fcc5000200000005000b00013c0000",
+            "wave_disk_equal": true
+          },
+          {
+            "channel": 1,
+            "frames": 46387,
+            "allocation_bytes": 101376,
+            "frequency_hz": 879.8332214355469,
+            "peak_pcm16": 2297.0,
+            "pcm_sha256": "8e2b41c69c6308975b315c29793f2159a4b96e7921da0cc6d8dcba475382ac1a",
+            "metadata_hex": "4e45573a556e6e616d65642020207f5200020000000200000032b50000f8c50000fcc5000200000010000b00013c0000",
+            "wave_disk_equal": true
+          }
+        ]
+      },
+      {
+        "process": "restored",
+        "channels": [
+          {
+            "channel": 0,
+            "frames": 46387,
+            "allocation_bytes": 101376,
+            "frequency_hz": 440.0848388671875,
+            "peak_pcm16": 2287.0,
+            "pcm_sha256": "8555cdb5da4bff25771e6e50ca37f0bc91cb8047813c52261c1f00907cb9f682",
+            "metadata_hex": "4e45573a556e6e616d65642020207f4c00020000000200000032b50000f8c50000fcc5000200000005000b00013c0000",
+            "wave_disk_equal": true
+          },
+          {
+            "channel": 1,
+            "frames": 46387,
+            "allocation_bytes": 101376,
+            "frequency_hz": 879.8332214355469,
+            "peak_pcm16": 2297.0,
+            "pcm_sha256": "8e2b41c69c6308975b315c29793f2159a4b96e7921da0cc6d8dcba475382ac1a",
+            "metadata_hex": "4e45573a556e6e616d65642020207f5200020000000200000032b50000f8c50000fcc5000200000010000b00013c0000",
+            "wave_disk_equal": true
+          }
+        ]
+      },
+      {
+        "process": "cold",
+        "channels": [
+          {
+            "channel": 0,
+            "frames": 46387,
+            "allocation_bytes": 101376,
+            "frequency_hz": 440.0848388671875,
+            "peak_pcm16": 2287.0,
+            "pcm_sha256": "8555cdb5da4bff25771e6e50ca37f0bc91cb8047813c52261c1f00907cb9f682",
+            "metadata_hex": "4e45573a556e6e616d65642020207f4c00020000000200000032b50000f8c50000fcc5000200000005000b00013c0000",
+            "wave_disk_equal": true
+          },
+          {
+            "channel": 1,
+            "frames": 46387,
+            "allocation_bytes": 101376,
+            "frequency_hz": 879.8332214355469,
+            "peak_pcm16": 2297.0,
+            "pcm_sha256": "8e2b41c69c6308975b315c29793f2159a4b96e7921da0cc6d8dcba475382ac1a",
+            "metadata_hex": "4e45573a556e6e616d65642020207f5200020000000200000032b50000f8c50000fcc5000200000010000b00013c0000",
+            "wave_disk_equal": true
+          }
+        ]
+      }
+    ],
+    "scope": "Physical MOTU stereo input, normal-speed packaged WebView sampling/Save/session restore; independent cold native Sample Load",
+    "limitations": [
+      "Windows MME does not measure physical driver losses or latency",
+      "No clean-machine, alternate-rate, long-duration or final-release claim",
+      "Device output playback is not measured by this sampling test"
+    ]
+  },
+  "recorded_seconds_per_channel": 1.051859410430839,
+  "evidence_sha256": {
+    "armed.png": "d4ace044496094b499b007d02562207e8527f3d9342fe17581955b9454c0bf25",
+    "capture-status.txt": "b9a2674b36268ee87c721cec103440e789307d4292b04d36c08b9527a7a312da",
+    "recorded.png": "77525f9e3fd18a475f2b2efeb66bfa8bdbacfbb60fda18f82847eb972c4cdf17",
+    "recorded.s760state": "f2c54c140a4a9dab60f7d605d31278c19304af7a56b78d520766aca7bdf61209",
+    "restored.png": "f510da2b1e8ccb229c82f5e232aeeddd1d77c2ce5ee018c342cba81b0ab5943f",
+    "restored.s760state": "218e337d8563d5202d40ea4d43b14858c0a4f35bb2f8eba3d286e41cfc70aba1",
+    "result.json": "ca4ddeb61809aa7448a6505292a5bdeb314bbd99e9a991d4711d75e307d2b6ff",
+    "saved.png": "654ec3a662b6c43cfec2b734a3f91f7821b92422eb946192f8fa5063df63687c",
+    "tone.json": "90d116463a359532db173a9139f2cdf217273e9fdff709d94e17bcaafe4abd2b",
+    "verification.json": "0627ac3c1352188e0db8ac2c568a485c06d3a28739eb4589b6c43a4ddff9cf78"
+  },
+  "commands": {
+    "ui_cwd": "google-ui",
+    "ui": "node node_modules/@playwright/test/cli.js test packaged-sampling.spec.ts --config=playwright.packaged.config.ts --output=<private-test-results>",
+    "environment": {
+      "S760_SAMPLE_PACKAGE": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-crash-2026-10-17\\package\\dist\\S760Studio",
+      "S760_SAMPLE_WORK": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3",
+      "S760_SAMPLE_BLANK": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\media-verification-20261012-065549\\formatted.img",
+      "S760_SAMPLE_DEVICE": "3:Stereo In 1-2 (MOTU Pro Audio v"
+    },
+    "readback": "python scripts/verify_packaged_sampling.py verify --package <same-package> --work <same-work>",
+    "regressions": "python -m pytest tests/test_capture.py tests/test_standalone_inputs.py tests/test_standalone_configuration.py tests/test_standalone_sessions.py -q --tb=short --basetemp=<private-temp> -o cache_dir=<private-cache>",
+    "typescript": "node google-ui/node_modules/typescript/bin/tsc --project google-ui/tsconfig.json --noEmit"
+  },
+  "validation": {
+    "final_packaged_ui_cases_passed": 1,
+    "independent_native_processes_passed": 3,
+    "focused_backend_tests_passed": 93,
+    "typescript": "passed"
+  },
+  "raw_evidence_private": "docs\\ic20-hle-findings\\chatGPT-work\\m6-webview-sampling-2026-10-17\\run3",
+  "limitations": [
+    "Windows MME does not measure physical driver losses or latency",
+    "No clean-machine, alternate-rate, long-duration or final-release claim",
+    "Device output playback is not measured by this sampling test",
+    "This qualifies short retained clips only, not a promised recording duration or uninterrupted physical ADC stream",
+    "The input-status snapshot includes whole-workflow discarded frames; physical driver losses and the recording-time discard distribution are not measured",
+    "Actual sampler output is disabled; native readback is unthrottled and has no live recording device",
+    "Final combined load/play/edit/sample/save/restore release qualification remains open"
+  ]
+}

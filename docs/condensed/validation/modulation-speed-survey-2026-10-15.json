@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "outcome": "Six complete midrange falls broadly track native timing; MIDI73 has an unresolved near-antiphase periodic audio mismatch. General modulation parity is not established; no DSP/timing change justified.",
+  "sample_count": 61,
+  "midi_notes": [
+    35,
+    95
+  ],
+  "time_settings": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    40,
+    48,
+    56,
+    64,
+    72,
+    80,
+    88,
+    96,
+    104,
+    112
+  ],
+  "hold_seconds": 3,
+  "release_seconds": 3,
+  "comparisons": [
+    {
+      "time": 16,
+      "hardware_note_count": 4,
+      "hardware_fall_seconds": 0.2325,
+      "hardware_min_seconds": 0.22500000000000003,
+      "hardware_max_seconds": 0.245,
+      "native_fall_seconds": 0.2386116249999901,
+      "difference_seconds": -0.006111624999990101,
+      "ratio": 0.9743867257096532
+    },
+    {
+      "time": 24,
+      "hardware_note_count": 4,
+      "hardware_fall_seconds": 0.38249999999999995,
+      "hardware_min_seconds": 0.32500000000000007,
+      "hardware_max_seconds": 0.40499999999999997,
+      "native_fall_seconds": 0.40018687500000283,
+      "difference_seconds": -0.017686875000002877,
+      "ratio": 0.9558034605707577
+    },
+    {
+      "time": 32,
+      "hardware_note_count": 4,
+      "hardware_fall_seconds": 0.5525,
+      "hardware_min_seconds": 0.5,
+      "hardware_max_seconds": 0.565,
+      "native_fall_seconds": 0.5603914999999944,
+      "difference_seconds": -0.007891499999994389,
+      "ratio": 0.9859178806245376
+    },
+    {
+      "time": 40,
+      "hardware_note_count": 4,
+      "hardware_fall_seconds": 0.6900000000000001,
+      "hardware_min_seconds": 0.6549999999999999,
+      "hardware_max_seconds": 0.7249999999999999,
+      "native_fall_seconds": 0.7213739999999973,
+      "difference_seconds": -0.03137399999999724,
+      "ratio": 0.9565079972386067
+    },
+    {
+      "time": 48,
+      "hardware_note_count": 4,
+      "hardware_fall_seconds": 0.96,
+      "hardware_min_seconds": 0.915,
+      "hardware_max_seconds": 1.0099999999999998,
+      "native_fall_seconds": 0.9821280000000172,
+      "difference_seconds": -0.022128000000017245,
+      "ratio": 0.9774693318996945
+    },
+    {
+      "time": 56,
+      "hardware_note_count": 4,
+      "hardware_fall_seconds": 1.2999999999999998,
+      "hardware_min_seconds": 1.2899999999999998,
+      "hardware_max_seconds": 1.3250000000000002,
+      "native_fall_seconds": 1.3026616249999847,
+      "difference_seconds": -0.0026616249999849018,
+      "ratio": 0.9979567794514673
+    }
+  ],
+  "matched_audio_intervals": [
+    {
+      "note": 45,
+      "time": 16,
+      "hardware_seconds": 0.235,
+      "native_seconds": 0.2594104308390023,
+      "difference_seconds": -0.024410430839002295
+    },
+    {
+      "note": 49,
+      "time": 24,
+      "hardware_seconds": 0.39499999999999996,
+      "native_seconds": 0.3990929705215419,
+      "difference_seconds": -0.00409297052154195
+    },
+    {
+      "note": 53,
+      "time": 32,
+      "hardware_seconds": 0.5449999999999999,
+      "native_seconds": 0.5188208616780046,
+      "difference_seconds": 0.026179138321995366
+    },
+    {
+      "note": 57,
+      "time": 40,
+      "hardware_seconds": 0.6549999999999999,
+      "native_seconds": 0.6385487528344671,
+      "difference_seconds": 0.016451247165532812
+    },
+    {
+      "note": 61,
+      "time": 48,
+      "hardware_seconds": 0.945,
+      "native_seconds": 0.947845804988662,
+      "difference_seconds": -0.0028458049886620485
+    },
+    {
+      "note": 65,
+      "time": 56,
+      "hardware_seconds": 1.305,
+      "native_seconds": 1.2621315192743765,
+      "difference_seconds": 0.04286848072562344
+    }
+  ],
+  "method": "Hardware channel1 5ms RMS bins,15ms Gaussian smoothing, extrema prominence2dB. First held peak to following valley; interval cancels unknown capture start offset. Native first cutoff2613 to following416. Aggregate hardware notes by Time setting; native one representative note per setting.",
+  "limits": [
+    "RMS extrema are audio landmarks, not direct hardware cutoff writes. Quantization/filter response/smoothing can shift these by tens of milliseconds.",
+    "Four different pitches per setting are not identical-note repeat captures; keyboard dependence is not independently isolated.",
+    "Visual overlays are independently gain-centered and not waveform residual fits.",
+    "Time4/8/12 are excluded from interval comparisons because fast turns approach analysis resolution.",
+    "Time64 and slower have no complete fall in3seconds; censored, not failed.",
+    "TVA release audibility limits TVF note-off observation. No LFO or TVA timing qualification.",
+    "No independent held-out validation or native behavior change.",
+    "A spurious Time80 RMS turn caused by carrier beating was excluded; incomplete native coefficient falls are not stage-duration observations."
+  ],
+  "source_hashes": {
+    "tests\\hardware_recordings\\s760_01 Survey_20261015_161418.zip": "b08ca7b4e50cdfdeb6dd14ae919b5e5ef701da4f0c5ac63b86a84addaa2eea78",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-speed-single-final-2026-10-15\\MODALL.IMG": "2698485cfaec42a098556c3ddf168cac0051162b08739c44ed54c23244cb7be3",
+    "mame-source\\mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "docs/ic20-hle-findings/chatGPT-work/analyze_modulation_survey.py": "f1394f95d4fc4c60cb6065779716787d0914b5327f409fc9bd4face1b133aad7"
+  },
+  "static_filter_recheck": {
+    "passed": true,
+    "rows": [
+      {
+        "mode": "BP",
+        "heldout_rms_error_percent": 0.0792437761520853
+      },
+      {
+        "mode": "HP",
+        "heldout_rms_error_percent": 0.1040800007936581
+      }
+    ]
+  },
+  "midi73_followup": {
+    "note": 73,
+    "time": 72,
+    "classification": "Unresolved periodic audio mismatch; initial general overlay conclusion overstated",
+    "fit_window_seconds": [
+      0.2,
+      2.8
+    ],
+    "hardware": {
+      "rms_trend_db_per_second": 2.9236404637,
+      "ripple_frequency_hz": 1.87387387,
+      "ripple_sinusoid_amplitude_db": 0.74425936,
+      "ripple_phase_radians": 1.73134907,
+      "carrier_hz": 410.8,
+      "lower_sideband_hz": 408.95,
+      "lower_sideband_relative_db": -17.41
+    },
+    "native": {
+      "rms_trend_db_per_second": 2.8848861179,
+      "ripple_frequency_hz": 1.85135135,
+      "ripple_sinusoid_amplitude_db": 1.31181208,
+      "ripple_phase_radians": -1.5279965,
+      "carrier_hz": 410.8,
+      "lower_sideband_hz": 408.95,
+      "lower_sideband_relative_db": -9.7,
+      "monotonic_cutoff_window_seconds": [
+        0.2,
+        2.7
+      ],
+      "cutoff_rows": 125,
+      "decreasing_cutoff_steps": 0
+    },
+    "method": "Exploratory sinusoid search0.5..5Hz after removing linear RMS dB trend; phases refer to waveform origins, not a synchronized hardware trigger. Hann periodogram independently confirms spectral components.",
+    "limits": "Similar broad trend does not establish modulation parity. Native cutoff rises monotonically until its first peak near2.76s while audio fluctuates repeatedly. Playback/phase, filter response and timing remain candidates; no production fix justified."
+  }
+}

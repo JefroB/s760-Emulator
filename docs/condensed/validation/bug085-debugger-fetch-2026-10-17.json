@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-17",
+  "bug": "BUG-085",
+  "status": "FIXED",
+  "before_executable_sha256": "933c3b0c44559fb951e4c6213edd27710e2ed18a32c6b7c75b7757ee3b1f3fd5",
+  "identities_sha256": {
+    "mame-source/mames760.exe": "8992e5f33d9651bb7616652ea2cf2437b3e39bd147fcc9dbc37788b930ea4c95",
+    "mame-source/src/devices/cpu/mcs96/mcs96.cpp": "040aa5fccff229628d82fe60c2df9124e9e8bbedd2a3b51dd863d4f1325f6982",
+    "mame-source/src/devices/cpu/mcs96/mcs96.h": "6026220299c3b0d2d71dd895e40f404782fad88c5181d84f149c4ceceadeca98",
+    "tests/test_native_debugger_fetch.py": "ec56284cf2b13a784cedad5589ee9a2d1388e2a1e812ef37a1d2eafcd669124d",
+    "scripts/trace_ic15_residual_byte.py": "7f1b36793618121abfc1d87e4c07b9a63abb0419115febd5e67d6e02d37e8872",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "before_observer_console": "[FETCH-CONTROL] fetch=0790 data=03f0\n[DATA-BYTES] 00 00 00\n[HISTORY] 4A61: skip #00\n[HISTORY] 4A5C: skip #00\n[HISTORY] 4A5E: skip #00\n[HISTORY] 4A5F: skip #00\n[HISTORY] 4A61: skip #00\n[HISTORY] 4A5C: skip #00\n[HISTORY] 4A5E: skip #00\n[HISTORY] 4A5F: skip #00\n[HISTORY] 4A61: skip #00\n[HISTORY] 4A5C: skip #00\n[HISTORY] 4A5E: skip #00\n[HISTORY] 4A5F: skip #00\n[HISTORY] 4A61: skip #00\n[HISTORY] 4A5C: skip #00\n[HISTORY] 4A5E: skip #00\n[HISTORY] 4A5F: skip #00\n[HISTORY] 4A61: skip #00\n[HISTORY] 4A5C: skip #00\n[HISTORY] 4A5E: skip #00\n[HISTORY] 4A5F: skip #00\n[HISTORY] 4A61: skip #00\n[HISTORY] 4A64: skip #00\n[HISTORY] 4A66: skip #00\n[HISTORY] 4A1D: skip #00\n[HISTORY] 4A20: skip #00\n[HISTORY] 4B09: skip #00\n[HISTORY] 4B0D: skip #00\n[HISTORY] 4B12: skip #00\n[HISTORY] 4B15: skip #00\n[HISTORY] 4B18: skip #00\n[HISTORY] 4B1A: skip #00\n[HISTORY] 4B1D: skip #00\nAverage speed: 1350.04% (3 seconds)\nConnecting to WMI Server failed. Error: 0x80070005\nXInput device detection failed. XInput won't be used. Error: 0x80070005\nsed1330.bin NOT FOUND (NO GOOD DUMP KNOWN) (tried in sed1330 s760)\nWARNING: the machine might not run correctly.\n",
+  "after_observer_console": "[FETCH-CONTROL] fetch=0790 data=03f0\n[DATA-BYTES] 00 00 00\n[HISTORY] 4A61: djnz da, 4a5c\n[HISTORY] 4A5C: push da\n[HISTORY] 4A5E: nop\n[HISTORY] 4A5F: pop da\n[HISTORY] 4A61: djnz da, 4a5c\n[HISTORY] 4A5C: push da\n[HISTORY] 4A5E: nop\n[HISTORY] 4A5F: pop da\n[HISTORY] 4A61: djnz da, 4a5c\n[HISTORY] 4A5C: push da\n[HISTORY] 4A5E: nop\n[HISTORY] 4A5F: pop da\n[HISTORY] 4A61: djnz da, 4a5c\n[HISTORY] 4A5C: push da\n[HISTORY] 4A5E: nop\n[HISTORY] 4A5F: pop da\n[HISTORY] 4A61: djnz da, 4a5c\n[HISTORY] 4A5C: push da\n[HISTORY] 4A5E: nop\n[HISTORY] 4A5F: pop da\n[HISTORY] 4A61: djnz da, 4a5c\n[HISTORY] 4A64: pop da\n[HISTORY] 4A66: ret\n[HISTORY] 4A1D: djnz da, 4a1a\n[HISTORY] 4A20: lcall 4b09\n[HISTORY] 4B09: ld 28, #8904\n[HISTORY] 4B0D: ldb d4, e000\n[HISTORY] 4B12: andb d4, #d0\n[HISTORY] 4B15: cmpb d4, #80\n[HISTORY] 4B18: jne 4b0d\n[HISTORY] 4B1A: ldb 42, #03\n[HISTORY] 4B1D: ldb da, [28]+\n[FETCH-BYTES] b2 29 da\nAverage speed: 1417.19% (3 seconds)\nConnecting to WMI Server failed. Error: 0x80070005\nXInput device detection failed. XInput won't be used. Error: 0x80070005\nsed1330.bin NOT FOUND (NO GOOD DUMP KNOWN) (tried in sed1330 s760)\nWARNING: the machine might not run correctly.\n",
+  "assertions": {
+    "fetch_selector_0102": "0790",
+    "data_selector_010a": "03f0",
+    "program_data_at_4b1d": "000000",
+    "opcode_bytes_at_4b1d": "b229da",
+    "history_at_4b1d": "ldb da, [28]+",
+    "firmware_unchanged": true
+  },
+  "backend_suite": "........................................................................ [ 14%]\n........................................................................ [ 28%]\n........................................................................ [ 43%]\n........................................................................ [ 57%]\n........................................................................ [ 72%]\n........................................................................ [ 86%]\n...................................................................      [100%]\n499 passed in 69.83s (0:01:09)",
+  "cpp_core_result": ">>> ALL C++ CORE TESTS PASSED SUCCESSFULLY! <<<",
+  "cpp_plugin_result": ">>> ALL VST3, VST2 & CLAP PLUGIN TESTS PASSED SUCCESSFULLY! <<<",
+  "native_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.716666666667,
+    "note_release": 80.816666666667,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    },
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999542236328125,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "seconds": 83.139365079365,
+        "sample": 3666446
+      },
+      {
+        "seconds": 84.139365079365,
+        "sample": 3710546
+      }
+    ]
+  },
+  "limits": [
+    "Debugger history uses selectors current at display time; no per-entry historical bank snapshots.",
+    "Read-only original-ROM observer; no guest-state or firmware patching.",
+    "Native model verification, not physical hardware parity.",
+    "Backend and runtime tests require local socket permission; initial sandbox-blocked attempts are excluded from passing results."
+  ],
+  "related_docs_fix": "BUG-096: report generators follow reorganized documentation paths; five focused checks and final full suite pass."
+}

@@ -1,0 +1,698 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Confirmed firmware/control-path implementation gap; physical command semantics unqualified",
+  "control_address": "0x101018",
+  "native_audio_handling": "Not interpreted by current native filter/envelope audio paths; general bus/shadow storage is not functional emulation.",
+  "table": {
+    "data_page": "0x02BE",
+    "logical_address": "0xAC7A",
+    "file_offset": 748666,
+    "first_six_words": [
+      0,
+      14,
+      20,
+      24,
+      26,
+      27
+    ],
+    "observed_fast_lookup_rows": [
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 79.598717875,
+        "pc": 34239,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 79.604184875,
+        "pc": 34490,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 96.598719,
+        "pc": 34239,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 96.59912225,
+        "pc": 33035,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 96.600214875,
+        "pc": 33276,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 96.600439875,
+        "pc": 34490,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 113.598718875,
+        "pc": 34239,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 113.60041675,
+        "pc": 34490,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15",
+        "seconds": 122.367061625,
+        "pc": 33276,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 79.797975875,
+        "pc": 12729,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 79.798738625,
+        "pc": 34239,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 79.799141125,
+        "pc": 33035,
+        "index": 8,
+        "word": 26
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 79.8111565,
+        "pc": 33276,
+        "index": 8,
+        "word": 26
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 79.81138075,
+        "pc": 34490,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 82.797549375,
+        "pc": 12729,
+        "index": 8,
+        "word": 26
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 86.797976625,
+        "pc": 12729,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 86.798739375,
+        "pc": 34239,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 86.80199825,
+        "pc": 34490,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 93.797976,
+        "pc": 12729,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 93.798741875,
+        "pc": 34239,
+        "index": 2,
+        "word": 14
+      },
+      {
+        "case": "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced",
+        "seconds": 93.8119945,
+        "pc": 34490,
+        "index": 2,
+        "word": 14
+      }
+    ]
+  },
+  "survey_rows": [
+    {
+      "note": 35,
+      "partial": 4,
+      "time_settings": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "command_words": {
+        "0x000A": 1,
+        "0x000E": 3,
+        "0x001B": 7,
+        "0x4E00": 1,
+        "0x001C": 1,
+        "0x001A": 3
+      },
+      "firmware_stage_counts": {
+        "7": 2,
+        "0": 2,
+        "3": 1,
+        "6": 148
+      },
+      "counter0_range": [
+        0,
+        0
+      ],
+      "divisors": [
+        65535
+      ],
+      "pcm_exact_frames": 308700,
+      "control_rows": [
+        {
+          "seconds": "79.797825250000002",
+          "pc": "15210",
+          "word": "10",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "255",
+          "index_register": "10",
+          "result_register": "37048",
+          "partial_time1": "13"
+        },
+        {
+          "seconds": "79.797975875000006",
+          "pc": "12729",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "79.798043500000006",
+          "pc": "12760",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "16377",
+          "result_register": "27",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "79.798061125000004",
+          "pc": "12879",
+          "word": "19968",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "40",
+          "result_register": "19968",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "79.798085499999999",
+          "pc": "12909",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "40",
+          "result_register": "27",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "79.798098374999995",
+          "pc": "15302",
+          "word": "28",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "255",
+          "index_register": "28",
+          "result_register": "37048",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "79.798738624999999",
+          "pc": "34239",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "79.798775750000004",
+          "pc": "34281",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "2816",
+          "result_register": "27",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "79.799141125000006",
+          "pc": "33035",
+          "word": "26",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "8",
+          "result_register": "26",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "79.799209250000004",
+          "pc": "33066",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "416",
+          "result_register": "27",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "79.811156499999996",
+          "pc": "33276",
+          "word": "26",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "8",
+          "result_register": "26",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "79.811222375",
+          "pc": "33298",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "2613",
+          "result_register": "27",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "79.811380749999998",
+          "pc": "34490",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "79.811417875000004",
+          "pc": "34532",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "2816",
+          "result_register": "27",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "82.797549375000003",
+          "pc": "12729",
+          "word": "26",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "8",
+          "result_register": "26",
+          "partial_time1": "4"
+        },
+        {
+          "seconds": "82.797617500000001",
+          "pc": "12760",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "0",
+          "index_register": "416",
+          "result_register": "27",
+          "partial_time1": "4"
+        }
+      ]
+    },
+    {
+      "note": 39,
+      "partial": 8,
+      "time_settings": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "command_words": {
+        "0x000A": 1,
+        "0x000E": 3,
+        "0x001B": 4,
+        "0x4E00": 1,
+        "0x001C": 1
+      },
+      "firmware_stage_counts": {
+        "7": 5,
+        "2": 5,
+        "3": 4,
+        "4": 4,
+        "6": 138
+      },
+      "counter0_range": [
+        0,
+        5
+      ],
+      "divisors": [
+        4,
+        65535
+      ],
+      "pcm_exact_frames": 308700,
+      "control_rows": [
+        {
+          "seconds": "86.797825750000001",
+          "pc": "15210",
+          "word": "10",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "255",
+          "index_register": "10",
+          "result_register": "37048",
+          "partial_time1": "13"
+        },
+        {
+          "seconds": "86.797976625000004",
+          "pc": "12729",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "86.798044250000004",
+          "pc": "12760",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "16377",
+          "result_register": "27",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "86.798061875000002",
+          "pc": "12879",
+          "word": "19968",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "40",
+          "result_register": "19968",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "86.798086249999997",
+          "pc": "12909",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "40",
+          "result_register": "27",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "86.798099124999993",
+          "pc": "15302",
+          "word": "28",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "255",
+          "index_register": "28",
+          "result_register": "37048",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "86.798739374999997",
+          "pc": "34239",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "8"
+        },
+        {
+          "seconds": "86.798776500000002",
+          "pc": "34281",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "2816",
+          "result_register": "27",
+          "partial_time1": "8"
+        },
+        {
+          "seconds": "86.801998249999997",
+          "pc": "34490",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "8"
+        },
+        {
+          "seconds": "86.802035375000003",
+          "pc": "34532",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "1",
+          "index_register": "2816",
+          "result_register": "27",
+          "partial_time1": "8"
+        }
+      ]
+    },
+    {
+      "note": 73,
+      "partial": 72,
+      "time_settings": [
+        72,
+        72,
+        72,
+        72
+      ],
+      "command_words": {
+        "0x000A": 1,
+        "0x000E": 3,
+        "0x001B": 4,
+        "0x4E00": 1,
+        "0x001C": 1
+      },
+      "firmware_stage_counts": {
+        "7": 18,
+        "2": 140,
+        "3": 11
+      },
+      "counter0_range": [
+        0,
+        140
+      ],
+      "divisors": [
+        139,
+        65535
+      ],
+      "pcm_exact_frames": 308700,
+      "control_rows": [
+        {
+          "seconds": "93.797824875000003",
+          "pc": "15210",
+          "word": "10",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "255",
+          "index_register": "10",
+          "result_register": "37048",
+          "partial_time1": "13"
+        },
+        {
+          "seconds": "93.797976000000006",
+          "pc": "12729",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "93.798043625000005",
+          "pc": "12760",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "16377",
+          "result_register": "27",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "93.798061250000003",
+          "pc": "12879",
+          "word": "19968",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "40",
+          "result_register": "19968",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "93.798085624999999",
+          "pc": "12909",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "40",
+          "result_register": "27",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "93.798098499999995",
+          "pc": "15302",
+          "word": "28",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "255",
+          "index_register": "28",
+          "result_register": "37048",
+          "partial_time1": "0"
+        },
+        {
+          "seconds": "93.798741875000005",
+          "pc": "34239",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "72"
+        },
+        {
+          "seconds": "93.798778999999996",
+          "pc": "34281",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "2816",
+          "result_register": "27",
+          "partial_time1": "72"
+        },
+        {
+          "seconds": "93.811994499999997",
+          "pc": "34490",
+          "word": "14",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "2",
+          "result_register": "14",
+          "partial_time1": "72"
+        },
+        {
+          "seconds": "93.812031625000003",
+          "pc": "34532",
+          "word": "27",
+          "mask": "65535",
+          "table_page": "702",
+          "channel": "2",
+          "index_register": "2816",
+          "result_register": "27",
+          "partial_time1": "72"
+        }
+      ]
+    }
+  ],
+  "survey_observer_pcm_exact_frames": 926100,
+  "original_control_word_counts": {
+    "0x000A": 3,
+    "0x4E00": 6,
+    "0x001B": 15,
+    "0x001C": 3,
+    "0x000E": 9
+  },
+  "limits": [
+    "Firmware uses a distinct short-time branch when software envelope counters are absent; endpoint writes bracketed by DSP control words support a hardware-assisted transition hypothesis, not a measured slew law.",
+    "Codes are not decoded into milliseconds, interpolation coefficients, latch/reset actions or chip identity. No guessed behavior is implemented.",
+    "Time4/8/72 discrimination establishes path selection, not physical timing parity.",
+    "Fast-path observation does not prove the cause of the separate Time80 resonant residual.",
+    "Read-only trace plus ordinary MIDI; no guest RAM/PC/ROM edits. Managed runtime and native audio defaults unchanged.",
+    "Existing silence-trimmed hardware captures do not measure absolute MIDI latency."
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\trace_resonant_firmware.lua": "1f1d9864de31a091d46fe9c3376191b39f07c38fa3a792c436a7caedeadb74ec",
+    "docs\\ic20-hle-findings\\chatGPT-work\\run_survey_firmware_trace.py": "ea3b5bb30aded6e550ae7baab1cc768ab564f80c5746e7067ba9dc0394a8b746",
+    "docs\\ic20-hle-findings\\chatGPT-work\\summarize_firmware_controls.py": "c1c3c0da8a3844d6b9ba9d14aec9a8a7e3d5819d3e0b1a402261145a5f9088be",
+    "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "c6bc26b40458577682d6978cb6f94cefc3e0437ae0e00a93b01691e046da1ed5",
+    "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-firmware-controls-2026-10-15\\firmware-inputs.csv.controls.csv": "7c3c051f533b25a6c02312b83391703eff9aa10ffddf53225e19663c9bca2362",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced\\firmware-inputs.csv": "9ede2f93e34e860bdbd23f08c6c2c59e4bac1028f26b7301ed437ff2ef636e19",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced\\firmware-inputs.csv.controls.csv": "b80643e0aad65c2d2215f286e11ff1a6cbaca529e157baa8037c1b9de57acf87",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\traced\\capture.json": "79df71ab53338742e6acc71034b2c1ca78d24edf9948c6592166232a156eead2",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-fast-firmware-2026-10-15\\baseline\\capture.json": "79df71ab53338742e6acc71034b2c1ca78d24edf9948c6592166232a156eead2"
+  }
+}

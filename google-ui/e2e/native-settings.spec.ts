@@ -7,6 +7,7 @@ test('recover missing firmware through graphical settings',async({page})=>{
   const dialog=page.getByRole('dialog',{name:'Standalone configuration'});
   await expect(dialog).toBeVisible();
   await expect(page.getByRole('status')).toContainText('needs configuration');
+  await dialog.getByRole('button',{name:'Firmware & media',exact:true}).click();
   await page.getByLabel('Boot ROM (32KB)').fill(process.env.S760_TEST_BOOT!);
   await page.getByLabel('System disk (1.44MB)').fill(process.env.S760_TEST_SYSTEM!);
   await page.getByLabel('Media directory').fill(process.env.S760_TEST_MEDIA!);
@@ -22,6 +23,7 @@ test('recover missing firmware through graphical settings',async({page})=>{
   })).toBeGreaterThan(10000);
   // Invalid replacement must leave this running firmware intact.
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await dialog.getByRole('button',{name:'Firmware & media',exact:true}).click();
   await page.getByLabel('Boot ROM (32KB)').fill('missing-boot-image.bin');
   await page.getByLabel('Replace current sampler memory and restart').check();
   await page.getByRole('button',{name:'Apply settings and start'}).click();

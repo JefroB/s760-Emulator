@@ -9,9 +9,11 @@ import argparse
 import hashlib
 import importlib.metadata as metadata
 import json
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
+import re
 import shutil
 import sys
+from urllib.parse import unquote, urlsplit
 
 PRIVATE_SUFFIXES = {'.bin', '.rom', '.hex', '.img', '.iso', '.chd', '.hda',
                     '.dsk', '.raw', '.hfe', '.wav', '.aiff', '.s760state'}
@@ -33,6 +35,34 @@ def write_json(path: Path, value) -> None:
 def copy_notice(source: Path, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source, destination)
+
+
+def readme_errors(package: Path) -> list[str]:
+    """Check first-party setup links without rewriting upstream license texts."""
+    readme = package/'README.md'
+    if not readme.is_file():
+        return ['Missing required file: README.md']
+    try:
+        text = readme.read_text(encoding='utf-8')
+    except UnicodeError:
+        return ['README.md is not UTF-8']
+    text = re.sub(r'```.*?```|~~~.*?~~~', '', text, flags=re.S)
+    errors = []
+    for target in re.findall(r'!?\[[^\]]*\]\(([^)]+)\)', text):
+        target = target.strip().strip('<>')
+        if target.startswith('#'):
+            continue
+        parsed = urlsplit(target)
+        if parsed.scheme in ('http', 'https', 'mailto'):
+            continue
+        name = unquote(parsed.path)
+        path = (package/name).resolve()
+        if parsed.scheme or PureWindowsPath(name).is_absolute() or not path.is_relative_to(package.resolve()):
+            errors.append(f'README.md link escapes package: {target}')
+        elif not path.is_file() and name != 'PACKAGE-AUDIT.json':
+            # The audit CLI publishes this very report after collecting errors.
+            errors.append(f'README.md broken local link: {target}')
+    return errors
 
 
 def prepare_notices(repo: Path, package: Path) -> None:
@@ -88,13 +118,13 @@ def prepare_notices(repo: Path, package: Path) -> None:
     write_json(package/'DEPENDENCY-INVENTORY.json', inventory)
     (package/'DEVELOPMENT-ONLY.txt').write_bytes(
         b'Local development artifact. Public distribution has NOT been qualified.\n'
-        b'See PACKAGE-AUDIT.json and NATIVE_BOUNDARY_QUALIFICATION.md (docs/ in the source checkout).\n'
+        b'See README.md and PACKAGE-AUDIT.json in this package.\n'
         b'No Roland firmware, samples or saved sessions are supplied.\n'
         b'License text presence does not establish license compatibility or corresponding source.\n')
 
 
 def audit_package(repo: Path, package: Path) -> dict:
-    errors = []
+    errors = readme_errors(package)
     files = {}
     private = {}
     for source in (repo/'roms').rglob('*'):
@@ -113,23 +143,26 @@ def audit_package(repo: Path, package: Path) -> dict:
             errors.append(f'Private-media extension: {name}')
         if checksum in private:
             errors.append(f'Private fixture content: {name} matches {private[checksum]}')
-    policy_path = repo/QUALIFICATION
-    policy = json.loads(policy_path.read_text(encoding='utf-8')) if policy_path.is_file() else {}
-    reviewed = (policy.get('schema') == 1 and policy.get('decision') == 'qualified'
-                and policy.get('files') == files)
+    # Dated reviews are immutable history. Only manifests in this trusted
+    # repository directory can authorize a tree; package-local reports cannot.
+    policies = [(p, json.loads(p.read_text(encoding='utf-8')))
+                for p in sorted((repo/'docs/distribution').glob('windows-standalone-*.json'))]
+    matching = next((p for p, policy in policies
+                     if policy.get('schema') == 1 and policy.get('decision') == 'qualified'
+                     and policy.get('files') == files), None)
+    reviewed = matching is not None
     expected = [('mame-source/mames760.exe', 'mame-source/mames760.exe'),
                 ('scripts/s760_runtime.lua', 'scripts/s760_runtime.lua'),
                 ('mame-source/COPYING', 'MAME-COPYING.txt'),
                 ('mame-source/COPYING', 'mame-source/COPYING')]
     expected += [(p.relative_to(repo).as_posix(), p.relative_to(repo).as_posix())
                  for p in (repo/'mame-source/docs/legal').rglob('*') if p.is_file()]
-    if not (repo/'mame-source/docs/legal/GPL-2.0').is_file():
+    if not reviewed and not (repo/'mame-source/docs/legal/GPL-2.0').is_file():
         errors.append('Missing source MAME GPL-2.0 license')
-    for source, destination in expected:
-        # The qualified engine was rebuilt from the delivered source archive,
-        # rather than copied from the developer's unrelated working executable.
-        if reviewed and destination == 'mame-source/mames760.exe':
-            continue
+    # A reviewed tree carries its own source/legal/runtime snapshot. Comparing
+    # it with today's working checkout would invalidate historical artifacts
+    # whenever the Lua protocol or upstream notices change.
+    for source, destination in ([] if reviewed else expected):
         if not (repo/source).is_file() or not (package/destination).is_file():
             errors.append(f'Missing required file: {destination}')
         elif digest(repo/source) != digest(package/destination):
@@ -146,13 +179,14 @@ def audit_package(repo: Path, package: Path) -> dict:
         blockers.insert(0, 'project_license_scope_not_reviewed')
     if reviewed:
         blockers = []
-    elif policy:
+    elif policies:
         blockers.append('artifact_differs_from_reviewed_distribution')
     return {'schema': 1, 'development_package_ok': not errors,
+            'reviewed_distribution': matching.relative_to(repo).as_posix() if matching else None,
             'release_ready': reviewed and not errors, 'release_blockers': blockers, 'errors': errors,
             'files': files,
             'limitations': ['Hash scan detects exact local ROM/media files and forbidden extensions; it is not a general secret or transformed-content detector.',
-                            'Dependency inventory is a build-environment superset; release review is recorded separately in docs/DISTRIBUTION_QUALIFICATION.md.' if reviewed else
+                            'Dependency inventory is a build-environment superset; release review is recorded separately in docs/testing/distribution-qualification.md.' if reviewed else
                             'Attribution of bundled DLLs and source correspondence require release review.']}
 
 

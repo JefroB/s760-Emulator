@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-16",
+  "metrics": {
+    "boot_rom": {
+      "classified_bytes": 26101,
+      "total_bytes": 32768,
+      "percent": 79.6539306640625,
+      "baseline_classified_bytes": 26101,
+      "percentage_point_change": 0.0,
+      "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "inventory": "docs\\condensed\\validation\\ic15-exploration-coverage-2026-10-16.json"
+    },
+    "os": {
+      "classified_bytes": 62736,
+      "total_bytes": 1032192,
+      "percent": 6.077938988095238,
+      "baseline_classified_bytes": 62736,
+      "percentage_point_change": 0.0,
+      "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "inventory": "docs\\condensed\\validation\\os-exploration-coverage-2026-10-16.json"
+    }
+  },
+  "overall_decoding_completion": "not yet quantifiable",
+  "rubric": "Separate region/root coverage, semantics, mutable addressing/dispatch and native critical-path qualification; no evidence-backed weighting yet. Assembler/rebuild and physical parity remain separate.",
+  "baseline": "Immediately preceding maintained totals:OS62736,ROM26101. This stack/CPU run adds behavior evidence and fixes a component; no additional firmware bytes classified.",
+  "validation": "457 full-suite tests pass; new native CPU pytest1pass separately. Native runtime passes. 171 original-ROM FDC IRQ stack writes reconciled and handoff4338 caller word observed.",
+  "remaining_blockers": [
+    "IC4 control47 full count and DMA interrupt/vector/acknowledgment contract (BUG-082)",
+    "Unresolved ROM byte use and physical reset/dormant-entry evidence",
+    "Genuine transport retry qualification"
+  ],
+  "tool_identities": {
+    "scripts/analyze_firmware_routines.py": "38917d105be8f2d45e1a49f4f7f7dda8ccb4dd931626cb92fe7b04a1ad64e686",
+    "scripts/firmware_coverage.py": "689518d401121fe4756a0bfec4f77f24dd9b159f7a58e0df6d2f04c4f1ea140c",
+    "scripts/firmware_manifests/ic15_exploration.json": "88de4d5a670b4b63301f483c38d2f3e740be18f3ad057c1a61454a471528ac1c",
+    "scripts/firmware_manifests/os_exploration.json": "04da92ccb6a4588588da2803fd192c8a393acaaf204fe8600c9efc4935a12aa1"
+  },
+  "engine_sha256": "09b5d0c0f84bf8b885069ea262a4de7533509cdb3cd4b384af1bb7567e1600e8"
+}

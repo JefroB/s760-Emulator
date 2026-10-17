@@ -1,0 +1,692 @@
+{
+  "schema_version": 1,
+  "rubric_version": "s760-os-decoding-v1",
+  "target": "S-760 OS2.24 loaded payload",
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "gates": [
+    "context",
+    "layout",
+    "behavior",
+    "execution"
+  ],
+  "rule": "Binary acceptance within24 published paths/families; equal gate count, not effort weighting or percent source understood. Conditional static proofs retain conditions. All major unmapped functionality and bytes remain in explicit open families/catch-all.",
+  "scope_change_policy": "Never remove unfinished families to improve score. New independent functionality requires a versioned amendment, retained previous snapshot and explicit old/new denominator. Refinements retain gates and stated scope.",
+  "gate_definitions": {
+    "context": "Justified entry/caller/gate and explicit fetch/data context under recorded conditions; conditional proof can pass, physical invocation is not implied.",
+    "layout": "Instruction/data boundaries, relevant widths and extents independently checked for the path.",
+    "behavior": "Inputs, outputs/state transitions and error/terminal behavior explained within the declared path scope.",
+    "execution": "Ordinary unchanged-firmware native execution validates the path acceptance condition; isolated component tests alone are insufficient."
+  },
+  "paths": [
+    {
+      "id": "startup",
+      "title": "OS handoff and initial selectors",
+      "scope": "Page0:C000 entry, initial selectors/stack and entry into the running OS; subordinate initialization has separate rows.",
+      "evidence": [
+        "docs/condensed/validation/os-reconciled-independent-review-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-handoff-2026-10-16.json"
+      ],
+      "remaining": "Explain complete startup ordering, dependency failures and mutable configuration branches.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "kernel_dispatch",
+      "title": "Scheduler and interrupt-wide control",
+      "scope": "Remaining scheduler, service dispatch, interrupt sources and entry/return mapping preservation.",
+      "evidence": [
+        "docs/condensed/validation/os-reconciled-frontier-promotion-2026-10-16.json"
+      ],
+      "remaining": "Map all scheduler/IRQ owners, bound indirect dispatch, qualify context restoration and ordinary invocation.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "midi_parser",
+      "title": "Resident MIDI status parser",
+      "scope": "000F:213A byte-ring/status parser and nine class dispatch stubs; note/voice processing separate.",
+      "evidence": [
+        "docs/condensed/validation/os-midi-decoding-2026-10-16.json"
+      ],
+      "remaining": "Exercise parser wrap, status classes and malformed/system transitions with native captured input.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "voice_lifecycle",
+      "title": "Note processing and voice lifecycle",
+      "scope": "Full note-on/off, allocation/stealing, partial ownership and release paths; host audio success does not close decoding.",
+      "evidence": [
+        "docs/condensed/validation/os-controller-routing-2026-10-16.json",
+        "docs/condensed/validation/os-reconciled-frontier-promotion-2026-10-16.json"
+      ],
+      "remaining": "Recover caller graph, voice ownership and allocation/release failures; validate supported musical workflows.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "controllers",
+      "title": "Controller/RPN routing",
+      "scope": "Known controller handlers, channel assignment lists and reset/session pair.",
+      "evidence": [
+        "docs/condensed/validation/os-controller-routing-2026-10-16.json",
+        "docs/condensed/validation/os-controller-session-pair-2026-10-16.json"
+      ],
+      "remaining": "Resolve destination parameter meanings and runtime list termination/preservation; exercise controller contracts.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "sysex_framing",
+      "title": "System-message framing/checksum",
+      "scope": "Known manufacturer/device/model header, packet buffer and checksum dispatch; not all protocol families.",
+      "evidence": [
+        "docs/condensed/validation/os-system-message-decoding-2026-10-16.json"
+      ],
+      "remaining": "Native valid/invalid header, checksum and length cases; account for remaining protocol families in unknown-payload row.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "transfer_lifecycle",
+      "title": "Transfer allocation and rollback",
+      "scope": "Known reservation, staged descriptor, publication, cancel and supervisor rollback.",
+      "evidence": [
+        "docs/condensed/validation/os-transfer-lifecycle-2026-10-16.json",
+        "docs/condensed/validation/os-owner-callees-2026-10-16.json"
+      ],
+      "remaining": "Prove intervening callee preservation, overflow/failure cleanup and runtime allocation/cancellation.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "field_packing",
+      "title": "Known transfer field packing",
+      "scope": "Documented seven-bit/nibble packing, address table and low-word derivatives under stated input bounds.",
+      "evidence": [
+        "docs/condensed/validation/os-transfer-fields-2026-10-16.json",
+        "docs/condensed/validation/os-transfer-addressing-2026-10-16.json",
+        "docs/condensed/validation/os-postprocess-full-fields-2026-10-16.json"
+      ],
+      "remaining": "Native boundary/malformed inputs and response capture; algebra tests are not execution.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "sample_transfer_helpers",
+      "title": "Known sample-send/copy helpers",
+      "scope": "Decoded descriptor address/conversion, send-tail padding and local copy helpers.",
+      "evidence": [
+        "docs/condensed/validation/os-send-and-copy-helpers-2026-10-16.json",
+        "docs/condensed/validation/os-transfer-lifecycle-2026-10-16.json"
+      ],
+      "remaining": "Close owner/callee context, complete send/receive state transitions and native end-to-end transfer.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "scsi_session",
+      "title": "SCSI session/request ownership",
+      "scope": "CDED session wrapper, known request fields, notifications and request DMA owner.",
+      "evidence": [
+        "docs/condensed/validation/os-scsi-session-2026-10-16.json",
+        "docs/condensed/validation/os-scsi-request-dma-2026-10-16.json"
+      ],
+      "remaining": "Resolve producers and mutable ownership; validate session success/failure/status under ordinary input.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "scsi_target",
+      "title": "SCSI target commands and deletion",
+      "scope": "Known0139:B418 command parser, selected transfers and005A deletion service, including zero-count DJNZ qualification.",
+      "evidence": [
+        "docs/condensed/validation/os-scsi-transfer-delete-2026-10-16.json"
+      ],
+      "remaining": "Exercise target commands, error status, deletion and cleanup without forcing guest state.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "fdc_startup",
+      "title": "OS FDC startup and result IRQ",
+      "scope": "005A:5C83 initialization and0000:CD5D result producer; full file operations separate.",
+      "evidence": [
+        "docs/condensed/validation/os-panel-fdc-startup-2026-10-16.json"
+      ],
+      "remaining": "Ordinary native seek/recalibration/result lengths and IRQ wait qualification.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "media_persistence",
+      "title": "OS filesystem and media persistence",
+      "scope": "Remaining floppy/SCSI filesystem, directory, allocation, save/load and error/retry code.",
+      "evidence": [
+        "docs/condensed/validation/os-reconciled-frontier-promotion-2026-10-16.json"
+      ],
+      "remaining": "Map file/media workflows and failure/cleanup behavior, then exercise persistence/reload.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "eeprom",
+      "title": "OS EEPROM services",
+      "scope": "003B64-word read/write/verify and bounded single-word operation, with unlimited retry caveat.",
+      "evidence": [
+        "docs/condensed/validation/os-eeprom-services-2026-10-16.json"
+      ],
+      "remaining": "Ordinary OS configuration persistence and retry cases; ROM EEPROM execution does not qualify OS routines.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "audio_init",
+      "title": "OS audio initialization/routing",
+      "scope": "Known02A6/001F initialization tables, routing masks and coefficient selection.",
+      "evidence": [
+        "docs/condensed/validation/os-startup-audio-2026-10-16.json"
+      ],
+      "remaining": "Bound remaining configuration-indexed coefficient tables and explain routing meanings; validate OS-side transactions.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "synthesis",
+      "title": "Remaining synthesis and modulation",
+      "scope": "OS-side pitch/filter/envelope/LFO/velocity/pan and voice parameter application; physical chip parity separate.",
+      "evidence": [
+        "docs/condensed/validation/os-controller-routing-2026-10-16.json",
+        "docs/condensed/validation/os-reconciled-frontier-promotion-2026-10-16.json"
+      ],
+      "remaining": "Recover remaining parameter/voice paths, layout and state transitions, then validate representative boundaries.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "ui_event_ring",
+      "title": "Resident UI event ring",
+      "scope": "Known enqueue/consume, payload sizes and special exits.",
+      "evidence": [
+        "docs/condensed/validation/os-ui-event-ring-2026-10-16.json",
+        "docs/condensed/validation/os-ui-preservation-2026-10-16.json"
+      ],
+      "remaining": "Resolve concurrency, capacity and cursor ownership; native producer/consumer event traces.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "screen_loader",
+      "title": "Known screen-descriptor loader",
+      "scope": "005A:42E8 descriptor loading and startup0130; entire screen inventory separate.",
+      "evidence": [
+        "docs/condensed/validation/os-screen-descriptor-loader-2026-10-16.json"
+      ],
+      "remaining": "Explain all descriptor-pointer roles and mutable callbacks; native cache/state validation.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "selection_callbacks",
+      "title": "Known selection/refresh callbacks",
+      "scope": "Decoded selection refresh, fixed011E/011F callbacks and temporary status rows.",
+      "evidence": [
+        "docs/condensed/validation/os-selection-refresh-2026-10-16.json",
+        "docs/condensed/validation/os-fixed-screen-callbacks-2026-10-16.json",
+        "docs/condensed/validation/os-ui-field-callbacks-2026-10-16.json"
+      ],
+      "remaining": "Close mutable descriptor/callback assumptions and full caller preservation; native selection/cancel assertions.",
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "display_screens",
+      "title": "Remaining UI screens and rendering",
+      "scope": "All remaining CRT/LCD screen families, fields, graphics and callback ownership; heuristic screen counts do not pass.",
+      "evidence": [
+        "docs/condensed/validation/os-screen-descriptor-loader-2026-10-16.json",
+        "docs/condensed/validation/os-ui-field-border-2026-10-16.json"
+      ],
+      "remaining": "Establish actual screen inventory and bounds, explain renderer/field behavior and exercise screens.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "input_devices",
+      "title": "Remaining panel/mouse/input ownership",
+      "scope": "OS panel, encoder, keyboard and mouse routes including focus/capture ownership.",
+      "evidence": [
+        "docs/condensed/validation/os-panel-fdc-startup-2026-10-16.json",
+        "docs/condensed/validation/os-ui-event-ring-2026-10-16.json"
+      ],
+      "remaining": "Identify all input producers and dispatch ownership, recover side effects and native boundary cases.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "object_hierarchy",
+      "title": "Performance/patch/partial/sample management",
+      "scope": "Remaining object creation/edit/copy/delete, hierarchy references, allocation and cleanup.",
+      "evidence": [
+        "docs/condensed/validation/os-scsi-transfer-delete-2026-10-16.json",
+        "docs/condensed/validation/os-transfer-lifecycle-2026-10-16.json"
+      ],
+      "remaining": "Decode object layouts and full lifecycle/failure paths; validate representative ordinary workflows.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "sampling_editing",
+      "title": "Sampling and waveform editing",
+      "scope": "Remaining record/input routing, sample editing, loop editing and transformations.",
+      "evidence": [
+        "docs/condensed/validation/os-reconciled-frontier-promotion-2026-10-16.json"
+      ],
+      "remaining": "Recover entry/caller graph, sample buffer contracts and edit/failure semantics; validate workflows.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    },
+    {
+      "id": "unknown_payload",
+      "title": "Remaining payload, overlays and resources",
+      "scope": "Explicit catch-all for every unclassified byte, unowned resource, unknown entry and functionality not assigned above. No OS unused-space assumption.",
+      "evidence": [
+        "docs/condensed/validation/os-exploration-coverage-2026-10-16.json",
+        "docs/condensed/validation/os-reconciled-frontier-promotion-2026-10-16.json"
+      ],
+      "remaining": "Classify remaining payload with evidence; account for overlays/indirect control and assign newly discovered functionality via versioned scope amendments. This row cannot pass while unexplained regions remain.",
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Named caller/entry and conditional fetch/data selector context established for this bounded contract."
+        },
+        "layout": {
+          "status": "open",
+          "acceptance": "Instruction and referenced-data boundaries, widths and extents checked for this bounded contract."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Inputs, outputs, state transitions and terminal/error behavior explained within this contract."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Ordinary unchanged-firmware native execution exercises this contract with matched assertions."
+        }
+      }
+    }
+  ],
+  "separate_unscored_requirements": [
+    "Physical timing/audio/display/hardware parity",
+    "Editable source, assembler/linker, no-change rebuild and modified-firmware acceptance",
+    "Effort/time remaining; equal gates do not model task cost"
+  ],
+  "historical_catalogues": "os-exhaustive-code-matrix.md and os-test-coverage-matrix.md are unverified research catalogues. Their addresses and feature badges are not evidence; they were not counted as completed rows."
+}

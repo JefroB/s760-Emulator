@@ -6,7 +6,7 @@ retained as research input only; they do not drive coverage or ownership claims.
 
 import os
 
-OUTPUT_MD_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs", "OS_TEST_COVERAGE_MATRIX.md"))
+OUTPUT_MD_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs", "firmware", "os", "os-test-coverage-matrix.md"))
 
 # Legacy status fields are never used as coverage evidence.
 UNTESTED = "Unverified"
@@ -402,7 +402,7 @@ def generate_markdown():
     else:
         from coverage_report import write_report
     sections = [('Subsystems', [(r['subsystem'], r['address']) for r in MATRIX_DATA])]
-    write_report(OUTPUT_MD_PATH, 'OS subsystem research inventory', sections)
+    write_report(OUTPUT_MD_PATH, 'OS subsystem research inventory', sections, document_dir="docs/firmware/os")
 
 
 if __name__ == '__main__':

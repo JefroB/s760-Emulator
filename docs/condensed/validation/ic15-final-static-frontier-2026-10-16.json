@@ -1,0 +1,29 @@
+{
+  "sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "unlinked_edges": [
+    {
+      "region": "rom_boot_services",
+      "source_page": 1936,
+      "from": 18261,
+      "to": 49152,
+      "kind": "branch",
+      "resolved": false,
+      "destination_page": null
+    }
+  ],
+  "numeric_matches": [
+    {
+      "row": {
+        "pc": 8616,
+        "page": 1920,
+        "file_offset": 8616,
+        "bytes": "89598350",
+        "mnemonic": "CMP",
+        "operands": "RW50, #0x8359"
+      },
+      "possible_file": 25433,
+      "qualification": "Numeric match only; immediate/register/data/fetch meaning and selector context require inspection."
+    }
+  ],
+  "qualification": "Complete scan of current decoded operands, not a proof against computed addresses, mutable callbacks, interrupts or alternate mappings."
+}

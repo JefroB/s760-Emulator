@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-16",
+  "metrics": {
+    "boot_rom": {
+      "classified_bytes": 26101,
+      "total_bytes": 32768,
+      "percent": 79.6539306640625,
+      "baseline_classified_bytes": 26101,
+      "percentage_point_change": 0.0,
+      "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "inventory": "docs\\condensed\\validation\\ic15-exploration-coverage-2026-10-16.json"
+    },
+    "os": {
+      "classified_bytes": 62649,
+      "total_bytes": 1032192,
+      "percent": 6.069510323660714,
+      "baseline_classified_bytes": 62649,
+      "percentage_point_change": 0.0,
+      "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "inventory": "docs\\condensed\\validation\\os-exploration-coverage-2026-10-16.json"
+    }
+  },
+  "overall_decoding_completion": "not yet quantifiable",
+  "rubric": "Separate region/root coverage, semantics, mutable addressing/dispatch and native critical-path qualification; no evidence-backed weighting yet. Assembler/rebuild and physical parity remain separate.",
+  "baseline": "Immediately preceding ROM followup26101 and OS62649. Both inventories freshly regenerated; no classification growth in this audit.",
+  "validation": "All5172 original-ROM instruction lengths/mnemonics and1365 direct targets agree with independent unchanged MAME decoder source; all five valid-state menu bounds exercised with ordinary native input. Current audit does not rerun earlier47 tests because production analysis/runtime code is unchanged.",
+  "remaining_blockers": [
+    "BUG-080 command-phase wait and unqualified large-DMA semantics",
+    "Existing HD fixture fails required SCSI boot-header shape; a valid private fixture is needed after transport repair",
+    "179 nonuniform and6488 uniformFF bytes lack justified use/classification",
+    "Physical reset/interrupt/dormant-entry evidence unavailable",
+    "Transport retry needs representable transport error or physical evidence"
+  ],
+  "tool_identities": {
+    "scripts/analyze_firmware_routines.py": "38917d105be8f2d45e1a49f4f7f7dda8ccb4dd931626cb92fe7b04a1ad64e686",
+    "scripts/firmware_coverage.py": "689518d401121fe4756a0bfec4f77f24dd9b159f7a58e0df6d2f04c4f1ea140c",
+    "scripts/firmware_manifests/ic15_exploration.json": "88de4d5a670b4b63301f483c38d2f3e740be18f3ad057c1a61454a471528ac1c",
+    "scripts/firmware_manifests/os_exploration.json": "c185fc99a345bd323cd494dcd3c408022b0b8e24f22e1454e81ad958ebc6c4e9"
+  }
+}

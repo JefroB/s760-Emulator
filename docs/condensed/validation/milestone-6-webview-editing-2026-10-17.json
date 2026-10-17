@@ -1,0 +1,450 @@
+{
+  "date": "2026-10-17",
+  "completed_gate": "Four named editing/persistence workflows through the actual frozen WebView2 desktop window",
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "google-ui/e2e/packaged-editing.spec.ts": "241763dabaf046735b21296aa3e4c80bc5fdaeee82922c5f67709fc7843ef06f",
+    "google-ui/e2e/native-controls.ts": "8cff868e1b4f672c0556e4ecdeafc9e59f5f59ac27b4c36affbf0f2fa284fe33",
+    "google-ui/playwright.packaged.config.ts": "6d3906fd63401a78c43a95466a805966dda1c7407e6d02398aa0db950122a3bb",
+    "scripts/verify_packaged_edit_audio.py": "093a4c304b1d939f30ed54416ec2e5f25430b919283d9254872c063355da3e02",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2"
+  },
+  "package_sha256": {
+    "S760Studio.exe": "dfde510d10a1ccbed6d966c04e848805cd897ca7a466cdd9f42c3f8b941cd236",
+    "mame-source/mames760.exe": "6db47405d446fe365cc9f581a2d0745651f8e25897ccaabc0a765c565c323b96",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+    "README.md": "2652ea93f36a4ee93bd7ec95cb76da6add68f8ea633684cff233f67849968a04",
+    "PACKAGE-AUDIT.json": "ca6ec8f420273b3dab968ebd45a53064550caa1989111b03b7967cc9c0610a7d",
+    "BUNDLED-INPUTS.json": "a9fee01bf7a3e8a43e9c701c8dea63053fd95ebadfbfcc987db1d66f17a1dc87",
+    "DEPENDENCY-INVENTORY.json": "0122915d202d104d8caac88ec92ef23a269b5ceac13dad51c2d4b5629c921a0e"
+  },
+  "fixture_sha256": {
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "production_runtime_and_package_unchanged": true,
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+    "node": "v22.17.1",
+    "playwright": "1.64.0"
+  },
+  "webview": {
+    "version": "155.0.4283.60",
+    "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+    "sha256": "a479cf008576c987fa50eaa648c1f40cc77c474bb61d84e7b11f155050d34026",
+    "observed_processes": [
+      {
+        "pid": 20196,
+        "parent": 3608,
+        "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "version": "155.0.4283.60",
+        "debugPort": "--remote-debugging-port=62820"
+      },
+      {
+        "pid": 20500,
+        "parent": 20196,
+        "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "version": "155.0.4283.60",
+        "debugPort": ""
+      },
+      {
+        "pid": 19628,
+        "parent": 20196,
+        "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "version": "155.0.4283.60",
+        "debugPort": ""
+      },
+      {
+        "pid": 31016,
+        "parent": 20196,
+        "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "version": "155.0.4283.60",
+        "debugPort": ""
+      },
+      {
+        "pid": 14428,
+        "parent": 20196,
+        "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "version": "155.0.4283.60",
+        "debugPort": ""
+      },
+      {
+        "pid": 22120,
+        "parent": 20196,
+        "executable": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+        "version": "155.0.4283.60",
+        "debugPort": "--remote-debugging-port=62820"
+      }
+    ],
+    "frozen_launches": 8,
+    "context": "Package-created existing page; no external page navigation in desktop mode",
+    "qa_only_argument": "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=<ephemeral> --remote-debugging-address=127.0.0.1"
+  },
+  "prerequisites": [
+    "Existing Windows development workstation with installed WebView2 and desktop runtimes",
+    "Private IC15 v1.11, OS 2.24 and ROBOFULL",
+    "Complete hash-identified frozen development package",
+    "Node/Playwright and localhost for QA; Python for separate native PCM"
+  ],
+  "commands": {
+    "browser_performance": "From google-ui: S760_EDIT_PACKAGE=<package>; S760_EDIT_WORK=<fresh-private-work>; S760_EDIT_WEBVIEW=1; node node_modules/@playwright/test/cli.js test packaged-editing.spec.ts --grep \"packaged perform\" --config=playwright.packaged.config.ts --output=<private-probe-results>",
+    "browser_other_cases": "Same package/work/WebView environment; node node_modules/@playwright/test/cli.js test packaged-editing.spec.ts --grep \"packaged (patch|partial|erase)\" --config=playwright.packaged.config.ts --output=<private-edit-results>",
+    "recommended_all_cases": "Fresh work: node node_modules/@playwright/test/cli.js test packaged-editing.spec.ts --config=playwright.packaged.config.ts --output=<private-results>",
+    "native": "python scripts/verify_packaged_edit_audio.py --package <package> --browser-work <private-work> --state-dir <fresh-native-work> --require-webview",
+    "typescript": "node google-ui/node_modules/typescript/bin/tsc --project google-ui/tsconfig.json --noEmit",
+    "backend": "Python stdin runner sets TEMP/TMP to private work, redirects mame_harness.SCRATCH_DIR and SNAP_DIR (ending snap/s760), creates both; pytest.main([tests,-q,--tb=short,--basetemp=<private>/tmp,-o,cache_dir=<private>/cache])"
+  },
+  "browser": {
+    "passed": 4,
+    "failed": 0,
+    "cases": {
+      "perform": {
+        "browser_result": {
+          "scenario": "perform",
+          "passed": true,
+          "before": 3403796005,
+          "edited": 1664581997,
+          "persisted": 1664581997,
+          "interface": "Packaged WebView2",
+          "renderers": [
+            "Edg/155.0.4283.60",
+            "Edg/155.0.4283.60"
+          ],
+          "rejected_media_sizes": [
+            0,
+            737279,
+            737281,
+            1474559,
+            1474561
+          ],
+          "saved_sha256": "ba60e02c636bdc9f81206f7a4bcde04e57655c017f44a3cb0c64c0471e6e4946",
+          "limits": "Packaged WebView2 controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+        },
+        "manual_session_sha256": "a42ed08ba6cf98c9bba8b381fe6d1f97580a701ef7d73bb16d1421c830746a84",
+        "preserved_neighbor_bytes": 119808,
+        "zeroed_pcm_bytes": 0,
+        "screenshots_sha256": {
+          "before.png": "0fbc0abe6ddf887576ebcac38b46a1d03400ff39e9bc19bd5a384232aa64ad22",
+          "edited.png": "cc432b919671cd9172b9749280c152ce95060c6dadb61dc1ddc045e16f578050",
+          "saved-screen.png": "cc432b919671cd9172b9749280c152ce95060c6dadb61dc1ddc045e16f578050",
+          "restored.png": "cc432b919671cd9172b9749280c152ce95060c6dadb61dc1ddc045e16f578050",
+          "cold.png": "aef525ca36d253b4b41e661624ef32f9204963bc5a7e3a3d14d09a594d0fc91a"
+        }
+      },
+      "patch": {
+        "browser_result": {
+          "scenario": "patch",
+          "passed": true,
+          "before": 500076997,
+          "edited": 4068560837,
+          "persisted": 4068560837,
+          "interface": "Packaged WebView2",
+          "renderers": [
+            "Edg/155.0.4283.60",
+            "Edg/155.0.4283.60"
+          ],
+          "rejected_media_sizes": [],
+          "saved_sha256": "ee17356be6926860112d158258a5f6d9087d8df9189bad44d99a936eca01ca81",
+          "limits": "Packaged WebView2 controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+        },
+        "manual_session_sha256": "586885d81e7582545630d30b3bb3d6407103e12018e9a0913321ac5ae7bdc01e",
+        "preserved_neighbor_bytes": 119808,
+        "zeroed_pcm_bytes": 0,
+        "screenshots_sha256": {
+          "before.png": "e0d0a70872e367193f3c85dbaf50cf588af969c6abf83e94e17451180a557c08",
+          "edited.png": "9ca5194f007bf4e695b42eb77895d793f4a68d576100bd7d8cc8ed8518cabd96",
+          "saved-screen.png": "9ca5194f007bf4e695b42eb77895d793f4a68d576100bd7d8cc8ed8518cabd96",
+          "restored.png": "9ca5194f007bf4e695b42eb77895d793f4a68d576100bd7d8cc8ed8518cabd96",
+          "cold.png": "38c07039154ea82047e329f63d2bac2af68eaba10edcbf1769c86e99aa929bce"
+        }
+      },
+      "partial": {
+        "browser_result": {
+          "scenario": "partial",
+          "passed": true,
+          "before": 313467589,
+          "edited": 1297015181,
+          "persisted": 1297015181,
+          "interface": "Packaged WebView2",
+          "renderers": [
+            "Edg/155.0.4283.60",
+            "Edg/155.0.4283.60"
+          ],
+          "rejected_media_sizes": [],
+          "saved_sha256": "4efd589e48d0b6cc63a11f52cc4a36c926e1bec906dc89ab4a532bd150f7d689",
+          "limits": "Packaged WebView2 controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+        },
+        "manual_session_sha256": "2ad71375d58d7a00b6bd4c96f0c6da8d07daff2a5b6f7702dda64929d7a9d586",
+        "preserved_neighbor_bytes": 119808,
+        "zeroed_pcm_bytes": 0,
+        "screenshots_sha256": {
+          "before.png": "8d0aed49321a00d662a541e0038f1649964326456d504df664dc61e4c025936e",
+          "edited.png": "14a0e64dd6787eed107437dc1ad5541471ceb404331e18d2b102b655110cf0d1",
+          "saved-screen.png": "14a0e64dd6787eed107437dc1ad5541471ceb404331e18d2b102b655110cf0d1",
+          "restored.png": "14a0e64dd6787eed107437dc1ad5541471ceb404331e18d2b102b655110cf0d1",
+          "cold.png": "c302f088f4db87cf9190f8b28235cc9b822500726dcf1878e22995cf6f8d1ed4"
+        }
+      },
+      "erase": {
+        "browser_result": {
+          "scenario": "erase",
+          "passed": true,
+          "before": 1153106405,
+          "edited": 3027321573,
+          "persisted": 3027321573,
+          "interface": "Packaged WebView2",
+          "renderers": [
+            "Edg/155.0.4283.60",
+            "Edg/155.0.4283.60"
+          ],
+          "rejected_media_sizes": [],
+          "saved_sha256": "f83274d715fc2b2dd34f3e08c9db1705cf9f80690fd75bd3c1931a4374b18563",
+          "limits": "Packaged WebView2 controls and persistence; silent unthrottled development profile, no physical audio or clean-machine claim"
+        },
+        "manual_session_sha256": "abae645e3818c1c14535b9e41c08036c4e1ebcb9fed4a14c1fead7cc7d04ce4d",
+        "preserved_neighbor_bytes": 110592,
+        "zeroed_pcm_bytes": 8192,
+        "screenshots_sha256": {
+          "before.png": "02151539d60545e088ef41438216d0ca3817dccf5d17ae8a8dde14e5e5b295db",
+          "edited.png": "959dba2e8abb6bb85322f7d03a5b0189183925a4aadc5cd741873b77aa9f1e11",
+          "saved-screen.png": "4f0816301cb0fb15a72854cb886b9765520b399ff95f24c7d03262a226a406c3",
+          "restored.png": "959dba2e8abb6bb85322f7d03a5b0189183925a4aadc5cd741873b77aa9f1e11",
+          "cold.png": "c3c316a01d059e186db6d55b7e58833f18ae8b2dfec60049ec4161eac7e7b313"
+        }
+      }
+    }
+  },
+  "independent_native": {
+    "passed": true,
+    "processes": 10,
+    "measurements": {
+      "baseline60": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        }
+      ],
+      "baseline21": [
+        {
+          "bend": "centre",
+          "frequency_hz": 248,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 248,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 248,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        }
+      ],
+      "perform": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      ],
+      "perform_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      ],
+      "patch": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 4107,
+          "peak": 0.007702201139181852,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 10002,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        }
+      ],
+      "patch_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 4107,
+          "peak": 0.007702201139181852,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 10002,
+          "peak": 0.007709295488893986,
+          "silent_release": true
+        }
+      ],
+      "partial": [
+        {
+          "bend": "centre",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        }
+      ],
+      "partial_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": 495,
+          "peak": 0.007714434992522001,
+          "silent_release": true
+        }
+      ],
+      "erase": [
+        {
+          "bend": "centre",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        }
+      ],
+      "erase_session": [
+        {
+          "bend": "centre",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "up",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        },
+        {
+          "bend": "down",
+          "frequency_hz": null,
+          "peak": 0.0,
+          "silent_release": true
+        }
+      ],
+      "passed": true,
+      "required_interface": "Packaged WebView2",
+      "scope": "Cold native PCM from packaged-interface exported media and sessions; no physical audio or clean-machine claim"
+    }
+  },
+  "regression": {
+    "passed": 519,
+    "skipped": 0,
+    "seconds": 107.83
+  },
+  "typescript": "passed",
+  "process_cleanup": "No tested frozen, native or WebView2 descendant remained after acceptance",
+  "evidence_logs": {
+    "performance": "probe.log",
+    "other_cases": "edit.log",
+    "native": "native.log",
+    "backend": "regression.log"
+  },
+  "limitations": [
+    "Exact dated development artifact and installed WebView2 version only; not every renderer/version.",
+    "Window runs silent/unthrottled; native PCM verification is separate from device audio.",
+    "No normal-speed device sampling through WebView2, arbitrary edit combinations, clean-machine/installer or final release qualification.",
+    "Complete final load/play/edit/sample/save/restore release workflow remains open."
+  ]
+}

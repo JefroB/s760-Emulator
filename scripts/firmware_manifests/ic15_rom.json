@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "target": "ic15_rom",
+  "cpu": "Intel S80C196KB",
+  "input": {
+    "filename": "Roland_S-760_v1.11.BIN",
+    "size": 32768,
+    "sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "immutable": true
+  },
+  "layout": [
+    {
+      "name": "eprom",
+      "start": 0,
+      "end": 32768,
+      "policy": "preserve_exactly",
+      "classification": "mixed code/data/unknown"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "reset_prefix",
+      "classification": "decoded instructions",
+      "file_start": 8320,
+      "file_end": 8365,
+      "evidence": "Original bytes decode through selector 0102=0790 setup at 209B/209F; native ROM aperture mirrors A0..A14."
+    }
+  ],
+  "entry_points": [
+    {
+      "name": "cpu_reset_entry",
+      "cpu_address": 8320,
+      "physical_address": 1974400,
+      "file_offset": 8320,
+      "evidence": "Native reset enters 2080 in BOOT aperture; immutable disassembly begins DI. Physical reset selector remains uncertain."
+    }
+  ],
+  "mapping": {
+    "kind": "mirrored_rom",
+    "physical_aperture": [
+      1966080,
+      2097152
+    ],
+    "mirror_size": 32768,
+    "formula": "file=physical_address&0x7fff",
+    "fetch_selectors": [
+      256,
+      258,
+      260,
+      262
+    ],
+    "data_selectors": [
+      264,
+      266,
+      268,
+      270
+    ],
+    "reset_mapping_status": "Native reset aperture is qualified for boot; physical power-on bank defaults remain uncertain."
+  },
+  "vectors": {
+    "cpu_range": [
+      8192,
+      8256
+    ],
+    "interpretation": "CPU vector area; runtime data mapping is separate from instruction fetch. Preserve bytes; do not inject vectors.",
+    "known_runtime_entries": [],
+    "evidence": "docs/condensed/02-ic15-boot-eprom-and-handoff.md; native driver banked_address and banked_physical_r"
+  },
+  "derived_fields": [
+    {
+      "name": "checksums_lengths_container_fields",
+      "status": "No recomputation rule qualified for this target",
+      "policy": "preserve_exactly"
+    }
+  ],
+  "build_contract": {
+    "implemented": false,
+    "output_size": 32768,
+    "relocation": "unsupported",
+    "layout": "fixed offsets; unknown regions preserved verbatim",
+    "generated_source": "ignored local workspace",
+    "maintained_annotations": "versioned manifest; never overwrite generated source with maintained edits"
+  },
+  "unknowns": [
+    "Complete code/data classification is unfinished. Unannotated bytes remain unknown.",
+    "Integrity fields are not fully qualified; absence of a checksum must not be assumed.",
+    "Full bank state and callee effects remain unqualified."
+  ],
+  "evidence": [
+    "docs/condensed/02-ic15-boot-eprom-and-handoff.md; native driver banked_address and banked_physical_r"
+  ]
+}

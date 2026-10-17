@@ -31,6 +31,7 @@ Host-side only; reads text files, launches no MAME binary (Requirement 8.5).
 `pytest tests` from the repo root is how CI runs these.
 """
 import os
+import pytest
 
 # repo root = parent of the tests/ directory (same convention as conftest.py)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,6 +43,10 @@ PRODUCT = os.path.join(STEERING, "product.md")
 
 # The three corrected files.
 ALL_FILES = [RE_WORKFLOW, HARDWARE, PRODUCT]
+
+pytestmark = pytest.mark.skipif(
+    not os.path.isdir(STEERING), reason='Local ignored .kiro steering notes required',
+)
 
 # The file that carried the stale stance and was corrected in place.
 STANCE_FILE = RE_WORKFLOW

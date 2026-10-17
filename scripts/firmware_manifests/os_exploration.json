@@ -1,0 +1,3754 @@
+{
+  "schema": 1,
+  "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "payload_offset": "0x4800",
+  "regions": [
+    {
+      "name": "timer_isr",
+      "page": "0x0",
+      "start": "0xcad1",
+      "end": "0xcbcf",
+      "entries": [
+        "0xcad1"
+      ],
+      "evidence": "modulation-firmware-path.md: timer trace identifies page 0 ISR and CB00 TIMER1 sample. Cross-window calls remain unresolved.",
+      "summary": [
+        "CB00 samples TIMER1 before control service. Normal rearm uses saved TIMER1 + 20000; fallback uses current TIMER1 + 1000.",
+        "CB17/CB20 install fetch pages 001F/002D; CB2A/CB31 restore previous selectors after the service call."
+      ]
+    },
+    {
+      "name": "mouse_handshake",
+      "page": "0x4b",
+      "start": "0x57b4",
+      "end": "0x58ab",
+      "entries": [
+        "0x57b4"
+      ],
+      "evidence": "Matched scheduler trace identifies page 4B; PUSHA at 57B4 and POPA at 5811. Native driver maps F008 mouse four-nibble handshake. Region is a bounded analysis window, not an asserted function extent.",
+      "summary": [
+        "PUSHA at 57B4 starts the masked section; POPA at 5811 restores flags.",
+        "Writes to F008 alternate the handshake bit while four input nibbles are read; 586F and 57C2 contain counted delay loops."
+      ]
+    },
+    {
+      "name": "tvf_dispatch",
+      "page": "0x2d",
+      "start": "0x8000",
+      "end": "0x8300",
+      "entries": [
+        "0x8000"
+      ],
+      "evidence": "modulation-firmware-path.md: corrected dispatcher origin 002D:8000; fast command store at 8106 and restore at 8125. Indirect dispatch is deliberately unresolved.",
+      "indirect_targets": {
+        "0x800c": {
+          "targets": [
+            "0x800e",
+            "0x8010",
+            "0x8012",
+            "0x8014",
+            "0x8016",
+            "0x8018",
+            "0x801a",
+            "0x801c"
+          ],
+          "evidence": "Immutable instructions at 8000-800C compute 800E + 2*stage. Eight entries correspond to audited envelope stages 0-7. Other stage values remain unresolved; these are code stubs, not pointer words."
+        }
+      },
+      "summary": [
+        "Stage index selects an instruction stub at 800E + 2*stage. Annotated values 0-7 cover known envelope stages; other values remain unknown.",
+        "Fast path writes a companion command at 8106, calls cutoff calculation at 811E, and restores command 001B at 8125. Physical command semantics remain unqualified."
+      ]
+    },
+    {
+      "name": "cutoff_calculation",
+      "page": "0x1f",
+      "start": "0x46f1",
+      "end": "0x480c",
+      "entries": [
+        "0x46f1"
+      ],
+      "evidence": "modulation-firmware-path.md: exact integer replay of cutoff calculation 001F:46F1-480B. Data page 02BE must not be confused with instruction page 001F."
+    },
+    {
+      "name": "initial_cutoff",
+      "page": "0x2d",
+      "start": "0x925c",
+      "end": "0x92a8",
+      "entries": [
+        "0x925c"
+      ],
+      "evidence": "modulation-firmware-path.md: 002D:9270 calls cutoff calculation and writes initial cutoff companion pair. Bounded analysis window only. Expanded backward from known 9270 boundary to counter branch at 925C; both successor paths decode to tail jumps, with no guessed jump targets.",
+      "summary": [
+        "Reads initial TVF counter at data[83C6 + RW86]. A zero value selects data[8306 + RW86] as current envelope value and jumps to stage continuation 8048.",
+        "A nonzero counter stores stage 2 to data[8C1E + RW84], selects data[8396 + RW86] as current envelope value, and jumps to dispatcher 8000.",
+        "Both branches call 46F1 then delay 46C2, and write D022=0 / D020=calculated cutoff. These companion writes are not exclusive to the zero-counter path."
+      ]
+    },
+    {
+      "name": "control_service",
+      "page": "0x1f",
+      "start": "0x4000",
+      "end": "0x46c2",
+      "entries": [
+        "0x4000"
+      ],
+      "evidence": "Timer ISR CB13-CB25 selects instruction page 001F for 4000 and 002D for 8000 before calling 4000. Local direct calls lead to 43A3 and the voice loop at 43E5; cross-window destinations require context.",
+      "summary": [
+        "Saves data selectors 010A/010C; selects data page 02BE at 010C, then restores selectors on return (4000-405B).",
+        "Under the active service branch, 442D calls TVF dispatcher 8000. Other calls in the voice loop remain explicitly unresolved where their regions are not covered."
+      ]
+    },
+    {
+      "name": "dsp_delay",
+      "page": "0x1f",
+      "start": "0x46c2",
+      "end": "0x46d1",
+      "entries": [
+        "0x46c2"
+      ],
+      "evidence": "Immutable page 001F bytes at 46C2-46D0: fourteen NOP instructions then RET. Called by the initial-cutoff routine in the page-001F context.",
+      "summary": [
+        "Fourteen NOPs followed by RET. This is an explicit firmware delay; its physical purpose and timing are not inferred from the name."
+      ]
+    },
+    {
+      "name": "voice_parameter_setup",
+      "page": "0x1f",
+      "start": "0x4c9e",
+      "end": "0x4f05",
+      "entries": [
+        "0x4c9e"
+      ],
+      "evidence": "Direct call targets from control_service at 4415/446E etc under fetch page 001F. Bounded analysis window; no assertion of complete function extent.",
+      "summary": [
+        "Selects data page 032A or 033A according to voice metadata, or 0356 in the R9D=5 branch. These writes target data selector 010A, not instruction selector 0102.",
+        "Prepares data[8A56 + RW86] from existing waveform state at 8A86 and fade state, before dispatching the next waveform-state update at 4DCA.",
+        "Eight masked dispatch cases include direction-switching ramps, wrapping ramps, a table-interpolated path, a binary-output path, a recurrence updated at phase endpoints, and bounded one-way ramps. User-facing waveform-name mapping is not established here."
+      ],
+      "indirect_targets": {
+        "0x4dca": {
+          "targets": [
+            "0x4dcc",
+            "0x4dce",
+            "0x4dd0",
+            "0x4dd2",
+            "0x4dd4",
+            "0x4dd6",
+            "0x4dd8",
+            "0x4dda"
+          ],
+          "evidence": "4DC0 masks index with 7; 4DC3 doubles it; 4DC6 adds 4DCC before indirect branch. Eight bounded index values; code stubs verified by decoding."
+        }
+      }
+    },
+    {
+      "name": "amplitude_write",
+      "page": "0x1f",
+      "start": "0x46d1",
+      "end": "0x46f1",
+      "entries": [
+        "0x46d1"
+      ],
+      "evidence": "Direct call target from control_service at 4485 etc under fetch page 001F; writes D036/D034 after channel selection and delay.",
+      "summary": [
+        "Scales two per-voice words, selects channel at D040, calls delay 46C2, then writes D036=0 and D034=scaled result."
+      ]
+    },
+    {
+      "name": "filter_modulation_mix",
+      "page": "0x2d",
+      "start": "0x83a5",
+      "end": "0x84c7",
+      "entries": [
+        "0x83a5"
+      ],
+      "evidence": "Control service calls 83A5 at 4422 before TVF dispatcher 442D. Under fetch 0104=002D, decoded routine writes per-voice 8516, read by cutoff calculation at 4795/47A3.",
+      "summary": [
+        "Combines base words 8546/8576, contributions 8966/86F6/8846, key-related arithmetic, and scaled modulation input 8A56.",
+        "Signed depth sum uses 4077/8667/88A7/87B7, clamped to -63..63 before multiplication by 8A56.",
+        "Saturates the accumulated result to 0..32767 and writes data[8516 + RW86]; cutoff calculation consumes this word. Field names beyond this dataflow remain provisional."
+      ]
+    },
+    {
+      "name": "os_handoff_and_interrupts",
+      "page": "0x0",
+      "start": "0xc000",
+      "end": "0x10000",
+      "entries": [
+        "0xc000",
+        "0xcd5d",
+        "0xcf5a",
+        "0xcf82"
+      ],
+      "evidence": "IC15 handoff selects page 0 at C000; condensed boot evidence identifies page 0 CD5D FDC completion handler. Static window hypothesis; callees must preserve this fetch mapping.",
+      "stop_after": {
+        "0xcdd4": "Writes fetch selector 0106 for the currently executing C000-FFFF window. Next fetch requires the new page; do not continue in page 0."
+      }
+    },
+    {
+      "name": "resident_services",
+      "page": "0xf",
+      "start": "0x2000",
+      "end": "0x4000",
+      "entries": [
+        "0x213a",
+        "0x2080"
+      ],
+      "evidence": "OS C00A/C00E selects fetch page 000F for CPU window 0000-3FFF. Existing service calls target 213A; bounds exclude vector/data area below entry. Mapping conditional on selector preservation. Startup C473 setsR48=FF and C476 calls2080 under retained low fetch000F fromC00A/C00E; callee and interrupt preservation remain conditional.",
+      "indirect_targets": {
+        "0x21db": {
+          "targets": [
+            "0x21de",
+            "0x21e2",
+            "0x21e6",
+            "0x21ea",
+            "0x21ee",
+            "0x21f2",
+            "0x21f6",
+            "0x21fa",
+            "0x21fe"
+          ],
+          "evidence": "217E-2186 separates status channel and upper message bits; 21A5 sets special index 8. 21D4 scales by four, 21D7 adds 21DE. Nine four-byte stubs independently decode as LJMP plus padding; other runtime values retained as unknown."
+        },
+        "0x2a59": {
+          "targets": [
+            "0x2a5c",
+            "0x2a60",
+            "0x2a64",
+            "0x2a68",
+            "0x2a6c",
+            "0x2a70",
+            "0x2a74",
+            "0x2a78",
+            "0x2a7c",
+            "0x2a80",
+            "0x2a84"
+          ],
+          "evidence": "2A4A/2A4D restrict controller to 0..10; 2A52 multiplies by four; 2A55 adds 2A5C. Each four-byte entry decodes as LJMP plus NOP."
+        },
+        "0x2ab0": {
+          "targets": [
+            "0x2ab2",
+            "0x2ab6",
+            "0x2aba",
+            "0x2abe",
+            "0x2ac2",
+            "0x2ac6"
+          ],
+          "evidence": "2A99 subtracts 96; 2A9C rejects underflow and 2A9E/2AA1 reject values above 5. 2AA6/2AA9 multiply by four before adding 2AB2."
+        }
+      },
+      "summary": [
+        "213A drains a byte ring using read pointer RW6E and comparison pointer RW70; read-pointer wrap is 1B6C -> 196C (512-byte span).",
+        "2174 distinguishes status bytes, separates low channel bits from message class, and checks F0/F7/FE. This supports identifying the region as MIDI parsing; detailed message semantics remain under analysis.",
+        "Status classes map to note on/off 307A, poly pressure 2203, controllers 29F3, program change 23DA, channel pressure 2255, and pitch bend 25FD. See os-midi-decoding.md for scope and evidence.",
+        "Controller tables cover bounded indices 0..10 at 2A5C and 96..101 at 2AB2; generic controller processing at 2ACB precedes these fixed paths."
+      ]
+    },
+    {
+      "name": "pitch_control",
+      "page": "0x1f",
+      "start": "0x480c",
+      "end": "0x4b1b",
+      "entries": [
+        "0x480c"
+      ],
+      "evidence": "Direct calls from known control service at 441F and 4478 with fetch page 001F."
+    },
+    {
+      "name": "voice_housekeeping",
+      "page": "0x1f",
+      "start": "0x4b1b",
+      "end": "0x4c9e",
+      "entries": [
+        "0x4b1b",
+        "0x4c86"
+      ],
+      "evidence": "Direct calls from known control service at 4462 and 445F under fetch page 001F. Semantic title provisional."
+    },
+    {
+      "name": "amplitude_stages",
+      "page": "0x2d",
+      "start": "0x84c7",
+      "end": "0x87db",
+      "entries": [
+        "0x84c7"
+      ],
+      "evidence": "Control-service direct calls target 84C7 under fetch page 002D. Initial dispatch index bounds need independent qualification."
+    },
+    {
+      "name": "service_87db",
+      "page": "0x2d",
+      "start": "0x87db",
+      "end": "0x8c00",
+      "entries": [
+        "0x87db"
+      ],
+      "evidence": "Control-service direct calls target 87DB under fetch page 002D. No semantic name inferred."
+    },
+    {
+      "name": "resident_refresh_callees",
+      "page": "0x2d",
+      "start": "0xb247",
+      "end": "0xb600",
+      "entries": [
+        "0xb247",
+        "0xb299",
+        "0xb489"
+      ],
+      "evidence": "Resident calls at 2567/256A/256D and 29EF target B299/B247/B489. This decode applies to timer-service context with fetch selector 0104=002D; other callers may use different pages. Bounds provisional.",
+      "summary": [
+        "B247 emits eight DC00/DC02/DC06 transactions using table data page 02A6; B489 emits two. This is the previously documented pan-command aperture; tag bit 9 semantics remain unproved.",
+        "B299 selects refresh behavior from page 0299:8F98 and invokes a loop over IDs 0..7 and 16..23. Detailed routing interpretation remains open."
+      ]
+    },
+    {
+      "name": "system_message_parser",
+      "page": "0x1f",
+      "start": "0x5e64",
+      "end": "0x7800",
+      "entries": [
+        "0x5e64",
+        "0x5eb2",
+        "0x5f62"
+      ],
+      "evidence": "Resident page 000F F0/data/F7 branches target 5E64/5EB2/5F62. Timer service selects fetch page 001F for 4000-7FFF. Decode is conditional on that context and intervening selector preservation.",
+      "indirect_targets": {
+        "0x5ef8": {
+          "targets": [
+            "0x5efa",
+            "0x5efc",
+            "0x5efe",
+            "0x5f00"
+          ],
+          "evidence": "Header index at B04E is compared with 4 at 5EC4; header path doubles it and adds 5EFA. Four short-jump stubs."
+        },
+        "0x5fad": {
+          "targets": [
+            "0x5fb0",
+            "0x5fb4",
+            "0x5fb8",
+            "0x5fbc",
+            "0x5fc0",
+            "0x5fc4",
+            "0x5fc8",
+            "0x5fcc",
+            "0x5fd0",
+            "0x5fd4",
+            "0x5fd8",
+            "0x5fdc",
+            "0x5fe0",
+            "0x5fe4",
+            "0x5fe8",
+            "0x5fec",
+            "0x5ff0",
+            "0x5ff4",
+            "0x5ff8",
+            "0x5ffc",
+            "0x6000",
+            "0x6004",
+            "0x6008",
+            "0x600c",
+            "0x6010",
+            "0x6014",
+            "0x6018",
+            "0x601c",
+            "0x6020",
+            "0x6024",
+            "0x6028",
+            "0x602c"
+          ],
+          "evidence": "5F92 masks low command nibble; 5F98/5F9B multiply by four. 5F9E selects base 5FB0 or 5FF0. Two adjacent sixteen-entry jump-stub tables."
+        },
+        "0x6d00": {
+          "targets": [
+            "0x6d02",
+            "0x6d04",
+            "0x6d06",
+            "0x6d08",
+            "0x6d0a",
+            "0x6d0c",
+            "0x6d0e"
+          ],
+          "evidence": "6CDD scans data page 02BE:B158 until FF and dispatches by matched index. Original table is 01 02 03 7C 7D 7E 7F FF. Seven stubs at 6D02..6D0E; runtime table mutations not excluded."
+        }
+      },
+      "summary": [
+        "F0 initialization selects accept/ignore state, clears command/header/checksum fields and sets receive pointer B04F.",
+        "Manufacturer/header path accepts 41 with configured device and model byte 34; 7E selects a separate parser. F7 handling checks the additive checksum modulo 128 on the 41 path.",
+        "Two sixteen-entry command tables select handlers by command range and low nibble; 7E uses a seven-entry FF-terminated lookup table in data page 02BE. Protocol operation names remain qualified separately."
+      ]
+    },
+    {
+      "name": "packed_message_fields",
+      "page": "0x0",
+      "start": "0xf874",
+      "end": "0xf8d8",
+      "entries": [
+        "0xf874",
+        "0xf8a6"
+      ],
+      "evidence": "Direct calls from system-message handlers target F874/F8A6. Timer ISR executes in page 0 C000-FFFF context. Decode conditional on selector 0106 remaining 0. Both helpers end in RET and do not modify selectors.",
+      "summary": [
+        "F874 unpacks four seven-bit bytes from B04F in most-significant-first order into B03C/B03E. F8A6 applies identical arithmetic from B053 into B040/B042.",
+        "Both also store the low word of the unpacked value shifted right once, at B044/B046. These derived fields must not be mistaken for the full-width unpacked values."
+      ]
+    },
+    {
+      "name": "transfer_voice_release",
+      "page": "0x1f",
+      "start": "0x4f05",
+      "end": "0x4f28",
+      "entries": [
+        "0x4f05"
+      ],
+      "evidence": "Direct call from 001F:6D1A under same fetch window; loop visits 24 voices and calls resident 30E0 for flagged entries."
+    },
+    {
+      "name": "transfer_owner",
+      "page": "0x166",
+      "start": "0x87b5",
+      "end": "0x8b91",
+      "entries": [
+        "0x87b5"
+      ],
+      "evidence": "Page 0:C869 loads 0166, C86D stores fetch selector 0104, C872 calls 87B5. Conditional static entry context; callees preserving fetch mapping still require review.",
+      "summary": [
+        "87B5 dispatches nonzero transfer state; 8810 monitors receive progress and detects cancellation or a 16-bit stalled-progress counter wrap.",
+        "88E2 and 8A51 call 8B5F to restore allocation cursor from 1FA0; success calls 8ACA instead. Cross-window callee register and selector preservation remains unproved."
+      ]
+    },
+    {
+      "name": "transfer_io_gate",
+      "page": "0x3b",
+      "start": "0x6f90",
+      "end": "0x6fb0",
+      "entries": [
+        "0x6f90"
+      ],
+      "evidence": "0166:87CC/87D0 selects fetch003B before 87D5 calls6F90",
+      "summary": [
+        "Writes 1BAA=1 and 1BA8=1; masks F000 bit3 inside PUSHA/POPA. No R30 or fetch-selector writes in this leaf."
+      ]
+    },
+    {
+      "name": "transfer_ui_context",
+      "page": "0x4b",
+      "start": "0x675c",
+      "end": "0x67a3",
+      "entries": [
+        "0x675c"
+      ],
+      "evidence": "0166:87D8/87DC selects fetch004B before 87E1 calls675C"
+    },
+    {
+      "name": "transfer_descriptor_destination",
+      "page": "0x4b",
+      "start": "0x6a26",
+      "end": "0x6b2e",
+      "entries": [
+        "0x6a26"
+      ],
+      "evidence": "0166:8B42/8B46 selects fetch004B before8B4B calls6A26"
+    },
+    {
+      "name": "bank_call_wrappers",
+      "page": "0x0",
+      "start": "0xce14",
+      "end": "0xcec8",
+      "entries": [
+        "0xce14",
+        "0xce2c",
+        "0xce62",
+        "0xce97"
+      ],
+      "evidence": "Transfer owner calls CE62; UI helper calls CE14 under page0 C-window assumption. CE27/CE92 explicitly PUSH return continuations CE2C/CE97 before indirect BR[RW1E]. Destination invocation values remain unresolved.",
+      "summary": [
+        "CE14 saves fetch0102 and RW28/2A/2C/2E/42, installs RW1C into0102, and invokes RW1E. It does not itself save R30 or0104.",
+        "CE62 saves fetch0102/0104 and twenty working words (20..3E even plus40/42/44/46); invokes RW1E without assigning a fetch page. CE97 restores those words and selectors."
+      ]
+    },
+    {
+      "name": "controller_state_reset",
+      "page": "0x1f",
+      "start": "0x4f7f",
+      "end": "0x5150",
+      "entries": [
+        "0x4f7f"
+      ],
+      "evidence": "0000:C371/C375 selects fetch001F before C37A calls4F7F; repeats C380/C384/C389. 4F7F->4F8D->502A->5046 reaches flag initialization; external hardware setup callees remain unresolved.",
+      "summary": [
+        "5046 saves data010A/010C, selects02BE, initializes controller/voice state, and restores both selectors.",
+        "5102..5127 zero three sixteen-byte ranges91AB..91BA,91BB..91CA,91CB..91DA.",
+        "4F8D compares requestedR9D to1BA5. Equal returns; nonzero changed state follows setup and reset, zero changed state takes4FC5 without5046."
+      ]
+    },
+    {
+      "name": "eeprom_config_services",
+      "page": "0x3b",
+      "start": "0x5845",
+      "end": "0x5b20",
+      "entries": [
+        "0x5845",
+        "0x5886",
+        "0x58ba",
+        "0x5968",
+        "0x59c0",
+        "0x59f3"
+      ],
+      "evidence": "Startup selector/call sequences identify page003B roots5845/5886/58BA/5968/59C0/59F3. Recursive local callees use PORT1.0/1/2 and PORT2.7, matching documented EEPROM wiring. No fetch-selector writes or external calls in decoded closure.",
+      "summary": [
+        "5886 reads64 words to0299:8F74 then verifies;58BA writes64 words and verifies. Mismatch retries whole operation without a local attempt bound.",
+        "5845 updates one aligned word for input8F74<=address<8FF4.",
+        "5968 copies selected default blocks from8FF4 mirror;59C0 compares four bytes at8F80 with default8F80+80;59F3 restores those four bytes."
+      ]
+    },
+    {
+      "name": "ui_cursor_6244",
+      "page": "0x3b",
+      "start": "0x6244",
+      "end": "0x64c9",
+      "entries": [
+        "0x6244"
+      ],
+      "evidence": "004B:675C invokes CE14 with explicit RW1C page and RW1E entry; CE14 installs0102 then branches RW1E. Conditional target only, not exhaustive indirect invocation. Current-window direct remaps automatically stop."
+    },
+    {
+      "name": "ui_refresh_4919",
+      "page": "0x3b",
+      "start": "0x4919",
+      "end": "0x49e0",
+      "entries": [
+        "0x4919"
+      ],
+      "evidence": "004B:675C invokes CE14 with explicit RW1C page and RW1E entry; CE14 installs0102 then branches RW1E. Conditional target only, not exhaustive indirect invocation. Current-window direct remaps automatically stop."
+    },
+    {
+      "name": "ui_cursor_4d38",
+      "page": "0x4b",
+      "start": "0x4d38",
+      "end": "0x4d92",
+      "entries": [
+        "0x4d38"
+      ],
+      "evidence": "004B:675C invokes CE14 with explicit RW1C page and RW1E entry; CE14 installs0102 then branches RW1E. Conditional target only, not exhaustive indirect invocation. Current-window direct remaps automatically stop."
+    },
+    {
+      "name": "ui_lcd_text",
+      "page": "0x3b",
+      "start": "0x62c7",
+      "end": "0x654a",
+      "entries": [
+        "0x64fa"
+      ],
+      "evidence": "003B:4952/4956/495A passes003B:64FA through CE14. Closure bounded to same fetch window."
+    },
+    {
+      "name": "ui_crt_text",
+      "page": "0x4b",
+      "start": "0x4550",
+      "end": "0x4648",
+      "entries": [
+        "0x4550"
+      ],
+      "evidence": "003B:49CC/49D0/49D4 passes004B:4550 through CE14; also direct selector-qualified calls from transfer_owner."
+    },
+    {
+      "name": "scsi_session_service",
+      "page": "0x166",
+      "start": "0x8b91",
+      "end": "0x8f11",
+      "entries": [
+        "0x8b91"
+      ],
+      "evidence": "0000:C87C/C880 selects fetch0166 before C885 calls8B91. Static context identifies SCSI E4xx service and a manufacturer41 mode notification, not the7E packet sender.",
+      "summary": [
+        "Reconfigures E4xx SCSI registers around a loop dispatching into page01C7 and139 through CDED; integrates transfer receive owner87B5 when2BBA!=0.",
+        "8E1F emits F0 41 device34 12 01 00 00 08 00 R30 checksum F7;R30=1 at entry and0 at exit."
+      ]
+    },
+    {
+      "name": "scsi_bank_wrapper",
+      "page": "0x0000",
+      "start": "0xcded",
+      "end": "0xce14",
+      "entries": [
+        "0xcded",
+        "0xce05"
+      ],
+      "evidence": "Direct CDED calls from0166 SCSI service with RW1C/RW1E target operands; retained page0 C-window.",
+      "summary": [
+        "CDED saves fetch0104 and RW30/32/34/36/44, installs RW1C into0104, pushes CE05 and invokes RW1E. CE05 restores the five words and selector before RET. Explicit continuation root follows the pushed return address."
+      ]
+    },
+    {
+      "name": "scsi_command_services",
+      "page": "0x01c7",
+      "start": "0x8000",
+      "end": "0x843a",
+      "entries": [
+        "0x8000",
+        "0x81ab",
+        "0x8339"
+      ],
+      "evidence": "0166:8CB0/8CFD/8D1B invoke CDED with RW1C=01C7 and explicit RW1E destinations; CDED installs0104 and restores on return. Caller page0 wrapper context retained.",
+      "summary": [
+        "8000 enumerates object types1..5, skips descriptors beginning7F, sends batches of at most16 records of type/index nibbles plus16 name bytes, then a zero-pair terminator message.",
+        "81AB invokes005A:4A1A conditionally before sending a four-nibble identifier response;8339 updates selected object state/display when data02E9:7160 is nonzero."
+      ]
+    },
+    {
+      "name": "scsi_status_processing",
+      "page": "0x0139",
+      "start": "0xb418",
+      "end": "0xbe55",
+      "entries": [
+        "0xb418"
+      ],
+      "evidence": "0166:8CD1/8CD5 set RW1C0139/RW1EB418 and8CD9 invokes page0:CDED, which installs fetch0104; return restores previous page.",
+      "summary": [
+        "Receives a command through E416 with E404 E4/C4 handshake; dispatches opcodes00/03/08/0A/12 and rejects others.",
+        "Sample descriptor transfer uses48 bytes, block data uses0x1200 words, and page02E9 tracks the selected index, block cursor and direction state. Final write publishes descriptor only after block completion."
+      ]
+    },
+    {
+      "name": "object_delete_service",
+      "page": "0x005a",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x4a1a",
+        "0x535d",
+        "0x52a6",
+        "0x6f52",
+        "0x6fd7",
+        "0x73c1"
+      ],
+      "evidence": "01C7:81CD/81D1 selects005A before81D6 calls4A1A;0139:BB93/BB97/BB9C repeats. Callers display Delete Sample and pass type5. Other types remain unqualified. CE14 calls at4A71/4E11/4E4F/4E8C/4EC9 target same-page535D,4EDC targets52A6,5071 targets6F52; explicit operands justify additional roots.6FC0/6FC4/6FC8 explicitly invoke same-page6FD7 throughCE14.7103/7107/710B explicitly invoke same-page73C1 throughCE14."
+    },
+    {
+      "name": "bank_wrapper_cec8",
+      "page": "0x0000",
+      "start": "0xcec8",
+      "end": "0xcf1f",
+      "entries": [
+        "0xcec8",
+        "0xcef8"
+      ],
+      "evidence": "005A:6F81/6F85/6F89 passes RW1C010A/RW1E8000 toCEC8 under retained page0 C-window; wrapper semantics under investigation. CEF3 explicitly pushesCEF8 before indirect branch; continuation root is evidence-backed.",
+      "summary": [
+        "CEC8 saves fetch0102/0104 and15 working words, installsRW1C into0104 and invokesRW1E;CEF8 restores them. All calls remain conditional on retained page0 C-window."
+      ]
+    },
+    {
+      "name": "selection_refresh_services",
+      "page": "0x007f",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x488d",
+        "0x40cb",
+        "0x4ab2",
+        "0x438b"
+      ],
+      "evidence": "01C7:8395/8399/839E,83A1/83A5/83AA,83AD/83B1/83B6,83B9/83BD/83C2 selectfetch007F before each direct call; CDED preserves the caller C-window.",
+      "summary": [
+        "40CB finds stereo partner by a16-byte name comparison after swapping terminal L/R, requires equal block counts, then updates reserved type4 descriptor255.",
+        "488D derives three existence flags from sample descriptor+2A;4AB2 compares two32-bit address fields;438B builds preview descriptor/address variants under mode gates. Indexed resource table bounds remain unresolved."
+      ]
+    },
+    {
+      "name": "selected_descriptor_and_name_search",
+      "page": "0x004b",
+      "start": "0x6a26",
+      "end": "0x6c2c",
+      "entries": [
+        "0x6b2e",
+        "0x6b9f"
+      ],
+      "evidence": "007F40CE/40D2/40D6 and4157/415B/415F invoke004B6B2E/6B9F throughCE14; retained page0 C-window. Shared direct6A26 helper is already qualified."
+    },
+    {
+      "name": "copy_progress_service",
+      "page": "0x010a",
+      "start": "0x8000",
+      "end": "0x8004",
+      "entries": [
+        "0x8000"
+      ],
+      "evidence": "005A:6F81/6F85/6F89 passesRW1C010A/RW1E8000 toCEC8;CEEE installs0104 andCEF8 restores. R48 contains a2-bit chunk,R49 descends5..1; purpose under investigation."
+    },
+    {
+      "name": "copy_chunk_hook",
+      "page": "0x0000",
+      "start": "0xf8d8",
+      "end": "0xf94e",
+      "entries": [
+        "0xf8d8"
+      ],
+      "evidence": "010A:8000 callsF8D8 under retained page0 C-window;CEC8 changes0104 only and leaves0106 unchanged. R48/R49 carry a2-bit chunk and position from005A6F7B..6F91."
+    },
+    {
+      "name": "crt_character_access",
+      "page": "0x004b",
+      "start": "0x4000",
+      "end": "0x4550",
+      "entries": [
+        "0x4320",
+        "0x42a7"
+      ],
+      "evidence": "0000:F8E5/F8E9/F8EE selects004B before4320;F909/F90D/F912 selects004B before42A7. Targets normalized16-bit from SLEIGH output."
+    },
+    {
+      "name": "lcd_character_read",
+      "page": "0x003b",
+      "start": "0x6000",
+      "end": "0x6244",
+      "entries": [
+        "0x61f6"
+      ],
+      "evidence": "0000:F91D/F921/F926 selects003B before61F6; display hook tests returnedRF3 against0D."
+    },
+    {
+      "name": "sample_send_voice_quiesce",
+      "page": "0x000f",
+      "start": "0x2000",
+      "end": "0x4000",
+      "entries": [
+        "0x2553"
+      ],
+      "evidence": "001F:695A saves0104, selects002D for callees, calls2553 at696A, then restores0104. Startup C00A/C00E establishes000F window0; timer context retains it."
+    },
+    {
+      "name": "voice_stop_hardware_helpers",
+      "page": "0x001f",
+      "start": "0x4000",
+      "end": "0x5000",
+      "entries": [
+        "0x46c2",
+        "0x46f1",
+        "0x4bb1"
+      ],
+      "evidence": "000F:2553 closure calls46C2/46F1/4BB1 while original sender001F:695A retains0102=001F. No direct fetch-selector writes in this resident closure; other invocation contexts remain conditional."
+    },
+    {
+      "name": "startup_audio_control",
+      "page": "0x0166",
+      "start": "0x8000",
+      "end": "0xc000",
+      "entries": [
+        "0xa3c2",
+        "0xa411",
+        "0x9c1e",
+        "0xa4d1",
+        "0xa42c",
+        "0xa52a",
+        "0xa3dd",
+        "0xa403",
+        "0xa4b2",
+        "0xa46e",
+        "0xa3a2",
+        "0x9e71",
+        "0x9d84",
+        "0xa216"
+      ],
+      "evidence": "Startup adjacent selector/call sequences C1B7,C39A,C3A6,C3C8,C3D4,C3E2,C3F0 explicitly selectfetch0166; purposes initially unassigned. Direct current-window selector writes stop analysis automatically.9C41/9C9E/9CA9/9CCA/A3FF/A436/A500 pass explicit same-page targets throughCDED; additional roots follow those operands. Hardware map identifies DCxx audio/pan command aperture, not generic RAM.",
+      "summary": [
+        "9C1E loads200 command pairs and200 coefficients intoDCxx under data02A6, preserving audio mode through001F4F7F.",
+        "9D84 selects one of three bounded routing configurations;9E71/A216 use configuration-indexed coefficient tables with unresolved index bounds.",
+        "A4D1 selects PORT1 bits7:6 and pulsesPORT2 bit6; previously documented internal clock mapping retained. Other port roles are not inferred from bit operations alone."
+      ]
+    },
+    {
+      "name": "screen_descriptor_loader",
+      "page": "0x005a",
+      "start": "0x4000",
+      "end": "0x47d2",
+      "entries": [
+        "0x42e8"
+      ],
+      "evidence": "0000:C32E/C332 selectsfetch005A before directC337 call42E8. Local closure only; wrappers remain context-qualified.",
+      "summary": [
+        "42E8 reads a4-byte page/pointer entry fromdata0219:8000+4*RW48, selects returneddata page, and caches eight16-bit descriptor fields plus referenced state.",
+        "Referenced geometry is16 bytes;FF coordinates center using40x25 cells. Descriptor+0E points to ten4-byte pairs copied to2174..219B. No universal table index bound established."
+      ]
+    },
+    {
+      "name": "ui_control_state",
+      "page": "0x004b",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x5322",
+        "0x53d6",
+        "0x5402",
+        "0x54e2",
+        "0x545c",
+        "0x57a9",
+        "0x5217",
+        "0x4aee",
+        "0x4bee"
+      ],
+      "evidence": "StartupC5E1/C5E5/C5EA explicitly selects004B5322;005A screen loader passes004B53D6/5402 throughCE14 for descriptor flag-dependent controls.Same-page explicitCE14 targets54E2/545C/57A9 in5322 closure justify added roots.01EC:87FF/8803 selectfetch0102=004B;8808 calls5217 for field rendering. Incoming descriptor data010C preserved conditionally."
+    },
+    {
+      "name": "panel_control_masks",
+      "page": "0x003b",
+      "start": "0x4000",
+      "end": "0x4300",
+      "entries": [
+        "0x4127",
+        "0x416d"
+      ],
+      "evidence": "005A screen loader invokes003B4127/416D throughCE14 with control masks;0166 SCSI8CCE/8CE8 independently selects003B for both direct calls."
+    },
+    {
+      "name": "fdc_startup_initialization",
+      "page": "0x005a",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x5c83"
+      ],
+      "evidence": "StartupC660/C664/C669 explicitly selects005A and calls5C83. E000/E002 accesses and seek/recalibrate commands identify FDC initialization.",
+      "summary": [
+        "5C83 initializes cylinder/head/sector state, programs FDC, waits for ready, optionally seeks cylinder10 then recalibrates via IRQ flag1D0E. No filesystem operation inferred."
+      ]
+    },
+    {
+      "name": "resident_event_service",
+      "page": "0x0000",
+      "start": "0xd000",
+      "end": "0x10000",
+      "entries": [
+        "0xf468",
+        "0xde9c",
+        "0xdd77",
+        "0xe1e1",
+        "0xe7a2",
+        "0xe914",
+        "0xe8ed",
+        "0xde4e",
+        "0xdc2c",
+        "0xd7ad",
+        "0xd383",
+        "0xdacc",
+        "0xd477",
+        "0xdc77",
+        "0xde00",
+        "0xd297",
+        "0xda9a",
+        "0xdda0",
+        "0xde35",
+        "0xde83",
+        "0xf121",
+        "0xd3ab",
+        "0xd7cf",
+        "0xdae4",
+        "0xdd1c",
+        "0xddb2",
+        "0xdd56",
+        "0xdde7"
+      ],
+      "evidence": "Original main loop page0000:C807 callsF468 andC811 callsDE9C. Same-window targets under retained fetch0106=0 from boot handoff. Interrupt/callee preservation conditional; direct current-window remaps stop recursive analysis. Window bounds are not claimed function extents. Explicit PUSH return addressesDD9B/DE30/DE7E/F11C seedDDA0/DE35/DE83/F121 conditionally on normal indirect-callee return; all remain page0000 fetch0106, while callees select0104.",
+      "summary": [
+        "F468 consumes event ring21B0 indexed byRW38 modulo128; producer000F2080 publishes write cursor21AE after enqueueing tag and payload.",
+        "DD77 invokes cached2178/217A target/page using fetch0104, with data010C=0299; DE00 uses2180/2182. Initial descriptor pairs are mutable and not an exhaustive runtime target bound.",
+        "F0C1 indexes2184+4*(RE0-17) only after2150 bit test; caller guards and byte-width arithmetic require review before asserting bounds."
+      ]
+    },
+    {
+      "name": "startup_empty_ui_callback",
+      "page": "0x0171",
+      "start": "0x8000",
+      "end": "0x8001",
+      "entries": [
+        "0x8000"
+      ],
+      "evidence": "Startup index0130 selects descriptor027C:93A8 and ten initial target/page pairs8000/0171 at93D2. DD77 and related consumers establish target/page order and fetch0104 selection. Conditional initial-image invocation only; mutable descriptor pairs are not exhaustively bounded."
+    },
+    {
+      "name": "ui_descriptor_event_callbacks",
+      "page": "0x01ec",
+      "start": "0x8000",
+      "end": "0xc000",
+      "entries": [
+        "0x876c",
+        "0x87a5",
+        "0x879e",
+        "0x8000",
+        "0x805a",
+        "0x8063",
+        "0x8069",
+        "0x806f",
+        "0xb059",
+        "0xb23e",
+        "0xb273",
+        "0xb297",
+        "0xb2bb",
+        "0xb2d9",
+        "0x9d29",
+        "0xb31e",
+        "0x81e2",
+        "0xb359"
+      ],
+      "evidence": "Page0000:F687/F68B selectsfetch0104=01EC thenF690 calls876C with tupleRW4C/RW48/R4A;F54E/F552 selects01EC thenF557 calls87A5. Stop at current-window remaps; remaining invocation/callee contexts conditional. Page0000:F18E/F192->F197,F1C9/F1CD->F1D2,F1DC/F1E0->F1E5 explicitly select01EC andcall8000 forfieldediting;F13A supplies descriptor tuple.8000 setsRW1C=01EC,RW1E=805A beforeCDED at8048; bounded edit-dispatch helper decoded under samefetchpage.",
+      "indirect_targets": {
+        "0x879c": {
+          "targets": [
+            "0x9d29",
+            "0xb059",
+            "0xb23e",
+            "0xb273",
+            "0xb297",
+            "0xb2bb",
+            "0xb2d9",
+            "0xb31e"
+          ],
+          "evidence": "Initialscreen012Ftype3metadatapointersaftertype-dependenttuplewalk. Othermutablemetadata/invocationstatesremainunknown."
+        },
+        "0x8061": {
+          "targets": [
+            "0x8069",
+            "0x806f",
+            "0x81e2",
+            "0xb359"
+          ],
+          "evidence": "Initialscreen012Ftype3metadatapointersaftertype-dependenttuplewalk. Othermutablemetadata/invocationstatesremainunknown."
+        }
+      }
+    },
+    {
+      "name": "fixed_screen_callbacks_0196",
+      "page": "0x196",
+      "start": "0x8000",
+      "end": "0xc000",
+      "entries": [
+        "0x9960",
+        "0x9ac7",
+        "0x99d9",
+        "0x9ae5",
+        "0x9aa4",
+        "0x9bb0",
+        "0x88b4"
+      ],
+      "evidence": "Initial callback target/page pairs fromfixed screen011E/011F, consumed byresident cached-callback invokers. Initial-image conditional roots; mutable runtime targets and other invocation states not bounded.0000:C821/C825 select0196 beforeC82A calls88B4 inmainloop."
+    },
+    {
+      "name": "fixed_screen_callbacks_0171",
+      "page": "0x171",
+      "start": "0x8000",
+      "end": "0xc000",
+      "entries": [
+        "0x8000",
+        "0x8172",
+        "0x818f"
+      ],
+      "evidence": "Initial callback target/page pairs fromfixed screen011E/011F, consumed byresident cached-callback invokers. Initial-image conditional roots; mutable runtime targets and other invocation states not bounded."
+    },
+    {
+      "name": "ui_temporary_status_row",
+      "page": "0x005a",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x746e",
+        "0x747e"
+      ],
+      "evidence": "Page0000:F5E2/F5E6->F5EB explicitlyselectsfetch0102=005A beforecall747E;F5FA/F5FE->F603 similarlycalls746E. Event0E/10 consumerssupplyR48. Declaredanalysiswindow notfunctionextent;callee/interruptpreservationconditional."
+    },
+    {
+      "name": "application_startup_0129",
+      "page": "0x0129",
+      "start": "0x8000",
+      "end": "0xc000",
+      "entries": [
+        "0x8000",
+        "0x81bb",
+        "0x8355",
+        "0x84e0"
+      ],
+      "evidence": "Original0000:C66F/C673 selectfetch0104=0129 beforeC677 LCALL8000. Startupapplicationclosure; stopcurrent-window remaps,retaincallee/interruptmappingconditions.ExplicitCDEDoperandpairs80A3/80A7->80AB selects0129:81BB;8155/8159->815D selects0129:8355."
+    },
+    {
+      "name": "ui_startup_services",
+      "page": "0x004b",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x730a",
+        "0x7362",
+        "0x7423",
+        "0x73d3"
+      ],
+      "evidence": "0000:C68A/C68E->C692 selects004B730A;C6B3/C6B7->C6BB selects7362;C6BF/C6C3->C6C7 selects7423;C6CB/C6CF->C6D3 selects73D3. Same-page recursiveclosurewithselectorstop;purposesinitiallyunassigned."
+    },
+    {
+      "name": "device_probe_0068",
+      "page": "0x0068",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x561e",
+        "0x58df",
+        "0x5a1c",
+        "0x56a8",
+        "0x5d3b"
+      ],
+      "evidence": "0129:8131/8135->813A and813D/8141->8146 etcselect0068:561E;8176/817A->817F calls58DF;8184/8188->818D calls5A1C. Staticprobeclosure; preserveexplicitfetch/data contexts."
+    },
+    {
+      "name": "scsi_probe_bus_helpers",
+      "page": "0x003b",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x7482",
+        "0x7592",
+        "0x73d6",
+        "0x7b14",
+        "0x7ef8"
+      ],
+      "evidence": "Explicit0068probeCE14operandpairs561E/5622,562F/5633,563C/5640,5708/570C,58DF/58E3 select003B helpers7482/7592/73D6/7B14/7EF8. Boundsanalysiswindowonly;retaincallee/interruptmapconditions."
+    },
+    {
+      "name": "numeric_edit_postprocess_01d1",
+      "page": "0x01d1",
+      "start": "0x8000",
+      "end": "0xc000",
+      "entries": [
+        "0xa0a2",
+        "0x9fdf",
+        "0x9ed0"
+      ],
+      "evidence": "01EC8149/814D->8151 and8156/815A->815E selects01D1 A0A2/9FDF afternumericclamp;8162alternatehandleruses81A4/81A8->81AC and81B1/81B5->81B9. ExplicitCDEDoperandpairs; mappingconditionalonwrapperrestoration.9FDF supplies01D1:9ED0 throughA016/A01A/A01E CDED pair."
+    },
+    {
+      "name": "field_value_text_005a",
+      "page": "0x005a",
+      "start": "0x4000",
+      "end": "0x8000",
+      "entries": [
+        "0x57e4",
+        "0x5784"
+      ],
+      "evidence": "01EC:B338/B33C->B341 explicitlyselectsfetch0102=005A before57E4;B349/B34D->B352 calls5784 fromarray-valueformatter. Retaineddata010A=02DB conditionforstring4DC9;calleepreservation remainsconditional."
+    },
+    {
+      "name": "page_1f_4f28_scsi_session_service",
+      "page": "0x1f",
+      "start": "0x4f20",
+      "end": "0x4f60",
+      "entries": [
+        "0x4f28"
+      ],
+      "evidence": "Frontier transition: called from scsi_session_service at 0x8BA6 via gate array selector. Traced 15 instructions. Independently qualified by exact LDpage/ST0102/LCALL fallthrough triple in166:scsi_session_service. Static save/conditional-reset and restore/invalidate pair for1BA7; data010C restored by4F28 on declared return paths. NestedCE14 call operands select known001F:4F7F. Calls retain return/callee/interrupt qualifications; no runtime claim."
+    },
+    {
+      "name": "page_1f_4f5e_scsi_session_service",
+      "page": "0x1f",
+      "start": "0x4f50",
+      "end": "0x4f80",
+      "entries": [
+        "0x4f5e"
+      ],
+      "evidence": "Frontier transition: called from scsi_session_service at 0x8D90 via gate array selector. Traced 10 instructions. Independently qualified by exact LDpage/ST0102/LCALL fallthrough triple in166:scsi_session_service. Static save/conditional-reset and restore/invalidate pair for1BA7; data010C restored by4F28 on declared return paths. NestedCE14 call operands select known001F:4F7F. Calls retain return/callee/interrupt qualifications; no runtime claim."
+    },
+    {
+      "name": "frontier_p1f_5388",
+      "page": 31,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        21384
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:DFD1 via selector 0102=001F"
+    },
+    {
+      "name": "frontier_p1f_54a3",
+      "page": 31,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        21667
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:DFAF via selector 0102=001F"
+    },
+    {
+      "name": "frontier_p3b_41d5",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        16853
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C413 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_41f7",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        16887
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:DF77 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_45fe",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        17918
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:D28F via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_489c",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        18588
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:F61D via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_5b20",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        23328
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C797 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_5b54",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        23380
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C43A via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6065",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        24677
+      ],
+      "evidence": "Evidenced from resident_event_service:EA1B via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6214",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25108
+      ],
+      "evidence": "Evidenced from resident_event_service:E7C9 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6294",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25236
+      ],
+      "evidence": "Evidenced from resident_event_service:E7DE via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_64c9",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25801
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C61E via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6611",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        26129
+      ],
+      "evidence": "Evidenced from application_startup_0129:809E via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6698",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        26264
+      ],
+      "evidence": "Evidenced from transfer_owner:88AB via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_680c",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        26636
+      ],
+      "evidence": "Evidenced from ui_descriptor_event_callbacks:9D7C via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6d2f",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        27951
+      ],
+      "evidence": "Evidenced from resident_event_service:D947 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6f8a",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        28554
+      ],
+      "evidence": "Evidenced from transfer_owner:87F8 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6fb0",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        28592
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C645 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_73b4",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        29620
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C651 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p4b_4000",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        16384
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:CF65 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_407f",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        16511
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C78B via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_40b3",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        16563
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C42E via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_451f",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        17695
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C635 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_46a8",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        18088
+      ],
+      "evidence": "Evidenced from application_startup_0129:807F via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_4713",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        18195
+      ],
+      "evidence": "Evidenced from transfer_owner:8894 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_48b3",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        18611
+      ],
+      "evidence": "Evidenced from ui_descriptor_event_callbacks:9D98 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_4c3c",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        19516
+      ],
+      "evidence": "Evidenced from resident_event_service:E871 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_4ce2",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        19682
+      ],
+      "evidence": "Evidenced from resident_event_service:E85C via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_5601",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        22017
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:DEEB via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_58ab",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        22699
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:DEF9 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_597b",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        22907
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:DF2A via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_598b",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        22923
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:DF3D via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_59a2",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        22946
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C7A3 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_5b6f",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        23407
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:D04C via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_61d1",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25041
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:D1B0 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_62d4",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25300
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:D1BF via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_64d0",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25808
+      ],
+      "evidence": "Evidenced from resident_event_service:D962 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_65b6",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        26038
+      ],
+      "evidence": "Evidenced from resident_event_service:D41E via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_6698",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        26264
+      ],
+      "evidence": "Evidenced from resident_event_service:DB57 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_794a",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        31050
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C65D via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p68_5508",
+      "page": 104,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        21768
+      ],
+      "evidence": "Evidenced from application_startup_0129:879B via selector 0102=0068"
+    },
+    {
+      "name": "frontier_p68_55be",
+      "page": 104,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        21950
+      ],
+      "evidence": "Evidenced from application_startup_0129:8A4C via selector 0102=0068"
+    },
+    {
+      "name": "frontier_p68_5c10",
+      "page": 104,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        23568
+      ],
+      "evidence": "Evidenced from application_startup_0129:89D4 via selector 0102=0068"
+    },
+    {
+      "name": "frontier_p68_5ca7",
+      "page": 104,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        23719
+      ],
+      "evidence": "Evidenced from application_startup_0129:8B00 via selector 0102=0068"
+    },
+    {
+      "name": "frontier_p68_63ae",
+      "page": 104,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25518
+      ],
+      "evidence": "Evidenced from application_startup_0129:868D via selector 0102=0068"
+    },
+    {
+      "name": "frontier_p74_64ea",
+      "page": 116,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25834
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C9C3 via selector 0102=0074"
+    },
+    {
+      "name": "frontier_pb1_aab1",
+      "page": 177,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        43697
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:CA08 via selector 0104=00B1"
+    },
+    {
+      "name": "frontier_pb1_ae95",
+      "page": 177,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        44693
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:CA47 via selector 0104=00B1"
+    },
+    {
+      "name": "frontier_p10a_8d2c",
+      "page": 266,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        36140
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C27C via selector 0104=010A"
+    },
+    {
+      "name": "frontier_p129_acdd",
+      "page": 297,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        44253
+      ],
+      "evidence": "Evidenced from resident_event_service:E977 via selector 0104=0129"
+    },
+    {
+      "name": "frontier_p166_8000",
+      "page": 358,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        32768
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C861 via selector 0104=0166"
+    },
+    {
+      "name": "frontier_p166_8176",
+      "page": 358,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        33142
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C83F via selector 0104=0166"
+    },
+    {
+      "name": "frontier_p166_8f11",
+      "page": 358,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        36625
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:C855 via selector 0104=0166"
+    },
+    {
+      "name": "frontier_p166_a10d",
+      "page": 358,
+      "start": 32768,
+      "end": 49152,
+      "entries": [
+        41229
+      ],
+      "evidence": "Evidenced from os_handoff_and_interrupts:CA19 via selector 0104=0166"
+    },
+    {
+      "name": "frontier_p3b_61d2",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25042
+      ],
+      "evidence": "Evidenced from frontier_p129_acdd:AD1F via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_64dd",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25821
+      ],
+      "evidence": "Evidenced from frontier_p166_8176:86AB via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p3b_6553",
+      "page": 59,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        25939
+      ],
+      "evidence": "Evidenced from frontier_p166_8176:8711 via selector 0102=003B"
+    },
+    {
+      "name": "frontier_p4b_4533",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        17715
+      ],
+      "evidence": "Evidenced from frontier_p166_8176:8675 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p4b_51b8",
+      "page": 75,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        20920
+      ],
+      "evidence": "Evidenced from frontier_p129_acdd:AD08 via selector 0102=004B"
+    },
+    {
+      "name": "frontier_p5a_744d",
+      "page": 90,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        29773
+      ],
+      "evidence": "Evidenced from frontier_p166_8176:85B1 via selector 0102=005A"
+    },
+    {
+      "name": "frontier_p5a_745c",
+      "page": 90,
+      "start": 16384,
+      "end": 32768,
+      "entries": [
+        29788
+      ],
+      "evidence": "Evidenced from frontier_p166_8176:82E1 via selector 0102=005A"
+    }
+  ],
+  "bank_links": [
+    {
+      "source": "resident_services",
+      "pc": "0x2567",
+      "target": "resident_refresh_callees",
+      "destination": "0xb299",
+      "context": "Timer-service invocation with fetch selector 0104=002D, preserved by intervening callees",
+      "evidence": "Direct call destination and timer selector setup; not qualified for every caller context."
+    },
+    {
+      "source": "resident_services",
+      "pc": "0x256a",
+      "target": "resident_refresh_callees",
+      "destination": "0xb247",
+      "context": "Timer-service invocation with fetch selector 0104=002D, preserved by intervening callees",
+      "evidence": "Direct call destination and timer selector setup; not qualified for every caller context."
+    },
+    {
+      "source": "resident_services",
+      "pc": "0x256d",
+      "target": "resident_refresh_callees",
+      "destination": "0xb489",
+      "context": "Timer-service invocation with fetch selector 0104=002D, preserved by intervening callees",
+      "evidence": "Direct call destination and timer selector setup; not qualified for every caller context."
+    },
+    {
+      "source": "resident_services",
+      "pc": "0x29ef",
+      "target": "resident_refresh_callees",
+      "destination": "0xb299",
+      "context": "Timer-service invocation with fetch selector 0104=002D, preserved by intervening callees",
+      "evidence": "Direct call destination and timer selector setup; not qualified for every caller context."
+    },
+    {
+      "source": "resident_services",
+      "pc": "0x21ad",
+      "target": "system_message_parser",
+      "destination": "0x5e64",
+      "context": "Timer-service invocation with fetch selector 0102=001F preserved by intervening code",
+      "evidence": "Direct F0, system-class data, and F7 branches respectively; original header checks at destinations support this context."
+    },
+    {
+      "source": "resident_services",
+      "pc": "0x21fa",
+      "target": "system_message_parser",
+      "destination": "0x5eb2",
+      "context": "Timer-service invocation with fetch selector 0102=001F preserved by intervening code",
+      "evidence": "Direct F0, system-class data, and F7 branches respectively; original header checks at destinations support this context."
+    },
+    {
+      "source": "resident_services",
+      "pc": "0x21b5",
+      "target": "system_message_parser",
+      "destination": "0x5f62",
+      "context": "Timer-service invocation with fetch selector 0102=001F preserved by intervening code",
+      "evidence": "Direct F0, system-class data, and F7 branches respectively; original header checks at destinations support this context."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x6063",
+      "target": "packed_message_fields",
+      "destination": "0xf874",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x6066",
+      "target": "packed_message_fields",
+      "destination": "0xf8a6",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x66ab",
+      "target": "packed_message_fields",
+      "destination": "0xf874",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x66ae",
+      "target": "packed_message_fields",
+      "destination": "0xf8a6",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x66d4",
+      "target": "packed_message_fields",
+      "destination": "0xf874",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x66d7",
+      "target": "packed_message_fields",
+      "destination": "0xf8a6",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x6299",
+      "target": "packed_message_fields",
+      "destination": "0xf874",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x67c6",
+      "target": "packed_message_fields",
+      "destination": "0xf874",
+      "context": "Timer-service execution with fetch selector 0106=0 preserved by intervening code",
+      "evidence": "Direct destination and timer ISR code-page identity; fixed helper bytes decoded separately."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc872",
+      "target": "transfer_owner",
+      "destination": "0x87b5",
+      "context": "Immediate selector 0104=0166 at C869/C86D; later same-window continuation assumes cross-window callees preserve this fetch selector.",
+      "evidence": "Decoded LD/ST/LCALL sequence in original OS image; os-transfer-lifecycle.md."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x87d5",
+      "target": "transfer_io_gate",
+      "destination": "0x6f90",
+      "context": "Caller immediately selects target page through0102; continuation preservation reviewed separately.",
+      "evidence": "Decoded selector/call sequence in transfer_owner."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x87e1",
+      "target": "transfer_ui_context",
+      "destination": "0x675c",
+      "context": "Caller immediately selects target page through0102; continuation preservation reviewed separately.",
+      "evidence": "Decoded selector/call sequence in transfer_owner."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x8b4b",
+      "target": "transfer_descriptor_destination",
+      "destination": "0x6a26",
+      "context": "Caller immediately selects target page through0102; continuation preservation reviewed separately.",
+      "evidence": "Decoded selector/call sequence in transfer_owner."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc37a",
+      "target": "controller_state_reset",
+      "destination": "0x4f7f",
+      "context": "Immediate fetch0102=001F in startup before call.",
+      "evidence": "C371/C375/C37A and C380/C384/C389 decoded byte sequences."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc389",
+      "target": "controller_state_reset",
+      "destination": "0x4f7f",
+      "context": "Immediate fetch0102=001F in startup before call.",
+      "evidence": "C371/C375/C37A and C380/C384/C389 decoded byte sequences."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc12f",
+      "target": "eeprom_config_services",
+      "destination": "0x5886",
+      "context": "Immediate startup fetch0102=003B before direct call.",
+      "evidence": "Adjacent selector/call sequence retained in bank-frontier validation."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc148",
+      "target": "eeprom_config_services",
+      "destination": "0x59c0",
+      "context": "Immediate startup fetch0102=003B before direct call.",
+      "evidence": "Adjacent selector/call sequence retained in bank-frontier validation."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc16b",
+      "target": "eeprom_config_services",
+      "destination": "0x5968",
+      "context": "Immediate startup fetch0102=003B before direct call.",
+      "evidence": "Adjacent selector/call sequence retained in bank-frontier validation."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc177",
+      "target": "eeprom_config_services",
+      "destination": "0x59f3",
+      "context": "Immediate startup fetch0102=003B before direct call.",
+      "evidence": "Adjacent selector/call sequence retained in bank-frontier validation."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc188",
+      "target": "eeprom_config_services",
+      "destination": "0x58ba",
+      "context": "Immediate startup fetch0102=003B before direct call.",
+      "evidence": "Adjacent selector/call sequence retained in bank-frontier validation."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc206",
+      "target": "eeprom_config_services",
+      "destination": "0x58ba",
+      "context": "Immediate startup fetch0102=003B before direct call.",
+      "evidence": "Adjacent selector/call sequence retained in bank-frontier validation."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc23d",
+      "target": "eeprom_config_services",
+      "destination": "0x5845",
+      "context": "Immediate startup fetch0102=003B before direct call.",
+      "evidence": "Adjacent selector/call sequence retained in bank-frontier validation."
+    },
+    {
+      "source": "transfer_ui_context",
+      "pc": "0x6772",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Page0 C-window retained under supervisor invocation; explicit R1C/R1E target arguments documented separately.",
+      "evidence": "Direct CE14 call in675C closure; caller page0 ownership and wrapper original bytes."
+    },
+    {
+      "source": "transfer_ui_context",
+      "pc": "0x6780",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Page0 C-window retained under supervisor invocation; explicit R1C/R1E target arguments documented separately.",
+      "evidence": "Direct CE14 call in675C closure; caller page0 ownership and wrapper original bytes."
+    },
+    {
+      "source": "transfer_ui_context",
+      "pc": "0x6791",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Page0 C-window retained under supervisor invocation; explicit R1C/R1E target arguments documented separately.",
+      "evidence": "Direct CE14 call in675C closure; caller page0 ownership and wrapper original bytes."
+    },
+    {
+      "source": "transfer_ui_context",
+      "pc": "0x679f",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Page0 C-window retained under supervisor invocation; explicit R1C/R1E target arguments documented separately.",
+      "evidence": "Direct CE14 call in675C closure; caller page0 ownership and wrapper original bytes."
+    },
+    {
+      "source": "ui_refresh_4919",
+      "pc": "0x495a",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Retained page0 C-window; CE14 installs requested page through0102.",
+      "evidence": "Explicit RW1C/RW1E setup at4952/4956 and49CC/49D0."
+    },
+    {
+      "source": "ui_refresh_4919",
+      "pc": "0x49d4",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Retained page0 C-window; CE14 installs requested page through0102.",
+      "evidence": "Explicit RW1C/RW1E setup at4952/4956 and49CC/49D0."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc885",
+      "target": "scsi_session_service",
+      "destination": "0x8b91",
+      "context": "Immediate fetch0104=0166 before direct call.",
+      "evidence": "C87C/C880/C885 decoded selector/call sequence."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8c65",
+      "target": "scsi_bank_wrapper",
+      "destination": "0xcded",
+      "context": "Page0 C-window retained; wrapper installs RW1C through0104.",
+      "evidence": "Explicit RW1C/RW1E invocation operands and CDFB selector store; CE05 restores selector."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8cb0",
+      "target": "scsi_bank_wrapper",
+      "destination": "0xcded",
+      "context": "Page0 C-window retained; wrapper installs RW1C through0104.",
+      "evidence": "Explicit RW1C/RW1E invocation operands and CDFB selector store; CE05 restores selector."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8cd9",
+      "target": "scsi_bank_wrapper",
+      "destination": "0xcded",
+      "context": "Page0 C-window retained; wrapper installs RW1C through0104.",
+      "evidence": "Explicit RW1C/RW1E invocation operands and CDFB selector store; CE05 restores selector."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8cfd",
+      "target": "scsi_bank_wrapper",
+      "destination": "0xcded",
+      "context": "Page0 C-window retained; wrapper installs RW1C through0104.",
+      "evidence": "Explicit RW1C/RW1E invocation operands and CDFB selector store; CE05 restores selector."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8d1b",
+      "target": "scsi_bank_wrapper",
+      "destination": "0xcded",
+      "context": "Page0 C-window retained; wrapper installs RW1C through0104.",
+      "evidence": "Explicit RW1C/RW1E invocation operands and CDFB selector store; CE05 restores selector."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc6a0",
+      "target": "object_delete_service",
+      "destination": "0x540f",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to005A.",
+      "evidence": "LD atC697, ST atC69B, direct call atC6A0; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": "0xc6af",
+      "target": "object_delete_service",
+      "destination": "0x540f",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to005A.",
+      "evidence": "LD atC6A6, ST atC6AA, direct call atC6AF; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x894e",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8945, ST at8949, direct call at894E; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x8971",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8968, ST at896C, direct call at8971; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x8990",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8987, ST at898B, direct call at8990; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x89ed",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at89E4, ST at89E8, direct call at89ED; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x8a10",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8A07, ST at8A0B, direct call at8A10; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x8ac2",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8AB9, ST at8ABD, direct call at8AC2; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x8aee",
+      "target": "selected_descriptor_and_name_search",
+      "destination": "0x6b9f",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8AE5, ST at8AE9, direct call at8AEE; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": "0x8b13",
+      "target": "selected_descriptor_and_name_search",
+      "destination": "0x6b9f",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8B0A, ST at8B0E, direct call at8B13; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8bb5",
+      "target": "controller_state_reset",
+      "destination": "0x4f7f",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to001F.",
+      "evidence": "LD at8BAC, ST at8BB0, direct call at8BB5; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8bc1",
+      "target": "transfer_io_gate",
+      "destination": "0x6f90",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to003B.",
+      "evidence": "LD at8BB8, ST at8BBC, direct call at8BC1; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8bcd",
+      "target": "transfer_ui_context",
+      "destination": "0x675c",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8BC4, ST at8BC8, direct call at8BCD; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8df2",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8DE9, ST at8DED, direct call at8DF2; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x8090",
+      "target": "transfer_descriptor_destination",
+      "destination": "0x6a26",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8087, ST at808B, direct call at8090; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x81d6",
+      "target": "object_delete_service",
+      "destination": "0x4a1a",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to005A.",
+      "evidence": "LD at81CD, ST at81D1, direct call at81D6; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x831a",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at8311, ST at8315, direct call at831A; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x8331",
+      "target": "ui_lcd_text",
+      "destination": "0x64fa",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to003B.",
+      "evidence": "LD at8328, ST at832C, direct call at8331; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x8382",
+      "target": "controller_state_reset",
+      "destination": "0x4f7f",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to001F.",
+      "evidence": "LD at8379, ST at837D, direct call at8382; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x839e",
+      "target": "selection_refresh_services",
+      "destination": "0x488d",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to007F.",
+      "evidence": "LD at8395, ST at8399, direct call at839E; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x83aa",
+      "target": "selection_refresh_services",
+      "destination": "0x40cb",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to007F.",
+      "evidence": "LD at83A1, ST at83A5, direct call at83AA; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x83b6",
+      "target": "selection_refresh_services",
+      "destination": "0x4ab2",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to007F.",
+      "evidence": "LD at83AD, ST at83B1, direct call at83B6; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x83c2",
+      "target": "selection_refresh_services",
+      "destination": "0x438b",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to007F.",
+      "evidence": "LD at83B9, ST at83BD, direct call at83C2; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x83d1",
+      "target": "controller_state_reset",
+      "destination": "0x4f7f",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to001F.",
+      "evidence": "LD at83C8, ST at83CC, direct call at83D1; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x83e4",
+      "target": "transfer_descriptor_destination",
+      "destination": "0x6a26",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at83DB, ST at83DF, direct call at83E4; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x8413",
+      "target": "crt_character_access",
+      "destination": "0x42a7",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD at840A, ST at840E, direct call at8413; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_command_services",
+      "pc": "0x8433",
+      "target": "ui_lcd_text",
+      "destination": "0x62c7",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to003B.",
+      "evidence": "LD at842A, ST at842E, direct call at8433; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_status_processing",
+      "pc": "0xb769",
+      "target": "transfer_descriptor_destination",
+      "destination": "0x6a26",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD atB760, ST atB764, direct call atB769; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_status_processing",
+      "pc": "0xbacd",
+      "target": "transfer_descriptor_destination",
+      "destination": "0x6a26",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD atBAC4, ST atBAC8, direct call atBACD; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_status_processing",
+      "pc": "0xbb9c",
+      "target": "object_delete_service",
+      "destination": "0x4a1a",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to005A.",
+      "evidence": "LD atBB93, ST atBB97, direct call atBB9C; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_status_processing",
+      "pc": "0xbbf5",
+      "target": "ui_crt_text",
+      "destination": "0x4550",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD atBBEC, ST atBBF0, direct call atBBF5; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_status_processing",
+      "pc": "0xbc0c",
+      "target": "ui_lcd_text",
+      "destination": "0x64fa",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to003B.",
+      "evidence": "LD atBC03, ST atBC07, direct call atBC0C; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "scsi_status_processing",
+      "pc": "0xbde3",
+      "target": "transfer_descriptor_destination",
+      "destination": "0x6a26",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD atBDDA, ST atBDDE, direct call atBDE3; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "copy_chunk_hook",
+      "pc": "0xf8ee",
+      "target": "crt_character_access",
+      "destination": "0x4320",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD atF8E5, ST atF8E9, direct call atF8EE; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "copy_chunk_hook",
+      "pc": "0xf912",
+      "target": "crt_character_access",
+      "destination": "0x42a7",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to004B.",
+      "evidence": "LD atF909, ST atF90D, direct call atF912; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "copy_chunk_hook",
+      "pc": "0xf926",
+      "target": "lcd_character_read",
+      "destination": "0x61f6",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to003B.",
+      "evidence": "LD atF91D, ST atF921, direct call atF926; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "copy_chunk_hook",
+      "pc": "0xf94a",
+      "target": "ui_lcd_text",
+      "destination": "0x62c7",
+      "context": "Conditional execution of adjacent decoded selector/call sequence; fetch0102 explicitly set to003B.",
+      "evidence": "LD atF941, ST atF945, direct call atF94A; both intervening fallthrough edges resolved. Original unresolved edge retained."
+    },
+    {
+      "source": "system_message_parser",
+      "pc": "0x696a",
+      "target": "sample_send_voice_quiesce",
+      "destination": "0x2553",
+      "context": "Timer invocation retains startup fetch000F for window0;695A changes0104 only, saving/restoring it.",
+      "evidence": "C00A/C00E establishes000F;695A..696F preserves caller window1 and restores window2."
+    },
+    {
+      "source": "lcd_character_read",
+      "pc": "0x6212",
+      "target": "ui_cursor_6244",
+      "destination": "0x634e",
+      "context": "Same page003B, no intervening selector change in local read helper.",
+      "evidence": "Direct jump6212 to shared coordinate advancement634E."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8ba6",
+      "target": "page_1f_4f28_scsi_session_service",
+      "destination": "0x4f28",
+      "context": "Immediate LD RW1C=001F; ST0102; LCALL with explicit fallthrough edges; caller fetch0166 in window2 is unaffected.",
+      "evidence": "Original bytes and independent MAME targets agree. Does not claim arbitrary selector preservation or native invocation."
+    },
+    {
+      "source": "page_1f_4f28_scsi_session_service",
+      "pc": "0x4f4c",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Retained fetch0106=0000; wrapper saves/restores0102 and transfers toRW1E=4F7F withRW1C=001F.",
+      "evidence": "Explicit caller operands, original CE14 body and already-decoded controller_state_reset. Wrapper indirect target is invocation-qualified here, not globally fixed for all wrapper callers."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8d90",
+      "target": "page_1f_4f5e_scsi_session_service",
+      "destination": "0x4f5e",
+      "context": "Immediate LD RW1C=001F; ST0102; LCALL with explicit fallthrough edges; caller fetch0166 in window2 is unaffected.",
+      "evidence": "Original bytes and independent MAME targets agree. Does not claim arbitrary selector preservation or native invocation."
+    },
+    {
+      "source": "page_1f_4f5e_scsi_session_service",
+      "pc": "0x4f73",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Retained fetch0106=0000; wrapper saves/restores0102 and transfers toRW1E=4F7F withRW1C=001F.",
+      "evidence": "Explicit caller operands, original CE14 body and already-decoded controller_state_reset. Wrapper indirect target is invocation-qualified here, not globally fixed for all wrapper callers."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 49788,
+      "target": "frontier_p10a_8d2c",
+      "destination": 36140,
+      "context": "Conditional execution of adjacent LD atC273, ST atC277 selecting0104=010A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file047D2C."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50195,
+      "target": "frontier_p3b_41d5",
+      "destination": 16853,
+      "context": "Conditional execution of adjacent LD atC40A, ST atC40E selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0135D5."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50222,
+      "target": "frontier_p4b_40b3",
+      "destination": 16563,
+      "context": "Conditional execution of adjacent LD atC425, ST atC429 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0174B3."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50234,
+      "target": "frontier_p3b_5b54",
+      "destination": 23380,
+      "context": "Conditional execution of adjacent LD atC431, ST atC435 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F54."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50718,
+      "target": "frontier_p3b_64c9",
+      "destination": 25801,
+      "context": "Conditional execution of adjacent LD atC615, ST atC619 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0158C9."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50741,
+      "target": "frontier_p4b_451f",
+      "destination": 17695,
+      "context": "Conditional execution of adjacent LD atC62C, ST atC630 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01791F."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50757,
+      "target": "frontier_p3b_6fb0",
+      "destination": 28592,
+      "context": "Conditional execution of adjacent LD atC63C, ST atC640 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0163B0."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50769,
+      "target": "frontier_p3b_73b4",
+      "destination": 29620,
+      "context": "Conditional execution of adjacent LD atC648, ST atC64C selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0167B4."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50781,
+      "target": "frontier_p4b_794a",
+      "destination": 31050,
+      "context": "Conditional execution of adjacent LD atC654, ST atC658 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01AD4A."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 50822,
+      "target": "frontier_p10a_8d2c",
+      "destination": 36140,
+      "context": "Conditional execution of adjacent LD atC67D, ST atC681 selecting0104=010A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file047D2C."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51083,
+      "target": "frontier_p4b_407f",
+      "destination": 16511,
+      "context": "Conditional execution of adjacent LD atC782, ST atC786 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01747F."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51095,
+      "target": "frontier_p3b_5b20",
+      "destination": 23328,
+      "context": "Conditional execution of adjacent LD atC78E, ST atC792 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F20."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51107,
+      "target": "frontier_p4b_59a2",
+      "destination": 22946,
+      "context": "Conditional execution of adjacent LD atC79A, ST atC79E selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018DA2."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51263,
+      "target": "frontier_p166_8176",
+      "destination": 33142,
+      "context": "Conditional execution of adjacent LD atC836, ST atC83A selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file05E176."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51285,
+      "target": "frontier_p166_8f11",
+      "destination": 36625,
+      "context": "Conditional execution of adjacent LD atC84C, ST atC850 selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file05EF11."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51297,
+      "target": "frontier_p166_8000",
+      "destination": 32768,
+      "context": "Conditional execution of adjacent LD atC858, ST atC85C selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file05E000."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51651,
+      "target": "frontier_p74_64ea",
+      "destination": 25834,
+      "context": "Conditional execution of adjacent LD atC9BA, ST atC9BE selecting0102=0074, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file023CEA."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51720,
+      "target": "frontier_pb1_aab1",
+      "destination": 43697,
+      "context": "Conditional execution of adjacent LD atC9FF, ST atCA03 selecting0104=00B1, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0336B1."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51737,
+      "target": "frontier_p166_a10d",
+      "destination": 41229,
+      "context": "Conditional execution of adjacent LD atCA10, ST atCA14 selecting0104=0166, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file06010D."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 51783,
+      "target": "frontier_pb1_ae95",
+      "destination": 44693,
+      "context": "Conditional execution of adjacent LD atCA3E, ST atCA42 selecting0104=00B1, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file033A95."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 53093,
+      "target": "frontier_p4b_4000",
+      "destination": 16384,
+      "context": "Conditional execution of adjacent LD atCF5C, ST atCF60 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file017400."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 53324,
+      "target": "frontier_p4b_5b6f",
+      "destination": 23407,
+      "context": "Conditional execution of adjacent LD atD043, ST atD047 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 53680,
+      "target": "frontier_p4b_61d1",
+      "destination": 25041,
+      "context": "Conditional execution of adjacent LD atD1A7, ST atD1AB selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0195D1."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 53695,
+      "target": "frontier_p4b_62d4",
+      "destination": 25300,
+      "context": "Conditional execution of adjacent LD atD1B6, ST atD1BA selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0196D4."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 53903,
+      "target": "frontier_p3b_45fe",
+      "destination": 17918,
+      "context": "Conditional execution of adjacent LD atD286, ST atD28A selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0139FE."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 57067,
+      "target": "frontier_p4b_5601",
+      "destination": 22017,
+      "context": "Conditional execution of adjacent LD atDEE2, ST atDEE6 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018A01."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 57081,
+      "target": "frontier_p4b_58ab",
+      "destination": 22699,
+      "context": "Conditional execution of adjacent LD atDEF0, ST atDEF4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018CAB."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 57130,
+      "target": "frontier_p4b_597b",
+      "destination": 22907,
+      "context": "Conditional execution of adjacent LD atDF21, ST atDF25 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D7B."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 57149,
+      "target": "frontier_p4b_598b",
+      "destination": 22923,
+      "context": "Conditional execution of adjacent LD atDF34, ST atDF38 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D8B."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 57207,
+      "target": "frontier_p3b_41f7",
+      "destination": 16887,
+      "context": "Conditional execution of adjacent LD atDF6E, ST atDF72 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0135F7."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 57263,
+      "target": "frontier_p1f_54a3",
+      "destination": 21667,
+      "context": "Conditional execution of adjacent LD atDFA6, ST atDFAA selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D8A3."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 57297,
+      "target": "frontier_p1f_5388",
+      "destination": 21384,
+      "context": "Conditional execution of adjacent LD atDFC8, ST atDFCC selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D788."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 62863,
+      "target": "frontier_p4b_5b6f",
+      "destination": 23407,
+      "context": "Conditional execution of adjacent LD atF586, ST atF58A selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 63005,
+      "target": "frontier_p3b_489c",
+      "destination": 18588,
+      "context": "Conditional execution of adjacent LD atF614, ST atF618 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file013C9C."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 63133,
+      "target": "frontier_p4b_40b3",
+      "destination": 16563,
+      "context": "Conditional execution of adjacent LD atF694, ST atF698 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0174B3."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 63145,
+      "target": "frontier_p3b_5b54",
+      "destination": 23380,
+      "context": "Conditional execution of adjacent LD atF6A0, ST atF6A4 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F54."
+    },
+    {
+      "source": "os_handoff_and_interrupts",
+      "pc": 63177,
+      "target": "frontier_p4b_59a2",
+      "destination": 22946,
+      "context": "Conditional execution of adjacent LD atF6C0, ST atF6C4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018DA2."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": 34808,
+      "target": "frontier_p3b_6f8a",
+      "destination": 28554,
+      "context": "Conditional execution of adjacent LD at87EF, ST at87F3 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01638A."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": 34964,
+      "target": "frontier_p4b_4713",
+      "destination": 18195,
+      "context": "Conditional execution of adjacent LD at888B, ST at888F selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file017B13."
+    },
+    {
+      "source": "transfer_owner",
+      "pc": 34987,
+      "target": "frontier_p3b_6698",
+      "destination": 26264,
+      "context": "Conditional execution of adjacent LD at88A2, ST at88A6 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file015A98."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": 36228,
+      "target": "frontier_p3b_6f8a",
+      "destination": 28554,
+      "context": "Conditional execution of adjacent LD at8D7B, ST at8D7F selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01638A."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 53931,
+      "target": "frontier_p4b_4000",
+      "destination": 16384,
+      "context": "Conditional execution of adjacent LD atD2A2, ST atD2A6 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file017400."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 54169,
+      "target": "frontier_p4b_4000",
+      "destination": 16384,
+      "context": "Conditional execution of adjacent LD atD390, ST atD394 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file017400."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 54302,
+      "target": "frontier_p4b_65b6",
+      "destination": 26038,
+      "context": "Conditional execution of adjacent LD atD415, ST atD419 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0199B6."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 54384,
+      "target": "frontier_p4b_5b6f",
+      "destination": 23407,
+      "context": "Conditional execution of adjacent LD atD467, ST atD46B selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 55449,
+      "target": "frontier_p4b_5b6f",
+      "destination": 23407,
+      "context": "Conditional execution of adjacent LD atD890, ST atD894 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 55623,
+      "target": "frontier_p3b_6d2f",
+      "destination": 27951,
+      "context": "Conditional execution of adjacent LD atD93E, ST atD942 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01612F."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 55637,
+      "target": "frontier_p4b_61d1",
+      "destination": 25041,
+      "context": "Conditional execution of adjacent LD atD94C, ST atD950 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0195D1."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 55650,
+      "target": "frontier_p4b_64d0",
+      "destination": 25808,
+      "context": "Conditional execution of adjacent LD atD959, ST atD95D selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0198D0."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 55954,
+      "target": "frontier_p3b_45fe",
+      "destination": 17918,
+      "context": "Conditional execution of adjacent LD atDA89, ST atDA8D selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0139FE."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 56151,
+      "target": "frontier_p4b_6698",
+      "destination": 26264,
+      "context": "Conditional execution of adjacent LD atDB4E, ST atDB52 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file019A98."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 56233,
+      "target": "frontier_p4b_5b6f",
+      "destination": 23407,
+      "context": "Conditional execution of adjacent LD atDBA0, ST atDBA4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 56691,
+      "target": "frontier_p3b_6f8a",
+      "destination": 28554,
+      "context": "Conditional execution of adjacent LD atDD6A, ST atDD6E selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 56828,
+      "target": "frontier_p3b_6f8a",
+      "destination": 28554,
+      "context": "Conditional execution of adjacent LD atDDF3, ST atDDF7 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 56906,
+      "target": "frontier_p3b_6f8a",
+      "destination": 28554,
+      "context": "Conditional execution of adjacent LD atDE41, ST atDE45 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 56984,
+      "target": "frontier_p3b_6f8a",
+      "destination": 28554,
+      "context": "Conditional execution of adjacent LD atDE8F, ST atDE93 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 57067,
+      "target": "frontier_p4b_5601",
+      "destination": 22017,
+      "context": "Conditional execution of adjacent LD atDEE2, ST atDEE6 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018A01."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 57081,
+      "target": "frontier_p4b_58ab",
+      "destination": 22699,
+      "context": "Conditional execution of adjacent LD atDEF0, ST atDEF4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018CAB."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 57130,
+      "target": "frontier_p4b_597b",
+      "destination": 22907,
+      "context": "Conditional execution of adjacent LD atDF21, ST atDF25 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D7B."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 57149,
+      "target": "frontier_p4b_598b",
+      "destination": 22923,
+      "context": "Conditional execution of adjacent LD atDF34, ST atDF38 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018D8B."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 57207,
+      "target": "frontier_p3b_41f7",
+      "destination": 16887,
+      "context": "Conditional execution of adjacent LD atDF6E, ST atDF72 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0135F7."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 57263,
+      "target": "frontier_p1f_54a3",
+      "destination": 21667,
+      "context": "Conditional execution of adjacent LD atDFA6, ST atDFAA selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D8A3."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 57297,
+      "target": "frontier_p1f_5388",
+      "destination": 21384,
+      "context": "Conditional execution of adjacent LD atDFC8, ST atDFCC selecting0102=001F, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file00D788."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 58591,
+      "target": "frontier_p3b_489c",
+      "destination": 18588,
+      "context": "Conditional execution of adjacent LD atE4D6, ST atE4DA selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file013C9C."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59337,
+      "target": "frontier_p3b_6214",
+      "destination": 25108,
+      "context": "Conditional execution of adjacent LD atE7C0, ST atE7C4 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015614."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59358,
+      "target": "frontier_p3b_6294",
+      "destination": 25236,
+      "context": "Conditional execution of adjacent LD atE7D5, ST atE7D9 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015694."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59417,
+      "target": "frontier_p3b_6214",
+      "destination": 25108,
+      "context": "Conditional execution of adjacent LD atE810, ST atE814 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015614."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59438,
+      "target": "frontier_p3b_6294",
+      "destination": 25236,
+      "context": "Conditional execution of adjacent LD atE825, ST atE829 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015694."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59484,
+      "target": "frontier_p4b_4ce2",
+      "destination": 19682,
+      "context": "Conditional execution of adjacent LD atE853, ST atE857 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0180E2."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59505,
+      "target": "frontier_p4b_4c3c",
+      "destination": 19516,
+      "context": "Conditional execution of adjacent LD atE868, ST atE86C selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01803C."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59564,
+      "target": "frontier_p4b_4ce2",
+      "destination": 19682,
+      "context": "Conditional execution of adjacent LD atE8A3, ST atE8A7 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0180E2."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59585,
+      "target": "frontier_p4b_4c3c",
+      "destination": 19516,
+      "context": "Conditional execution of adjacent LD atE8B8, ST atE8BC selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01803C."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59767,
+      "target": "frontier_p129_acdd",
+      "destination": 44253,
+      "context": "Conditional execution of adjacent LD atE96E, ST atE972 selecting0104=0129, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0518DD."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 59931,
+      "target": "frontier_p3b_6065",
+      "destination": 24677,
+      "context": "Conditional execution of adjacent LD atEA12, ST atEA16 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file015465."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 61750,
+      "target": "frontier_p3b_6f8a",
+      "destination": 28554,
+      "context": "Conditional execution of adjacent LD atF12D, ST atF131 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file01638A."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 62863,
+      "target": "frontier_p4b_5b6f",
+      "destination": 23407,
+      "context": "Conditional execution of adjacent LD atF586, ST atF58A selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018F6F."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 63005,
+      "target": "frontier_p3b_489c",
+      "destination": 18588,
+      "context": "Conditional execution of adjacent LD atF614, ST atF618 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file013C9C."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 63133,
+      "target": "frontier_p4b_40b3",
+      "destination": 16563,
+      "context": "Conditional execution of adjacent LD atF694, ST atF698 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file0174B3."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 63145,
+      "target": "frontier_p3b_5b54",
+      "destination": 23380,
+      "context": "Conditional execution of adjacent LD atF6A0, ST atF6A4 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file014F54."
+    },
+    {
+      "source": "resident_event_service",
+      "pc": 63177,
+      "target": "frontier_p4b_59a2",
+      "destination": 22946,
+      "context": "Conditional execution of adjacent LD atF6C0, ST atF6C4 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0000; destination file018DA2."
+    },
+    {
+      "source": "ui_descriptor_event_callbacks",
+      "pc": 40264,
+      "target": "frontier_p3b_6698",
+      "destination": 26264,
+      "context": "Conditional execution of adjacent LD at9D3F, ST at9D43 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file015A98."
+    },
+    {
+      "source": "ui_descriptor_event_callbacks",
+      "pc": 40281,
+      "target": "frontier_p4b_4713",
+      "destination": 18195,
+      "context": "Conditional execution of adjacent LD at9D50, ST at9D54 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file017B13."
+    },
+    {
+      "source": "ui_descriptor_event_callbacks",
+      "pc": 40316,
+      "target": "frontier_p3b_680c",
+      "destination": 26636,
+      "context": "Conditional execution of adjacent LD at9D73, ST at9D77 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file015C0C."
+    },
+    {
+      "source": "ui_descriptor_event_callbacks",
+      "pc": 40344,
+      "target": "frontier_p4b_48b3",
+      "destination": 18611,
+      "context": "Conditional execution of adjacent LD at9D8F, ST at9D93 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page01EC; destination file017CB3."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 32895,
+      "target": "frontier_p4b_46a8",
+      "destination": 18088,
+      "context": "Conditional execution of adjacent LD at8076, ST at807A selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file017AA8."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 32926,
+      "target": "frontier_p3b_6611",
+      "destination": 26129,
+      "context": "Conditional execution of adjacent LD at8095, ST at8099 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file015A11."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 34445,
+      "target": "frontier_p68_63ae",
+      "destination": 25518,
+      "context": "Conditional execution of adjacent LD at8684, ST at8688 selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file020BAE."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 34715,
+      "target": "frontier_p68_5508",
+      "destination": 21768,
+      "context": "Conditional execution of adjacent LD at8792, ST at8796 selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file01FD08."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 35284,
+      "target": "frontier_p68_5c10",
+      "destination": 23568,
+      "context": "Conditional execution of adjacent LD at89CB, ST at89CF selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file020410."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 35348,
+      "target": "frontier_p68_5c10",
+      "destination": 23568,
+      "context": "Conditional execution of adjacent LD at8A0B, ST at8A0F selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file020410."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 35404,
+      "target": "frontier_p68_55be",
+      "destination": 21950,
+      "context": "Conditional execution of adjacent LD at8A43, ST at8A47 selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file01FDBE."
+    },
+    {
+      "source": "application_startup_0129",
+      "pc": 35584,
+      "target": "frontier_p68_5ca7",
+      "destination": 23719,
+      "context": "Conditional execution of adjacent LD at8AF7, ST at8AFB selecting0102=0068, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file0204A7."
+    },
+    {
+      "source": "frontier_p129_acdd",
+      "pc": 44296,
+      "target": "frontier_p4b_51b8",
+      "destination": 20920,
+      "context": "Conditional execution of adjacent LD atACFF, ST atAD03 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file0185B8."
+    },
+    {
+      "source": "frontier_p129_acdd",
+      "pc": 44319,
+      "target": "frontier_p3b_61d2",
+      "destination": 25042,
+      "context": "Conditional execution of adjacent LD atAD16, ST atAD1A selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0129; destination file0155D2."
+    },
+    {
+      "source": "frontier_p166_8176",
+      "pc": 33505,
+      "target": "frontier_p5a_745c",
+      "destination": 29788,
+      "context": "Conditional execution of adjacent LD at82D8, ST at82DC selecting0102=005A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01E45C."
+    },
+    {
+      "source": "frontier_p166_8176",
+      "pc": 34225,
+      "target": "frontier_p5a_744d",
+      "destination": 29773,
+      "context": "Conditional execution of adjacent LD at85A8, ST at85AC selecting0102=005A, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file01E44D."
+    },
+    {
+      "source": "frontier_p166_8176",
+      "pc": 34421,
+      "target": "frontier_p4b_4533",
+      "destination": 17715,
+      "context": "Conditional execution of adjacent LD at866C, ST at8670 selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file017933."
+    },
+    {
+      "source": "frontier_p166_8176",
+      "pc": 34452,
+      "target": "frontier_p4b_4533",
+      "destination": 17715,
+      "context": "Conditional execution of adjacent LD at868B, ST at868F selecting0102=004B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file017933."
+    },
+    {
+      "source": "frontier_p166_8176",
+      "pc": 34475,
+      "target": "frontier_p3b_64dd",
+      "destination": 25821,
+      "context": "Conditional execution of adjacent LD at86A2, ST at86A6 selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file0158DD."
+    },
+    {
+      "source": "frontier_p166_8176",
+      "pc": 34496,
+      "target": "frontier_p3b_64dd",
+      "destination": 25821,
+      "context": "Conditional execution of adjacent LD at86B7, ST at86BB selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file0158DD."
+    },
+    {
+      "source": "frontier_p166_8176",
+      "pc": 34577,
+      "target": "frontier_p3b_6553",
+      "destination": 25939,
+      "context": "Conditional execution of adjacent LD at8708, ST at870C selecting0102=003B, then direct call. Callee preservation/return context and physical invocation remain unproved.",
+      "evidence": "Original image byte-checked LD/ST/CALL sequence; independent decoder and global boundaries pass. Iterative reconciled review2026-10-16. Source page0166; destination file015953."
+    }
+  ],
+  "data_regions": [
+    {
+      "name": "message_address_ranges",
+      "file_start": 749494,
+      "file_end": 749620,
+      "encoding": "21 records: little-endian uint32 base, uint16 extent",
+      "evidence": "001F:610B loads AFB6; 6111/6115 read a 32-bit base, 611E reads extent at +4, 613B steps six bytes. 21 descending bases end in zero; dispatch explicitly handles indices through 20. Initial-image table, runtime immutability unproved."
+    },
+    {
+      "name": "eeprom_default_prefix",
+      "file_start": 703476,
+      "file_end": 703486,
+      "encoding": "Initial image configuration bytes; runtime defaults may be mutable",
+      "evidence": "Data page0299 explicitly selected in003B EEPROM service;596D..598B copies five words when R4A!=0. Unreferenced holes in the default mirror remain unclassified."
+    },
+    {
+      "name": "eeprom_default_signature",
+      "file_start": 703488,
+      "file_end": 703492,
+      "encoding": "Initial image configuration bytes; runtime defaults may be mutable",
+      "evidence": "Data page0299 explicitly selected in003B EEPROM service;59C0 compares four bytes;59F3 restores four bytes. Unreferenced holes in the default mirror remain unclassified."
+    },
+    {
+      "name": "eeprom_default_tail",
+      "file_start": 703508,
+      "file_end": 703604,
+      "encoding": "Initial image configuration bytes; runtime defaults may be mutable",
+      "evidence": "Data page0299 explicitly selected in003B EEPROM service;5992..59B8 copies48 words. Unreferenced holes in the default mirror remain unclassified."
+    },
+    {
+      "name": "ui_fixed_exit_labels",
+      "file_start": 767771,
+      "file_end": 767811,
+      "encoding": "Four10-byte NUL-terminated labels",
+      "evidence": "003B:4979/498C/4997/49A2/49A8 select4339/431B/4325/432F on data02DB;49D4 calls004B:4550 throughCE14; consumer is NUL terminated. All four strings are9 bytes plus NUL in immutable input. Indexed labels beyond these fixed choices remain unbounded."
+    },
+    {
+      "name": "scsi_identification",
+      "file_start": 793904,
+      "file_end": 793940,
+      "encoding": "Initial-image referenced data; runtime mutability retained",
+      "evidence": "0139:B678..B6D5 reads at most36 table bytes then pads zeros; explicit data02E9 mapping."
+    },
+    {
+      "name": "scsi_sense_initial",
+      "file_start": 793940,
+      "file_end": 793943,
+      "encoding": "Initial-image referenced data; runtime mutability retained",
+      "evidence": "0139:B5EC..B649 reads first3 bytes then pads zeros;7156 mutable sense field."
+    },
+    {
+      "name": "scsi_delete_label",
+      "file_start": 781771,
+      "file_end": 781785,
+      "encoding": "Initial-image referenced data; runtime mutability retained",
+      "evidence": "01C7:81B8 and0139:BB7E select41CB; text helpers selectdata02E9 and call NUL-terminated UI printers."
+    },
+    {
+      "name": "scsi_delete_clear_label",
+      "file_start": 781785,
+      "file_end": 781799,
+      "encoding": "Initial-image referenced data; runtime mutability retained",
+      "evidence": "01C7:81D9 and0139:BB9F select41D9;13 spaces followedNUL consumed by same UI printers."
+    },
+    {
+      "name": "object_default_type_01",
+      "file_start": 699424,
+      "file_end": 699435,
+      "encoding": "Count/value runs,FF escape subcommands,00 terminator",
+      "evidence": "005A:5462..5582 explicitly selects 8020 under data0299;5584 interpreter terminates at00. Expanded size 32 bytes; original-image extent only."
+    },
+    {
+      "name": "object_default_type_02",
+      "file_start": 699435,
+      "file_end": 699468,
+      "encoding": "Count/value runs,FF escape subcommands,00 terminator",
+      "evidence": "005A:5462..5582 explicitly selects 802B under data0299;5584 interpreter terminates at00. Expanded size 256 bytes; original-image extent only."
+    },
+    {
+      "name": "object_default_type_11",
+      "file_start": 699468,
+      "file_end": 699477,
+      "encoding": "Count/value runs,FF escape subcommands,00 terminator",
+      "evidence": "005A:5462..5582 explicitly selects 804C under data0299;5584 interpreter terminates at00. Expanded size 128 bytes; original-image extent only."
+    },
+    {
+      "name": "object_default_type_03",
+      "file_start": 699477,
+      "file_end": 699532,
+      "encoding": "Count/value runs,FF escape subcommands,00 terminator",
+      "evidence": "005A:5462..5582 explicitly selects 8055 under data0299;5584 interpreter terminates at00. Expanded size 256 bytes; original-image extent only."
+    },
+    {
+      "name": "object_default_type_04",
+      "file_start": 699532,
+      "file_end": 699611,
+      "encoding": "Count/value runs,FF escape subcommands,00 terminator",
+      "evidence": "005A:5462..5582 explicitly selects 808C under data0299;5584 interpreter terminates at00. Expanded size 128 bytes; original-image extent only."
+    },
+    {
+      "name": "object_default_type_12",
+      "file_start": 699624,
+      "file_end": 699627,
+      "encoding": "Count/value runs,FF escape subcommands,00 terminator",
+      "evidence": "005A:5462..5582 explicitly selects 80E8 under data0299;5584 interpreter terminates at00. Expanded size 128 bytes; original-image extent only."
+    },
+    {
+      "name": "object_default_type_05",
+      "file_start": 699627,
+      "file_end": 699648,
+      "encoding": "Count/value runs,FF escape subcommands,00 terminator",
+      "evidence": "005A:5462..5582 explicitly selects 80EB under data0299;5584 interpreter terminates at00. Expanded size 48 bytes; original-image extent only."
+    },
+    {
+      "name": "partial_subrecord_default",
+      "file_start": 699611,
+      "file_end": 699623,
+      "encoding": "Initial image reset template dependency",
+      "evidence": "5634 loads length-prefixed80DB: length11 plus11 copied bytes. Data0299 selected by5584."
+    },
+    {
+      "name": "sample_address_defaults",
+      "file_start": 699648,
+      "file_end": 699668,
+      "encoding": "Initial image reset template dependency",
+      "evidence": "5645 copies10 words from8100. Data0299 selected by5584."
+    },
+    {
+      "name": "sample_block_count_default",
+      "file_start": 699668,
+      "file_end": 699670,
+      "encoding": "Initial image reset template dependency",
+      "evidence": "5656 copies one word from8114. Data0299 selected by5584."
+    },
+    {
+      "name": "audio_setup_control_words",
+      "file_start": 712704,
+      "file_end": 712708,
+      "encoding": "Initial-image audio command/configuration table; peripheral instruction meaning unresolved",
+      "evidence": "0166:9D63..9D77 reads two words intoDC08/DC0A.9C62/9C66 selects data02A6; ranges bounded by explicit counts."
+    },
+    {
+      "name": "audio_setup_command_pairs",
+      "file_start": 712712,
+      "file_end": 713512,
+      "encoding": "Initial-image audio command/configuration table; peripheral instruction meaning unresolved",
+      "evidence": "0166:9D14..9D3C reads200 pairs of16-bit words intoDC00/DC02 then tagsDC06 with0..199.9C62/9C66 selects data02A6; ranges bounded by explicit counts."
+    },
+    {
+      "name": "audio_setup_coefficients",
+      "file_start": 713512,
+      "file_end": 713912,
+      "encoding": "Initial-image audio command/configuration table; peripheral instruction meaning unresolved",
+      "evidence": "0166:9D3D..9D62 reads200 words intoDC00, clearsDC02 and tagsDC06 with0200..02C7.9C62/9C66 selects data02A6; ranges bounded by explicit counts."
+    },
+    {
+      "name": "audio_output_tags",
+      "file_start": 713912,
+      "file_end": 713920,
+      "encoding": "Audio command/routing resource",
+      "evidence": "Data02A6 explicitly selected. 9EBC indexed by loop0..7."
+    },
+    {
+      "name": "audio_routing_tags",
+      "file_start": 713952,
+      "file_end": 713961,
+      "encoding": "Audio command/routing resource",
+      "evidence": "Data02A6 explicitly selected. 9E08 indexed by loop0..8."
+    },
+    {
+      "name": "audio_routing_configurations",
+      "file_start": 713962,
+      "file_end": 714070,
+      "encoding": "Audio command/routing resource",
+      "evidence": "Data02A6 explicitly selected. 9DB3..9DC9 bounds selector to0/1/2;9DEE uses36-byte stride,9DF8..9E1C reads9 pairs."
+    },
+    {
+      "name": "audio_routing_gate_tags",
+      "file_start": 714070,
+      "file_end": 714076,
+      "encoding": "Audio command/routing resource",
+      "evidence": "Data02A6 explicitly selected. 9E56 indexed by loop0..5."
+    },
+    {
+      "name": "audio_routing_gate_masks",
+      "file_start": 714076,
+      "file_end": 714079,
+      "encoding": "Audio command/routing resource",
+      "evidence": "Data02A6 explicitly selected. 9E30 indexed by locally bounded selector0/1/2."
+    },
+    {
+      "name": "audio_auxiliary_tags",
+      "file_start": 714092,
+      "file_end": 714094,
+      "encoding": "Audio command/routing resource",
+      "evidence": "Data02A6 explicitly selected. A25F indexed by loop0..1."
+    },
+    {
+      "name": "screen_0130_index",
+      "file_start": 569536,
+      "file_end": 569540,
+      "encoding": "Screen descriptor resource; runtime mutation explicitly possible",
+      "evidence": "Startup C32A supplies0130 to005A42E8; index entry4 bytes at0219:84C0."
+    },
+    {
+      "name": "screen_0130_descriptor",
+      "file_start": 674728,
+      "file_end": 674744,
+      "encoding": "Screen descriptor resource; runtime mutation explicitly possible",
+      "evidence": "42E8 reads eight words atdescriptor offsets0..0E."
+    },
+    {
+      "name": "screen_0130_geometry",
+      "file_start": 674746,
+      "file_end": 674762,
+      "encoding": "Screen descriptor resource; runtime mutation explicitly possible",
+      "evidence": "4449..44F1 consumes bytes0..15 ofdescriptor+2 target."
+    },
+    {
+      "name": "screen_0130_handler_pairs",
+      "file_start": 674770,
+      "file_end": 674810,
+      "encoding": "Screen descriptor resource; runtime mutation explicitly possible",
+      "evidence": "438F..4442 copies ten4-byte pairs fromdescriptor+0E target; invocation semantics pending."
+    },
+    {
+      "name": "screen_0130_mutable_selector",
+      "file_start": 674766,
+      "file_end": 674768,
+      "encoding": "Screen descriptor resource; runtime mutation explicitly possible",
+      "evidence": "Startup C33A..C352 dereferencesdescriptor+0C and writes93FA or9404 depending8F94."
+    },
+    {
+      "name": "fdc_startup_three_byte_command",
+      "file_start": 752900,
+      "file_end": 752903,
+      "encoding": "Initial-image FDC command bytes",
+      "evidence": "005A5AB9 selectsdata02CC and5AC6 loads4504;5AD7 sets3-byte count transmitted at5ADA..5AEF."
+    },
+    {
+      "name": "startup_field_list_pointer",
+      "file_start": 674764,
+      "file_end": 674766,
+      "encoding": "Little-endian pointer",
+      "evidence": "Startup descriptor027C:93A8+0A selects93CC, cached2170;01EC87B3/87B8 dereferences to93D0 undercached215C=027C. Initial image pointer only."
+    },
+    {
+      "name": "startup_field_list_terminator",
+      "file_start": 674768,
+      "file_end": 674769,
+      "encoding": "FF sentinel",
+      "evidence": "Initial field-list pointer93D0 containsFF;01EC87C3/87C7 terminates onfirst byteFF. Only consumed sentinel byte classified; following FF unknown."
+    },
+    {
+      "name": "screen_011e_index",
+      "file_start": 569464,
+      "file_end": 569468,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011e_descriptor",
+      "file_start": 573102,
+      "file_end": 573118,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011e_callbacks",
+      "file_start": 573272,
+      "file_end": 573312,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "Loader4393..4442 copies ten target/page pairs;DD1C/DD77/DDB2/DE00 andF0C1 consumers. Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011e_field_pointer",
+      "file_start": 573208,
+      "file_end": 573210,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "87B3/87B8 dereference2170 undercached215C. Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011e_fields",
+      "file_start": 573212,
+      "file_end": 573248,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "87C3 checksFF;8873 advances7 bytes. Bound frominitialFF, not a runtime invariant. Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011f_index",
+      "file_start": 569468,
+      "file_end": 569472,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011f_descriptor",
+      "file_start": 573312,
+      "file_end": 573328,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011f_callbacks",
+      "file_start": 573556,
+      "file_end": 573596,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "Loader4393..4442 copies ten target/page pairs;DD1C/DD77/DDB2/DE00 andF0C1 consumers. Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011f_field_pointer",
+      "file_start": 573492,
+      "file_end": 573494,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "87B3/87B8 dereference2170 undercached215C. Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "screen_011f_fields",
+      "file_start": 573496,
+      "file_end": 573532,
+      "encoding": "Consumer-bounded descriptor resource",
+      "evidence": "87C3 checksFF;8873 advances7 bytes. Bound frominitialFF, not a runtime invariant. Fixed event1 selection producers0000:F09C/F0A2 feedRW4A011E/011F viaF0A8/2080;F49E/F4A3 recover16bitR48 forCF82/D7CF screen loader005A42E8. Conditional initial-image descriptor, mutable targets unresolved."
+    },
+    {
+      "name": "transfer_status_message_15",
+      "file_start": 758030,
+      "file_end": 758050,
+      "encoding": "Attribute byte then NUL text",
+      "evidence": "0166:8A24..8A47 statusbranchesassignRBB=15;8A4C passesR48 through8A7A to005A747E. 753F computes576A+20*R2E underdata010A=02CC;7547 attr,7560 NULtextconsumer004B4550. EntryboundsfirstNUL;no globaltablebound orruntimeimmutabilityclaim."
+    },
+    {
+      "name": "transfer_status_message_5b",
+      "file_start": 759430,
+      "file_end": 759450,
+      "encoding": "Attribute byte then NUL text",
+      "evidence": "0166:8A24..8A47 statusbranchesassignRBB=5B;8A4C passesR48 through8A7A to005A747E. 753F computes576A+20*R2E underdata010A=02CC;7547 attr,7560 NULtextconsumer004B4550. EntryboundsfirstNUL;no globaltablebound orruntimeimmutabilityclaim."
+    },
+    {
+      "name": "transfer_status_message_5c",
+      "file_start": 759450,
+      "file_end": 759470,
+      "encoding": "Attribute byte then NUL text",
+      "evidence": "0166:8A24..8A47 statusbranchesassignRBB=5C;8A4C passesR48 through8A7A to005A747E. 753F computes576A+20*R2E underdata010A=02CC;7547 attr,7560 NULtextconsumer004B4550. EntryboundsfirstNUL;no globaltablebound orruntimeimmutabilityclaim."
+    },
+    {
+      "name": "transfer_status_message_5d",
+      "file_start": 759470,
+      "file_end": 759490,
+      "encoding": "Attribute byte then NUL text",
+      "evidence": "0166:8A24..8A47 statusbranchesassignRBB=5D;8A4C passesR48 through8A7A to005A747E. 753F computes576A+20*R2E underdata010A=02CC;7547 attr,7560 NULtextconsumer004B4550. EntryboundsfirstNUL;no globaltablebound orruntimeimmutabilityclaim."
+    },
+    {
+      "name": "device_signature_6de0",
+      "file_start": 763360,
+      "file_end": 763372,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:83F3 loadssource6DE0 withcount12 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6dec",
+      "file_start": 763372,
+      "file_end": 763392,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:841B loadssource6DEC withcount20 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e00",
+      "file_start": 763392,
+      "file_end": 763413,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:842A loadssource6E00 withcount21 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e5b",
+      "file_start": 763483,
+      "file_end": 763504,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:8439 loadssource6E5B withcount21 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e70",
+      "file_start": 763504,
+      "file_end": 763526,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:8448 loadssource6E70 withcount22 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e2d",
+      "file_start": 763437,
+      "file_end": 763461,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:8457 loadssource6E2D withcount24 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e45",
+      "file_start": 763461,
+      "file_end": 763481,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:8466 loadssource6E45 withcount20 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e86",
+      "file_start": 763526,
+      "file_end": 763546,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:8475 loadssource6E86 withcount20 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e15",
+      "file_start": 763413,
+      "file_end": 763426,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:8488 loadssource6E15 withcount13 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e26",
+      "file_start": 763430,
+      "file_end": 763437,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:8497 loadssource6E26 withcount7 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6e9a",
+      "file_start": 763546,
+      "file_end": 763554,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:84A6 loadssource6E9A withcount8 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "device_signature_6ea2",
+      "file_start": 763554,
+      "file_end": 763562,
+      "encoding": "Counteddevice-identificationbytes",
+      "evidence": "0129:84B5 loadssource6EA2 withcount8 to83FA/84C8 compareloops;839A/839E setsdata010A=02CC. Boundedcompareagainstinput2E16;identitiesconditionaloninitialimage,notdeviceparity."
+    },
+    {
+      "name": "probe_command_5f4e",
+      "file_start": 759630,
+      "file_end": 759637,
+      "encoding": "Bytecountthencommandbytes",
+      "evidence": "0068:562B/56B5 loadscommandpointer5F4E;003B7592 setsdata010A=02CC and75A3..75AF copiescount-prefixedbytesto5F12. Initialcount6;command03requests0Abytes,12requests23bytes."
+    },
+    {
+      "name": "probe_command_5f55",
+      "file_start": 759637,
+      "file_end": 759644,
+      "encoding": "Bytecountthencommandbytes",
+      "evidence": "0068:562B/56B5 loadscommandpointer5F55;003B7592 setsdata010A=02CC and75A3..75AF copiescount-prefixedbytesto5F12. Initialcount6;command03requests0Abytes,12requests23bytes."
+    },
+    {
+      "name": "probe_label_6d8e",
+      "file_start": 763278,
+      "file_end": 763296,
+      "encoding": "NULbanneror14countedlabelbytes",
+      "evidence": "0129:8025/8040 suppliesbanner6D8E toCRT4550/LCD64FA;8221/8229/8231/8239 selectslabelbase6DD0/6DA0/6DB0/6DC0;829D replacesbase+2 targetdigit and82AA copiesbase+2..+15 to17-byte RAMrecordsunder0299:9E92. Data010A=02CC explicitlyselected;labelmutabilityandbufferterminationremainqualified."
+    },
+    {
+      "name": "probe_label_6da2",
+      "file_start": 763298,
+      "file_end": 763312,
+      "encoding": "NULbanneror14countedlabelbytes",
+      "evidence": "0129:8025/8040 suppliesbanner6D8E toCRT4550/LCD64FA;8221/8229/8231/8239 selectslabelbase6DD0/6DA0/6DB0/6DC0;829D replacesbase+2 targetdigit and82AA copiesbase+2..+15 to17-byte RAMrecordsunder0299:9E92. Data010A=02CC explicitlyselected;labelmutabilityandbufferterminationremainqualified."
+    },
+    {
+      "name": "probe_label_6db2",
+      "file_start": 763314,
+      "file_end": 763328,
+      "encoding": "NULbanneror14countedlabelbytes",
+      "evidence": "0129:8025/8040 suppliesbanner6D8E toCRT4550/LCD64FA;8221/8229/8231/8239 selectslabelbase6DD0/6DA0/6DB0/6DC0;829D replacesbase+2 targetdigit and82AA copiesbase+2..+15 to17-byte RAMrecordsunder0299:9E92. Data010A=02CC explicitlyselected;labelmutabilityandbufferterminationremainqualified."
+    },
+    {
+      "name": "probe_label_6dc2",
+      "file_start": 763330,
+      "file_end": 763344,
+      "encoding": "NULbanneror14countedlabelbytes",
+      "evidence": "0129:8025/8040 suppliesbanner6D8E toCRT4550/LCD64FA;8221/8229/8231/8239 selectslabelbase6DD0/6DA0/6DB0/6DC0;829D replacesbase+2 targetdigit and82AA copiesbase+2..+15 to17-byte RAMrecordsunder0299:9E92. Data010A=02CC explicitlyselected;labelmutabilityandbufferterminationremainqualified."
+    },
+    {
+      "name": "probe_label_6dd2",
+      "file_start": 763346,
+      "file_end": 763360,
+      "encoding": "NULbanneror14countedlabelbytes",
+      "evidence": "0129:8025/8040 suppliesbanner6D8E toCRT4550/LCD64FA;8221/8229/8231/8239 selectslabelbase6DD0/6DA0/6DB0/6DC0;829D replacesbase+2 targetdigit and82AA copiesbase+2..+15 to17-byte RAMrecordsunder0299:9E92. Data010A=02CC explicitlyselected;labelmutabilityandbufferterminationremainqualified."
+    },
+    {
+      "name": "device_media_identity_6eaa",
+      "file_start": 763562,
+      "file_end": 763578,
+      "encoding": "Countedmediaidentitybytes",
+      "evidence": "0129:85AC..85CA compares16bytes againstresponse2E0E;explicit010A=02CC. Separateconditional84E0maskgates;initialresourcesnotruntimeimmutabilityproof."
+    },
+    {
+      "name": "device_media_identity_6eba",
+      "file_start": 763578,
+      "file_end": 763774,
+      "encoding": "Countedmediaidentitybytes",
+      "evidence": "0129:855C..857A comparesunsignedbytecountC4(196) againstresponse2E10;explicit010A=02CC. Signeddisplay#-3C doesnotmeannegativecount. Separateconditional84E0maskgates;initialresourcesnotruntimeimmutabilityproof."
+    },
+    {
+      "name": "submenu_initial_crt_five_indices",
+      "file_start": 769194,
+      "file_end": 769204,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "Fiveinitial011Efieldindices0..4 select02DB48AA+2*index through01969AA4; conditionalvalidfield-selectionpath. Otherwriters/indicesremainunresolved;FFFFsentinelnotconsumedhere."
+    },
+    {
+      "name": "screen_012f_index",
+      "file_start": 569532,
+      "file_end": 569536,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen. Firstsixrecordsaretype3;notafullfieldlistbound."
+    },
+    {
+      "name": "screen_012f_descriptor",
+      "file_start": 673806,
+      "file_end": 673822,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen. Firstsixrecordsaretype3;notafullfieldlistbound."
+    },
+    {
+      "name": "screen_012f_field_pointer",
+      "file_start": 674162,
+      "file_end": 674164,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen. Firstsixrecordsaretype3;notafullfieldlistbound."
+    },
+    {
+      "name": "screen_012f_tuple_pointer",
+      "file_start": 674164,
+      "file_end": 674166,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen. Firstsixrecordsaretype3;notafullfieldlistbound."
+    },
+    {
+      "name": "screen_012f_first_six_fields",
+      "file_start": 674166,
+      "file_end": 674447,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen. Firstsixrecordsaretype3;notafullfieldlistbound. Fullinitiallistnowwalkedusingtype-dependent2/4/6-bytewidths;FFsentinelboundsrecords. Notruntimeimmutability."
+    },
+    {
+      "name": "screen_012f_first_six_tuples",
+      "file_start": 674448,
+      "file_end": 674686,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen. Firstsixrecordsaretype3;notafullfieldlistbound. Fullinitiallistnowwalkedusingtype-dependent2/4/6-bytewidths;FFsentinelboundsrecords. Notruntimeimmutability."
+    },
+    {
+      "name": "field_metadata_5ce4",
+      "file_start": 774372,
+      "file_end": 774380,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "01EC878A loadsdisplaypointer+0;801E/8022/8028 loadeditpointer+2 andsignedwords+4/+6 underdata010A=02DB. Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen."
+    },
+    {
+      "name": "field_metadata_5cec",
+      "file_start": 774380,
+      "file_end": 774388,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "01EC878A loadsdisplaypointer+0;801E/8022/8028 loadeditpointer+2 andsignedwords+4/+6 underdata010A=02DB. Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen."
+    },
+    {
+      "name": "field_metadata_5cf4",
+      "file_start": 774388,
+      "file_end": 774396,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "01EC878A loadsdisplaypointer+0;801E/8022/8028 loadeditpointer+2 andsignedwords+4/+6 underdata010A=02DB. Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen."
+    },
+    {
+      "name": "field_metadata_5d40",
+      "file_start": 774464,
+      "file_end": 774472,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "01EC878A loadsdisplaypointer+0;801E/8022/8028 loadeditpointer+2 andsignedwords+4/+6 underdata010A=02DB. Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen."
+    },
+    {
+      "name": "field_metadata_5bbc",
+      "file_start": 774076,
+      "file_end": 774084,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "01EC878A loadsdisplaypointer+0;801E/8022/8028 loadeditpointer+2 andsignedwords+4/+6 underdata010A=02DB. Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen."
+    },
+    {
+      "name": "field_metadata_5d48",
+      "file_start": 774472,
+      "file_end": 774480,
+      "encoding": "Initialconsumer-boundedresource",
+      "evidence": "01EC878A loadsdisplaypointer+0;801E/8022/8028 loadeditpointer+2 andsignedwords+4/+6 underdata010A=02DB. Initial011Efieldindex2 ->data02DB48AE value012F ->event1screenloader005A42E8; initialdescriptoronly,mutabletargetsremainopen."
+    },
+    {
+      "name": "field_metadata_549a",
+      "file_start": 772250,
+      "file_end": 772258,
+      "encoding": "Functionpointersplusloader-readunusedwords",
+      "evidence": "Initialscreen012Ftype3tuplewalkwithcorrect2/4/6-byteadvancement;01EC8000/876C readmetadata+0..+7 underdata010A=02DB. Otherinvocationstatesunresolved. Editor81E2 overridesRL50/54 withzero andsignextended(RAM2A2C-1);words+4/+6 arenoteffectivelimitsforthisrecord."
+    },
+    {
+      "name": "field_metadata_5d96",
+      "file_start": 774550,
+      "file_end": 774558,
+      "encoding": "Display/editpointersandtwosignedlimitwords",
+      "evidence": "Initialscreen012Ftype3tuplewalkwithcorrect2/4/6-byteadvancement;01EC8000/876C readmetadata+0..+7 underdata010A=02DB. Otherinvocationstatesunresolved."
+    },
+    {
+      "name": "array_zero_value_off_text",
+      "file_start": 770505,
+      "file_end": 770509,
+      "encoding": "NUL-terminatedASCII",
+      "evidence": "01EC:B334 passes4DC9 whenarrayvalue0 to005A57E4,whichsetsdata010A=02DB anddispatchesNULtextto003B64FA/004B4550. ExactlyOff+NUL;noenumtableboundinferred."
+    }
+  ]
+}

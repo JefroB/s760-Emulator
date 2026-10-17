@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-16",
+  "bug": "BUG-004",
+  "status": "OPEN",
+  "production_changes": false,
+  "executable_sha256": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+  "scope": "Existing native executable, original firmware, unthrottled headless, no sound device; read-only MAME -log diagnostics. Current working source has pre-existing edits and is not asserted identical to this executable.",
+  "scenarios": {
+    "load": {
+      "received": 175,
+      "data_port_reads": 176,
+      "overruns": 647,
+      "log_sha256": "58d653a1f8437953e9d6e70ced764ac6b121e9774ef2312fd32110e98158e4bb",
+      "artifact_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bug004-20261016-receive",
+      "acceptance_passed": true,
+      "scheduled_events": 240,
+      "exact_sample_bytes": 119808,
+      "post_load_peak": 0.01694745011627674,
+      "silent_tail_frames": 44100,
+      "first_overrun_context": [
+        "[:] [IC4MIDI] receive=90 time=36.563465252 mask=11",
+        "[:] [IC4MIDI] unsupported overrun incoming=3c",
+        "[:] [IC4MIDI] unsupported overrun incoming=64"
+      ],
+      "recovery_context": [
+        "[:] [IC4MIDI] unsupported overrun incoming=00",
+        "[:] [IC4MIDI] vector response=0138",
+        "[:] [IC4MIDI] read=90 PC=cd24",
+        "[:] [IC4MIDI] receive=80 time=75.419002667 mask=54",
+        "[:] [IC4MIDI] vector response=0138"
+      ]
+    },
+    "polyphony": {
+      "received": 252,
+      "data_port_reads": 306,
+      "overruns": 0,
+      "log_sha256": "7c06d04fbe01c92abae1a782e81105372479969b1712fd625c8eab09b81e7875",
+      "artifact_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bug004-20261016-polyphony",
+      "acceptance_passed": true
+    }
+  },
+  "interpretation": "647 overruns occur after a byte is latched with mask 0x11 (MIDI source6 disabled), before that byte is consumed. Subsequent receive logs show mask 0x54 and post-load playback/release passes. Existing disk acceptance measures host scheduling and recovery, not lossless guest reception. Read totals are not unique receive counts: initialization reads and checkpoint replay also read the port.",
+  "limits": "No physical IC4 measurement, proven FIFO depth, exact concurrent-source priority or fix. The log does not timestamp each dropped byte or record its current mask. The latched-byte mask must not be represented as a separate mask measurement for every overrun.",
+  "reproduction": {
+    "harness": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bug004_receive_audit.py",
+    "load": "python docs/ic20-hle-findings/chatGPT-work/bug004_receive_audit.py",
+    "polyphony": "python docs/ic20-hle-findings/chatGPT-work/bug004_receive_audit.py --polyphony",
+    "method": "Harness appends -log to native MAME Popen, then runs existing verify_native_disk_midi.py or verify_native_runtime.py --polyphony in fresh private state directories. It does not modify guest state or serial timing."
+  }
+}

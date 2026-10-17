@@ -1,0 +1,248 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Unresolved; additional transition hypotheses rejected",
+  "duration_refinement": {
+    "rows": [
+      {
+        "label": "quiet",
+        "model": "baseline20ms",
+        "alignment_seconds": 0.9403862309187374,
+        "source_phase": 1543.76301811102,
+        "duration_ms": 20.0,
+        "training_error_percent": 25.225640130393572,
+        "evaluation_error_percent": 20.004249819935435,
+        "nfev": 2
+      },
+      {
+        "label": "quiet",
+        "model": "binary1024frames",
+        "alignment_seconds": 0.9434842838519489,
+        "source_phase": 1543.7743093049264,
+        "duration_ms": 23.219954648526077,
+        "training_error_percent": 26.23206742544508,
+        "evaluation_error_percent": 20.363683082700916,
+        "nfev": 7
+      },
+      {
+        "label": "quiet",
+        "model": "duration-fit",
+        "alignment_seconds": 0.9402352964014457,
+        "source_phase": 1543.7629647251285,
+        "duration_ms": 19.68360331976518,
+        "training_error_percent": 25.208826235893593,
+        "evaluation_error_percent": 19.970379359703983,
+        "nfev": 5
+      },
+      {
+        "label": "repeat",
+        "model": "baseline20ms",
+        "alignment_seconds": 0.39746204053701706,
+        "source_phase": 1795.0734108133981,
+        "duration_ms": 20.0,
+        "training_error_percent": 19.22276008796988,
+        "evaluation_error_percent": 21.334143221636175,
+        "nfev": 3
+      },
+      {
+        "label": "repeat",
+        "model": "binary1024frames",
+        "alignment_seconds": 0.4006336153565476,
+        "source_phase": 1795.0666699398507,
+        "duration_ms": 23.219954648526077,
+        "training_error_percent": 19.495217914136262,
+        "evaluation_error_percent": 24.68209487790798,
+        "nfev": 8
+      },
+      {
+        "label": "repeat",
+        "model": "quiet-duration-transfer",
+        "alignment_seconds": 0.39730794743966963,
+        "source_phase": 1795.0741428136298,
+        "duration_ms": 19.68360331976518,
+        "training_error_percent": 19.220640613699743,
+        "evaluation_error_percent": 21.262775337970016,
+        "nfev": 5
+      }
+    ],
+    "clock_ratio": 1.0000213476698374,
+    "gain": 1,
+    "damping": 85,
+    "limits": [
+      "Existing reused evaluation blocks, not new validation.",
+      "Duration selected using quiet training only; repeat fits constant alignment and phase only.",
+      "No native source, DSP, firmware or clock changes."
+    ]
+  },
+  "derived_coefficient_transition": {
+    "rows": [
+      {
+        "label": "quiet",
+        "model": "cutoff-ramp-direct-I",
+        "parameters": [
+          0.9403733839194353,
+          1543.763035177731
+        ],
+        "training_error_percent": 25.4703007334733,
+        "evaluation_error_percent": 20.657151896334128
+      },
+      {
+        "label": "repeat",
+        "model": "cutoff-ramp-direct-I",
+        "parameters": [
+          0.39744424335339884,
+          1795.0735519177028
+        ],
+        "training_error_percent": 19.149091828677435,
+        "evaluation_error_percent": 21.50428699749119
+      },
+      {
+        "label": "quiet",
+        "model": "derived-coefficient-ramp",
+        "parameters": [
+          0.9403775971278344,
+          1543.7565509348317
+        ],
+        "training_error_percent": 25.65453901412434,
+        "evaluation_error_percent": 20.856125914966025
+      },
+      {
+        "label": "repeat",
+        "model": "derived-coefficient-ramp",
+        "parameters": [
+          0.3974428128690434,
+          1795.0650465323697
+        ],
+        "training_error_percent": 19.37373962675658,
+        "evaluation_error_percent": 21.75402590081464
+      }
+    ],
+    "stationary_checks": [
+      {
+        "cutoff": 428.0,
+        "mode": 0,
+        "error": 1.423728893881812e-13
+      },
+      {
+        "cutoff": 428.0,
+        "mode": 1,
+        "error": 1.423728893881812e-13
+      },
+      {
+        "cutoff": 2732.0,
+        "mode": 0,
+        "error": 9.312415875628069e-15
+      },
+      {
+        "cutoff": 2732.0,
+        "mode": 1,
+        "error": 9.312415875628069e-15
+      }
+    ],
+    "causality_pass": true,
+    "clock_ratio": 1.0000213476698374,
+    "damping": 85,
+    "gain": 1,
+    "duration_ms": 20
+  },
+  "limits": [
+    "No native renderer, source reconstruction, firmware, clock or production default changed.",
+    "Historical alternating training/evaluation blocks are reused, not independent new captures.",
+    "Only quiet training selects the refined duration; repeat receives the frozen value.",
+    "Derived-coefficient experiment compares direct-I realizations with fixed20ms duration, fixed measured clock, gain1 and damping85.",
+    "Both derived models pass stationary equivalence at428/2732 and future-write causality checks.",
+    "Constant alignment/source phase are fitted per recording on training blocks only; these are not measured hardware latency.",
+    "These negative tests do not identify the physical control law or rule out all timing/state hypotheses."
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\refine_filter_duration.py": "53994e8af8f59aa09ac7923d3d0e4a434149be01b6b0fba121c7aa1eebd176a5",
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_derived_coefficient_ramp.py": "fcc661cfcdc9d933ddc1c0626540aa501d772144f4afc3f5ddad5b654807743c",
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_causal_cutoff_transitions.py": "53a00309e9037475fa6760e0afa22710d88c4fac7d5201512372e03338c18c78",
+    "docs\\ic20-hle-findings\\chatGPT-work\\check_resonant_recording_band.py": "344ba499d8ca55d0824ad28cc2bb31b6cd1ad5b469664b1c70d14eeddff2d2eb",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\on\\application.csv": "3723b9ee084534b0df33e866b4cdf5a9cdf2d604c685a858ec863a2c27795086",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "34b8d5906c85d9417538412c8099f2dc08b6b5fa0e6b34c8bd9743350d6b2749",
+    "mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "test-recordings\\s760_01 REF NOISE 2_20261010_130755.zip": "7f83e74a62c5c3ace3771467e8e1ead4a3e3be6efb42464b3e4d91a512245487",
+    "test-recordings\\s760_01 REF NOISE_20261010_121558.zip": "f4aa569c7c5148f5e49004f6ddef1591b51143bd5a4b38c09f839fd1d1856d44",
+    "test-recordings\\s760_04 LP SW R64_20261010_130922.zip": "34315b1ca9d12fc8d6a20cb41a4a0652c24d4ba28a03b81dc432abdeee0354d0",
+    "test-recordings\\s760_04 LP SW R64_20261010_133400.zip": "c90dc78bb559f0468f47a016a74944f152dc93b0eb0d43f3bb2c5c5293820536",
+    "docs\\ic20-hle-findings\\chatGPT-work\\filter-duration-refinement-2026-10-15\\static-regression\\static-filter-results.json": "4b9672ebfa8239cb1369c714bcf3b3597249731c2b1c84f54eb1f8f9d695a6ee"
+  },
+  "static_regression": {
+    "passed": true,
+    "corrected": [
+      {
+        "mode": "BP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3138.3275782676355
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3138.328238008413
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3138.3265058880206
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3138.3229780226975
+          }
+        ],
+        "gain": 0.9997405678404846,
+        "phase_slope": -0.005177618402581901,
+        "heldout_correlation": 0.9999996864978555,
+        "heldout_rms_error_percent": 0.0792437761520853
+      },
+      {
+        "mode": "HP",
+        "cutoff": 428,
+        "damping": 85,
+        "training": [
+          {
+            "start": 1.0,
+            "end": 1.5,
+            "center": 1.25,
+            "phase": 3140.583700749303
+          },
+          {
+            "start": 1.3,
+            "end": 1.8,
+            "center": 1.55,
+            "phase": 3140.5806604406243
+          },
+          {
+            "start": 1.6,
+            "end": 2.1,
+            "center": 1.85,
+            "phase": 3140.5776651403867
+          },
+          {
+            "start": 1.9,
+            "end": 2.4,
+            "center": 2.15,
+            "phase": 3140.5746027631394
+          }
+        ],
+        "gain": 0.9996662082490966,
+        "phase_slope": -0.010096419576897898,
+        "heldout_correlation": 0.9999994585343163,
+        "heldout_rms_error_percent": 0.1040800007936581
+      }
+    ],
+    "wrong_cutoff_rejected": true
+  },
+  "prior_native_source_and_executable_unchanged": true
+}

@@ -1,0 +1,1854 @@
+{
+  "date": "2026-10-17",
+  "bug": "BUG-076",
+  "status": "FIXED",
+  "before_executable_sha256": "8992e5f33d9651bb7616652ea2cf2437b3e39bd147fcc9dbc37788b930ea4c95",
+  "identities_sha256": {
+    "mame-source/mames760.exe": "6db47405d446fe365cc9f581a2d0745651f8e25897ccaabc0a765c565c323b96",
+    "mame-source/src/frontend/mame/luaengine.cpp": "e38c3a5bcc4f9e5762916c57b10758425ab02d8c41bbf1b96751e59086168bc9",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+    "scripts/verify_modulation_application.py": "c97eb2d5a40660136ba4d8dcd3cc014c2ec7e005e1182f07c96141825e4cc452",
+    "tests/test_native_pcm_origin.py": "0ec83351351e69803cc38b6b80b1df721b44711116525305870b9b6e0a1fb4eb",
+    "tests/test_modulation_capture_origin.py": "45d82219089c4dcf39d5a0f7d1af1701fb0949c3f7fc6cb58fb6066a55a9c495",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "docs/ic20-hle-findings/chatGPT-work/modulation-application-2026-10-15/MODDIAG.IMG": "e459f11534ca054529a0baa7eeee72158c77f0132056d14c65f84e67279ef6ee"
+  },
+  "origin_contract": {
+    "first_sample": "Capture-local frame counter, reset on audio_capture.",
+    "stream_first_sample": "Absolute speaker sample index at first returned PCM frame, observed from produced end index minus hook buffer length.",
+    "stream_contiguous": "False when native origin metadata is missing or an observed stream gap occurs.",
+    "wav_mapping": "absolute_stream_frame = stream_first_sample + wav_frame",
+    "rate": 44100
+  },
+  "before_native_regression": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________ test_native_pcm_origin_and_buffered_checkpoint ________________\n\ntmp_path = WindowsPath('D:/S-760/docs/ic20-hle-findings/chatGPT-work/bug076/native-before/test_native_pcm_origin_and_buf0')\n\n    def test_native_pcm_origin_and_buffered_checkpoint(tmp_path):\n        exe = Path(os.environ.get('S760_MAME_EXE', ROOT / 'mame-source/mames760.exe'))\n        rom = ROOT / 'roms/BOOT/Roland_S-760_v1.11.BIN'\n        disk = ROOT / 'roms/System/S760224.IMG'\n        if not all(p.is_file() for p in (exe, rom, disk)):\n            pytest.skip('Native MAME and local firmware required')\n        config = RuntimeConfig(exe, rom, disk, tmp_path / 'state', sound=False, throttle=False)\n        with NativeRuntime(config) as runtime:\n            runtime.request('pause')\n            runtime.request('audio_capture', enabled=True)\n            first = previous = None\n            position = 0\n            observations = []\n            for frames in [1, 127, 8192, 63, 2048]:\n                meta, pcm = runtime.render_audio(frames)\n>               assert meta.get('stream_contiguous') is True, meta\nE               AssertionError: {'channels': 2, 'dropped_frames': 0, 'first_sample': 0, 'frames': 1, ...}\nE               assert False is True\nE                +  where False = <built-in method get of dict object at 0x00000205F5E948C0>('stream_contiguous')\nE                +    where <built-in method get of dict object at 0x00000205F5E948C0> = {'channels': 2, 'dropped_frames': 0, 'first_sample': 0, 'frames': 1, ...}.get\n\ntests\\test_native_pcm_origin.py:28: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/test_native_pcm_origin.py::test_native_pcm_origin_and_buffered_checkpoint\n1 failed in 1.97s\n",
+  "modulation_cases": [
+    {
+      "name": "moving",
+      "observed_stream_origin": 3593269,
+      "status_time_estimate_frame": 3594150,
+      "status_origin_error_frames": 881,
+      "first_nonzero_wav_frame": 7478,
+      "pcm_sha256": "0f2b402848de41f272c3b69c159828a012c485037d141f61b5493834d9cef5f0",
+      "audio_origin": {
+        "stream_first_sample": 3593269,
+        "capture_first_sample": 0,
+        "frames": 308700,
+        "rate": 44100,
+        "blocks": [
+          {
+            "wav_frame": 0,
+            "frames": 8192,
+            "stream_first_sample": 3593269,
+            "capture_first_sample": 0
+          },
+          {
+            "wav_frame": 8192,
+            "frames": 8192,
+            "stream_first_sample": 3601461,
+            "capture_first_sample": 8192
+          },
+          {
+            "wav_frame": 16384,
+            "frames": 8192,
+            "stream_first_sample": 3609653,
+            "capture_first_sample": 16384
+          },
+          {
+            "wav_frame": 24576,
+            "frames": 8192,
+            "stream_first_sample": 3617845,
+            "capture_first_sample": 24576
+          },
+          {
+            "wav_frame": 32768,
+            "frames": 8192,
+            "stream_first_sample": 3626037,
+            "capture_first_sample": 32768
+          },
+          {
+            "wav_frame": 40960,
+            "frames": 8192,
+            "stream_first_sample": 3634229,
+            "capture_first_sample": 40960
+          },
+          {
+            "wav_frame": 49152,
+            "frames": 8192,
+            "stream_first_sample": 3642421,
+            "capture_first_sample": 49152
+          },
+          {
+            "wav_frame": 57344,
+            "frames": 8192,
+            "stream_first_sample": 3650613,
+            "capture_first_sample": 57344
+          },
+          {
+            "wav_frame": 65536,
+            "frames": 8192,
+            "stream_first_sample": 3658805,
+            "capture_first_sample": 65536
+          },
+          {
+            "wav_frame": 73728,
+            "frames": 8192,
+            "stream_first_sample": 3666997,
+            "capture_first_sample": 73728
+          },
+          {
+            "wav_frame": 81920,
+            "frames": 8192,
+            "stream_first_sample": 3675189,
+            "capture_first_sample": 81920
+          },
+          {
+            "wav_frame": 90112,
+            "frames": 8192,
+            "stream_first_sample": 3683381,
+            "capture_first_sample": 90112
+          },
+          {
+            "wav_frame": 98304,
+            "frames": 8192,
+            "stream_first_sample": 3691573,
+            "capture_first_sample": 98304
+          },
+          {
+            "wav_frame": 106496,
+            "frames": 8192,
+            "stream_first_sample": 3699765,
+            "capture_first_sample": 106496
+          },
+          {
+            "wav_frame": 114688,
+            "frames": 8192,
+            "stream_first_sample": 3707957,
+            "capture_first_sample": 114688
+          },
+          {
+            "wav_frame": 122880,
+            "frames": 8192,
+            "stream_first_sample": 3716149,
+            "capture_first_sample": 122880
+          },
+          {
+            "wav_frame": 131072,
+            "frames": 8192,
+            "stream_first_sample": 3724341,
+            "capture_first_sample": 131072
+          },
+          {
+            "wav_frame": 139264,
+            "frames": 8192,
+            "stream_first_sample": 3732533,
+            "capture_first_sample": 139264
+          },
+          {
+            "wav_frame": 147456,
+            "frames": 8192,
+            "stream_first_sample": 3740725,
+            "capture_first_sample": 147456
+          },
+          {
+            "wav_frame": 155648,
+            "frames": 8192,
+            "stream_first_sample": 3748917,
+            "capture_first_sample": 155648
+          },
+          {
+            "wav_frame": 163840,
+            "frames": 8192,
+            "stream_first_sample": 3757109,
+            "capture_first_sample": 163840
+          },
+          {
+            "wav_frame": 172032,
+            "frames": 8192,
+            "stream_first_sample": 3765301,
+            "capture_first_sample": 172032
+          },
+          {
+            "wav_frame": 180224,
+            "frames": 8192,
+            "stream_first_sample": 3773493,
+            "capture_first_sample": 180224
+          },
+          {
+            "wav_frame": 188416,
+            "frames": 8192,
+            "stream_first_sample": 3781685,
+            "capture_first_sample": 188416
+          },
+          {
+            "wav_frame": 196608,
+            "frames": 8192,
+            "stream_first_sample": 3789877,
+            "capture_first_sample": 196608
+          },
+          {
+            "wav_frame": 204800,
+            "frames": 8192,
+            "stream_first_sample": 3798069,
+            "capture_first_sample": 204800
+          },
+          {
+            "wav_frame": 212992,
+            "frames": 8192,
+            "stream_first_sample": 3806261,
+            "capture_first_sample": 212992
+          },
+          {
+            "wav_frame": 221184,
+            "frames": 8192,
+            "stream_first_sample": 3814453,
+            "capture_first_sample": 221184
+          },
+          {
+            "wav_frame": 229376,
+            "frames": 8192,
+            "stream_first_sample": 3822645,
+            "capture_first_sample": 229376
+          },
+          {
+            "wav_frame": 237568,
+            "frames": 8192,
+            "stream_first_sample": 3830837,
+            "capture_first_sample": 237568
+          },
+          {
+            "wav_frame": 245760,
+            "frames": 8192,
+            "stream_first_sample": 3839029,
+            "capture_first_sample": 245760
+          },
+          {
+            "wav_frame": 253952,
+            "frames": 8192,
+            "stream_first_sample": 3847221,
+            "capture_first_sample": 253952
+          },
+          {
+            "wav_frame": 262144,
+            "frames": 8192,
+            "stream_first_sample": 3855413,
+            "capture_first_sample": 262144
+          },
+          {
+            "wav_frame": 270336,
+            "frames": 8192,
+            "stream_first_sample": 3863605,
+            "capture_first_sample": 270336
+          },
+          {
+            "wav_frame": 278528,
+            "frames": 8192,
+            "stream_first_sample": 3871797,
+            "capture_first_sample": 278528
+          },
+          {
+            "wav_frame": 286720,
+            "frames": 8192,
+            "stream_first_sample": 3879989,
+            "capture_first_sample": 286720
+          },
+          {
+            "wav_frame": 294912,
+            "frames": 8192,
+            "stream_first_sample": 3888181,
+            "capture_first_sample": 294912
+          },
+          {
+            "wav_frame": 303104,
+            "frames": 5596,
+            "stream_first_sample": 3896373,
+            "capture_first_sample": 303104
+          }
+        ],
+        "qualification": "Observed speaker-buffer sample indices; not absolute MIDI/audio latency."
+      },
+      "scheduled_midi": [
+        {
+          "sample": 3596198,
+          "bytes": [
+            192,
+            0
+          ]
+        },
+        {
+          "sample": 3597198,
+          "bytes": [
+            176,
+            7,
+            127
+          ]
+        },
+        {
+          "sample": 3598198,
+          "bytes": [
+            176,
+            10,
+            64
+          ]
+        },
+        {
+          "sample": 3599198,
+          "bytes": [
+            176,
+            64,
+            0
+          ]
+        },
+        {
+          "sample": 3600608,
+          "bytes": [
+            144,
+            73,
+            127
+          ]
+        },
+        {
+          "sample": 3732908,
+          "bytes": [
+            128,
+            73,
+            0
+          ]
+        }
+      ],
+      "delivered_midi": [
+        {
+          "seconds": 81.546439909297,
+          "sample": 3596198
+        },
+        {
+          "seconds": 81.569115646259,
+          "sample": 3597198
+        },
+        {
+          "seconds": 81.59179138322,
+          "sample": 3598198
+        },
+        {
+          "seconds": 81.614467120181,
+          "sample": 3599198
+        },
+        {
+          "seconds": 81.646439909297,
+          "sample": 3600608
+        },
+        {
+          "seconds": 84.646439909297,
+          "sample": 3732908
+        }
+      ],
+      "first_source_trace": {
+        "kind": "a",
+        "audio_frame": "3600746",
+        "cpu_cycles": "1306393292",
+        "machine_seconds": "81.649580749999998",
+        "voice": "0",
+        "register": "0",
+        "damping_word": "4095",
+        "mode": "0",
+        "cutoff_word": "422",
+        "command": "0",
+        "c": "0.025634765625",
+        "damping": "0.999755859375",
+        "position": "8",
+        "input": "0.878448486328125",
+        "low_before": "0",
+        "band_before": "0",
+        "render_c": "0.025634765625"
+      },
+      "mapped_source_wav_frame": 7477,
+      "expected_lp_startup_frames": 1,
+      "alignment_fit_frames": 0
+    },
+    {
+      "name": "static64",
+      "observed_stream_origin": 3901969,
+      "status_time_estimate_frame": 3902115,
+      "status_origin_error_frames": 146,
+      "first_nonzero_wav_frame": 6747,
+      "pcm_sha256": "71d43e0becc69060ade6ca2560c2e20e5550de17caaf177aeb3a1be594687dd3",
+      "audio_origin": {
+        "stream_first_sample": 3901969,
+        "capture_first_sample": 308700,
+        "frames": 308700,
+        "rate": 44100,
+        "blocks": [
+          {
+            "wav_frame": 0,
+            "frames": 8192,
+            "stream_first_sample": 3901969,
+            "capture_first_sample": 308700
+          },
+          {
+            "wav_frame": 8192,
+            "frames": 8192,
+            "stream_first_sample": 3910161,
+            "capture_first_sample": 316892
+          },
+          {
+            "wav_frame": 16384,
+            "frames": 8192,
+            "stream_first_sample": 3918353,
+            "capture_first_sample": 325084
+          },
+          {
+            "wav_frame": 24576,
+            "frames": 8192,
+            "stream_first_sample": 3926545,
+            "capture_first_sample": 333276
+          },
+          {
+            "wav_frame": 32768,
+            "frames": 8192,
+            "stream_first_sample": 3934737,
+            "capture_first_sample": 341468
+          },
+          {
+            "wav_frame": 40960,
+            "frames": 8192,
+            "stream_first_sample": 3942929,
+            "capture_first_sample": 349660
+          },
+          {
+            "wav_frame": 49152,
+            "frames": 8192,
+            "stream_first_sample": 3951121,
+            "capture_first_sample": 357852
+          },
+          {
+            "wav_frame": 57344,
+            "frames": 8192,
+            "stream_first_sample": 3959313,
+            "capture_first_sample": 366044
+          },
+          {
+            "wav_frame": 65536,
+            "frames": 8192,
+            "stream_first_sample": 3967505,
+            "capture_first_sample": 374236
+          },
+          {
+            "wav_frame": 73728,
+            "frames": 8192,
+            "stream_first_sample": 3975697,
+            "capture_first_sample": 382428
+          },
+          {
+            "wav_frame": 81920,
+            "frames": 8192,
+            "stream_first_sample": 3983889,
+            "capture_first_sample": 390620
+          },
+          {
+            "wav_frame": 90112,
+            "frames": 8192,
+            "stream_first_sample": 3992081,
+            "capture_first_sample": 398812
+          },
+          {
+            "wav_frame": 98304,
+            "frames": 8192,
+            "stream_first_sample": 4000273,
+            "capture_first_sample": 407004
+          },
+          {
+            "wav_frame": 106496,
+            "frames": 8192,
+            "stream_first_sample": 4008465,
+            "capture_first_sample": 415196
+          },
+          {
+            "wav_frame": 114688,
+            "frames": 8192,
+            "stream_first_sample": 4016657,
+            "capture_first_sample": 423388
+          },
+          {
+            "wav_frame": 122880,
+            "frames": 8192,
+            "stream_first_sample": 4024849,
+            "capture_first_sample": 431580
+          },
+          {
+            "wav_frame": 131072,
+            "frames": 8192,
+            "stream_first_sample": 4033041,
+            "capture_first_sample": 439772
+          },
+          {
+            "wav_frame": 139264,
+            "frames": 8192,
+            "stream_first_sample": 4041233,
+            "capture_first_sample": 447964
+          },
+          {
+            "wav_frame": 147456,
+            "frames": 8192,
+            "stream_first_sample": 4049425,
+            "capture_first_sample": 456156
+          },
+          {
+            "wav_frame": 155648,
+            "frames": 8192,
+            "stream_first_sample": 4057617,
+            "capture_first_sample": 464348
+          },
+          {
+            "wav_frame": 163840,
+            "frames": 8192,
+            "stream_first_sample": 4065809,
+            "capture_first_sample": 472540
+          },
+          {
+            "wav_frame": 172032,
+            "frames": 8192,
+            "stream_first_sample": 4074001,
+            "capture_first_sample": 480732
+          },
+          {
+            "wav_frame": 180224,
+            "frames": 8192,
+            "stream_first_sample": 4082193,
+            "capture_first_sample": 488924
+          },
+          {
+            "wav_frame": 188416,
+            "frames": 8192,
+            "stream_first_sample": 4090385,
+            "capture_first_sample": 497116
+          },
+          {
+            "wav_frame": 196608,
+            "frames": 8192,
+            "stream_first_sample": 4098577,
+            "capture_first_sample": 505308
+          },
+          {
+            "wav_frame": 204800,
+            "frames": 8192,
+            "stream_first_sample": 4106769,
+            "capture_first_sample": 513500
+          },
+          {
+            "wav_frame": 212992,
+            "frames": 8192,
+            "stream_first_sample": 4114961,
+            "capture_first_sample": 521692
+          },
+          {
+            "wav_frame": 221184,
+            "frames": 8192,
+            "stream_first_sample": 4123153,
+            "capture_first_sample": 529884
+          },
+          {
+            "wav_frame": 229376,
+            "frames": 8192,
+            "stream_first_sample": 4131345,
+            "capture_first_sample": 538076
+          },
+          {
+            "wav_frame": 237568,
+            "frames": 8192,
+            "stream_first_sample": 4139537,
+            "capture_first_sample": 546268
+          },
+          {
+            "wav_frame": 245760,
+            "frames": 8192,
+            "stream_first_sample": 4147729,
+            "capture_first_sample": 554460
+          },
+          {
+            "wav_frame": 253952,
+            "frames": 8192,
+            "stream_first_sample": 4155921,
+            "capture_first_sample": 562652
+          },
+          {
+            "wav_frame": 262144,
+            "frames": 8192,
+            "stream_first_sample": 4164113,
+            "capture_first_sample": 570844
+          },
+          {
+            "wav_frame": 270336,
+            "frames": 8192,
+            "stream_first_sample": 4172305,
+            "capture_first_sample": 579036
+          },
+          {
+            "wav_frame": 278528,
+            "frames": 8192,
+            "stream_first_sample": 4180497,
+            "capture_first_sample": 587228
+          },
+          {
+            "wav_frame": 286720,
+            "frames": 8192,
+            "stream_first_sample": 4188689,
+            "capture_first_sample": 595420
+          },
+          {
+            "wav_frame": 294912,
+            "frames": 8192,
+            "stream_first_sample": 4196881,
+            "capture_first_sample": 603612
+          },
+          {
+            "wav_frame": 303104,
+            "frames": 5596,
+            "stream_first_sample": 4205073,
+            "capture_first_sample": 611804
+          }
+        ],
+        "qualification": "Observed speaker-buffer sample indices; not absolute MIDI/audio latency."
+      },
+      "scheduled_midi": [
+        {
+          "sample": 3904163,
+          "bytes": [
+            192,
+            1
+          ]
+        },
+        {
+          "sample": 3905163,
+          "bytes": [
+            176,
+            7,
+            127
+          ]
+        },
+        {
+          "sample": 3906163,
+          "bytes": [
+            176,
+            10,
+            64
+          ]
+        },
+        {
+          "sample": 3907163,
+          "bytes": [
+            176,
+            64,
+            0
+          ]
+        },
+        {
+          "sample": 3908573,
+          "bytes": [
+            144,
+            73,
+            127
+          ]
+        },
+        {
+          "sample": 4040873,
+          "bytes": [
+            128,
+            73,
+            0
+          ]
+        }
+      ],
+      "delivered_midi": [
+        {
+          "seconds": 88.52977324263,
+          "sample": 3904163
+        },
+        {
+          "seconds": 88.552448979592,
+          "sample": 3905163
+        },
+        {
+          "seconds": 88.575124716553,
+          "sample": 3906163
+        },
+        {
+          "seconds": 88.597800453515,
+          "sample": 3907163
+        },
+        {
+          "seconds": 88.62977324263,
+          "sample": 3908573
+        },
+        {
+          "seconds": 91.62977324263,
+          "sample": 4040873
+        }
+      ],
+      "first_source_trace": {
+        "kind": "a",
+        "audio_frame": "3908715",
+        "cpu_cycles": "1418128092",
+        "machine_seconds": "88.633005749999995",
+        "voice": "1",
+        "register": "0",
+        "damping_word": "4095",
+        "mode": "0",
+        "cutoff_word": "416",
+        "command": "0",
+        "c": "0.025390625",
+        "damping": "0.999755859375",
+        "position": "8",
+        "input": "0.878448486328125",
+        "low_before": "0",
+        "band_before": "0",
+        "render_c": "0.025390625"
+      },
+      "mapped_source_wav_frame": 6746,
+      "expected_lp_startup_frames": 1,
+      "alignment_fit_frames": 0
+    },
+    {
+      "name": "static80",
+      "observed_stream_origin": 4210669,
+      "status_time_estimate_frame": 4210815,
+      "status_origin_error_frames": 146,
+      "first_nonzero_wav_frame": 6747,
+      "pcm_sha256": "855ee4aeced8edb9d36dc5eaf77a817a13d270aaa8cf0602816ff9723f0a6886",
+      "audio_origin": {
+        "stream_first_sample": 4210669,
+        "capture_first_sample": 617400,
+        "frames": 308700,
+        "rate": 44100,
+        "blocks": [
+          {
+            "wav_frame": 0,
+            "frames": 8192,
+            "stream_first_sample": 4210669,
+            "capture_first_sample": 617400
+          },
+          {
+            "wav_frame": 8192,
+            "frames": 8192,
+            "stream_first_sample": 4218861,
+            "capture_first_sample": 625592
+          },
+          {
+            "wav_frame": 16384,
+            "frames": 8192,
+            "stream_first_sample": 4227053,
+            "capture_first_sample": 633784
+          },
+          {
+            "wav_frame": 24576,
+            "frames": 8192,
+            "stream_first_sample": 4235245,
+            "capture_first_sample": 641976
+          },
+          {
+            "wav_frame": 32768,
+            "frames": 8192,
+            "stream_first_sample": 4243437,
+            "capture_first_sample": 650168
+          },
+          {
+            "wav_frame": 40960,
+            "frames": 8192,
+            "stream_first_sample": 4251629,
+            "capture_first_sample": 658360
+          },
+          {
+            "wav_frame": 49152,
+            "frames": 8192,
+            "stream_first_sample": 4259821,
+            "capture_first_sample": 666552
+          },
+          {
+            "wav_frame": 57344,
+            "frames": 8192,
+            "stream_first_sample": 4268013,
+            "capture_first_sample": 674744
+          },
+          {
+            "wav_frame": 65536,
+            "frames": 8192,
+            "stream_first_sample": 4276205,
+            "capture_first_sample": 682936
+          },
+          {
+            "wav_frame": 73728,
+            "frames": 8192,
+            "stream_first_sample": 4284397,
+            "capture_first_sample": 691128
+          },
+          {
+            "wav_frame": 81920,
+            "frames": 8192,
+            "stream_first_sample": 4292589,
+            "capture_first_sample": 699320
+          },
+          {
+            "wav_frame": 90112,
+            "frames": 8192,
+            "stream_first_sample": 4300781,
+            "capture_first_sample": 707512
+          },
+          {
+            "wav_frame": 98304,
+            "frames": 8192,
+            "stream_first_sample": 4308973,
+            "capture_first_sample": 715704
+          },
+          {
+            "wav_frame": 106496,
+            "frames": 8192,
+            "stream_first_sample": 4317165,
+            "capture_first_sample": 723896
+          },
+          {
+            "wav_frame": 114688,
+            "frames": 8192,
+            "stream_first_sample": 4325357,
+            "capture_first_sample": 732088
+          },
+          {
+            "wav_frame": 122880,
+            "frames": 8192,
+            "stream_first_sample": 4333549,
+            "capture_first_sample": 740280
+          },
+          {
+            "wav_frame": 131072,
+            "frames": 8192,
+            "stream_first_sample": 4341741,
+            "capture_first_sample": 748472
+          },
+          {
+            "wav_frame": 139264,
+            "frames": 8192,
+            "stream_first_sample": 4349933,
+            "capture_first_sample": 756664
+          },
+          {
+            "wav_frame": 147456,
+            "frames": 8192,
+            "stream_first_sample": 4358125,
+            "capture_first_sample": 764856
+          },
+          {
+            "wav_frame": 155648,
+            "frames": 8192,
+            "stream_first_sample": 4366317,
+            "capture_first_sample": 773048
+          },
+          {
+            "wav_frame": 163840,
+            "frames": 8192,
+            "stream_first_sample": 4374509,
+            "capture_first_sample": 781240
+          },
+          {
+            "wav_frame": 172032,
+            "frames": 8192,
+            "stream_first_sample": 4382701,
+            "capture_first_sample": 789432
+          },
+          {
+            "wav_frame": 180224,
+            "frames": 8192,
+            "stream_first_sample": 4390893,
+            "capture_first_sample": 797624
+          },
+          {
+            "wav_frame": 188416,
+            "frames": 8192,
+            "stream_first_sample": 4399085,
+            "capture_first_sample": 805816
+          },
+          {
+            "wav_frame": 196608,
+            "frames": 8192,
+            "stream_first_sample": 4407277,
+            "capture_first_sample": 814008
+          },
+          {
+            "wav_frame": 204800,
+            "frames": 8192,
+            "stream_first_sample": 4415469,
+            "capture_first_sample": 822200
+          },
+          {
+            "wav_frame": 212992,
+            "frames": 8192,
+            "stream_first_sample": 4423661,
+            "capture_first_sample": 830392
+          },
+          {
+            "wav_frame": 221184,
+            "frames": 8192,
+            "stream_first_sample": 4431853,
+            "capture_first_sample": 838584
+          },
+          {
+            "wav_frame": 229376,
+            "frames": 8192,
+            "stream_first_sample": 4440045,
+            "capture_first_sample": 846776
+          },
+          {
+            "wav_frame": 237568,
+            "frames": 8192,
+            "stream_first_sample": 4448237,
+            "capture_first_sample": 854968
+          },
+          {
+            "wav_frame": 245760,
+            "frames": 8192,
+            "stream_first_sample": 4456429,
+            "capture_first_sample": 863160
+          },
+          {
+            "wav_frame": 253952,
+            "frames": 8192,
+            "stream_first_sample": 4464621,
+            "capture_first_sample": 871352
+          },
+          {
+            "wav_frame": 262144,
+            "frames": 8192,
+            "stream_first_sample": 4472813,
+            "capture_first_sample": 879544
+          },
+          {
+            "wav_frame": 270336,
+            "frames": 8192,
+            "stream_first_sample": 4481005,
+            "capture_first_sample": 887736
+          },
+          {
+            "wav_frame": 278528,
+            "frames": 8192,
+            "stream_first_sample": 4489197,
+            "capture_first_sample": 895928
+          },
+          {
+            "wav_frame": 286720,
+            "frames": 8192,
+            "stream_first_sample": 4497389,
+            "capture_first_sample": 904120
+          },
+          {
+            "wav_frame": 294912,
+            "frames": 8192,
+            "stream_first_sample": 4505581,
+            "capture_first_sample": 912312
+          },
+          {
+            "wav_frame": 303104,
+            "frames": 5596,
+            "stream_first_sample": 4513773,
+            "capture_first_sample": 920504
+          }
+        ],
+        "qualification": "Observed speaker-buffer sample indices; not absolute MIDI/audio latency."
+      },
+      "scheduled_midi": [
+        {
+          "sample": 4212863,
+          "bytes": [
+            192,
+            2
+          ]
+        },
+        {
+          "sample": 4213863,
+          "bytes": [
+            176,
+            7,
+            127
+          ]
+        },
+        {
+          "sample": 4214863,
+          "bytes": [
+            176,
+            10,
+            64
+          ]
+        },
+        {
+          "sample": 4215863,
+          "bytes": [
+            176,
+            64,
+            0
+          ]
+        },
+        {
+          "sample": 4217273,
+          "bytes": [
+            144,
+            73,
+            127
+          ]
+        },
+        {
+          "sample": 4349573,
+          "bytes": [
+            128,
+            73,
+            0
+          ]
+        }
+      ],
+      "delivered_midi": [
+        {
+          "seconds": 95.52977324263,
+          "sample": 4212863
+        },
+        {
+          "seconds": 95.552448979592,
+          "sample": 4213863
+        },
+        {
+          "seconds": 95.575124716553,
+          "sample": 4214863
+        },
+        {
+          "seconds": 95.597800453515,
+          "sample": 4215863
+        },
+        {
+          "seconds": 95.62977324263,
+          "sample": 4217273
+        },
+        {
+          "seconds": 98.62977324263,
+          "sample": 4349573
+        }
+      ],
+      "first_source_trace": {
+        "kind": "a",
+        "audio_frame": "4217415",
+        "cpu_cycles": "1530128102",
+        "machine_seconds": "95.633006374999994",
+        "voice": "2",
+        "register": "0",
+        "damping_word": "4095",
+        "mode": "0",
+        "cutoff_word": "1042",
+        "command": "0",
+        "c": "0.0634765625",
+        "damping": "0.999755859375",
+        "position": "8",
+        "input": "0.878448486328125",
+        "low_before": "0",
+        "band_before": "0",
+        "render_c": "0.0634765625"
+      },
+      "mapped_source_wav_frame": 6746,
+      "expected_lp_startup_frames": 1,
+      "alignment_fit_frames": 0
+    },
+    {
+      "name": "static96",
+      "observed_stream_origin": 4519369,
+      "status_time_estimate_frame": 4519515,
+      "status_origin_error_frames": 146,
+      "first_nonzero_wav_frame": 6747,
+      "pcm_sha256": "97dc572ec44603bc417cf9986bf396fa69d14666e1820c508405fe07e65573c0",
+      "audio_origin": {
+        "stream_first_sample": 4519369,
+        "capture_first_sample": 926100,
+        "frames": 308700,
+        "rate": 44100,
+        "blocks": [
+          {
+            "wav_frame": 0,
+            "frames": 8192,
+            "stream_first_sample": 4519369,
+            "capture_first_sample": 926100
+          },
+          {
+            "wav_frame": 8192,
+            "frames": 8192,
+            "stream_first_sample": 4527561,
+            "capture_first_sample": 934292
+          },
+          {
+            "wav_frame": 16384,
+            "frames": 8192,
+            "stream_first_sample": 4535753,
+            "capture_first_sample": 942484
+          },
+          {
+            "wav_frame": 24576,
+            "frames": 8192,
+            "stream_first_sample": 4543945,
+            "capture_first_sample": 950676
+          },
+          {
+            "wav_frame": 32768,
+            "frames": 8192,
+            "stream_first_sample": 4552137,
+            "capture_first_sample": 958868
+          },
+          {
+            "wav_frame": 40960,
+            "frames": 8192,
+            "stream_first_sample": 4560329,
+            "capture_first_sample": 967060
+          },
+          {
+            "wav_frame": 49152,
+            "frames": 8192,
+            "stream_first_sample": 4568521,
+            "capture_first_sample": 975252
+          },
+          {
+            "wav_frame": 57344,
+            "frames": 8192,
+            "stream_first_sample": 4576713,
+            "capture_first_sample": 983444
+          },
+          {
+            "wav_frame": 65536,
+            "frames": 8192,
+            "stream_first_sample": 4584905,
+            "capture_first_sample": 991636
+          },
+          {
+            "wav_frame": 73728,
+            "frames": 8192,
+            "stream_first_sample": 4593097,
+            "capture_first_sample": 999828
+          },
+          {
+            "wav_frame": 81920,
+            "frames": 8192,
+            "stream_first_sample": 4601289,
+            "capture_first_sample": 1008020
+          },
+          {
+            "wav_frame": 90112,
+            "frames": 8192,
+            "stream_first_sample": 4609481,
+            "capture_first_sample": 1016212
+          },
+          {
+            "wav_frame": 98304,
+            "frames": 8192,
+            "stream_first_sample": 4617673,
+            "capture_first_sample": 1024404
+          },
+          {
+            "wav_frame": 106496,
+            "frames": 8192,
+            "stream_first_sample": 4625865,
+            "capture_first_sample": 1032596
+          },
+          {
+            "wav_frame": 114688,
+            "frames": 8192,
+            "stream_first_sample": 4634057,
+            "capture_first_sample": 1040788
+          },
+          {
+            "wav_frame": 122880,
+            "frames": 8192,
+            "stream_first_sample": 4642249,
+            "capture_first_sample": 1048980
+          },
+          {
+            "wav_frame": 131072,
+            "frames": 8192,
+            "stream_first_sample": 4650441,
+            "capture_first_sample": 1057172
+          },
+          {
+            "wav_frame": 139264,
+            "frames": 8192,
+            "stream_first_sample": 4658633,
+            "capture_first_sample": 1065364
+          },
+          {
+            "wav_frame": 147456,
+            "frames": 8192,
+            "stream_first_sample": 4666825,
+            "capture_first_sample": 1073556
+          },
+          {
+            "wav_frame": 155648,
+            "frames": 8192,
+            "stream_first_sample": 4675017,
+            "capture_first_sample": 1081748
+          },
+          {
+            "wav_frame": 163840,
+            "frames": 8192,
+            "stream_first_sample": 4683209,
+            "capture_first_sample": 1089940
+          },
+          {
+            "wav_frame": 172032,
+            "frames": 8192,
+            "stream_first_sample": 4691401,
+            "capture_first_sample": 1098132
+          },
+          {
+            "wav_frame": 180224,
+            "frames": 8192,
+            "stream_first_sample": 4699593,
+            "capture_first_sample": 1106324
+          },
+          {
+            "wav_frame": 188416,
+            "frames": 8192,
+            "stream_first_sample": 4707785,
+            "capture_first_sample": 1114516
+          },
+          {
+            "wav_frame": 196608,
+            "frames": 8192,
+            "stream_first_sample": 4715977,
+            "capture_first_sample": 1122708
+          },
+          {
+            "wav_frame": 204800,
+            "frames": 8192,
+            "stream_first_sample": 4724169,
+            "capture_first_sample": 1130900
+          },
+          {
+            "wav_frame": 212992,
+            "frames": 8192,
+            "stream_first_sample": 4732361,
+            "capture_first_sample": 1139092
+          },
+          {
+            "wav_frame": 221184,
+            "frames": 8192,
+            "stream_first_sample": 4740553,
+            "capture_first_sample": 1147284
+          },
+          {
+            "wav_frame": 229376,
+            "frames": 8192,
+            "stream_first_sample": 4748745,
+            "capture_first_sample": 1155476
+          },
+          {
+            "wav_frame": 237568,
+            "frames": 8192,
+            "stream_first_sample": 4756937,
+            "capture_first_sample": 1163668
+          },
+          {
+            "wav_frame": 245760,
+            "frames": 8192,
+            "stream_first_sample": 4765129,
+            "capture_first_sample": 1171860
+          },
+          {
+            "wav_frame": 253952,
+            "frames": 8192,
+            "stream_first_sample": 4773321,
+            "capture_first_sample": 1180052
+          },
+          {
+            "wav_frame": 262144,
+            "frames": 8192,
+            "stream_first_sample": 4781513,
+            "capture_first_sample": 1188244
+          },
+          {
+            "wav_frame": 270336,
+            "frames": 8192,
+            "stream_first_sample": 4789705,
+            "capture_first_sample": 1196436
+          },
+          {
+            "wav_frame": 278528,
+            "frames": 8192,
+            "stream_first_sample": 4797897,
+            "capture_first_sample": 1204628
+          },
+          {
+            "wav_frame": 286720,
+            "frames": 8192,
+            "stream_first_sample": 4806089,
+            "capture_first_sample": 1212820
+          },
+          {
+            "wav_frame": 294912,
+            "frames": 8192,
+            "stream_first_sample": 4814281,
+            "capture_first_sample": 1221012
+          },
+          {
+            "wav_frame": 303104,
+            "frames": 5596,
+            "stream_first_sample": 4822473,
+            "capture_first_sample": 1229204
+          }
+        ],
+        "qualification": "Observed speaker-buffer sample indices; not absolute MIDI/audio latency."
+      },
+      "scheduled_midi": [
+        {
+          "sample": 4521563,
+          "bytes": [
+            192,
+            3
+          ]
+        },
+        {
+          "sample": 4522563,
+          "bytes": [
+            176,
+            7,
+            127
+          ]
+        },
+        {
+          "sample": 4523563,
+          "bytes": [
+            176,
+            10,
+            64
+          ]
+        },
+        {
+          "sample": 4524563,
+          "bytes": [
+            176,
+            64,
+            0
+          ]
+        },
+        {
+          "sample": 4525973,
+          "bytes": [
+            144,
+            73,
+            127
+          ]
+        },
+        {
+          "sample": 4658273,
+          "bytes": [
+            128,
+            73,
+            0
+          ]
+        }
+      ],
+      "delivered_midi": [
+        {
+          "seconds": 102.52977324263,
+          "sample": 4521563
+        },
+        {
+          "seconds": 102.55244897959,
+          "sample": 4522563
+        },
+        {
+          "seconds": 102.57512471655,
+          "sample": 4523563
+        },
+        {
+          "seconds": 102.59780045351,
+          "sample": 4524563
+        },
+        {
+          "seconds": 102.62977324263,
+          "sample": 4525973
+        },
+        {
+          "seconds": 105.62977324263,
+          "sample": 4658273
+        }
+      ],
+      "first_source_trace": {
+        "kind": "a",
+        "audio_frame": "4526115",
+        "cpu_cycles": "1642128060",
+        "machine_seconds": "102.63300375",
+        "voice": "3",
+        "register": "0",
+        "damping_word": "4095",
+        "mode": "0",
+        "cutoff_word": "2613",
+        "command": "0",
+        "c": "0.159423828125",
+        "damping": "0.999755859375",
+        "position": "8",
+        "input": "0.878448486328125",
+        "low_before": "0",
+        "band_before": "0",
+        "render_c": "0.159423828125"
+      },
+      "mapped_source_wav_frame": 6746,
+      "expected_lp_startup_frames": 1,
+      "alignment_fit_frames": 0
+    },
+    {
+      "name": "bypass",
+      "observed_stream_origin": 4828069,
+      "status_time_estimate_frame": 4828215,
+      "status_origin_error_frames": 146,
+      "first_nonzero_wav_frame": 6727,
+      "pcm_sha256": "3ecc0065ef21ce16c955ad391bff90eea90c61993b43ee079fac86d59b08e682",
+      "audio_origin": {
+        "stream_first_sample": 4828069,
+        "capture_first_sample": 1234800,
+        "frames": 308700,
+        "rate": 44100,
+        "blocks": [
+          {
+            "wav_frame": 0,
+            "frames": 8192,
+            "stream_first_sample": 4828069,
+            "capture_first_sample": 1234800
+          },
+          {
+            "wav_frame": 8192,
+            "frames": 8192,
+            "stream_first_sample": 4836261,
+            "capture_first_sample": 1242992
+          },
+          {
+            "wav_frame": 16384,
+            "frames": 8192,
+            "stream_first_sample": 4844453,
+            "capture_first_sample": 1251184
+          },
+          {
+            "wav_frame": 24576,
+            "frames": 8192,
+            "stream_first_sample": 4852645,
+            "capture_first_sample": 1259376
+          },
+          {
+            "wav_frame": 32768,
+            "frames": 8192,
+            "stream_first_sample": 4860837,
+            "capture_first_sample": 1267568
+          },
+          {
+            "wav_frame": 40960,
+            "frames": 8192,
+            "stream_first_sample": 4869029,
+            "capture_first_sample": 1275760
+          },
+          {
+            "wav_frame": 49152,
+            "frames": 8192,
+            "stream_first_sample": 4877221,
+            "capture_first_sample": 1283952
+          },
+          {
+            "wav_frame": 57344,
+            "frames": 8192,
+            "stream_first_sample": 4885413,
+            "capture_first_sample": 1292144
+          },
+          {
+            "wav_frame": 65536,
+            "frames": 8192,
+            "stream_first_sample": 4893605,
+            "capture_first_sample": 1300336
+          },
+          {
+            "wav_frame": 73728,
+            "frames": 8192,
+            "stream_first_sample": 4901797,
+            "capture_first_sample": 1308528
+          },
+          {
+            "wav_frame": 81920,
+            "frames": 8192,
+            "stream_first_sample": 4909989,
+            "capture_first_sample": 1316720
+          },
+          {
+            "wav_frame": 90112,
+            "frames": 8192,
+            "stream_first_sample": 4918181,
+            "capture_first_sample": 1324912
+          },
+          {
+            "wav_frame": 98304,
+            "frames": 8192,
+            "stream_first_sample": 4926373,
+            "capture_first_sample": 1333104
+          },
+          {
+            "wav_frame": 106496,
+            "frames": 8192,
+            "stream_first_sample": 4934565,
+            "capture_first_sample": 1341296
+          },
+          {
+            "wav_frame": 114688,
+            "frames": 8192,
+            "stream_first_sample": 4942757,
+            "capture_first_sample": 1349488
+          },
+          {
+            "wav_frame": 122880,
+            "frames": 8192,
+            "stream_first_sample": 4950949,
+            "capture_first_sample": 1357680
+          },
+          {
+            "wav_frame": 131072,
+            "frames": 8192,
+            "stream_first_sample": 4959141,
+            "capture_first_sample": 1365872
+          },
+          {
+            "wav_frame": 139264,
+            "frames": 8192,
+            "stream_first_sample": 4967333,
+            "capture_first_sample": 1374064
+          },
+          {
+            "wav_frame": 147456,
+            "frames": 8192,
+            "stream_first_sample": 4975525,
+            "capture_first_sample": 1382256
+          },
+          {
+            "wav_frame": 155648,
+            "frames": 8192,
+            "stream_first_sample": 4983717,
+            "capture_first_sample": 1390448
+          },
+          {
+            "wav_frame": 163840,
+            "frames": 8192,
+            "stream_first_sample": 4991909,
+            "capture_first_sample": 1398640
+          },
+          {
+            "wav_frame": 172032,
+            "frames": 8192,
+            "stream_first_sample": 5000101,
+            "capture_first_sample": 1406832
+          },
+          {
+            "wav_frame": 180224,
+            "frames": 8192,
+            "stream_first_sample": 5008293,
+            "capture_first_sample": 1415024
+          },
+          {
+            "wav_frame": 188416,
+            "frames": 8192,
+            "stream_first_sample": 5016485,
+            "capture_first_sample": 1423216
+          },
+          {
+            "wav_frame": 196608,
+            "frames": 8192,
+            "stream_first_sample": 5024677,
+            "capture_first_sample": 1431408
+          },
+          {
+            "wav_frame": 204800,
+            "frames": 8192,
+            "stream_first_sample": 5032869,
+            "capture_first_sample": 1439600
+          },
+          {
+            "wav_frame": 212992,
+            "frames": 8192,
+            "stream_first_sample": 5041061,
+            "capture_first_sample": 1447792
+          },
+          {
+            "wav_frame": 221184,
+            "frames": 8192,
+            "stream_first_sample": 5049253,
+            "capture_first_sample": 1455984
+          },
+          {
+            "wav_frame": 229376,
+            "frames": 8192,
+            "stream_first_sample": 5057445,
+            "capture_first_sample": 1464176
+          },
+          {
+            "wav_frame": 237568,
+            "frames": 8192,
+            "stream_first_sample": 5065637,
+            "capture_first_sample": 1472368
+          },
+          {
+            "wav_frame": 245760,
+            "frames": 8192,
+            "stream_first_sample": 5073829,
+            "capture_first_sample": 1480560
+          },
+          {
+            "wav_frame": 253952,
+            "frames": 8192,
+            "stream_first_sample": 5082021,
+            "capture_first_sample": 1488752
+          },
+          {
+            "wav_frame": 262144,
+            "frames": 8192,
+            "stream_first_sample": 5090213,
+            "capture_first_sample": 1496944
+          },
+          {
+            "wav_frame": 270336,
+            "frames": 8192,
+            "stream_first_sample": 5098405,
+            "capture_first_sample": 1505136
+          },
+          {
+            "wav_frame": 278528,
+            "frames": 8192,
+            "stream_first_sample": 5106597,
+            "capture_first_sample": 1513328
+          },
+          {
+            "wav_frame": 286720,
+            "frames": 8192,
+            "stream_first_sample": 5114789,
+            "capture_first_sample": 1521520
+          },
+          {
+            "wav_frame": 294912,
+            "frames": 8192,
+            "stream_first_sample": 5122981,
+            "capture_first_sample": 1529712
+          },
+          {
+            "wav_frame": 303104,
+            "frames": 5596,
+            "stream_first_sample": 5131173,
+            "capture_first_sample": 1537904
+          }
+        ],
+        "qualification": "Observed speaker-buffer sample indices; not absolute MIDI/audio latency."
+      },
+      "scheduled_midi": [
+        {
+          "sample": 4830263,
+          "bytes": [
+            192,
+            4
+          ]
+        },
+        {
+          "sample": 4831263,
+          "bytes": [
+            176,
+            7,
+            127
+          ]
+        },
+        {
+          "sample": 4832263,
+          "bytes": [
+            176,
+            10,
+            64
+          ]
+        },
+        {
+          "sample": 4833263,
+          "bytes": [
+            176,
+            64,
+            0
+          ]
+        },
+        {
+          "sample": 4834673,
+          "bytes": [
+            144,
+            73,
+            127
+          ]
+        },
+        {
+          "sample": 4966973,
+          "bytes": [
+            128,
+            73,
+            0
+          ]
+        }
+      ],
+      "delivered_midi": [
+        {
+          "seconds": 109.52977324263,
+          "sample": 4830263
+        },
+        {
+          "seconds": 109.55244897959,
+          "sample": 4831263
+        },
+        {
+          "seconds": 109.57512471655,
+          "sample": 4832263
+        },
+        {
+          "seconds": 109.59780045351,
+          "sample": 4833263
+        },
+        {
+          "seconds": 109.62977324263,
+          "sample": 4834673
+        },
+        {
+          "seconds": 112.62977324263,
+          "sample": 4966973
+        }
+      ]
+    }
+  ],
+  "exact_loaded_pcm_bytes": 9216,
+  "trace_rows": 5251,
+  "trace_dropped": 0,
+  "buffered_checkpoint_and_reset": {
+    "blocks": [
+      {
+        "channels": 2,
+        "first_sample": 0,
+        "stream_contiguous": true,
+        "stream_first_sample": 0,
+        "dropped_frames": 0,
+        "rate": 44100,
+        "frames": 1
+      },
+      {
+        "channels": 2,
+        "first_sample": 1,
+        "stream_contiguous": true,
+        "stream_first_sample": 1,
+        "dropped_frames": 0,
+        "rate": 44100,
+        "frames": 127
+      },
+      {
+        "channels": 2,
+        "first_sample": 128,
+        "stream_contiguous": true,
+        "stream_first_sample": 128,
+        "dropped_frames": 0,
+        "rate": 44100,
+        "frames": 8192
+      },
+      {
+        "channels": 2,
+        "first_sample": 8320,
+        "stream_contiguous": true,
+        "stream_first_sample": 8320,
+        "dropped_frames": 0,
+        "rate": 44100,
+        "frames": 63
+      },
+      {
+        "channels": 2,
+        "first_sample": 8383,
+        "stream_contiguous": true,
+        "stream_first_sample": 8383,
+        "dropped_frames": 0,
+        "rate": 44100,
+        "frames": 2048
+      }
+    ],
+    "checkpoint": {
+      "channels": 2,
+      "first_sample": 10431,
+      "stream_contiguous": true,
+      "stream_first_sample": 10431,
+      "dropped_frames": 0,
+      "rate": 44100,
+      "frames": 4096
+    },
+    "restored": {
+      "channels": 2,
+      "first_sample": 10431,
+      "stream_contiguous": true,
+      "stream_first_sample": 10431,
+      "dropped_frames": 0,
+      "rate": 44100,
+      "frames": 4096
+    },
+    "reset": {
+      "channels": 2,
+      "first_sample": 0,
+      "stream_contiguous": true,
+      "stream_first_sample": 14995,
+      "dropped_frames": 0,
+      "rate": 44100,
+      "frames": 1024
+    }
+  },
+  "native_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1019.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.533333333333,
+    "note_release": 80.733333333333,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    },
+    "pull_render": {
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "frames": 122616,
+      "wav_max_error_pcm16": 0.9999542236328125,
+      "dropped_frames": 0,
+      "paused_between_requests": true,
+      "release_tail_silent": true
+    },
+    "scheduled_midi": [
+      {
+        "seconds": 82.906009070295,
+        "sample": 3656155
+      },
+      {
+        "seconds": 83.906009070295,
+        "sample": 3700255
+      }
+    ]
+  },
+  "backend_suite": "........................................................................ [ 14%]\n........................................................................ [ 28%]\n........................................................................ [ 42%]\n........................................................................ [ 56%]\n........................................................................ [ 70%]\n........................................................................ [ 84%]\n........................................................................ [ 98%]\n........                                                                 [100%]\n512 passed in 85.00s (0:01:24)",
+  "cpp_core_result": ">>> ALL C++ CORE TESTS PASSED SUCCESSFULLY! <<<",
+  "cpp_plugin_result": ">>> ALL VST3, VST2 & CLAP PLUGIN TESTS PASSED SUCCESSFULLY! <<<",
+  "limits": [
+    "Observed native frame mapping, not physical MIDI-to-analog latency or a renderer/timing correction.",
+    "Scheduled MIDI sample timestamps denote transmitter enqueue time, not voice/source onset.",
+    "The four filtered MODDIAG cases map the first traced source frame plus one LP recurrence startup frame to the first nonzero WAV sample; no fitted lag/cross-correlation is used.",
+    "The bypass case records origin metadata but has no filter application trace row.",
+    "Old native executables expose an unqualified origin through the current protocol; the verifier rejects it.",
+    "Historical captures lack origin metadata and are not retroactively assigned an absolute timing map.",
+    "Strict same-build/protocol checkpoint identity remains enforced; no cross-build checkpoint migration."
+  ]
+}

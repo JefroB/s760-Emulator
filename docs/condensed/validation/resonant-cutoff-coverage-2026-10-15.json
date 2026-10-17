@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "static_control_cutoff_words": [
+    428,
+    2732
+  ],
+  "maximum_native_sweep_word": 15451,
+  "rows": [
+    {
+      "label": "quiet",
+      "bins": [
+        {
+          "cutoff_word_min": 0,
+          "cutoff_word_max_exclusive": 428,
+          "evaluation_seconds": 0.41210416666666666,
+          "waveform_error_percent": 89.61890431397902,
+          "observed_energy_fraction": 0.004721987715852208,
+          "residual_energy_fraction": 0.12147082832618582
+        },
+        {
+          "cutoff_word_min": 428,
+          "cutoff_word_max_exclusive": 2732,
+          "evaluation_seconds": 1.2014583333333333,
+          "waveform_error_percent": 29.460253176822437,
+          "observed_energy_fraction": 0.17025132522978575,
+          "residual_energy_fraction": 0.47327256637551696
+        },
+        {
+          "cutoff_word_min": 2732,
+          "cutoff_word_max_exclusive": 8192,
+          "evaluation_seconds": 0.5223333333333333,
+          "waveform_error_percent": 14.651048462540906,
+          "observed_energy_fraction": 0.4574396167503002,
+          "residual_energy_fraction": 0.3144988518184851
+        },
+        {
+          "cutoff_word_min": 8192,
+          "cutoff_word_max_exclusive": 16384,
+          "evaluation_seconds": 0.364125,
+          "waveform_error_percent": 8.779864532103913,
+          "observed_energy_fraction": 0.36758707030406185,
+          "residual_energy_fraction": 0.09075775347981223
+        }
+      ],
+      "observed_energy_above_static_coverage": 0.8250266870543621,
+      "residual_energy_above_static_coverage": 0.4052566052982973
+    },
+    {
+      "label": "repeat",
+      "bins": [
+        {
+          "cutoff_word_min": 0,
+          "cutoff_word_max_exclusive": 428,
+          "evaluation_seconds": 0.3697708333333333,
+          "waveform_error_percent": 43.275310686841806,
+          "observed_energy_fraction": 0.013647883739991873,
+          "residual_energy_fraction": 0.0948273343422491
+        },
+        {
+          "cutoff_word_min": 428,
+          "cutoff_word_max_exclusive": 2732,
+          "evaluation_seconds": 1.0625416666666667,
+          "waveform_error_percent": 33.11038992678874,
+          "observed_energy_fraction": 0.10405693654380876,
+          "residual_energy_fraction": 0.42324074069724665
+        },
+        {
+          "cutoff_word_min": 2732,
+          "cutoff_word_max_exclusive": 8192,
+          "evaluation_seconds": 0.6677083333333333,
+          "waveform_error_percent": 15.499574373816133,
+          "observed_energy_fraction": 0.44149992034237384,
+          "residual_energy_fraction": 0.39351202985301814
+        },
+        {
+          "cutoff_word_min": 8192,
+          "cutoff_word_max_exclusive": 16384,
+          "evaluation_seconds": 0.4,
+          "waveform_error_percent": 7.352967061890987,
+          "observed_energy_fraction": 0.44079525937382547,
+          "residual_energy_fraction": 0.08841989510748605
+        }
+      ],
+      "observed_energy_above_static_coverage": 0.8822951797161993,
+      "residual_energy_above_static_coverage": 0.4819319249605042
+    }
+  ],
+  "limits": [
+    "Cutoff-bin assignment uses the candidate native trajectory, not measured physical cutoff.",
+    "Energy fractions localize the existing waveform residual; they do not establish a cause or prove a stationary filter defect.",
+    "Two accurate stationary control points do not qualify all frequencies between or above them.",
+    "No additional fitting, native behavior change or new hardware recording."
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\profile_resonant_cutoff_coverage.py": "18db8db261d995d20d0096a7b5ecb27d27fe8fb4d7c0bd87a55f943ec9343545",
+    "docs\\condensed\\validation\\cutoff-space-quantization-2026-10-15.json": "bedca6f201c95f1ee4ccc830792d9f3f78c90aafce33ecc18046a4a86cbb510d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\on\\application.csv": "3723b9ee084534b0df33e866b4cdf5a9cdf2d604c685a858ec863a2c27795086"
+  }
+}

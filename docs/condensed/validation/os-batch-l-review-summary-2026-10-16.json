@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-16",
+  "frozen_batch": "L",
+  "original_input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "candidate_code_bytes": 377306,
+  "candidate_data_bytes": 3405,
+  "candidate_percent": 36.88373868427579,
+  "region_count": 7157,
+  "unique_instruction_encodings": 129491,
+  "independent_location_comparisons": 163961,
+  "length_mnemonic_agreements": 138103,
+  "length_disagreements": 25858,
+  "disagreement_categories": {
+    "XCHB": 16,
+    "XCH": 4,
+    "SKIP": 25836,
+    "IDLPD": 1,
+    "TIJMP": 1
+  },
+  "direct_target_comparisons": 33184,
+  "direct_target_disagreements": [],
+  "boundary_conflict_pair_count": 1360,
+  "missing_baseline_encodings": [],
+  "original_byte_mapping_mismatches": 0,
+  "code_data_overlaps": 0,
+  "additional_conditional_bank_links": 0,
+  "decoder_warning_count": 0,
+  "standalone_decoder_probes": [
+    {
+      "bytes": "0012",
+      "mnemonic": "SKIP",
+      "length": 1,
+      "operands": ""
+    },
+    {
+      "bytes": "f600",
+      "mnemonic": "IDLPD",
+      "length": 2,
+      "operands": "#0x0"
+    }
+  ],
+  "spec_sha256": "31fd7a61c2bd756a2727bafb4ef96ad3fa804a84c2b8c7ddfcd9cdbf9af7f28f",
+  "spec_constructors": {
+    "745": ":IDLPD \"#\"immed8                    is op8=0xf6; immed8 {\n\tidlePowerdown();\n\t$(Z) = 0;\n\t$(N) = 0;\n\t$(C) = 0;",
+    "1219": ":SKIP                               is op8=0x00 {\n\tlocal tmp:1 = 0;\n\ttmp = tmp; # avoid warning\n} #2-byte NOP\n"
+  },
+  "intel_manual": {
+    "url": "https://www.syndex.org/kernels/196/27065103.pdf",
+    "document": "Intel80C196KB User Guide270651-003, Table3-2B, printed19/PDFpage22 zero-based",
+    "SKIP": "2 bytes, opcode00",
+    "IDLPD": "1 byte, opcodeF6"
+  },
+  "boundary_counterexample": {
+    "file_offset": "0x496B",
+    "established": "page0000:C16B EFFA97 LCALL5968, length3",
+    "candidate": "bd_p00_416d page0000:416D begins at file496D (third LCALL byte97)",
+    "qualification": "No independent alternate entry establishes this overlapping stream. Original alias mappings are not proof of actual selector context."
+  },
+  "triage": {
+    "review_regions": 1504,
+    "instruction_checks_clear_regions": 5653,
+    "qualification": "Whole-region conservative triage. Clear means no observed byte-boundary/independent-decoder conflict; does not establish justified entry, bank preservation, runtime or semantics. Existing maintained manifest remains unchanged."
+  },
+  "root_provenance": "Later batch pipelines scan rawF0 bytes and propose following bytes as entries. F0 can occur in operands/data; recursive decode success is not an entry justification. No wholesale promotion.",
+  "remaining_disagreements": "20 indexed XCH/XCHB and1TIJMP unrecognized by both independently built MAME disassemblers; retain CPU-variant/support qualification instead of attributing every disagreement to Gemini.",
+  "metrics": {
+    "rom_classified_bytes": 26277,
+    "rom_total_bytes": 32768,
+    "rom_percent": 80.1910400390625,
+    "rom_percentage_point_change": 0,
+    "os_classified_bytes": 62736,
+    "os_total_bytes": 1032192,
+    "os_percent": 6.077938988095238,
+    "os_percentage_point_change": 0,
+    "overall": "not yet quantifiable"
+  }
+}

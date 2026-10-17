@@ -1,0 +1,938 @@
+{
+  "command": [
+    "D:\\S-760\\mame-source\\mames760.exe",
+    "s760",
+    "-rompath",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-eeprom\\roms",
+    "-nvram_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-eeprom\\nvram",
+    "-cfg_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-eeprom\\cfg",
+    "-video",
+    "none",
+    "-sound",
+    "none",
+    "-skip_gameinfo",
+    "-nothrottle",
+    "-seconds_to_run",
+    "3",
+    "-autoboot_delay",
+    "0",
+    "-autoboot_script",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\eeprom.lua"
+  ],
+  "returncode": 0,
+  "observer_source": "local cpu=manager.machine.devices[':maincpu']\nlocal space=cpu.spaces['program']\neeprom_write=space:install_write_tap(0x4caa,0x4d29,'config-write',function(a,d,m)\n local pc=cpu.state['PC'].value\n if pc>=0x5140 and pc<=0x53a0 then print(string.format('[CONFIGW] pc=%04x addr=%04x value=%04x mask=%04x',pc,a,d,m)) end\nend)\neeprom_read=space:install_read_tap(0x4caa,0x4d29,'config-read',function(a,d,m)\n local pc=cpu.state['PC'].value\n if pc>=0x5350 and pc<=0x53a0 then print(string.format('[CONFIGR] pc=%04x addr=%04x value=%04x mask=%04x',pc,a,d,m)) end\nend)\nlocal frames=0\nemu.register_frame_done(function()\nframes=frames+1\nif frames==120 then local s='' for a=0x4caa,0x4d29 do s=s..string.format('%02x',space:read_u8(a)) end print('[CONFIGFINAL] '..s) end\nend)\n",
+  "identities": {
+    "D:\\S-760\\mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-eeprom\\roms\\s760\\s760224.img": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\eeprom.lua": "45672b9a6fdb2dc4b24a67235b2e3a66bd449b642c25ece2896087b7d747b746"
+  },
+  "rows": [
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19626,
+      "value": 1794,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19628,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19630,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19632,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19634,
+      "value": 2049,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19636,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19638,
+      "value": 11825,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19640,
+      "value": 12336,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19642,
+      "value": 28498,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19644,
+      "value": 24940,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19646,
+      "value": 25710,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19648,
+      "value": 25942,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19650,
+      "value": 11890,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19652,
+      "value": 12576,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19654,
+      "value": 12590,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19656,
+      "value": 13873,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19658,
+      "value": 256,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19660,
+      "value": 255,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19662,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19664,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19666,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19668,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19670,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19672,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19674,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19676,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19678,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19680,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19682,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19684,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19686,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19688,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19690,
+      "value": 32520,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19692,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19694,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19696,
+      "value": 255,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19698,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19700,
+      "value": 15420,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19702,
+      "value": 15420,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19704,
+      "value": 32639,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19706,
+      "value": 32639,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19708,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19710,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19712,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19714,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19716,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19718,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19720,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19722,
+      "value": 6424,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19724,
+      "value": 6938,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19726,
+      "value": 7452,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19728,
+      "value": 7966,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19730,
+      "value": 20302,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19732,
+      "value": 20816,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19734,
+      "value": 21330,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19736,
+      "value": 21844,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19738,
+      "value": 4368,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19740,
+      "value": 4882,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19742,
+      "value": 5396,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19744,
+      "value": 5910,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19746,
+      "value": 18246,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19748,
+      "value": 18760,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19750,
+      "value": 19274,
+      "mask": 65535
+    },
+    {
+      "kind": "W",
+      "pc": 21316,
+      "addr": 19752,
+      "value": 19788,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19626,
+      "value": 1794,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19628,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19630,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19632,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19634,
+      "value": 2049,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19636,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19638,
+      "value": 11825,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19640,
+      "value": 12336,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19642,
+      "value": 28498,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19644,
+      "value": 24940,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19646,
+      "value": 25710,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19648,
+      "value": 25942,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19650,
+      "value": 11890,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19652,
+      "value": 12576,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19654,
+      "value": 12590,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19656,
+      "value": 13873,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19658,
+      "value": 256,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19660,
+      "value": 255,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19662,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19664,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19666,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19668,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19670,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19672,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19674,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19676,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19678,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19680,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19682,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19684,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19686,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19688,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19690,
+      "value": 32520,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19692,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19694,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19696,
+      "value": 255,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19698,
+      "value": 1,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19700,
+      "value": 15420,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19702,
+      "value": 15420,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19704,
+      "value": 32639,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19706,
+      "value": 32639,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19708,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19710,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19712,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19714,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19716,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19718,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19720,
+      "value": 0,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19722,
+      "value": 6424,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19724,
+      "value": 6938,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19726,
+      "value": 7452,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19728,
+      "value": 7966,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19730,
+      "value": 20302,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19732,
+      "value": 20816,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19734,
+      "value": 21330,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19736,
+      "value": 21844,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19738,
+      "value": 4368,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19740,
+      "value": 4882,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19742,
+      "value": 5396,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19744,
+      "value": 5910,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19746,
+      "value": 18246,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19748,
+      "value": 18760,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19750,
+      "value": 19274,
+      "mask": 65535
+    },
+    {
+      "kind": "R",
+      "pc": 21388,
+      "addr": 19752,
+      "value": 19788,
+      "mask": 65535
+    }
+  ],
+  "final_buffer": [
+    "020700000100000001080000312e3030526f6c616e645665722e20312e3131360001ff0000000000000000000000000000000000000000000100000000000000087f00000100ff0001003c3c3c3c7f7f7f7f000000000000000000000000000018191a1b1c1d1e1f4e4f5051525354551011121314151617464748494a4b4c4d"
+  ],
+  "row_counts": {
+    "W:5344": 64,
+    "R:538C": 64
+  },
+  "qualification": "Ordinary native boot, fresh private state. Read-only taps return nil; final snapshot reads configuration RAM only. Covers model configuration initialization, not physical EEPROM timing/endurance or power-cycle persistence."
+}

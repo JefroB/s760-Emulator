@@ -1,0 +1,183 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Offline transition/quantization discrimination only",
+  "ramp_ms": 20,
+  "shared_cutoff_scale": 1.0025161169492316,
+  "source_phase_drift_ppm": 0,
+  "gain": 1,
+  "damping_word": 85,
+  "baseline_exact": true,
+  "checks": [
+    {
+      "logarithmic": false,
+      "quantization_after": false,
+      "stationary_relative_rms": 0.0,
+      "future_write_prefix_exact": true
+    },
+    {
+      "logarithmic": false,
+      "quantization_after": true,
+      "stationary_relative_rms": 0.0,
+      "future_write_prefix_exact": true
+    },
+    {
+      "logarithmic": true,
+      "quantization_after": false,
+      "stationary_relative_rms": 1.0625820703381993e-14,
+      "future_write_prefix_exact": true
+    },
+    {
+      "logarithmic": true,
+      "quantization_after": true,
+      "stationary_relative_rms": 0.0,
+      "future_write_prefix_exact": true
+    }
+  ],
+  "rows": [
+    {
+      "label": "quiet",
+      "transition_space": "linear-coefficient",
+      "quantization": "before",
+      "alignment_seconds": 0.9291318578807357,
+      "source_phase": 1543.8296831316,
+      "training_error_percent": 20.326943760478716,
+      "evaluation_error_percent": 17.66957321634731,
+      "rise_error_percent": 16.064589774748114,
+      "fall_error_percent": 18.92456559096275,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 4
+    },
+    {
+      "label": "repeat",
+      "transition_space": "linear-coefficient",
+      "quantization": "before",
+      "alignment_seconds": 0.38684613571424536,
+      "source_phase": 1795.223412564336,
+      "training_error_percent": 21.934434641919864,
+      "evaluation_error_percent": 16.41746429389345,
+      "rise_error_percent": 15.620539313724082,
+      "fall_error_percent": 17.201021448941873,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 4
+    },
+    {
+      "label": "quiet",
+      "transition_space": "linear-coefficient",
+      "quantization": "after",
+      "alignment_seconds": 0.9291318578807357,
+      "source_phase": 1543.8296831316,
+      "training_error_percent": 19.76091944518962,
+      "evaluation_error_percent": 17.899735547842425,
+      "rise_error_percent": 16.81919591504446,
+      "fall_error_percent": 18.76757642160103,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 6
+    },
+    {
+      "label": "repeat",
+      "transition_space": "linear-coefficient",
+      "quantization": "after",
+      "alignment_seconds": 0.38683763093447954,
+      "source_phase": 1795.2288940907729,
+      "training_error_percent": 22.35779186955788,
+      "evaluation_error_percent": 16.39341709648522,
+      "rise_error_percent": 15.890522602679317,
+      "fall_error_percent": 16.89659815002106,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 5
+    },
+    {
+      "label": "quiet",
+      "transition_space": "log-coefficient",
+      "quantization": "before",
+      "alignment_seconds": 0.9291341218639956,
+      "source_phase": 1543.8359915158803,
+      "training_error_percent": 20.37246628160405,
+      "evaluation_error_percent": 17.79696428873427,
+      "rise_error_percent": 16.30385957645997,
+      "fall_error_percent": 18.971566945587274,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 5
+    },
+    {
+      "label": "repeat",
+      "transition_space": "log-coefficient",
+      "quantization": "before",
+      "alignment_seconds": 0.38684353306528263,
+      "source_phase": 1795.2312184266063,
+      "training_error_percent": 22.083341426494826,
+      "evaluation_error_percent": 16.519147645760878,
+      "rise_error_percent": 15.713284484929433,
+      "fall_error_percent": 17.3113227852853,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 4
+    },
+    {
+      "label": "quiet",
+      "transition_space": "log-coefficient",
+      "quantization": "after",
+      "alignment_seconds": 0.9291164551239555,
+      "source_phase": 1543.8382821072803,
+      "training_error_percent": 19.817137384521136,
+      "evaluation_error_percent": 18.05950067352377,
+      "rise_error_percent": 17.138861328305087,
+      "fall_error_percent": 18.805115257700606,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 5
+    },
+    {
+      "label": "repeat",
+      "transition_space": "log-coefficient",
+      "quantization": "after",
+      "alignment_seconds": 0.38685111845392567,
+      "source_phase": 1795.2370197615053,
+      "training_error_percent": 22.517613329789825,
+      "evaluation_error_percent": 16.538504609780748,
+      "rise_error_percent": 15.983715707489928,
+      "fall_error_percent": 17.092033231399355,
+      "optimizer_status": 3,
+      "optimizer_evaluations": 8
+    }
+  ],
+  "quiet_training_selected_rule": {
+    "label": "quiet",
+    "transition_space": "linear-coefficient",
+    "quantization": "after",
+    "alignment_seconds": 0.9291318578807357,
+    "source_phase": 1543.8296831316,
+    "training_error_percent": 19.76091944518962,
+    "evaluation_error_percent": 17.899735547842425,
+    "rise_error_percent": 16.81919591504446,
+    "fall_error_percent": 18.76757642160103,
+    "optimizer_status": 3,
+    "optimizer_evaluations": 6
+  },
+  "repeat_same_rule": {
+    "label": "repeat",
+    "transition_space": "linear-coefficient",
+    "quantization": "after",
+    "alignment_seconds": 0.38683763093447954,
+    "source_phase": 1795.2288940907729,
+    "training_error_percent": 22.35779186955788,
+    "evaluation_error_percent": 16.39341709648522,
+    "rise_error_percent": 15.890522602679317,
+    "fall_error_percent": 16.89659815002106,
+    "optimizer_status": 3,
+    "optimizer_evaluations": 5
+  },
+  "limits": [
+    "Log coefficient is a proxy for a parameter-space hypothesis, not a decoded firmware envelope parameter or a proven hardware conversion.",
+    "Log model restricted to positive observed cutoff words; zero-crossing/reset behavior is not qualified.",
+    "Before model quantizes received words then ramps continuously. After model ramps raw words and quantizes applied coefficients to multiples of4.",
+    "Duration and shared cutoff scale frozen from earlier quiet-training analysis; per-recording fit only constant alignment and source phase.",
+    "Evaluation blocks historically reused; no independent-session validation or physical latency inference.",
+    "Stationary endpoints and causality checked numerically; moving fractional-phase lane recording-chain approximation retained.",
+    "No native runtime behavior, clock, filter equation or defaults changed."
+  ],
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\test_cutoff_space_quantization.py": "29f1d87d3221daaad06fddbf8e6162abb2e283e3f88d28f2cf9fd7156bd2ee26",
+    "docs\\condensed\\validation\\resonant-phase-trajectory-2026-10-15.json": "4369d9cffd397f2697f4fb0b3727a59b50d115a7d998d03bdccd8fd29e6eaefd",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\on\\application.csv": "3723b9ee084534b0df33e866b4cdf5a9cdf2d604c685a858ec863a2c27795086"
+  }
+}

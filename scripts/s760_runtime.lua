@@ -13,6 +13,7 @@ local step_pending = nil
 local render_pending = nil
 local audio_enabled, audio_chunks, audio_frames = false, {}, 0
 local audio_total, audio_dropped = 0, 0
+local audio_stream_origin, audio_stream_contiguous = nil, true
 local audio_limit = 44100
 local midi_pending, midi_delivered, midi_error = 0, {}, ''
 local midi_queue = {}
@@ -70,10 +71,20 @@ emu.register_sound_update(function(sound)
     if not audio_enabled then return end
     local left, right = sound[':lspeaker'], sound[':rspeaker']
     if not left or not right then return end
+    local first = left.first_sample
+    local qualified = type(first) == 'number' and first % 1 == 0 and first >= 0
+        and right.first_sample == first and left.sample_rate == 44100 and right.sample_rate == 44100
     left, right = left[1], right[1]
     assert(#left == #right, 'Native speaker channel length mismatch')
     local n = #left
     if n == 0 then return end
+    if not qualified then
+        audio_stream_origin, audio_stream_contiguous = nil, false
+    elseif audio_total == 0 and audio_stream_contiguous then
+        audio_stream_origin = first
+    elseif audio_stream_origin and first ~= audio_stream_origin + audio_total then
+        audio_stream_origin, audio_stream_contiguous = nil, false
+    end
     -- Drop oldest complete blocks on overflow and report every lost frame.
     while audio_frames + n > audio_limit and #audio_chunks > 0 do
         local old = table.remove(audio_chunks, 1)
@@ -117,7 +128,9 @@ local function send_audio(count, display, input_status)
     end
     local response = {ok=true, surfaces=display and {{0,w,h},{1,lw,lh}} or nil, output_level=output_level, input_level=input_level,
            audio={frames=count, channels=2, rate=44100,
-           first_sample=audio_total-audio_frames, dropped_frames=audio_dropped},
+           first_sample=audio_total-audio_frames, dropped_frames=audio_dropped,
+           stream_first_sample=audio_stream_origin and audio_stream_origin+audio_total-audio_frames or nil,
+           stream_contiguous=audio_stream_contiguous and audio_stream_origin ~= nil},
            seconds=machine.time:as_double(), buffered_frames=audio_frames-count}
     if input_status then for key,value in pairs(input_status) do response[key]=value end end
     reply(response)
@@ -181,7 +194,8 @@ local function execute(command)
             midi=events, delivered=midi_delivered, midi_error=midi_error, mouse={mouse_x,mouse_y,target_x,target_y,settle},
             pointer_pending=pointer_pending, value_position=value_position, output_level=output_level, input_level=input_level,
             buttons=button_states, enabled=audio_enabled, frames=audio_frames,
-            total=audio_total, dropped=audio_dropped})
+            total=audio_total, dropped=audio_dropped,
+            stream_origin=audio_stream_origin, stream_contiguous=audio_stream_contiguous})
         local chunks = {}
         for _, chunk in ipairs(audio_chunks) do chunks[#chunks+1] = chunk.data end
         local pcm = table.concat(chunks)
@@ -202,6 +216,10 @@ local function execute(command)
         assert(meta.version == 2 and type(meta.enabled) == 'boolean' and meta.frames*8 == a
                and meta.frames >= 0 and meta.total >= meta.frames and meta.dropped >= 0,
                'Invalid checkpoint metadata')
+        assert(type(meta.stream_contiguous) == 'boolean'
+               and (meta.stream_origin == nil or (type(meta.stream_origin) == 'number'
+               and meta.stream_origin % 1 == 0 and meta.stream_origin >= 0)),
+               'Invalid checkpoint PCM origin')
         assert(type(meta.mouse) == 'table' and #meta.mouse == 5 and type(meta.buttons) == 'table',
                'Invalid checkpoint input metadata')
         local restored_value, restored_level = meta.value_position or 0, meta.output_level or 100
@@ -249,6 +267,7 @@ local function execute(command)
         for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_X'].fields) do f:set_value(mouse_x) end
         for _, f in pairs(machine.ioport.ports[':NATIVE_MOUSE_Y'].fields) do f:set_value(mouse_y) end
         audio_enabled,audio_frames,audio_total,audio_dropped = meta.enabled,meta.frames,meta.total,meta.dropped
+        audio_stream_origin,audio_stream_contiguous = meta.stream_origin,meta.stream_contiguous
         audio_chunks = a > 0 and {{frames=meta.frames,data=blob:sub(13+m+s)}} or {}
         machine.sounds[':lspeaker'].hook = audio_enabled
         machine.sounds[':rspeaker'].hook = audio_enabled
@@ -275,6 +294,10 @@ local function execute(command)
             assert(bus_trace, 'Diagnostic trace is not active')
             bus_trace.read:remove()
             bus_trace.write:remove()
+            -- Each native tap owns its Lua callback, which captures this trace.
+            -- Break the trace -> tap references after detaching so the registry
+            -- callbacks cannot keep retired taps and their trace rows alive.
+            bus_trace.read, bus_trace.write = nil, nil
             reply({ok=true, rows=bus_trace.rows, dropped=bus_trace.dropped, accesses=bus_trace.accesses})
             bus_trace = nil
         end
@@ -378,6 +401,7 @@ local function execute(command)
         machine.sounds[':lspeaker'].hook = audio_enabled
         machine.sounds[':rspeaker'].hook = audio_enabled
         audio_chunks, audio_frames, audio_total, audio_dropped = {}, 0, 0, 0
+        audio_stream_origin, audio_stream_contiguous = nil, true
         reply({ok=true})
     elseif command.op == 'audio' then
         assert(audio_enabled, 'Enable audio capture first')

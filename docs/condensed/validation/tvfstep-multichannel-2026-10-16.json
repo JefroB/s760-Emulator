@@ -1,0 +1,370 @@
+{
+  "date": "2026-10-16",
+  "status": "PASS: original-firmware multichannel capture stimulus",
+  "routing": {
+    "passed": true,
+    "midi_type": 1,
+    "duration_seconds": 187.0,
+    "tracks": [
+      {
+        "track": 1,
+        "name": "CH1 BYPASS",
+        "channel": 1,
+        "note_count": 1
+      },
+      {
+        "track": 2,
+        "name": "CH2 LOW HOLD",
+        "channel": 2,
+        "note_count": 1
+      },
+      {
+        "track": 3,
+        "name": "CH3 HIGH HOLD",
+        "channel": 3,
+        "note_count": 1
+      },
+      {
+        "track": 4,
+        "name": "CH4 STEP UP",
+        "channel": 4,
+        "note_count": 3
+      },
+      {
+        "track": 5,
+        "name": "CH5 STEP DOWN",
+        "channel": 5,
+        "note_count": 3
+      },
+      {
+        "track": 6,
+        "name": "CH6 RAMP UP",
+        "channel": 6,
+        "note_count": 1
+      },
+      {
+        "track": 7,
+        "name": "CH7 RAMP DOWN",
+        "channel": 7,
+        "note_count": 1
+      }
+    ],
+    "program_changes": 0,
+    "note_schedule": [
+      [
+        1.0,
+        1
+      ],
+      [
+        18.0,
+        2
+      ],
+      [
+        35.0,
+        3
+      ],
+      [
+        52.0,
+        4
+      ],
+      [
+        69.0,
+        5
+      ],
+      [
+        86.0,
+        6
+      ],
+      [
+        103.0,
+        7
+      ],
+      [
+        120.0,
+        4
+      ],
+      [
+        137.0,
+        5
+      ],
+      [
+        154.0,
+        4
+      ],
+      [
+        171.0,
+        5
+      ]
+    ],
+    "changed_disk_bytes": [
+      {
+        "offset": "0x4e30",
+        "before": 0,
+        "after": 16
+      },
+      {
+        "offset": "0x4e31",
+        "before": 0,
+        "after": 50
+      },
+      {
+        "offset": "0x4e32",
+        "before": 0,
+        "after": 84
+      },
+      {
+        "offset": "0x4e33",
+        "before": 0,
+        "after": 6
+      },
+      {
+        "offset": "0x4e41",
+        "before": 127,
+        "after": 255
+      },
+      {
+        "offset": "0x4e42",
+        "before": 127,
+        "after": 255
+      },
+      {
+        "offset": "0x4e43",
+        "before": 127,
+        "after": 255
+      },
+      {
+        "offset": "0x4e44",
+        "before": 127,
+        "after": 255
+      },
+      {
+        "offset": "0x4e45",
+        "before": 127,
+        "after": 255
+      },
+      {
+        "offset": "0x4e46",
+        "before": 127,
+        "after": 255
+      }
+    ],
+    "unchanged_sound_records_and_pcm": true,
+    "sha256": {
+      "docs\\ic20-hle-findings\\chatGPT-work\\tvfstep-multichannel-2026-10-16\\pack\\TVFSTEP.IMG": "85e1bdb850fa9f02a4882fc0b28be35422c3697ba56dc95307a676e2d5c62d54",
+      "docs\\ic20-hle-findings\\chatGPT-work\\tvfstep-multichannel-2026-10-16\\pack\\TVFSTEP_CAPTURE.mid": "7d2a99e56cb9e57daa0e0fcf57bc32bcc553dc48789289e9d48a7d2091fe83d5"
+    }
+  },
+  "native": {
+    "passed": true,
+    "image_bytes": 737280,
+    "source_hashes": {
+      "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\tvfstep-multichannel-2026-10-16\\pack\\TVFSTEP.IMG": "85e1bdb850fa9f02a4882fc0b28be35422c3697ba56dc95307a676e2d5c62d54",
+      "D:\\S-760\\roms\\FDD\\waves760.sdk": "fa2824eceb51b62bd30b44d0a784940d31bc56b4fc6c29148503000622ba4da1",
+      "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "D:\\S-760\\roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    },
+    "exact_loaded_sample_bytes": 64512,
+    "media": {
+      "ok": true,
+      "error": "",
+      "inserted": true,
+      "dirty": false,
+      "writeProtected": false,
+      "busy": false,
+      "generation": 2,
+      "revision": 0
+    },
+    "multichannel": true,
+    "midi_events_per_take": 5,
+    "limits": "Original-firmware native reference and verified capture stimulus. Low-amplitude lead-in precedes delayed step; hardware timing/response remains unmeasured. Reference WAVs are native float PCM, not analog predictions."
+  },
+  "cases": [
+    {
+      "take": 1,
+      "program": 1,
+      "channel": 1,
+      "name": "01 BYPASS",
+      "peak": 0.0008841429371386766,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0
+    },
+    {
+      "take": 2,
+      "program": 2,
+      "channel": 2,
+      "name": "02 LOW HOLD",
+      "peak": 0.0012178177712485194,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 416,
+      "last_word": 416,
+      "distinct_words": 1
+    },
+    {
+      "take": 3,
+      "program": 3,
+      "channel": 3,
+      "name": "03 HIGH HOLD",
+      "peak": 0.006669186055660248,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 2613,
+      "last_word": 2613,
+      "distinct_words": 1
+    },
+    {
+      "take": 4,
+      "program": 4,
+      "channel": 4,
+      "name": "04 STEP UP",
+      "peak": 0.006669186055660248,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 441,
+      "last_word": 2613,
+      "distinct_words": 18,
+      "step_seconds": 7.586101632369633,
+      "step_words": [
+        416,
+        2613
+      ]
+    },
+    {
+      "take": 5,
+      "program": 5,
+      "channel": 5,
+      "name": "05 STEP DOWN",
+      "peak": 0.008355301804840565,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 2470,
+      "last_word": 416,
+      "distinct_words": 128,
+      "step_seconds": 7.602569132369638,
+      "step_words": [
+        2613,
+        416
+      ]
+    },
+    {
+      "take": 6,
+      "program": 6,
+      "channel": 6,
+      "name": "06 RAMP UP",
+      "peak": 0.007192051969468594,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 427,
+      "last_word": 2613,
+      "distinct_words": 217
+    },
+    {
+      "take": 7,
+      "program": 7,
+      "channel": 7,
+      "name": "07 RAMP DOWN",
+      "peak": 0.008022895082831383,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 2549,
+      "last_word": 416,
+      "distinct_words": 217
+    },
+    {
+      "take": 8,
+      "program": 4,
+      "channel": 4,
+      "name": "04 STEP UP",
+      "peak": 0.007782781962305307,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 441,
+      "last_word": 2613,
+      "distinct_words": 18,
+      "step_seconds": 7.593198507369635,
+      "step_words": [
+        416,
+        2613
+      ]
+    },
+    {
+      "take": 9,
+      "program": 5,
+      "channel": 5,
+      "name": "05 STEP DOWN",
+      "peak": 0.008364506997168064,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 2470,
+      "last_word": 416,
+      "distinct_words": 128,
+      "step_seconds": 7.5800933823696255,
+      "step_words": [
+        2613,
+        416
+      ]
+    },
+    {
+      "take": 10,
+      "program": 4,
+      "channel": 4,
+      "name": "04 STEP UP",
+      "peak": 0.007051341235637665,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 441,
+      "last_word": 2613,
+      "distinct_words": 18,
+      "step_seconds": 7.584627382369632,
+      "step_words": [
+        416,
+        2613
+      ]
+    },
+    {
+      "take": 11,
+      "program": 5,
+      "channel": 5,
+      "name": "05 STEP DOWN",
+      "peak": 0.008388755843043327,
+      "silent_tail_frames": 44100,
+      "trace_dropped": 0,
+      "first_word": 2470,
+      "last_word": 416,
+      "distinct_words": 128,
+      "step_seconds": 7.5866852573696235,
+      "step_words": [
+        2613,
+        416
+      ]
+    }
+  ],
+  "firmware_ui_assignment_probe": {
+    "part": 2,
+    "channel": 14,
+    "saved_changes": [
+      {
+        "offset": "0x4e30",
+        "before": 0,
+        "after": 208
+      },
+      {
+        "offset": "0x4e41",
+        "before": 127,
+        "after": 255
+      }
+    ]
+  },
+  "artifacts": {
+    "capture-sequence.json": "395a18953171ae03712dc16f50e452b904cbe7af18b150f5798cfb513d3d223a",
+    "performance-channels.png": "d51038868e010a95efb7dbb33ff26372b8b0b1d7383e912890495c38e5d3a23b",
+    "README.txt": "b0c8ee2cf414f9e9a3e5a9d34d423dd46e0aa909c652d05b003280690d0f9e31",
+    "TVF7CH.IMG": "85e1bdb850fa9f02a4882fc0b28be35422c3697ba56dc95307a676e2d5c62d54",
+    "TVFSTEP_7CH_CAPTURE.mid": "7d2a99e56cb9e57daa0e0fcf57bc32bcc553dc48789289e9d48a7d2091fe83d5"
+  },
+  "limits": [
+    "Native stimulus/routing qualification, not real-hardware filter parity.",
+    "Ableton track output channels must be set explicitly after import.",
+    "No program changes are used."
+  ]
+}

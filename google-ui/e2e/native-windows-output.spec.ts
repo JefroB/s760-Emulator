@@ -6,6 +6,7 @@ test('Windows output selection applies through native WASAPI and survives reconn
   await page.goto(process.env.S760_NATIVE_WINDOWS_URL!);
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await page.getByLabel('Audio output backend').selectOption('wasapi');
   const option=page.getByLabel('Windows output device').locator('option').filter({hasText:'Realtek Digital Output'});
   await expect(option).toHaveCount(1,{timeout:15000});
@@ -19,6 +20,7 @@ test('Windows output selection applies through native WASAPI and survives reconn
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
   await page.reload();
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await expect(page.getByLabel('Audio output backend')).toHaveValue('wasapi');
   await expect(page.getByLabel('Windows output device')).toHaveValue(endpoint!);
   await expect(page.getByRole('alert')).toHaveCount(0);

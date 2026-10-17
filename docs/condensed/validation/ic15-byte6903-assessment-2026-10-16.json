@@ -1,0 +1,44 @@
+{
+  "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "file_offset": "0x6903",
+  "resource_address": "0798:8903",
+  "byte": "08",
+  "best_supported_hypothesis": "Unused FDC Sense Interrupt Status command constant adjacent to SPECIFY command template; active implementation uses an immediate constant instead.",
+  "confidence": "Plausible provenance, not proven historical intent or exhaustive absence of dormant use.",
+  "facts": {
+    "direct_8903_word_occurrences": [],
+    "fdc_command_definition_source": "mame-source/src/devices/machine/upd765.cpp, command decoder get_command:08 -> C_SENSE_INTERRUPT_STATUS",
+    "fdc_command_definition_source_sha256": "41fdb9a4ce2c4b2a3f8d79191f0addc18d10e57fb847f0a1e6af6df709c48b1c",
+    "byte_anchors": {
+      "0x197": "b108da",
+      "0x19a": "c70102e0da",
+      "0x4b09": "a1048928",
+      "0x4b1a": "b10342",
+      "0x4b1d": "b229da",
+      "0x4b32": "e042e8"
+    },
+    "neighbor_bytes": "00 08 03 bf 02 30"
+  },
+  "native_summary": [
+    {
+      "mode": "boot",
+      "observed_neighbor_reads": 15,
+      "candidate_byte_reads": 0,
+      "immediate_sense_commands": 58,
+      "milestones": [
+        "[HANDOFF] reads=15"
+      ]
+    },
+    {
+      "mode": "setup",
+      "observed_neighbor_reads": 27755,
+      "candidate_byte_reads": 0,
+      "immediate_sense_commands": 0,
+      "milestones": [
+        "[SETUP-ENTERED]"
+      ]
+    }
+  ],
+  "native_evidence": "ic15-byte6903-native-v2-2026-10-16.json",
+  "qualification": "Read taps use aligned word addresses and byte masks:8903 would be high lane of8902. Initial probe attempted CPU-register reads through program space and obtainedFFFF; those fields were discarded and corrected v2 reran both probes without them. No original firmware mutation or forced guest state. Sole byte remains semantically provisional; coverage unchanged."
+}

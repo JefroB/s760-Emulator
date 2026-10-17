@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-15",
+  "note": 73,
+  "velocity": 127,
+  "hold_seconds": 3,
+  "release_seconds": 3,
+  "source_hashes": {
+    "s760_01 Survey_20261015_161418.zip": "b08ca7b4e50cdfdeb6dd14ae919b5e5ef701da4f0c5ac63b86a84addaa2eea78",
+    "s760_01 Survey_C#5.wav": "07bf374e2fac868b34f0637c5639b73d9a8f2ea63cb0ff53138d86d450d28c16",
+    "s760_MIDI 73_20261015_170426.zip": "86d405065d09901f4f4f627576e30c65a372133b736942f5cc4d9048919a0714",
+    "s760_MIDI 73_C#5.wav": "a198450d728b6dd902dce7911653b35f0702935ab2a7576d6fb81de071d063f2",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-speed-single-final-2026-10-15\\native-timing-survey\\references\\note73.wav": "b90af36d718d3e2cd296529262cc0f6d0f46d375856194d452fb8368b59d55ac"
+  },
+  "rows": [
+    {
+      "label": "Hardware V1",
+      "sample_rate": 48000,
+      "duration_seconds": 5.9235625,
+      "peak": 0.003526449203491211,
+      "peak_dbfs": -49.05324735082032,
+      "clipped_samples": 0,
+      "held_rms": 0.000862590220003545,
+      "rms_linear_trend_db_per_second": 2.923640463701827,
+      "diagnostic_ripple_hz": 1.87,
+      "diagnostic_ripple_amplitude_db": 0.7567427831635973,
+      "diagnostic_ripple_phase_degrees": 100.5275614294389
+    },
+    {
+      "label": "Hardware V2",
+      "sample_rate": 48000,
+      "duration_seconds": 5.966104166666667,
+      "peak": 0.053488731384277344,
+      "peak_dbfs": -25.434754046714186,
+      "clipped_samples": 0,
+      "held_rms": 0.012944352776748599,
+      "rms_linear_trend_db_per_second": 2.9371698507679054,
+      "diagnostic_ripple_hz": 1.868,
+      "diagnostic_ripple_amplitude_db": 0.7764639826654964,
+      "diagnostic_ripple_phase_degrees": 97.43643636687409
+    },
+    {
+      "label": "Native V1 reference",
+      "sample_rate": 44100,
+      "duration_seconds": 6.853560090702948,
+      "peak": 0.0006794952787458897,
+      "peak_dbfs": -63.3562711295269,
+      "clipped_samples": 0,
+      "held_rms": 0.00016584925274718657,
+      "rms_linear_trend_db_per_second": 2.8848861178917766,
+      "diagnostic_ripple_hz": 1.8490000000000002,
+      "diagnostic_ripple_amplitude_db": 1.3360517134925187,
+      "diagnostic_ripple_phase_degrees": -86.51835460629586
+    }
+  ],
+  "observed_peak_gain_db": 23.618493304106135,
+  "observed_held_rms_gain_db": 23.52551621136858,
+  "gain_pilot_status": "PASS: higher recorded level, no full-scale clipping or nonfinite samples",
+  "timing_status": "INCONCLUSIVE; repeated hardware captures are not trigger synchronized; no source/filter timing qualification",
+  "limits": [
+    "Native line is the original V1 render, independently gain-centered; not a newly rendered V2 acceptance comparison.",
+    "Sinusoid fits describe audio RMS ripple only, not an identified envelope/LFO.",
+    "Physical MIDI timestamps and any sampler/interface gain changes between captures are unknown.",
+    "No per-capture timing shift, warp or filter/DSP change was applied."
+  ]
+}

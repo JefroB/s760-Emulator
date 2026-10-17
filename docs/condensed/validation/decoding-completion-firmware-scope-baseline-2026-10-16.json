@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-16",
+  "functional_scope_acceptance": {
+    "rom": {
+      "passed_gates": 46,
+      "total_gates": 60,
+      "percent": 76.66666666666667
+    },
+    "os": {
+      "passed_gates": 36,
+      "total_gates": 96,
+      "percent": 37.5
+    },
+    "combined": {
+      "passed_gates": 82,
+      "total_gates": 156,
+      "percent": 52.56410256410256
+    }
+  },
+  "initial_scope_baseline": true,
+  "functional_score_delta": null,
+  "byte_metrics": {
+    "boot_rom": {
+      "classified_bytes": 26277,
+      "total_bytes": 32768,
+      "percent": 80.1910400390625,
+      "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "presumed_unused_bytes": 6490,
+      "accounted_including_assumption_bytes": 32767,
+      "unresolved_other_bytes": 1
+    },
+    "os": {
+      "classified_bytes": 77680,
+      "total_bytes": 1032192,
+      "percent": 7.525731646825397,
+      "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    }
+  },
+  "byte_percentage_point_change": {
+    "os": 0,
+    "boot_rom": 0
+  },
+  "overall_semantic_decoding_completion": "not yet quantifiable",
+  "rubric": "Fixed binary acceptance gates; not effort weighting. Scope expansion requires versioned amendment.",
+  "verification": "6 guard tests and deterministic ROM/OS report checks pass",
+  "tool_identities": {
+    "scripts/report_ic15_completion.py": "93efcbce81bdfdcb8edf6e8aee366d909500869baf8c7f35dfa734baee267870",
+    "scripts/report_firmware_completion.py": "7fa6a1326f7e13d087b388718bcdccb29116203d2c5fdf852b3d492d10b31133"
+  }
+}

@@ -1,0 +1,1033 @@
+{
+  "additional_static_status_regressions": {
+    "failed": 0,
+    "passed": 6
+  },
+  "all_package_files_unchanged": true,
+  "archive_integrity": {
+    "all_package_files_verified": 611,
+    "archive_sha256": "b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9",
+    "entries": 615,
+    "passed": true
+  },
+  "archived_frozen_project_modules": [
+    {
+      "module": "s760_asio",
+      "sha256": "6508edee315654e34250b1e00ccead69291b919fd332866e41e732fb297d777e"
+    },
+    {
+      "module": "s760_capture",
+      "sha256": "ad794bede82d0c7ad0f24e2adf42c97f7bbce842135fd6e9c63f4546a5efeea0"
+    },
+    {
+      "module": "s760_readiness",
+      "sha256": "63f190ea4ce98ba210a7e7f87c442376aef08701e90ac681028971d07af358ca"
+    },
+    {
+      "module": "s760_runtime",
+      "sha256": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723"
+    }
+  ],
+  "asio_physical_calibration": {
+    "channels": [
+      {
+        "channel": 1,
+        "frequency_hz": 439.91661071777344,
+        "peak": 0.07000732421875
+      },
+      {
+        "channel": 2,
+        "frequency_hz": 880.0014495849609,
+        "peak": 0.070098876953125
+      }
+    ],
+    "frames": 159744,
+    "passed": true,
+    "raw_sha256": "56e4c79d777ff7ea74e3b05a5b01d40791fee93c6300940e2ddeff83218d17e5",
+    "scope": "Continuous calibration PCM, source-built ASIO DLL/bridge, MOTU outputs3/4 to inputs1/2; not sampler audio or analog parity",
+    "status": {
+      "backend": "asio",
+      "bufferCapacityFrames": 65536,
+      "bufferFrames": 512,
+      "channels": 2,
+      "clockPacingRate": 0.97,
+      "device": "MOTU Pro Audio v2",
+      "discardedFrames": 0,
+      "driverInputLatencyMs": 12.403628117913831,
+      "driverLossMeasurement": "status flags only; latency is driver-reported",
+      "driverOutputLatencyMs": 13.582766439909298,
+      "driverStatusFlags": 0,
+      "format": "PCM16 input / float32 output",
+      "inputChannel": 1,
+      "outputChannel": 3,
+      "outputDiscardedFrames": 0,
+      "outputQueuedFrames": 28672,
+      "outputQueuedMs": 650.1587301587301,
+      "outputTargetMs": 371.51927437641723,
+      "outputUnderruns": 0,
+      "playedFrames": 160256,
+      "rate": 44100.0,
+      "receivedFrames": 160256
+    }
+  },
+  "asio_runtime": {
+    "devices": [
+      {
+        "inputs": 2,
+        "name": "ASIO4ALL v2",
+        "outputs": 8
+      },
+      {
+        "inputs": 64,
+        "name": "MOTU Pro Audio v2",
+        "outputs": 64
+      },
+      {
+        "inputs": 2,
+        "name": "Realtek ASIO",
+        "outputs": 2
+      }
+    ],
+    "scope": "Bounded actual ASIO stream with silent PCM; not musical-audio parity",
+    "status": {
+      "backend": "asio",
+      "bufferCapacityFrames": 65536,
+      "bufferFrames": 512,
+      "channels": 2,
+      "clockPacingRate": 0.97,
+      "device": "MOTU Pro Audio v2",
+      "discardedFrames": 0,
+      "driverInputLatencyMs": 12.403628117913831,
+      "driverLossMeasurement": "status flags only; latency is driver-reported",
+      "driverOutputLatencyMs": 13.582766439909298,
+      "driverStatusFlags": 0,
+      "format": "PCM16 input / float32 output",
+      "inputChannel": 0,
+      "outputChannel": 3,
+      "outputDiscardedFrames": 0,
+      "outputQueuedFrames": 50448,
+      "outputQueuedMs": 1143.9455782312925,
+      "outputTargetMs": 371.51927437641723,
+      "outputUnderruns": 0,
+      "playedFrames": 125952,
+      "rate": 44100.0,
+      "receivedFrames": 0
+    }
+  },
+  "backend_tests": {
+    "failed": 0,
+    "passed": 532,
+    "seconds": 91.51
+  },
+  "binary_identities": {
+    "S760Studio.exe": {
+      "bytes": 5684297,
+      "sha256": "fdcade2450d67c7bafeaf2b80bfe4fee68b044e3eefa006222f2944e18cdbc4b"
+    },
+    "_internal/audio/libportaudio64bit-asio.dll": {
+      "bytes": 343040,
+      "sha256": "f99a0de4335d04a0b6e039dcc63db8783997ad6044dd8f022a8803d88af297ec"
+    },
+    "_internal/audio/s760_asio.dll": {
+      "bytes": 27136,
+      "sha256": "94c6e3cdf9ab351a2a144d5c7042037a80e8db8dbf66f16ec7f129e430a995f4"
+    },
+    "mame-source/mames760.exe": {
+      "bytes": 27465728,
+      "sha256": "fd0063cff78f09ec617ec2ab7eee11be4cc870ec291216af99c0909c4345e25d"
+    }
+  },
+  "clean_machine_accepted": false,
+  "commands": {
+    "asio_source_rebuild": "powershell.exe -File scripts/build_asio_dependency.ps1 -PortAudioSource <delivered-PortAudio> -AsioSdk <delivered-ASIOSDK> -OutputDirectory <fresh-output>",
+    "distribution_gate": "s760_package_audit.require_release(audit_package(repo,package),repo=repo,package=package) re-reads bytes and trusted dated policy",
+    "handoff": "Windows PowerShell5.1 Start-Acceptance.ps1 with default package/manifest paths, unrelated C:/Windows cwd, private external media/profile",
+    "native_readback": "python scripts/verify_packaged_workflow.py verify --package <final-extracted-package> --work <completed-cycle> --state-dir <fresh-state>",
+    "native_source_rebuild": "CL=/Z7; MSBuild mames760.vcxproj /t:Rebuild /m:2 /p:Configuration=Release /p:Platform=x64",
+    "workflow": "S760_WORKFLOW_PACKAGE=<final-extracted-package>; S760_WORKFLOW_MANIFEST=<final-kit-manifest>; node node_modules/@playwright/test/cli.js test e2e/packaged-workflow.spec.ts --config playwright.packaged.config.ts"
+  },
+  "complete_workflow_revalidation": "passed",
+  "completed_scope": "Source/dependency-qualified final standalone archive; two complete repeated normal-speed workstation workflows from its extracted bytes; separate clean-machine acceptance remains incomplete",
+  "cycles": [
+    {
+      "limits": [
+        "Native readback is accelerated; actual UI workflow and Windows endpoint playback are normal-speed",
+        "Windows digital loopback is not analog output parity or physical latency measurement",
+        "No clean-machine or final-release qualification is inferred"
+      ],
+      "native_program_playback": {
+        "baseline": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        "combined_restored_session": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        "edited_disk": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      },
+      "native_state_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\release-promotion-2026-10-17\\native-final-cycle1",
+      "passed": true,
+      "sample_readbacks": [
+        {
+          "channels": [
+            {
+              "allocation_bytes": 73728,
+              "frequency_hz": 440.0848388671875,
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "nonzero_extent_frames": 32429,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "04249ae741debec60ead0c75a35f818141261b9c75a6f478597f587fdf7855f2",
+              "recorded_marker_frames": 32429,
+              "sample_end_frame": 36860,
+              "wave_disk_equal": true
+            },
+            {
+              "allocation_bytes": 73728,
+              "frequency_hz": 879.8332214355469,
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "nonzero_extent_frames": 32429,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "53b5b16f817db0f672aa8501a329d5f750cbc4d923589f8a6e8f39e692f981de",
+              "recorded_marker_frames": 32429,
+              "sample_end_frame": 36860,
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808,
+          "process": "recorded"
+        },
+        {
+          "channels": [
+            {
+              "allocation_bytes": 73728,
+              "frequency_hz": 440.0848388671875,
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "nonzero_extent_frames": 32429,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "04249ae741debec60ead0c75a35f818141261b9c75a6f478597f587fdf7855f2",
+              "recorded_marker_frames": 32429,
+              "sample_end_frame": 36860,
+              "wave_disk_equal": true
+            },
+            {
+              "allocation_bytes": 73728,
+              "frequency_hz": 879.8332214355469,
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "nonzero_extent_frames": 32429,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "53b5b16f817db0f672aa8501a329d5f750cbc4d923589f8a6e8f39e692f981de",
+              "recorded_marker_frames": 32429,
+              "sample_end_frame": 36860,
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808,
+          "process": "restored"
+        },
+        {
+          "channels": [
+            {
+              "allocation_bytes": 73728,
+              "frequency_hz": 440.0848388671875,
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "nonzero_extent_frames": 32429,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "04249ae741debec60ead0c75a35f818141261b9c75a6f478597f587fdf7855f2",
+              "recorded_marker_frames": 32429,
+              "sample_end_frame": 36860,
+              "wave_disk_equal": true
+            },
+            {
+              "allocation_bytes": 73728,
+              "frequency_hz": 879.8332214355469,
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "nonzero_extent_frames": 32429,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "53b5b16f817db0f672aa8501a329d5f750cbc4d923589f8a6e8f39e692f981de",
+              "recorded_marker_frames": 32429,
+              "sample_end_frame": 36860,
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808,
+          "process": "cold"
+        }
+      ],
+      "ui": {
+        "before": 4121272165,
+        "captureStatus": "Recording: Stereo In 1-2 (MOTU Pro Audio v \u2014 44.1 kHz stereo PCM16. Capture restarts: 3.",
+        "cycle": 1,
+        "edited": 3401795101,
+        "edited_disk_sha256": "9454ee5d9b3cf6f427a69b82b3631b513355be6cdbd020b880c73373b653671f",
+        "interface": "Packaged WebView2",
+        "outputEndpoint": "{0.0.0.00000000}.{07ef8be9-58bc-4ceb-8e7d-70fde0d7dc99}",
+        "package_manifest_sha256": "23d7b4493f1a2c5da9e85b8dfe2d169e73dad6b2edd4ae180cdc2464cd09ae4c",
+        "passed": true,
+        "playback": {
+          "baseline": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1089836167649,
+              "format": "float32",
+              "frames": 383520,
+              "last_qpc_100ns": 1089915966411,
+              "packets": 799,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.008416865020990372,
+            "raw_sha256": "9edf8240aba44380de156ebf28ddc1a66bf393f83aa636d15b2d5b7545ad1697",
+            "silent_release": true
+          },
+          "cold-restored": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1091854702353,
+              "format": "float32",
+              "frames": 384000,
+              "last_qpc_100ns": 1091934601118,
+              "packets": 800,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.004231181461364031,
+            "raw_sha256": "146da7e456bbf407e8a466b48e045603ec18ab694656f123a791df57877572ce",
+            "silent_release": true
+          },
+          "edited": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1090036164768,
+              "format": "float32",
+              "frames": 383520,
+              "last_qpc_100ns": 1090115963654,
+              "packets": 799,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.0042311809957027435,
+            "raw_sha256": "aa954f65c5ce0df2c77397d6b6d774b71d4574a3ab037eeaee50f0aee909a40d",
+            "silent_release": true
+          },
+          "restored": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1091503758641,
+              "format": "float32",
+              "frames": 383040,
+              "last_qpc_100ns": 1091583457543,
+              "packets": 798,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.004231181461364031,
+            "raw_sha256": "e3cf0a3343c7f34b31b75d9be6c543ff13cab3203bc56eb923a179b82d4542e1",
+            "silent_release": true
+          }
+        },
+        "recordingDevice": "3:Stereo In 1-2 (MOTU Pro Audio v",
+        "renderers": [
+          "Edg/155.0.4283.60",
+          "Edg/155.0.4283.60"
+        ],
+        "sample_disk_sha256": "043630646022c6d8f3ae68673baf28f5700f06e1acf854e6ee01bb241b162978",
+        "throttle": true
+      }
+    },
+    {
+      "limits": [
+        "Native readback is accelerated; actual UI workflow and Windows endpoint playback are normal-speed",
+        "Windows digital loopback is not analog output parity or physical latency measurement",
+        "No clean-machine or final-release qualification is inferred"
+      ],
+      "native_program_playback": {
+        "baseline": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        "combined_restored_session": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        "edited_disk": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      },
+      "native_state_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\release-promotion-2026-10-17\\native-final-cycle2",
+      "passed": true,
+      "sample_readbacks": [
+        {
+          "channels": [
+            {
+              "allocation_bytes": 82944,
+              "frequency_hz": 440.0848388671875,
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "nonzero_extent_frames": 36871,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "b4f0942dafcda0e0bc76576f80c3c768e8e4ba73deebfa3b295260499ebd2220",
+              "recorded_marker_frames": 36871,
+              "sample_end_frame": 41468,
+              "wave_disk_equal": true
+            },
+            {
+              "allocation_bytes": 82944,
+              "frequency_hz": 879.8332214355469,
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "nonzero_extent_frames": 36871,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "58427f829d79782dbabec1067fa947d829e49133de740d0398b6902de8824d89",
+              "recorded_marker_frames": 36871,
+              "sample_end_frame": 41468,
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808,
+          "process": "recorded"
+        },
+        {
+          "channels": [
+            {
+              "allocation_bytes": 82944,
+              "frequency_hz": 440.0848388671875,
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "nonzero_extent_frames": 36871,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "b4f0942dafcda0e0bc76576f80c3c768e8e4ba73deebfa3b295260499ebd2220",
+              "recorded_marker_frames": 36871,
+              "sample_end_frame": 41468,
+              "wave_disk_equal": true
+            },
+            {
+              "allocation_bytes": 82944,
+              "frequency_hz": 879.8332214355469,
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "nonzero_extent_frames": 36871,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "58427f829d79782dbabec1067fa947d829e49133de740d0398b6902de8824d89",
+              "recorded_marker_frames": 36871,
+              "sample_end_frame": 41468,
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808,
+          "process": "restored"
+        },
+        {
+          "channels": [
+            {
+              "allocation_bytes": 82944,
+              "frequency_hz": 440.0848388671875,
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "nonzero_extent_frames": 36871,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "b4f0942dafcda0e0bc76576f80c3c768e8e4ba73deebfa3b295260499ebd2220",
+              "recorded_marker_frames": 36871,
+              "sample_end_frame": 41468,
+              "wave_disk_equal": true
+            },
+            {
+              "allocation_bytes": 82944,
+              "frequency_hz": 879.8332214355469,
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "nonzero_extent_frames": 36871,
+              "padding_after_sample_end_zero": true,
+              "pcm_sha256": "58427f829d79782dbabec1067fa947d829e49133de740d0398b6902de8824d89",
+              "recorded_marker_frames": 36871,
+              "sample_end_frame": 41468,
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808,
+          "process": "cold"
+        }
+      ],
+      "ui": {
+        "before": 4121272165,
+        "captureStatus": "Recording: Stereo In 1-2 (MOTU Pro Audio v \u2014 44.1 kHz stereo PCM16. Capture restarts: 3.",
+        "cycle": 2,
+        "edited": 3401795101,
+        "edited_disk_sha256": "6b90eb219055cf18566f23cf69ef5e07ab452028fdb75f8577c320ace0266526",
+        "interface": "Packaged WebView2",
+        "outputEndpoint": "{0.0.0.00000000}.{07ef8be9-58bc-4ceb-8e7d-70fde0d7dc99}",
+        "package_manifest_sha256": "23d7b4493f1a2c5da9e85b8dfe2d169e73dad6b2edd4ae180cdc2464cd09ae4c",
+        "passed": true,
+        "playback": {
+          "baseline": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1092756616345,
+              "format": "float32",
+              "frames": 384000,
+              "last_qpc_100ns": 1092836515204,
+              "packets": 800,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.008416865020990372,
+            "raw_sha256": "ad0c33fe1109debc9d5408211ebcabb9da43a96e640c21663a93b84b354a30b0",
+            "silent_release": true
+          },
+          "cold-restored": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1094858193578,
+              "format": "float32",
+              "frames": 383040,
+              "last_qpc_100ns": 1094937892375,
+              "packets": 798,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.004231181461364031,
+            "raw_sha256": "a9f6fe24014c5b50e3021bc674281174d8822ee3cfeafaecf2ddeeaf06716e7b",
+            "silent_release": true
+          },
+          "edited": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1092966213317,
+              "format": "float32",
+              "frames": 383520,
+              "last_qpc_100ns": 1093046012102,
+              "packets": 799,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.004231181461364031,
+            "raw_sha256": "e4c121aa707f1a99ea4bcfc681b3197ddf622d0b7247eaef5a54923a279dd3f7",
+            "silent_release": true
+          },
+          "restored": {
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output",
+            "endpoint_capture": {
+              "channels": 2,
+              "discontinuity_flags": 1,
+              "first_qpc_100ns": 1094505953015,
+              "format": "float32",
+              "frames": 383520,
+              "last_qpc_100ns": 1094585751852,
+              "packets": 799,
+              "rate": 48000,
+              "silent_frames": 0
+            },
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "passed": true,
+            "peak": 0.004231181461364031,
+            "raw_sha256": "a45a127f52deba7ae5de1066ee9ae40e4b52aadfd140affd27fd8f5ba387f6c7",
+            "silent_release": true
+          }
+        },
+        "recordingDevice": "3:Stereo In 1-2 (MOTU Pro Audio v",
+        "renderers": [
+          "Edg/155.0.4283.60",
+          "Edg/155.0.4283.60"
+        ],
+        "sample_disk_sha256": "3b7172b1c97f3ddb866c235ec1969d991293376be233a5d21bb70a593922ce91",
+        "throttle": true
+      }
+    }
+  ],
+  "date": "2026-10-17",
+  "distribution_qualified": true,
+  "file_count_excluding_generated_audit": 610,
+  "final_archive": {
+    "archive": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\release-promotion-2026-10-17\\S760 standalone GPLv3 source-built 2026-10-17.zip",
+    "bytes": 287210283,
+    "clean_machine_acceptance": "pending",
+    "distribution_qualification_claimed": true,
+    "package_files": 611,
+    "product_release_accepted": false,
+    "sha256": "b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9"
+  },
+  "final_assembly_diff": {
+    "changed_or_added_delivery_files": [
+      "DISTRIBUTION.md",
+      "PACKAGE-AUDIT.json",
+      "corresponding-source/host-source.zip",
+      "corresponding-source/python-native-dependencies/SOURCE-PROVENANCE.json",
+      "corresponding-source/python-native-dependencies/bzip2-1.0.8.tar.gz",
+      "corresponding-source/python-native-dependencies/libffi-3.4.4.tar.gz",
+      "corresponding-source/python-native-dependencies/mpdecimal-4.0.0.tar.gz",
+      "corresponding-source/python-native-dependencies/openssl-3.0.15.tar.gz",
+      "corresponding-source/python-native-dependencies/sqlite-3.45.3.0.tar.gz",
+      "corresponding-source/python-native-dependencies/xz-5.2.5.tar.gz",
+      "corresponding-source/python-native-dependencies/zlib-1.3.1.tar.gz",
+      "corresponding-source/requirements-frozen.txt"
+    ],
+    "passed": true,
+    "runtime_UI_and_notices_unchanged": true
+  },
+  "final_status": "Standalone artifact promotion and repeated workstation workflow complete; separate clean-machine prerequisite/install/workflow acceptance incomplete",
+  "fixture_sha256": {
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+  },
+  "focused_distribution_tests": {
+    "failed": 0,
+    "passed": 38
+  },
+  "handoff": {
+    "acceptance_status": "INCOMPLETE",
+    "boot": {
+      "cleanMachine": false,
+      "coloredPixels": 225776,
+      "completeWorkflow": false,
+      "interface": "Packaged WebView2",
+      "packageManifest": "23d7b4493f1a2c5da9e85b8dfe2d169e73dad6b2edd4ae180cdc2464cd09ae4c",
+      "passed": true,
+      "renderer": "Edg/155.0.4283.60",
+      "scope": "Extracted archive, default kit paths, Windows PowerShell launcher, unrelated working directory and stripped child development environment; workstation boot/UI smoke only"
+    },
+    "clean_machine_accepted": false,
+    "environment": {
+      "clean_machine_claimed": false,
+      "date": "2026-10-17T17:36:44.7945230Z",
+      "development_tools_on_path": [
+        {
+          "name": "python",
+          "path": "C:\\Users\\jborn\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+        },
+        {
+          "name": "node",
+          "path": "C:\\Program Files\\nodejs\\node.exe"
+        },
+        {
+          "name": "git",
+          "path": "C:\\Program Files\\Git\\cmd\\git.exe"
+        },
+        {
+          "name": "cmake",
+          "path": "C:\\Program Files\\CMake\\bin\\cmake.exe"
+        },
+        {
+          "name": "cl",
+          "path": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.43.34808\\bin\\Hostx64\\x64\\cl.exe"
+        }
+      ],
+      "firmware_sha256": {
+        "boot": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "system": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+      },
+      "os": {
+        "BuildNumber": "26200",
+        "Caption": "Microsoft Windows 11 Pro",
+        "InstallDate": "/Date(1750608785000)/",
+        "OSArchitecture": "64-bit",
+        "Version": "10.0.26200"
+      },
+      "package_files_verified": 611,
+      "package_manifest_sha256": "23d7b4493f1a2c5da9e85b8dfe2d169e73dad6b2edd4ae180cdc2464cd09ae4c",
+      "profile": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\release-promotion-2026-10-17\\final-handoff-smoke\\profile",
+      "schema": 1,
+      "status": "NOT_RUN",
+      "vc_runtime": "14.44.35211.0",
+      "verify_only": false,
+      "webview_runtimes": [
+        {
+          "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.45\\msedgewebview2.exe",
+          "version": "155.0.4283.45"
+        },
+        {
+          "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+          "version": "155.0.4283.60"
+        }
+      ]
+    },
+    "pending_manual_steps": [
+      "launch",
+      "load",
+      "play",
+      "edit",
+      "sample",
+      "firmware_save",
+      "export",
+      "session_restore",
+      "cold_reopen"
+    ]
+  },
+  "host_source_rebuild": {
+    "builder_exit": 0,
+    "fresh_npm_install": true,
+    "native_bridge_from_exported_source": true,
+    "passed": true,
+    "result_scope": "Private rebuilt host development audit passes; rebuilt host output is not a separately qualified release",
+    "template_reconstruction": "Editable delivered README staged at the builder template path; release-profile link made plain text for the development rebuild"
+  },
+  "limits": [
+    "Workstation runtime tests are not clean-machine acceptance.",
+    "No installer, signing, tag or publication is performed.",
+    "GPLv3 option explicitly requested for the source-built ASIO dependency; original BSD notices retained.",
+    "Original upstream Python source archives include their own public test assets; exact private Roland assets are excluded."
+  ],
+  "native_acceptance": {
+    "held_peak_pcm16": 1019.0,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "native_boot_frames": true,
+    "note_release": 80.883333333333,
+    "note_start": 78.716666666667,
+    "process_shutdown": "clean",
+    "pull_render": {
+      "dropped_frames": 0,
+      "frames": 122616,
+      "paused_between_requests": true,
+      "release_tail_silent": true,
+      "sizes": [
+        1,
+        63,
+        127,
+        256,
+        511,
+        1024,
+        4096,
+        8192
+      ],
+      "wav_max_error_pcm16": 0.9999542236328125
+    },
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "scheduled_midi": [
+      {
+        "sample": 3666446,
+        "seconds": 83.139365079365
+      },
+      {
+        "sample": 3710546,
+        "seconds": 84.139365079365
+      }
+    ],
+    "system_audio": {
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "device_latency_measured": false,
+      "enabled": false,
+      "throttled": false
+    }
+  },
+  "native_clean_rebuild_exit": 0,
+  "original_fixtures_unchanged": true,
+  "package_all_bytes": 324944302,
+  "package_all_files": 611,
+  "package_bytes_excluding_generated_audit": 324846112,
+  "package_manifest_sha256": "23d7b4493f1a2c5da9e85b8dfe2d169e73dad6b2edd4ae180cdc2464cd09ae4c",
+  "process_cleanup": {
+    "checked_utc": "2026-10-17T17:40:03.7700450Z",
+    "count": 0,
+    "remaining_test_owned_processes": []
+  },
+  "published": false,
+  "scope": "Exact standalone source/dependency distribution engineering; no clean-machine or final product acceptance claim",
+  "source_build_tool_sha256": {
+    "google-ui/e2e/packaged-workflow.spec.ts": "e3dcbf3490ee56733f0f7985e75ae35cc9ac69fdda8bf3316440e4f4024cd8b7",
+    "google-ui/e2e/standalone-handoff.spec.ts": "26c354982740e7749c3847af91d13c54c1d59886c2ec5fcc23327270f0c5bd32",
+    "scripts/build_asio_dependency.ps1": "8bc106c31c1a1545d3793215bee94c4671b5b2592be6cef8f853c1db822b5bb1",
+    "scripts/requirements-standalone-frozen-2026-10-17.txt": "779fcc66ae0acae9e42ac851af7857e7c62af12f268efd0d62f1ee616c83108d",
+    "scripts/s760_distribution_inventory.py": "8b8ee2d84241bd05987a4bbf1df9f5cc71cded32b7aa40a5590fff842e02ee57",
+    "scripts/s760_package_audit.py": "45ebe5ba1f29f74602940e5596467d4191d769e6974da4da338298970a46340f",
+    "scripts/verify_packaged_workflow.py": "edd6033410711f5e4c49209aff3642a4698b7b67dadc19120a38ad92080efaad",
+    "scripts/verify_release_artifacts.py": "ca5474931560e3014015a572c649dff24c37914707cc8de191103e47d089f728"
+  },
+  "source_review": {
+    "archives": [
+      {
+        "bytes": 954506,
+        "manifest_files_verified": 304,
+        "path": "corresponding-source/host-source.zip",
+        "private_assets_found": 0,
+        "sha256": "3ae6979c4fa7be9bbb1ea8b73a9d2af27e2d423f088339a63d7fa276c2da54d0"
+      },
+      {
+        "bytes": 203957979,
+        "manifest_files_verified": 27323,
+        "path": "corresponding-source/mame-source.zip",
+        "private_assets_found": 0,
+        "sha256": "dc7891a22578c8fa671590eabe974dd7179c0351ea2e13072ff7c6ed03b00e4c"
+      },
+      {
+        "bytes": 10701093,
+        "manifest_files_verified": 405,
+        "path": "corresponding-source/portaudio-asio-source.zip",
+        "private_assets_found": 0,
+        "sha256": "d6a8b309946460eaba33761c1d636d08d064764592adcf454c9ab5ac30c22f77"
+      },
+      {
+        "bytes": 86805,
+        "filename": "clr_loader-0.3.1.tar.gz",
+        "name": "clr_loader",
+        "sha256": "2e073e9aaf49d1ae2f56ecba27987ad5fb68be4bcd9dd34a5bed8f0e4e128366",
+        "url": "https://files.pythonhosted.org/packages/e4/46/7eea92b6aa2d68af78e049cbecec5f757f1aad44ecdecdc16bbad7eead51/clr_loader-0.3.1.tar.gz",
+        "version": "0.3.1"
+      },
+      {
+        "bytes": 257852,
+        "filename": "pythonnet-3.2.1.tar.gz",
+        "name": "pythonnet",
+        "sha256": "c86e8dd31268f6e0c48fcc4d6030041316d49ed2764a1cb6ea8c37876e07c572",
+        "url": "https://files.pythonhosted.org/packages/ef/34/98f38d7ca1e9eb684d297d1d6a9420f3f3a32f411eae82a7f25a2b783539/pythonnet-3.2.1.tar.gz",
+        "version": "3.2.1"
+      },
+      {
+        "bytes": 513126,
+        "filename": "pywebview-6.2.1.tar.gz",
+        "name": "pywebview",
+        "sha256": "71b7136752e40824655304d938efb62014218d1a90bd8e87e1cbdb1ce9c466af",
+        "url": "https://files.pythonhosted.org/packages/59/4a/05307135dafba67778669d194bd1a3822a7685ec9ee8a6d7e70856c1a551/pywebview-6.2.1.tar.gz",
+        "version": "6.2.1"
+      },
+      {
+        "bytes": 53150,
+        "filename": "sounddevice-0.5.2.tar.gz",
+        "name": "sounddevice",
+        "sha256": "c634d51bd4e922d6f0fa5e1a975cc897c947f61d31da9f79ba7ea34dff448b49",
+        "url": "https://files.pythonhosted.org/packages/91/a6/91e9f08ed37c7c9f56b5227c6aea7f2ae63ba2d59520eefb24e82cbdd589/sounddevice-0.5.2.tar.gz",
+        "version": "0.5.2"
+      },
+      {
+        "bytes": 530807,
+        "filename": "cffi-2.1.1.tar.gz",
+        "name": "cffi",
+        "sha256": "dd31f52ea1086513bb9df30f8fcee9b8918323ae067a3d5b78bc826a000712be",
+        "url": "https://files.pythonhosted.org/packages/9e/ef/008a1939e372c06329a3fce4279c02f328488f3526744906eeec3da7ad5f/cffi-2.1.1.tar.gz",
+        "version": "2.1.1"
+      },
+      {
+        "bytes": 20537,
+        "filename": "markupsafe-3.0.2.tar.gz",
+        "name": "markupsafe",
+        "sha256": "ee55d3edf80167e48ea11a923c7386f4669df67d7994554387f84e7d8b0a2bf0",
+        "url": "https://files.pythonhosted.org/packages/b2/97/5d42485e71dfc078108a86d6de8fa46db44a1a9295e89c5d6d4a06e23a62/markupsafe-3.0.2.tar.gz",
+        "version": "3.0.2"
+      },
+      {
+        "bytes": 182204,
+        "filename": "websockets-16.1.1.tar.gz",
+        "name": "websockets",
+        "sha256": "db234eda965dcce15df96bb9709f587cd87d4d52aaf0e80e2f34ec04c7670c57",
+        "url": "https://files.pythonhosted.org/packages/21/f7/bc3a25c5ec26ce62ce487690becc2f3710bbc7b33338f005ad390db0b986/websockets-16.1.1.tar.gz",
+        "version": "16.1.1"
+      },
+      {
+        "bytes": 1319958,
+        "filename": "setuptools-80.9.0.tar.gz",
+        "name": "setuptools",
+        "sha256": "f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c",
+        "url": "https://files.pythonhosted.org/packages/18/5d/3bf57dcd21979b887f014ea83c24ae194cfcd12b9e0fda66b957c69d1fca/setuptools-80.9.0.tar.gz",
+        "version": "80.9.0"
+      },
+      {
+        "bytes": 98717,
+        "filename": "bottle-0.13.4.tar.gz",
+        "name": "bottle",
+        "sha256": "787e78327e12b227938de02248333d788cfe45987edca735f8f88e03472c3f47",
+        "url": "https://files.pythonhosted.org/packages/7a/71/cca6167c06d00c81375fd668719df245864076d284f7cb46a694cbeb5454/bottle-0.13.4.tar.gz",
+        "version": "0.13.4"
+      },
+      {
+        "bytes": 245115,
+        "filename": "jinja2-3.1.6.tar.gz",
+        "name": "jinja2",
+        "sha256": "0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d",
+        "url": "https://files.pythonhosted.org/packages/df/bf/f7da0350254c0ed7c72f3e33cef02e048281fec7ecec5f032d4aac52226b/jinja2-3.1.6.tar.gz",
+        "version": "3.1.6"
+      },
+      {
+        "bytes": 145772,
+        "filename": "more_itertools-11.1.0.tar.gz",
+        "name": "more-itertools",
+        "sha256": "48e8f4d9e7e5878571ecf6f2b4e57634f93cd474cc8cfbd2376f2d11b396e30d",
+        "url": "https://files.pythonhosted.org/packages/de/1d/f4da6f02cdffe04d6362210b807146a26044c88d839208aec273bb0d9184/more_itertools-11.1.0.tar.gz",
+        "version": "11.1.0"
+      },
+      {
+        "bytes": 165727,
+        "filename": "packaging-25.0.tar.gz",
+        "name": "packaging",
+        "sha256": "d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f",
+        "url": "https://files.pythonhosted.org/packages/a1/d4/1fc4078c65507b51b96ca8f8c3ba19e6a61c8253c72794544580a7b6c24d/packaging-25.0.tar.gz",
+        "version": "25.0"
+      },
+      {
+        "bytes": 2978,
+        "filename": "proxy_tools-0.1.0.tar.gz",
+        "name": "proxy_tools",
+        "sha256": "ccb3751f529c047e2d8a58440d86b205303cf0fe8146f784d1cbcd94f0a28010",
+        "url": "https://files.pythonhosted.org/packages/f2/cf/77d3e19b7fabd03895caca7857ef51e4c409e0ca6b37ee6e9f7daa50b642/proxy_tools-0.1.0.tar.gz",
+        "version": "0.1.0"
+      },
+      {
+        "bytes": 113796,
+        "filename": "pycparser-3.11.tar.gz",
+        "name": "pycparser",
+        "sha256": "d875f09c3507d00e1aba0eecc6dcadc1352f30fff09dc6bff2f1c2935e97c2bc",
+        "url": "https://files.pythonhosted.org/packages/da/a8/c5fdbeee588bb8ada9458774f43adf1bdd30bd59157055142183e769a024/pycparser-3.11.tar.gz",
+        "version": "3.11"
+      },
+      {
+        "bytes": 113555,
+        "filename": "typing_extensions-4.16.0.tar.gz",
+        "name": "typing_extensions",
+        "sha256": "dc983d19a509c94dba722ee6abd33940f7c05a89e243c47e907eb4db6f1a43e5",
+        "url": "https://files.pythonhosted.org/packages/f6/cc/6253133b5bb138fc3306cebfbda2c520f545d36b5be2c7255cc528bb45d6/typing_extensions-4.16.0.tar.gz",
+        "version": "4.16.0"
+      },
+      {
+        "bytes": 107545,
+        "filename": "wheel-0.45.1.tar.gz",
+        "name": "wheel",
+        "sha256": "661e1abd9198507b1409a20c02106d9670b2576e916d58f520316666abca6729",
+        "url": "https://files.pythonhosted.org/packages/8a/98/2d9906746cdc6a6ef809ae6338005b3f21bb568bea3165cfc6a243fdc25c/wheel-0.45.1.tar.gz",
+        "version": "0.45.1"
+      },
+      {
+        "bytes": 4036072,
+        "filename": "pyinstaller-6.19.0.tar.gz",
+        "name": "pyinstaller",
+        "sha256": "ec73aeb8bd9b7f2f1240d328a4542e90b3c6e6fbc106014778431c616592a865",
+        "url": "https://files.pythonhosted.org/packages/c8/63/fd62472b6371d89dc138d40c36d87a50dc2de18a035803bbdc376b4ffac4/pyinstaller-6.19.0.tar.gz",
+        "version": "6.19.0"
+      },
+      {
+        "bytes": 22532980,
+        "filename": "Python-3.13.0.tar.xz",
+        "name": "cpython",
+        "sha256": "086de5882e3cb310d4dca48457522e2e48018ecd43da9cdf827f6a0759efb07d",
+        "url": "https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tar.xz",
+        "version": "3.13.0"
+      },
+      {
+        "bytes": 818771,
+        "filename": "bzip2-1.0.8.tar.gz",
+        "name": "bzip2-1.0.8",
+        "provenance": "Version named by CPython3.13.0 PCbuild/get_externals.bat",
+        "sha256": "ab8d1b0cc087c20d4c32c0e4fcf7d0c733a95da12cedc6d63b3f0a9af07427e2",
+        "url": "https://codeload.github.com/python/cpython-source-deps/tar.gz/refs/tags/bzip2-1.0.8"
+      },
+      {
+        "bytes": 1375889,
+        "filename": "libffi-3.4.4.tar.gz",
+        "name": "libffi-3.4.4",
+        "provenance": "Version named by CPython3.13.0 PCbuild/get_externals.bat",
+        "sha256": "9d802681adfea27d84cae0487a785fb9caa925bdad44c401b364c59ab2b8edda",
+        "url": "https://codeload.github.com/python/cpython-source-deps/tar.gz/refs/tags/libffi-3.4.4"
+      },
+      {
+        "bytes": 15473788,
+        "filename": "openssl-3.0.15.tar.gz",
+        "name": "openssl-3.0.15",
+        "provenance": "Version named by CPython3.13.0 PCbuild/get_externals.bat",
+        "sha256": "1550c87996a0858474a9dd179deab2c55eb73726b9a140b32865b02fd3d8a86b",
+        "url": "https://codeload.github.com/python/cpython-source-deps/tar.gz/refs/tags/openssl-3.0.15"
+      },
+      {
+        "bytes": 319629,
+        "filename": "mpdecimal-4.0.0.tar.gz",
+        "name": "mpdecimal-4.0.0",
+        "provenance": "Version named by CPython3.13.0 PCbuild/get_externals.bat",
+        "sha256": "338fac3fb8cdd60f406b6326431338756f58a8af94229ffd9bf1e7c2b1ad71ca",
+        "url": "https://codeload.github.com/python/cpython-source-deps/tar.gz/refs/tags/mpdecimal-4.0.0"
+      },
+      {
+        "bytes": 2733295,
+        "filename": "sqlite-3.45.3.0.tar.gz",
+        "name": "sqlite-3.45.3.0",
+        "provenance": "Version named by CPython3.13.0 PCbuild/get_externals.bat",
+        "sha256": "730e4a3efd6a63828bee499940fb13acc2a32c182502ce8a1d970387895d0504",
+        "url": "https://codeload.github.com/python/cpython-source-deps/tar.gz/refs/tags/sqlite-3.45.3.0"
+      },
+      {
+        "bytes": 1744796,
+        "filename": "xz-5.2.5.tar.gz",
+        "name": "xz-5.2.5",
+        "provenance": "Version named by CPython3.13.0 PCbuild/get_externals.bat",
+        "sha256": "a15c168e39e87d750c3dc766edc7f19bdda57dacf01e509678467eace91ad282",
+        "url": "https://codeload.github.com/python/cpython-source-deps/tar.gz/refs/tags/xz-5.2.5"
+      },
+      {
+        "bytes": 1570732,
+        "filename": "zlib-1.3.1.tar.gz",
+        "name": "zlib-1.3.1",
+        "provenance": "Version named by CPython3.13.0 PCbuild/get_externals.bat",
+        "sha256": "e3f3fb32564952006eb18b091ca8464740e5eca29d328cfb0b2da22768e0b638",
+        "url": "https://codeload.github.com/python/cpython-source-deps/tar.gz/refs/tags/zlib-1.3.1"
+      }
+    ],
+    "limits": [
+      "Upstream source archives retain their own public test assets. Exact local private media hashes are rejected.",
+      "The source/dependency review does not establish clean-machine acceptance."
+    ],
+    "passed": true
+  },
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "tagged": false,
+  "typescript": "passed",
+  "working_tree_dirty": true
+}

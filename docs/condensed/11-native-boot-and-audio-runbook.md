@@ -7,10 +7,10 @@ their settings. This is a development checkpoint, not complete ASIC emulation.
 
 ## Run from an existing local build
 
-For the React/WebView2 desktop player, follow [Standalone player](../STANDALONE_PLAYER.md).
+For the React/WebView2 desktop player, follow [Standalone player](../emulator/guides/standalone-player.md).
 Its isolated MAME process supplies real CRT/LCD frames and accepts native inputs;
-audio still belongs to MAME. The [runtime protocol](../NATIVE_RUNTIME_PROTOCOL.md)
-now serves an explicit [native VST3 development path](../NATIVE_CPP_RUNTIME.md).
+audio still belongs to MAME. The [runtime protocol](../emulator/runtime/native-runtime-protocol.md)
+now serves an explicit [native VST3 development path](../emulator/runtime/native-cpp-runtime.md).
 Its processor harness passes; production selection and DAW acceptance remain open.
 The command below remains the direct MAME alternative.
 
@@ -103,7 +103,7 @@ restart and repeated recall:131072 stereo float frames match exactly, including
 release. An unrelated old scheduled event is cancelled during restore. C++
 queue snapshots preserve unread PCM and pending host blocks in unit tests;
 complete VST3 state, SCSI and UI/recovery are still open. See the
-[checkpoint contract](../NATIVE_CHECKPOINTS.md) and
+[checkpoint contract](../emulator/runtime/native-checkpoints.md) and
 [acceptance record](validation/native-scheduled-checkpoint-2026-10-11.json).
 
 ## Firmware readiness and recovery — 2026-10-11
@@ -114,7 +114,7 @@ unknown screens, timeout, clock stall and process failure. Idle does not assert
 sample-load success. Reconnect retains the live patch; confirmed restart checks
 live dirty/busy media, releases the old process and boots a new child. The UI
 service remains available after child failure. Unsaved-state restoration is
-still separate work. [Contract](../NATIVE_FIRMWARE_STATUS.md) and
+still separate work. [Contract](../emulator/runtime/native-firmware-status.md) and
 [acceptance evidence](validation/native-readiness-2026-10-11.json).
 
 ## Host audio timing — 2026-10-11
@@ -127,7 +127,7 @@ this is not total analog/device latency. This closes the Milestone1 timing
 objective for the stated profile. Production plugin selection, native input,
 complete state and DAW/editor qualification remain open. In-process rewind of
 a pre-capture checkpoint has an overflow limitation; cold restoration passes.
-See the [contract](../NATIVE_AUDIO_TIMING.md) and
+See the [contract](../emulator/runtime/native-audio-timing.md) and
 [evidence](validation/native-audio-timing-2026-10-11.json).
 
 ## Exported VST3 engine selection — 2026-10-11
@@ -138,7 +138,7 @@ module acceptance passes boot/load, real displays, exact offline PCM at48kHz,
 note offsets/release and suspension/termination. Historical core construction
 remains diagnostic-only; native ADC/state and real DAW/editor qualification are
 still open. The former FX class is unavailable until native input exists. See
-[selection/configuration](../NATIVE_PLUGIN_SELECTION.md) and
+[selection/configuration](../emulator/guides/native-plugin-selection.md) and
 [evidence](validation/native-factory-2026-10-11.json).
 
 ## Standalone sessions and crash recovery — 2026-10-11
@@ -151,5 +151,5 @@ save/restart/restore path preserves the original patch-table pixels. Checkpoint
 buffer operations defer past the first periodic callback after pause so an old
 emulated timer cannot continue over restored state. No guest state is forced.
 Full plugin/SCSI snapshots and recovery of changes after the last save remain
-open. [Contract](../NATIVE_SESSIONS.md) and
+open. [Contract](../emulator/guides/native-sessions.md) and
 [evidence](validation/native-session-2026-10-11.json).

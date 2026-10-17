@@ -1,0 +1,291 @@
+{
+  "date": "2026-10-15",
+  "status": "Offline hypothesis discrimination; no hardware timing law or production change",
+  "training": "Alternating5ms blocks within5\u2013150ms; audio alignment/gain frozen from prior0.2\u20131.2s fits",
+  "evaluation": "Other5ms blocks; oracle amplitude uses even samples per5ms and reports odd samples",
+  "rows": [
+    {
+      "note": 39,
+      "native_source_replay_error": 5.012059221600433e-08,
+      "fixed_audio_alignment_frames": 160.14246601288147,
+      "fixed_gain": 0.011094124930383767,
+      "models": [
+        {
+          "model": "immediate",
+          "training_error": 0.7436784578354583,
+          "evaluation_error": 0.7811742611448724,
+          "full_onset_error": 0.7613388700773656
+        },
+        {
+          "model": "oracle-5ms-amplitude",
+          "odd_sample_evaluation_error": 0.6625224175013323,
+          "gains": [
+            0.36880496740816304,
+            0.4013175083294292,
+            0.7320681499285848,
+            0.49250400767245833,
+            0.46073254685679615,
+            0.3515753380990893,
+            0.6547159131891628,
+            0.49077433700120837,
+            0.32427002897746676,
+            0.5845628151529446,
+            0.7667625836408062,
+            0.8274199613078245,
+            0.8835972821137323,
+            1.0085513623175033,
+            0.9671592252505855,
+            0.9592421398911386,
+            0.9140168127377084,
+            0.8838140537174897,
+            1.0099827357423161,
+            0.8497510722360354,
+            1.0040799158468525,
+            1.000853711545765,
+            0.9451502868314058,
+            1.2368570939167434,
+            1.524259757736961,
+            0.9378611461414588,
+            1.465930999866474,
+            0.0,
+            0.921870503513256
+          ]
+        },
+        {
+          "model": "initial-filter-state",
+          "state": [
+            -0.4027549188326388,
+            2.0330223896246804
+          ],
+          "training_error": 0.7399385221168507,
+          "evaluation_error": 0.8361595650208044,
+          "full_onset_error": 0.7861350779969969
+        },
+        {
+          "model": "control-trajectory-phase",
+          "initial_word": 656,
+          "lag_ms": 25.370730941199703,
+          "training_error": 0.23475810344230838,
+          "evaluation_error": 0.19912522292638402,
+          "full_onset_error": 0.21891604405177023
+        },
+        {
+          "model": "control-trajectory-phase",
+          "initial_word": 416,
+          "lag_ms": 25.51666285451164,
+          "training_error": 0.27129685205048304,
+          "evaluation_error": 0.23929970514071394,
+          "full_onset_error": 0.2569184734068907
+        },
+        {
+          "model": "causal-linear20ms",
+          "lag_ms": 14.867568325859516,
+          "training_error": 0.1307611188842372,
+          "evaluation_error": 0.11622892941802529,
+          "full_onset_error": 0.12421718264810656
+        },
+        {
+          "model": "causal-onepole10ms",
+          "lag_ms": 14.409271036230752,
+          "training_error": 0.1306469160863062,
+          "evaluation_error": 0.13134246244185338,
+          "full_onset_error": 0.13097071436264854
+        }
+      ]
+    },
+    {
+      "note": 37,
+      "native_source_replay_error": 5.0095871634111293e-08,
+      "fixed_audio_alignment_frames": 149.2219621276422,
+      "fixed_gain": 0.011123279949180522,
+      "models": [
+        {
+          "model": "immediate",
+          "training_error": 0.4970413317011525,
+          "evaluation_error": 0.6658850621075162,
+          "full_onset_error": 0.5894315543578439
+        },
+        {
+          "model": "oracle-5ms-amplitude",
+          "odd_sample_evaluation_error": 0.5048830393968554,
+          "gains": [
+            0.31245672812307307,
+            0.4196322220306301,
+            0.6904303770782155,
+            0.9158196253767124,
+            0.3980055262375262,
+            0.6796549534660653,
+            0.6680943855577929,
+            0.9548366392722569,
+            0.7022008911238571,
+            0.7353499298676565,
+            0.8534023936027952,
+            0.9715802510728321,
+            0.9456761148150827,
+            1.026006517062826,
+            1.0584810390160913,
+            0.972742014479172,
+            1.0725080019584965,
+            0.946971215777585,
+            1.079801838203165,
+            1.092224797013572,
+            1.4863796891234586,
+            1.0399020629700024,
+            1.030820773964479,
+            1.0911777510163974,
+            1.2793929217252895,
+            0.7522357374073873,
+            1.0854929551970514,
+            1.0182897284215324,
+            0.2457160409004765
+          ]
+        },
+        {
+          "model": "initial-filter-state",
+          "state": [
+            -0.9999685843494933,
+            1.0169630975959805
+          ],
+          "training_error": 0.48841047455550685,
+          "evaluation_error": 0.7343397320425101,
+          "full_onset_error": 0.6263176108630867
+        },
+        {
+          "model": "control-trajectory-phase",
+          "initial_word": 656,
+          "lag_ms": 14.993944106759704,
+          "training_error": 0.20324353050537564,
+          "evaluation_error": 0.18941567369540205,
+          "full_onset_error": 0.19629619245484484
+        },
+        {
+          "model": "control-trajectory-phase",
+          "initial_word": 416,
+          "lag_ms": 14.993688083190154,
+          "training_error": 0.20265057272124495,
+          "evaluation_error": 0.17834923915861223,
+          "full_onset_error": 0.19061471647288628
+        },
+        {
+          "model": "causal-linear20ms",
+          "lag_ms": 4.052887499127911,
+          "training_error": 0.04346934020511354,
+          "evaluation_error": 0.03960697826053512,
+          "full_onset_error": 0.04153971591285118
+        },
+        {
+          "model": "causal-onepole10ms",
+          "lag_ms": 4.348604026172975,
+          "training_error": 0.07144971789279202,
+          "evaluation_error": 0.07995454950465092,
+          "full_onset_error": 0.07591668837669634
+        }
+      ]
+    },
+    {
+      "note": 38,
+      "native_source_replay_error": 5.0046575415634374e-08,
+      "fixed_audio_alignment_frames": 174.26398283011736,
+      "fixed_gain": 0.011107826813387036,
+      "models": [
+        {
+          "model": "immediate",
+          "training_error": 0.42386282136895104,
+          "evaluation_error": 0.4409247444371042,
+          "full_onset_error": 0.4329451911223019
+        },
+        {
+          "model": "oracle-5ms-amplitude",
+          "odd_sample_evaluation_error": 0.4054375122029134,
+          "gains": [
+            0.6616153772411517,
+            0.8374270891274739,
+            0.6982207867987008,
+            0.7524042579015913,
+            0.7512746950560848,
+            0.9719028515182184,
+            0.5729230800974006,
+            0.7857963301778312,
+            0.7410861775771274,
+            0.9308711323088148,
+            0.9082575121260325,
+            0.9175748114999556,
+            0.9095166926355355,
+            0.9377135911107094,
+            0.9912403552772863,
+            1.0098356180505899,
+            1.0109074280385324,
+            1.046401797702929,
+            0.973842245913799,
+            1.14705525224987,
+            1.0046236204895578,
+            1.1003575151883023,
+            1.0282970404775684,
+            1.025569268373882,
+            1.1859100577239694,
+            1.1202778561354159,
+            1.0716094889413186,
+            0.889362750013547,
+            1.2412591151404115
+          ]
+        },
+        {
+          "model": "initial-filter-state",
+          "state": [
+            -0.22308997373198325,
+            -0.5179450361076277
+          ],
+          "training_error": 0.42357732130402953,
+          "evaluation_error": 0.45281052449323594,
+          "full_onset_error": 0.43923763184385517
+        },
+        {
+          "model": "control-trajectory-phase",
+          "initial_word": 656,
+          "lag_ms": 7.533970959230368,
+          "training_error": 0.19010877605615908,
+          "evaluation_error": 0.3078051052948827,
+          "full_onset_error": 0.25893772219182926
+        },
+        {
+          "model": "control-trajectory-phase",
+          "initial_word": 416,
+          "lag_ms": 7.534191677386569,
+          "training_error": 0.18195937200358223,
+          "evaluation_error": 0.2976884427648126,
+          "full_onset_error": 0.24977011542593874
+        },
+        {
+          "model": "causal-linear20ms",
+          "lag_ms": 0.12099562802810174,
+          "training_error": 0.02719203962078705,
+          "evaluation_error": 0.030103167310499262,
+          "full_onset_error": 0.02876412768062944
+        },
+        {
+          "model": "causal-onepole10ms",
+          "lag_ms": 1.3812034004324436,
+          "training_error": 0.06931189807995022,
+          "evaluation_error": 0.08392438859674983,
+          "full_onset_error": 0.07736335189998497
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Coefficient phase fits are per-recording diagnostics, not a measured hardware clock or MIDI latency.",
+    "Capture control-tick phase can differ between native and hardware; a phase fit does not imply envelope speed error.",
+    "Initial-state fit is diagnostic; no hardware state observed.",
+    "Oracle amplitude is deliberately flexible to test whether amplitude alone can explain mismatch.",
+    "Existing captures are reused; no independent repeat or low-note bypass calibration."
+  ],
+  "future_write_causality_check": true,
+  "selection": "Frozen20ms model selected using the Time8 set MIDI37\u201339: onepole10ms nearly ties MIDI39 training, but20ms transfers better across MIDI37/38. New MIDI40/43/47/51 are the unused transfer set.",
+  "hashes": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\check_time8_onset.py": "0bb493bd5c40bee2c5abdabe26e6c5c019d696d10377612b0bbc3fcf91a08718",
+    "docs\\ic20-hle-findings\\chatGPT-work\\source_reconstruction_model.py": "d819e5459c49c36054346579015e17c527368c80ce50db3d7df6aec3eb5f0650",
+    "docs\\ic20-hle-findings\\chatGPT-work\\dsp-transactions-2026-10-15\\application.csv": "c700b1c425885b7bcdadf25fb8a63d80b860a58a8d7deb1c167db3e98229cc87",
+    "docs\\ic20-hle-findings\\chatGPT-work\\fast-command-neighbors-2026-10-15\\application.csv": "50a6e13692292e3b77f08e37b028938cae0d9fef61efee5daf4f939daf050f31",
+    "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d"
+  }
+}

@@ -1,0 +1,446 @@
+{
+  "schema_version": 1,
+  "rubric_version": "ic15-native-decoding-v1",
+  "date": "2026-10-16",
+  "target": "Roland S-760 IC15 boot ROM v1.11",
+  "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "score_name": "Boot-ROM functional-scope acceptance",
+  "rule": "Count passed gates divided by all defined gates. Equal binary acceptance gates; no partial credit and no inference about effort/time remaining. Open/blocked both score0. Not an overall OS/project or hardware-fidelity percentage.",
+  "scope_change_policy": "Freeze v1 paths and acceptance criteria. New independent functionality requires a versioned scope amendment and an explicit old/new denominator and baseline; new details within a path refine evidence without silently changing its gates. Never drop a failed path to improve score.",
+  "gates": [
+    "context",
+    "layout",
+    "behavior",
+    "execution"
+  ],
+  "gate_definitions": {
+    "context": "Justified entry/caller/gate and explicit fetch/data context under recorded conditions; conditional proof can pass, physical invocation is not implied.",
+    "layout": "Instruction/data boundaries, relevant widths and extents independently checked for the path.",
+    "behavior": "Inputs, outputs/state transitions and error/terminal behavior explained within the declared path scope.",
+    "execution": "Ordinary unchanged-firmware native execution validates the path acceptance condition; isolated component tests alone are insufficient."
+  },
+  "assumptions": [
+    {
+      "id": "ff-unused",
+      "bytes": 6490,
+      "status": "accepted_by_user",
+      "rule": "Presume remainingFF space unused unless contrary evidence appears. Preserve original bytes. Not a failing gate or verified code/data."
+    }
+  ],
+  "separate_unscored_requirements": [
+    "Physical power-on selector defaults, bus/interrupt timing and real hardware parity",
+    "Assembler/source generation, byte-exact rebuild and modified-firmware acceptance (Milestone7)",
+    "Full OS behavioral completion; its inventory/denominator is not yet established"
+  ],
+  "paths": [
+    {
+      "id": "reset",
+      "title": "Reset and startup selection",
+      "scope": "Native retained reset mapping, initialization and boot decision; physical power-on selectors excluded.",
+      "evidence": [
+        "docs/condensed/validation/ic15-root-and-hex-audit-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-handoff-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Reset/vector roots and retained fetch/data selectors documented."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Reset encodings, vectors and startup configuration accesses bounded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Initialization order and saved-device branches documented."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Unchanged ROM reaches startup and OS handoff with fresh native state."
+        }
+      }
+    },
+    {
+      "id": "floppy_load",
+      "title": "Successful floppy OS load",
+      "scope": "Header, complete payload and OS handoff from unchanged full-size floppy.",
+      "evidence": [
+        "docs/condensed/validation/ic15-byte6903-floppy-load-trace-2026-10-16.json",
+        "docs/condensed/validation/ic15-loader-recovery-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Loader caller and fetch/data contexts established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Header signature, payload extent, destinations and instruction boundaries documented."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Read sequence, density choice and handoff explained for accepted full media."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Native trace matches all112 payload transfers and handoff."
+        }
+      }
+    },
+    {
+      "id": "floppy_failure",
+      "title": "Floppy errors and recovery",
+      "scope": "Invalid signature, density/short-media handling and genuine transport-error/retry behavior.",
+      "evidence": [
+        "docs/condensed/validation/ic15-native-invalid-media-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-short-density-2026-10-16.json",
+        "docs/condensed/validation/ic15-loader-recovery-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Error-loop call sites and contexts established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Checks, status fields and recovery branches decoded."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Each error cause, retry transition and cleanup distinguished; genuine transport retry contract completed."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Represented transport error/retry and short-media behavior qualified without forcing guest state."
+        }
+      }
+    },
+    {
+      "id": "scsi_command",
+      "title": "SCSI command/header and fallback",
+      "scope": "Selection, counted CDB, header validation and absent/bad-header fallback; payload separate.",
+      "evidence": [
+        "docs/condensed/validation/ic15-native-scsi-command-contract-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-scsi-absent-fallback-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-scsi-bad-header-fallback-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Command/header callers and mapping contracts established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "CDB record widths, buffers and header checks bounded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Active/completion, timeout, signature rejection and fallback explained."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Ordinary menu input qualifies command transfers and absent/bad-header floppy fallback."
+        }
+      }
+    },
+    {
+      "id": "scsi_payload",
+      "title": "SCSI payload DMA completion",
+      "scope": "IC4 control47 count, completion interrupt and SCSI-to-OS handoff.",
+      "evidence": [
+        "docs/condensed/validation/ic15-native-scsi-valid-header-2026-10-16.json",
+        "docs/condensed/validation/ic15-scsi-records-and-transfer-2026-10-16.json",
+        "docs/condensed/validation/ic15-scsi-transport-validation-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "DMA interrupt delivery, vector selection and acknowledgment context established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "ROM DMA setup, count encodings and wait/handler instructions mapped."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Full-count extent, completion/acknowledgment and failure handling explained independently."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Original ROM loads full SCSI OS payload and reaches OS via ordinary input."
+        }
+      }
+    },
+    {
+      "id": "setup",
+      "title": "Front-panel setup menu",
+      "scope": "Five valid-state setup fields and ordinary control actions.",
+      "evidence": [
+        "docs/condensed/validation/ic15-native-menu-bounds-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-contrast-bounds-encoder-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-tv-bounds-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Setup entry gate and display/data contexts established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Field locations, labels and limits bounded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Selection, clamps, display updates and exit/save flow explained."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Ordinary input qualifies both limits of all five fields."
+        }
+      }
+    },
+    {
+      "id": "eeprom",
+      "title": "EEPROM persistence",
+      "scope": "64-word read/write/verify and setup persistence in native model.",
+      "evidence": [
+        "docs/condensed/validation/ic15-native-setup-eeprom-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-eeprom-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Read/write/save callers and mapping context established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Word count, serial operations and configuration layout bounded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Read, write, verification and configuration initialization flow explained."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Ordinary save, reread and fresh-process reboot preserve expected values."
+        }
+      }
+    },
+    {
+      "id": "display",
+      "title": "Boot display and referenced resources",
+      "scope": "ROM display transactions, glyph/bitmap addressing and setup output; physical timing excluded.",
+      "evidence": [
+        "docs/condensed/validation/ic15-display-resource-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-upload-2026-10-16.json",
+        "docs/condensed/validation/ic15-pixel-upload-contract-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "CRT/LCD entry sites and resource mapping established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Referenced text, glyph, bitmap bounds and transfer widths mapped."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Addressing, transaction order and geometry/count behavior documented for boot/setup."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Native upload/output transactions match original-ROM resource contracts."
+        }
+      }
+    },
+    {
+      "id": "audio",
+      "title": "Startup audio initialization",
+      "scope": "ROM table-driven initialization transactions; full audio-chip semantics excluded.",
+      "evidence": [
+        "docs/condensed/validation/ic15-native-audio-init-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Startup caller and data selectors established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "400-pair/coefficient resources and control words bounded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Exact write destinations, values and order explained."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Native trace matches2789 expected writes."
+        }
+      }
+    },
+    {
+      "id": "ram_diagnostic",
+      "title": "RAM self-test",
+      "scope": "4028 test, success/failure reporting and selector restoration.",
+      "evidence": [
+        "docs/condensed/validation/ic15-indirect-store-contracts-2026-10-16.json",
+        "docs/condensed/validation/ic15-residual-helpers-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Conditional startup gate and ROM fetch context documented; physical button identity unresolved."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "63-page test extent, patterns and progress resources bounded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Three-pattern comparisons, page alias checks and terminal outcomes explained."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Supported ordinary diagnostic input reaches test and qualifies success/failure behavior."
+        }
+      }
+    },
+    {
+      "id": "monitor",
+      "title": "Serial monitor and continuation",
+      "scope": "4000 ->01A0 manual frame, commands and g/G handoff.",
+      "evidence": [
+        "docs/condensed/validation/ic15-local-stack-balance-2026-10-16.json",
+        "docs/condensed/validation/ic15-stack-cpu-validation-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Conditional monitor gate, internal stack and bank restoration context documented."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Command paths and16-byte save/restore frame decoded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Read/write commands, input loop and g/G continuation explained."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Supported entry and serial input exercise original monitor commands and continuation."
+        }
+      }
+    },
+    {
+      "id": "fdc_irq",
+      "title": "FDC interrupt and boot stack",
+      "scope": "Native FDC interrupt routing, FIFO result drain and original-ROM stack accounting.",
+      "evidence": [
+        "docs/condensed/validation/ic15-native-stack-after-cpu-2026-10-16.json",
+        "docs/condensed/validation/ic15-native-stack-irq-reconciliation-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "passed",
+          "acceptance": "Observed level13/vector203A/target0120 and retained contexts documented."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "FIFO result/flag state and stack frames bounded."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Register/flag restoration and handoff caller word explained."
+        },
+        "execution": {
+          "status": "passed",
+          "acceptance": "Actual IRQ logs reconcile171 return-word writes and observed boot stack balance."
+        }
+      }
+    },
+    {
+      "id": "aux_irq",
+      "title": "Other low ROM interrupt stubs",
+      "scope": "Structural0124..013D/02E0 paths; not an assumption of real IC4 routing.",
+      "evidence": [
+        "docs/condensed/validation/ic15-decoding-2026-10-16.json",
+        "docs/condensed/validation/ic15-indirect-store-contracts-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Real source-to-vector delivery and mapping contracts established."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Stub and handler encodings, touched registers and branches mapped."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Static flag/port operations and local state changes explained conditionally."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Independent ordinary invocation validates delivery/acknowledgment for these sources."
+        }
+      }
+    },
+    {
+      "id": "residual_helpers",
+      "title": "Structural-only helper family",
+      "scope": "Uncalled fill, graphics, delay and EEPROM helper bodies.",
+      "evidence": [
+        "docs/condensed/validation/ic15-residual-helpers-2026-10-16.json",
+        "docs/condensed/validation/ic15-final-static-frontier-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Justified callers or supported alternate invocation contexts established for structural-only entries."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "Bounded helper encodings/data classified with original-byte evidence."
+        },
+        "behavior": {
+          "status": "passed",
+          "acceptance": "Documented arithmetic, loops, widths and side effects retain invocation qualifications."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Original firmware invokes representative remaining helper contracts via supported inputs."
+        }
+      }
+    },
+    {
+      "id": "resource_ownership",
+      "title": "Unreferenced resources and final byte",
+      "scope": "Dormant self-check strings, controller placeholder and6903 command-constant candidate.",
+      "evidence": [
+        "docs/condensed/validation/ic15-residual-text-classification-2026-10-16.json",
+        "docs/condensed/validation/ic15-residual-byte-history-2026-10-16.json"
+      ],
+      "gates": {
+        "context": {
+          "status": "open",
+          "acceptance": "Consumers/ownership or an explicitly accepted unused classification established for remaining resources."
+        },
+        "layout": {
+          "status": "passed",
+          "acceptance": "String bounds and final raw08 byte position independently recorded."
+        },
+        "behavior": {
+          "status": "open",
+          "acceptance": "Role or non-use established beyond observed-path absence; author intent not invented."
+        },
+        "execution": {
+          "status": "open",
+          "acceptance": "Relevant dormant consumer or accepted non-use contract validated; current negative traces alone do not close this."
+        }
+      }
+    }
+  ]
+}

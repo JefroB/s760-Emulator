@@ -1,0 +1,70 @@
+{
+  "command": [
+    "D:\\S-760\\mame-source\\mames760.exe",
+    "s760",
+    "-rompath",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-short-dma\\roms",
+    "-nvram_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-short-dma\\nvram",
+    "-cfg_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-short-dma\\cfg",
+    "-video",
+    "none",
+    "-sound",
+    "none",
+    "-skip_gameinfo",
+    "-nothrottle",
+    "-seconds_to_run",
+    "12",
+    "-autoboot_delay",
+    "0",
+    "-autoboot_script",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\short-density.lua",
+    "-log"
+  ],
+  "returncode": 0,
+  "identities": {
+    "D:\\S-760\\mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "D:\\S-760\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-short-dma\\roms\\s760\\s760224.img": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\short-density.lua": "bb38c45ae780b690d9ee52787e8b1405131db594dc7c2c7e3591522a65c96fda",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-short-dma\\roms\\s760\\short.img": "cf91aaa99cb1bbb7119afd6d8cba32b628e241d2cb833f7bfa8ae76a6112f58d"
+  },
+  "observer_source": "local cpu=manager.machine.devices[':maincpu']\nlocal space=cpu.spaces['program']\nhandoff_tap=space:install_write_tap(0x0106,0x0107,'rom-handoff-observer',function(a,d,m)\n print(string.format('[HANDOFF] pc=%04x value=%04x mask=%04x',cpu.state['PC'].value,d,m))\nend)\nlocal frames=0\nemu.register_frame_done(function()\n frames=frames+1\n if frames%60==0 then print(string.format('[BOOTSTATE] frame=%d pc=%04x fetch0106=%04x',frames,cpu.state['PC'].value,space:read_u16(0x0106))) end\nend)\n\ndensity_tap=space:install_read_tap(0xf002,0xf003,'density-observer',function(a,d,m)\nlocal pc=cpu.state['PC'].value\nif pc>=0x4e1a and pc<=0x4e4d then print(string.format('[DENSITY] pc=%04x value=%04x mask=%04x',pc,d,m)) end\nend)\n",
+  "dma_rows": [
+    {
+      "disk": 0,
+      "ram": 1034278,
+      "count": 512
+    },
+    {
+      "disk": 0,
+      "ram": 1034278,
+      "count": 512
+    }
+  ],
+  "matched_console": [
+    "[BOOTSTATE] frame=60 pc=486f fetch0106=07b0",
+    "[BOOTSTATE] frame=120 pc=2265 fetch0106=07b0",
+    "[BOOTSTATE] frame=180 pc=2265 fetch0106=07b0",
+    "[BOOTSTATE] frame=240 pc=4a5f fetch0106=07b0",
+    "[DENSITY] pc=4e1f value=00df mask=00ff",
+    "[DENSITY] pc=4e2c value=00db mask=00ff",
+    "[DENSITY] pc=4e45 value=00db mask=00ff",
+    "[BOOTSTATE] frame=300 pc=4a5f fetch0106=07b0",
+    "[HANDOFF] pc=4755 value=0000 mask=ffff",
+    "[BOOTSTATE] frame=360 pc=486b fetch0106=0000",
+    "[BOOTSTATE] frame=420 pc=226a fetch0106=0000",
+    "[BOOTSTATE] frame=480 pc=226a fetch0106=0000",
+    "[BOOTSTATE] frame=540 pc=4a5c fetch0106=0000",
+    "[DENSITY] pc=4e1f value=00df mask=00ff",
+    "[DENSITY] pc=4e2c value=00db mask=00ff",
+    "[DENSITY] pc=4e45 value=00db mask=00ff",
+    "[BOOTSTATE] frame=600 pc=4a5c fetch0106=0000",
+    "[HANDOFF] pc=4755 value=0000 mask=ffff",
+    "[BOOTSTATE] frame=660 pc=3a35 fetch0106=0000",
+    "[BOOTSTATE] frame=720 pc=2265 fetch0106=0000"
+  ],
+  "qualification": "Ordinary native boot with existing read-only FDC trace and passthrough observer; no forced guest state. Selected media is private720KB truncation for short case, otherwise unchanged original. DMA rows describe current device model, not physical timing."
+}

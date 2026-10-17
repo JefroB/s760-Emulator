@@ -7,7 +7,7 @@ $repo = (Resolve-Path "$PSScriptRoot/..").Path
 $output = [IO.Path]::GetFullPath($OutputDirectory)
 if ($Release) {
     & python "$repo/scripts/s760_package_audit.py" --repo $repo --package "$output/dist/S760Studio" --require-release
-    if ($LASTEXITCODE -ne 0) { throw 'Package does not match the reviewed distribution. See docs/DISTRIBUTION_QUALIFICATION.md.' }
+    if ($LASTEXITCODE -ne 0) { throw 'Package does not match the reviewed distribution. See docs/testing/distribution-qualification.md.' }
     Write-Output "Verified reviewed standalone distribution: $output/dist/S760Studio"
     return
 }
@@ -44,18 +44,7 @@ try {
     if (Test-Path -LiteralPath "$repo/LICENSE") {
         Copy-Item -LiteralPath "$repo/LICENSE" -Destination "$package/LICENSE.txt"
     }
-    Copy-Item -LiteralPath "$repo/docs/STANDALONE_PLAYER.md" -Destination "$package/README.md"
-    Copy-Item -LiteralPath "$repo/docs/COMPLETION_ROADMAP.md" -Destination "$package/COMPLETION_ROADMAP.md"
-    Copy-Item -LiteralPath "$repo/docs/NATIVE_FIRMWARE_STATUS.md" -Destination "$package/NATIVE_FIRMWARE_STATUS.md"
-    Copy-Item -LiteralPath "$repo/docs/NATIVE_SESSIONS.md" -Destination "$package/NATIVE_SESSIONS.md"
-    Copy-Item -LiteralPath "$repo/docs/NATIVE_CHECKPOINTS.md" -Destination "$package/NATIVE_CHECKPOINTS.md"
-    Copy-Item -LiteralPath "$repo/docs/NATIVE_BOUNDARY_QUALIFICATION.md" -Destination "$package/NATIVE_BOUNDARY_QUALIFICATION.md"
-    New-Item -ItemType Directory -Path "$package/condensed/validation" -Force | Out-Null
-    Copy-Item -LiteralPath "$repo/docs/condensed/validation/native-readiness-2026-10-11.json" -Destination "$package/condensed/validation/"
-    Copy-Item -LiteralPath "$repo/docs/condensed/validation/native-session-2026-10-11.json" -Destination "$package/condensed/validation/"
-    Copy-Item -LiteralPath "$repo/docs/condensed/validation/standalone-asio-2026-10-12.json" -Destination "$package/condensed/validation/"
-    Copy-Item -LiteralPath "$repo/docs/condensed/validation/standalone-midi-sustained-2026-10-12.json" -Destination "$package/condensed/validation/"
-    Copy-Item -LiteralPath "$repo/docs/condensed/validation/standalone-audio-devices-2026-10-12.json" -Destination "$package/condensed/validation/"
+    Copy-Item -LiteralPath "$repo/docs/emulator/guides/standalone-package-readme.md" -Destination "$package/README.md"
     & python "$repo/scripts/s760_distribution_inventory.py" --package $package --build "$output/build/S760Studio" --external-windows-runtime
     if ($LASTEXITCODE -ne 0) { throw 'Bundled input inventory failed' }
     & python "$repo/scripts/s760_package_audit.py" --repo $repo --package $package --prepare

@@ -2,7 +2,7 @@
 
 The test writes only to a new --state-dir, uses ports4000 and --debug-port,
 starts/stops its own hidden hosts, and keeps proprietary captures/state private.
-See docs/NATIVE_PLUGIN_STATE.md for supported limits and the QA host patch.
+See docs/emulator/runtime/native-plugin-state.md for supported limits and the QA host patch.
 """
 import asyncio,json,os,subprocess,time,base64,hashlib
 

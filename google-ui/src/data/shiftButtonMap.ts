@@ -3,7 +3,7 @@
  *
  * This module is the typed, build-time source of truth the React UI imports to
  * render dedicated SHIFT buttons. It mirrors the human-readable canonical
- * document `docs/front-panel-button-mapping.md`.
+ * document `docs/hardware/front-panel-button-mapping.md`.
  *
  * GOLDEN RULE — evidence over invention (project steering): the real-hardware
  * front-panel button layout and its SHIFT (secondary) function mapping are NOT

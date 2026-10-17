@@ -1,0 +1,365 @@
+{
+  "date": "2026-10-15",
+  "flag": "S760_NATIVE_SOURCE_CANDIDATE",
+  "default": "off",
+  "disabled_path": [
+    {
+      "note": 60,
+      "frames": 308700,
+      "pcm_sha256": "8d121311338646564aebcde83b533cf6839c7984468d5bdaebce052e1406ebed",
+      "bit_identical": true
+    },
+    {
+      "note": 72,
+      "frames": 308700,
+      "pcm_sha256": "b9853fe54efa37c04283279bc8e08f19f5ae5d2cc7cd9f3fc0de9b8e5dcbbd39",
+      "bit_identical": true
+    },
+    {
+      "note": 73,
+      "frames": 308700,
+      "pcm_sha256": "db40819a3ef8883d449a43b5ebfa654a8d8c1630f17ca4b1f61de6545954ba58",
+      "bit_identical": true
+    },
+    {
+      "note": 77,
+      "frames": 308700,
+      "pcm_sha256": "4b0ed5a95950a46f9044ed0e7c64eb4028faac191582d32f3a969b9b39de5f8e",
+      "bit_identical": true
+    },
+    {
+      "note": 83,
+      "frames": 308700,
+      "pcm_sha256": "fe764409b2268a1c30316c4f0ab6cf4765179ac33bde4785473235694efcc84c",
+      "bit_identical": true
+    }
+  ],
+  "enabled_replay": [
+    {
+      "note": 60,
+      "pitch_word": 16384,
+      "source_start_frame": 7042,
+      "gain": 0.028292573980308856,
+      "candidate_replay_relative_rms": 5.0400956946260615e-08
+    },
+    {
+      "note": 72,
+      "pitch_word": 32768,
+      "source_start_frame": 7042,
+      "gain": 0.028292574004024285,
+      "candidate_replay_relative_rms": 4.973295571364115e-08
+    },
+    {
+      "note": 73,
+      "pitch_word": 34716,
+      "source_start_frame": 7042,
+      "gain": 0.028292573987398834,
+      "candidate_replay_relative_rms": 5.005482781275063e-08
+    },
+    {
+      "note": 77,
+      "pitch_word": 43740,
+      "source_start_frame": 7041,
+      "gain": 0.02829257398650024,
+      "candidate_replay_relative_rms": 4.96461300814938e-08
+    },
+    {
+      "note": 83,
+      "pitch_word": 61857,
+      "source_start_frame": 7041,
+      "gain": 0.02829257397541277,
+      "candidate_replay_relative_rms": 5.040843913507427e-08
+    }
+  ],
+  "control_trace_identical": true,
+  "limits": [
+    "Diagnostic opt-in forward-loop source model only; no filter equation or cutoff timing change.",
+    "Cross-build exact comparison used private native raw-state transport; normal managed identity guard was asserted to reject and remains unchanged. Not supported checkpoint migration.",
+    "Enabled source matches the offline model; hardware acceptance retains the offline training/evaluation and capture-alignment limitations."
+  ],
+  "hashes": {
+    "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-native-source-2026-10-15\\mames760-before-source.exe": "0b6d0d9bcc133dca21b44b20e000f3a3abd00f1afa8097374b4c09016d99e920",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "c6bc26b40458577682d6978cb6f94cefc3e0437ae0e00a93b01691e046da1ed5",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-native-source-2026-10-15\\new-on\\capture.json": "cba3421464973e080d8dc933f6b274f08b0ab652b36b1237b40b9bbacc25d03e",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-native-source-2026-10-15\\new-on\\application.csv": "d698b665d86a5840950f968f83605087b633fdb8c81fee942e83a925e9007265",
+    "docs\\ic20-hle-findings\\chatGPT-work\\modulation-native-source-2026-10-15\\raw-new-off\\capture.json": "63b6b8a380819d84720527779cb7358d49cf46baed20d95e9b4f815e05efbb55",
+    "docs\\condensed\\validation\\modulation-native-source-hardware-2026-10-15.json": "5cef17655fc65dbbbfe8b2b7ec0967f217eaf9913af6f435f3da495d60c48a45"
+  },
+  "regressions": {
+    "backend_passed": 404,
+    "backend_skipped": 0,
+    "core_suite": "passed",
+    "plugin_suite": "passed",
+    "native_bus_trace_pcm_frames_exact": 131072,
+    "native_displays_exact": true
+  },
+  "static_recheck": [
+    {
+      "mode": "BP",
+      "cutoff": 428,
+      "damping": 85,
+      "training": [
+        {
+          "start": 1.0,
+          "end": 1.5,
+          "center": 1.25,
+          "phase": 3138.3275782676355
+        },
+        {
+          "start": 1.3,
+          "end": 1.8,
+          "center": 1.55,
+          "phase": 3138.328238008413
+        },
+        {
+          "start": 1.6,
+          "end": 2.1,
+          "center": 1.85,
+          "phase": 3138.3265058880206
+        },
+        {
+          "start": 1.9,
+          "end": 2.4,
+          "center": 2.15,
+          "phase": 3138.3229780226975
+        }
+      ],
+      "gain": 0.9997405678404846,
+      "phase_slope": -0.005177618402581901,
+      "heldout_correlation": 0.9999996864978555,
+      "heldout_rms_error_percent": 0.0792437761520853
+    },
+    {
+      "mode": "HP",
+      "cutoff": 428,
+      "damping": 85,
+      "training": [
+        {
+          "start": 1.0,
+          "end": 1.5,
+          "center": 1.25,
+          "phase": 3140.583700749303
+        },
+        {
+          "start": 1.3,
+          "end": 1.8,
+          "center": 1.55,
+          "phase": 3140.5806604406243
+        },
+        {
+          "start": 1.6,
+          "end": 2.1,
+          "center": 1.85,
+          "phase": 3140.5776651403867
+        },
+        {
+          "start": 1.9,
+          "end": 2.4,
+          "center": 2.15,
+          "phase": 3140.5746027631394
+        }
+      ],
+      "gain": 0.9996662082490966,
+      "phase_slope": -0.010096419576897898,
+      "heldout_correlation": 0.9999994585343163,
+      "heldout_rms_error_percent": 0.1040800007936581
+    }
+  ],
+  "resonant_numerical_recheck": {
+    "results": [
+      {
+        "level": "quiet",
+        "interpolation": "linear",
+        "parameters": [
+          0.9204073451926751,
+          1543.8272186849354,
+          1.002076479650362
+        ],
+        "train": {
+          "correlation": 0.9788513502948231,
+          "relative_error_db": -13.781216036975014
+        },
+        "heldout": {
+          "correlation": 0.9843445995331541,
+          "relative_error_db": -15.076457655916013
+        }
+      },
+      {
+        "level": "quiet",
+        "interpolation": "fourier",
+        "parameters": [
+          0.9196304429477038,
+          1543.8282442213608,
+          1.0022552427738631
+        ],
+        "train": {
+          "correlation": 0.9794537367117487,
+          "relative_error_db": -13.858815635055677
+        },
+        "heldout": {
+          "correlation": 0.9839319686556247,
+          "relative_error_db": -14.944007226972225
+        }
+      },
+      {
+        "level": "repeat",
+        "interpolation": "linear",
+        "parameters": [
+          0.38485752516003024,
+          1795.1077543793588,
+          1.0004806961978778
+        ],
+        "train": {
+          "correlation": 0.9821647605686415,
+          "relative_error_db": -14.51492036478686
+        },
+        "heldout": {
+          "correlation": 0.9828447175782691,
+          "relative_error_db": -14.682849524552182
+        }
+      },
+      {
+        "level": "repeat",
+        "interpolation": "fourier",
+        "parameters": [
+          0.3847621530529324,
+          1795.116175182844,
+          1.0005049176519232
+        ],
+        "train": {
+          "correlation": 0.9826327626848784,
+          "relative_error_db": -14.585624125506415
+        },
+        "heldout": {
+          "correlation": 0.9838352643778273,
+          "relative_error_db": -14.876260702477369
+        }
+      }
+    ],
+    "limits": "Accepted quiet/repeat captures; fixed85/unity gain, original inferred coefficient trace; no native changes"
+  },
+  "enabled_trace_hardware_prediction": {
+    "date": "2026-10-15",
+    "bug": "BUG-005",
+    "status": "Diagnostic per-recording constant alignment; not acceptance",
+    "band_hz": [
+      30,
+      1500
+    ],
+    "training_seconds": [
+      0.2,
+      1.2
+    ],
+    "evaluation_seconds": [
+      1.5,
+      2.7
+    ],
+    "calibration": {
+      "model": "cubic",
+      "start_source_offset": 1,
+      "clock_ratio": 1.0000215,
+      "band_hz": [
+        30,
+        1500
+      ],
+      "delay_frames_48k": 13.28495598759455,
+      "gain": 0.1657794548169962,
+      "training_relative_rms": 0.0761302185472777,
+      "evaluation_relative_rms": 0.0758658649357781
+    },
+    "rows": [
+      {
+        "note": 60,
+        "pitch_word": 16384,
+        "models": [
+          {
+            "model": "cubic",
+            "source_offset": 1,
+            "frozen_bypass_alignment_evaluation_error": 1.1899568801812508,
+            "diagnostic_delay_frames_48k": -1.9731547796080078,
+            "diagnostic_delay_ms": -0.0411073912418335,
+            "training_error_fixed_gain": 0.0634057457884401,
+            "evaluation_error_fixed_gain": 0.04236377073271422,
+            "training_gain_ratio_to_bypass": 1.0051474319101077,
+            "evaluation_error_training_gain": 0.042164201872788694
+          }
+        ]
+      },
+      {
+        "note": 72,
+        "pitch_word": 32768,
+        "models": [
+          {
+            "model": "cubic",
+            "source_offset": 1,
+            "frozen_bypass_alignment_evaluation_error": 1.4417224711716923,
+            "diagnostic_delay_frames_48k": -324.96287016918365,
+            "diagnostic_delay_ms": -6.770059795191326,
+            "training_error_fixed_gain": 0.04965031939507007,
+            "evaluation_error_fixed_gain": 0.060848479894411465,
+            "training_gain_ratio_to_bypass": 1.000097556415428,
+            "evaluation_error_training_gain": 0.060830307472846186
+          }
+        ]
+      },
+      {
+        "note": 73,
+        "pitch_word": 34716,
+        "models": [
+          {
+            "model": "cubic",
+            "source_offset": 1,
+            "frozen_bypass_alignment_evaluation_error": 0.8476564818301107,
+            "diagnostic_delay_frames_48k": 24.930638367535984,
+            "diagnostic_delay_ms": 0.5193882993236663,
+            "training_error_fixed_gain": 0.04251827936401729,
+            "evaluation_error_fixed_gain": 0.04680646102943705,
+            "training_gain_ratio_to_bypass": 1.0128206064939231,
+            "evaluation_error_training_gain": 0.04593534693671581
+          }
+        ]
+      },
+      {
+        "note": 77,
+        "pitch_word": 43740,
+        "models": [
+          {
+            "model": "cubic",
+            "source_offset": 1,
+            "frozen_bypass_alignment_evaluation_error": 1.373317251950966,
+            "diagnostic_delay_frames_48k": -273.49599309213176,
+            "diagnostic_delay_ms": -5.697833189419412,
+            "training_error_fixed_gain": 0.06912416666657,
+            "evaluation_error_fixed_gain": 0.0567486456035188,
+            "training_gain_ratio_to_bypass": 1.004374408837542,
+            "evaluation_error_training_gain": 0.056370106780813264
+          }
+        ]
+      },
+      {
+        "note": 83,
+        "pitch_word": 61857,
+        "models": [
+          {
+            "model": "cubic",
+            "source_offset": 1,
+            "frozen_bypass_alignment_evaluation_error": 1.4133774950588813,
+            "diagnostic_delay_frames_48k": 144.09394181602,
+            "diagnostic_delay_ms": 3.0019571211670835,
+            "training_error_fixed_gain": 0.08715994446938365,
+            "evaluation_error_fixed_gain": 0.07625868656635147,
+            "training_gain_ratio_to_bypass": 1.0031930843894028,
+            "evaluation_error_training_gain": 0.07613996105679574
+          }
+        ]
+      }
+    ],
+    "limits": [
+      "Per-recording delay fitted only on training window; cannot distinguish recording origin from physical signal-path latency.",
+      "No envelope time warp, cutoff shift or filter coefficient fitting.",
+      "Both source models use identical bypass gain and clock, unlike earlier separately calibrated model rankings.",
+      "Not independent-session hardware validation. No runtime behavior change."
+    ]
+  }
+}

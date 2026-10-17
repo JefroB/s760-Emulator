@@ -30,8 +30,8 @@ test.beforeEach(async ({page}) => {
 test('composed shell mounts the chassis chrome and the Gotek drive bay', async ({
   page,
 }) => {
-  // Two rack ears == a mounted 1U chassis (RackEar carries the "1U" marker).
-  await expect(page.getByText('1U')).toHaveCount(2);
+  await expect(page.getByLabel('left rack ear', {exact: true})).toBeVisible();
+  await expect(page.getByLabel('right rack ear', {exact: true})).toBeVisible();
   // Hardware silkscreen model block identifies the real chassis.
   await expect(page.getByText('DIGITAL SAMPLER')).toBeVisible();
   // The Gotek drive bay badge is unique to the React GotekBay chrome.

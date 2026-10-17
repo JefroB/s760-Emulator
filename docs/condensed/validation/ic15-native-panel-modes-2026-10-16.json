@@ -1,0 +1,446 @@
+{
+  "identities": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "mame-source/mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\panel.lua": "de6053669ff7ca459e4a28bfd53f5d055f7194d7e2ac58e42b51a9bc397980a4"
+  },
+  "qualification": "Ordinary native ROM boots with configurable virtual board high bits, no held keys or gueststateforcing. Read taps returnno replacementvalue; snapshotsreadRAMandsafe selector. Eachrunprivatefreshstate,unthrottled2seconds. Four modecasesqualifiedforthisbinary;physicaloptionboards,timing,fullbootandmenueditingremainopen. KnownSED1330/WMI/XInputwarningspersist.",
+  "observer_source": "local cpu=manager.machine.devices[':maincpu']\nlocal space=cpu.spaces['program']\nlocal seen=0\npanel_tap=space:install_read_tap(0xf00a,0xf00b,'rom-panel-observer',function(a,d,m)\n if seen<20 then print(string.format('[PANELOBS] pc=%04x value=%02x',cpu.state['PC'].value,d&255)) end\n seen=seen+1\nend)\nlocal frames=0\nemu.register_frame_done(function()\n frames=frames+1\n if frames<=4 then\n  print(string.format('[PANELSTATE] frame=%d selector010a=%04x latches=%02x,%02x,%02x,%02x display=%02x setup=%02x',frames,space:read_u16(0x010a),space:read_u8(0x4d2b),space:read_u8(0x4d2c),space:read_u8(0x4d2d),space:read_u8(0x4d2e),space:read_u8(0x4d2f),space:read_u8(0x4d34)))\n end\nend)\n",
+  "failed_attempts": [
+    "Initial16-bit tapendF00A rejected;correctendF00B.",
+    "Initialmame.register_frame_done globalabsent;correctlocal APIemu.register_frame_done. Failedrunsprovidednoacceptanceevidence."
+  ],
+  "runs": [
+    {
+      "board_config": "00",
+      "first_four_reads": [
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        }
+      ],
+      "frame4": {
+        "data010a": 1008,
+        "latches": [
+          192,
+          192,
+          192,
+          192
+        ],
+        "display": 1,
+        "setup": 1
+      },
+      "observed_read_rows": [
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        },
+        {
+          "pc": 15481,
+          "value": 63
+        }
+      ],
+      "command": [
+        "D:\\S-760\\mame-source\\mames760.exe",
+        "s760",
+        "-rompath",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-3\\roms",
+        "-nvram_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-3\\nvram",
+        "-cfg_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-3\\cfg",
+        "-video",
+        "none",
+        "-sound",
+        "none",
+        "-skip_gameinfo",
+        "-nothrottle",
+        "-seconds_to_run",
+        "2",
+        "-autoboot_delay",
+        "0",
+        "-autoboot_script",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\panel.lua"
+      ],
+      "console_sha256": "8b253fe2441188a03f5df2f9b278c72707f24c6b228df5b98e183440429e697f",
+      "staged_os_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    },
+    {
+      "board_config": "40",
+      "first_four_reads": [
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        }
+      ],
+      "frame4": {
+        "data010a": 1008,
+        "latches": [
+          128,
+          128,
+          128,
+          128
+        ],
+        "display": 1,
+        "setup": 2
+      },
+      "observed_read_rows": [
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        },
+        {
+          "pc": 15481,
+          "value": 127
+        }
+      ],
+      "command": [
+        "D:\\S-760\\mame-source\\mames760.exe",
+        "s760",
+        "-rompath",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-40\\roms",
+        "-nvram_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-40\\nvram",
+        "-cfg_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-40\\cfg",
+        "-video",
+        "none",
+        "-sound",
+        "none",
+        "-skip_gameinfo",
+        "-nothrottle",
+        "-seconds_to_run",
+        "2",
+        "-autoboot_delay",
+        "0",
+        "-autoboot_script",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\panel.lua"
+      ],
+      "console_sha256": "f4abb1fb4dd2100376ac72b30aadec37cefe0cded10e93177fadfd7d8326a07b",
+      "staged_os_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    },
+    {
+      "board_config": "80",
+      "first_four_reads": [
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        }
+      ],
+      "frame4": {
+        "data010a": 1008,
+        "latches": [
+          64,
+          64,
+          64,
+          64
+        ],
+        "display": 0,
+        "setup": 0
+      },
+      "observed_read_rows": [
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        },
+        {
+          "pc": 15481,
+          "value": 191
+        }
+      ],
+      "command": [
+        "D:\\S-760\\mame-source\\mames760.exe",
+        "s760",
+        "-rompath",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-80\\roms",
+        "-nvram_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-80\\nvram",
+        "-cfg_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-80\\cfg",
+        "-video",
+        "none",
+        "-sound",
+        "none",
+        "-skip_gameinfo",
+        "-nothrottle",
+        "-seconds_to_run",
+        "2",
+        "-autoboot_delay",
+        "0",
+        "-autoboot_script",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\panel.lua"
+      ],
+      "console_sha256": "2358a7e068e24b3ddda69676789f25c2d7e3076f57cfbc9bef05be2d26cfeff6",
+      "staged_os_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    },
+    {
+      "board_config": "c0",
+      "first_four_reads": [
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        }
+      ],
+      "frame4": {
+        "data010a": 1008,
+        "latches": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "display": 0,
+        "setup": 0
+      },
+      "observed_read_rows": [
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        },
+        {
+          "pc": 15481,
+          "value": 255
+        }
+      ],
+      "command": [
+        "D:\\S-760\\mame-source\\mames760.exe",
+        "s760",
+        "-rompath",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-c0\\roms",
+        "-nvram_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-c0\\nvram",
+        "-cfg_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\native-panel-c0\\cfg",
+        "-video",
+        "none",
+        "-sound",
+        "none",
+        "-skip_gameinfo",
+        "-nothrottle",
+        "-seconds_to_run",
+        "2",
+        "-autoboot_delay",
+        "0",
+        "-autoboot_script",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\os-postprocess-2026-10-16\\panel.lua"
+      ],
+      "console_sha256": "38e7e1dbb2e1f9e7fa1311a18304c3f17335e6fd611a9ce7ec0de850a038fab8",
+      "staged_os_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    }
+  ],
+  "environment_common": {
+    "S760_ROM_BOOT": "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN",
+    "S760_FLOPPY": "Eachrunprivate roms/s760/s760224.img",
+    "inherited_S760_variables": "cleared",
+    "S760_F00A": "00baselineunset;othercases40,80,c0"
+  }
+}

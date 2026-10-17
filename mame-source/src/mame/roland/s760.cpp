@@ -1034,6 +1034,12 @@ public:
 	bool m_native_midi_experiment = false;
 	bool m_native_midi_pending = false;
 	u8 m_native_midi_byte = 0;
+	static constexpr size_t NATIVE_MIDI_FIFO_SIZE = 64;
+	u8 m_native_midi_fifo[NATIVE_MIDI_FIFO_SIZE]{};
+	u32 m_native_midi_fifo_head = 0;
+	u32 m_native_midi_fifo_tail = 0;
+	u32 m_native_midi_fifo_count = 0;
+	bool m_native_scsi_dma_pending = false;
 
 	// IRQ Sources handled by Gate Array (0xF001)
 	enum irq_source : uint8_t
@@ -1094,6 +1100,13 @@ private:
 	// with the envelope words. Keep full control bits; no DSP law inferred.
 	std::array<u16, 4> m_native_filter_bus{};
 	std::array<u16, 32 * 4> m_native_filter_words{};
+	// Diagnostic software-counted LP transition, not decoded ASIC semantics.
+	bool m_native_cutoff_ramp_candidate = false;
+	unsigned m_native_cutoff_ramp_samples = 882;
+	bool m_native_cutoff_round_increment = false;
+	u16 m_native_cutoff_control = 0, m_native_cutoff_initial_bus = 0;
+	std::array<double, 32> m_native_cutoff_current{}, m_native_cutoff_target{}, m_native_cutoff_step{};
+	std::array<u16, 32> m_native_cutoff_remaining{};
 	void native_filter_w(offs_t offset, u8 data);
 	// Finding80: global voice bitmap, independent of selector101040.
 	std::array<u16, 2> m_native_filter_activity_bus{};
@@ -1109,6 +1122,23 @@ private:
 	u8 m_native_wave_parameter_select = 0, m_native_wave_aux_select = 0;
 	u8 m_native_wave_control_select = 0;
 	bool m_native_sound_trace = false;
+	// Opt-in, bounded read-only diagnostics. Flush at exit, never from audio.
+	struct modulation_trace_row
+	{
+		char kind;
+		u64 frame, cycles;
+		double seconds;
+		unsigned channel, reg;
+		std::array<u16, 4> words;
+		double position, input, low, band, render_c;
+	};
+	std::vector<modulation_trace_row> m_modulation_trace;
+	std::string m_modulation_trace_path;
+	u64 m_modulation_trace_dropped = 0;
+	bool m_modulation_trace_enabled = false;
+	void modulation_trace_add(char kind, u64 frame, unsigned channel, unsigned reg,
+		double position = 0, double input = 0, double low = 0, double band = 0, double render_c = -1);
+	void modulation_trace_flush();
 	bool m_native_wave_monitor = false;
 	bool m_native_envelope_monitor = false;
 	bool m_native_stereo_monitor = false;
@@ -1116,6 +1146,7 @@ private:
 	bool m_native_loop_monitor = false;
 	bool m_native_half_interpolation_monitor = false;
 	bool m_native_interpolation_monitor = false;
+	bool m_native_source_candidate = false;
 	std::array<bool, 32> m_native_wave_reverse{}, m_native_wave_stopped{};
 	u32 m_native_wave_end_pending = 0;
 	u8 m_native_wave_end_slot = 0;
@@ -1437,6 +1468,17 @@ void s760_state::machine_start()
 	save_item(NAME(m_native_envelope_select));
 	save_item(NAME(m_native_filter_bus));
 	save_item(NAME(m_native_filter_words));
+	// Keep the default native save registry compatible with the prior build.
+	// Experimental ramp sessions require the same opt-in profile on restore.
+	if (getenv("S760_NATIVE_CUTOFF_RAMP_CANDIDATE") != nullptr)
+	{
+		save_item(NAME(m_native_cutoff_control));
+		save_item(NAME(m_native_cutoff_initial_bus));
+		save_item(NAME(m_native_cutoff_current));
+		save_item(NAME(m_native_cutoff_target));
+		save_item(NAME(m_native_cutoff_step));
+		save_item(NAME(m_native_cutoff_remaining));
+	}
 	save_item(NAME(m_native_lpf_low));
 	save_item(NAME(m_native_lpf_band));
 	save_item(NAME(m_native_filter_activity_bus));
@@ -1483,13 +1525,39 @@ void s760_state::machine_start()
 	set_rcv_rate(31250);
 	save_item(NAME(m_native_midi_pending));
 	save_item(NAME(m_native_midi_byte));
+	save_item(NAME(m_native_midi_fifo));
+	save_item(NAME(m_native_midi_fifo_head));
+	save_item(NAME(m_native_midi_fifo_tail));
+	save_item(NAME(m_native_midi_fifo_count));
 	m_native_wave_monitor = m_banked_os && getenv("S760_NATIVE_WAVE_MONITOR") != nullptr;
 	m_native_envelope_monitor = m_banked_os && getenv("S760_NATIVE_ENVELOPE_MONITOR") != nullptr;
 	m_native_stereo_monitor = m_banked_os && getenv("S760_NATIVE_STEREO_MONITOR") != nullptr;
 	m_native_lpf_monitor = m_banked_os && getenv("S760_NATIVE_LPF_MONITOR") != nullptr;
+	if (m_banked_os)
+		if (const char *path = getenv("S760_MODULATION_TRACE"))
+		{
+			m_modulation_trace_path = path;
+			m_modulation_trace_enabled = !m_modulation_trace_path.empty();
+			if (m_modulation_trace_enabled)
+			{
+				m_modulation_trace.reserve(32768);
+				machine().add_notifier(MACHINE_NOTIFY_EXIT,
+					machine_notify_delegate(&s760_state::modulation_trace_flush, this));
+			}
+		}
 	m_native_loop_monitor = m_banked_os && getenv("S760_NATIVE_LOOP_MONITOR") != nullptr;
 	m_native_half_interpolation_monitor = m_banked_os && getenv("S760_NATIVE_HALF_INTERPOLATION_MONITOR") != nullptr;
 	m_native_interpolation_monitor = m_banked_os && getenv("S760_NATIVE_INTERPOLATION_MONITOR") != nullptr;
+	m_native_source_candidate = m_native_interpolation_monitor && getenv("S760_NATIVE_SOURCE_CANDIDATE") != nullptr;
+	m_native_cutoff_ramp_candidate = m_native_lpf_monitor && getenv("S760_NATIVE_CUTOFF_RAMP_CANDIDATE") != nullptr;
+	// Separate opt-in trial: nearest native sample to the frozen 10.844412ms model.
+	const bool short_rounded = getenv("S760_NATIVE_CUTOFF_SHORT_ROUNDED_CANDIDATE") != nullptr;
+	if (m_native_lpf_monitor && (getenv("S760_NATIVE_CUTOFF_SHORT_CANDIDATE") != nullptr || short_rounded))
+	{
+		m_native_cutoff_ramp_candidate = true;
+		m_native_cutoff_ramp_samples = 478;
+		m_native_cutoff_round_increment = short_rounded;
+	}
 	m_native_half_interpolation_monitor |= m_native_interpolation_monitor;
 	m_native_loop_monitor |= m_native_half_interpolation_monitor;
 	m_native_envelope_monitor |= m_native_stereo_monitor || m_native_lpf_monitor || m_native_loop_monitor;
@@ -1947,6 +2015,7 @@ void s760_state::machine_start()
 	save_item(NAME(m_irq_pending));
 	save_item(NAME(m_irq_mask));
 	save_item(NAME(m_int_line_asserted));
+	save_item(NAME(m_native_scsi_dma_pending));
 	save_item(NAME(m_mmio));
 	save_item(NAME(m_ga_ctrl));
 	save_item(NAME(m_ga_status));
@@ -2127,36 +2196,60 @@ u32 s760_state::banked_address(u16 address, bool fetch) const
 
 u8 s760_state::banked_r(offs_t address)
 {
-	if (m_native_midi_experiment)
+	if (m_banked_os && address == 0x203a
+		&& banked_physical_r(banked_address(0x203a, false)) == 0x20
+		&& banked_physical_r(banked_address(0x203b, false)) == 0x01)
 	{
-		// Experimental IC4 source2 route: OS stub0128 enters CBCF, reads
-		// C002 (slot in bits0..4, completion in bit5), and reads C016 to ack.
-		if (address == 0x203a && m_native_loop_monitor && m_native_wave_end_pending
-			&& BIT(m_bank_regs[0x15], 2)
-			&& !((m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0))
-			&& banked_physical_r(banked_address(0x203a, false)) == 0x20
-			&& banked_physical_r(banked_address(0x203b, false)) == 0x01)
+		// Natural IC4 priority arbitration: Source 0 (FDC) > Source 2 (Wave) > Source 4 (SCSI) > Source 6 (MIDI).
+		if ((m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0))
+		{
+			return 0x20;
+		}
+		if (m_native_midi_experiment && m_native_loop_monitor && m_native_wave_end_pending
+			&& BIT(m_bank_regs[0x15], 2))
+		{
 			return 0x28;
-		// Opt-in IC4 hypothesis: source6 selects stub0138 when reading the
-		// external vector. Do not modify guest RAM or CPU execution state.
-		// Concurrent-source priority and vector latching remain unverified.
-		if (address == 0x203a && m_native_midi_pending && BIT(m_bank_regs[0x15], 6)
-			&& !((m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0))
-			&& banked_physical_r(banked_address(0x203a, false)) == 0x20
-			&& banked_physical_r(banked_address(0x203b, false)) == 0x01)
+		}
+		if (m_native_scsi_dma_pending && BIT(m_bank_regs[0x15], 4))
+		{
+			if (!machine().side_effects_disabled())
+			{
+				m_native_scsi_dma_pending = false;
+				check_irq_state();
+				logerror("[IC4SCSIDMA] vector response=0130\n");
+			}
+			return 0x30;
+		}
+		if (m_native_midi_experiment && m_native_midi_pending && BIT(m_bank_regs[0x15], 6))
 		{
 			if (!machine().side_effects_disabled()) logerror("[IC4MIDI] vector response=0138\n");
 			return 0x38;
 		}
+	}
+	if (m_native_midi_experiment)
+	{
 		if (address == 0x114) return (m_bank_regs[0x14] & 0xfe) | (m_native_midi_pending ? 1 : 0);
 		if (address == 0x116)
 		{
 			const u8 value = m_native_midi_byte;
 			if (!machine().side_effects_disabled())
 			{
-				m_native_midi_pending = false;
+				if (m_native_midi_fifo_count > 0)
+				{
+					m_native_midi_fifo_head = (m_native_midi_fifo_head + 1) % NATIVE_MIDI_FIFO_SIZE;
+					--m_native_midi_fifo_count;
+				}
+				m_native_midi_pending = (m_native_midi_fifo_count > 0);
+				if (m_native_midi_pending)
+					m_native_midi_byte = m_native_midi_fifo[m_native_midi_fifo_head];
+
+				if (m_int_line_asserted)
+				{
+					m_int_line_asserted = false;
+					m_maincpu->set_input_line(i8x9x_device::EXTINT_LINE, CLEAR_LINE);
+				}
 				check_irq_state();
-				logerror("[IC4MIDI] read=%02x PC=%04x\n", value, m_maincpu->pc());
+				logerror("[IC4MIDI] read=%02x remaining=%u PC=%04x\n", value, m_native_midi_fifo_count, m_maincpu->pc());
 			}
 			return value;
 		}
@@ -2179,7 +2272,8 @@ void s760_state::banked_w(offs_t address, u8 data)
 			// Like the observed wave DMA modes below, this bounded transfer is
 			// synchronous; it does not establish physical IC4 bus arbitration.
 			const u32 dest = m_bank_regs[0x1a] | (u32(m_bank_regs[0x1b]) << 8) | (u32(m_bank_regs[0x1c]) << 16);
-			const u32 count = m_bank_regs[0x18] | (u32(m_bank_regs[0x19]) << 8);
+			const u32 encoded = m_bank_regs[0x18] | (u32(m_bank_regs[0x19]) << 8);
+			const u32 count = (encoded == (m_scsi_tc & 0xffff) && m_scsi_tc) ? m_scsi_tc : (encoded ? encoded : m_scsi_tc);
 			if (count && count <= m_scsi_tc && u64(dest) + count <= m_banked_ram.size()
 				&& m_scsi_data_idx <= m_scsi_data_buffer.size()
 				&& count <= m_scsi_data_buffer.size() - m_scsi_data_idx)
@@ -2188,7 +2282,9 @@ void s760_state::banked_w(offs_t address, u8 data)
 				const u32 next = dest + count;
 				m_bank_regs[0x18] = m_bank_regs[0x19] = 0;
 				m_bank_regs[0x1a] = u8(next); m_bank_regs[0x1b] = u8(next >> 8); m_bank_regs[0x1c] = u8(next >> 16);
-				logerror("[NATIVESCSIDMA] RAM=%06x count=%04x control=47\n", dest, count);
+				logerror("[NATIVESCSIDMA] RAM=%06x count=%06x control=47\n", dest, count);
+				m_native_scsi_dma_pending = true;
+				check_irq_state();
 			}
 		}
         if (address == 0x11d && (data == 0x78 || data == 0xa0) && m_scsi_bus_phase == 5
@@ -2308,6 +2404,22 @@ u8 s760_state::banked_physical_r(u32 address)
 
 void s760_state::banked_physical_w(u32 address, u8 data)
 {
+	if (m_native_cutoff_ramp_candidate && (address == 0x101018 || address == 0x101019))
+		m_native_cutoff_control = (address & 1) ? (m_native_cutoff_control & 0xff) | (u16(data) << 8)
+			: (m_native_cutoff_control & 0xff00) | data;
+	if (m_native_cutoff_ramp_candidate && (address == 0x101020 || address == 0x101021))
+	{
+		m_native_cutoff_initial_bus = (address & 1) ? (m_native_cutoff_initial_bus & 0xff) | (u16(data) << 8)
+			: (m_native_cutoff_initial_bus & 0xff00) | data;
+		if ((address & 1) && m_native_envelope_select < 32)
+		{
+			m_sound->sync_native_monitor();
+			const unsigned voice = m_native_envelope_select;
+			m_native_cutoff_current[voice] = m_native_cutoff_target[voice] = (m_native_cutoff_initial_bus & ~3) / 16384.0;
+			m_native_cutoff_step[voice] = 0;
+			m_native_cutoff_remaining[voice] = 0;
+		}
+	}
 	if (address < m_banked_ram.size()) { m_banked_ram[address] = data; return; }
 	if (address >= 0x100000 && address <= 0x1007ff)
 	{
@@ -2505,15 +2617,18 @@ void s760_state::rcv_complete()
 	receive_register_extract();
 	if (!m_native_midi_experiment) return;
 	const u8 data = get_received_char();
-	// Single-byte experimental latch. Real FIFO depth/overrun flags unknown.
-	if (m_native_midi_pending)
+	if (m_native_midi_fifo_count >= NATIVE_MIDI_FIFO_SIZE)
 	{
 		logerror("[IC4MIDI] unsupported overrun incoming=%02x\n", data);
 		return;
 	}
-	m_native_midi_byte = data;
+	m_native_midi_fifo[m_native_midi_fifo_tail] = data;
+	m_native_midi_fifo_tail = (m_native_midi_fifo_tail + 1) % NATIVE_MIDI_FIFO_SIZE;
+	++m_native_midi_fifo_count;
+	m_native_midi_byte = m_native_midi_fifo[m_native_midi_fifo_head];
 	m_native_midi_pending = true;
-	logerror("[IC4MIDI] receive=%02x time=%.9f mask=%02x\n", data, machine().time().as_double(), m_bank_regs[0x15]);
+	logerror("[IC4MIDI] receive=%02x fifo=%u time=%.9f mask=%02x\n",
+		data, m_native_midi_fifo_count, machine().time().as_double(), m_bank_regs[0x15]);
 	check_irq_state();
 }
 
@@ -2557,9 +2672,65 @@ void s760_state::native_filter_w(offs_t offset, u8 data)
 	if (!(offset & 1) || m_native_envelope_select >= 32) return;
 	if (m_native_lpf_monitor) m_sound->sync_native_monitor();
 	m_native_filter_words[m_native_envelope_select * 4 + field] = word;
+	if (m_native_cutoff_ramp_candidate && field == 2)
+	{
+		const unsigned voice = m_native_envelope_select;
+		const double target = (word & ~3) / 16384.0;
+		if (m_native_cutoff_control == 0x001b && word <= 0x3fff
+			&& m_native_filter_words[voice * 4 + 1] == 0)
+		{
+			if (target != m_native_cutoff_target[voice])
+			{
+				m_native_cutoff_target[voice] = target;
+				m_native_cutoff_step[voice] = (target - m_native_cutoff_current[voice]) / m_native_cutoff_ramp_samples;
+				// Diagnostic signed floor: eight fractional bits per cutoff-word increment.
+				if (m_native_cutoff_round_increment)
+					m_native_cutoff_step[voice] = std::floor(m_native_cutoff_step[voice] * 4194304.0) / 4194304.0;
+				m_native_cutoff_remaining[voice] = m_native_cutoff_ramp_samples;
+			}
+		}
+		else
+		{
+			// Fast/initialization commands retain immediate behavior.
+			m_native_cutoff_current[voice] = m_native_cutoff_target[voice] = target;
+			m_native_cutoff_step[voice] = 0;
+			m_native_cutoff_remaining[voice] = 0;
+		}
+	}
+	if (m_modulation_trace_enabled)
+		modulation_trace_add('w', machine().time().as_ticks(44100), m_native_envelope_select, reg);
 	if (m_native_sound_trace)
 		logerror("[NATIVEFILTER] channel=%02x reg=%02x value=%04x time=%.9f\n",
 			m_native_envelope_select, reg, word, machine().time().as_double());
+}
+
+void s760_state::modulation_trace_add(char kind, u64 frame, unsigned channel, unsigned reg,
+	double position, double input, double low, double band, double render_c)
+{
+	if (m_modulation_trace.size() == m_modulation_trace.capacity())
+	{
+		++m_modulation_trace_dropped;
+		return;
+	}
+	const u16 *words = &m_native_filter_words[channel * 4];
+	m_modulation_trace.push_back({kind, frame, u64(m_maincpu->total_cycles()),
+		machine().time().as_double(), channel, reg,
+		{words[0], words[1], words[2], words[3]}, position, input, low, band,
+		render_c < 0 ? (words[2] & ~3) / 16384.0 : render_c});
+}
+
+void s760_state::modulation_trace_flush()
+{
+	std::ofstream file(m_modulation_trace_path);
+	file.precision(17);
+	file << "# dropped=" << m_modulation_trace_dropped << "\n";
+	file << "kind,audio_frame,cpu_cycles,machine_seconds,voice,register,damping_word,mode,cutoff_word,command,c,damping,position,input,low_before,band_before,render_c\n";
+	for (const auto &row : m_modulation_trace)
+		file << row.kind << ',' << row.frame << ',' << row.cycles << ',' << row.seconds << ','
+			<< row.channel << ',' << row.reg << ',' << row.words[0] << ',' << row.words[1] << ','
+			<< row.words[2] << ',' << row.words[3] << ',' << (row.words[2] & ~3) / 16384.0 << ','
+			<< row.words[0] / 4096.0 << ',' << row.position << ',' << row.input << ','
+			<< row.low << ',' << row.band << ',' << row.render_c << '\n';
 }
 
 void s760_state::native_filter_activity_w(offs_t offset, u8 data)
@@ -2701,8 +2872,13 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 		// the integer-phase response from the output so this is relative to the
 		// existing unity path, as are the measured half/quarter-speed kernels.
 		// This remains an audition model, not a claim about ASIC arithmetic.
+		// Offline survey candidate only: forward loops, excluding the separately
+		// measured half/quarter paths. No ASIC address semantics are inferred.
+		const bool source_candidate = m_native_source_candidate && measured_loops
+			&& control_mode == 4 && loop_flags == 0 && p[2] >= 0x1000 && !measured_half
+			&& start == std::floor(start) && end == std::floor(end) && length >= 2;
 		const bool measured_pitch = m_native_interpolation_monitor && measured_loops
-			&& control_mode == 4 && loop_flags == 0 && p[2] >= 0x1000 && p[2] <= 0x8000
+			&& control_mode == 4 && loop_flags == 0 && p[2] >= 0x1000 && (p[2] <= 0x8000 || source_candidate)
 			&& p[2] != 0x4000 && !measured_half
 			&& start == std::floor(start) && end == std::floor(end) && length >= 2;
 		// Optional coefficient audition, not MB87424 emulation: provisional Q15
@@ -2743,13 +2919,17 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 					: start + std::fmod(pos - end, length);
 			}
 			if (pos < 0 || pos >= m_native_wave.size()/2) break;
-			const u32 a = u32(pos);
+			// Shift reconstruction phase without modifying the address accumulator,
+			// comparator, firmware writes or saved playback position.
+			const double source_position = source_candidate && pos >= start
+				? start + std::fmod(pos + 1.0 - start, length) : pos;
+			const u32 a = u32(source_position);
 			const u32 b = !reverse_loop && !alternate && a + 1 >= end ? u32(start) : a + 1;
 			if (b >= m_native_wave.size()/2) break;
 			const s16 va = s16(m_native_wave[a*2] | (u16(m_native_wave[a*2+1]) << 8));
 			const s16 vb = s16(m_native_wave[b*2] | (u16(m_native_wave[b*2+1]) << 8));
-			double pcm = (va + (vb-va)*(pos-a)) / 32768.0;
-			const double fraction = pos - a;
+			double pcm = (va + (vb-va)*(source_position-a)) / 32768.0;
+			const double fraction = source_position - a;
 			const bool quarter_speed = p[2] == 0x1000;
 			const bool half_interpolation = measured_half && pos >= start
 				&& fraction * (quarter_speed ? 4 : 2) == std::floor(fraction * (quarter_speed ? 4 : 2));
@@ -2804,7 +2984,7 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 				{
 					// Quantize each output position before reconstruction. Keep
 					// the full accumulator for advancement; do not quantize pitch.
-					const double q = std::floor((pos + output_neighbor * step) * 128.0) / 128.0;
+					const double q = std::floor((source_position + output_neighbor * step) * 128.0) / 128.0;
 					const s64 base = s64(std::floor(q));
 					double reconstructed = 0.0;
 					for (int neighbor = -1; neighbor <= 2; ++neighbor)
@@ -2824,7 +3004,7 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 			}
 			const u16 *filter = &m_native_filter_words[channel * 4];
 			// Findings85/86/93: measured stationary LP candidate. This opt-in
-			// audition uses stepped writes, not guessed hardware interpolation.
+			// audition uses stepped writes unless the diagnostic ramp is enabled.
 			// Findings98/106 support BP/HP outputs at resonance0 and64.
 			// Other clocks, modes and flagged commands retain the raw path.
 			const bool supported_mode = filter[1] == 0
@@ -2833,9 +3013,25 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 			if (m_native_lpf_monitor && rate == 44100 && supported_mode
 				&& filter[3] == 0 && filter[2] <= 0x3fff && filter[0] <= 0x0fff)
 			{
-				const double c = (filter[2] & ~3) / 16384.0;
+				double c = (filter[2] & ~3) / 16384.0;
+				if (m_native_cutoff_ramp_candidate && filter[1] == 0)
+				{
+					if (m_native_cutoff_remaining[channel])
+					{
+						m_native_cutoff_current[channel] += m_native_cutoff_step[channel];
+						if (m_native_cutoff_round_increment)
+							m_native_cutoff_current[channel] = m_native_cutoff_step[channel] >= 0
+								? std::min(m_native_cutoff_current[channel], m_native_cutoff_target[channel])
+								: std::max(m_native_cutoff_current[channel], m_native_cutoff_target[channel]);
+						if (!--m_native_cutoff_remaining[channel])
+							m_native_cutoff_current[channel] = m_native_cutoff_target[channel];
+					}
+					c = m_native_cutoff_current[channel];
+				}
 				const double damping = filter[0] / 4096.0;
 				double &low = m_native_lpf_low[channel], &band = m_native_lpf_band[channel];
+				if (m_modulation_trace_enabled && i == 0)
+					modulation_trace_add('a', stream.start_index(), channel, 0, pos, pcm, low, band, c);
 				low += c * band;
 				const double high = pcm - low - damping * band;
 				band += c * high;
@@ -2844,7 +3040,7 @@ void s760_state::native_wave_monitor_update(sound_stream &stream)
 			else
 				m_native_lpf_low[channel] = m_native_lpf_band[channel] = 0.0;
 			const float sample = (m_native_lpf_monitor || half_interpolation || pitch_interpolation) ? envelope * float(pcm) / 24.0f
-				: envelope * float(va + (vb-va)*(pos-a)) / (32768.0f*24.0f);
+				: envelope * float(va + (vb-va)*(source_position-a)) / (32768.0f*24.0f);
 			stream.add(0, i, sample * left_gain * output_level);
 			stream.add(1, i, sample * right_gain * output_level);
 			const double advance = measured_loops && m_native_wave_reverse[slot] ? -step : step;
@@ -3008,12 +3204,21 @@ void s760_state::machine_reset()
 	m_native_wave_bus.fill(0);
 	m_native_midi_pending = false;
 	m_native_midi_byte = 0;
+	std::fill_n(m_native_midi_fifo, NATIVE_MIDI_FIFO_SIZE, 0);
+	m_native_midi_fifo_head = 0;
+	m_native_midi_fifo_tail = 0;
+	m_native_midi_fifo_count = 0;
 	receive_register_reset();
 	m_native_envelope_bus.fill(0);
 	m_native_envelope_words.fill(0);
 	m_native_envelope_select = 0;
 	m_native_filter_bus.fill(0);
 	m_native_filter_words.fill(0);
+	m_native_cutoff_control = m_native_cutoff_initial_bus = 0;
+	m_native_cutoff_current.fill(0);
+	m_native_cutoff_target.fill(0);
+	m_native_cutoff_step.fill(0);
+	m_native_cutoff_remaining.fill(0);
 	m_native_lpf_low.fill(0);
 	m_native_lpf_band.fill(0);
 	m_native_wave_reverse.fill(false);
@@ -3793,7 +3998,7 @@ uint8_t s760_state::scsi_r(offs_t offset)
 				if (m_scsi_scmd & 0x10) val |= 0x08;
 				if (m_scsi_bus_phase != 0) val |= 0x80;
 				if ((m_scsi_scmd & 0xe0) == 0x80 && m_scsi_tc
-					&& (m_scsi_bus_phase == 4 || m_scsi_bus_phase == 5)) val |= 0x30;
+					&& (m_scsi_bus_phase == 3 || m_scsi_bus_phase == 4 || m_scsi_bus_phase == 5)) val |= 0x30;
 			}
 			break;
 
@@ -4002,7 +4207,9 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 			m_scsi_dreg = data;
 			if (m_scsi_bus_phase == 3) // COMMAND phase
 			{
+				const bool counted_transfer = m_banked_os && (m_scsi_scmd & 0xe0) == 0x80 && m_scsi_tc;
 				m_scsi_cdb[m_scsi_cdb_idx++] = data;
+				if (counted_transfer) --m_scsi_tc;
 				if (m_scsi_cdb_idx == 1)
 				{
 					uint8_t op = data;
@@ -4014,6 +4221,11 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 				if (m_scsi_cdb_idx >= m_scsi_cdb_len)
 				{
 					scsi_execute_cdb();
+				}
+				if (counted_transfer && !m_scsi_tc)
+				{
+					m_scsi_ints |= 0x10; // SPC transfer complete, independent of target command completion.
+					trigger_irq(IRQ_SCSI);
 				}
 			}
 			else if (m_scsi_bus_phase == 5) // DATA_OUT phase (Write data)
@@ -4231,7 +4443,8 @@ void s760_state::check_irq_state()
 	// Firmware enables channel0 with 0115=11 for SEEK; 50 disables it.
 	// Only the verified FDC channel is connected in this experiment. The old
 	// synthetic 60 Hz/VDP sources are not physical CPU-gate inputs.
-	if (m_banked_os) should_assert = (m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0);
+	if (m_banked_os) should_assert = ((m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0))
+		|| (m_native_scsi_dma_pending && BIT(m_bank_regs[0x15], 4));
 	if (m_native_midi_experiment && m_native_midi_pending && BIT(m_bank_regs[0x15], 6)) should_assert = true;
 	if (m_native_midi_experiment && m_native_loop_monitor && m_native_wave_end_pending
 		&& BIT(m_bank_regs[0x15], 2)) should_assert = true;
@@ -4302,7 +4515,7 @@ uint8_t s760_state::mmio_r(offs_t offset)
 			// opt-in model covers one relative Value input, not every IC20
 			// quadrature mode. 20ms is conservative host detent pacing,
 			// not a measured hardware scan period.
-			if (!m_native_value_encoder) { val = m_mmio[2]; break; }
+			if (!m_native_value_encoder) { val = 0; break; }
 			if (!machine().side_effects_disabled() && !m_value_latch && machine().time() >= m_value_next)
 			{
 				const s16 delta = s16(u16(m_value_port->read()) - m_value_last);
@@ -4352,9 +4565,9 @@ void s760_state::native_mouse_w(u8 data)
 
 void s760_state::mmio_w(offs_t offset, uint8_t data)
 {
-	if (m_native_value_encoder && (offset & 0x1f) == 0x12)
+	if ((offset & 0x1f) == 0x12)
 	{
-		if (!data && m_value_latch)
+		if (m_native_value_encoder && !data && m_value_latch)
 		{
 			m_value_latch = 0;
 			m_value_next = machine().time() + attotime::from_msec(20);

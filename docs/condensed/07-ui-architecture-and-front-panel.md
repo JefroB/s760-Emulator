@@ -4,7 +4,7 @@
 
 Native MAME supplies real CRT/LCD frames and firmware controls to the standalone and concrete WebView2 plugin editor. SoundCheck qualifies firmware sample loading and audio during editor operation/reopening. Persistent plugin paths and startup diagnostics are available; in-plugin graphical recovery remains Milestone 4 work. Value and Output controls complete Milestone 2 playback/UI integration; Input Level remains explicitly deferred to Milestone 3 native recording. The current qualification does not establish analog pot taper or full IC20 quadrature behavior. Earlier scaffold descriptions below are historical architecture context.
 
-See the [completion roadmap](../COMPLETION_ROADMAP.md) and [native runbook](11-native-boot-and-audio-runbook.md).
+See the [completion roadmap](../project/completion-roadmap.md) and [native runbook](11-native-boot-and-audio-runbook.md).
 
 ## Technical reference and dated milestone history
 
@@ -142,7 +142,7 @@ alias; this is NOT complete IC20 emulation.
 
 ## Front-panel mapping contract
 
-[front-panel-button-mapping.md](../front-panel-button-mapping.md) remains the
+[front-panel-button-mapping.md](../hardware/front-panel-button-mapping.md) remains the
 human canonical enumeration; `google-ui/src/data/shiftButtonMap.ts` is its
 machine-readable mirror. The source seeds **23 unverified controls**:
 POWER; PERF/PATCH/PART/SAMPLE/SYSTEM/DISK; NAV_LEFT/RIGHT/UP/DOWN; DEC/INC;
@@ -195,7 +195,7 @@ The optional Windows C++ WebView2 backend is now concrete: environment/controlle
 resize, bounded text/frame channel, cancellation and reopen pass against the real
 runtime. React supports that channel through its existing frame decoder. Native plugin/React controller lifetime is now qualified below; actual
 DAW hosting and plugin configuration remain unqualified. See the
-[checkpoint and limits](../MILESTONE_2_PROGRESS.md) and
+[checkpoint and limits](../testing/milestone-2-progress.md) and
 [validation](validation/milestone-2-editor-2026-10-11.json).
 
 
@@ -224,7 +224,7 @@ concrete React/WebView2 editor: firmware Perform Play capture, close/reopen and
 plugin removal pass. Independent Steinberg-SDK interface tests exposed and
 verified corrections to local vtables, GUIDs and metadata. This advances actual
 host editor acceptance. Loaded-sample SoundCheck audio and persistent configuration
-with actionable diagnostics now also pass; in-plugin graphical recovery remains open. See [host evidence](../MILESTONE_2_PROGRESS.md).
+with actionable diagnostics now also pass; in-plugin graphical recovery remains open. See [host evidence](../testing/milestone-2-progress.md).
 
 
 ### Verified embedded rack arrangement (2026-10-11)
@@ -232,7 +232,7 @@ with actionable diagnostics now also pass; in-plugin graphical recovery remains 
 The manual and owner's photograph confirm the navigation grid: S1/Dec, Up,
 S2/Inc above Left, Down, Right. There are only two S buttons. F1–F6 appear
 beneath the LCD; F4–F6 and Home/Mark/Jump each send their actual Shift chord.
-See [the corrected manual mapping](../front-panel-button-mapping.md).
+See [the corrected manual mapping](../hardware/front-panel-button-mapping.md).
 Input and output levels are separate knobs, and Value has a separate Menu
 button. Value and Output are enabled and qualified; Input remains disabled pending native recording. Menu drives SC0/SP4 and opens the native
 firmware menu. The OS 2.24 pointer adapter now accounts for firmware cursor
@@ -245,7 +245,7 @@ with explicit scan bounds and transactional errors). Independent browse selectio
 and inserted identity survive editor recreation and native plugin-state recall.
 Version2 metadata restores alongside checkpoint bytes, without remounting a source
 file. Cold replay with relocated sources matches PCM exactly. See the
-[media library contract and qualification](../NATIVE_MEDIA_LIBRARY.md).
+[media library contract and qualification](../emulator/guides/native-media-library.md).
 
 SoundCheck screenshots show the whole rack at 1480x900, an active CRT without
 unused bottom rows, and firmware LCD status in Mouse+CRT mode. Original LCD
@@ -257,7 +257,7 @@ SoundCheck audio qualification uses ROBOFULL through actual React Disk/Load,
 MIDI 60/velocity 127, 44.1 kHz/512-frame callbacks and editor reopening while held.
 The fixed-frequency fixture gives 20,004 Hz and 0.0445375 peak, with no silent
 steady blocks and zero release tail. Settings-only startup and failure recovery
-pass from an unrelated host working directory. See [configuration contract](../NATIVE_PLUGIN_CONFIGURATION.md)
+pass from an unrelated host working directory. See [configuration contract](../emulator/guides/native-plugin-configuration.md)
 and [validation](validation/milestone-2-audio-config-2026-10-11.json).
 
 
@@ -270,5 +270,29 @@ Output Level is analog VR1 attenuation according to Service Notes p20, outside
 firmware parameter editing. The native stereo implementation supplies linear
 software gain: exact half amplitude at50%, silence at0%, with UI readback and
 same-build recall. Input Level precedes analog conversion and awaits native ADC.
-See the [control contract](../NATIVE_RACK_CONTROLS.md) and
+See the [control contract](../emulator/guides/native-rack-controls.md) and
 [validation](validation/milestone-2-rack-controls-2026-10-11.json) for scope and limits.
+
+
+### OS2.24 callback slots and event ring (static)
+
+[Resident UI event decoding](../firmware/os/os-ui-event-dispatch.md) connects000F:2080 to0000:F468 through a128-byte ring21B0..222F with modulo128 cursors21AC/21AE. Producer tag1 carries two bytes; tags3/0A/0E/0F/10 carry one. The consumer drains using a local cursor and resets both stored cursors on exhaustion; special exits and concurrency remain unvalidated.
+
+The screen loader's ten four-byte callback pairs at2174..219B are target-first/page-second. DD1C/DD77/DDB2/DE00 consume slots0..3. The guardedEA42..EA60 path accepts events17..1C and invokes slots4..9 throughF0C1. Each selects fetch0104 from the pair and data010C=0299; return continuations restore data010C but do not locally restore fetch0104. Startup descriptor0130 initializes all ten to0171:8000, whose sole decoded instruction is RET; mutable descriptor targets remain open. [Byte evidence](validation/os-ui-event-ring-2026-10-16.json) preserves conditional wrapper sites and new anchors. No native or hardware UI parity is claimed.
+
+
+### Fixed screen callbacks and transfer status rows
+
+[Static selection analysis](../firmware/os/os-ui-selection-callbacks.md) follows initial screen011E/011F through five type2 fields and cached callbacks0196:9960/9AC7 and0171:8172/818F. Update handlers use mutable next-screen tables02DB:48AA/48B6; their bounds remain unresolved. Numeric metadata provides separate display/edit function pointers and two sign-extended words whose limit semantics remain provisional. [Byte evidence](validation/os-fixed-screen-callbacks-2026-10-16.json) preserves all newly decoded anchors and initial descriptors.
+
+005A:747E/746E implement temporary CRT row2/LCD row7 status overlays with countdown4000/2000 (units unresolved), saving40/25 character-attribute pairs and restoring onindex0 when marker0D is present. Supervisor results2/3/4/5 select Illegal Sample #, Memory Full, Dump Adrs Error !, Dump Data Error !. Only four consumer-bounded messages are classified; no full table/runtime acceptance claim follows.
+
+
+### Concrete numeric limits and object startup
+
+[Numeric/device continuation](../firmware/os/os-device-probe-and-numeric-fields.md) follows initial011E index2 via02DB:48AA toscreen012F. Its first six type3 tuples resolve metadata5CE4/5CEC/5CF4/5D40/5BBC/5D48, with signed bounds-1..15,0..1,0..1,0..31,0..1,0..4.01EC:81BD compares signed32-bit upper thenlower limits and marks saturation; postprocesscallee preservation and ordinary editing acceptance remain open. Initialtarget annotations retain unknown edges for otherinvocations. [Byte evidence](validation/os-device-probe-and-numeric-2026-10-16.json) records the path and sixmetadatarecords.
+
+004B:730A expands361E/3620 andcopies3618 intodata0299 fields8100..8115.7362/73D3/7423 copy128/256-byte objecttemplates todata0356 stagingrecords. These are runtimecopies,withoutnew immutable-resourceextents.0196:88B4 qualifies mode1 geometry/outside state22A8 andevent2 enqueueing on outside scroll events;nativepointerparity remainsopen.
+
+
+[Full-field/postprocess decoding](../firmware/os/os-postprocess-and-full-fields.md) extends initial012F to40 records and238 tuple bytes. Dynamic editor81E2 overrides loaded bounds; metadata5D96 indexes a byte array through23A8.01D1 propagation switches source/destination data banks explicitly and preserves the numeric value under bounded object-offset assumptions. Native editing remains open. [Evidence](validation/os-postprocess-full-fields-2026-10-16.json) retains those limits.

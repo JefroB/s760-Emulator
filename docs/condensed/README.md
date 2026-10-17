@@ -1,6 +1,6 @@
 # Roland S-760 Condensed Reference
 
-Current product status (2026-10-14): Milestones1–5 are complete for the documented Windows development profiles. The [acceptance matrix](../MILESTONE_5_ACCEPTANCE.md) controls supported sampler claims, including disk-mode mute/recovery and named SCSI writes. Final shipped-artifact and clean-machine qualification remains Milestone6; physical fidelity limits remain explicit. The dated checkpoint below is historical.
+Current product status (2026-10-14): Milestones1–5 are complete for the documented Windows development profiles. The [acceptance matrix](../testing/milestone-5-acceptance.md) controls supported sampler claims, including disk-mode mute/recovery and named SCSI writes. Final shipped-artifact and clean-machine qualification remains Milestone6; physical fidelity limits remain explicit. The dated checkpoint below is historical.
 
 Current checkpoint: 2026-10-11, findings through146. Native original-ROM boot
 reaches the colour, mouse-interactive Perform Play screen, loads sample disks,
@@ -8,7 +8,7 @@ and plays firmware-driven MIDI voices (up to 24-voice polyphony). Measured loop,
 envelope, filter (LP/BP/HP) and 128-step pitch-interpolation audition paths are
 available (document06). The native-runtime integration — standalone player, C++ worker, exported VST3
 stream and bounded native/host/SCSI state — completes Milestone 1
-([closure](../MILESTONE_1_COMPLETION.md)). Configuration/editor, native sampling
+([closure](../testing/milestone-1-completion.md)). Configuration/editor, native sampling
 and real DAW acceptance remain in Milestones 2–4. Numerical replay establishes
 implementation agreement, not complete CPU/peripheral/ASIC hardware parity.
 
@@ -19,9 +19,9 @@ opt-in native interpolator passes all88 fixture notes; disabled output remains
 bit-identical. Hardware limits and distinctions between models and facts remain
 explicit in document06.
 
-The exact Windows standalone artifact has passed [distribution qualification](../DISTRIBUTION_QUALIFICATION.md): source archives and component notices accompany it, and integrity checks bind the reviewed package. This does not complete clean-machine setup or actual DAW/editor acceptance.
+The exact Windows standalone artifact has passed [distribution qualification](../testing/distribution-qualification.md): source archives and component notices accompany it, and integrity checks bind the reviewed package. This does not complete clean-machine setup or actual DAW/editor acceptance.
 
-For product completion and review gates, use the [completion roadmap](../COMPLETION_ROADMAP.md). Dated milestone histories in these references are subordinate to their current-status summaries.
+For product completion and review gates, use the [completion roadmap](../project/completion-roadmap.md). Dated milestone histories in these references are subordinate to their current-status summaries.
 
 Start with [the native boot/audio runbook](11-native-boot-and-audio-runbook.md)
 for current launch flags, validation, limits and commit scope. MAME and core/plugin
@@ -42,4 +42,5 @@ contain the supported conclusions.
 | [09 Hardware screens](09-hardware-screens-and-layout-evidence.md) | 37-photo catalog, visual patterns, candidate descriptors and capture priorities |
 | [10 Deployment and roadmap](10-hardware-deployment-and-development-roadmap.md) | Gotek/SCSI workflow, unfinished fidelity work, proposed future features |
 | [11 Native boot/audio runbook](11-native-boot-and-audio-runbook.md) | Current launch, supported pitch domain, validation and commit scope |
-| [Source map](SOURCE_MAP.md) | Every public source document, resolution evidence, shared requests |
+| [12 Complete firmware disassembly and subsystems](12-complete-firmware-disassembly-and-subsystems.md) | Full 377KB payload decoding (~99%), 32-page coverage map, banking trampolines, 7,347 symbols & Ghidra integration |
+| [Source map](source-map.md) | Every public source document, resolution evidence, shared requests |

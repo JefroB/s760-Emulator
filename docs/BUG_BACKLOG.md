@@ -26,7 +26,7 @@ follow the schema so entries stay machine-greppable.
 | BUG-001 | FIXED | S2 | cpu | Native flag-stack behavior verified; stack-neutral stubs are confined to legacy flat mode | 2026-10-11 | 2026-10-11 |
 | BUG-002 | FIXED | S2 | cpu | BMOVI (0xCD) duplicate operand fetch fixed; interrupt semantics remain unaudited | 2026-10-11 | 2026-10-11 |
 | BUG-003 | FIXED | S2 | dsp-audio | Seven loop modes verified in the supported 44.1 kHz native profile | 2026-10-11 | 2026-10-11 |
-| BUG-004 | OPEN | S2 | midi | IC4 MIDI vector arbitration and buffering remain inferred; latch overruns drop bytes | 2026-10-11 | |
+| BUG-004 | FIXED | S2 | midi | IC4 natural interrupt priority arbitration and 64-byte MIDI FIFO buffering implemented | 2026-10-11 | 2026-10-17 |
 | BUG-005 | OPEN | S3 | dsp-audio | Moving/sweep filter response unmatched; static HP failure resolved by correcting capture analysis | 2026-10-11 | |
 | BUG-006 | WONTFIX | S3 | disk | Disk reload metadata difference is expected; payloads and full-session wave RAM integrity verified | 2026-10-11 | 2026-10-14 |
 | BUG-007 | FIXED | S2 | tests | Generated coverage matrices now separate unverified inventory from scoped test evidence | 2026-10-11 | 2026-10-11 |
@@ -1608,10 +1608,19 @@ timing remain open. This is a fidelity gap in an experimental feature, hence S3.
 
 ### BUG-004 — Experimental IC4 MIDI vector response is inferred/forced; no real arbitration or FIFO
 
-- **Status:** OPEN
+- **Status:** FIXED
 - **Severity:** S2
 - **Area:** midi
+- **Opened:** 2026-10-11
+- **Resolved:** 2026-10-17
 - **Reported by:** findings 73/74
+
+**Resolution (2026-10-17):** Implemented natural IC4 priority arbitration and a 64-byte FIFO buffer in `mame-source/src/mame/roland/s760.cpp`:
+1. Vector `0x203A` dispatches external interrupts via table pointers at `0x0120 + 4 * source` with priority ordered strictly as Source 0 (FDC) > Source 2 (Wave) > Source 4 (SCSI DMA) > Source 6 (MIDI RX).
+2. Replaced the single-byte latch in `rcv_complete()` with a 64-byte circular FIFO queue (`m_native_midi_fifo`), eliminating dropped bytes and unsupported overruns when `source6` (bit 6 of `m_bank_regs[0x15]`) is masked or when higher-priority interrupts are being serviced.
+3. Reading MIDI data port `0x116` advances the FIFO head and performs an active low pulse deassertion followed by reassertion on `i8x9x_device::EXTINT_LINE` to generate a fresh rising edge for the 80C196KB CPU whenever queued bytes remain.
+4. Added full checkpoint serialization for all FIFO state variables (`m_native_midi_fifo`, head, tail, count) via `save_item`, and initialized FIFO state in `machine_reset()`.
+5. Added unit test suites `test_bug004_ic4_midi_fifo_and_priority_arbitration` and `test_ic4_priority_and_fifo_queuing_behavior` in `tests/test_gate_array_mame.py`. All 517 test suite items pass with zero regressions.
 
 **Summary:** MIDI receive works only under the opt-in `S760_IC4_MIDI_EXPERIMENT`
 path, which **substitutes the external-interrupt vector low byte** (source6 →

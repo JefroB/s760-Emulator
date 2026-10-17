@@ -11,6 +11,10 @@ import re
 import shutil
 import sys
 
+def windows_runtime(name):
+    name = name.lower()
+    return name in ('ucrtbase.dll', 'vcruntime140.dll', 'vcruntime140_1.dll', 'msvcp140.dll') or name.startswith('api-ms-win-')
+
 
 def digest(path):
     with Path(path).open('rb') as f:
@@ -42,7 +46,7 @@ def externalize_windows_runtime(package, build):
     package=Path(package).resolve();build=Path(build).resolve();omitted={}
     for name,source,kind in rows(build,'COLLECT-00.toc',0):
         normal=name.replace('\\','/').lower()
-        if '/' in normal or not (normal in ('ucrtbase.dll','vcruntime140.dll','vcruntime140_1.dll') or normal.startswith('api-ms-win-')):
+        if '/' in normal or not windows_runtime(normal):
             continue
         if kind!='BINARY': raise ValueError('Unexpected runtime input kind')
         target=destination(package,name,kind);original=Path(source)
@@ -59,26 +63,24 @@ def inventory(package, build, search_paths=None):
     package,build=Path(package).resolve(),Path(build).resolve()
     prerequisites=package/'SYSTEM-PREREQUISITES.json'
     omitted=json.loads(prerequisites.read_text(encoding='utf-8'))['excluded_files'] if prerequisites.is_file() else {}
-    owners={}; distributions={}
+    owners={}
     for dist in metadata.distributions(path=search_paths or sys.path):
         name=dist.metadata.get('Name','unknown');key=re.sub(r'[^a-z0-9_.-]','-',name.lower())
-        distributions[key]=dist
         for file in dist.files or []:
-            owners[os.path.abspath(dist.locate_file(file)).casefold()]=key
+            owners[os.path.abspath(dist.locate_file(file)).casefold()]=(key, dist)
     components={}; inputs=[]; errors=[];mapped=set()
     def component(source):
-        key=owners.get(str(source.resolve()).casefold())
+        key, dist=owners.get(str(source.resolve()).casefold(), (None, None))
         low=source.name.lower()
         if source.is_relative_to(Path(__file__).resolve().parent): key='s760-project'
         if source==Path(__file__).resolve().parents[1]/'build/Release/s760_asio.dll': key='s760-project'
         if low=='base_library.zip' and source.parent==build: key='cpython-and-vendored-libraries'
         if 'webview2' in low: key='microsoft-webview2-sdk'
-        elif low.startswith(('api-ms-win-','vcruntime','ucrtbase')): key='microsoft-windows-runtime'
+        elif windows_runtime(low): key='microsoft-windows-runtime'
         elif key is None and source.is_relative_to(Path(sys.base_prefix).resolve()) and 'site-packages' not in source.parts:
             key='cpython-and-vendored-libraries'
         if key is None: key='unattributed'
         if key not in components:
-            dist=distributions.get(key)
             record={'version':dist.version if dist else None,'declared_license':(dist.metadata.get('License-Expression') or dist.metadata.get('License')) if dist else None,'notices':[], 'rights_status':'review_required'}
             if dist:
                 for file in dist.files or []:
@@ -100,6 +102,7 @@ def inventory(package, build, search_paths=None):
     for name,source,kind in rows(build,'COLLECT-00.toc',0):
         target=destination(package,name,kind);source=Path(source).resolve()
         key='s760-launcher-and-pyinstaller-bootloader' if kind=='EXECUTABLE' else component(source)
+        if key=='unattributed': errors.append('Unattributed collected input: '+name)
         relative=target.relative_to(package).as_posix();mapped.add(relative)
         record={'path':relative,'kind':kind,'component':key}
         if relative in omitted and key=='microsoft-windows-runtime' and not target.exists() and source.is_file() and digest(source)==omitted[relative]:
@@ -117,7 +120,9 @@ def inventory(package, build, search_paths=None):
         if kind=='PYMODULE' and source.name=='-':
             modules.append({'module':name,'kind':kind,'component':'namespace-package','source_sha256':None});continue
         if not source.is_file(): errors.append('Missing module source: '+name);continue
-        modules.append({'module':name,'kind':kind,'component':component(source),'source_sha256':digest(source)})
+        key=component(source)
+        if key=='unattributed': errors.append('Unattributed frozen module: '+name)
+        modules.append({'module':name,'kind':kind,'component':key,'source_sha256':digest(source)})
     vendor_root=Path(__file__).resolve().parents[1]/'docs/distribution'
     if 'cffi' in components and components['cffi']['version']=='1.17.1':
         original=vendor_root/'cffi-1.17.1-libffi-notices.txt'

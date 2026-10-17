@@ -1,0 +1,112 @@
+{
+  "identities": {
+    "D:\\S-760\\mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "D:\\S-760\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\encoder.lua": "c123672b7196ed40a9dfe9b0c663862b022f227b24c04d2faed4af61d498f912"
+  },
+  "observer_and_input_source": "local cpu=manager.machine.devices[':maincpu'] local space=cpu.spaces['program']\nlocal mode=nil for _,f in pairs(manager.machine.ioport.ports[':PANEL1'].fields) do if f.name=='Mode' then mode=f end end assert(mode)\nmode:set_value(1)\nlocal reads=0\nencoder_read=space:install_read_tap(0xf012,0xf013,'encoder-read',function(a,d,m)\nif reads<10 then print(string.format('[ENCODER] pc=%04x value=%04x mask=%04x',cpu.state['PC'].value,d,m)) end reads=reads+1\nend)\nencoder_write=space:install_write_tap(0xf012,0xf013,'encoder-clear',function(a,d,m)\nif reads<10 then print(string.format('[CLEAR] pc=%04x value=%04x mask=%04x',cpu.state['PC'].value,d,m)) end\nend)\ncontrast=space:install_write_tap(0x4cb0,0x4cb1,'contrast',function(a,d,m)\nlocal pc=cpu.state['PC'].value if pc>=0x58f3 and pc<=0x5940 then print(string.format('[EDIT] pc=%04x value=%02x',pc,(d>>8)&255)) end\nend)\nlocal frames=0 emu.register_frame_done(function()\nframes=frames+1 mode:set_value(1) if frames%30==0 then print(string.format('[STATE] frame=%d pc=%04x contrast=%02x',frames,cpu.state['PC'].value,space:read_u8(0x4cb1))) end\nend)\n",
+  "runs": [
+    {
+      "encoder_enabled": false,
+      "command": [
+        "D:\\S-760\\mame-source\\mames760.exe",
+        "s760",
+        "-rompath",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-encoder-off\\roms",
+        "-nvram_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-encoder-off\\nvram",
+        "-cfg_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-encoder-off\\cfg",
+        "-video",
+        "none",
+        "-sound",
+        "none",
+        "-skip_gameinfo",
+        "-nothrottle",
+        "-seconds_to_run",
+        "3",
+        "-autoboot_delay",
+        "0",
+        "-autoboot_script",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\encoder.lua"
+      ],
+      "returncode": 0,
+      "observations": [
+        "[STATE] frame=30 pc=314e contrast=00",
+        "[STATE] frame=60 pc=486f contrast=00",
+        "[STATE] frame=90 pc=486d contrast=00",
+        "[ENCODER] pc=57dd value=00dc mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[EDIT] pc=593e value=ff",
+        "[STATE] frame=120 pc=3c79 contrast=ff",
+        "[STATE] frame=150 pc=3c68 contrast=ff",
+        "[STATE] frame=180 pc=576a contrast=ff"
+      ],
+      "errors": [
+        "Connecting to WMI Server failed. Error: 0x80070005",
+        "XInput device detection failed. XInput won't be used. Error: 0x80070005"
+      ],
+      "staged_os_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    },
+    {
+      "encoder_enabled": true,
+      "command": [
+        "D:\\S-760\\mame-source\\mames760.exe",
+        "s760",
+        "-rompath",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-encoder-on\\roms",
+        "-nvram_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-encoder-on\\nvram",
+        "-cfg_directory",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-encoder-on\\cfg",
+        "-video",
+        "none",
+        "-sound",
+        "none",
+        "-skip_gameinfo",
+        "-nothrottle",
+        "-seconds_to_run",
+        "3",
+        "-autoboot_delay",
+        "0",
+        "-autoboot_script",
+        "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\encoder.lua"
+      ],
+      "returncode": 0,
+      "observations": [
+        "[STATE] frame=30 pc=314e contrast=00",
+        "[STATE] frame=60 pc=486f contrast=00",
+        "[STATE] frame=90 pc=486d contrast=00",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[CLEAR] pc=57e2 value=0000 mask=00ff",
+        "[ENCODER] pc=57dd value=0000 mask=00ff",
+        "[STATE] frame=120 pc=2d74 contrast=00",
+        "[STATE] frame=150 pc=2d77 contrast=00",
+        "[STATE] frame=180 pc=2d64 contrast=00"
+      ],
+      "errors": [
+        "Connecting to WMI Server failed. Error: 0x80070005",
+        "XInput device detection failed. XInput won't be used. Error: 0x80070005"
+      ],
+      "staged_os_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    }
+  ],
+  "qualification": "Matched fresh private-state ordinary Mode-held menu boots; only existing S760_NATIVE_VALUE_ENCODER flag differs. No encoder movement, S1/S2 input, guest mutation, firmware patch or bus replacement. Native profile comparison, not physical encoder behavior."
+}

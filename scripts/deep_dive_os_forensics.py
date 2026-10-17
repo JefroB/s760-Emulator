@@ -60,7 +60,7 @@ def analyze_forensics():
             struct_locations[sname] = f"0x{idx:06X}"
 
     # 4. Generate Comprehensive Deep Forensics Markdown Document
-    out_md_path = os.path.join(DOCS_DIR, "OS_FORENSICS_DEEP_DIVE.md")
+    out_md_path = os.path.join(DOCS_DIR, "os-forensics-deep-dive.md")
     with open(out_md_path, "w", encoding="utf-8") as out:
         out.write("# Roland S-760 OS v2.24 — Architecture & Forensics Deep Dive\n\n")
         out.write("Comprehensive forensic analysis of the firmware, internal state machine, SysEx specs, and factory test routines.\n\n")

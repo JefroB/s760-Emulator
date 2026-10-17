@@ -1,0 +1,1574 @@
+{
+  "command": [
+    "D:\\S-760\\mame-source\\mames760.exe",
+    "s760",
+    "-rompath",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-contrast-bounds\\roms",
+    "-nvram_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-contrast-bounds\\nvram",
+    "-cfg_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-contrast-bounds\\cfg",
+    "-video",
+    "none",
+    "-sound",
+    "none",
+    "-skip_gameinfo",
+    "-nothrottle",
+    "-seconds_to_run",
+    "30",
+    "-autoboot_delay",
+    "0",
+    "-autoboot_script",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\contrast.lua"
+  ],
+  "returncode": 0,
+  "observer_and_input_source": "local cpu=manager.machine.devices[':maincpu']\nlocal space=cpu.spaces['program']\nlocal function field(port,name) for _,f in pairs(manager.machine.ioport.ports[port].fields) do if f.name==name then return f end end error('missing input') end\nlocal mode=field(':PANEL1','Mode') local dec=field(':PANEL0','S1') local inc=field(':PANEL0','S2')\nlocal frames,stage,cooldown,boundframe=0,0,0,0\nmode:set_value(1)\ncontrast_write=space:install_write_tap(0x4cb0,0x4cb1,'contrast-bounds',function(a,d,m)\n local pc=cpu.state['PC'].value\n if pc>=0x58f3 and pc<=0x5940 then print(string.format('[EDIT] frame=%d pc=%04x value=%02x mask=%04x',frames,pc,(d>>8)&255,m)) end\nend)\nemu.register_frame_done(function()\n frames=frames+1 local pc=cpu.state['PC'].value local value=space:read_u8(0x4cb1)\n if cooldown>0 then cooldown=cooldown-1 end\n if stage==0 then mode:set_value(1) if frames>90 and pc>=0x5741 and pc<=0x5809 then mode:set_value(0) stage=1 cooldown=30 print('[ENTERED] contrast field='..space:read_u8(0x4d30)) end\n elseif stage==1 and cooldown==0 then dec:set_value(1) stage=2 print('[INPUT] S1 held')\n elseif stage==2 and value==0xce then if boundframe==0 then boundframe=frames end if frames-boundframe>=120 then dec:set_value(0) stage=3 cooldown=30 boundframe=0 print('[LOWER] '..frames) end\n elseif stage==3 and cooldown==0 then inc:set_value(1) stage=4 print('[INPUT] S2 held')\n elseif stage==4 and value==0x32 then if boundframe==0 then boundframe=frames end if frames-boundframe>=120 then inc:set_value(0) stage=5 print('[UPPER] '..frames) end end\n if frames%60==0 then print(string.format('[STATE] frame=%d pc=%04x stage=%d contrast=%02x',frames,pc,stage,value)) end\nend)\n",
+  "identities": {
+    "D:\\S-760\\mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\native-contrast-bounds\\roms\\s760\\s760224.img": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-reference-audit-2026-10-16\\contrast.lua": "87ff6dd548e761e700524b4c88d51ee5d9874947537b87fca8791379b3ae938b"
+  },
+  "rows": [
+    {
+      "frame": 110,
+      "pc": 22846,
+      "value": 255,
+      "mask": 65280
+    },
+    {
+      "frame": 158,
+      "pc": 22846,
+      "value": 254,
+      "mask": 65280
+    },
+    {
+      "frame": 161,
+      "pc": 22846,
+      "value": 253,
+      "mask": 65280
+    },
+    {
+      "frame": 165,
+      "pc": 22846,
+      "value": 252,
+      "mask": 65280
+    },
+    {
+      "frame": 169,
+      "pc": 22846,
+      "value": 251,
+      "mask": 65280
+    },
+    {
+      "frame": 173,
+      "pc": 22846,
+      "value": 250,
+      "mask": 65280
+    },
+    {
+      "frame": 177,
+      "pc": 22846,
+      "value": 249,
+      "mask": 65280
+    },
+    {
+      "frame": 180,
+      "pc": 22846,
+      "value": 248,
+      "mask": 65280
+    },
+    {
+      "frame": 184,
+      "pc": 22846,
+      "value": 247,
+      "mask": 65280
+    },
+    {
+      "frame": 188,
+      "pc": 22846,
+      "value": 246,
+      "mask": 65280
+    },
+    {
+      "frame": 192,
+      "pc": 22846,
+      "value": 245,
+      "mask": 65280
+    },
+    {
+      "frame": 196,
+      "pc": 22846,
+      "value": 244,
+      "mask": 65280
+    },
+    {
+      "frame": 199,
+      "pc": 22846,
+      "value": 243,
+      "mask": 65280
+    },
+    {
+      "frame": 203,
+      "pc": 22846,
+      "value": 242,
+      "mask": 65280
+    },
+    {
+      "frame": 207,
+      "pc": 22846,
+      "value": 241,
+      "mask": 65280
+    },
+    {
+      "frame": 211,
+      "pc": 22846,
+      "value": 240,
+      "mask": 65280
+    },
+    {
+      "frame": 215,
+      "pc": 22846,
+      "value": 239,
+      "mask": 65280
+    },
+    {
+      "frame": 219,
+      "pc": 22846,
+      "value": 238,
+      "mask": 65280
+    },
+    {
+      "frame": 222,
+      "pc": 22846,
+      "value": 237,
+      "mask": 65280
+    },
+    {
+      "frame": 226,
+      "pc": 22846,
+      "value": 236,
+      "mask": 65280
+    },
+    {
+      "frame": 230,
+      "pc": 22846,
+      "value": 235,
+      "mask": 65280
+    },
+    {
+      "frame": 234,
+      "pc": 22846,
+      "value": 234,
+      "mask": 65280
+    },
+    {
+      "frame": 238,
+      "pc": 22846,
+      "value": 233,
+      "mask": 65280
+    },
+    {
+      "frame": 242,
+      "pc": 22846,
+      "value": 232,
+      "mask": 65280
+    },
+    {
+      "frame": 245,
+      "pc": 22846,
+      "value": 231,
+      "mask": 65280
+    },
+    {
+      "frame": 249,
+      "pc": 22846,
+      "value": 230,
+      "mask": 65280
+    },
+    {
+      "frame": 253,
+      "pc": 22846,
+      "value": 229,
+      "mask": 65280
+    },
+    {
+      "frame": 257,
+      "pc": 22846,
+      "value": 228,
+      "mask": 65280
+    },
+    {
+      "frame": 261,
+      "pc": 22846,
+      "value": 227,
+      "mask": 65280
+    },
+    {
+      "frame": 265,
+      "pc": 22846,
+      "value": 226,
+      "mask": 65280
+    },
+    {
+      "frame": 268,
+      "pc": 22846,
+      "value": 225,
+      "mask": 65280
+    },
+    {
+      "frame": 272,
+      "pc": 22846,
+      "value": 224,
+      "mask": 65280
+    },
+    {
+      "frame": 276,
+      "pc": 22846,
+      "value": 223,
+      "mask": 65280
+    },
+    {
+      "frame": 280,
+      "pc": 22846,
+      "value": 222,
+      "mask": 65280
+    },
+    {
+      "frame": 284,
+      "pc": 22846,
+      "value": 221,
+      "mask": 65280
+    },
+    {
+      "frame": 288,
+      "pc": 22846,
+      "value": 220,
+      "mask": 65280
+    },
+    {
+      "frame": 291,
+      "pc": 22846,
+      "value": 219,
+      "mask": 65280
+    },
+    {
+      "frame": 295,
+      "pc": 22846,
+      "value": 218,
+      "mask": 65280
+    },
+    {
+      "frame": 299,
+      "pc": 22846,
+      "value": 217,
+      "mask": 65280
+    },
+    {
+      "frame": 303,
+      "pc": 22846,
+      "value": 216,
+      "mask": 65280
+    },
+    {
+      "frame": 307,
+      "pc": 22846,
+      "value": 215,
+      "mask": 65280
+    },
+    {
+      "frame": 310,
+      "pc": 22846,
+      "value": 214,
+      "mask": 65280
+    },
+    {
+      "frame": 314,
+      "pc": 22846,
+      "value": 213,
+      "mask": 65280
+    },
+    {
+      "frame": 318,
+      "pc": 22846,
+      "value": 212,
+      "mask": 65280
+    },
+    {
+      "frame": 322,
+      "pc": 22846,
+      "value": 211,
+      "mask": 65280
+    },
+    {
+      "frame": 326,
+      "pc": 22846,
+      "value": 210,
+      "mask": 65280
+    },
+    {
+      "frame": 330,
+      "pc": 22846,
+      "value": 209,
+      "mask": 65280
+    },
+    {
+      "frame": 333,
+      "pc": 22846,
+      "value": 208,
+      "mask": 65280
+    },
+    {
+      "frame": 337,
+      "pc": 22846,
+      "value": 207,
+      "mask": 65280
+    },
+    {
+      "frame": 341,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 345,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 349,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 353,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 356,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 360,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 364,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 368,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 372,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 376,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 379,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 383,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 387,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 391,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 395,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 398,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 402,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 406,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 410,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 414,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 418,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 421,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 425,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 429,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 433,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 437,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 441,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 444,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 448,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 452,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 456,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 460,
+      "pc": 22846,
+      "value": 206,
+      "mask": 65280
+    },
+    {
+      "frame": 492,
+      "pc": 22817,
+      "value": 207,
+      "mask": 65280
+    },
+    {
+      "frame": 495,
+      "pc": 22817,
+      "value": 208,
+      "mask": 65280
+    },
+    {
+      "frame": 499,
+      "pc": 22817,
+      "value": 209,
+      "mask": 65280
+    },
+    {
+      "frame": 503,
+      "pc": 22817,
+      "value": 210,
+      "mask": 65280
+    },
+    {
+      "frame": 507,
+      "pc": 22817,
+      "value": 211,
+      "mask": 65280
+    },
+    {
+      "frame": 511,
+      "pc": 22817,
+      "value": 212,
+      "mask": 65280
+    },
+    {
+      "frame": 514,
+      "pc": 22817,
+      "value": 213,
+      "mask": 65280
+    },
+    {
+      "frame": 518,
+      "pc": 22817,
+      "value": 214,
+      "mask": 65280
+    },
+    {
+      "frame": 522,
+      "pc": 22817,
+      "value": 215,
+      "mask": 65280
+    },
+    {
+      "frame": 526,
+      "pc": 22817,
+      "value": 216,
+      "mask": 65280
+    },
+    {
+      "frame": 530,
+      "pc": 22817,
+      "value": 217,
+      "mask": 65280
+    },
+    {
+      "frame": 534,
+      "pc": 22817,
+      "value": 218,
+      "mask": 65280
+    },
+    {
+      "frame": 537,
+      "pc": 22817,
+      "value": 219,
+      "mask": 65280
+    },
+    {
+      "frame": 541,
+      "pc": 22817,
+      "value": 220,
+      "mask": 65280
+    },
+    {
+      "frame": 545,
+      "pc": 22817,
+      "value": 221,
+      "mask": 65280
+    },
+    {
+      "frame": 549,
+      "pc": 22817,
+      "value": 222,
+      "mask": 65280
+    },
+    {
+      "frame": 553,
+      "pc": 22817,
+      "value": 223,
+      "mask": 65280
+    },
+    {
+      "frame": 557,
+      "pc": 22817,
+      "value": 224,
+      "mask": 65280
+    },
+    {
+      "frame": 560,
+      "pc": 22817,
+      "value": 225,
+      "mask": 65280
+    },
+    {
+      "frame": 564,
+      "pc": 22817,
+      "value": 226,
+      "mask": 65280
+    },
+    {
+      "frame": 568,
+      "pc": 22817,
+      "value": 227,
+      "mask": 65280
+    },
+    {
+      "frame": 572,
+      "pc": 22817,
+      "value": 228,
+      "mask": 65280
+    },
+    {
+      "frame": 576,
+      "pc": 22817,
+      "value": 229,
+      "mask": 65280
+    },
+    {
+      "frame": 580,
+      "pc": 22817,
+      "value": 230,
+      "mask": 65280
+    },
+    {
+      "frame": 583,
+      "pc": 22817,
+      "value": 231,
+      "mask": 65280
+    },
+    {
+      "frame": 587,
+      "pc": 22817,
+      "value": 232,
+      "mask": 65280
+    },
+    {
+      "frame": 591,
+      "pc": 22817,
+      "value": 233,
+      "mask": 65280
+    },
+    {
+      "frame": 595,
+      "pc": 22817,
+      "value": 234,
+      "mask": 65280
+    },
+    {
+      "frame": 599,
+      "pc": 22817,
+      "value": 235,
+      "mask": 65280
+    },
+    {
+      "frame": 603,
+      "pc": 22817,
+      "value": 236,
+      "mask": 65280
+    },
+    {
+      "frame": 606,
+      "pc": 22817,
+      "value": 237,
+      "mask": 65280
+    },
+    {
+      "frame": 610,
+      "pc": 22817,
+      "value": 238,
+      "mask": 65280
+    },
+    {
+      "frame": 614,
+      "pc": 22817,
+      "value": 239,
+      "mask": 65280
+    },
+    {
+      "frame": 618,
+      "pc": 22817,
+      "value": 240,
+      "mask": 65280
+    },
+    {
+      "frame": 622,
+      "pc": 22817,
+      "value": 241,
+      "mask": 65280
+    },
+    {
+      "frame": 625,
+      "pc": 22817,
+      "value": 242,
+      "mask": 65280
+    },
+    {
+      "frame": 629,
+      "pc": 22817,
+      "value": 243,
+      "mask": 65280
+    },
+    {
+      "frame": 633,
+      "pc": 22817,
+      "value": 244,
+      "mask": 65280
+    },
+    {
+      "frame": 637,
+      "pc": 22817,
+      "value": 245,
+      "mask": 65280
+    },
+    {
+      "frame": 641,
+      "pc": 22817,
+      "value": 246,
+      "mask": 65280
+    },
+    {
+      "frame": 645,
+      "pc": 22817,
+      "value": 247,
+      "mask": 65280
+    },
+    {
+      "frame": 648,
+      "pc": 22817,
+      "value": 248,
+      "mask": 65280
+    },
+    {
+      "frame": 652,
+      "pc": 22817,
+      "value": 249,
+      "mask": 65280
+    },
+    {
+      "frame": 656,
+      "pc": 22817,
+      "value": 250,
+      "mask": 65280
+    },
+    {
+      "frame": 660,
+      "pc": 22817,
+      "value": 251,
+      "mask": 65280
+    },
+    {
+      "frame": 664,
+      "pc": 22817,
+      "value": 252,
+      "mask": 65280
+    },
+    {
+      "frame": 667,
+      "pc": 22817,
+      "value": 253,
+      "mask": 65280
+    },
+    {
+      "frame": 671,
+      "pc": 22817,
+      "value": 254,
+      "mask": 65280
+    },
+    {
+      "frame": 675,
+      "pc": 22817,
+      "value": 255,
+      "mask": 65280
+    },
+    {
+      "frame": 679,
+      "pc": 22817,
+      "value": 0,
+      "mask": 65280
+    },
+    {
+      "frame": 683,
+      "pc": 22817,
+      "value": 1,
+      "mask": 65280
+    },
+    {
+      "frame": 686,
+      "pc": 22817,
+      "value": 2,
+      "mask": 65280
+    },
+    {
+      "frame": 690,
+      "pc": 22817,
+      "value": 3,
+      "mask": 65280
+    },
+    {
+      "frame": 694,
+      "pc": 22817,
+      "value": 4,
+      "mask": 65280
+    },
+    {
+      "frame": 698,
+      "pc": 22817,
+      "value": 5,
+      "mask": 65280
+    },
+    {
+      "frame": 701,
+      "pc": 22817,
+      "value": 6,
+      "mask": 65280
+    },
+    {
+      "frame": 705,
+      "pc": 22817,
+      "value": 7,
+      "mask": 65280
+    },
+    {
+      "frame": 709,
+      "pc": 22817,
+      "value": 8,
+      "mask": 65280
+    },
+    {
+      "frame": 713,
+      "pc": 22817,
+      "value": 9,
+      "mask": 65280
+    },
+    {
+      "frame": 716,
+      "pc": 22817,
+      "value": 10,
+      "mask": 65280
+    },
+    {
+      "frame": 720,
+      "pc": 22817,
+      "value": 11,
+      "mask": 65280
+    },
+    {
+      "frame": 724,
+      "pc": 22817,
+      "value": 12,
+      "mask": 65280
+    },
+    {
+      "frame": 728,
+      "pc": 22817,
+      "value": 13,
+      "mask": 65280
+    },
+    {
+      "frame": 731,
+      "pc": 22817,
+      "value": 14,
+      "mask": 65280
+    },
+    {
+      "frame": 735,
+      "pc": 22817,
+      "value": 15,
+      "mask": 65280
+    },
+    {
+      "frame": 739,
+      "pc": 22817,
+      "value": 16,
+      "mask": 65280
+    },
+    {
+      "frame": 743,
+      "pc": 22817,
+      "value": 17,
+      "mask": 65280
+    },
+    {
+      "frame": 746,
+      "pc": 22817,
+      "value": 18,
+      "mask": 65280
+    },
+    {
+      "frame": 750,
+      "pc": 22817,
+      "value": 19,
+      "mask": 65280
+    },
+    {
+      "frame": 754,
+      "pc": 22817,
+      "value": 20,
+      "mask": 65280
+    },
+    {
+      "frame": 758,
+      "pc": 22817,
+      "value": 21,
+      "mask": 65280
+    },
+    {
+      "frame": 761,
+      "pc": 22817,
+      "value": 22,
+      "mask": 65280
+    },
+    {
+      "frame": 765,
+      "pc": 22817,
+      "value": 23,
+      "mask": 65280
+    },
+    {
+      "frame": 769,
+      "pc": 22817,
+      "value": 24,
+      "mask": 65280
+    },
+    {
+      "frame": 773,
+      "pc": 22817,
+      "value": 25,
+      "mask": 65280
+    },
+    {
+      "frame": 776,
+      "pc": 22817,
+      "value": 26,
+      "mask": 65280
+    },
+    {
+      "frame": 780,
+      "pc": 22817,
+      "value": 27,
+      "mask": 65280
+    },
+    {
+      "frame": 784,
+      "pc": 22817,
+      "value": 28,
+      "mask": 65280
+    },
+    {
+      "frame": 788,
+      "pc": 22817,
+      "value": 29,
+      "mask": 65280
+    },
+    {
+      "frame": 791,
+      "pc": 22817,
+      "value": 30,
+      "mask": 65280
+    },
+    {
+      "frame": 795,
+      "pc": 22817,
+      "value": 31,
+      "mask": 65280
+    },
+    {
+      "frame": 799,
+      "pc": 22817,
+      "value": 32,
+      "mask": 65280
+    },
+    {
+      "frame": 803,
+      "pc": 22817,
+      "value": 33,
+      "mask": 65280
+    },
+    {
+      "frame": 806,
+      "pc": 22817,
+      "value": 34,
+      "mask": 65280
+    },
+    {
+      "frame": 810,
+      "pc": 22817,
+      "value": 35,
+      "mask": 65280
+    },
+    {
+      "frame": 814,
+      "pc": 22817,
+      "value": 36,
+      "mask": 65280
+    },
+    {
+      "frame": 818,
+      "pc": 22817,
+      "value": 37,
+      "mask": 65280
+    },
+    {
+      "frame": 821,
+      "pc": 22817,
+      "value": 38,
+      "mask": 65280
+    },
+    {
+      "frame": 825,
+      "pc": 22817,
+      "value": 39,
+      "mask": 65280
+    },
+    {
+      "frame": 829,
+      "pc": 22817,
+      "value": 40,
+      "mask": 65280
+    },
+    {
+      "frame": 833,
+      "pc": 22817,
+      "value": 41,
+      "mask": 65280
+    },
+    {
+      "frame": 836,
+      "pc": 22817,
+      "value": 42,
+      "mask": 65280
+    },
+    {
+      "frame": 840,
+      "pc": 22817,
+      "value": 43,
+      "mask": 65280
+    },
+    {
+      "frame": 844,
+      "pc": 22817,
+      "value": 44,
+      "mask": 65280
+    },
+    {
+      "frame": 848,
+      "pc": 22817,
+      "value": 45,
+      "mask": 65280
+    },
+    {
+      "frame": 851,
+      "pc": 22817,
+      "value": 46,
+      "mask": 65280
+    },
+    {
+      "frame": 855,
+      "pc": 22817,
+      "value": 47,
+      "mask": 65280
+    },
+    {
+      "frame": 859,
+      "pc": 22817,
+      "value": 48,
+      "mask": 65280
+    },
+    {
+      "frame": 863,
+      "pc": 22817,
+      "value": 49,
+      "mask": 65280
+    },
+    {
+      "frame": 866,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 870,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 874,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 878,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 881,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 885,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 889,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 893,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 896,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 900,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 904,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 908,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 911,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 915,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 919,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 923,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 926,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 930,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 934,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 938,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 941,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 945,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 949,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 953,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 956,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 960,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 964,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 967,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 971,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 975,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 979,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 982,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    },
+    {
+      "frame": 986,
+      "pc": 22817,
+      "value": 50,
+      "mask": 65280
+    }
+  ],
+  "observations": [
+    "[STATE] frame=60 pc=486f stage=0 contrast=00",
+    "[EDIT] frame=110 pc=593e value=ff mask=ff00",
+    "[STATE] frame=120 pc=3c79 stage=0 contrast=ff",
+    "[ENTERED] contrast field=3",
+    "[INPUT] S1 held",
+    "[EDIT] frame=158 pc=593e value=fe mask=ff00",
+    "[EDIT] frame=161 pc=593e value=fd mask=ff00",
+    "[EDIT] frame=165 pc=593e value=fc mask=ff00",
+    "[EDIT] frame=169 pc=593e value=fb mask=ff00",
+    "[EDIT] frame=173 pc=593e value=fa mask=ff00",
+    "[EDIT] frame=177 pc=593e value=f9 mask=ff00",
+    "[STATE] frame=180 pc=5712 stage=2 contrast=f9",
+    "[EDIT] frame=180 pc=593e value=f8 mask=ff00",
+    "[EDIT] frame=184 pc=593e value=f7 mask=ff00",
+    "[EDIT] frame=188 pc=593e value=f6 mask=ff00",
+    "[EDIT] frame=192 pc=593e value=f5 mask=ff00",
+    "[EDIT] frame=196 pc=593e value=f4 mask=ff00",
+    "[EDIT] frame=199 pc=593e value=f3 mask=ff00",
+    "[EDIT] frame=203 pc=593e value=f2 mask=ff00",
+    "[EDIT] frame=207 pc=593e value=f1 mask=ff00",
+    "[EDIT] frame=211 pc=593e value=f0 mask=ff00",
+    "[EDIT] frame=215 pc=593e value=ef mask=ff00",
+    "[EDIT] frame=219 pc=593e value=ee mask=ff00",
+    "[EDIT] frame=222 pc=593e value=ed mask=ff00",
+    "[EDIT] frame=226 pc=593e value=ec mask=ff00",
+    "[EDIT] frame=230 pc=593e value=eb mask=ff00",
+    "[EDIT] frame=234 pc=593e value=ea mask=ff00",
+    "[EDIT] frame=238 pc=593e value=e9 mask=ff00",
+    "[STATE] frame=240 pc=2d77 stage=2 contrast=e9",
+    "[EDIT] frame=242 pc=593e value=e8 mask=ff00",
+    "[EDIT] frame=245 pc=593e value=e7 mask=ff00",
+    "[EDIT] frame=249 pc=593e value=e6 mask=ff00",
+    "[EDIT] frame=253 pc=593e value=e5 mask=ff00",
+    "[EDIT] frame=257 pc=593e value=e4 mask=ff00",
+    "[EDIT] frame=261 pc=593e value=e3 mask=ff00",
+    "[EDIT] frame=265 pc=593e value=e2 mask=ff00",
+    "[EDIT] frame=268 pc=593e value=e1 mask=ff00",
+    "[EDIT] frame=272 pc=593e value=e0 mask=ff00",
+    "[EDIT] frame=276 pc=593e value=df mask=ff00",
+    "[EDIT] frame=280 pc=593e value=de mask=ff00",
+    "[EDIT] frame=284 pc=593e value=dd mask=ff00",
+    "[EDIT] frame=288 pc=593e value=dc mask=ff00",
+    "[EDIT] frame=291 pc=593e value=db mask=ff00",
+    "[EDIT] frame=295 pc=593e value=da mask=ff00",
+    "[EDIT] frame=299 pc=593e value=d9 mask=ff00",
+    "[STATE] frame=300 pc=5699 stage=2 contrast=d9",
+    "[EDIT] frame=303 pc=593e value=d8 mask=ff00",
+    "[EDIT] frame=307 pc=593e value=d7 mask=ff00",
+    "[EDIT] frame=310 pc=593e value=d6 mask=ff00",
+    "[EDIT] frame=314 pc=593e value=d5 mask=ff00",
+    "[EDIT] frame=318 pc=593e value=d4 mask=ff00",
+    "[EDIT] frame=322 pc=593e value=d3 mask=ff00",
+    "[EDIT] frame=326 pc=593e value=d2 mask=ff00",
+    "[EDIT] frame=330 pc=593e value=d1 mask=ff00",
+    "[EDIT] frame=333 pc=593e value=d0 mask=ff00",
+    "[EDIT] frame=337 pc=593e value=cf mask=ff00",
+    "[EDIT] frame=341 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=345 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=349 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=353 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=356 pc=593e value=ce mask=ff00",
+    "[STATE] frame=360 pc=5699 stage=2 contrast=ce",
+    "[EDIT] frame=360 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=364 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=368 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=372 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=376 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=379 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=383 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=387 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=391 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=395 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=398 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=402 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=406 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=410 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=414 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=418 pc=593e value=ce mask=ff00",
+    "[STATE] frame=420 pc=2de2 stage=2 contrast=ce",
+    "[EDIT] frame=421 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=425 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=429 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=433 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=437 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=441 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=444 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=448 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=452 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=456 pc=593e value=ce mask=ff00",
+    "[EDIT] frame=460 pc=593e value=ce mask=ff00",
+    "[LOWER] 462",
+    "[STATE] frame=480 pc=2f93 stage=3 contrast=ce",
+    "[INPUT] S2 held",
+    "[EDIT] frame=492 pc=5921 value=cf mask=ff00",
+    "[EDIT] frame=495 pc=5921 value=d0 mask=ff00",
+    "[EDIT] frame=499 pc=5921 value=d1 mask=ff00",
+    "[EDIT] frame=503 pc=5921 value=d2 mask=ff00",
+    "[EDIT] frame=507 pc=5921 value=d3 mask=ff00",
+    "[EDIT] frame=511 pc=5921 value=d4 mask=ff00",
+    "[EDIT] frame=514 pc=5921 value=d5 mask=ff00",
+    "[EDIT] frame=518 pc=5921 value=d6 mask=ff00",
+    "[EDIT] frame=522 pc=5921 value=d7 mask=ff00",
+    "[EDIT] frame=526 pc=5921 value=d8 mask=ff00",
+    "[EDIT] frame=530 pc=5921 value=d9 mask=ff00",
+    "[EDIT] frame=534 pc=5921 value=da mask=ff00",
+    "[EDIT] frame=537 pc=5921 value=db mask=ff00",
+    "[STATE] frame=540 pc=2df9 stage=4 contrast=db",
+    "[EDIT] frame=541 pc=5921 value=dc mask=ff00",
+    "[EDIT] frame=545 pc=5921 value=dd mask=ff00",
+    "[EDIT] frame=549 pc=5921 value=de mask=ff00",
+    "[EDIT] frame=553 pc=5921 value=df mask=ff00",
+    "[EDIT] frame=557 pc=5921 value=e0 mask=ff00",
+    "[EDIT] frame=560 pc=5921 value=e1 mask=ff00",
+    "[EDIT] frame=564 pc=5921 value=e2 mask=ff00",
+    "[EDIT] frame=568 pc=5921 value=e3 mask=ff00",
+    "[EDIT] frame=572 pc=5921 value=e4 mask=ff00",
+    "[EDIT] frame=576 pc=5921 value=e5 mask=ff00",
+    "[EDIT] frame=580 pc=5921 value=e6 mask=ff00",
+    "[EDIT] frame=583 pc=5921 value=e7 mask=ff00",
+    "[EDIT] frame=587 pc=5921 value=e8 mask=ff00",
+    "[EDIT] frame=591 pc=5921 value=e9 mask=ff00",
+    "[EDIT] frame=595 pc=5921 value=ea mask=ff00",
+    "[EDIT] frame=599 pc=5921 value=eb mask=ff00",
+    "[STATE] frame=600 pc=2ddd stage=4 contrast=eb",
+    "[EDIT] frame=603 pc=5921 value=ec mask=ff00",
+    "[EDIT] frame=606 pc=5921 value=ed mask=ff00",
+    "[EDIT] frame=610 pc=5921 value=ee mask=ff00",
+    "[EDIT] frame=614 pc=5921 value=ef mask=ff00",
+    "[EDIT] frame=618 pc=5921 value=f0 mask=ff00",
+    "[EDIT] frame=622 pc=5921 value=f1 mask=ff00",
+    "[EDIT] frame=625 pc=5921 value=f2 mask=ff00",
+    "[EDIT] frame=629 pc=5921 value=f3 mask=ff00",
+    "[EDIT] frame=633 pc=5921 value=f4 mask=ff00",
+    "[EDIT] frame=637 pc=5921 value=f5 mask=ff00",
+    "[EDIT] frame=641 pc=5921 value=f6 mask=ff00",
+    "[EDIT] frame=645 pc=5921 value=f7 mask=ff00",
+    "[EDIT] frame=648 pc=5921 value=f8 mask=ff00",
+    "[EDIT] frame=652 pc=5921 value=f9 mask=ff00",
+    "[EDIT] frame=656 pc=5921 value=fa mask=ff00",
+    "[STATE] frame=660 pc=2df9 stage=4 contrast=fa",
+    "[EDIT] frame=660 pc=5921 value=fb mask=ff00",
+    "[EDIT] frame=664 pc=5921 value=fc mask=ff00",
+    "[EDIT] frame=667 pc=5921 value=fd mask=ff00",
+    "[EDIT] frame=671 pc=5921 value=fe mask=ff00",
+    "[EDIT] frame=675 pc=5921 value=ff mask=ff00",
+    "[EDIT] frame=679 pc=5921 value=00 mask=ff00",
+    "[EDIT] frame=683 pc=5921 value=01 mask=ff00",
+    "[EDIT] frame=686 pc=5921 value=02 mask=ff00",
+    "[EDIT] frame=690 pc=5921 value=03 mask=ff00",
+    "[EDIT] frame=694 pc=5921 value=04 mask=ff00",
+    "[EDIT] frame=698 pc=5921 value=05 mask=ff00",
+    "[EDIT] frame=701 pc=5921 value=06 mask=ff00",
+    "[EDIT] frame=705 pc=5921 value=07 mask=ff00",
+    "[EDIT] frame=709 pc=5921 value=08 mask=ff00",
+    "[EDIT] frame=713 pc=5921 value=09 mask=ff00",
+    "[EDIT] frame=716 pc=5921 value=0a mask=ff00",
+    "[STATE] frame=720 pc=2d6d stage=4 contrast=0a",
+    "[EDIT] frame=720 pc=5921 value=0b mask=ff00",
+    "[EDIT] frame=724 pc=5921 value=0c mask=ff00",
+    "[EDIT] frame=728 pc=5921 value=0d mask=ff00",
+    "[EDIT] frame=731 pc=5921 value=0e mask=ff00",
+    "[EDIT] frame=735 pc=5921 value=0f mask=ff00",
+    "[EDIT] frame=739 pc=5921 value=10 mask=ff00",
+    "[EDIT] frame=743 pc=5921 value=11 mask=ff00",
+    "[EDIT] frame=746 pc=5921 value=12 mask=ff00",
+    "[EDIT] frame=750 pc=5921 value=13 mask=ff00",
+    "[EDIT] frame=754 pc=5921 value=14 mask=ff00",
+    "[EDIT] frame=758 pc=5921 value=15 mask=ff00",
+    "[EDIT] frame=761 pc=5921 value=16 mask=ff00",
+    "[EDIT] frame=765 pc=5921 value=17 mask=ff00",
+    "[EDIT] frame=769 pc=5921 value=18 mask=ff00",
+    "[EDIT] frame=773 pc=5921 value=19 mask=ff00",
+    "[EDIT] frame=776 pc=5921 value=1a mask=ff00",
+    "[STATE] frame=780 pc=2d6d stage=4 contrast=1a",
+    "[EDIT] frame=780 pc=5921 value=1b mask=ff00",
+    "[EDIT] frame=784 pc=5921 value=1c mask=ff00",
+    "[EDIT] frame=788 pc=5921 value=1d mask=ff00",
+    "[EDIT] frame=791 pc=5921 value=1e mask=ff00",
+    "[EDIT] frame=795 pc=5921 value=1f mask=ff00",
+    "[EDIT] frame=799 pc=5921 value=20 mask=ff00",
+    "[EDIT] frame=803 pc=5921 value=21 mask=ff00",
+    "[EDIT] frame=806 pc=5921 value=22 mask=ff00",
+    "[EDIT] frame=810 pc=5921 value=23 mask=ff00",
+    "[EDIT] frame=814 pc=5921 value=24 mask=ff00",
+    "[EDIT] frame=818 pc=5921 value=25 mask=ff00",
+    "[EDIT] frame=821 pc=5921 value=26 mask=ff00",
+    "[EDIT] frame=825 pc=5921 value=27 mask=ff00",
+    "[EDIT] frame=829 pc=5921 value=28 mask=ff00",
+    "[EDIT] frame=833 pc=5921 value=29 mask=ff00",
+    "[EDIT] frame=836 pc=5921 value=2a mask=ff00",
+    "[STATE] frame=840 pc=5741 stage=4 contrast=2a",
+    "[EDIT] frame=840 pc=5921 value=2b mask=ff00",
+    "[EDIT] frame=844 pc=5921 value=2c mask=ff00",
+    "[EDIT] frame=848 pc=5921 value=2d mask=ff00",
+    "[EDIT] frame=851 pc=5921 value=2e mask=ff00",
+    "[EDIT] frame=855 pc=5921 value=2f mask=ff00",
+    "[EDIT] frame=859 pc=5921 value=30 mask=ff00",
+    "[EDIT] frame=863 pc=5921 value=31 mask=ff00",
+    "[EDIT] frame=866 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=870 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=874 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=878 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=881 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=885 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=889 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=893 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=896 pc=5921 value=32 mask=ff00",
+    "[STATE] frame=900 pc=2d67 stage=4 contrast=32",
+    "[EDIT] frame=900 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=904 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=908 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=911 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=915 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=919 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=923 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=926 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=930 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=934 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=938 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=941 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=945 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=949 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=953 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=956 pc=5921 value=32 mask=ff00",
+    "[STATE] frame=960 pc=2deb stage=4 contrast=32",
+    "[EDIT] frame=960 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=964 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=967 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=971 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=975 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=979 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=982 pc=5921 value=32 mask=ff00",
+    "[EDIT] frame=986 pc=5921 value=32 mask=ff00",
+    "[UPPER] 987",
+    "[STATE] frame=1020 pc=2d77 stage=5 contrast=32",
+    "[STATE] frame=1080 pc=2df9 stage=5 contrast=32",
+    "[STATE] frame=1140 pc=3038 stage=5 contrast=32",
+    "[STATE] frame=1200 pc=2f70 stage=5 contrast=32",
+    "[STATE] frame=1260 pc=3c68 stage=5 contrast=32",
+    "[STATE] frame=1320 pc=5699 stage=5 contrast=32",
+    "[STATE] frame=1380 pc=2dd8 stage=5 contrast=32",
+    "[STATE] frame=1440 pc=2f70 stage=5 contrast=32",
+    "[STATE] frame=1500 pc=2f93 stage=5 contrast=32",
+    "[STATE] frame=1560 pc=2f69 stage=5 contrast=32",
+    "[STATE] frame=1620 pc=5632 stage=5 contrast=32",
+    "[STATE] frame=1680 pc=2df9 stage=5 contrast=32",
+    "[STATE] frame=1740 pc=2d64 stage=5 contrast=32",
+    "[STATE] frame=1800 pc=2f69 stage=5 contrast=32"
+  ],
+  "checks": {
+    "all_values_in_signed_bounds": true,
+    "lower_observed": true,
+    "upper_observed": true,
+    "lower_clamp_writes": 32,
+    "upper_clamp_writes": 33
+  },
+  "errors": [
+    "Connecting to WMI Server failed. Error: 0x80070005",
+    "XInput device detection failed. XInput won't be used. Error: 0x80070005"
+  ],
+  "qualification": "Ordinary native Mode/S1/S2 inputs, fresh private state, retained valid configuration; passthrough observer. Signed edit bounds and repeated clamp behavior, not arbitrary corrupted RAM states, physical LCD response or repeat timing."
+}

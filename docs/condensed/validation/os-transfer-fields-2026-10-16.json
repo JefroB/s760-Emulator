@@ -1,0 +1,88 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "decoder": "pypcode 4.0.0",
+  "anchors": [
+    {
+      "pc": 63635,
+      "page": 0,
+      "file_offset": 32915,
+      "bytes": "c3013cb060",
+      "mnemonic": "ST",
+      "operands": "RW60, 0xb03c, TABLE[ZR]"
+    },
+    {
+      "pc": 63648,
+      "page": 0,
+      "file_offset": 32928,
+      "bytes": "c30144b060",
+      "mnemonic": "ST",
+      "operands": "RW60, 0xb044, TABLE[ZR]"
+    },
+    {
+      "pc": 63685,
+      "page": 0,
+      "file_offset": 32965,
+      "bytes": "c30140b060",
+      "mnemonic": "ST",
+      "operands": "RW60, 0xb040, TABLE[ZR]"
+    },
+    {
+      "pc": 63698,
+      "page": 0,
+      "file_offset": 32978,
+      "bytes": "c30146b060",
+      "mnemonic": "ST",
+      "operands": "RW60, 0xb046, TABLE[ZR]"
+    },
+    {
+      "pc": 24659,
+      "page": 31,
+      "file_offset": 58451,
+      "bytes": "8958b05c",
+      "mnemonic": "CMP",
+      "operands": "RW5C, #0xb058"
+    },
+    {
+      "pc": 25198,
+      "page": 31,
+      "file_offset": 58990,
+      "bytes": "6954b05c",
+      "mnemonic": "SUB",
+      "operands": "RW5C, #0xb054"
+    },
+    {
+      "pc": 26314,
+      "page": 31,
+      "file_offset": 60106,
+      "bytes": "8958b05c",
+      "mnemonic": "CMP",
+      "operands": "RW5C, #0xb058"
+    },
+    {
+      "pc": 26368,
+      "page": 31,
+      "file_offset": 60160,
+      "bytes": "a1000164",
+      "mnemonic": "LD",
+      "operands": "RW64, #0x100"
+    },
+    {
+      "pc": 28275,
+      "page": 31,
+      "file_offset": 62067,
+      "bytes": "89ff015c",
+      "mnemonic": "CMP",
+      "operands": "RW5C, #0x1ff"
+    }
+  ],
+  "arithmetic_checks": {
+    "four_byte_cases": 4102,
+    "three_byte_cases": 4101,
+    "mismatches": 0,
+    "scope": "Register-operation algebra versus compact formulas; not independent hardware or CPU execution"
+  },
+  "identities": {
+    "scripts/analyze_firmware_routines.py": "66a2f8b8e4de1df537284db328ed8c42b714ef739867bbaa8404ee0ce3dfef7b",
+    "scripts/firmware_manifests/os_exploration.json": "0b747c438c6a81cda1f8270e276cec9678fb15f9d65e74a7fbbc3baf6ed79c7a"
+  }
+}

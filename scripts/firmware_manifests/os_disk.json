@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "target": "os_disk",
+  "cpu": "Intel S80C196KB",
+  "input": {
+    "filename": "S760224.IMG",
+    "size": 1474560,
+    "sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "immutable": true
+  },
+  "layout": [
+    {
+      "name": "container_prefix",
+      "start": 0,
+      "end": 18432,
+      "policy": "preserve_exactly",
+      "classification": "mixed container/loading records; incompletely decoded"
+    },
+    {
+      "name": "loaded_payload",
+      "start": 18432,
+      "end": 1050624,
+      "policy": "preserve_exactly",
+      "classification": "mixed code/data/unknown"
+    },
+    {
+      "name": "container_tail",
+      "start": 1050624,
+      "end": 1474560,
+      "policy": "preserve_exactly",
+      "classification": "unknown/padding; preserve"
+    }
+  ],
+  "annotations": [
+    {
+      "name": "timer_isr",
+      "classification": "bounded code analysis window; unreachable bytes unclassified",
+      "file_start": 21201,
+      "file_end": 21455,
+      "evidence": "modulation-firmware-path.md: timer trace identifies page 0 ISR and CB00 TIMER1 sample. Cross-window calls remain unresolved."
+    },
+    {
+      "name": "mouse_handshake",
+      "classification": "bounded code analysis window; unreachable bytes unclassified",
+      "file_start": 101300,
+      "file_end": 101547,
+      "evidence": "Matched scheduler trace identifies page 4B; PUSHA at 57B4 and POPA at 5811. Native driver maps F008 mouse four-nibble handshake. Region is a bounded analysis window, not an asserted function extent."
+    },
+    {
+      "name": "tvf_dispatch",
+      "classification": "bounded code analysis window; unreachable bytes unclassified",
+      "file_start": 64512,
+      "file_end": 65280,
+      "evidence": "modulation-firmware-path.md: corrected dispatcher origin 002D:8000; fast command store at 8106 and restore at 8125. Indirect dispatch is deliberately unresolved."
+    },
+    {
+      "name": "cutoff_calculation",
+      "classification": "bounded code analysis window; unreachable bytes unclassified",
+      "file_start": 51953,
+      "file_end": 52236,
+      "evidence": "modulation-firmware-path.md: exact integer replay of cutoff calculation 001F:46F1-480B. Data page 02BE must not be confused with instruction page 001F."
+    },
+    {
+      "name": "initial_cutoff",
+      "classification": "bounded code analysis window; unreachable bytes unclassified",
+      "file_start": 69232,
+      "file_end": 69312,
+      "evidence": "modulation-firmware-path.md: 002D:9270 calls cutoff calculation and writes initial cutoff companion pair. Bounded analysis window only."
+    },
+    {
+      "name": "control_service",
+      "classification": "bounded code analysis window; unreachable bytes unclassified",
+      "file_start": 50176,
+      "file_end": 51906,
+      "evidence": "Timer ISR CB13-CB25 selects instruction page 001F for 4000 and 002D for 8000 before calling 4000. Local direct calls lead to 43A3 and the voice loop at 43E5; cross-window destinations require context."
+    },
+    {
+      "name": "dsp_delay",
+      "classification": "bounded code analysis window; unreachable bytes unclassified",
+      "file_start": 51906,
+      "file_end": 51921,
+      "evidence": "Immutable page 001F bytes at 46C2-46D0: fourteen NOP instructions then RET. Called by the initial-cutoff routine in the page-001F context."
+    }
+  ],
+  "entry_points": [
+    {
+      "name": "disk_handoff",
+      "cpu_address": 49152,
+      "fetch_page": 0,
+      "file_offset": 18432,
+      "evidence": "docs/condensed/02-ic15-boot-eprom-and-handoff.md; native driver banked_address and banked_physical_r"
+    }
+  ],
+  "mapping": {
+    "kind": "os_banked_payload",
+    "file_start": 18432,
+    "file_end": 1050624,
+    "physical_start": 0,
+    "physical_end": 1032192,
+    "fetch_selectors": [
+      256,
+      258,
+      260,
+      262
+    ],
+    "data_selectors": [
+      264,
+      266,
+      268,
+      270
+    ],
+    "formula": "physical=(selector<<10)+(cpu_address&0x3fff); file=0x4800+physical",
+    "load_evidence": "IC15:4FBF loads cylinders 1..56; IC15:4750 clears fetch selector 0106; 4755 jumps C000."
+  },
+  "vectors": {
+    "cpu_range": [
+      8192,
+      8256
+    ],
+    "interpretation": "CPU vector area; runtime data mapping is separate from instruction fetch. Preserve bytes; do not inject vectors.",
+    "known_runtime_entries": [
+      {
+        "address": 8202,
+        "handler": 51921,
+        "meaning": "HSO/software timer in loaded OS"
+      },
+      {
+        "address": 8250,
+        "handler": 288,
+        "meaning": "Observed loaded-OS EXTINT1 stub; runtime mapping dependent"
+      }
+    ],
+    "evidence": "docs/condensed/02-ic15-boot-eprom-and-handoff.md; native driver banked_address and banked_physical_r"
+  },
+  "derived_fields": [
+    {
+      "name": "checksums_lengths_container_fields",
+      "status": "No recomputation rule qualified for this target",
+      "policy": "preserve_exactly"
+    }
+  ],
+  "build_contract": {
+    "implemented": false,
+    "output_size": 1474560,
+    "relocation": "unsupported",
+    "layout": "fixed offsets; unknown regions preserved verbatim",
+    "generated_source": "ignored local workspace",
+    "maintained_annotations": "versioned manifest; never overwrite generated source with maintained edits"
+  },
+  "unknowns": [
+    "Complete code/data classification is unfinished. Unannotated bytes remain unknown.",
+    "Integrity fields are not fully qualified; absence of a checksum must not be assumed.",
+    "Full bank state and callee effects remain unqualified."
+  ],
+  "evidence": [
+    "docs/condensed/02-ic15-boot-eprom-and-handoff.md; native driver banked_address and banked_physical_r"
+  ]
+}

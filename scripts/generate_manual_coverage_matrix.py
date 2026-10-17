@@ -6,7 +6,7 @@ retained as research input only; they do not drive coverage or ownership claims.
 
 import os
 
-OUTPUT_PATH = "docs/MANUAL_FUNCTION_TEST_COVERAGE.md"
+OUTPUT_PATH = "docs/testing/manual-function-test-coverage.md"
 
 MANUAL_7_SECTIONS = [
     {
@@ -136,7 +136,7 @@ def generate_markdown():
     else:
         from coverage_report import write_report
     sections = [(s['section_id'] + ': ' + s['title'], [(r[0], r[1]) for r in s['procedures']]) for s in MANUAL_7_SECTIONS]
-    write_report(OUTPUT_PATH, 'Manual workflow research inventory', sections)
+    write_report(OUTPUT_PATH, 'Manual workflow research inventory', sections, document_dir="docs/testing")
 
 
 if __name__ == '__main__':

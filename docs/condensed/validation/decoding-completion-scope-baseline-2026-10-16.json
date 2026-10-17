@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-16",
+  "rubric_version": "ic15-native-decoding-v1",
+  "boot_rom_scope_acceptance": {
+    "passed_gates": 46,
+    "total_gates": 60,
+    "percent": 76.66666666666667,
+    "gate_counts": {
+      "context": 11,
+      "layout": 15,
+      "behavior": 12,
+      "execution": 8
+    }
+  },
+  "initial_baseline": true,
+  "acceptance_percentage_point_change": null,
+  "metrics": {
+    "boot_rom": {
+      "classified_bytes": 26277,
+      "total_bytes": 32768,
+      "percent": 80.1910400390625,
+      "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "presumed_unused_bytes": 6490,
+      "accounted_including_assumption_bytes": 32767,
+      "unresolved_other_bytes": 1
+    },
+    "os": {
+      "classified_bytes": 77680,
+      "total_bytes": 1032192,
+      "percent": 7.525731646825397,
+      "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    }
+  },
+  "classified_byte_percentage_point_change": {
+    "boot_rom": 0,
+    "os": 0
+  },
+  "overall_decoding_completion": "not yet quantifiable for OS-plus-ROM; boot-ROM v1 acceptance separately quantified",
+  "qualifications": "ic15-completion-scope-v1.json",
+  "verification": {
+    "guard_tests": 3,
+    "deterministic_report_check": "passed"
+  },
+  "generator_sha256": "93efcbce81bdfdcb8edf6e8aee366d909500869baf8c7f35dfa734baee267870"
+}

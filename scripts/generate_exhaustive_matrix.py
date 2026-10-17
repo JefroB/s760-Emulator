@@ -6,7 +6,7 @@ retained as research input only; they do not drive coverage or ownership claims.
 
 import os
 
-OUTPUT_PATH = "docs/OS_EXHAUSTIVE_CODE_MATRIX.md"
+OUTPUT_PATH = "docs/firmware/os/os-exhaustive-code-matrix.md"
 
 TESTED = "Unverified"
 UNTESTED = "Unverified"
@@ -140,10 +140,10 @@ EXHAUSTIVE_SECTIONS = [
         "section_title": "9. OS String Catalog & Token Lookup Tables",
         "description": "ASCII strings extracted and categorized from the OS binary payload.",
         "rows": [
-            ("0x08B000 - 0x090000", "String Table: UI Labels & Page Names", "Yes", "Screen headers, mode banners ('PERFORM', 'PATCH', 'PARTIAL', 'SAMPLE', 'SYSTEM', 'DISK')", TESTED, "Yes", "Low", "docs/OS_STRING_CATALOG.md:1", "tests/test_image_invariants.py"),
-            ("0x090000 - 0x0A0000", "String Table: Parameter Names & Units", "Yes", "'Cutoff', 'Resonance', 'Attack', 'Release', 'Level', 'Pan', 'Freq (Hz)', 'Ratio (%)'", UNTESTED, "Yes", "Low", "docs/OS_STRING_CATALOG.md:500", ""),
-            ("0x0A0000 - 0x0B0000", "String Table: Storage & SCSI Commands", "Yes", "'Format Disk', 'Load All', 'Save Patch', 'Akai Convert', 'S-550 Convert', 'Tape Streamer'", UNTESTED, "Yes", "Low", "docs/OS_STRING_CATALOG.md:2500", ""),
-            ("0x0B0000 - 0x0C8000", "String Table: Diagnostic & Error Prompts", "Yes", "'Device Not Ready', 'Disk Write Protected', 'Out Of Memory', 'Now Working...', 'Are You Sure?'", UNTESTED, "Yes", "Low", "docs/OS_STRING_CATALOG.md:6000", ""),
+            ("0x08B000 - 0x090000", "String Table: UI Labels & Page Names", "Yes", "Screen headers, mode banners ('PERFORM', 'PATCH', 'PARTIAL', 'SAMPLE', 'SYSTEM', 'DISK')", TESTED, "Yes", "Low", "docs/firmware/os/os-string-catalog.md:1", "tests/test_image_invariants.py"),
+            ("0x090000 - 0x0A0000", "String Table: Parameter Names & Units", "Yes", "'Cutoff', 'Resonance', 'Attack', 'Release', 'Level', 'Pan', 'Freq (Hz)', 'Ratio (%)'", UNTESTED, "Yes", "Low", "docs/firmware/os/os-string-catalog.md:500", ""),
+            ("0x0A0000 - 0x0B0000", "String Table: Storage & SCSI Commands", "Yes", "'Format Disk', 'Load All', 'Save Patch', 'Akai Convert', 'S-550 Convert', 'Tape Streamer'", UNTESTED, "Yes", "Low", "docs/firmware/os/os-string-catalog.md:2500", ""),
+            ("0x0B0000 - 0x0C8000", "String Table: Diagnostic & Error Prompts", "Yes", "'Device Not Ready', 'Disk Write Protected', 'Out Of Memory', 'Now Working...', 'Are You Sure?'", UNTESTED, "Yes", "Low", "docs/firmware/os/os-string-catalog.md:6000", ""),
         ]
     },
     {
@@ -165,7 +165,7 @@ def generate_markdown():
     else:
         from coverage_report import write_report
     sections = [(s['section_title'], [(r[1], r[0]) for r in s['rows']]) for s in EXHAUSTIVE_SECTIONS]
-    write_report(OUTPUT_PATH, 'OS code research inventory', sections)
+    write_report(OUTPUT_PATH, 'OS code research inventory', sections, document_dir="docs/firmware/os")
 
 
 if __name__ == '__main__':

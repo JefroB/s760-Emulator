@@ -1,0 +1,1178 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "OPEN; stationary response constrained, moving control application remains suspect",
+  "native_comparison": {
+    "control_application_trace_identical": true,
+    "rows": [
+      {
+        "name": "bypass",
+        "program": 0,
+        "note": 60,
+        "aligned_error_percent": 0.0,
+        "windows": [
+          {
+            "file_seconds": 1,
+            "unshifted_error_percent": 141.98783123101458,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 3,
+            "unshifted_error_percent": 141.97505449822248,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 5,
+            "unshifted_error_percent": 141.96227661551288,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 7,
+            "unshifted_error_percent": 141.9590819651245,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 9,
+            "unshifted_error_percent": 141.99741302616198,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 11,
+            "unshifted_error_percent": 141.98783123101455,
+            "one_source_sample_aligned_error_percent": 0.0
+          }
+        ]
+      },
+      {
+        "name": "static64-r64",
+        "program": 17,
+        "note": 60,
+        "aligned_error_percent": 5.074295955599403e-06,
+        "windows": [
+          {
+            "file_seconds": 1,
+            "unshifted_error_percent": 2.607427423741637,
+            "one_source_sample_aligned_error_percent": 1.6768064156259575e-05
+          },
+          {
+            "file_seconds": 3,
+            "unshifted_error_percent": 2.608684146009125,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 5,
+            "unshifted_error_percent": 2.609985652751107,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 7,
+            "unshifted_error_percent": 2.6089035158075315,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 9,
+            "unshifted_error_percent": 2.6087572733408773,
+            "one_source_sample_aligned_error_percent": 0.0
+          },
+          {
+            "file_seconds": 11,
+            "unshifted_error_percent": 2.6081899481260775,
+            "one_source_sample_aligned_error_percent": 0.0
+          }
+        ]
+      },
+      {
+        "name": "sweep-r64",
+        "program": 3,
+        "note": 60,
+        "aligned_error_percent": 0.5539890857542238,
+        "windows": [
+          {
+            "file_seconds": 1,
+            "unshifted_error_percent": 0.6781146433151068,
+            "one_source_sample_aligned_error_percent": 0.20902039536847186
+          },
+          {
+            "file_seconds": 3,
+            "unshifted_error_percent": 27.085692292592647,
+            "one_source_sample_aligned_error_percent": 0.50352184737044
+          },
+          {
+            "file_seconds": 5,
+            "unshifted_error_percent": 30.069312184483117,
+            "one_source_sample_aligned_error_percent": 0.3538054417687231
+          },
+          {
+            "file_seconds": 7,
+            "unshifted_error_percent": 1.0911558350595645,
+            "one_source_sample_aligned_error_percent": 0.3220673410170472
+          },
+          {
+            "file_seconds": 9,
+            "unshifted_error_percent": 1.637453688018213,
+            "one_source_sample_aligned_error_percent": 1.609835779628691
+          },
+          {
+            "file_seconds": 11,
+            "unshifted_error_percent": 1.6089417331569784,
+            "one_source_sample_aligned_error_percent": 1.5817980433368057
+          }
+        ]
+      }
+    ],
+    "hashes": {
+      "roms\\FDD\\ROBO_TVF.IMG": "1bcbd06688769883ad0f1477608fd80a134e4b22e7bea76709a98283007f3fad",
+      "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+      "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\off\\application.csv": "a26e7847479bafc2401bec6ae33b17d5f871f0bc302ba9239d34b93f9f158a75",
+      "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\on\\application.csv": "3723b9ee084534b0df33e866b4cdf5a9cdf2d604c685a858ec863a2c27795086"
+    }
+  },
+  "static_controls": {
+    "source_sha256": "f4aa569c7c5148f5e49004f6ddef1591b51143bd5a4b38c09f839fd1d1856d44",
+    "results": [
+      {
+        "capture": "s760_18 LP C64R64_20261010_122944.zip",
+        "sha256": "8a5b1f82754f675fe329f0d260da12c3a8198cfecbe884d19962d8fd11670f67",
+        "cutoff_word": 428,
+        "damping_word": 85,
+        "training_gain": 0.9998251508280496,
+        "phase_slope": -0.0014714323096001614,
+        "evaluation": [
+          {
+            "start": 3.0,
+            "end": 4.5,
+            "relative_rms_percent": 0.0610616538717086,
+            "correlation": 0.9999998136098621
+          },
+          {
+            "start": 6.0,
+            "end": 7.5,
+            "relative_rms_percent": 0.0948933311587783,
+            "correlation": 0.9999995498827909
+          },
+          {
+            "start": 9.0,
+            "end": 10.5,
+            "relative_rms_percent": 0.13523923473951335,
+            "correlation": 0.9999990855404854
+          }
+        ]
+      },
+      {
+        "capture": "s760_19 LP C96R64_20261010_123933.zip",
+        "sha256": "52b77419dd29548348a70bf465e24bd2e523d93abd84ce0c77cedd8226e0f031",
+        "cutoff_word": 2732,
+        "damping_word": 85,
+        "training_gain": 0.998786637414678,
+        "phase_slope": -0.007759915203441223,
+        "evaluation": [
+          {
+            "start": 3.0,
+            "end": 4.5,
+            "relative_rms_percent": 0.08632557651403618,
+            "correlation": 0.9999996273953945
+          },
+          {
+            "start": 6.0,
+            "end": 7.5,
+            "relative_rms_percent": 0.08854579697913793,
+            "correlation": 0.999999607982403
+          },
+          {
+            "start": 9.0,
+            "end": 10.5,
+            "relative_rms_percent": 0.09361897726455622,
+            "correlation": 0.9999995617742801
+          }
+        ]
+      }
+    ],
+    "limits": "Fixed LP recurrence; training-only constant gain and affine source phase. Analog captures, not absolute timing or free coefficient fits."
+  },
+  "moving_diagnostics": {
+    "recording-band": {
+      "results": [
+        {
+          "label": "quiet",
+          "source_reference": "s760_01 REF NOISE 2_20261010_130755.zip",
+          "capture": "s760_04 LP SW R64_20261010_130922.zip",
+          "parameters": [
+            0.9194709314682524,
+            1543.8294794087253,
+            1.0022946518341804
+          ],
+          "training_relative_rms_percent": 19.74330924358697,
+          "evaluation_relative_rms_percent": 17.77805382954337,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 43.70995551039575,
+              "observed_rms": 0.0020035293842566764
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 39.60874984692596,
+              "observed_rms": 0.002497079921727358
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 19.331778187059534,
+              "observed_rms": 0.0036940458016930327
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 12.563974722239735,
+              "observed_rms": 0.006231967637177614
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 7.025302693689454,
+              "observed_rms": 0.007394000798785587
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 7.047812608306089,
+              "observed_rms": 0.006608725377466391
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 13.1435843534647,
+              "observed_rms": 0.0060519848748867185
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 25.477573448789215,
+              "observed_rms": 0.003860048585585551
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 49.28693554156899,
+              "observed_rms": 0.002462690645883282
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 52.19828539706347,
+              "observed_rms": 0.001274272309082721
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 45.80553047135535,
+              "observed_rms": 0.0013376643590326763
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 103.85270434451095,
+              "observed_rms": 0.0007604507302094562
+            }
+          ]
+        },
+        {
+          "label": "repeat",
+          "source_reference": "s760_01 REF NOISE_20261010_121558.zip",
+          "capture": "s760_04 LP SW R64_20261010_133400.zip",
+          "parameters": [
+            0.3847621530529324,
+            1795.116175182844,
+            1.0005049176519232
+          ],
+          "training_relative_rms_percent": 18.378753223741914,
+          "evaluation_relative_rms_percent": 17.71295278816195,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 46.2297050718758,
+              "observed_rms": 0.014826571044249616
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 26.05128205814211,
+              "observed_rms": 0.012978572345887408
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 57.7776707514955,
+              "observed_rms": 0.017224195158058765
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 16.700986273471703,
+              "observed_rms": 0.028524401352597893
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 14.733853240413406,
+              "observed_rms": 0.048201249677233056
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 7.996926737109739,
+              "observed_rms": 0.05021652428236643
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 9.55073987784336,
+              "observed_rms": 0.05916989887522061
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 13.881980837901072,
+              "observed_rms": 0.05395544613407516
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 17.910455940467344,
+              "observed_rms": 0.03538428992612302
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 32.23673145329311,
+              "observed_rms": 0.022187865370084364
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 29.066928248595897,
+              "observed_rms": 0.011845704969464368
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 69.80604713185156,
+              "observed_rms": 0.008875574010064257
+            }
+          ]
+        }
+      ],
+      "controls": {
+        "damping": 85,
+        "gain": 1,
+        "source_rate": 44100.94143223983,
+        "phase_lanes": 8
+      },
+      "limits": [
+        "Analog recordings; trimmed start is audio origin, not MIDI timestamp.",
+        "Train/evaluation alternating blocks have been reused in historical exploration, not fresh validation.",
+        "Source phase, constant trim and envelope time-scale fitted on training only.",
+        "Fractional-phase lanes approximate commuting slowly changing native recurrence with the recording chain; not literal hardware or a DSP correction."
+      ]
+    },
+    "native-hold": {
+      "results": [
+        {
+          "label": "quiet",
+          "source_reference": "s760_01 REF NOISE 2_20261010_130755.zip",
+          "capture": "s760_04 LP SW R64_20261010_130922.zip",
+          "parameters": [
+            0.9196624828276939,
+            1543.8721549712259,
+            1.0022848535402316
+          ],
+          "training_relative_rms_percent": 49.69295842016931,
+          "evaluation_relative_rms_percent": 45.01438109790034,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 43.74203021229539,
+              "observed_rms": 0.0020035293842566764
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 45.04071588567142,
+              "observed_rms": 0.002497079921727358
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 39.76793385701815,
+              "observed_rms": 0.0036940458016930327
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 43.314479960868894,
+              "observed_rms": 0.006231967637177614
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 54.85995893787701,
+              "observed_rms": 0.007394000798785587
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 52.43676692918733,
+              "observed_rms": 0.006608725377466391
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 39.101634668239605,
+              "observed_rms": 0.0060519848748867185
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 28.403680356419358,
+              "observed_rms": 0.003860048585585551
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 47.4197705387875,
+              "observed_rms": 0.002462690645883282
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 50.75721082842095,
+              "observed_rms": 0.001274272309082721
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 64.93529689304519,
+              "observed_rms": 0.0013376643590326763
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 128.35006018861023,
+              "observed_rms": 0.0007604507302094562
+            }
+          ]
+        },
+        {
+          "label": "repeat",
+          "source_reference": "s760_01 REF NOISE_20261010_121558.zip",
+          "capture": "s760_04 LP SW R64_20261010_133400.zip",
+          "parameters": [
+            0.3850469425014856,
+            1795.1806294951168,
+            1.0006350697918776
+          ],
+          "training_relative_rms_percent": 43.10638941161472,
+          "evaluation_relative_rms_percent": 45.438452747392915,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 39.866665424928534,
+              "observed_rms": 0.014826571044249616
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 26.07848468649187,
+              "observed_rms": 0.012978572345887408
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 63.531566728585936,
+              "observed_rms": 0.017224195158058765
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 24.635753744211694,
+              "observed_rms": 0.028524401352597893
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 35.994556407361536,
+              "observed_rms": 0.048201249677233056
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 53.16728727730869,
+              "observed_rms": 0.05021652428236643
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 49.986427074224224,
+              "observed_rms": 0.05916989887522061
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 43.002898123975136,
+              "observed_rms": 0.05395544613407516
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 30.56677086039949,
+              "observed_rms": 0.03538428992612302
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 37.103628271150896,
+              "observed_rms": 0.022187865370084364
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 32.018225256322395,
+              "observed_rms": 0.011845704969464368
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 73.80897302128984,
+              "observed_rms": 0.008875574010064257
+            }
+          ]
+        }
+      ],
+      "controls": {
+        "damping": 85,
+        "gain": 1,
+        "source_rate": 44100.94143223983,
+        "phase_lanes": 8,
+        "trajectory": "actual native held activation trace"
+      },
+      "limits": [
+        "Analog recordings; trimmed start is audio origin, not MIDI timestamp.",
+        "Train/evaluation alternating blocks have been reused in historical exploration, not fresh validation.",
+        "Source phase, constant trim and envelope time-scale fitted on training only.",
+        "Fractional-phase lanes approximate commuting slowly changing native recurrence with the recording chain; not literal hardware or a DSP correction."
+      ]
+    },
+    "native-linear": {
+      "results": [
+        {
+          "label": "quiet",
+          "source_reference": "s760_01 REF NOISE 2_20261010_130755.zip",
+          "capture": "s760_04 LP SW R64_20261010_130922.zip",
+          "parameters": [
+            0.909483323195724,
+            1543.828529881556,
+            1.0024559835595614
+          ],
+          "training_relative_rms_percent": 19.756176277320325,
+          "evaluation_relative_rms_percent": 17.769670710693813,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 43.75465963454001,
+              "observed_rms": 0.0020035293842566764
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 39.579237879702035,
+              "observed_rms": 0.002497079921727358
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 19.256044686661085,
+              "observed_rms": 0.0036940458016930327
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 12.521970625353816,
+              "observed_rms": 0.006231967637177614
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 7.026269674156129,
+              "observed_rms": 0.007394000798785587
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 7.1738329253749775,
+              "observed_rms": 0.006608725377466391
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 13.219089933861397,
+              "observed_rms": 0.0060519848748867185
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 25.32220655173549,
+              "observed_rms": 0.003860048585585551
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 49.10181908875099,
+              "observed_rms": 0.002462690645883282
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 52.140573775469704,
+              "observed_rms": 0.001274272309082721
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 46.31946626698129,
+              "observed_rms": 0.0013376643590326763
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 104.73879719448371,
+              "observed_rms": 0.0007604507302094562
+            }
+          ]
+        },
+        {
+          "label": "repeat",
+          "source_reference": "s760_01 REF NOISE_20261010_121558.zip",
+          "capture": "s760_04 LP SW R64_20261010_133400.zip",
+          "parameters": [
+            0.37470389003120735,
+            1795.1194532251388,
+            1.0006785907427453
+          ],
+          "training_relative_rms_percent": 18.42487659665947,
+          "evaluation_relative_rms_percent": 17.748714415015808,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 46.0235172635693,
+              "observed_rms": 0.014826571044249616
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 26.063709023591816,
+              "observed_rms": 0.012978572345887408
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 57.909080615859295,
+              "observed_rms": 0.017224195158058765
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 16.61668236853199,
+              "observed_rms": 0.028524401352597893
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 14.834050954894993,
+              "observed_rms": 0.048201249677233056
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 7.8728987281037215,
+              "observed_rms": 0.05021652428236643
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 9.513699908235614,
+              "observed_rms": 0.05916989887522061
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 14.084372864058032,
+              "observed_rms": 0.05395544613407516
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 17.95040409518576,
+              "observed_rms": 0.03538428992612302
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 32.36875342910457,
+              "observed_rms": 0.022187865370084364
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 29.073937142237476,
+              "observed_rms": 0.011845704969464368
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 69.93657515605693,
+              "observed_rms": 0.008875574010064257
+            }
+          ]
+        }
+      ],
+      "controls": {
+        "damping": 85,
+        "gain": 1,
+        "source_rate": 44100.94143223983,
+        "phase_lanes": 8,
+        "trajectory": "native-linear"
+      },
+      "limits": [
+        "Analog recordings; trimmed start is audio origin, not MIDI timestamp.",
+        "Train/evaluation alternating blocks have been reused in historical exploration, not fresh validation.",
+        "Source phase, constant trim and envelope time-scale fitted on training only.",
+        "Fractional-phase lanes approximate commuting slowly changing native recurrence with the recording chain; not literal hardware or a DSP correction."
+      ]
+    },
+    "native-hold-fixed-clock": {
+      "results": [
+        {
+          "label": "quiet",
+          "source_reference": "s760_01 REF NOISE 2_20261010_130755.zip",
+          "capture": "s760_04 LP SW R64_20261010_130922.zip",
+          "parameters": [
+            0.929801420245456,
+            1543.7770930194629,
+            1.0000213476708353
+          ],
+          "training_relative_rms_percent": 51.508966169147186,
+          "evaluation_relative_rms_percent": 44.030689248231425,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 56.673627462947664,
+              "observed_rms": 0.0020035293842566764
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 44.622536496030335,
+              "observed_rms": 0.002497079921727358
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 33.35832504793232,
+              "observed_rms": 0.0036940458016930327
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 38.678499850564236,
+              "observed_rms": 0.006231967637177614
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 55.21243987247193,
+              "observed_rms": 0.007394000798785587
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 52.147367772860264,
+              "observed_rms": 0.006608725377466391
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 40.16788627931283,
+              "observed_rms": 0.0060519848748867185
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 35.72574990209509,
+              "observed_rms": 0.003860048585585551
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 45.798182180871045,
+              "observed_rms": 0.002462690645883282
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 44.758633390164064,
+              "observed_rms": 0.001274272309082721
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 102.35455389512006,
+              "observed_rms": 0.0013376643590326763
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 164.99871462508128,
+              "observed_rms": 0.0007604507302094562
+            }
+          ]
+        },
+        {
+          "label": "repeat",
+          "source_reference": "s760_01 REF NOISE_20261010_121558.zip",
+          "capture": "s760_04 LP SW R64_20261010_133400.zip",
+          "parameters": [
+            0.38770067810964143,
+            1795.1507206950166,
+            1.0000213476708368
+          ],
+          "training_relative_rms_percent": 43.36498000804491,
+          "evaluation_relative_rms_percent": 46.24565924890618,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 23.729061346652983,
+              "observed_rms": 0.014826571044249616
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 31.807531550694335,
+              "observed_rms": 0.012978572345887408
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 69.4185621771592,
+              "observed_rms": 0.017224195158058765
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 26.18448591134598,
+              "observed_rms": 0.028524401352597893
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 36.15987092905857,
+              "observed_rms": 0.048201249677233056
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 52.97130066623282,
+              "observed_rms": 0.05021652428236643
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 49.81702035731955,
+              "observed_rms": 0.05916989887522061
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 43.7618529045811,
+              "observed_rms": 0.05395544613407516
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 31.795027393280186,
+              "observed_rms": 0.03538428992612302
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 42.39353556616447,
+              "observed_rms": 0.022187865370084364
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 33.840564010749475,
+              "observed_rms": 0.011845704969464368
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 83.84830437757306,
+              "observed_rms": 0.008875574010064257
+            }
+          ]
+        }
+      ],
+      "controls": {
+        "damping": 85,
+        "gain": 1,
+        "source_rate": 44100.94143223983,
+        "phase_lanes": 8,
+        "trajectory": "native-hold-fixed-clock"
+      },
+      "limits": [
+        "Analog recordings; trimmed start is audio origin, not MIDI timestamp.",
+        "Train/evaluation alternating blocks have been reused in historical exploration, not fresh validation.",
+        "Source phase, constant trim and envelope time-scale fitted on training only.",
+        "Fractional-phase lanes approximate commuting slowly changing native recurrence with the recording chain; not literal hardware or a DSP correction."
+      ]
+    },
+    "native-linear-fixed-clock": {
+      "results": [
+        {
+          "label": "quiet",
+          "source_reference": "s760_01 REF NOISE 2_20261010_130755.zip",
+          "capture": "s760_04 LP SW R64_20261010_130922.zip",
+          "parameters": [
+            0.9203515229169236,
+            1543.764414562014,
+            1.0000213476708344
+          ],
+          "training_relative_rms_percent": 24.604017319362768,
+          "evaluation_relative_rms_percent": 19.141519240976017,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 56.38004599070046,
+              "observed_rms": 0.0020035293842566764
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 45.207613788073225,
+              "observed_rms": 0.002497079921727358
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 20.348423273022597,
+              "observed_rms": 0.0036940458016930327
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 16.682094809331467,
+              "observed_rms": 0.006231967637177614
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 8.332632559864061,
+              "observed_rms": 0.007394000798785587
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 6.953300316395229,
+              "observed_rms": 0.006608725377466391
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 15.894637106655308,
+              "observed_rms": 0.0060519848748867185
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 25.535710716139715,
+              "observed_rms": 0.003860048585585551
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 39.63006207278402,
+              "observed_rms": 0.002462690645883282
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 41.55377572799281,
+              "observed_rms": 0.001274272309082721
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 90.7467996198561,
+              "observed_rms": 0.0013376643590326763
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 160.00251314062527,
+              "observed_rms": 0.0007604507302094562
+            }
+          ]
+        },
+        {
+          "label": "repeat",
+          "source_reference": "s760_01 REF NOISE_20261010_121558.zip",
+          "capture": "s760_04 LP SW R64_20261010_133400.zip",
+          "parameters": [
+            0.37745385556066513,
+            1795.0789969606628,
+            1.0000213476708373
+          ],
+          "training_relative_rms_percent": 19.02792451107042,
+          "evaluation_relative_rms_percent": 20.593362636687377,
+          "windows": [
+            {
+              "start": 1.5,
+              "end": 1.9,
+              "relative_rms_percent": 29.83830899144923,
+              "observed_rms": 0.014826571044249616
+            },
+            {
+              "start": 1.9,
+              "end": 2.3,
+              "relative_rms_percent": 27.754938839482396,
+              "observed_rms": 0.012978572345887408
+            },
+            {
+              "start": 2.3,
+              "end": 2.6999999999999997,
+              "relative_rms_percent": 63.64385291009669,
+              "observed_rms": 0.017224195158058765
+            },
+            {
+              "start": 2.6999999999999997,
+              "end": 3.0999999999999996,
+              "relative_rms_percent": 16.323933234503404,
+              "observed_rms": 0.028524401352597893
+            },
+            {
+              "start": 3.0999999999999996,
+              "end": 3.4999999999999996,
+              "relative_rms_percent": 16.189412936070145,
+              "observed_rms": 0.048201249677233056
+            },
+            {
+              "start": 3.4999999999999996,
+              "end": 3.8999999999999995,
+              "relative_rms_percent": 9.136787787068855,
+              "observed_rms": 0.05021652428236643
+            },
+            {
+              "start": 3.8999999999999995,
+              "end": 4.3,
+              "relative_rms_percent": 12.079519354451982,
+              "observed_rms": 0.05916989887522061
+            },
+            {
+              "start": 4.299999999999999,
+              "end": 4.699999999999999,
+              "relative_rms_percent": 16.289327824985346,
+              "observed_rms": 0.05395544613407516
+            },
+            {
+              "start": 4.699999999999999,
+              "end": 5.1,
+              "relative_rms_percent": 19.736800895763512,
+              "observed_rms": 0.03538428992612302
+            },
+            {
+              "start": 5.1,
+              "end": 5.5,
+              "relative_rms_percent": 38.54955263641603,
+              "observed_rms": 0.022187865370084364
+            },
+            {
+              "start": 5.499999999999999,
+              "end": 5.8999999999999995,
+              "relative_rms_percent": 31.24102467491582,
+              "observed_rms": 0.011845704969464368
+            },
+            {
+              "start": 5.899999999999999,
+              "end": 6.299999999999999,
+              "relative_rms_percent": 81.34852143591732,
+              "observed_rms": 0.008875574010064257
+            }
+          ]
+        }
+      ],
+      "controls": {
+        "damping": 85,
+        "gain": 1,
+        "source_rate": 44100.94143223983,
+        "phase_lanes": 8,
+        "trajectory": "native-linear-fixed-clock"
+      },
+      "limits": [
+        "Analog recordings; trimmed start is audio origin, not MIDI timestamp.",
+        "Train/evaluation alternating blocks have been reused in historical exploration, not fresh validation.",
+        "Source phase, constant trim and envelope time-scale fitted on training only.",
+        "Fractional-phase lanes approximate commuting slowly changing native recurrence with the recording chain; not literal hardware or a DSP correction."
+      ]
+    }
+  },
+  "stationary_lane_numerical_checks": [
+    {
+      "cutoff": 428,
+      "relative_rms": 2.9439797379767836e-12
+    },
+    {
+      "cutoff": 2732,
+      "relative_rms": 1.301128753354779e-13
+    }
+  ],
+  "limits": [
+    "No C++ or production playback changes in this investigation. Existing source flag remains diagnostic/off by default.",
+    "Hardware WAV starts are silence-trimmed audio origins. No absolute MIDI latency inference.",
+    "Moving comparisons use measured bypass excitation and recording-band fractional-phase lanes, not literal DAC/ASIC arithmetic.",
+    "Historical interpolated and native held traces are emulator evidence, not physical register-write captures.",
+    "Linear interpolation between writes uses a future endpoint; explanatory offline diagnostic, not a causal implementation proposal.",
+    "Source phase and constant envelope alignment fit on alternating training blocks only. Fixed-clock variants freeze scale to independently measured source-clock ratio; other variants fit a small envelope scale.",
+    "Evaluation blocks have been reused across historical experiments, not independent validation.",
+    "Good stationary control results at two points do not establish the entire filter transfer function or rule out moving-state arithmetic."
+  ],
+  "hashes": {
+    "mame-source\\mames760.exe": "7e90222277cbcc45802ee4f1db37573b0f7b2bf8cc3db55e0b5fa8f5ce4ad71d",
+    "roms\\FDD\\ROBO_TVF.IMG": "1bcbd06688769883ad0f1477608fd80a134e4b22e7bea76709a98283007f3fad",
+    "docs\\ic20-hle-findings\\chatGPT-work\\capture_original_resonant.py": "3898284cd09cc07ecde037b1a84ab043a57942222562494bfe4d1c37df1824e7",
+    "docs\\ic20-hle-findings\\chatGPT-work\\check_original_resonant_static.py": "078e20127875d8b0499612e367bf4b4d6ff3b4b90af441532bcd922da2f52500",
+    "docs\\ic20-hle-findings\\chatGPT-work\\check_resonant_recording_band.py": "344ba499d8ca55d0824ad28cc2bb31b6cd1ad5b469664b1c70d14eeddff2d2eb",
+    "docs\\ic20-hle-findings\\chatGPT-work\\compare_original_source_flag.py": "03eea44eb717c13edb6e8f2723981fdc06479415c14546468a3821d1d612c27f",
+    "docs\\ic20-hle-findings\\chatGPT-work\\capture-81b.log": "dec9a1a4e1aa32ccb3521011d1c1a433711ada162021160649dcd5873303faad",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\native-hold-fixed-clock-moving.json": "2bdad49c8e78f07d4b3b200c775f453ffed85c476d0ff2b280e1c66807491861",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\native-hold-moving.json": "f536a8ce6d2f9b790118fb81d8dfa390cd370f9ccf1b688a4db77396c172ea8c",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\native-linear-fixed-clock-moving.json": "13f9cd13292d880656246d6af339e24cb30902fef732286cd89575621bb981c6",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\native-linear-moving.json": "6b18c6c127b9d484a5750c94bceff5519fd4f88db5edeb1a38a32053c70eeadd",
+    "docs\\ic20-hle-findings\\chatGPT-work\\resonant-source-control-2026-10-15\\recording-band-moving.json": "99ee04739547ff3a129940059e65bb3e8401ac2b56b6610577089536056be2a3",
+    "test-recordings\\s760_01 REF NOISE 2_20261010_130755.zip": "7f83e74a62c5c3ace3771467e8e1ead4a3e3be6efb42464b3e4d91a512245487",
+    "test-recordings\\s760_01 REF NOISE_20261010_121558.zip": "f4aa569c7c5148f5e49004f6ddef1591b51143bd5a4b38c09f839fd1d1856d44",
+    "test-recordings\\s760_04 LP SW R64_20261010_130922.zip": "34315b1ca9d12fc8d6a20cb41a4a0652c24d4ba28a03b81dc432abdeee0354d0",
+    "test-recordings\\s760_04 LP SW R64_20261010_133400.zip": "c90dc78bb559f0468f47a016a74944f152dc93b0eb0d43f3bb2c5c5293820536",
+    "test-recordings\\s760_18 LP C64R64_20261010_122944.zip": "8a5b1f82754f675fe329f0d260da12c3a8198cfecbe884d19962d8fd11670f67",
+    "test-recordings\\s760_19 LP C96R64_20261010_123933.zip": "52b77419dd29548348a70bf465e24bd2e523d93abd84ce0c77cedd8226e0f031"
+  }
+}

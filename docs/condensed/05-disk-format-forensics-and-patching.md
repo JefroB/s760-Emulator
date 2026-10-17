@@ -141,7 +141,7 @@ the88-key ROBOFULL fixture:119808 bytes, with note60 playback and silent release
 verified. High wave-memory records differ across save/reload, so full session
 state equivalence is not claimed. Library originals remain unchanged.
 See [reproducible evidence](validation/native-media-2026-10-11.json) and
-[the player runbook](../STANDALONE_PLAYER.md). Busy or dirty controller media
+[the player runbook](../emulator/guides/standalone-player.md). Busy or dirty controller media
 now rejects replacement/ejection. Export acknowledges only its captured revision
 after host publication; subsequent writes remain dirty. Native regression covers
 134 writes, rejected changes, export, ejection/reinsertion and fresh reload.
@@ -217,7 +217,7 @@ preload; it does not describe the real loader handoff or prove banking unnecessa
 
 Condensed 2026-10-09 from the original overview, disk map, CPU investigation,
 manuals guide, emulation specification, findings log, and string/forensics catalogs.
-See [source map](SOURCE_MAP.md) for the complete input list. Offsets below are
+See [source map](source-map.md) for the complete input list. Offsets below are
 **disk file offsets** unless explicitly marked runtime.
 
 ## Artifact and layout
@@ -291,7 +291,7 @@ folder. Never alter `S760224.IMG` in place.
 
 ## Resource catalogs and limits
 
-`OS_STRING_CATALOG.md` and `06-ui-string-map.txt` preserve exact strings and file
+`os-string-catalog.md` and `06-ui-string-map.txt` preserve exact strings and file
 offsets. Useful anchors include Patch Common `0x09446A`, Partial TVF `0x09A1DC`,
 TVA `0x09A872`, and LFO `0x09ACA0`. These locate labels/descriptors; they are not
 automatically executable function entries or C++ structure offsets.
@@ -327,3 +327,18 @@ Current native ROBOFULL Save clears four active notes, completes under240 incomi
 ### Disk Load versus full-session identity (BUG-006,2026-10-14)
 
 The historical347-byte wave-RAM mismatch reproduces in the32MiB profile at high-memory metadata/name/ID/directory records, while13 sample allocations/119808 bytes remain exact through Save/export/fresh firmware Load. A separate cold checkpoint preserves all33554432 wave-RAM bytes exactly. Disk Load reconstructs records and must not be required to reproduce an entire session. BUG-006 is closed WONTFIX for its erroneous whole-session expectation; no guest metadata was patched. `verify_native_media.py --checkpoint --state-dir <fresh-private-directory>` now records every changed range and asserts full-wave identity specifically for checkpoint recall. [Evidence](validation/remaining-bug-investigation-2026-10-14.json).
+
+
+### Explicit TVF envelope fields corrected (BUG-073,2026-10-14)
+
+The original firmware TVF screen confirms partial+0x52..0x55 holds the four Level values and+0x56..0x59 the four Time values. The historical local builder labelled/wrote these in reverse for explicit specs. The canonical tracked scripts/build_sample_disk.py corrects explicit JSON levels/rates(time); the local .agents entry point delegates to it. Implicit legacy preset bytes remain unchanged. The controlled TVFSTEP capture disk is737280 bytes, loads64512 sample bytes exactly and produces the measured up/down steps and static endpoints through unmodified firmware. [Capture instructions](../hardware/captures/tvf-transition-capture.md), [native evidence](validation/tvf-transition-capture-2026-10-14.json). Generated images and their proprietary template stay outside source distributions.
+
+
+### OS transfer supervisor (static, 2026-10-16)
+
+OS 2.24 reserves sample space in units of 0x1200 before searching its 512 descriptor slots. Startup C869/C86D/C872 explicitly maps fetch page 0166 and calls 87B5; recursive analysis reaches higher-level rollback at 8B5F. That helper restores cursor 3616 from saved 1FA0 and refreshes page 0299 allocation mirrors. The supervisor's receive loop resets a 16-bit stall counter when the packet counter changes; cancellation or counter wrap takes an error path through rollback, while success takes a staged 0x30-byte copy path. External callee preservation, descriptor ownership and native cleanup acceptance remain open. These are static original-byte observations, not a measured timeout or physical transfer validation. [Lifecycle analysis](../firmware/os/os-transfer-lifecycle.md) and [byte evidence](validation/os-transfer-lifecycle-2026-10-16.json).
+
+
+### Original OS startup device identification
+
+[Static device-probe decoding](../firmware/os/os-device-probe-and-numeric-fields.md) followsstartup0129:8000 overeight targets0..7. Commandrecordsunder02CC:5F4E/5F55 are count6 plus03/12 commandbytes withrequested0A/23-byte responses. Counted comparisons identifyvendor/productprefixes,includingJVC/OMTI,CD-ROMfamilies,SonySMO-C,SyQuestandIomega. [Original-byte evidence](validation/os-device-probe-and-numeric-2026-10-16.json) preserves boundedresources;these firmwarebranchesdo notestablishnewphysicaldevicecompatibility.

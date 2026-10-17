@@ -4,12 +4,12 @@ Requires the private SoundCheck QA patch with separate stereo waveform capture.
 Functional controller checks negotiate offline processing by default; use the
 separate paced native-host tests for realtime deadlines. --burst-check verifies
 unpaced blocks under the chosen contract without retrying rejected blocks.
-RawCC120/121 remain original-firmware passthrough; see docs/NATIVE_VST3_MIDI.md.
+RawCC120/121 remain original-firmware passthrough; see docs/emulator/runtime/native-vst3-midi.md.
 """
 """Qualify audible native firmware bend through actual VST3 parameter queues.
 
 Requires original OS2.24, ROBOFULL and a WebView-enabled module in the privately
-patched SoundCheck host. See docs/NATIVE_VST3_MIDI.md. Uses loopback4000 and the
+patched SoundCheck host. See docs/emulator/runtime/native-vst3-midi.md. Uses loopback4000 and the
 selected debug port; captures remain in a new private --state-dir.
 """
 import asyncio,json,os,subprocess,time,base64

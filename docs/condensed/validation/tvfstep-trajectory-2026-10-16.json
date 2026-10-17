@@ -1,0 +1,420 @@
+{
+  "date": "2026-10-16",
+  "bug": "BUG-005",
+  "status": "OPEN; diagnostic trajectory localization, no production change",
+  "shared_rise_selected": {
+    "rows": [
+      {
+        "take": 6,
+        "model": "baseline",
+        "offset_ms": 39.082560321388804,
+        "time_scale": 1.0,
+        "log_cutoff_corrections": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "training_error_percent": 1.7702511399733574,
+        "evaluation_error_percent": 2.3248137593502176,
+        "nfev": 9,
+        "optimality": 0.6391794286264,
+        "transferred": false
+      },
+      {
+        "take": 6,
+        "model": "time-scale",
+        "offset_ms": 39.284801037064376,
+        "time_scale": 1.0000714886397937,
+        "log_cutoff_corrections": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "training_error_percent": 1.7561414958522525,
+        "evaluation_error_percent": 2.3709619025912567,
+        "nfev": 14,
+        "optimality": 0.5888266663997084,
+        "transferred": false
+      },
+      {
+        "take": 6,
+        "model": "cutoff-map",
+        "offset_ms": 39.13695028747664,
+        "time_scale": 1.0,
+        "log_cutoff_corrections": [
+          -0.00034938874063349736,
+          7.153041368790598e-05,
+          1.481004132788055e-05,
+          0.0003316689303708745,
+          -0.0001416151073875479
+        ],
+        "training_error_percent": 1.5093099445693197,
+        "evaluation_error_percent": 2.146780342900384,
+        "nfev": 21,
+        "optimality": 0.053801726692544814,
+        "transferred": false
+      },
+      {
+        "take": 6,
+        "model": "time-and-map",
+        "offset_ms": 39.59034569279959,
+        "time_scale": 1.0001144320292326,
+        "log_cutoff_corrections": [
+          -0.00018376756462492978,
+          0.0001767066703823103,
+          9.93120026468121e-05,
+          0.00038511781329031544,
+          -0.00013011097944493237
+        ],
+        "training_error_percent": 1.505923296256055,
+        "evaluation_error_percent": 2.169087012073197,
+        "nfev": 16,
+        "optimality": 0.1746117386019852,
+        "transferred": false
+      },
+      {
+        "take": 7,
+        "model": "baseline",
+        "offset_ms": 43.159673987283846,
+        "time_scale": 1.0,
+        "log_cutoff_corrections": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "training_error_percent": 8.715077091494722,
+        "evaluation_error_percent": 10.21085257264181,
+        "nfev": 9,
+        "optimality": 0.36955553148566045,
+        "transferred": false
+      },
+      {
+        "take": 7,
+        "model": "time-scale",
+        "offset_ms": 43.28497337888634,
+        "time_scale": 1.0000714886397937,
+        "log_cutoff_corrections": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "training_error_percent": 8.525626659937437,
+        "evaluation_error_percent": 9.973771460268566,
+        "nfev": 9,
+        "optimality": 0.014810070325088617,
+        "transferred": true
+      },
+      {
+        "take": 7,
+        "model": "cutoff-map",
+        "offset_ms": 43.03264392651785,
+        "time_scale": 1.0,
+        "log_cutoff_corrections": [
+          -0.00034938874063349736,
+          7.153041368790598e-05,
+          1.481004132788055e-05,
+          0.0003316689303708745,
+          -0.0001416151073875479
+        ],
+        "training_error_percent": 8.406007029458664,
+        "evaluation_error_percent": 9.658826457953179,
+        "nfev": 16,
+        "optimality": 1.2321935181752142,
+        "transferred": true
+      },
+      {
+        "take": 7,
+        "model": "time-and-map",
+        "offset_ms": 43.07693805702572,
+        "time_scale": 1.0001144320292326,
+        "log_cutoff_corrections": [
+          -0.00018376756462492978,
+          0.0001767066703823103,
+          9.93120026468121e-05,
+          0.00038511781329031544,
+          -0.00013011097944493237
+        ],
+        "training_error_percent": 8.351304099142695,
+        "evaluation_error_percent": 9.50373988033763,
+        "nfev": 16,
+        "optimality": 2.0903170909955584,
+        "transferred": true
+      }
+    ],
+    "cutoff_knots": [
+      416.0,
+      565.0323382130086,
+      767.455632755913,
+      1042.3972371413884,
+      1415.836894828795,
+      1923.061613493653,
+      2612.0
+    ],
+    "duration_ms": 10.844412349537208,
+    "source_rate": 44100.95331578614,
+    "limits": [
+      "Opening training selects corrections; closing fits only constant alignment.",
+      "Source phase/gain fixed from later plateau; damping85 and source clock fixed.",
+      "Cutoff map is a bounded endpoint-preserving diagnostic, not decoded hardware behavior.",
+      "Existing evaluation blocks reused; no hardware bus observation or absolute MIDI timing."
+    ]
+  },
+  "independently_fitted_closing": {
+    "rows": [
+      {
+        "take": 7,
+        "model": "baseline",
+        "offset_ms": 43.159673987283846,
+        "time_scale": 1.0,
+        "log_cutoff_corrections": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "training_error_percent": 8.715077091494722,
+        "evaluation_error_percent": 10.21085257264181,
+        "nfev": 9,
+        "optimality": 0.36955553148566045,
+        "transferred": false
+      },
+      {
+        "take": 7,
+        "model": "time-scale",
+        "offset_ms": 49.01662275934066,
+        "time_scale": 1.0031403397863239,
+        "log_cutoff_corrections": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "training_error_percent": 1.713029603691808,
+        "evaluation_error_percent": 1.728825860836325,
+        "nfev": 12,
+        "optimality": 0.31855447888255445,
+        "transferred": false
+      },
+      {
+        "take": 7,
+        "model": "cutoff-map",
+        "offset_ms": 43.44939667872723,
+        "time_scale": 1.0,
+        "log_cutoff_corrections": [
+          -0.002676389653204947,
+          -0.0015477588424511923,
+          -0.0005915048418831838,
+          0.0003906327183706923,
+          0.0017052327677942187
+        ],
+        "training_error_percent": 3.650219426376835,
+        "evaluation_error_percent": 4.407810582614322,
+        "nfev": 16,
+        "optimality": 0.29760025480533936,
+        "transferred": false
+      },
+      {
+        "take": 7,
+        "model": "time-and-map",
+        "offset_ms": 50.07166236694707,
+        "time_scale": 1.0034045162156722,
+        "log_cutoff_corrections": [
+          4.082585933539754e-05,
+          -0.00013345442264825236,
+          -0.00028058355168864024,
+          -0.00026583409652060623,
+          -0.0004236145574646425
+        ],
+        "training_error_percent": 1.6199342119887208,
+        "evaluation_error_percent": 1.7016050517990742,
+        "nfev": 19,
+        "optimality": 0.1412852258497569,
+        "transferred": false
+      }
+    ],
+    "cutoff_knots": [
+      416.0,
+      565.0323382130086,
+      767.455632755913,
+      1042.3972371413884,
+      1415.836894828795,
+      1923.061613493653,
+      2612.0
+    ],
+    "duration_ms": 10.844412349537208,
+    "source_rate": 44100.95331578614,
+    "limits": [
+      "Independent closing-trajectory diagnosis; not a transferred model or implementation proposal.",
+      "Source phase/gain fixed from later plateau; damping85 and source clock fixed.",
+      "Cutoff map is a bounded endpoint-preserving diagnostic, not decoded hardware behavior.",
+      "Existing evaluation blocks reused; no hardware bus observation or absolute MIDI timing."
+    ]
+  },
+  "local_window_alignment": {
+    "rows": [
+      {
+        "take": 6,
+        "center_seconds": 0.8,
+        "offset_ms": 39.86842405491402,
+        "fitted_error_percent": 1.4471839847075487
+      },
+      {
+        "take": 6,
+        "center_seconds": 1.3,
+        "offset_ms": 39.489401005860735,
+        "fitted_error_percent": 1.4278332821527633
+      },
+      {
+        "take": 6,
+        "center_seconds": 1.8,
+        "offset_ms": 39.0791275780264,
+        "fitted_error_percent": 1.3903594232753418
+      },
+      {
+        "take": 6,
+        "center_seconds": 2.3,
+        "offset_ms": 38.87115485580026,
+        "fitted_error_percent": 1.618558984406376
+      },
+      {
+        "take": 6,
+        "center_seconds": 2.8,
+        "offset_ms": 38.49371763701598,
+        "fitted_error_percent": 1.5445031453640325
+      },
+      {
+        "take": 6,
+        "center_seconds": 3.3,
+        "offset_ms": 38.88124612374989,
+        "fitted_error_percent": 1.2788783118382547
+      },
+      {
+        "take": 6,
+        "center_seconds": 3.8,
+        "offset_ms": 39.44867293752722,
+        "fitted_error_percent": 2.1934941396687417
+      },
+      {
+        "take": 6,
+        "center_seconds": 4.3,
+        "offset_ms": 39.676748637948776,
+        "fitted_error_percent": 2.5156191359031257
+      },
+      {
+        "take": 7,
+        "center_seconds": 0.8,
+        "offset_ms": 46.52602190755793,
+        "fitted_error_percent": 2.421661946573875
+      },
+      {
+        "take": 7,
+        "center_seconds": 1.3,
+        "offset_ms": 45.238232174009234,
+        "fitted_error_percent": 1.61991499815265
+      },
+      {
+        "take": 7,
+        "center_seconds": 1.8,
+        "offset_ms": 43.38494480546003,
+        "fitted_error_percent": 1.9035056400217953
+      },
+      {
+        "take": 7,
+        "center_seconds": 2.3,
+        "offset_ms": 42.00747996573051,
+        "fitted_error_percent": 2.871795851721515
+      },
+      {
+        "take": 7,
+        "center_seconds": 2.8,
+        "offset_ms": 40.18562394372534,
+        "fitted_error_percent": 1.7136246500170722
+      },
+      {
+        "take": 7,
+        "center_seconds": 3.3,
+        "offset_ms": 38.91573210254592,
+        "fitted_error_percent": 2.4281129357259768
+      },
+      {
+        "take": 7,
+        "center_seconds": 3.8,
+        "offset_ms": 37.911047868663715,
+        "fitted_error_percent": 1.6653892064063198
+      },
+      {
+        "take": 7,
+        "center_seconds": 4.3,
+        "offset_ms": 36.45610994183089,
+        "fitted_error_percent": 1.0251678433524238
+      }
+    ],
+    "limits": [
+      "Each window fits and scores the same samples; diagnostic only.",
+      "Full-history state preserved; fixed source, phase, gain, damping and rise-selected slew.",
+      "Timing estimates can absorb other model errors."
+    ]
+  },
+  "local_linear_regression": [
+    {
+      "take": 6,
+      "slope_ms_per_second": -0.05991547242948014,
+      "intercept_ms": 39.37884605855061,
+      "r_squared": 0.02451733004593626
+    },
+    {
+      "take": 7,
+      "slope_ms_per_second": -2.9132095099420114,
+      "intercept_ms": 48.756833339042586,
+      "r_squared": 0.9952454855553652
+    }
+  ],
+  "identities": [
+    {
+      "path": "docs\\ic20-hle-findings\\chatGPT-work\\infer_tvfstep_trajectory.py",
+      "sha256": "cb299db088097d0858a53f214eea8443f3f16864d57a09c189d55ef2ac8c5b71"
+    },
+    {
+      "path": "docs\\ic20-hle-findings\\chatGPT-work\\infer_tvfstep_closing_diagnostic.py",
+      "sha256": "fc0446c6bb1d944d2cceae4dbc5ea986edf47fd8a4478216e5b8c2d67447aedb"
+    },
+    {
+      "path": "docs\\ic20-hle-findings\\chatGPT-work\\infer_tvfstep_local_alignment.py",
+      "sha256": "f4c8b0549b125ea15977284e75838f0164d490c3ada50c6be149da2f049dd284"
+    },
+    {
+      "path": "docs\\ic20-hle-findings\\chatGPT-work\\tvfstep-multichannel-2026-10-16\\pack\\native-validation.json",
+      "sha256": "5f05d37d7ed74492ceb5c800b5e99787d3e32678727a91a7602caa0f2061f4c3"
+    },
+    {
+      "path": "tests\\hardware_recordings\\1-Audio 0001 [2026-10-16 060855].wav",
+      "sha256": "9cbbb379e8bdc84a823fdf7b25631ea6c91796563ee7d5cbdfe090750c33e5d2"
+    }
+  ],
+  "method": {
+    "source_rate": 44100.95331578614,
+    "duration_ms": 10.844412349537208,
+    "training": "Alternating 200ms blocks, even parity, 0.5 to 4.8 seconds; optimization samples every 16th training point",
+    "evaluation": "Other 200ms blocks, reused historical evaluation; not fresh acceptance",
+    "fixed": "Source clock, plateau-calibrated phase/gain, damping85/4096, SVF recurrence",
+    "local": "500ms windows centered 0.8..4.3s; same-window fit/score, full state history"
+  },
+  "limitations": [
+    "Closing-only fit is diagnostic, not a successful transferred correction.",
+    "Effective progression rate may compensate for coefficient mapping, transition dynamics or capture/model artifacts; it is not a hardware clock measurement.",
+    "Opening-selected correction does not resolve closing; no global or direction-specific emulator speed change justified.",
+    "Eight fractional recurrence lanes approximate recording-chain effects; not literal chip simulation.",
+    "No production code changed, no native build required."
+  ],
+  "next_investigation": "Trace and compare original-firmware envelope counter, stage and cutoff conversion on these exact opening and closing fixtures before changing emulation."
+}

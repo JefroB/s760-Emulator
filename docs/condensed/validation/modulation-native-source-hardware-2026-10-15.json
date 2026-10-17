@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-15",
+  "bug": "BUG-005",
+  "status": "Diagnostic per-recording constant alignment; not acceptance",
+  "band_hz": [
+    30,
+    1500
+  ],
+  "training_seconds": [
+    0.2,
+    1.2
+  ],
+  "evaluation_seconds": [
+    1.5,
+    2.7
+  ],
+  "calibration": {
+    "model": "cubic",
+    "start_source_offset": 1,
+    "clock_ratio": 1.0000215,
+    "band_hz": [
+      30,
+      1500
+    ],
+    "delay_frames_48k": 13.28495598759455,
+    "gain": 0.1657794548169962,
+    "training_relative_rms": 0.0761302185472777,
+    "evaluation_relative_rms": 0.0758658649357781
+  },
+  "rows": [
+    {
+      "note": 60,
+      "pitch_word": 16384,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.1899568801812508,
+          "diagnostic_delay_frames_48k": -1.9731547796080078,
+          "diagnostic_delay_ms": -0.0411073912418335,
+          "training_error_fixed_gain": 0.0634057457884401,
+          "evaluation_error_fixed_gain": 0.04236377073271422,
+          "training_gain_ratio_to_bypass": 1.0051474319101077,
+          "evaluation_error_training_gain": 0.042164201872788694
+        }
+      ]
+    },
+    {
+      "note": 72,
+      "pitch_word": 32768,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.4417224711716923,
+          "diagnostic_delay_frames_48k": -324.96287016918365,
+          "diagnostic_delay_ms": -6.770059795191326,
+          "training_error_fixed_gain": 0.04965031939507007,
+          "evaluation_error_fixed_gain": 0.060848479894411465,
+          "training_gain_ratio_to_bypass": 1.000097556415428,
+          "evaluation_error_training_gain": 0.060830307472846186
+        }
+      ]
+    },
+    {
+      "note": 73,
+      "pitch_word": 34716,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 0.8476564818301107,
+          "diagnostic_delay_frames_48k": 24.930638367535984,
+          "diagnostic_delay_ms": 0.5193882993236663,
+          "training_error_fixed_gain": 0.04251827936401729,
+          "evaluation_error_fixed_gain": 0.04680646102943705,
+          "training_gain_ratio_to_bypass": 1.0128206064939231,
+          "evaluation_error_training_gain": 0.04593534693671581
+        }
+      ]
+    },
+    {
+      "note": 77,
+      "pitch_word": 43740,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.373317251950966,
+          "diagnostic_delay_frames_48k": -273.49599309213176,
+          "diagnostic_delay_ms": -5.697833189419412,
+          "training_error_fixed_gain": 0.06912416666657,
+          "evaluation_error_fixed_gain": 0.0567486456035188,
+          "training_gain_ratio_to_bypass": 1.004374408837542,
+          "evaluation_error_training_gain": 0.056370106780813264
+        }
+      ]
+    },
+    {
+      "note": 83,
+      "pitch_word": 61857,
+      "models": [
+        {
+          "model": "cubic",
+          "source_offset": 1,
+          "frozen_bypass_alignment_evaluation_error": 1.4133774950588813,
+          "diagnostic_delay_frames_48k": 144.09394181602,
+          "diagnostic_delay_ms": 3.0019571211670835,
+          "training_error_fixed_gain": 0.08715994446938365,
+          "evaluation_error_fixed_gain": 0.07625868656635147,
+          "training_gain_ratio_to_bypass": 1.0031930843894028,
+          "evaluation_error_training_gain": 0.07613996105679574
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Per-recording delay fitted only on training window; cannot distinguish recording origin from physical signal-path latency.",
+    "No envelope time warp, cutoff shift or filter coefficient fitting.",
+    "Both source models use identical bypass gain and clock, unlike earlier separately calibrated model rankings.",
+    "Not independent-session hardware validation. No runtime behavior change."
+  ]
+}

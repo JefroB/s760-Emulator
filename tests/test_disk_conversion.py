@@ -20,11 +20,9 @@ def generate_test_tone(freq=440.0, rate=44100, num_samples=22050):
     return bytes(pcm)
 
 
-def test_real_s760_os_disk_layout():
+def test_real_s760_os_disk_layout(image_bytes):
     """Verify real S-760 OS disk image structure, header, and payload offsets."""
-    assert os.path.exists(IMAGE), f"S760 disk image not found at {IMAGE}"
-    with open(IMAGE, "rb") as f:
-        data = f.read()
+    data = image_bytes
 
     # Assert 1.44MB High Density geometry (1,474,560 bytes)
     assert len(data) == 1474560, f"Unexpected disk size: {len(data)}"

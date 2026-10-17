@@ -6,6 +6,7 @@ test('standalone ASIO driver, pairs and buffer survive apply and reconnect',asyn
   await page.goto(process.env.S760_NATIVE_ASIO_URL!);
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await page.getByLabel('Audio output backend').selectOption('asio');
   await expect(page.getByLabel('ASIO driver').locator('option').filter({hasText:'MOTU Pro Audio v2'})).toHaveCount(1,{timeout:15000});
   await page.getByLabel('ASIO driver').selectOption('MOTU Pro Audio v2');
@@ -20,6 +21,7 @@ test('standalone ASIO driver, pairs and buffer survive apply and reconnect',asyn
   await expect(page.getByRole('status')).toHaveText('OS ready — Perform Play.',{timeout:40000});
   await page.reload();
   await page.getByRole('button',{name:'Configuration',exact:true}).click();
+  await page.getByRole('button',{name:'Audio',exact:true}).click();
   await expect(page.getByLabel('ASIO driver')).toHaveValue('MOTU Pro Audio v2');
   await expect(page.getByLabel('ASIO output pair')).toHaveValue('3');
   await expect(page.getByLabel('ASIO input pair')).toHaveValue('1');

@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-16",
+  "metrics": {
+    "os": {
+      "classified_bytes": 77680,
+      "total_bytes": 1032192,
+      "percent": 7.525731646825397,
+      "baseline_classified_bytes": 62736,
+      "percentage_point_change": 1.4477926587301588,
+      "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd"
+    },
+    "boot_rom": {
+      "classified_bytes": 26277,
+      "total_bytes": 32768,
+      "percent": 80.1910400390625,
+      "baseline_classified_bytes": 26277,
+      "percentage_point_change": 0,
+      "input_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+    }
+  },
+  "overall_decoding_completion": "not yet quantifiable",
+  "rubric": "Classified bytes separate from recovered behavior, invocation/bank preservation, native critical paths, physical parity and assembler/rebuild acceptance. No supported weighting.",
+  "validation": "61 caller-qualified regions and101 conditional links independently checked;57 focused tests pass."
+}

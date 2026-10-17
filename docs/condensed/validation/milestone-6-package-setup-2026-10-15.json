@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-15",
+  "revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "worktree": "dirty; exact tested files and package manifest identified below; not a release freeze",
+  "bug": "BUG-074",
+  "evidence_class": [
+    "package documentation and negative regression",
+    "real relocated frozen-process/browser setup and profile reopen",
+    "actual relocated WebView2 pixel readback",
+    "backend regressions"
+  ],
+  "host": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_qa_only": "3.13.0",
+    "node_qa_only": "22.17.1",
+    "playwright_qa_only": "1.64.0",
+    "application_environment": "PATH=Windows System32 only; PYTHON*, NODE_* and S760_* removed; unrelated working directory; application and user files under paths with spaces"
+  },
+  "prerequisites": [
+    "Installed Visual C++ v14 x64 runtime and WebView2 on development workstation",
+    "User-supplied IC15v1.11, OS2.24 and ROBOFULL staged outside copied package",
+    "Local loopback available; Chromium installed for QA",
+    "Private package-deps195 available through build-only PYTHONPATH"
+  ],
+  "commands": {
+    "build": "$env:PYTHONPATH=(Resolve-Path docs/ic20-hle-findings/chatGPT-work/package-deps195).Path; ./scripts/build_standalone.ps1 -OutputDirectory docs/ic20-hle-findings/chatGPT-work/m6-guide-package-20261015",
+    "final_document_stage": "Copy final standalone-package-readme.md into built and first relocated package README.md; recompute PACKAGE-AUDIT.json with audit_package/write_json; native/frozen binaries unchanged",
+    "browser": "From google-ui: PLAYWRIGHT_BROWSERS_PATH=C:/Users/jborn/AppData/Local/ms-playwright; S760_SETUP_PACKAGE=<m6-guide-package-20261015/dist/S760Studio>; S760_SETUP_WORK=<m6-guide-relocated-02>; node node_modules/@playwright/test/cli.js test packaged-setup.spec.ts --config=playwright.packaged.config.ts --output=../docs/ic20-hle-findings/chatGPT-work/m6-guide-setup-results-02",
+    "desktop": "subprocess.run([<relocated01>/S760 Studio/S760Studio.exe,--verify-desktop,--no-sound,--fast,--state-dir,<relocated01>/desktop profile,--boot-rom,<private files>/boot.bin,--system-disk,<private files>/system.img,--media-dir,<private files>/disks],cwd=<unrelated cwd>,env=<stripped>,timeout=90,creationflags=CREATE_NO_WINDOW)",
+    "targeted_regression": "python -m pytest tests/test_package_audit.py tests/test_distribution_inventory.py -q --basetemp=docs/ic20-hle-findings/chatGPT-work/m6-package-docs-tests/passing -o cache_dir=docs/ic20-hle-findings/chatGPT-work/m6-package-docs-tests/cache",
+    "full_regression": "Python stdin runner redirects mame_harness.SCRATCH_DIR=<private m6-guide-pytest>/harness and SNAP_DIR=<private>/snapshots/s760, creates both; pytest.main([tests,-q,--basetemp=<private>/tmp,-o,cache_dir=<private>/cache])",
+    "typescript": "npm run lint (google-ui)"
+  },
+  "before": {
+    "absent_readme_links": [
+      "condensed/validation/milestone-5-wave-memory-2026-10-14.json",
+      "condensed/validation/milestone-5-normal-stereo-2026-10-14.json",
+      "condensed/validation/milestone-5-roland-scsi-load-2026-10-14.json",
+      "condensed/validation/milestone-5-akai-scsi-load-2026-10-14.json",
+      "condensed/validation/milestone-5-disk-voice-restriction-2026-10-14.json",
+      "condensed/validation/standalone-configuration-2026-10-12.json",
+      "firmware-setup.md",
+      "distribution-qualification.md",
+      "native-plugin-selection.md",
+      "condensed/validation/standalone-audio-settings-2026-10-12.json",
+      "condensed/validation/standalone-formatting-2026-10-12.json",
+      "native-rack-controls.md",
+      "condensed/validation/native-physical-sampling-2026-10-12.json",
+      "native-runtime-protocol.md"
+    ],
+    "negative_regression": "1 expected failure: existing audit returned development_package_ok=True for README linking absent firmware-setup.md"
+  },
+  "result": {
+    "targeted_tests": {
+      "passed": 25,
+      "failed": 0
+    },
+    "full_backend_tests": {
+      "passed": 404,
+      "failed": 0,
+      "skipped": 0,
+      "seconds": 67.6
+    },
+    "typescript": "pass",
+    "browser": {
+      "passed": true,
+      "relocated": true,
+      "paths_with_spaces": true,
+      "stripped_environment": [
+        "PYTHON*",
+        "NODE_*",
+        "S760_*"
+      ],
+      "path": "Windows System32 only",
+      "invalid_boot_rejected": true,
+      "settings_persisted": true,
+      "os_ready_after_reopen": true,
+      "limits": "Development workstation, silent/unthrottled browser; not a clean-machine or audio-device test"
+    },
+    "browser_seconds": 23.8,
+    "desktop": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 228564
+    },
+    "relocated_package_byte_identity": true,
+    "local_package_readme_links": "pass",
+    "development_package_ok": true,
+    "release_ready": false
+  },
+  "source_sha256": {
+    "scripts/build_standalone.ps1": "cf242b05a4761b7a90ac56f20443e0b0112e08d974e219d3fb5821456b955aea",
+    "scripts/s760_package_audit.py": "4a184ae137f5acdddea10356b6c7be6073dee0971dbce5fd71318b8dd951a592",
+    "tests/test_package_audit.py": "04f25b50a030578667416f4b05899e2b424b20f1678ac9f32ed04a0beed80b53",
+    "google-ui/e2e/packaged-setup.spec.ts": "9b628e082e53880f59795bcd8e2e87bb62300dca5a69048be0b95fc3f2a44f8a",
+    "google-ui/playwright.packaged.config.ts": "753f496a89409314f2d7c6afd70807ae6b1fe6bf69875f1357f39c707f82ade3",
+    "docs/emulator/guides/standalone-package-readme.md": "f5e3aa24fa57af712a45fad60afb729e183c7c4a4c2386cea4e9fa9ba4d54b05",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae"
+  },
+  "package_sha256": {
+    "S760Studio.exe": "711de730991927a97217e4bd0f512ac3a1aa5b7f3f5cb182a285d16266307925",
+    "mame-source/mames760.exe": "9508d5e4c6cfbb6d4e7e64cc180326a240239d85b7604f1ddb32dfe58d4a6f04",
+    "scripts/s760_runtime.lua": "9eee49d122c2a800103eef071d9cc874c92a745c3cf2db4870d3acbf73bc61ab",
+    "README.md": "f5e3aa24fa57af712a45fad60afb729e183c7c4a4c2386cea4e9fa9ba4d54b05",
+    "PACKAGE-AUDIT.json": "95eef5b2ba93ff657b75389e494cc032b4cb54e7a2d8cb24716dc7cbdac821fe",
+    "BUNDLED-INPUTS.json": "1e18ff023d1f6049bc7685dc8c5f095cb51c486f95036312dfbc62a2c655d225",
+    "DEPENDENCY-INVENTORY.json": "0122915d202d104d8caac88ec92ef23a269b5ceac13dad51c2d4b5629c921a0e",
+    "SYSTEM-PREREQUISITES.json": "0674fef1a03b42174adbd293dda1b73ada63226e96f3b99fa8e423b170846bb5"
+  },
+  "package_tree_sha256": "35b934e63160405d2694b0716ad350fd2decc0c25db77f6da335bd8508ad5e87",
+  "package_file_count": 572,
+  "release_blockers": [
+    "project_license_scope_not_reviewed",
+    "corresponding_source_not_qualified",
+    "bundled_dependency_rights_not_qualified",
+    "artifact_differs_from_reviewed_distribution"
+  ],
+  "private_browser_result_sha256": "754b750e4386b9bd98ddc9feef04b6c32cee7f1f1a606ee6e5eb185b9f5e78c7",
+  "private_captures_sha256": {
+    "first-setup.png": "106f01c66b2e7f6d5db94ac45ea1b418ca7bc26d3f721b1f0c0b46ad4a06b26f",
+    "reopened-profile.png": "76793662f419b4c1d7d904c2d02c7c77ff56f083bb7cf893906e6301dae07839"
+  },
+  "limitations": [
+    "Development workstation already has system runtimes; no clean-machine or installer acceptance",
+    "Silent unthrottled profile; no new physical audio, recording or editing-loop qualification",
+    "Only README inline local file destinations checked; external availability, Markdown fragments and upstream license links are not qualified",
+    "Reopen test supplies no --no-sound override: muted sound comes from saved settings",
+    "No final release/tag or changed-package redistribution qualification; VST3 remains separately tracked"
+  ]
+}

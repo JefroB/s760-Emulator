@@ -1,0 +1,65 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "decoder": "pypcode 4.0.0",
+  "deterministic_analysis": true,
+  "deterministic_outputs": true,
+  "scope": "Static bounded fetch mappings; no bank-state propagation or type recovery",
+  "script_sha256": "88b1d7cf325d960af8d3e91d14f146c0edf22d616223d9b725cac3bb438e36fb",
+  "manifest_sha256": "d42c4e7d26dd80eb88eeb6e648fd00651e1fcb8680b4a7c0e5c66e34fbeabf8c",
+  "context_qualified_links": 13,
+  "tests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "regions": [
+    {
+      "name": "timer_isr",
+      "instructions": 78,
+      "basic_blocks": 18,
+      "unresolved_edges": 2,
+      "decode_warnings": 0
+    },
+    {
+      "name": "mouse_handshake",
+      "instructions": 73,
+      "basic_blocks": 22,
+      "unresolved_edges": 0,
+      "decode_warnings": 0
+    },
+    {
+      "name": "tvf_dispatch",
+      "instructions": 178,
+      "basic_blocks": 48,
+      "unresolved_edges": 9,
+      "decode_warnings": 0
+    },
+    {
+      "name": "cutoff_calculation",
+      "instructions": 81,
+      "basic_blocks": 19,
+      "unresolved_edges": 0,
+      "decode_warnings": 0
+    },
+    {
+      "name": "initial_cutoff",
+      "instructions": 5,
+      "basic_blocks": 3,
+      "unresolved_edges": 3,
+      "decode_warnings": 0
+    },
+    {
+      "name": "control_service",
+      "instructions": 413,
+      "basic_blocks": 189,
+      "unresolved_edges": 67,
+      "decode_warnings": 0
+    },
+    {
+      "name": "dsp_delay",
+      "instructions": 15,
+      "basic_blocks": 1,
+      "unresolved_edges": 0,
+      "decode_warnings": 0
+    }
+  ]
+}

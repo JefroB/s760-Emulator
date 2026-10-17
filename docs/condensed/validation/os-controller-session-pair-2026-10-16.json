@@ -1,0 +1,355 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "qualification": "Two conditional caller-qualified roots promoted from Gemini candidate output; broad round4 candidate inventory is retained separately, not wholesale promoted. No new runtime or physical qualification.",
+  "added_code_bytes": 87,
+  "new_regions": [
+    {
+      "name": "page_1f_4f28_scsi_session_service",
+      "page": "0x1f",
+      "start": "0x4f20",
+      "end": "0x4f60",
+      "entries": [
+        "0x4f28"
+      ],
+      "evidence": "Frontier transition: called from scsi_session_service at 0x8BA6 via gate array selector. Traced 15 instructions. Independently qualified by exact LDpage/ST0102/LCALL fallthrough triple in166:scsi_session_service. Static save/conditional-reset and restore/invalidate pair for1BA7; data010C restored by4F28 on declared return paths. NestedCE14 call operands select known001F:4F7F. Calls retain return/callee/interrupt qualifications; no runtime claim."
+    },
+    {
+      "name": "page_1f_4f5e_scsi_session_service",
+      "page": "0x1f",
+      "start": "0x4f50",
+      "end": "0x4f80",
+      "entries": [
+        "0x4f5e"
+      ],
+      "evidence": "Frontier transition: called from scsi_session_service at 0x8D90 via gate array selector. Traced 10 instructions. Independently qualified by exact LDpage/ST0102/LCALL fallthrough triple in166:scsi_session_service. Static save/conditional-reset and restore/invalidate pair for1BA7; data010C restored by4F28 on declared return paths. NestedCE14 call operands select known001F:4F7F. Calls retain return/callee/interrupt qualifications; no runtime claim."
+    }
+  ],
+  "caller_proofs": [
+    {
+      "source_region": "scsi_session_service",
+      "source_page": 358,
+      "load_pc": 35741,
+      "selector_pc": 35745,
+      "call_pc": 35750,
+      "selector": 258,
+      "destination_page": 31,
+      "destination_pc": 20264,
+      "destination_file_offset": 54056,
+      "already_decoded_in": [],
+      "evidence": [
+        {
+          "pc": 35741,
+          "page": 358,
+          "file_offset": 387997,
+          "bytes": "a11f001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x1f"
+        },
+        {
+          "pc": 35745,
+          "page": 358,
+          "file_offset": 388001,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 35750,
+          "page": 358,
+          "file_offset": 388006,
+          "bytes": "ef7fc3",
+          "mnemonic": "LCALL",
+          "operands": "0x4f28"
+        }
+      ]
+    },
+    {
+      "source_region": "scsi_session_service",
+      "source_page": 358,
+      "load_pc": 36231,
+      "selector_pc": 36235,
+      "call_pc": 36240,
+      "selector": 258,
+      "destination_page": 31,
+      "destination_pc": 20318,
+      "destination_file_offset": 54110,
+      "already_decoded_in": [],
+      "evidence": [
+        {
+          "pc": 36231,
+          "page": 358,
+          "file_offset": 388487,
+          "bytes": "a11f001c",
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x1f"
+        },
+        {
+          "pc": 36235,
+          "page": 358,
+          "file_offset": 388491,
+          "bytes": "c30102011c",
+          "mnemonic": "ST",
+          "operands": "RW1C, 0x102, TABLE[ZR]"
+        },
+        {
+          "pc": 36240,
+          "page": 358,
+          "file_offset": 388496,
+          "bytes": "efcbc1",
+          "mnemonic": "LCALL",
+          "operands": "0x4f5e"
+        }
+      ]
+    }
+  ],
+  "bank_links": [
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8ba6",
+      "target": "page_1f_4f28_scsi_session_service",
+      "destination": "0x4f28",
+      "context": "Immediate LD RW1C=001F; ST0102; LCALL with explicit fallthrough edges; caller fetch0166 in window2 is unaffected.",
+      "evidence": "Original bytes and independent MAME targets agree. Does not claim arbitrary selector preservation or native invocation."
+    },
+    {
+      "source": "page_1f_4f28_scsi_session_service",
+      "pc": "0x4f4c",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Retained fetch0106=0000; wrapper saves/restores0102 and transfers toRW1E=4F7F withRW1C=001F.",
+      "evidence": "Explicit caller operands, original CE14 body and already-decoded controller_state_reset. Wrapper indirect target is invocation-qualified here, not globally fixed for all wrapper callers."
+    },
+    {
+      "source": "scsi_session_service",
+      "pc": "0x8d90",
+      "target": "page_1f_4f5e_scsi_session_service",
+      "destination": "0x4f5e",
+      "context": "Immediate LD RW1C=001F; ST0102; LCALL with explicit fallthrough edges; caller fetch0166 in window2 is unaffected.",
+      "evidence": "Original bytes and independent MAME targets agree. Does not claim arbitrary selector preservation or native invocation."
+    },
+    {
+      "source": "page_1f_4f5e_scsi_session_service",
+      "pc": "0x4f73",
+      "target": "bank_call_wrappers",
+      "destination": "0xce14",
+      "context": "Retained fetch0106=0000; wrapper saves/restores0102 and transfers toRW1E=4F7F withRW1C=001F.",
+      "evidence": "Explicit caller operands, original CE14 body and already-decoded controller_state_reset. Wrapper indirect target is invocation-qualified here, not globally fixed for all wrapper callers."
+    }
+  ],
+  "instructions": [
+    {
+      "pc": 20264,
+      "page": 31,
+      "file_offset": 54056,
+      "bytes": "c701a71b9d",
+      "mnemonic": "STB",
+      "operands": "R9D, 0x1ba7, LOOKUP[ZR]"
+    },
+    {
+      "pc": 20269,
+      "page": 31,
+      "file_offset": 54061,
+      "bytes": "cb010c01",
+      "mnemonic": "PUSH",
+      "operands": "0x10c, TABLE[ZR]"
+    },
+    {
+      "pc": 20273,
+      "page": 31,
+      "file_offset": 54065,
+      "bytes": "a199021c",
+      "mnemonic": "LD",
+      "operands": "RW1C, #0x299"
+    },
+    {
+      "pc": 20277,
+      "page": 31,
+      "file_offset": 54069,
+      "bytes": "c3010c011c",
+      "mnemonic": "ST",
+      "operands": "RW1C, 0x10c, TABLE[ZR]"
+    },
+    {
+      "pc": 20282,
+      "page": 31,
+      "file_offset": 54074,
+      "bytes": "9b019c8f00",
+      "mnemonic": "CMPB",
+      "operands": "ZRlo, 0x8f9c, LOOKUP[ZR]"
+    },
+    {
+      "pc": 20287,
+      "page": 31,
+      "file_offset": 54079,
+      "bytes": "d710",
+      "mnemonic": "JNE",
+      "operands": "0x4f51"
+    },
+    {
+      "pc": 20289,
+      "page": 31,
+      "file_offset": 54081,
+      "bytes": "b0009d",
+      "mnemonic": "LDB",
+      "operands": "R9D, ZRlo"
+    },
+    {
+      "pc": 20292,
+      "page": 31,
+      "file_offset": 54084,
+      "bytes": "a11f001c",
+      "mnemonic": "LD",
+      "operands": "RW1C, #0x1f"
+    },
+    {
+      "pc": 20296,
+      "page": 31,
+      "file_offset": 54088,
+      "bytes": "a17f4f1e",
+      "mnemonic": "LD",
+      "operands": "RW1E, #0x4f7f"
+    },
+    {
+      "pc": 20300,
+      "page": 31,
+      "file_offset": 54092,
+      "bytes": "efc57e",
+      "mnemonic": "LCALL",
+      "operands": "0xce14"
+    },
+    {
+      "pc": 20303,
+      "page": 31,
+      "file_offset": 54095,
+      "bytes": "2008",
+      "mnemonic": "SJMP",
+      "operands": "0x4f59"
+    },
+    {
+      "pc": 20305,
+      "page": 31,
+      "file_offset": 54097,
+      "bytes": "b1ffda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #-0x1"
+    },
+    {
+      "pc": 20308,
+      "page": 31,
+      "file_offset": 54100,
+      "bytes": "c701a71bda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x1ba7, LOOKUP[ZR]"
+    },
+    {
+      "pc": 20313,
+      "page": 31,
+      "file_offset": 54105,
+      "bytes": "cf010c01",
+      "mnemonic": "POP",
+      "operands": "0x10c, TABLE[ZR]"
+    },
+    {
+      "pc": 20317,
+      "page": 31,
+      "file_offset": 54109,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    },
+    {
+      "pc": 20318,
+      "page": 31,
+      "file_offset": 54110,
+      "bytes": "b301a71bda",
+      "mnemonic": "LDB",
+      "operands": "RDA, 0x1ba7, LOOKUP[ZR]"
+    },
+    {
+      "pc": 20323,
+      "page": 31,
+      "file_offset": 54115,
+      "bytes": "99ffda",
+      "mnemonic": "CMPB",
+      "operands": "RDA, #-0x1"
+    },
+    {
+      "pc": 20326,
+      "page": 31,
+      "file_offset": 54118,
+      "bytes": "df0e",
+      "mnemonic": "JE",
+      "operands": "0x4f76"
+    },
+    {
+      "pc": 20328,
+      "page": 31,
+      "file_offset": 54120,
+      "bytes": "b0da9d",
+      "mnemonic": "LDB",
+      "operands": "R9D, RDA"
+    },
+    {
+      "pc": 20331,
+      "page": 31,
+      "file_offset": 54123,
+      "bytes": "a11f001c",
+      "mnemonic": "LD",
+      "operands": "RW1C, #0x1f"
+    },
+    {
+      "pc": 20335,
+      "page": 31,
+      "file_offset": 54127,
+      "bytes": "a17f4f1e",
+      "mnemonic": "LD",
+      "operands": "RW1E, #0x4f7f"
+    },
+    {
+      "pc": 20339,
+      "page": 31,
+      "file_offset": 54131,
+      "bytes": "ef9e7e",
+      "mnemonic": "LCALL",
+      "operands": "0xce14"
+    },
+    {
+      "pc": 20342,
+      "page": 31,
+      "file_offset": 54134,
+      "bytes": "b1ffda",
+      "mnemonic": "LDB",
+      "operands": "RDA, #-0x1"
+    },
+    {
+      "pc": 20345,
+      "page": 31,
+      "file_offset": 54137,
+      "bytes": "c701a71bda",
+      "mnemonic": "STB",
+      "operands": "RDA, 0x1ba7, LOOKUP[ZR]"
+    },
+    {
+      "pc": 20350,
+      "page": 31,
+      "file_offset": 54142,
+      "bytes": "f0",
+      "mnemonic": "RET",
+      "operands": ""
+    }
+  ],
+  "semantics": "4F28 savesR9D at1BA7, saves010C and selects0299; if byte8F9C=0 invokes known controller reset4F7F withR9D=0, otherwise sets1BA7=FF. It then restores010C.4F5E skips reset if1BA7=FF, otherwise invokes4F7F with savedR9D; finally sets1BA7=FF. Data-address preservation depends on the already qualified callee-return contract, not interrupts or arbitrary mutable states.",
+  "metrics": {
+    "os_classified_bytes": 62736,
+    "os_total": 1032192,
+    "os_percent": 6.077938988095238,
+    "os_baseline": 62649,
+    "os_change_points": 0.00842866443452381,
+    "rom_classified_bytes": 26101,
+    "rom_total": 32768,
+    "rom_percent": 79.6539306640625,
+    "rom_change_points": 0.0,
+    "overall": "not yet quantifiable"
+  },
+  "manifest_sha256": "04da92ccb6a4588588da2803fd192c8a393acaaf204fe8600c9efc4935a12aa1"
+}

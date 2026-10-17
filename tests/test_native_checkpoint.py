@@ -47,6 +47,25 @@ def test_failed_save_preserves_existing_checkpoint(tmp_path, monkeypatch):
     assert not list(tmp_path.glob('*.tmp'))
 
 
+@pytest.mark.parametrize('operation', ['fsync', 'replace'])
+def test_publication_io_failure_retains_previous_archive_and_removes_pending(tmp_path, monkeypatch, operation):
+    import s760_runtime
+    runtime = client(tmp_path, monkeypatch)
+    destination = tmp_path/'recovery.s760state'
+    previous = b'previous durable archive'
+    destination.write_bytes(previous)
+    blob = b'new native checkpoint bytes'
+    (tmp_path/'runtime-checkpoint.bin').write_bytes(blob)
+    monkeypatch.setattr(runtime, 'request', lambda *args: ({'bytes': len(blob)}, []))
+    def fail(*args):
+        raise OSError('Injected publication '+operation+' failure')
+    monkeypatch.setattr(s760_runtime.os, operation, fail)
+    with pytest.raises(OSError, match='publication '+operation):
+        runtime.save_checkpoint(destination)
+    assert destination.read_bytes() == previous
+    assert not list(tmp_path.glob('recovery.s760state.*.tmp'))
+
+
 def test_scsi_identity_tracks_backing_files_and_rejects_changes(tmp_path, monkeypatch):
     import s760_runtime
     for name in ('mame', 'boot', 'system'):

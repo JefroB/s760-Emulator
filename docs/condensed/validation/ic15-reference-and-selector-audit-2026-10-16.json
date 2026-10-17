@@ -1,0 +1,2331 @@
+{
+  "sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "qualification": "Exhaustive raw16-bit numeric matches, both byte orders and both alignments, into nonuniform gaps under retained reset data0108=0780 and010C=0798. Matches are not references; source classification, decoding and consumers must establish use. Big-endian scan is additional conservatism, not a claim of a big-endian pointer consumer. No alternate selectors assumed.",
+  "matches": [
+    {
+      "source_file": 2249,
+      "word": 10534,
+      "byte_order": "little",
+      "target_file": 10534,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 2250,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2251,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 2252,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2265,
+      "word": 10534,
+      "byte_order": "little",
+      "target_file": 10534,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 2276,
+      "word": 10529,
+      "byte_order": "little",
+      "target_file": 10529,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2299,
+      "word": 10542,
+      "byte_order": "little",
+      "target_file": 10542,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 2300,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 12983,
+      "word": 10528,
+      "byte_order": "little",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 12981,
+        "page": 1920,
+        "file_offset": 12981,
+        "bytes": "702120",
+        "mnemonic": "ANDB",
+        "operands": "R20, R21"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 13807,
+      "word": 10536,
+      "byte_order": "little",
+      "target_file": 10536,
+      "source_instruction": {
+        "pc": 13807,
+        "page": 1920,
+        "file_offset": 13807,
+        "bytes": "2829",
+        "mnemonic": "SCALL",
+        "operands": "0x361a"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 15258,
+      "word": 10536,
+      "byte_order": "little",
+      "target_file": 10536,
+      "source_instruction": {
+        "pc": 15258,
+        "page": 1920,
+        "file_offset": 15258,
+        "bytes": "2829",
+        "mnemonic": "SCALL",
+        "operands": "0x3bc5"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 16673,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 16673,
+        "page": 1936,
+        "file_offset": 16673,
+        "bytes": "b029f3",
+        "mnemonic": "LDB",
+        "operands": "RF3, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 17027,
+      "word": 10528,
+      "byte_order": "little",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 17027,
+        "page": 1936,
+        "file_offset": 17027,
+        "bytes": "2029",
+        "mnemonic": "SJMP",
+        "operands": "0x42ae"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 17446,
+      "word": 10536,
+      "byte_order": "little",
+      "target_file": 10536,
+      "source_instruction": {
+        "pc": 17446,
+        "page": 1936,
+        "file_offset": 17446,
+        "bytes": "2829",
+        "mnemonic": "SCALL",
+        "operands": "0x4451"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 17843,
+      "word": 10675,
+      "byte_order": "little",
+      "target_file": 10675,
+      "source_instruction": {
+        "pc": 17843,
+        "page": 1936,
+        "file_offset": 17843,
+        "bytes": "b329524cda",
+        "mnemonic": "LDB",
+        "operands": "RDA, 0x4c52, LOOKUP[RW28]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 17873,
+      "word": 10674,
+      "byte_order": "little",
+      "target_file": 10674,
+      "source_instruction": {
+        "pc": 17873,
+        "page": 1936,
+        "file_offset": 17873,
+        "bytes": "b229da",
+        "mnemonic": "LDB",
+        "operands": "RDA, [RW28]+"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 19229,
+      "word": 10674,
+      "byte_order": "little",
+      "target_file": 10674,
+      "source_instruction": {
+        "pc": 19229,
+        "page": 1936,
+        "file_offset": 19229,
+        "bytes": "b229da",
+        "mnemonic": "LDB",
+        "operands": "RDA, [RW28]+"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 20209,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 20209,
+        "page": 1936,
+        "file_offset": 20209,
+        "bytes": "b029cd",
+        "mnemonic": "LDB",
+        "operands": "RCD, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 20657,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 20657,
+        "page": 1936,
+        "file_offset": 20657,
+        "bytes": "b029cd",
+        "mnemonic": "LDB",
+        "operands": "RCD, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 20784,
+      "word": 10674,
+      "byte_order": "little",
+      "target_file": 10674,
+      "source_instruction": {
+        "pc": 20784,
+        "page": 1936,
+        "file_offset": 20784,
+        "bytes": "b229f3",
+        "mnemonic": "LDB",
+        "operands": "RF3, [RW28]+"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 20862,
+      "word": 10674,
+      "byte_order": "little",
+      "target_file": 10674,
+      "source_instruction": {
+        "pc": 20862,
+        "page": 1936,
+        "file_offset": 20862,
+        "bytes": "b229da",
+        "mnemonic": "LDB",
+        "operands": "RDA, [RW28]+"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 21049,
+      "word": 10674,
+      "byte_order": "little",
+      "target_file": 10674,
+      "source_instruction": {
+        "pc": 21049,
+        "page": 1936,
+        "file_offset": 21049,
+        "bytes": "b229da",
+        "mnemonic": "LDB",
+        "operands": "RDA, [RW28]+"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 21558,
+      "word": 10559,
+      "byte_order": "little",
+      "target_file": 10559,
+      "source_instruction": {
+        "pc": 21558,
+        "page": 1936,
+        "file_offset": 21558,
+        "bytes": "3f2904",
+        "mnemonic": "JBS",
+        "operands": "R29, 0x7, 0x543d"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 21980,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 21980,
+        "page": 1936,
+        "file_offset": 21980,
+        "bytes": "b029f1",
+        "mnemonic": "LDB",
+        "operands": "RF1, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 21986,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 21986,
+        "page": 1936,
+        "file_offset": 21986,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 21992,
+      "word": 10644,
+      "byte_order": "little",
+      "target_file": 10644,
+      "source_instruction": {
+        "pc": 21991,
+        "page": 1936,
+        "file_offset": 21991,
+        "bytes": "2894",
+        "mnemonic": "SCALL",
+        "operands": "0x567d"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22123,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 22123,
+        "page": 1936,
+        "file_offset": 22123,
+        "bytes": "b029f1",
+        "mnemonic": "LDB",
+        "operands": "RF1, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22135,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22135,
+        "page": 1936,
+        "file_offset": 22135,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22161,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 22161,
+        "page": 1936,
+        "file_offset": 22161,
+        "bytes": "b029f1",
+        "mnemonic": "LDB",
+        "operands": "RF1, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22182,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22182,
+        "page": 1936,
+        "file_offset": 22182,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22558,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22555,
+        "page": 1936,
+        "file_offset": 22555,
+        "bytes": "b301ab4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22584,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22584,
+        "page": 1936,
+        "file_offset": 22584,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22589,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22586,
+        "page": 1936,
+        "file_offset": 22586,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22608,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22605,
+        "page": 1936,
+        "file_offset": 22605,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22616,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22613,
+        "page": 1936,
+        "file_offset": 22613,
+        "bytes": "b301af4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22656,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22656,
+        "page": 1936,
+        "file_offset": 22656,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22661,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22658,
+        "page": 1936,
+        "file_offset": 22658,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22680,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22677,
+        "page": 1936,
+        "file_offset": 22677,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22688,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22685,
+        "page": 1936,
+        "file_offset": 22685,
+        "bytes": "b301b24c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22728,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22728,
+        "page": 1936,
+        "file_offset": 22728,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22740,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22737,
+        "page": 1936,
+        "file_offset": 22737,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22766,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22763,
+        "page": 1936,
+        "file_offset": 22763,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22774,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22771,
+        "page": 1936,
+        "file_offset": 22771,
+        "bytes": "b301b14c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22796,
+      "word": 10546,
+      "byte_order": "little",
+      "target_file": 10546,
+      "source_instruction": {
+        "pc": 22795,
+        "page": 1936,
+        "file_offset": 22795,
+        "bytes": "993229",
+        "mnemonic": "CMPB",
+        "operands": "R29, #0x32"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22800,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22800,
+        "page": 1936,
+        "file_offset": 22800,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22802,
+      "word": 10580,
+      "byte_order": "little",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 22802,
+        "page": 1936,
+        "file_offset": 22802,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22803,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 22802,
+        "page": 1936,
+        "file_offset": 22802,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22815,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22812,
+        "page": 1936,
+        "file_offset": 22812,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22831,
+      "word": 10580,
+      "byte_order": "little",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 22831,
+        "page": 1936,
+        "file_offset": 22831,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22832,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 22831,
+        "page": 1936,
+        "file_offset": 22831,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22844,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 22841,
+        "page": 1936,
+        "file_offset": 22841,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22924,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 22924,
+        "page": 1936,
+        "file_offset": 22924,
+        "bytes": "b029f1",
+        "mnemonic": "LDB",
+        "operands": "RF1, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22930,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22930,
+        "page": 1936,
+        "file_offset": 22930,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22936,
+      "word": 10653,
+      "byte_order": "little",
+      "target_file": 10653,
+      "source_instruction": {
+        "pc": 22935,
+        "page": 1936,
+        "file_offset": 22935,
+        "bytes": "289d",
+        "mnemonic": "SCALL",
+        "operands": "0x5a36"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23076,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 23076,
+        "page": 1936,
+        "file_offset": 23076,
+        "bytes": "b029f1",
+        "mnemonic": "LDB",
+        "operands": "RF1, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23088,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23088,
+        "page": 1936,
+        "file_offset": 23088,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23114,
+      "word": 10672,
+      "byte_order": "little",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 23114,
+        "page": 1936,
+        "file_offset": 23114,
+        "bytes": "b029f1",
+        "mnemonic": "LDB",
+        "operands": "RF1, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23135,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23135,
+        "page": 1936,
+        "file_offset": 23135,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23535,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23532,
+        "page": 1936,
+        "file_offset": 23532,
+        "bytes": "b301ab4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23561,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23561,
+        "page": 1936,
+        "file_offset": 23561,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23566,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23563,
+        "page": 1936,
+        "file_offset": 23563,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23585,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23582,
+        "page": 1936,
+        "file_offset": 23582,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23593,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23590,
+        "page": 1936,
+        "file_offset": 23590,
+        "bytes": "b301af4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23633,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23633,
+        "page": 1936,
+        "file_offset": 23633,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23638,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23635,
+        "page": 1936,
+        "file_offset": 23635,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23657,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23654,
+        "page": 1936,
+        "file_offset": 23654,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23665,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23662,
+        "page": 1936,
+        "file_offset": 23662,
+        "bytes": "b301b24c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23705,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23705,
+        "page": 1936,
+        "file_offset": 23705,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23717,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23714,
+        "page": 1936,
+        "file_offset": 23714,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23743,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23740,
+        "page": 1936,
+        "file_offset": 23740,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23751,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23748,
+        "page": 1936,
+        "file_offset": 23748,
+        "bytes": "b301b14c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23787,
+      "word": 10546,
+      "byte_order": "little",
+      "target_file": 10546,
+      "source_instruction": {
+        "pc": 23786,
+        "page": 1936,
+        "file_offset": 23786,
+        "bytes": "993229",
+        "mnemonic": "CMPB",
+        "operands": "R29, #0x32"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23791,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23791,
+        "page": 1936,
+        "file_offset": 23791,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23793,
+      "word": 10580,
+      "byte_order": "little",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 23793,
+        "page": 1936,
+        "file_offset": 23793,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23794,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 23793,
+        "page": 1936,
+        "file_offset": 23793,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23806,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23803,
+        "page": 1936,
+        "file_offset": 23803,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23822,
+      "word": 10580,
+      "byte_order": "little",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 23822,
+        "page": 1936,
+        "file_offset": 23822,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23823,
+      "word": 10537,
+      "byte_order": "little",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 23822,
+        "page": 1936,
+        "file_offset": 23822,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23835,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23832,
+        "page": 1936,
+        "file_offset": 23832,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23843,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23840,
+        "page": 1936,
+        "file_offset": 23840,
+        "bytes": "b301b54c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb5, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23869,
+      "word": 10519,
+      "byte_order": "little",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23869,
+        "page": 1936,
+        "file_offset": 23869,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23874,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23871,
+        "page": 1936,
+        "file_offset": 23871,
+        "bytes": "c701b54c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb5, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23893,
+      "word": 10572,
+      "byte_order": "little",
+      "target_file": 10572,
+      "source_instruction": {
+        "pc": 23890,
+        "page": 1936,
+        "file_offset": 23890,
+        "bytes": "c701b54c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb5, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 25052,
+      "word": 32772,
+      "byte_order": "little",
+      "target_file": 24580,
+      "source_instruction": null,
+      "source_data_region": "boot_bitmap_6108",
+      "even_aligned": true
+    },
+    {
+      "source_file": 25092,
+      "word": 32772,
+      "byte_order": "little",
+      "target_file": 24580,
+      "source_instruction": null,
+      "source_data_region": "boot_bitmap_6108",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2250,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2251,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 2252,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2253,
+      "word": 10534,
+      "byte_order": "big",
+      "target_file": 10534,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 2266,
+      "word": 10529,
+      "byte_order": "big",
+      "target_file": 10529,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2277,
+      "word": 10534,
+      "byte_order": "big",
+      "target_file": 10534,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 2300,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": true
+    },
+    {
+      "source_file": 2301,
+      "word": 10534,
+      "byte_order": "big",
+      "target_file": 10534,
+      "source_instruction": null,
+      "source_data_region": "boot_display_glyph_rows",
+      "even_aligned": false
+    },
+    {
+      "source_file": 9584,
+      "word": 10675,
+      "byte_order": "big",
+      "target_file": 10675,
+      "source_instruction": {
+        "pc": 9583,
+        "page": 1920,
+        "file_offset": 9583,
+        "bytes": "db29",
+        "mnemonic": "JC",
+        "operands": "0x259a"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 13808,
+      "word": 10612,
+      "byte_order": "big",
+      "target_file": 10612,
+      "source_instruction": {
+        "pc": 13807,
+        "page": 1920,
+        "file_offset": 13807,
+        "bytes": "2829",
+        "mnemonic": "SCALL",
+        "operands": "0x361a"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 15259,
+      "word": 10612,
+      "byte_order": "big",
+      "target_file": 10612,
+      "source_instruction": {
+        "pc": 15258,
+        "page": 1920,
+        "file_offset": 15258,
+        "bytes": "2829",
+        "mnemonic": "SCALL",
+        "operands": "0x3bc5"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 17028,
+      "word": 10549,
+      "byte_order": "big",
+      "target_file": 10549,
+      "source_instruction": {
+        "pc": 17027,
+        "page": 1936,
+        "file_offset": 17027,
+        "bytes": "2029",
+        "mnemonic": "SJMP",
+        "operands": "0x42ae"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 17189,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 17189,
+        "page": 1936,
+        "file_offset": 17189,
+        "bytes": "2999",
+        "mnemonic": "SCALL",
+        "operands": "0x44c0"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 17193,
+      "word": 10587,
+      "byte_order": "big",
+      "target_file": 10587,
+      "source_instruction": {
+        "pc": 17193,
+        "page": 1936,
+        "file_offset": 17193,
+        "bytes": "295b",
+        "mnemonic": "SCALL",
+        "operands": "0x4486"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 17447,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 17446,
+        "page": 1936,
+        "file_offset": 17446,
+        "bytes": "2829",
+        "mnemonic": "SCALL",
+        "operands": "0x4451"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 17844,
+      "word": 10578,
+      "byte_order": "big",
+      "target_file": 10578,
+      "source_instruction": {
+        "pc": 17843,
+        "page": 1936,
+        "file_offset": 17843,
+        "bytes": "b329524cda",
+        "mnemonic": "LDB",
+        "operands": "RDA, 0x4c52, LOOKUP[RW28]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 20182,
+      "word": 10672,
+      "byte_order": "big",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 20180,
+        "page": 1936,
+        "file_offset": 20180,
+        "bytes": "b0cd29",
+        "mnemonic": "LDB",
+        "operands": "R29, RCD"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 20630,
+      "word": 10672,
+      "byte_order": "big",
+      "target_file": 10672,
+      "source_instruction": {
+        "pc": 20628,
+        "page": 1936,
+        "file_offset": 20628,
+        "bytes": "b0cd29",
+        "mnemonic": "LDB",
+        "operands": "R29, RCD"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 21993,
+      "word": 10582,
+      "byte_order": "big",
+      "target_file": 10582,
+      "source_instruction": {
+        "pc": 21993,
+        "page": 1936,
+        "file_offset": 21993,
+        "bytes": "2956",
+        "mnemonic": "SCALL",
+        "operands": "0x5741"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22183,
+      "word": 10519,
+      "byte_order": "big",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 22182,
+        "page": 1936,
+        "file_offset": 22182,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22559,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 22555,
+        "page": 1936,
+        "file_offset": 22555,
+        "bytes": "b301ab4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22590,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22586,
+        "page": 1936,
+        "file_offset": 22586,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22609,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22605,
+        "page": 1936,
+        "file_offset": 22605,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22617,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 22613,
+        "page": 1936,
+        "file_offset": 22613,
+        "bytes": "b301af4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22662,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22658,
+        "page": 1936,
+        "file_offset": 22658,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22681,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22677,
+        "page": 1936,
+        "file_offset": 22677,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22689,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 22685,
+        "page": 1936,
+        "file_offset": 22685,
+        "bytes": "b301b24c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22729,
+      "word": 10651,
+      "byte_order": "big",
+      "target_file": 10651,
+      "source_instruction": {
+        "pc": 22728,
+        "page": 1936,
+        "file_offset": 22728,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22741,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22737,
+        "page": 1936,
+        "file_offset": 22737,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22755,
+      "word": 10651,
+      "byte_order": "big",
+      "target_file": 10651,
+      "source_instruction": {
+        "pc": 22754,
+        "page": 1936,
+        "file_offset": 22754,
+        "bytes": "1529",
+        "mnemonic": "DECB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22767,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22763,
+        "page": 1936,
+        "file_offset": 22763,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22775,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 22771,
+        "page": 1936,
+        "file_offset": 22771,
+        "bytes": "b301b14c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22801,
+      "word": 10580,
+      "byte_order": "big",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 22800,
+        "page": 1936,
+        "file_offset": 22800,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22803,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 22802,
+        "page": 1936,
+        "file_offset": 22802,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22816,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22812,
+        "page": 1936,
+        "file_offset": 22812,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22830,
+      "word": 10580,
+      "byte_order": "big",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 22829,
+        "page": 1936,
+        "file_offset": 22829,
+        "bytes": "1529",
+        "mnemonic": "DECB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22832,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 22831,
+        "page": 1936,
+        "file_offset": 22831,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 22845,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 22841,
+        "page": 1936,
+        "file_offset": 22841,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 22937,
+      "word": 10615,
+      "byte_order": "big",
+      "target_file": 10615,
+      "source_instruction": {
+        "pc": 22937,
+        "page": 1936,
+        "file_offset": 22937,
+        "bytes": "2977",
+        "mnemonic": "SCALL",
+        "operands": "0x5b12"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23136,
+      "word": 10519,
+      "byte_order": "big",
+      "target_file": 10519,
+      "source_instruction": {
+        "pc": 23135,
+        "page": 1936,
+        "file_offset": 23135,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23536,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 23532,
+        "page": 1936,
+        "file_offset": 23532,
+        "bytes": "b301ab4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23567,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23563,
+        "page": 1936,
+        "file_offset": 23563,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23586,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23582,
+        "page": 1936,
+        "file_offset": 23582,
+        "bytes": "c701ab4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cab, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23594,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 23590,
+        "page": 1936,
+        "file_offset": 23590,
+        "bytes": "b301af4c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23639,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23635,
+        "page": 1936,
+        "file_offset": 23635,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23658,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23654,
+        "page": 1936,
+        "file_offset": 23654,
+        "bytes": "c701af4c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4caf, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23666,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 23662,
+        "page": 1936,
+        "file_offset": 23662,
+        "bytes": "b301b24c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23706,
+      "word": 10651,
+      "byte_order": "big",
+      "target_file": 10651,
+      "source_instruction": {
+        "pc": 23705,
+        "page": 1936,
+        "file_offset": 23705,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23718,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23714,
+        "page": 1936,
+        "file_offset": 23714,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23732,
+      "word": 10651,
+      "byte_order": "big",
+      "target_file": 10651,
+      "source_instruction": {
+        "pc": 23731,
+        "page": 1936,
+        "file_offset": 23731,
+        "bytes": "1529",
+        "mnemonic": "DECB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23744,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23740,
+        "page": 1936,
+        "file_offset": 23740,
+        "bytes": "c701b24c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb2, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23752,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 23748,
+        "page": 1936,
+        "file_offset": 23748,
+        "bytes": "b301b14c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23792,
+      "word": 10580,
+      "byte_order": "big",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 23791,
+        "page": 1936,
+        "file_offset": 23791,
+        "bytes": "1729",
+        "mnemonic": "INCB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23794,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 23793,
+        "page": 1936,
+        "file_offset": 23793,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23807,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23803,
+        "page": 1936,
+        "file_offset": 23803,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23821,
+      "word": 10580,
+      "byte_order": "big",
+      "target_file": 10580,
+      "source_instruction": {
+        "pc": 23820,
+        "page": 1936,
+        "file_offset": 23820,
+        "bytes": "1529",
+        "mnemonic": "DECB",
+        "operands": "R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23823,
+      "word": 10537,
+      "byte_order": "big",
+      "target_file": 10537,
+      "source_instruction": {
+        "pc": 23822,
+        "page": 1936,
+        "file_offset": 23822,
+        "bytes": "542929da",
+        "mnemonic": "ADDB",
+        "operands": "RDA, R29, R29"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23836,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23832,
+        "page": 1936,
+        "file_offset": 23832,
+        "bytes": "c701b14c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb1, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23844,
+      "word": 10649,
+      "byte_order": "big",
+      "target_file": 10649,
+      "source_instruction": {
+        "pc": 23840,
+        "page": 1936,
+        "file_offset": 23840,
+        "bytes": "b301b54c29",
+        "mnemonic": "LDB",
+        "operands": "R29, 0x4cb5, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 23875,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23871,
+        "page": 1936,
+        "file_offset": 23871,
+        "bytes": "c701b54c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb5, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": false
+    },
+    {
+      "source_file": 23894,
+      "word": 10528,
+      "byte_order": "big",
+      "target_file": 10528,
+      "source_instruction": {
+        "pc": 23890,
+        "page": 1936,
+        "file_offset": 23890,
+        "bytes": "c701b54c29",
+        "mnemonic": "STB",
+        "operands": "R29, 0x4cb5, LOOKUP[ZR]"
+      },
+      "source_data_region": null,
+      "even_aligned": true
+    },
+    {
+      "source_file": 25053,
+      "word": 32772,
+      "byte_order": "big",
+      "target_file": 24580,
+      "source_instruction": null,
+      "source_data_region": "boot_bitmap_6108",
+      "even_aligned": false
+    }
+  ],
+  "selector_candidates": [
+    {
+      "region": "rom_reset",
+      "pc": 8325,
+      "page": 1920,
+      "file_offset": 8325,
+      "bytes": "c3010a0120",
+      "mnemonic": "ST",
+      "operands": "RW20, 0x10a, TABLE[ZR]"
+    },
+    {
+      "region": "rom_reset",
+      "pc": 8351,
+      "page": 1920,
+      "file_offset": 8351,
+      "bytes": "c301020120",
+      "mnemonic": "ST",
+      "operands": "RW20, 0x102, TABLE[ZR]"
+    },
+    {
+      "region": "rom_reset",
+      "pc": 8360,
+      "page": 1920,
+      "file_offset": 8360,
+      "bytes": "c3010c013c",
+      "mnemonic": "ST",
+      "operands": "RW3C, 0x10c, TABLE[ZR]"
+    },
+    {
+      "region": "rom_reset",
+      "pc": 8374,
+      "page": 1920,
+      "file_offset": 8374,
+      "bytes": "c3010c0120",
+      "mnemonic": "ST",
+      "operands": "RW20, 0x10c, TABLE[ZR]"
+    },
+    {
+      "region": "rom_reset",
+      "pc": 8383,
+      "page": 1920,
+      "file_offset": 8383,
+      "bytes": "c3010e0120",
+      "mnemonic": "ST",
+      "operands": "RW20, 0x10e, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16552,
+      "page": 1936,
+      "file_offset": 16552,
+      "bytes": "c3010c0128",
+      "mnemonic": "ST",
+      "operands": "RW28, 0x10c, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 16585,
+      "page": 1936,
+      "file_offset": 16585,
+      "bytes": "c3010c0128",
+      "mnemonic": "ST",
+      "operands": "RW28, 0x10c, TABLE[ZR]"
+    },
+    {
+      "region": "rom_boot_services",
+      "pc": 18256,
+      "page": 1936,
+      "file_offset": 18256,
+      "bytes": "c301060100",
+      "mnemonic": "ST",
+      "operands": "ZR, 0x106, TABLE[ZR]"
+    },
+    {
+      "region": "rom_low_monitor_vectors",
+      "pc": 505,
+      "page": 1920,
+      "file_offset": 505,
+      "bytes": "c3010c015e",
+      "mnemonic": "ST",
+      "operands": "RW5E, 0x10c, TABLE[ZR]"
+    },
+    {
+      "region": "rom_low_monitor_vectors",
+      "pc": 575,
+      "page": 1920,
+      "file_offset": 575,
+      "bytes": "c3010c0124",
+      "mnemonic": "ST",
+      "operands": "RW24, 0x10c, TABLE[ZR]"
+    },
+    {
+      "region": "rom_low_monitor_vectors",
+      "pc": 646,
+      "page": 1920,
+      "file_offset": 646,
+      "bytes": "c3010c0124",
+      "mnemonic": "ST",
+      "operands": "RW24, 0x10c, TABLE[ZR]"
+    }
+  ],
+  "coverage_baseline": {
+    "decoded_unique_bytes": 15060,
+    "identified_data_bytes": 11041,
+    "unclassified_bytes": 6667
+  }
+}

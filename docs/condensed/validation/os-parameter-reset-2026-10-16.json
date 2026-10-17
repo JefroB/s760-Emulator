@@ -1,0 +1,3169 @@
+{
+  "input_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "decoder": "pypcode 4.0.0",
+  "qualification": "Static original-byte validation, no new native or physical test",
+  "region": {
+    "name": "controller_state_reset",
+    "page": 31,
+    "start": 20351,
+    "end": 20816,
+    "evidence": "0000:C371/C375 selects fetch001F before C37A calls4F7F; repeats C380/C384/C389. 4F7F->4F8D->502A->5046 reaches flag initialization; external hardware setup callees remain unresolved.",
+    "instructions": [
+      {
+        "pc": 20351,
+        "page": 31,
+        "file_offset": 54143,
+        "bytes": "280c",
+        "mnemonic": "SCALL",
+        "operands": "0x4f8d"
+      },
+      {
+        "pc": 20353,
+        "page": 31,
+        "file_offset": 54145,
+        "bytes": "a14b001c",
+        "mnemonic": "LD",
+        "operands": "RW1C, #0x4b"
+      },
+      {
+        "pc": 20357,
+        "page": 31,
+        "file_offset": 54149,
+        "bytes": "a1d1611e",
+        "mnemonic": "LD",
+        "operands": "RW1E, #0x61d1"
+      },
+      {
+        "pc": 20361,
+        "page": 31,
+        "file_offset": 54153,
+        "bytes": "ef887e",
+        "mnemonic": "LCALL",
+        "operands": "0xce14"
+      },
+      {
+        "pc": 20364,
+        "page": 31,
+        "file_offset": 54156,
+        "bytes": "f0",
+        "mnemonic": "RET",
+        "operands": ""
+      },
+      {
+        "pc": 20365,
+        "page": 31,
+        "file_offset": 54157,
+        "bytes": "9b01a51b9d",
+        "mnemonic": "CMPB",
+        "operands": "R9D, 0x1ba5, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20370,
+        "page": 31,
+        "file_offset": 54162,
+        "bytes": "df2f",
+        "mnemonic": "JE",
+        "operands": "0x4fc3"
+      },
+      {
+        "pc": 20372,
+        "page": 31,
+        "file_offset": 54164,
+        "bytes": "98009d",
+        "mnemonic": "CMPB",
+        "operands": "R9D, ZRlo"
+      },
+      {
+        "pc": 20375,
+        "page": 31,
+        "file_offset": 54167,
+        "bytes": "d707",
+        "mnemonic": "JNE",
+        "operands": "0x4fa0"
+      },
+      {
+        "pc": 20377,
+        "page": 31,
+        "file_offset": 54169,
+        "bytes": "c701a51b9d",
+        "mnemonic": "STB",
+        "operands": "R9D, 0x1ba5, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20382,
+        "page": 31,
+        "file_offset": 54174,
+        "bytes": "2025",
+        "mnemonic": "SJMP",
+        "operands": "0x4fc5"
+      },
+      {
+        "pc": 20384,
+        "page": 31,
+        "file_offset": 54176,
+        "bytes": "b301a51b28",
+        "mnemonic": "LDB",
+        "operands": "R28, 0x1ba5, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20389,
+        "page": 31,
+        "file_offset": 54181,
+        "bytes": "980028",
+        "mnemonic": "CMPB",
+        "operands": "R28, ZRlo"
+      },
+      {
+        "pc": 20392,
+        "page": 31,
+        "file_offset": 54184,
+        "bytes": "df07",
+        "mnemonic": "JE",
+        "operands": "0x4fb1"
+      },
+      {
+        "pc": 20394,
+        "page": 31,
+        "file_offset": 54186,
+        "bytes": "990528",
+        "mnemonic": "CMPB",
+        "operands": "R28, #0x5"
+      },
+      {
+        "pc": 20397,
+        "page": 31,
+        "file_offset": 54189,
+        "bytes": "d707",
+        "mnemonic": "JNE",
+        "operands": "0x4fb6"
+      },
+      {
+        "pc": 20399,
+        "page": 31,
+        "file_offset": 54191,
+        "bytes": "2814",
+        "mnemonic": "SCALL",
+        "operands": "0x4fc5"
+      },
+      {
+        "pc": 20401,
+        "page": 31,
+        "file_offset": 54193,
+        "bytes": "ef9601",
+        "mnemonic": "LCALL",
+        "operands": "0x514a"
+      },
+      {
+        "pc": 20404,
+        "page": 31,
+        "file_offset": 54196,
+        "bytes": "2002",
+        "mnemonic": "SJMP",
+        "operands": "0x4fb8"
+      },
+      {
+        "pc": 20406,
+        "page": 31,
+        "file_offset": 54198,
+        "bytes": "280d",
+        "mnemonic": "SCALL",
+        "operands": "0x4fc5"
+      },
+      {
+        "pc": 20408,
+        "page": 31,
+        "file_offset": 54200,
+        "bytes": "117b",
+        "mnemonic": "CLRB",
+        "operands": "R7B"
+      },
+      {
+        "pc": 20410,
+        "page": 31,
+        "file_offset": 54202,
+        "bytes": "fa",
+        "mnemonic": "DI",
+        "operands": ""
+      },
+      {
+        "pc": 20411,
+        "page": 31,
+        "file_offset": 54203,
+        "bytes": "286d",
+        "mnemonic": "SCALL",
+        "operands": "0x502a"
+      },
+      {
+        "pc": 20413,
+        "page": 31,
+        "file_offset": 54205,
+        "bytes": "fb",
+        "mnemonic": "EI",
+        "operands": ""
+      },
+      {
+        "pc": 20414,
+        "page": 31,
+        "file_offset": 54206,
+        "bytes": "c701a51b9d",
+        "mnemonic": "STB",
+        "operands": "R9D, 0x1ba5, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20419,
+        "page": 31,
+        "file_offset": 54211,
+        "bytes": "f8",
+        "mnemonic": "CLRC",
+        "operands": ""
+      },
+      {
+        "pc": 20420,
+        "page": 31,
+        "file_offset": 54212,
+        "bytes": "f0",
+        "mnemonic": "RET",
+        "operands": ""
+      },
+      {
+        "pc": 20421,
+        "page": 31,
+        "file_offset": 54213,
+        "bytes": "91807b",
+        "mnemonic": "ORB",
+        "operands": "R7B, #-0x80"
+      },
+      {
+        "pc": 20424,
+        "page": 31,
+        "file_offset": 54216,
+        "bytes": "3f7bfd",
+        "mnemonic": "JBS",
+        "operands": "R7B, 0x7, 0x4fc8"
+      },
+      {
+        "pc": 20427,
+        "page": 31,
+        "file_offset": 54219,
+        "bytes": "b10872",
+        "mnemonic": "LDB",
+        "operands": "R72, #0x8"
+      },
+      {
+        "pc": 20430,
+        "page": 31,
+        "file_offset": 54222,
+        "bytes": "cb010c01",
+        "mnemonic": "PUSH",
+        "operands": "0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 20434,
+        "page": 31,
+        "file_offset": 54226,
+        "bytes": "a1be021c",
+        "mnemonic": "LD",
+        "operands": "RW1C, #0x2be"
+      },
+      {
+        "pc": 20438,
+        "page": 31,
+        "file_offset": 54230,
+        "bytes": "c3010c011c",
+        "mnemonic": "ST",
+        "operands": "RW1C, 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 20443,
+        "page": 31,
+        "file_offset": 54235,
+        "bytes": "a1968f28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x8f96"
+      },
+      {
+        "pc": 20447,
+        "page": 31,
+        "file_offset": 54239,
+        "bytes": "b11042",
+        "mnemonic": "LDB",
+        "operands": "R42, #0x10"
+      },
+      {
+        "pc": 20450,
+        "page": 31,
+        "file_offset": 54242,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20453,
+        "page": 31,
+        "file_offset": 54245,
+        "bytes": "e042fa",
+        "mnemonic": "DJNZ",
+        "operands": "R42, 0x4fe2"
+      },
+      {
+        "pc": 20456,
+        "page": 31,
+        "file_offset": 54248,
+        "bytes": "a1a68f28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x8fa6"
+      },
+      {
+        "pc": 20460,
+        "page": 31,
+        "file_offset": 54252,
+        "bytes": "b11042",
+        "mnemonic": "LDB",
+        "operands": "R42, #0x10"
+      },
+      {
+        "pc": 20463,
+        "page": 31,
+        "file_offset": 54255,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20466,
+        "page": 31,
+        "file_offset": 54258,
+        "bytes": "e042fa",
+        "mnemonic": "DJNZ",
+        "operands": "R42, 0x4fef"
+      },
+      {
+        "pc": 20469,
+        "page": 31,
+        "file_offset": 54261,
+        "bytes": "a1b68f28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x8fb6"
+      },
+      {
+        "pc": 20473,
+        "page": 31,
+        "file_offset": 54265,
+        "bytes": "b11042",
+        "mnemonic": "LDB",
+        "operands": "R42, #0x10"
+      },
+      {
+        "pc": 20476,
+        "page": 31,
+        "file_offset": 54268,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20479,
+        "page": 31,
+        "file_offset": 54271,
+        "bytes": "e042fa",
+        "mnemonic": "DJNZ",
+        "operands": "R42, 0x4ffc"
+      },
+      {
+        "pc": 20482,
+        "page": 31,
+        "file_offset": 54274,
+        "bytes": "a1c68f28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x8fc6"
+      },
+      {
+        "pc": 20486,
+        "page": 31,
+        "file_offset": 54278,
+        "bytes": "b11042",
+        "mnemonic": "LDB",
+        "operands": "R42, #0x10"
+      },
+      {
+        "pc": 20489,
+        "page": 31,
+        "file_offset": 54281,
+        "bytes": "c22900",
+        "mnemonic": "ST",
+        "operands": "ZR, [RW28]+"
+      },
+      {
+        "pc": 20492,
+        "page": 31,
+        "file_offset": 54284,
+        "bytes": "e042fa",
+        "mnemonic": "DJNZ",
+        "operands": "R42, 0x5009"
+      },
+      {
+        "pc": 20495,
+        "page": 31,
+        "file_offset": 54287,
+        "bytes": "cf010c01",
+        "mnemonic": "POP",
+        "operands": "0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 20499,
+        "page": 31,
+        "file_offset": 54291,
+        "bytes": "b30100f0da",
+        "mnemonic": "LDB",
+        "operands": "RDA, 0xf000, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20504,
+        "page": 31,
+        "file_offset": 54296,
+        "bytes": "9180da",
+        "mnemonic": "ORB",
+        "operands": "RDA, #-0x80"
+      },
+      {
+        "pc": 20507,
+        "page": 31,
+        "file_offset": 54299,
+        "bytes": "c70100f0da",
+        "mnemonic": "STB",
+        "operands": "RDA, 0xf000, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20512,
+        "page": 31,
+        "file_offset": 54304,
+        "bytes": "b101da",
+        "mnemonic": "LDB",
+        "operands": "RDA, #0x1"
+      },
+      {
+        "pc": 20515,
+        "page": 31,
+        "file_offset": 54307,
+        "bytes": "c701a61bda",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x1ba6, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20520,
+        "page": 31,
+        "file_offset": 54312,
+        "bytes": "f8",
+        "mnemonic": "CLRC",
+        "operands": ""
+      },
+      {
+        "pc": 20521,
+        "page": 31,
+        "file_offset": 54313,
+        "bytes": "f0",
+        "mnemonic": "RET",
+        "operands": ""
+      },
+      {
+        "pc": 20522,
+        "page": 31,
+        "file_offset": 54314,
+        "bytes": "281a",
+        "mnemonic": "SCALL",
+        "operands": "0x5046"
+      },
+      {
+        "pc": 20524,
+        "page": 31,
+        "file_offset": 54316,
+        "bytes": "b13806",
+        "mnemonic": "LDB",
+        "operands": "HSI_status, #0x38"
+      },
+      {
+        "pc": 20527,
+        "page": 31,
+        "file_offset": 54319,
+        "bytes": "4510270a04",
+        "mnemonic": "ADD",
+        "operands": "HSI_time, TIMER1, #0x2710"
+      },
+      {
+        "pc": 20532,
+        "page": 31,
+        "file_offset": 54324,
+        "bytes": "b12008",
+        "mnemonic": "LDB",
+        "operands": "INT_MASK, #0x20"
+      },
+      {
+        "pc": 20535,
+        "page": 31,
+        "file_offset": 54327,
+        "bytes": "b3011501da",
+        "mnemonic": "LDB",
+        "operands": "RDA, 0x115, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20540,
+        "page": 31,
+        "file_offset": 54332,
+        "bytes": "9144da",
+        "mnemonic": "ORB",
+        "operands": "RDA, #0x44"
+      },
+      {
+        "pc": 20543,
+        "page": 31,
+        "file_offset": 54335,
+        "bytes": "c7011501da",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x115, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20548,
+        "page": 31,
+        "file_offset": 54340,
+        "bytes": "f8",
+        "mnemonic": "CLRC",
+        "operands": ""
+      },
+      {
+        "pc": 20549,
+        "page": 31,
+        "file_offset": 54341,
+        "bytes": "f0",
+        "mnemonic": "RET",
+        "operands": ""
+      },
+      {
+        "pc": 20550,
+        "page": 31,
+        "file_offset": 54342,
+        "bytes": "a3010a0128",
+        "mnemonic": "LD",
+        "operands": "RW28, 0x10a, TABLE[ZR]"
+      },
+      {
+        "pc": 20555,
+        "page": 31,
+        "file_offset": 54347,
+        "bytes": "a3010c012a",
+        "mnemonic": "LD",
+        "operands": "RW2A, 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 20560,
+        "page": 31,
+        "file_offset": 54352,
+        "bytes": "c828",
+        "mnemonic": "PUSH",
+        "operands": "RW28"
+      },
+      {
+        "pc": 20562,
+        "page": 31,
+        "file_offset": 54354,
+        "bytes": "c82a",
+        "mnemonic": "PUSH",
+        "operands": "RW2A"
+      },
+      {
+        "pc": 20564,
+        "page": 31,
+        "file_offset": 54356,
+        "bytes": "a1be021c",
+        "mnemonic": "LD",
+        "operands": "RW1C, #0x2be"
+      },
+      {
+        "pc": 20568,
+        "page": 31,
+        "file_offset": 54360,
+        "bytes": "c3010c011c",
+        "mnemonic": "ST",
+        "operands": "RW1C, 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 20573,
+        "page": 31,
+        "file_offset": 54365,
+        "bytes": "a17b9128",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x917b"
+      },
+      {
+        "pc": 20577,
+        "page": 31,
+        "file_offset": 54369,
+        "bytes": "b1ffda",
+        "mnemonic": "LDB",
+        "operands": "RDA, #-0x1"
+      },
+      {
+        "pc": 20580,
+        "page": 31,
+        "file_offset": 54372,
+        "bytes": "c629da",
+        "mnemonic": "STB",
+        "operands": "RDA, [RW28]+"
+      },
+      {
+        "pc": 20583,
+        "page": 31,
+        "file_offset": 54375,
+        "bytes": "17da",
+        "mnemonic": "INCB",
+        "operands": "RDA"
+      },
+      {
+        "pc": 20585,
+        "page": 31,
+        "file_offset": 54377,
+        "bytes": "9917da",
+        "mnemonic": "CMPB",
+        "operands": "RDA, #0x17"
+      },
+      {
+        "pc": 20588,
+        "page": 31,
+        "file_offset": 54380,
+        "bytes": "d7f6",
+        "mnemonic": "JNE",
+        "operands": "0x5064"
+      },
+      {
+        "pc": 20590,
+        "page": 31,
+        "file_offset": 54382,
+        "bytes": "a1939128",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x9193"
+      },
+      {
+        "pc": 20594,
+        "page": 31,
+        "file_offset": 54386,
+        "bytes": "b101da",
+        "mnemonic": "LDB",
+        "operands": "RDA, #0x1"
+      },
+      {
+        "pc": 20597,
+        "page": 31,
+        "file_offset": 54389,
+        "bytes": "c629da",
+        "mnemonic": "STB",
+        "operands": "RDA, [RW28]+"
+      },
+      {
+        "pc": 20600,
+        "page": 31,
+        "file_offset": 54392,
+        "bytes": "17da",
+        "mnemonic": "INCB",
+        "operands": "RDA"
+      },
+      {
+        "pc": 20602,
+        "page": 31,
+        "file_offset": 54394,
+        "bytes": "9918da",
+        "mnemonic": "CMPB",
+        "operands": "RDA, #0x18"
+      },
+      {
+        "pc": 20605,
+        "page": 31,
+        "file_offset": 54397,
+        "bytes": "d7f6",
+        "mnemonic": "JNE",
+        "operands": "0x5075"
+      },
+      {
+        "pc": 20607,
+        "page": 31,
+        "file_offset": 54399,
+        "bytes": "b1ffda",
+        "mnemonic": "LDB",
+        "operands": "RDA, #-0x1"
+      },
+      {
+        "pc": 20610,
+        "page": 31,
+        "file_offset": 54402,
+        "bytes": "c628da",
+        "mnemonic": "STB",
+        "operands": "RDA, [RW28]"
+      },
+      {
+        "pc": 20613,
+        "page": 31,
+        "file_offset": 54405,
+        "bytes": "11da",
+        "mnemonic": "CLRB",
+        "operands": "RDA"
+      },
+      {
+        "pc": 20615,
+        "page": 31,
+        "file_offset": 54407,
+        "bytes": "c7017991da",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x9179, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20620,
+        "page": 31,
+        "file_offset": 54412,
+        "bytes": "b117da",
+        "mnemonic": "LDB",
+        "operands": "RDA, #0x17"
+      },
+      {
+        "pc": 20623,
+        "page": 31,
+        "file_offset": 54415,
+        "bytes": "c7017a91da",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x917a, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20628,
+        "page": 31,
+        "file_offset": 54420,
+        "bytes": "11da",
+        "mnemonic": "CLRB",
+        "operands": "RDA"
+      },
+      {
+        "pc": 20630,
+        "page": 31,
+        "file_offset": 54422,
+        "bytes": "c701b42bda",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x2bb4, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20635,
+        "page": 31,
+        "file_offset": 54427,
+        "bytes": "b10bda",
+        "mnemonic": "LDB",
+        "operands": "RDA, #0xb"
+      },
+      {
+        "pc": 20638,
+        "page": 31,
+        "file_offset": 54430,
+        "bytes": "c701b52bda",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x2bb5, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20643,
+        "page": 31,
+        "file_offset": 54435,
+        "bytes": "b10cda",
+        "mnemonic": "LDB",
+        "operands": "RDA, #0xc"
+      },
+      {
+        "pc": 20646,
+        "page": 31,
+        "file_offset": 54438,
+        "bytes": "c701b62bda",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x2bb6, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20651,
+        "page": 31,
+        "file_offset": 54443,
+        "bytes": "b117da",
+        "mnemonic": "LDB",
+        "operands": "RDA, #0x17"
+      },
+      {
+        "pc": 20654,
+        "page": 31,
+        "file_offset": 54446,
+        "bytes": "c701b72bda",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x2bb7, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20659,
+        "page": 31,
+        "file_offset": 54451,
+        "bytes": "a16c196e",
+        "mnemonic": "LD",
+        "operands": "RW6E, #0x196c"
+      },
+      {
+        "pc": 20663,
+        "page": 31,
+        "file_offset": 54455,
+        "bytes": "a16c1970",
+        "mnemonic": "LD",
+        "operands": "RW70, #0x196c"
+      },
+      {
+        "pc": 20667,
+        "page": 31,
+        "file_offset": 54459,
+        "bytes": "71017b",
+        "mnemonic": "ANDB",
+        "operands": "R7B, #0x1"
+      },
+      {
+        "pc": 20670,
+        "page": 31,
+        "file_offset": 54462,
+        "bytes": "b10872",
+        "mnemonic": "LDB",
+        "operands": "R72, #0x8"
+      },
+      {
+        "pc": 20673,
+        "page": 31,
+        "file_offset": 54465,
+        "bytes": "a10c9b28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x9b0c"
+      },
+      {
+        "pc": 20677,
+        "page": 31,
+        "file_offset": 54469,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20680,
+        "page": 31,
+        "file_offset": 54472,
+        "bytes": "89249b28",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x9b24"
+      },
+      {
+        "pc": 20684,
+        "page": 31,
+        "file_offset": 54476,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x50c5"
+      },
+      {
+        "pc": 20686,
+        "page": 31,
+        "file_offset": 54478,
+        "bytes": "a1521f28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x1f52"
+      },
+      {
+        "pc": 20690,
+        "page": 31,
+        "file_offset": 54482,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20693,
+        "page": 31,
+        "file_offset": 54485,
+        "bytes": "896a1f28",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x1f6a"
+      },
+      {
+        "pc": 20697,
+        "page": 31,
+        "file_offset": 54489,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x50d2"
+      },
+      {
+        "pc": 20699,
+        "page": 31,
+        "file_offset": 54491,
+        "bytes": "a1668c28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x8c66"
+      },
+      {
+        "pc": 20703,
+        "page": 31,
+        "file_offset": 54495,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20706,
+        "page": 31,
+        "file_offset": 54498,
+        "bytes": "897e8c28",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x8c7e"
+      },
+      {
+        "pc": 20710,
+        "page": 31,
+        "file_offset": 54502,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x50df"
+      },
+      {
+        "pc": 20712,
+        "page": 31,
+        "file_offset": 54504,
+        "bytes": "a17e8c28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x8c7e"
+      },
+      {
+        "pc": 20716,
+        "page": 31,
+        "file_offset": 54508,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20719,
+        "page": 31,
+        "file_offset": 54511,
+        "bytes": "89c68c28",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x8cc6"
+      },
+      {
+        "pc": 20723,
+        "page": 31,
+        "file_offset": 54515,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x50ec"
+      },
+      {
+        "pc": 20725,
+        "page": 31,
+        "file_offset": 54517,
+        "bytes": "a1c68c28",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x8cc6"
+      },
+      {
+        "pc": 20729,
+        "page": 31,
+        "file_offset": 54521,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20732,
+        "page": 31,
+        "file_offset": 54524,
+        "bytes": "89de8c28",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x8cde"
+      },
+      {
+        "pc": 20736,
+        "page": 31,
+        "file_offset": 54528,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x50f9"
+      },
+      {
+        "pc": 20738,
+        "page": 31,
+        "file_offset": 54530,
+        "bytes": "a1ab9128",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x91ab"
+      },
+      {
+        "pc": 20742,
+        "page": 31,
+        "file_offset": 54534,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20745,
+        "page": 31,
+        "file_offset": 54537,
+        "bytes": "89bb9128",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x91bb"
+      },
+      {
+        "pc": 20749,
+        "page": 31,
+        "file_offset": 54541,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x5106"
+      },
+      {
+        "pc": 20751,
+        "page": 31,
+        "file_offset": 54543,
+        "bytes": "a1bb9128",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x91bb"
+      },
+      {
+        "pc": 20755,
+        "page": 31,
+        "file_offset": 54547,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20758,
+        "page": 31,
+        "file_offset": 54550,
+        "bytes": "89cb9128",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x91cb"
+      },
+      {
+        "pc": 20762,
+        "page": 31,
+        "file_offset": 54554,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x5113"
+      },
+      {
+        "pc": 20764,
+        "page": 31,
+        "file_offset": 54556,
+        "bytes": "a1cb9128",
+        "mnemonic": "LD",
+        "operands": "RW28, #0x91cb"
+      },
+      {
+        "pc": 20768,
+        "page": 31,
+        "file_offset": 54560,
+        "bytes": "c62900",
+        "mnemonic": "STB",
+        "operands": "ZRlo, [RW28]+"
+      },
+      {
+        "pc": 20771,
+        "page": 31,
+        "file_offset": 54563,
+        "bytes": "89db9128",
+        "mnemonic": "CMP",
+        "operands": "RW28, #0x91db"
+      },
+      {
+        "pc": 20775,
+        "page": 31,
+        "file_offset": 54567,
+        "bytes": "d7f7",
+        "mnemonic": "JNE",
+        "operands": "0x5120"
+      },
+      {
+        "pc": 20777,
+        "page": 31,
+        "file_offset": 54569,
+        "bytes": "c301942a00",
+        "mnemonic": "ST",
+        "operands": "ZR, 0x2a94, TABLE[ZR]"
+      },
+      {
+        "pc": 20782,
+        "page": 31,
+        "file_offset": 54574,
+        "bytes": "c3018c2a00",
+        "mnemonic": "ST",
+        "operands": "ZR, 0x2a8c, TABLE[ZR]"
+      },
+      {
+        "pc": 20787,
+        "page": 31,
+        "file_offset": 54579,
+        "bytes": "b101da",
+        "mnemonic": "LDB",
+        "operands": "RDA, #0x1"
+      },
+      {
+        "pc": 20790,
+        "page": 31,
+        "file_offset": 54582,
+        "bytes": "c701a61bda",
+        "mnemonic": "STB",
+        "operands": "RDA, 0x1ba6, LOOKUP[ZR]"
+      },
+      {
+        "pc": 20795,
+        "page": 31,
+        "file_offset": 54587,
+        "bytes": "cc2a",
+        "mnemonic": "POP",
+        "operands": "RW2A"
+      },
+      {
+        "pc": 20797,
+        "page": 31,
+        "file_offset": 54589,
+        "bytes": "cc28",
+        "mnemonic": "POP",
+        "operands": "RW28"
+      },
+      {
+        "pc": 20799,
+        "page": 31,
+        "file_offset": 54591,
+        "bytes": "c3010a0128",
+        "mnemonic": "ST",
+        "operands": "RW28, 0x10a, TABLE[ZR]"
+      },
+      {
+        "pc": 20804,
+        "page": 31,
+        "file_offset": 54596,
+        "bytes": "c3010c012a",
+        "mnemonic": "ST",
+        "operands": "RW2A, 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 20809,
+        "page": 31,
+        "file_offset": 54601,
+        "bytes": "f0",
+        "mnemonic": "RET",
+        "operands": ""
+      },
+      {
+        "pc": 20810,
+        "page": 31,
+        "file_offset": 54602,
+        "bytes": "2804",
+        "mnemonic": "SCALL",
+        "operands": "0x5150"
+      },
+      {
+        "pc": 20812,
+        "page": 31,
+        "file_offset": 54604,
+        "bytes": "2968",
+        "mnemonic": "SCALL",
+        "operands": "0x52b6"
+      },
+      {
+        "pc": 20814,
+        "page": 31,
+        "file_offset": 54606,
+        "bytes": "20ec",
+        "mnemonic": "SJMP",
+        "operands": "0x523c"
+      }
+    ],
+    "entries": [
+      20351
+    ],
+    "summary": [
+      "5046 saves data010A/010C, selects02BE, initializes controller/voice state, and restores both selectors.",
+      "5102..5127 zero three sixteen-byte ranges91AB..91BA,91BB..91CA,91CB..91DA.",
+      "4F8D compares requestedR9D to1BA5. Equal returns; nonzero changed state follows setup and reset, zero changed state takes4FC5 without5046."
+    ],
+    "edges": [
+      {
+        "from": 20351,
+        "to": 20365,
+        "kind": "call",
+        "resolved": true
+      },
+      {
+        "from": 20351,
+        "to": 20353,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20365,
+        "to": 20370,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20353,
+        "to": 20357,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20370,
+        "to": 20419,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20370,
+        "to": 20372,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20357,
+        "to": 20361,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20419,
+        "to": 20420,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20372,
+        "to": 20375,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20361,
+        "to": 52756,
+        "kind": "call",
+        "resolved": false
+      },
+      {
+        "from": 20361,
+        "to": 20364,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20375,
+        "to": 20384,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20375,
+        "to": 20377,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20384,
+        "to": 20389,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20377,
+        "to": 20382,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20389,
+        "to": 20392,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20382,
+        "to": 20421,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20392,
+        "to": 20401,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20392,
+        "to": 20394,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20421,
+        "to": 20424,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20401,
+        "to": 20810,
+        "kind": "call",
+        "resolved": true
+      },
+      {
+        "from": 20401,
+        "to": 20404,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20394,
+        "to": 20397,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20424,
+        "to": 20424,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20424,
+        "to": 20427,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20810,
+        "to": 20816,
+        "kind": "call",
+        "resolved": false
+      },
+      {
+        "from": 20810,
+        "to": 20812,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20404,
+        "to": 20408,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20397,
+        "to": 20406,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20397,
+        "to": 20399,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20427,
+        "to": 20430,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20812,
+        "to": 21174,
+        "kind": "call",
+        "resolved": false
+      },
+      {
+        "from": 20812,
+        "to": 20814,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20408,
+        "to": 20410,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20406,
+        "to": 20421,
+        "kind": "call",
+        "resolved": true
+      },
+      {
+        "from": 20406,
+        "to": 20408,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20399,
+        "to": 20421,
+        "kind": "call",
+        "resolved": true
+      },
+      {
+        "from": 20399,
+        "to": 20401,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20430,
+        "to": 20434,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20814,
+        "to": 21052,
+        "kind": "branch",
+        "resolved": false
+      },
+      {
+        "from": 20410,
+        "to": 20411,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20434,
+        "to": 20438,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20411,
+        "to": 20522,
+        "kind": "call",
+        "resolved": true
+      },
+      {
+        "from": 20411,
+        "to": 20413,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20438,
+        "to": 20443,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20522,
+        "to": 20550,
+        "kind": "call",
+        "resolved": true
+      },
+      {
+        "from": 20522,
+        "to": 20524,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20413,
+        "to": 20414,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20443,
+        "to": 20447,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20550,
+        "to": 20555,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20524,
+        "to": 20527,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20414,
+        "to": 20419,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20447,
+        "to": 20450,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20555,
+        "to": 20560,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20527,
+        "to": 20532,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20450,
+        "to": 20453,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20560,
+        "to": 20562,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20532,
+        "to": 20535,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20453,
+        "to": 20450,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20453,
+        "to": 20456,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20562,
+        "to": 20564,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20535,
+        "to": 20540,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20456,
+        "to": 20460,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20564,
+        "to": 20568,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20540,
+        "to": 20543,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20460,
+        "to": 20463,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20568,
+        "to": 20573,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20543,
+        "to": 20548,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20463,
+        "to": 20466,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20573,
+        "to": 20577,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20548,
+        "to": 20549,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20466,
+        "to": 20463,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20466,
+        "to": 20469,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20577,
+        "to": 20580,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20469,
+        "to": 20473,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20580,
+        "to": 20583,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20473,
+        "to": 20476,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20583,
+        "to": 20585,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20476,
+        "to": 20479,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20585,
+        "to": 20588,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20479,
+        "to": 20476,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20479,
+        "to": 20482,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20588,
+        "to": 20580,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20588,
+        "to": 20590,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20482,
+        "to": 20486,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20590,
+        "to": 20594,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20486,
+        "to": 20489,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20594,
+        "to": 20597,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20489,
+        "to": 20492,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20597,
+        "to": 20600,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20492,
+        "to": 20489,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20492,
+        "to": 20495,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20600,
+        "to": 20602,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20495,
+        "to": 20499,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20602,
+        "to": 20605,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20499,
+        "to": 20504,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20605,
+        "to": 20597,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20605,
+        "to": 20607,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20504,
+        "to": 20507,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20607,
+        "to": 20610,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20507,
+        "to": 20512,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20610,
+        "to": 20613,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20512,
+        "to": 20515,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20613,
+        "to": 20615,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20515,
+        "to": 20520,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20615,
+        "to": 20620,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20520,
+        "to": 20521,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20620,
+        "to": 20623,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20623,
+        "to": 20628,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20628,
+        "to": 20630,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20630,
+        "to": 20635,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20635,
+        "to": 20638,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20638,
+        "to": 20643,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20643,
+        "to": 20646,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20646,
+        "to": 20651,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20651,
+        "to": 20654,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20654,
+        "to": 20659,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20659,
+        "to": 20663,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20663,
+        "to": 20667,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20667,
+        "to": 20670,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20670,
+        "to": 20673,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20673,
+        "to": 20677,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20677,
+        "to": 20680,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20680,
+        "to": 20684,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20684,
+        "to": 20677,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20684,
+        "to": 20686,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20686,
+        "to": 20690,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20690,
+        "to": 20693,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20693,
+        "to": 20697,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20697,
+        "to": 20690,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20697,
+        "to": 20699,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20699,
+        "to": 20703,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20703,
+        "to": 20706,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20706,
+        "to": 20710,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20710,
+        "to": 20703,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20710,
+        "to": 20712,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20712,
+        "to": 20716,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20716,
+        "to": 20719,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20719,
+        "to": 20723,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20723,
+        "to": 20716,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20723,
+        "to": 20725,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20725,
+        "to": 20729,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20729,
+        "to": 20732,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20732,
+        "to": 20736,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20736,
+        "to": 20729,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20736,
+        "to": 20738,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20738,
+        "to": 20742,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20742,
+        "to": 20745,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20745,
+        "to": 20749,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20749,
+        "to": 20742,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20749,
+        "to": 20751,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20751,
+        "to": 20755,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20755,
+        "to": 20758,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20758,
+        "to": 20762,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20762,
+        "to": 20755,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20762,
+        "to": 20764,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20764,
+        "to": 20768,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20768,
+        "to": 20771,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20771,
+        "to": 20775,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20775,
+        "to": 20768,
+        "kind": "branch",
+        "resolved": true
+      },
+      {
+        "from": 20775,
+        "to": 20777,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20777,
+        "to": 20782,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20782,
+        "to": 20787,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20787,
+        "to": 20790,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20790,
+        "to": 20795,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20795,
+        "to": 20797,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20797,
+        "to": 20799,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20799,
+        "to": 20804,
+        "kind": "fallthrough",
+        "resolved": true
+      },
+      {
+        "from": 20804,
+        "to": 20809,
+        "kind": "fallthrough",
+        "resolved": true
+      }
+    ],
+    "undecoded_ranges": [],
+    "warnings": [],
+    "blocks": [
+      {
+        "start": 20351,
+        "instructions": [
+          20351
+        ],
+        "exits": [
+          {
+            "from": 20351,
+            "to": 20365,
+            "kind": "call",
+            "resolved": true
+          },
+          {
+            "from": 20351,
+            "to": 20353,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20353,
+        "instructions": [
+          20353,
+          20357,
+          20361
+        ],
+        "exits": [
+          {
+            "from": 20361,
+            "to": 52756,
+            "kind": "call",
+            "resolved": false
+          },
+          {
+            "from": 20361,
+            "to": 20364,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20364,
+        "instructions": [
+          20364
+        ],
+        "exits": []
+      },
+      {
+        "start": 20365,
+        "instructions": [
+          20365,
+          20370
+        ],
+        "exits": [
+          {
+            "from": 20370,
+            "to": 20419,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20370,
+            "to": 20372,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20372,
+        "instructions": [
+          20372,
+          20375
+        ],
+        "exits": [
+          {
+            "from": 20375,
+            "to": 20384,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20375,
+            "to": 20377,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20377,
+        "instructions": [
+          20377,
+          20382
+        ],
+        "exits": [
+          {
+            "from": 20382,
+            "to": 20421,
+            "kind": "branch",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20384,
+        "instructions": [
+          20384,
+          20389,
+          20392
+        ],
+        "exits": [
+          {
+            "from": 20392,
+            "to": 20401,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20392,
+            "to": 20394,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20394,
+        "instructions": [
+          20394,
+          20397
+        ],
+        "exits": [
+          {
+            "from": 20397,
+            "to": 20406,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20397,
+            "to": 20399,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20399,
+        "instructions": [
+          20399
+        ],
+        "exits": [
+          {
+            "from": 20399,
+            "to": 20421,
+            "kind": "call",
+            "resolved": true
+          },
+          {
+            "from": 20399,
+            "to": 20401,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20401,
+        "instructions": [
+          20401
+        ],
+        "exits": [
+          {
+            "from": 20401,
+            "to": 20810,
+            "kind": "call",
+            "resolved": true
+          },
+          {
+            "from": 20401,
+            "to": 20404,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20404,
+        "instructions": [
+          20404
+        ],
+        "exits": [
+          {
+            "from": 20404,
+            "to": 20408,
+            "kind": "branch",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20406,
+        "instructions": [
+          20406
+        ],
+        "exits": [
+          {
+            "from": 20406,
+            "to": 20421,
+            "kind": "call",
+            "resolved": true
+          },
+          {
+            "from": 20406,
+            "to": 20408,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20408,
+        "instructions": [
+          20408,
+          20410,
+          20411
+        ],
+        "exits": [
+          {
+            "from": 20411,
+            "to": 20522,
+            "kind": "call",
+            "resolved": true
+          },
+          {
+            "from": 20411,
+            "to": 20413,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20413,
+        "instructions": [
+          20413,
+          20414
+        ],
+        "exits": [
+          {
+            "from": 20414,
+            "to": 20419,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20419,
+        "instructions": [
+          20419,
+          20420
+        ],
+        "exits": []
+      },
+      {
+        "start": 20421,
+        "instructions": [
+          20421
+        ],
+        "exits": [
+          {
+            "from": 20421,
+            "to": 20424,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20424,
+        "instructions": [
+          20424
+        ],
+        "exits": [
+          {
+            "from": 20424,
+            "to": 20424,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20424,
+            "to": 20427,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20427,
+        "instructions": [
+          20427,
+          20430,
+          20434,
+          20438,
+          20443,
+          20447
+        ],
+        "exits": [
+          {
+            "from": 20447,
+            "to": 20450,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20450,
+        "instructions": [
+          20450,
+          20453
+        ],
+        "exits": [
+          {
+            "from": 20453,
+            "to": 20450,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20453,
+            "to": 20456,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20456,
+        "instructions": [
+          20456,
+          20460
+        ],
+        "exits": [
+          {
+            "from": 20460,
+            "to": 20463,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20463,
+        "instructions": [
+          20463,
+          20466
+        ],
+        "exits": [
+          {
+            "from": 20466,
+            "to": 20463,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20466,
+            "to": 20469,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20469,
+        "instructions": [
+          20469,
+          20473
+        ],
+        "exits": [
+          {
+            "from": 20473,
+            "to": 20476,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20476,
+        "instructions": [
+          20476,
+          20479
+        ],
+        "exits": [
+          {
+            "from": 20479,
+            "to": 20476,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20479,
+            "to": 20482,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20482,
+        "instructions": [
+          20482,
+          20486
+        ],
+        "exits": [
+          {
+            "from": 20486,
+            "to": 20489,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20489,
+        "instructions": [
+          20489,
+          20492
+        ],
+        "exits": [
+          {
+            "from": 20492,
+            "to": 20489,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20492,
+            "to": 20495,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20495,
+        "instructions": [
+          20495,
+          20499,
+          20504,
+          20507,
+          20512,
+          20515,
+          20520,
+          20521
+        ],
+        "exits": []
+      },
+      {
+        "start": 20522,
+        "instructions": [
+          20522
+        ],
+        "exits": [
+          {
+            "from": 20522,
+            "to": 20550,
+            "kind": "call",
+            "resolved": true
+          },
+          {
+            "from": 20522,
+            "to": 20524,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20524,
+        "instructions": [
+          20524,
+          20527,
+          20532,
+          20535,
+          20540,
+          20543,
+          20548,
+          20549
+        ],
+        "exits": []
+      },
+      {
+        "start": 20550,
+        "instructions": [
+          20550,
+          20555,
+          20560,
+          20562,
+          20564,
+          20568,
+          20573,
+          20577
+        ],
+        "exits": [
+          {
+            "from": 20577,
+            "to": 20580,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20580,
+        "instructions": [
+          20580,
+          20583,
+          20585,
+          20588
+        ],
+        "exits": [
+          {
+            "from": 20588,
+            "to": 20580,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20588,
+            "to": 20590,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20590,
+        "instructions": [
+          20590,
+          20594
+        ],
+        "exits": [
+          {
+            "from": 20594,
+            "to": 20597,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20597,
+        "instructions": [
+          20597,
+          20600,
+          20602,
+          20605
+        ],
+        "exits": [
+          {
+            "from": 20605,
+            "to": 20597,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20605,
+            "to": 20607,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20607,
+        "instructions": [
+          20607,
+          20610,
+          20613,
+          20615,
+          20620,
+          20623,
+          20628,
+          20630,
+          20635,
+          20638,
+          20643,
+          20646,
+          20651,
+          20654,
+          20659,
+          20663,
+          20667,
+          20670,
+          20673
+        ],
+        "exits": [
+          {
+            "from": 20673,
+            "to": 20677,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20677,
+        "instructions": [
+          20677,
+          20680,
+          20684
+        ],
+        "exits": [
+          {
+            "from": 20684,
+            "to": 20677,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20684,
+            "to": 20686,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20686,
+        "instructions": [
+          20686
+        ],
+        "exits": [
+          {
+            "from": 20686,
+            "to": 20690,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20690,
+        "instructions": [
+          20690,
+          20693,
+          20697
+        ],
+        "exits": [
+          {
+            "from": 20697,
+            "to": 20690,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20697,
+            "to": 20699,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20699,
+        "instructions": [
+          20699
+        ],
+        "exits": [
+          {
+            "from": 20699,
+            "to": 20703,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20703,
+        "instructions": [
+          20703,
+          20706,
+          20710
+        ],
+        "exits": [
+          {
+            "from": 20710,
+            "to": 20703,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20710,
+            "to": 20712,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20712,
+        "instructions": [
+          20712
+        ],
+        "exits": [
+          {
+            "from": 20712,
+            "to": 20716,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20716,
+        "instructions": [
+          20716,
+          20719,
+          20723
+        ],
+        "exits": [
+          {
+            "from": 20723,
+            "to": 20716,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20723,
+            "to": 20725,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20725,
+        "instructions": [
+          20725
+        ],
+        "exits": [
+          {
+            "from": 20725,
+            "to": 20729,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20729,
+        "instructions": [
+          20729,
+          20732,
+          20736
+        ],
+        "exits": [
+          {
+            "from": 20736,
+            "to": 20729,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20736,
+            "to": 20738,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20738,
+        "instructions": [
+          20738
+        ],
+        "exits": [
+          {
+            "from": 20738,
+            "to": 20742,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20742,
+        "instructions": [
+          20742,
+          20745,
+          20749
+        ],
+        "exits": [
+          {
+            "from": 20749,
+            "to": 20742,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20749,
+            "to": 20751,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20751,
+        "instructions": [
+          20751
+        ],
+        "exits": [
+          {
+            "from": 20751,
+            "to": 20755,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20755,
+        "instructions": [
+          20755,
+          20758,
+          20762
+        ],
+        "exits": [
+          {
+            "from": 20762,
+            "to": 20755,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20762,
+            "to": 20764,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20764,
+        "instructions": [
+          20764
+        ],
+        "exits": [
+          {
+            "from": 20764,
+            "to": 20768,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20768,
+        "instructions": [
+          20768,
+          20771,
+          20775
+        ],
+        "exits": [
+          {
+            "from": 20775,
+            "to": 20768,
+            "kind": "branch",
+            "resolved": true
+          },
+          {
+            "from": 20775,
+            "to": 20777,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20777,
+        "instructions": [
+          20777,
+          20782,
+          20787,
+          20790,
+          20795,
+          20797,
+          20799,
+          20804,
+          20809
+        ],
+        "exits": []
+      },
+      {
+        "start": 20810,
+        "instructions": [
+          20810
+        ],
+        "exits": [
+          {
+            "from": 20810,
+            "to": 20816,
+            "kind": "call",
+            "resolved": false
+          },
+          {
+            "from": 20810,
+            "to": 20812,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20812,
+        "instructions": [
+          20812
+        ],
+        "exits": [
+          {
+            "from": 20812,
+            "to": 21174,
+            "kind": "call",
+            "resolved": false
+          },
+          {
+            "from": 20812,
+            "to": 20814,
+            "kind": "fallthrough",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "start": 20814,
+        "instructions": [
+          20814
+        ],
+        "exits": [
+          {
+            "from": 20814,
+            "to": 21052,
+            "kind": "branch",
+            "resolved": false
+          }
+        ]
+      }
+    ]
+  },
+  "tool_sha256": {
+    "scripts\\analyze_firmware_routines.py": "72a1169cabf00162b1c5c7fc41bcfeb24896cf2c1052f8804e62dd32ebd51fe4",
+    "scripts\\firmware_manifests\\os_exploration.json": "2048529fef10745d26dfeee764f4f7f3f60d3d322d184ee39a2953d0ad9f2a6f"
+  }
+}

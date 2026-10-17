@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-15",
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "worktree": "dirty; reviewed files identified below; unrelated pre-existing changes excluded",
+  "evidence_layer": "documentation review and report regression tests",
+  "prerequisites": [
+    "Python with pytest; repository scripts and inventory reports; no firmware required"
+  ],
+  "fixture_identity": "four generated inventory reports and reviewed test selectors",
+  "command": "python -m pytest tests/test_coverage_reports.py -q -o cache_dir=docs/ic20-hle-findings/chatGPT-work/m6-audit-cache --basetemp=docs/ic20-hle-findings/chatGPT-work/m6-audit-tmp",
+  "result": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "report_regeneration": "each report generated twice, matches committed output",
+    "local_markdown_links": "reviewed local destinations resolve"
+  },
+  "limitations": [
+    "No runtime, physical hardware or packaged product tests executed",
+    "Historical mappings not revalidated",
+    "Final interface, final artifact and clean-machine setup qualification remain open"
+  ],
+  "sha256": {
+    "README.md": "36f7c1dba4e303c3dc8893356438ee5fecef489e5aaf7639c61ce5587f92a4cc",
+    "docs/project/completion-roadmap.md": "97839d2abdadb062de0029720af3bfe38144349bc4388e1a8d928d2e13e2cc62",
+    "docs/hardware/captures/hardware-recording-parity-methodology.md": "5cb06f094d09e3dc84b934505394fd6fdb1bde1613ce07c16c4213d580e6acf8",
+    "docs/project/lle-roadmap-and-fidelity-assessment.md": "fa0aab0e7b6a0b39fb2c1f74df92b0ae9630e903413b5bf13b66176bd0414c99",
+    "docs/firmware/os/nextgen-os-features-and-feasibility.md": "a78f40edae5d2b201d328562db125470137187f80de7adb5c91f11dadc436229",
+    "docs/hardware/roland-rfsc16a-vdp-and-display-architecture.md": "95ffa3bf1c021c881f806ce1fc80f3b2dd7b97699382bb4440c0eea928a4de17",
+    "docs/testing/testing.md": "4fc76f3a513001e4d1bac4174f3a19b6dc820e5745dd456c43cfaff34542fe5d",
+    "docs/condensed/08-testing-coverage-and-verification.md": "04a0559d93a2247f9f296887ae9efd353277894cd981e1e47d318a2d17f68230",
+    "docs/condensed/10-hardware-deployment-and-development-roadmap.md": "14fe6aed395cbcc12163f93b371bc96522733bbb71c2fcac34a3d37a39dbc75d",
+    "docs/hardware/screens/inferred-screen-layouts.md": "0552ce3354b75e839196b5ef1d39462a2f80047c15e48118495eebd09f8d17ad",
+    "docs/hardware/screens/screen-inventory-and-capture-list.md": "08b590806dc932751bd3107e923184c102a2a1590fd35bc30029feb307b94ba7",
+    "docs/testing/milestone-6-coverage-audit.md": "5fe0175ecd8e88ef8073694f845cd772ef168a4fc5f88dad59205ee67a58a5f3",
+    "tests/test_coverage_reports.py": "d160e9e6800265ef9abff21948eec29337780fbefa3673864e6fd92698207c1f",
+    "scripts/coverage_report.py": "59bd0aff27432eeefad2f80197061cdd9aa2156833b5a5becdf656941c92730b",
+    "docs/firmware/os/os-test-coverage-matrix.md": "f3c0fd02f2f2ec9cb9686ff624716f00ab63fe6113f36dd7771d0b7f09aae9c7",
+    "docs/firmware/os/os-exhaustive-code-matrix.md": "042c0f795baadd01626aebf6650ee9a99c83dd3c59687ea852e9ccee4db1b2a4",
+    "docs/testing/ui-test-coverage-matrix.md": "fd7cd1e8d00190360bdd7526bbd5a28d3ebe0f4820ca089dea830e7b9a844ec0",
+    "docs/testing/manual-function-test-coverage.md": "51ac3730bfba9e0ac7becfdebcbd79ed347f645162171ec7e6f76bd003f35a92"
+  }
+}

@@ -1,0 +1,821 @@
+{
+  "date": "2026-10-16",
+  "user_acceptance_target": {
+    "metric": "Existing evaluation RMS waveform residual percentage",
+    "opening_below_percent": 1.0,
+    "closing_below_percent": 1.0,
+    "static_and_fast_command_regressions_required": true,
+    "achieved": false
+  },
+  "reports": {
+    "filter-direction-curvature-2026-10-16": {
+      "rows": [
+        {
+          "take": 2,
+          "direction": "up",
+          "model": "prior-direction-scale",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0010870392846998931,
+          "offset_ms": 33.99962437835043,
+          "training_error_percent": 1.6122728894183773,
+          "evaluation_error_percent": 2.3087925056179177
+        },
+        {
+          "take": 2,
+          "direction": "up",
+          "model": "direction-curvature",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 34.09520274900438,
+          "training_error_percent": 1.6064364525589259,
+          "evaluation_error_percent": 2.2498492226958833
+        },
+        {
+          "take": 3,
+          "direction": "down",
+          "model": "prior-direction-scale",
+          "scale": 1.0004058684244863,
+          "map_beta": 0.0010870392846998931,
+          "offset_ms": 46.68600747979871,
+          "training_error_percent": 2.0659531142672782,
+          "evaluation_error_percent": 2.265307822082266
+        },
+        {
+          "take": 3,
+          "direction": "down",
+          "model": "direction-curvature",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 47.92979604640032,
+          "training_error_percent": 1.5598606205177523,
+          "evaluation_error_percent": 1.673204746297577
+        },
+        {
+          "take": 4,
+          "direction": "down",
+          "model": "prior-direction-scale",
+          "scale": 1.0004058684244863,
+          "map_beta": 0.0010870392846998931,
+          "offset_ms": 45.540428548292525,
+          "training_error_percent": 2.10440552853244,
+          "evaluation_error_percent": 2.2637507493725106
+        },
+        {
+          "take": 4,
+          "direction": "down",
+          "model": "direction-curvature",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 46.78188424412989,
+          "training_error_percent": 1.6036327803212453,
+          "evaluation_error_percent": 1.6459723186231154
+        },
+        {
+          "take": 5,
+          "direction": "up",
+          "model": "prior-direction-scale",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0010870392846998931,
+          "offset_ms": 51.66078602547345,
+          "training_error_percent": 1.949750696335961,
+          "evaluation_error_percent": 1.9346343800693173
+        },
+        {
+          "take": 5,
+          "direction": "up",
+          "model": "direction-curvature",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 51.762691076060314,
+          "training_error_percent": 1.9076210548787274,
+          "evaluation_error_percent": 1.8984502910512646
+        },
+        {
+          "take": 6,
+          "direction": "up",
+          "model": "prior-direction-scale",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0010870392846998931,
+          "offset_ms": 47.42359466602657,
+          "training_error_percent": 1.7023424105802483,
+          "evaluation_error_percent": 1.8854455703868873
+        },
+        {
+          "take": 6,
+          "direction": "up",
+          "model": "direction-curvature",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 47.51648073606894,
+          "training_error_percent": 1.709261568063635,
+          "evaluation_error_percent": 1.8934372064042946
+        },
+        {
+          "take": 7,
+          "direction": "down",
+          "model": "prior-direction-scale",
+          "scale": 1.0004058684244863,
+          "map_beta": 0.0010870392846998931,
+          "offset_ms": 54.70984318450665,
+          "training_error_percent": 2.341950913503188,
+          "evaluation_error_percent": 2.945219309122201
+        },
+        {
+          "take": 7,
+          "direction": "down",
+          "model": "direction-curvature",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 56.00249336412206,
+          "training_error_percent": 2.163362932597819,
+          "evaluation_error_percent": 2.6829017677529454
+        }
+      ],
+      "fits": {
+        "up": {
+          "training_take": 2,
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "training_mse": 0.000257379421981987,
+          "training_offset_ms": 34.1092687553138,
+          "coarse_beta": [
+            -0.005,
+            -0.004,
+            -0.003,
+            -0.002,
+            -0.001,
+            0.0,
+            0.001,
+            0.002,
+            0.003,
+            0.004000000000000001,
+            0.005
+          ],
+          "coarse_mse": [
+            0.00289689490058101,
+            0.0021648668351185265,
+            0.0015323564465141582,
+            0.0010151912359055435,
+            0.0006244724409565554,
+            0.00037008201001090393,
+            0.000261240514129989,
+            0.00030365051226402274,
+            0.0004968229327531089,
+            0.0008375376568671962,
+            0.0013187162393116115
+          ],
+          "optimizer_success": true
+        },
+        "down": {
+          "training_take": 3,
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "training_mse": 0.00023962876982032462,
+          "training_offset_ms": 47.926999000109106,
+          "coarse_beta": [
+            -0.005,
+            -0.004,
+            -0.003,
+            -0.002,
+            -0.001,
+            0.0,
+            0.001,
+            0.002,
+            0.003,
+            0.004000000000000001,
+            0.005
+          ],
+          "coarse_mse": [
+            0.0013957335526648667,
+            0.0009751791367754997,
+            0.0006336196913232102,
+            0.0003879235329554793,
+            0.0002571479915460334,
+            0.0002562774170932823,
+            0.0003950332831908622,
+            0.0006748073510022241,
+            0.001087785608347175,
+            0.0016244669525610814,
+            0.0022667383009963757
+          ],
+          "optimizer_success": true
+        }
+      },
+      "prior_fits": {
+        "up": {
+          "training_take": 2,
+          "scale": 0.998323560020371,
+          "map_beta": 0.0010870392846998931,
+          "training_mse": 0.00025883189692586653,
+          "training_offset_ms": 34.00971021455045,
+          "search_bounds": [
+            0.998,
+            1.002
+          ],
+          "coarse_scales": [
+            0.998,
+            0.99825,
+            0.9984999999999999,
+            0.99875,
+            0.999,
+            0.99925,
+            0.9995,
+            0.99975,
+            1.0,
+            1.00025,
+            1.0005,
+            1.00075,
+            1.001,
+            1.00125,
+            1.0015,
+            1.00175,
+            1.002
+          ],
+          "coarse_mse": [
+            0.0003359181703108459,
+            0.0002632478225714636,
+            0.00028043469215940784,
+            0.00038825581244760035,
+            0.0005871145492809115,
+            0.0008769729988927312,
+            0.0012564973195405488,
+            0.0017219672784861584,
+            0.0022763129439400086,
+            0.0029149473865808266,
+            0.0036373947331964454,
+            0.00443991772206824,
+            0.005323783050893179,
+            0.006289861600974073,
+            0.007332311206329232,
+            0.008449401664723416,
+            0.009641870766375894
+          ],
+          "optimizer_success": true
+        },
+        "down": {
+          "training_take": 3,
+          "scale": 1.0004058684244863,
+          "map_beta": 0.0010870392846998931,
+          "training_mse": 0.00041384323046009366,
+          "training_offset_ms": 46.6889373917546,
+          "search_bounds": [
+            0.998,
+            1.002
+          ],
+          "coarse_scales": [
+            0.998,
+            0.99825,
+            0.9984999999999999,
+            0.99875,
+            0.999,
+            0.99925,
+            0.9995,
+            0.99975,
+            1.0,
+            1.00025,
+            1.0005,
+            1.00075,
+            1.001,
+            1.00125,
+            1.0015,
+            1.00175,
+            1.002
+          ],
+          "coarse_mse": [
+            0.004740360856758577,
+            0.0038871344802573846,
+            0.003126230252452719,
+            0.0024596018306346206,
+            0.0018872173051701943,
+            0.001408883339620151,
+            0.001024439632682337,
+            0.0007338566824496646,
+            0.0005362106553816309,
+            0.000431738678180818,
+            0.0004206791847388773,
+            0.0005022652957260896,
+            0.0006754413350524402,
+            0.0009394601345221237,
+            0.001292926368552646,
+            0.0017344657187989426,
+            0.0022631158630932514
+          ],
+          "optimizer_success": true
+        }
+      },
+      "contracts": [
+        {
+          "direction": "up",
+          "static_anchor_identity": true,
+          "midpoint_shift_cutoff_words": 0.6786013196473845
+        },
+        {
+          "direction": "down",
+          "static_anchor_identity": true,
+          "midpoint_shift_cutoff_words": -0.2679460079684323
+        }
+      ],
+      "limits": [
+        "Extra curvature parameters selected only on take2 opening/take3 closing training blocks; freeze for later takes. Constant alignment fitted on each take training blocks.",
+        "Existing direction scales, physical slew, increment precision, source clock/phase/gain, damping and recurrence fixed.",
+        "Small endpoint-preserving map beta bound+/-0.005. Intermediate stationary cutoff accuracy unqualified.",
+        "Analog research evaluation blocks reused; this is exploratory model refinement, not new native/hardware validation.",
+        "Direction-specific offline global scales are not a causal native reversal/command response law."
+      ]
+    },
+    "filter-duration-transfer-2026-10-16": {
+      "rows": [
+        {
+          "take": 2,
+          "direction": "up",
+          "model": "prior-duration",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 34.09520274900438,
+          "training_error_percent": 1.6064364525589259,
+          "evaluation_error_percent": 2.2498492226958833
+        },
+        {
+          "take": 2,
+          "direction": "up",
+          "model": "trained-duration",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 34.09520274900438,
+          "training_error_percent": 1.6064364525589259,
+          "evaluation_error_percent": 2.2498492226958833
+        },
+        {
+          "take": 3,
+          "direction": "down",
+          "model": "prior-duration",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 47.92979604640032,
+          "training_error_percent": 1.5598606205177523,
+          "evaluation_error_percent": 1.673204746297577
+        },
+        {
+          "take": 3,
+          "direction": "down",
+          "model": "trained-duration",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 47.92979604640032,
+          "training_error_percent": 1.5598606205177523,
+          "evaluation_error_percent": 1.673204746297577
+        },
+        {
+          "take": 4,
+          "direction": "down",
+          "model": "prior-duration",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 46.78188424412989,
+          "training_error_percent": 1.6036327803212453,
+          "evaluation_error_percent": 1.6459723186231154
+        },
+        {
+          "take": 4,
+          "direction": "down",
+          "model": "trained-duration",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 46.78188424412989,
+          "training_error_percent": 1.6036327803212453,
+          "evaluation_error_percent": 1.6459723186231154
+        },
+        {
+          "take": 5,
+          "direction": "up",
+          "model": "prior-duration",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 51.762691076060314,
+          "training_error_percent": 1.9076210548787274,
+          "evaluation_error_percent": 1.8984502910512646
+        },
+        {
+          "take": 5,
+          "direction": "up",
+          "model": "trained-duration",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 51.762691076060314,
+          "training_error_percent": 1.9076210548787274,
+          "evaluation_error_percent": 1.8984502910512646
+        },
+        {
+          "take": 6,
+          "direction": "up",
+          "model": "prior-duration",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 47.51648073606894,
+          "training_error_percent": 1.709261568063635,
+          "evaluation_error_percent": 1.8934372064042946
+        },
+        {
+          "take": 6,
+          "direction": "up",
+          "model": "trained-duration",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 47.51648073606894,
+          "training_error_percent": 1.709261568063635,
+          "evaluation_error_percent": 1.8934372064042946
+        },
+        {
+          "take": 7,
+          "direction": "down",
+          "model": "prior-duration",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 56.00249336412206,
+          "training_error_percent": 2.163362932597819,
+          "evaluation_error_percent": 2.6829017677529454
+        },
+        {
+          "take": 7,
+          "direction": "down",
+          "model": "trained-duration",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "duration_ms": 10.844412349537208,
+          "offset_ms": 56.00249336412206,
+          "training_error_percent": 2.163362932597819,
+          "evaluation_error_percent": 2.6829017677529454
+        }
+      ],
+      "fits": {
+        "up": {
+          "training_take": 2,
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "duration": 0.010844412349537208,
+          "training_mse": 0.000257379421981987,
+          "coarse_durations": [
+            0.002,
+            0.005,
+            0.008,
+            0.010844412349537208,
+            0.014,
+            0.017,
+            0.02,
+            0.023,
+            0.026,
+            0.03
+          ],
+          "coarse_mse": [
+            0.000541296734453943,
+            0.0004285838319624244,
+            0.0003402611213178686,
+            0.000257379421981987,
+            0.0005885451805838425,
+            0.0006117071297923153,
+            0.000720886909844283,
+            0.004179927085668316,
+            0.00548448092105889,
+            0.008144369275931752
+          ],
+          "optimizer_success": true
+        },
+        "down": {
+          "training_take": 3,
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "duration": 0.010844412349537208,
+          "training_mse": 0.00023962876982032462,
+          "coarse_durations": [
+            0.002,
+            0.005,
+            0.008,
+            0.010844412349537208,
+            0.014,
+            0.017,
+            0.02,
+            0.023,
+            0.026,
+            0.03
+          ],
+          "coarse_mse": [
+            0.0004970534791059937,
+            0.0003918142355003995,
+            0.0003370684411919068,
+            0.00023962876982032462,
+            0.0003440585294523593,
+            0.00038780615677775867,
+            0.000703778430260525,
+            0.000703778430260525,
+            0.0013135741334475968,
+            0.0022841370890268483
+          ],
+          "optimizer_success": true
+        }
+      },
+      "prior_fits": {
+        "up": {
+          "training_take": 2,
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "training_mse": 0.000257379421981987,
+          "training_offset_ms": 34.1092687553138,
+          "coarse_beta": [
+            -0.005,
+            -0.004,
+            -0.003,
+            -0.002,
+            -0.001,
+            0.0,
+            0.001,
+            0.002,
+            0.003,
+            0.004000000000000001,
+            0.005
+          ],
+          "coarse_mse": [
+            0.00289689490058101,
+            0.0021648668351185265,
+            0.0015323564465141582,
+            0.0010151912359055435,
+            0.0006244724409565554,
+            0.00037008201001090393,
+            0.000261240514129989,
+            0.00030365051226402274,
+            0.0004968229327531089,
+            0.0008375376568671962,
+            0.0013187162393116115
+          ],
+          "optimizer_success": true
+        },
+        "down": {
+          "training_take": 3,
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "training_mse": 0.00023962876982032462,
+          "training_offset_ms": 47.926999000109106,
+          "coarse_beta": [
+            -0.005,
+            -0.004,
+            -0.003,
+            -0.002,
+            -0.001,
+            0.0,
+            0.001,
+            0.002,
+            0.003,
+            0.004000000000000001,
+            0.005
+          ],
+          "coarse_mse": [
+            0.0013957335526648667,
+            0.0009751791367754997,
+            0.0006336196913232102,
+            0.0003879235329554793,
+            0.0002571479915460334,
+            0.0002562774170932823,
+            0.0003950332831908622,
+            0.0006748073510022241,
+            0.001087785608347175,
+            0.0016244669525610814,
+            0.0022667383009963757
+          ],
+          "optimizer_success": true
+        }
+      },
+      "limits": [
+        "Direction scales and map frozen from preceding first-pair fits. Only duration additionally selected on first-pair training.",
+        "Duration candidates2..30ms, then local refinement; frozen transfer to later takes. Per-take alignment fitted only on training blocks.",
+        "Slew, signed-floor increment precision, clamp/deadline behavior explicitly modeled.",
+        "All analog research evaluation samples reused; no fresh native/hardware acceptance or general causal direction-response law."
+      ]
+    },
+    "filter-target-precision-2026-10-16": {
+      "rows": [
+        {
+          "take": 2,
+          "direction": "up",
+          "model": "floor4",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 34.09520274900438,
+          "training_error_percent": 1.6064364525589259,
+          "evaluation_error_percent": 2.2498492226958833
+        },
+        {
+          "take": 2,
+          "direction": "up",
+          "model": "raw14",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 36.829389999207365,
+          "training_error_percent": 5.225754538552882,
+          "evaluation_error_percent": 4.338570886219358
+        },
+        {
+          "take": 2,
+          "direction": "up",
+          "model": "nearest4",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 37.71102105105294,
+          "training_error_percent": 7.698748361331551,
+          "evaluation_error_percent": 7.215218563007439
+        },
+        {
+          "take": 3,
+          "direction": "down",
+          "model": "floor4",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 47.92979604640032,
+          "training_error_percent": 1.5598606205177523,
+          "evaluation_error_percent": 1.673204746297577
+        },
+        {
+          "take": 3,
+          "direction": "down",
+          "model": "raw14",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 44.69321159604709,
+          "training_error_percent": 4.982762171302305,
+          "evaluation_error_percent": 5.974306848405097
+        },
+        {
+          "take": 3,
+          "direction": "down",
+          "model": "nearest4",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 44.15176420240045,
+          "training_error_percent": 8.148283522187645,
+          "evaluation_error_percent": 9.391146714264588
+        },
+        {
+          "take": 4,
+          "direction": "down",
+          "model": "floor4",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 46.78188424412989,
+          "training_error_percent": 1.6036327803212453,
+          "evaluation_error_percent": 1.6459723186231154
+        },
+        {
+          "take": 4,
+          "direction": "down",
+          "model": "raw14",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 43.54874073481967,
+          "training_error_percent": 5.078530441291381,
+          "evaluation_error_percent": 6.016755295199901
+        },
+        {
+          "take": 4,
+          "direction": "down",
+          "model": "nearest4",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 42.99259542351749,
+          "training_error_percent": 8.298413186168643,
+          "evaluation_error_percent": 9.474291359897183
+        },
+        {
+          "take": 5,
+          "direction": "up",
+          "model": "floor4",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 51.762691076060314,
+          "training_error_percent": 1.9076210548787274,
+          "evaluation_error_percent": 1.8984502910512646
+        },
+        {
+          "take": 5,
+          "direction": "up",
+          "model": "raw14",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 54.45135419553734,
+          "training_error_percent": 3.857666791370005,
+          "evaluation_error_percent": 3.563230615819737
+        },
+        {
+          "take": 5,
+          "direction": "up",
+          "model": "nearest4",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 55.480354383115696,
+          "training_error_percent": 6.252510695006184,
+          "evaluation_error_percent": 6.054163910099641
+        },
+        {
+          "take": 6,
+          "direction": "up",
+          "model": "floor4",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 47.51648073606894,
+          "training_error_percent": 1.709261568063635,
+          "evaluation_error_percent": 1.8934372064042946
+        },
+        {
+          "take": 6,
+          "direction": "up",
+          "model": "raw14",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 50.28776315586355,
+          "training_error_percent": 4.790391752576434,
+          "evaluation_error_percent": 4.184423280063715
+        },
+        {
+          "take": 6,
+          "direction": "up",
+          "model": "nearest4",
+          "scale": 0.998323560020371,
+          "map_beta": 0.0012360679774997896,
+          "offset_ms": 51.28484366626813,
+          "training_error_percent": 7.166251362258199,
+          "evaluation_error_percent": 6.446902636662361
+        },
+        {
+          "take": 7,
+          "direction": "down",
+          "model": "floor4",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 56.00249336412206,
+          "training_error_percent": 2.163362932597819,
+          "evaluation_error_percent": 2.6829017677529454
+        },
+        {
+          "take": 7,
+          "direction": "down",
+          "model": "raw14",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 52.54904591916017,
+          "training_error_percent": 5.806288448554979,
+          "evaluation_error_percent": 7.37827400430588
+        },
+        {
+          "take": 7,
+          "direction": "down",
+          "model": "nearest4",
+          "scale": 1.0004058684244863,
+          "map_beta": -0.00048806194529769096,
+          "offset_ms": 52.08523328909874,
+          "training_error_percent": 8.158400799909508,
+          "evaluation_error_percent": 9.826810272201143
+        }
+      ],
+      "selection_first_pair_training_scores": {
+        "floor4": 5.013803231552133,
+        "raw14": 52.1364293529673,
+        "nearest4": 125.66525068905993
+      },
+      "selected": "floor4",
+      "limits": [
+        "Slew duration, increment rounding, direction scales and curvature fixed; only target precision variant changes.",
+        "Selection uses first pair training only; later evaluations are reused research data.",
+        "Raw/nearest target conversion can alter stationary plateaus and must pass static controls before acceptance.",
+        "Offline direction retiming is not a general causal native implementation."
+      ]
+    }
+  },
+  "best_direction_means_percent": {
+    "up": 2.0139122400504808,
+    "down": 2.000692944224546
+  },
+  "identities": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\filter-direction-curvature-2026-10-16\\compare.py": "a08c62eb40aae22c5ef230bfde4339ac2c47e5dff55b75a534387c91834387df",
+    "docs\\ic20-hle-findings\\chatGPT-work\\filter-duration-transfer-2026-10-16\\compare.py": "3ffefc134d5c16f178c8d1fb369fc82f92078bdb20db1c9ab9ea45d951c65a32",
+    "docs\\ic20-hle-findings\\chatGPT-work\\filter-target-precision-2026-10-16\\compare.py": "db8c2d15c39ca424da6221ed6d8b6a2638b1875b01317ed758e7d5a4cf6715f0"
+  },
+  "native_changed": false,
+  "limits": [
+    "Existing analog research evaluation blocks reused; improved offline calibration is not native or fresh hardware acceptance.",
+    "Current direction retiming is not a general causal reversal/command implementation.",
+    "Two static map anchors preserved; intermediate stationary settings unqualified.",
+    "Finite duration/profile searches do not exclude every possible parameter combination."
+  ],
+  "best_worst_take_percent": {
+    "up": 2.2498492226958833,
+    "down": 2.6829017677529454
+  }
+}

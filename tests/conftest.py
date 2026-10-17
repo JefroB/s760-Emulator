@@ -42,9 +42,43 @@ VER_ISOLATED = 0x87FDB           # space-padded isolated copy
 PYTHON = sys.executable
 
 
+@pytest.fixture
+def synthetic_completion_root(tmp_path):
+    """Scope-rule tests use invented input bytes and committed evidence metadata."""
+    from pathlib import Path
+    import hashlib
+    import json
+    root = Path(ROOT)
+    validation = tmp_path / 'docs/condensed/validation'
+    validation.mkdir(parents=True)
+    # Keep the evidence real while replacing only private firmware identities.
+    for source in (root / 'docs/condensed/validation').glob('*.json'):
+        (validation / source.name).write_bytes(source.read_bytes())
+    for relative, label, size in [
+        ('S760224.IMG', 'os', IMAGE_SIZE),
+        ('roms/BOOT/Roland_S-760_v1.11.BIN', 'ic15', 32768),
+    ]:
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(bytes(size))
+        digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        inventory = validation / f'{label}-exploration-coverage-2026-10-16.json'
+        data = json.loads(inventory.read_text())
+        data['input_sha256'] = digest
+        inventory.write_text(json.dumps(data))
+        scope = validation / f'{label}-completion-scope-v1.json'
+        data = json.loads(scope.read_text())
+        data['input_sha256'] = digest
+        if label == 'ic15':
+            data['assumptions'][0]['bytes'] = 0
+        scope.write_text(json.dumps(data))
+    return tmp_path
+
+
 @pytest.fixture(scope="session")
 def image_bytes():
-    assert os.path.exists(IMAGE), f"original image missing: {IMAGE}"
+    if not os.path.exists(IMAGE):
+        pytest.skip(f"Local Roland system image required: {IMAGE}")
     with open(IMAGE, "rb") as f:
         return f.read()
 
@@ -53,6 +87,8 @@ def image_bytes():
 def original_sha():
     """Hash of the original image; a canary that we never mutate it in place."""
     import hashlib
+    if not os.path.exists(IMAGE):
+        pytest.skip(f"Local Roland system image required: {IMAGE}")
     with open(IMAGE, "rb") as f:
         return hashlib.sha256(f.read()).hexdigest()
 

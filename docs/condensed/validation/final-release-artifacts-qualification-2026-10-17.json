@@ -1,0 +1,162 @@
+{
+  "gate": "Historical static artifact audit; no observed clean-machine/DAW execution",
+  "standalone": {
+    "passed": true,
+    "package_root": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\Frozen acceptance kit\\S760Studio",
+    "files_inspected": 572,
+    "forbidden_assets_found": 0,
+    "executables": {
+      "S760Studio.exe": {
+        "path": "S760Studio.exe",
+        "size_bytes": 5684297,
+        "sha256": "fdcade2450d67c7bafeaf2b80bfe4fee68b044e3eefa006222f2944e18cdbc4b",
+        "machine": "IMAGE_FILE_MACHINE_AMD64 (0x8664)",
+        "is_dll": false
+      },
+      "mames760.exe": {
+        "path": "mames760.exe",
+        "size_bytes": 27463680,
+        "sha256": "cf06552967250bf703b3bae221d27f720ff6285585c990a730e0cc5f51bccda5",
+        "machine": "IMAGE_FILE_MACHINE_AMD64 (0x8664)",
+        "is_dll": false
+      }
+    },
+    "notices_verified": [
+      "LICENSE.txt (BSD-3-Clause)",
+      "MAME-COPYING.txt (GPL-2.0)",
+      "SYSTEM-PREREQUISITES.json (Microsoft VC++ / WebView2 runtimes)",
+      "DEPENDENCY-INVENTORY.json (Upstream component notices)"
+    ]
+  },
+  "vst3": {
+    "passed": true,
+    "artifact": "Roland_S760.vst3",
+    "pe_info": {
+      "path": "Roland_S760.vst3",
+      "size_bytes": 479232,
+      "sha256": "b5e8c52021e1d426701701bc64bb7dfb61ba395f1cc7c83f202da677ea1ef3de",
+      "machine": "IMAGE_FILE_MACHINE_AMD64 (0x8664)",
+      "is_dll": true
+    },
+    "embedded_proprietary_data": null,
+    "configuration_contract": {
+      "schema_version": 1,
+      "settings_location": "%LOCALAPPDATA%/S760/plugin-settings.json",
+      "supported_wave_memory_mb": [
+        8,
+        16,
+        32
+      ],
+      "path_decoupling_verified": true
+    },
+    "vst3_standard_location": "%CommonProgramFiles%/VST3/Roland_S760.vst3",
+    "private_asset_exclusion_qualified": false
+  },
+  "matrix": {
+    "supported_os": [
+      {
+        "name": "Windows 10 x64",
+        "min_version": "1809 (Build 17763)",
+        "architecture": "x64"
+      },
+      {
+        "name": "Windows 11 x64",
+        "min_version": "21H2 (Build 22000)",
+        "architecture": "x64"
+      }
+    ],
+    "runtime_prerequisites": [
+      {
+        "name": "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
+        "minimum_version": "14.30",
+        "files": [
+          "msvcp140.dll",
+          "vcruntime140.dll",
+          "vcruntime140_1.dll"
+        ],
+        "installer_source": "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+      },
+      {
+        "name": "Microsoft Edge WebView2 Runtime",
+        "distribution": "Evergreen System-wide or Per-user",
+        "minimum_version": "120.0.2210.0",
+        "installer_source": "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
+      },
+      {
+        "name": "Audio Output Driver",
+        "supported_backends": [
+          "WASAPI (Exclusive/Shared)",
+          "DirectSound",
+          "ASIO 2.0"
+        ]
+      },
+      {
+        "name": "MIDI Interface",
+        "supported_standards": [
+          "Windows Class-Compliant USB MIDI",
+          "WinMM MME MIDI",
+          "DirectMusic"
+        ]
+      }
+    ],
+    "vst3_daw_host_matrix": [
+      {
+        "host": "SoundCheck",
+        "version": "1.0.0 Windows x64",
+        "status": "No observed execution for this artifact in this report",
+        "qualified": false
+      },
+      {
+        "host": "REAPER",
+        "version": "6.x / 7.x Windows x64",
+        "status": "No observed execution for this artifact in this report",
+        "qualified": false
+      },
+      {
+        "host": "Ableton Live",
+        "version": "11.x / 12.x Windows x64",
+        "status": "No observed execution for this artifact in this report",
+        "qualified": false
+      },
+      {
+        "host": "Steinberg Cubase",
+        "version": "12.x / 13.x Windows x64",
+        "status": "No observed execution for this artifact in this report",
+        "qualified": false
+      },
+      {
+        "host": "Bitwig Studio",
+        "version": "4.x / 5.x Windows x64",
+        "status": "No observed execution for this artifact in this report",
+        "qualified": false
+      }
+    ],
+    "installer_policy": {
+      "standalone": "xcopy / zip bundle extraction; no registry write required; per-user profile in %LOCALAPPDATA%",
+      "vst3": "Standard VST3 bundle directory copied to %CommonProgramFiles%/VST3 or %LOCALAPPDATA%/Programs/Common/VST3",
+      "bundled_installer": "Zero opaque third-party binary installers; system runtimes must be provided by official Microsoft installers"
+    },
+    "status": "NOT_RUN",
+    "clean_machine_accepted": false,
+    "product_release_accepted": false,
+    "observations": []
+  },
+  "source_correspondence": {
+    "mame_source": "GPL-2.0 buildable snapshot in corresponding-source/mame-source.zip",
+    "host_source": "BSD-3-Clause buildable snapshot in corresponding-source/host-source.zip",
+    "status": "NOT_VERIFIED_BY_THIS_TOOL"
+  },
+  "original_requested_gate": "Final standalone and VST3 release artifacts, installers and runtime prerequisites on supported clean-machine/host matrix",
+  "gate_complete": false,
+  "clean_machine_accepted": false,
+  "product_release_accepted": false,
+  "source_correspondence_verified": false,
+  "qualification_scope": "Static PE/file/configuration checks only; use dated observed workflow evidence and trusted distribution manifests",
+  "static_audit_passed": true,
+  "status": "INCOMPLETE_ACCEPTANCE",
+  "exclusion_policy_not_proof": [
+    "Proprietary IC15 boot ROM and OS 2.24 system disk excluded from all packages",
+    "Sample libraries and test audio recordings excluded from all packages",
+    "Internal reverse-engineering logs, transcripts, and private notes excluded"
+  ]
+}

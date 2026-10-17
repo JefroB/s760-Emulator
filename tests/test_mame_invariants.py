@@ -41,10 +41,8 @@ def test_mame_harness_supplies_generated_lua(tmp_path, monkeypatch):
     assert mame_harness.MameTestSession(body).run()["returncode"] == 0
 
 
-def test_mame_rom_hashes_match_image():
-    assert os.path.exists(IMAGE), f"Image missing: {IMAGE}"
-    with open(IMAGE, "rb") as f:
-        data = f.read()
+def test_mame_rom_hashes_match_image(image_bytes):
+    data = image_bytes
     
     crc32_val = f"{zlib.crc32(data) & 0xFFFFFFFF:08x}"
     sha1_val = hashlib.sha1(data).hexdigest()

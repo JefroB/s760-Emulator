@@ -10,7 +10,7 @@
 #
 # Platform notes / prerequisites encoded here:
 #   * The C++ toolchain + the `s760.ps1` analyzer the Python suite shells out to
-#     are Windows/MSVC/PowerShell based (see docs/TESTING.md and the
+#     are Windows/MSVC/PowerShell based (see docs/testing/testing.md and the
 #     s760-build-and-test runbook), so the backend job runs on windows-latest and
 #     targets Python 3.13 (core/CMakeLists.txt `find_package(Python 3.13 ...)`).
 #   * The MAME binary (`mames760.exe`) and the S-760 ROM set are local/hardware
@@ -57,7 +57,8 @@ jobs:
           # pybind11: required by core/CMakeLists.txt to build the s760_cpp module.
           # pytest + Pillow(PIL): the test suite imports pytest and PIL (mame_harness).
           # NumPy/SciPy: band-limited hardware-capture reference and alias tests.
-          python -m pip install pybind11 pytest Pillow numpy scipy -r scripts/requirements-standalone.txt
+          # soundfile: imported during collection by capture-analysis tests.
+          python -m pip install pybind11 pytest Pillow numpy scipy soundfile -r scripts/requirements-standalone.txt
 
       - name: Configure CMake (Release)
         shell: pwsh
@@ -98,7 +99,9 @@ jobs:
   # ---------------------------------------------------------------------------
   frontend-tests:
     name: Frontend (Vitest + Playwright)
-    runs-on: ubuntu-latest
+    # Visual baselines are reviewed on Windows (the packaged desktop target).
+    # Playwright includes the OS in snapshot names; Linux has no baseline here.
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: google-ui
@@ -127,6 +130,13 @@ jobs:
       # so no separate dev-server step is needed here.
       - name: Run Playwright (E2E / visual)
         run: npm run test:e2e
+
+      - name: Upload Playwright failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: google-ui/test-results/
 
   # ---------------------------------------------------------------------------
   # Aggregate gate: fails if either suite failed.

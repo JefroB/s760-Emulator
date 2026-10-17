@@ -57,6 +57,38 @@ def test_namespace_package_is_not_missing_source(tmp_path):
     assert result['frozen_modules'][0]['component']=='namespace-package'
 
 
+def test_collected_unknown_binary_fails_even_when_mapped(tmp_path):
+    package,build,deps=fixture(tmp_path)
+    source=deps/'mystery.dll';source.write_bytes(b'unknown')
+    (package/'_internal').mkdir()
+    (package/'_internal/mystery.dll').write_bytes(source.read_bytes())
+    (build/'COLLECT-00.toc').write_text(repr(([('mystery.dll',str(source),'BINARY')],)))
+    assert any('Unattributed collected input' in e for e in inventory(package,build,[str(deps)])['errors'])
+
+
+def test_component_version_comes_from_actual_source_distribution(tmp_path):
+    package,build,deps=fixture(tmp_path)
+    other=tmp_path/'other';other.mkdir()
+    info=other/'example-9.9.dist-info';info.mkdir()
+    (info/'METADATA').write_text('Name: example\nVersion: 9.9\n')
+    (info/'RECORD').write_text('example.py,,\n')
+    result=inventory(package,build,[str(deps),str(other)])
+    assert result['components']['example']['version']=='1.2'
+
+
+def test_msvcp_is_external_prerequisite(tmp_path):
+    from s760_distribution_inventory import externalize_windows_runtime
+    package,build,deps=fixture(tmp_path)
+    source=deps/'MSVCP140.dll';source.write_bytes(b'original runtime')
+    (package/'_internal').mkdir()
+    (package/'_internal/MSVCP140.dll').write_bytes(source.read_bytes())
+    (build/'COLLECT-00.toc').write_text(repr(([('MSVCP140.dll',str(source),'BINARY')],)))
+    externalize_windows_runtime(package,build)
+    result=inventory(package,build,[str(deps)])
+    assert not result['errors']
+    assert result['collected_files'][0]['disposition']=='external_system_prerequisite'
+
+
 def test_windows_prerequisite_removes_only_matching_package_copy(tmp_path):
     from s760_distribution_inventory import externalize_windows_runtime
     package,build,deps=fixture(tmp_path)

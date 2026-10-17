@@ -90,10 +90,14 @@ class RolandGateArraySimulator:
             return self.eeprom_latch
         elif reg == 0x10:
             return self.eeprom_do & 0x01
+        elif reg == 0x12:
+            return 0x00
         return self.mmio[offset & 0x0F]
 
     def write(self, offset, data):
         reg = offset & 0x1F
+        if reg == 0x12:
+            return
         self.mmio[offset & 0x0F] = data & 0xFF
         if reg == 0x00:
             self.ga_ctrl = data & 0xFF
@@ -345,3 +349,171 @@ def test_interrupt_subsystem_irq_masking():
     ga.trigger_irq(RolandGateArraySimulator.IRQ_TIMER_60HZ)
     assert (ga.read(0x01) & 0x01) == 0x01  # Pending flag still sets
     assert not ga.int_line_asserted        # But CPU INT line is not asserted due to mask
+
+
+def test_bug081_encoder_latch_f012_does_not_alias_f002():
+    """Verify F012 rotary encoder latch does not read or corrupt F002 control state (BUG-081)."""
+    ga = RolandGateArraySimulator()
+    # Write 0xDC to F002 (Control / bank / reset latch)
+    ga.write(0x02, 0xDC)
+    assert ga.mmio[2] == 0xDC
+    assert ga.read(0x02) == 0x0C  # simm_bank masked with 0x0F
+
+    # Reading F012 must return 0 (no encoder movement), NOT 0xDC (m_mmio[2])
+    assert ga.read(0x12) == 0x00, "Reading F012 must return 0, not alias m_mmio[2]"
+
+    # Writing 0x00 to F012 (firmware clear latch) must NOT overwrite m_mmio[2]
+    ga.write(0x12, 0x00)
+    assert ga.mmio[2] == 0xDC, "Writing to F012 must not overwrite m_mmio[2] at F002"
+
+    # Source check on driver s760.cpp to ensure no fallback to m_mmio[2]
+    with open(DRIVER_PATH, "r", encoding="utf-8", errors="ignore") as f:
+        src = f.read()
+    assert "val = m_mmio[2];" not in src, "s760.cpp must not alias F012 to m_mmio[2]"
+
+
+def test_bug004_ic4_midi_fifo_and_priority_arbitration():
+    """Verify IC4 natural interrupt priority arbitration and 64-byte FIFO queuing (BUG-004)."""
+    with open(DRIVER_PATH, "r", encoding="utf-8", errors="ignore") as f:
+        src = f.read()
+
+    # 1. Verify 64-byte FIFO data structure & member declarations
+    assert "static constexpr size_t NATIVE_MIDI_FIFO_SIZE = 64;" in src
+    assert "u8 m_native_midi_fifo[NATIVE_MIDI_FIFO_SIZE]" in src
+    assert "u32 m_native_midi_fifo_head = 0;" in src
+    assert "u32 m_native_midi_fifo_tail = 0;" in src
+    assert "u32 m_native_midi_fifo_count = 0;" in src
+
+    # 2. Verify state saving for checkpoint persistence
+    assert "save_item(NAME(m_native_midi_fifo));" in src
+    assert "save_item(NAME(m_native_midi_fifo_head));" in src
+    assert "save_item(NAME(m_native_midi_fifo_tail));" in src
+    assert "save_item(NAME(m_native_midi_fifo_count));" in src
+
+    # 3. Verify rcv_complete pushes to FIFO without single-byte drop
+    assert "if (m_native_midi_fifo_count >= NATIVE_MIDI_FIFO_SIZE)" in src
+    assert "m_native_midi_fifo[m_native_midi_fifo_tail] = data;" in src
+    assert "++m_native_midi_fifo_count;" in src
+
+    # 4. Verify banked_r(0x116) pops FIFO and edge-reasserts EXTINT if bytes remain
+    assert "m_native_midi_fifo_head = (m_native_midi_fifo_head + 1) % NATIVE_MIDI_FIFO_SIZE;" in src
+    assert "--m_native_midi_fifo_count;" in src
+    assert "m_maincpu->set_input_line(i8x9x_device::EXTINT_LINE, CLEAR_LINE);" in src
+
+    # 5. Verify natural IC4 vector priority arbitration ordering:
+    # Source 0 (FDC) > Source 2 (Wave) > Source 4 (SCSI) > Source 6 (MIDI)
+    fdc_pos = src.find("if ((m_irq_pending & IRQ_FDC) && BIT(m_bank_regs[0x15], 0))")
+    wave_pos = src.find("if (m_native_midi_experiment && m_native_loop_monitor && m_native_wave_end_pending")
+    scsi_pos = src.find("if (m_native_scsi_dma_pending && BIT(m_bank_regs[0x15], 4))")
+    midi_pos = src.find("if (m_native_midi_experiment && m_native_midi_pending && BIT(m_bank_regs[0x15], 6))")
+
+    assert -1 < fdc_pos < wave_pos < scsi_pos < midi_pos, (
+        "IC4 priority arbitration order must strictly be: FDC (0) > Wave (2) > SCSI (4) > MIDI (6)"
+    )
+
+
+class IC4InterruptArbiterSimulator:
+    """Python simulator replicating IC4 external interrupt priority arbitration and MIDI FIFO."""
+    FIFO_SIZE = 64
+
+    def __init__(self):
+        self.bank_15 = 0x00  # Interrupt mask register
+        self.irq_fdc = False
+        self.wave_end_pending = False
+        self.scsi_dma_pending = False
+        self.fifo = []
+        self.extint_asserted = False
+
+    def push_midi_byte(self, byte_val):
+        if len(self.fifo) < self.FIFO_SIZE:
+            self.fifo.append(byte_val)
+        self.update_extint()
+
+    def read_midi_port_116(self):
+        if not self.fifo:
+            return 0x00
+        val = self.fifo.pop(0)
+        # Edge reassertion simulation: pulse low then re-evaluate
+        self.extint_asserted = False
+        self.update_extint()
+        return val
+
+    def status_114(self):
+        return 0x01 if len(self.fifo) > 0 else 0x00
+
+    def update_extint(self):
+        active = False
+        if (self.bank_15 & 0x01) and self.irq_fdc:
+            active = True
+        if (self.bank_15 & 0x04) and self.wave_end_pending:
+            active = True
+        if (self.bank_15 & 0x10) and self.scsi_dma_pending:
+            active = True
+        if (self.bank_15 & 0x40) and len(self.fifo) > 0:
+            active = True
+        self.extint_asserted = active
+
+    def arbitrate_vector_203a(self):
+        # Priority: Source 0 (FDC) > Source 2 (Wave) > Source 4 (SCSI) > Source 6 (MIDI)
+        if (self.bank_15 & 0x01) and self.irq_fdc:
+            return 0x20
+        if (self.bank_15 & 0x04) and self.wave_end_pending:
+            return 0x28
+        if (self.bank_15 & 0x10) and self.scsi_dma_pending:
+            self.scsi_dma_pending = False
+            self.update_extint()
+            return 0x30
+        if (self.bank_15 & 0x40) and len(self.fifo) > 0:
+            return 0x38
+        return None
+
+
+def test_ic4_priority_and_fifo_queuing_behavior():
+    arb = IC4InterruptArbiterSimulator()
+    arb.bank_15 = 0x55  # Enable Source 0, 2, 4, 6
+
+    # Push 3 MIDI bytes into FIFO
+    for b in [0x90, 0x3C, 0x7F]:
+        arb.push_midi_byte(b)
+
+    assert arb.status_114() == 0x01
+    assert arb.extint_asserted
+
+    # When all 4 sources are simultaneously active
+    arb.irq_fdc = True
+    arb.wave_end_pending = True
+    arb.scsi_dma_pending = True
+
+    # 1st vector request -> FDC (Source 0)
+    assert arb.arbitrate_vector_203a() == 0x20
+
+    # Clear FDC
+    arb.irq_fdc = False
+    arb.update_extint()
+
+    # 2nd vector request -> Wave (Source 2)
+    assert arb.arbitrate_vector_203a() == 0x28
+
+    # Clear Wave
+    arb.wave_end_pending = False
+    arb.update_extint()
+
+    # 3rd vector request -> SCSI (Source 4)
+    assert arb.arbitrate_vector_203a() == 0x30
+    assert not arb.scsi_dma_pending
+
+    # 4th vector request -> MIDI (Source 6)
+    assert arb.arbitrate_vector_203a() == 0x38
+
+    # Read bytes sequentially from FIFO
+    assert arb.read_midi_port_116() == 0x90
+    assert arb.extint_asserted  # Still asserted because 2 bytes remain!
+    assert arb.status_114() == 0x01
+
+    assert arb.read_midi_port_116() == 0x3C
+    assert arb.extint_asserted
+    assert arb.status_114() == 0x01
+
+    assert arb.read_midi_port_116() == 0x7F
+    assert not arb.extint_asserted  # De-asserts once FIFO is empty!
+    assert arb.status_114() == 0x00

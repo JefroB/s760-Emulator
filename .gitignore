@@ -125,6 +125,11 @@ docs/ic20-hle-findings/
 
 # Original hardware captures stay local; commit summaries and hashes instead.
 /test-recordings/
+# Generated firmware exports contain user-supplied Roland code/data.
+/firmware_source/
+# Hardware recording bundles and generated MAME UI preferences stay local.
+/tests/hardware_recordings/
+/ui.ini
 /error.log
 
 # OS metadata

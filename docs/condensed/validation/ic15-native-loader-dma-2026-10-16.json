@@ -1,0 +1,625 @@
+{
+  "command": [
+    "D:\\S-760\\mame-source\\mames760.exe",
+    "s760",
+    "-rompath",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-loader\\roms",
+    "-nvram_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-loader\\nvram",
+    "-cfg_directory",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-loader\\cfg",
+    "-video",
+    "none",
+    "-sound",
+    "none",
+    "-skip_gameinfo",
+    "-nothrottle",
+    "-seconds_to_run",
+    "12",
+    "-autoboot_delay",
+    "0",
+    "-autoboot_script",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\loader.lua",
+    "-log"
+  ],
+  "returncode": 0,
+  "identities": {
+    "D:\\S-760\\mame-source\\mames760.exe": "5ea06b9b9b253158f6140ab36f9fc0d75b581e6df68ab9f0a0f3fcc94450adfc",
+    "D:\\S-760\\roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "D:\\S-760\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\native-loader\\roms\\s760\\s760224.img": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\rom-completion-followup-2026-10-16\\loader.lua": "66f20084c70c3deff33efd351622a0a621d5bb33727890fb6c5a101f327d5049"
+  },
+  "dma_rows": [
+    {
+      "disk": 0,
+      "ram": 1034278,
+      "count": 512
+    },
+    {
+      "disk": 18432,
+      "ram": 0,
+      "count": 9216
+    },
+    {
+      "disk": 27648,
+      "ram": 9216,
+      "count": 9216
+    },
+    {
+      "disk": 36864,
+      "ram": 18432,
+      "count": 9216
+    },
+    {
+      "disk": 46080,
+      "ram": 27648,
+      "count": 9216
+    },
+    {
+      "disk": 55296,
+      "ram": 36864,
+      "count": 9216
+    },
+    {
+      "disk": 64512,
+      "ram": 46080,
+      "count": 9216
+    },
+    {
+      "disk": 73728,
+      "ram": 55296,
+      "count": 9216
+    },
+    {
+      "disk": 82944,
+      "ram": 64512,
+      "count": 9216
+    },
+    {
+      "disk": 92160,
+      "ram": 73728,
+      "count": 9216
+    },
+    {
+      "disk": 101376,
+      "ram": 82944,
+      "count": 9216
+    },
+    {
+      "disk": 110592,
+      "ram": 92160,
+      "count": 9216
+    },
+    {
+      "disk": 119808,
+      "ram": 101376,
+      "count": 9216
+    },
+    {
+      "disk": 129024,
+      "ram": 110592,
+      "count": 9216
+    },
+    {
+      "disk": 138240,
+      "ram": 119808,
+      "count": 9216
+    },
+    {
+      "disk": 147456,
+      "ram": 129024,
+      "count": 9216
+    },
+    {
+      "disk": 156672,
+      "ram": 138240,
+      "count": 9216
+    },
+    {
+      "disk": 165888,
+      "ram": 147456,
+      "count": 9216
+    },
+    {
+      "disk": 175104,
+      "ram": 156672,
+      "count": 9216
+    },
+    {
+      "disk": 184320,
+      "ram": 165888,
+      "count": 9216
+    },
+    {
+      "disk": 193536,
+      "ram": 175104,
+      "count": 9216
+    },
+    {
+      "disk": 202752,
+      "ram": 184320,
+      "count": 9216
+    },
+    {
+      "disk": 211968,
+      "ram": 193536,
+      "count": 9216
+    },
+    {
+      "disk": 221184,
+      "ram": 202752,
+      "count": 9216
+    },
+    {
+      "disk": 230400,
+      "ram": 211968,
+      "count": 9216
+    },
+    {
+      "disk": 239616,
+      "ram": 221184,
+      "count": 9216
+    },
+    {
+      "disk": 248832,
+      "ram": 230400,
+      "count": 9216
+    },
+    {
+      "disk": 258048,
+      "ram": 239616,
+      "count": 9216
+    },
+    {
+      "disk": 267264,
+      "ram": 248832,
+      "count": 9216
+    },
+    {
+      "disk": 276480,
+      "ram": 258048,
+      "count": 9216
+    },
+    {
+      "disk": 285696,
+      "ram": 267264,
+      "count": 9216
+    },
+    {
+      "disk": 294912,
+      "ram": 276480,
+      "count": 9216
+    },
+    {
+      "disk": 304128,
+      "ram": 285696,
+      "count": 9216
+    },
+    {
+      "disk": 313344,
+      "ram": 294912,
+      "count": 9216
+    },
+    {
+      "disk": 322560,
+      "ram": 304128,
+      "count": 9216
+    },
+    {
+      "disk": 331776,
+      "ram": 313344,
+      "count": 9216
+    },
+    {
+      "disk": 340992,
+      "ram": 322560,
+      "count": 9216
+    },
+    {
+      "disk": 350208,
+      "ram": 331776,
+      "count": 9216
+    },
+    {
+      "disk": 359424,
+      "ram": 340992,
+      "count": 9216
+    },
+    {
+      "disk": 368640,
+      "ram": 350208,
+      "count": 9216
+    },
+    {
+      "disk": 377856,
+      "ram": 359424,
+      "count": 9216
+    },
+    {
+      "disk": 387072,
+      "ram": 368640,
+      "count": 9216
+    },
+    {
+      "disk": 396288,
+      "ram": 377856,
+      "count": 9216
+    },
+    {
+      "disk": 405504,
+      "ram": 387072,
+      "count": 9216
+    },
+    {
+      "disk": 414720,
+      "ram": 396288,
+      "count": 9216
+    },
+    {
+      "disk": 423936,
+      "ram": 405504,
+      "count": 9216
+    },
+    {
+      "disk": 433152,
+      "ram": 414720,
+      "count": 9216
+    },
+    {
+      "disk": 442368,
+      "ram": 423936,
+      "count": 9216
+    },
+    {
+      "disk": 451584,
+      "ram": 433152,
+      "count": 9216
+    },
+    {
+      "disk": 460800,
+      "ram": 442368,
+      "count": 9216
+    },
+    {
+      "disk": 470016,
+      "ram": 451584,
+      "count": 9216
+    },
+    {
+      "disk": 479232,
+      "ram": 460800,
+      "count": 9216
+    },
+    {
+      "disk": 488448,
+      "ram": 470016,
+      "count": 9216
+    },
+    {
+      "disk": 497664,
+      "ram": 479232,
+      "count": 9216
+    },
+    {
+      "disk": 506880,
+      "ram": 488448,
+      "count": 9216
+    },
+    {
+      "disk": 516096,
+      "ram": 497664,
+      "count": 9216
+    },
+    {
+      "disk": 525312,
+      "ram": 506880,
+      "count": 9216
+    },
+    {
+      "disk": 534528,
+      "ram": 516096,
+      "count": 9216
+    },
+    {
+      "disk": 543744,
+      "ram": 525312,
+      "count": 9216
+    },
+    {
+      "disk": 552960,
+      "ram": 534528,
+      "count": 9216
+    },
+    {
+      "disk": 562176,
+      "ram": 543744,
+      "count": 9216
+    },
+    {
+      "disk": 571392,
+      "ram": 552960,
+      "count": 9216
+    },
+    {
+      "disk": 580608,
+      "ram": 562176,
+      "count": 9216
+    },
+    {
+      "disk": 589824,
+      "ram": 571392,
+      "count": 9216
+    },
+    {
+      "disk": 599040,
+      "ram": 580608,
+      "count": 9216
+    },
+    {
+      "disk": 608256,
+      "ram": 589824,
+      "count": 9216
+    },
+    {
+      "disk": 617472,
+      "ram": 599040,
+      "count": 9216
+    },
+    {
+      "disk": 626688,
+      "ram": 608256,
+      "count": 9216
+    },
+    {
+      "disk": 635904,
+      "ram": 617472,
+      "count": 9216
+    },
+    {
+      "disk": 645120,
+      "ram": 626688,
+      "count": 9216
+    },
+    {
+      "disk": 654336,
+      "ram": 635904,
+      "count": 9216
+    },
+    {
+      "disk": 663552,
+      "ram": 645120,
+      "count": 9216
+    },
+    {
+      "disk": 672768,
+      "ram": 654336,
+      "count": 9216
+    },
+    {
+      "disk": 681984,
+      "ram": 663552,
+      "count": 9216
+    },
+    {
+      "disk": 691200,
+      "ram": 672768,
+      "count": 9216
+    },
+    {
+      "disk": 700416,
+      "ram": 681984,
+      "count": 9216
+    },
+    {
+      "disk": 709632,
+      "ram": 691200,
+      "count": 9216
+    },
+    {
+      "disk": 718848,
+      "ram": 700416,
+      "count": 9216
+    },
+    {
+      "disk": 728064,
+      "ram": 709632,
+      "count": 9216
+    },
+    {
+      "disk": 737280,
+      "ram": 718848,
+      "count": 9216
+    },
+    {
+      "disk": 746496,
+      "ram": 728064,
+      "count": 9216
+    },
+    {
+      "disk": 755712,
+      "ram": 737280,
+      "count": 9216
+    },
+    {
+      "disk": 764928,
+      "ram": 746496,
+      "count": 9216
+    },
+    {
+      "disk": 774144,
+      "ram": 755712,
+      "count": 9216
+    },
+    {
+      "disk": 783360,
+      "ram": 764928,
+      "count": 9216
+    },
+    {
+      "disk": 792576,
+      "ram": 774144,
+      "count": 9216
+    },
+    {
+      "disk": 801792,
+      "ram": 783360,
+      "count": 9216
+    },
+    {
+      "disk": 811008,
+      "ram": 792576,
+      "count": 9216
+    },
+    {
+      "disk": 820224,
+      "ram": 801792,
+      "count": 9216
+    },
+    {
+      "disk": 829440,
+      "ram": 811008,
+      "count": 9216
+    },
+    {
+      "disk": 838656,
+      "ram": 820224,
+      "count": 9216
+    },
+    {
+      "disk": 847872,
+      "ram": 829440,
+      "count": 9216
+    },
+    {
+      "disk": 857088,
+      "ram": 838656,
+      "count": 9216
+    },
+    {
+      "disk": 866304,
+      "ram": 847872,
+      "count": 9216
+    },
+    {
+      "disk": 875520,
+      "ram": 857088,
+      "count": 9216
+    },
+    {
+      "disk": 884736,
+      "ram": 866304,
+      "count": 9216
+    },
+    {
+      "disk": 893952,
+      "ram": 875520,
+      "count": 9216
+    },
+    {
+      "disk": 903168,
+      "ram": 884736,
+      "count": 9216
+    },
+    {
+      "disk": 912384,
+      "ram": 893952,
+      "count": 9216
+    },
+    {
+      "disk": 921600,
+      "ram": 903168,
+      "count": 9216
+    },
+    {
+      "disk": 930816,
+      "ram": 912384,
+      "count": 9216
+    },
+    {
+      "disk": 940032,
+      "ram": 921600,
+      "count": 9216
+    },
+    {
+      "disk": 949248,
+      "ram": 930816,
+      "count": 9216
+    },
+    {
+      "disk": 958464,
+      "ram": 940032,
+      "count": 9216
+    },
+    {
+      "disk": 967680,
+      "ram": 949248,
+      "count": 9216
+    },
+    {
+      "disk": 976896,
+      "ram": 958464,
+      "count": 9216
+    },
+    {
+      "disk": 986112,
+      "ram": 967680,
+      "count": 9216
+    },
+    {
+      "disk": 995328,
+      "ram": 976896,
+      "count": 9216
+    },
+    {
+      "disk": 1004544,
+      "ram": 986112,
+      "count": 9216
+    },
+    {
+      "disk": 1013760,
+      "ram": 995328,
+      "count": 9216
+    },
+    {
+      "disk": 1022976,
+      "ram": 1004544,
+      "count": 9216
+    },
+    {
+      "disk": 1032192,
+      "ram": 1013760,
+      "count": 9216
+    },
+    {
+      "disk": 1041408,
+      "ram": 1022976,
+      "count": 9216
+    }
+  ],
+  "matched_console": [
+    "[BOOTSTATE] frame=60 pc=486f fetch0106=07b0",
+    "[BOOTSTATE] frame=120 pc=2265 fetch0106=07b0",
+    "[BOOTSTATE] frame=180 pc=2265 fetch0106=07b0",
+    "[BOOTSTATE] frame=240 pc=4a5f fetch0106=07b0",
+    "[BOOTSTATE] frame=300 pc=4a5f fetch0106=07b0",
+    "[BOOTSTATE] frame=360 pc=4a5f fetch0106=07b0",
+    "[BOOTSTATE] frame=420 pc=4a5c fetch0106=07b0",
+    "[BOOTSTATE] frame=480 pc=4a61 fetch0106=07b0",
+    "[HANDOFF] pc=4755 value=0000 mask=ffff",
+    "[BOOTSTATE] frame=540 pc=68df fetch0106=0000",
+    "[BOOTSTATE] frame=600 pc=7094 fetch0106=0000",
+    "[BOOTSTATE] frame=660 pc=3c8c fetch0106=0000",
+    "[BOOTSTATE] frame=720 pc=3cc1 fetch0106=0000"
+  ],
+  "qualification": "Ordinary original-media native boot with existing read-only FDC trace; no forced guest state. DMA rows describe current device model, not physical timing.",
+  "checks": {
+    "header_exact": true,
+    "payload_rows": 112,
+    "payload_total_bytes": 1032192,
+    "contiguous_expected_destinations": true,
+    "contiguous_expected_sources": true,
+    "handoff_count": 1
+  },
+  "setup_note": "First launch omitted -log and yielded no DMA rows. Accepted run enables-log; state directory originated in that first ordinary launch. No claim of independent fresh NVRAM for accepted run."
+}
