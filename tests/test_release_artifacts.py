@@ -36,16 +36,55 @@ def test_mame_binary_architecture():
     assert info['size_bytes'] > 20000000
 
 
-def test_vst3_audit_contract():
-    """Verify that audit_vst3_artifact validates configuration contract."""
-    vst3_path = ROOT / 'build/Release/Roland_S760.vst3'
-    if not vst3_path.is_file():
-        pytest.skip('VST3 binary not built')
-    report = audit_vst3_artifact(vst3_path)
+@pytest.fixture
+def vst3_audit_fixture(tmp_path, monkeypatch):
+    """Invented runtime files for configuration validation, never guest execution."""
+    from scripts import verify_release_artifacts as audit
+    runtime = tmp_path / 'runtime with spaces'
+    for name, size in (
+        ('mame-source/mames760.exe', 1), ('scripts/s760_runtime.lua', 1),
+        ('google-ui/dist/index.html', 1), ('roms/BOOT/Roland_S-760_v1.11.BIN', 32768),
+        ('roms/System/S760224.IMG', 1474560),
+    ):
+        path = runtime / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(bytes(size))
+    # Minimal invented PE header: the real built binary is checked separately.
+    data = bytearray(1024)
+    data[:2] = b'MZ'
+    struct.pack_into('<I', data, 0x3C, 0x80)
+    data[0x80:0x84] = b'PE\0\0'
+    struct.pack_into('<H', data, 0x84, 0x8664)
+    struct.pack_into('<H', data, 0x96, 0x2000)
+    binary = runtime / 'fixture.vst3'
+    binary.write_bytes(data)
+    monkeypatch.setattr(audit, 'ROOT', runtime)
+    return binary
+
+
+def test_vst3_audit_contract(vst3_audit_fixture):
+    """Configuration contract checks need no installed private runtime."""
+    report = audit_vst3_artifact(vst3_audit_fixture)
     assert report['passed'] is True
     assert report['configuration_contract']['path_decoupling_verified'] is True
     assert report['embedded_proprietary_data'] is None
     assert report['private_asset_exclusion_qualified'] is False
+
+
+def test_vst3_audit_still_rejects_missing_runtime(vst3_audit_fixture):
+    (vst3_audit_fixture.parent / 'mame-source/mames760.exe').unlink()
+    with pytest.raises(ValueError, match='Missing runtime/editor file'):
+        audit_vst3_artifact(vst3_audit_fixture)
+
+
+def test_built_vst3_audit_with_independent_configuration(vst3_audit_fixture):
+    binary = ROOT / 'build/Release/Roland_S760.vst3'
+    if not binary.is_file():
+        pytest.skip('VST3 binary not built')
+    report = audit_vst3_artifact(binary)
+    assert report['pe_info']['is_dll']
+    assert report['known_private_hash_literals_absent']
+    assert report['configuration_contract']['path_decoupling_verified']
 
 
 def test_clean_machine_matrix_completeness():

@@ -133,10 +133,32 @@ follow the schema so entries stay machine-greppable.
 | BUG-108 | FIXED | S3 | docs | Standalone archive omits an offline user documentation set | 2026-10-17 | 2026-10-17 |
 | BUG-109 | FIXED | S2 | tests | Optional firmware disassembler import prevents hosted CI test collection | 2026-10-17 | 2026-10-17 |
 | BUG-110 | FIXED | S2 | tests | Recovery and decompiler tests assume untracked private media and firmware exports | 2026-10-17 | 2026-10-17 |
+| BUG-111 | FIXED | S2 | tests | Built VST3 audit assumes a private runtime is installed on the CI runner | 2026-10-17 | 2026-10-17 |
 
-<!-- NEXT-ID: BUG-111 -->
+<!-- NEXT-ID: BUG-112 -->
 
 ## Details
+
+### BUG-111 — Built-plugin audit assumes a private runtime installation
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** GitHub revalidation of the CI prerequisite fixes
+
+**Summary:** CI builds `Roland_S760.vst3` but not the separately provisioned native MAME runtime. The VST3 audit contract test supplies checkout paths to the settings validator, which correctly rejects missing runtime/editor files.
+
+**Repro:** Build the VST3 on a clean checkout without MAME, private firmware or a built web editor, then run `tests/test_release_artifacts.py`.
+
+**Expected:** Audit unit tests provide synthetic configuration inputs; the actual built plugin still receives its binary checks.
+
+**Actual:** `ValueError: Missing runtime/editor file: ...mame-source/mames760.exe`. The first local clean reproduction lacked the VST3 binary and skipped this combination.
+
+**Evidence:** [Revalidation run](https://github.com/JefroB/s760-Emulator/actions/runs/39070384486), backend job 117506583913. All prior CI prerequisite failures are cleared; this run reports 446 passed, 74 skipped and this single failure.
+**Resolution:** Supply invented runtime/configuration files for the audit unit tests, retain a separate check of the actual built VST3, and verify that missing runtime files are still rejected. The isolated full suite with the built VST3 present passes 464 tests with 59 prerequisite skips; the provisioned release-audit module passes all eight tests. [Validation](../condensed/validation/bug111-ci-built-vst3-2026-10-17.json).
+
 
 ### BUG-110 — Clean checkout lacks private fixtures assumed by unit tests
 
