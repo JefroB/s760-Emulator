@@ -98,7 +98,12 @@ passes. BUG-102 fixes actual dependency attribution; BUG-103 preserves historica
 artifact identity; BUG-104 prevents static checks from qualifying unrun machines
 or DAWs. No test-owned app/audio processes remain.
 
-The final archive is `S760 standalone GPLv3 source-built 2026-10-17.zip`,
+The frozen archive is now delivered as
+[`s760-standalone-acceptance-2026-10-17.zip`](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17/s760-standalone-acceptance-2026-10-17.zip)
+in the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17),
+with a local copy under `artifacts/standalone/`. Its original evidence name was
+`S760 standalone GPLv3 source-built 2026-10-17.zip`; only its outer name/location
+changed. It remains
 287,210,283 bytes, SHA-256
 `b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9`.
 Its package, source archives, notices, manifest and handoff scripts stay together.
@@ -117,8 +122,10 @@ Removing development-tool paths on this workstation does not close that gate.
 
 Use the [clean-machine handoff](standalone-clean-machine-handoff.md) with the
 promoted package's complete manifest. Its collector must retain incomplete
-status until actual observations and evidence exist. This task publishes no
-release, creates no tag and makes no VST3 qualification claim.
+status until actual observations and evidence exist. The original qualification
+run published no release or tag. Subsequent delivery through a qualification
+prerelease does not establish clean-machine acceptance, a final release or VST3
+qualification.
 
 [Machine-readable review and results](../condensed/validation/standalone-release-promotion-2026-10-17.json)
 record exact binaries, source identities, tests and limitations.

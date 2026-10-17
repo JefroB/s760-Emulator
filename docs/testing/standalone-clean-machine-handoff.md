@@ -10,6 +10,12 @@ completes this procedure and its evidence is reviewed.
 
 ## What to provide
 
+Download the [complete standalone acceptance kit](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17/s760-standalone-acceptance-2026-10-17.zip)
+from the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17).
+The [artifact directory](../../artifacts/standalone/README.md) records its checksum
+and local download location. No findings-folder access or source checkout is
+needed. This is the same frozen archive used for workstation qualification.
+
 Use a fresh Windows x64 installation or disposable VM without the source checkout,
 Python, Node, CMake or Visual Studio. Record the original machine/prerequisite
 state before installing anything. Extract the kit into a writable folder whose
