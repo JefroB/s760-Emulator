@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-17",
+  "bugs": [
+    "BUG-109",
+    "BUG-110"
+  ],
+  "failed_run": "https://github.com/JefroB/s760-Emulator/actions/runs/39069718146",
+  "failed_job": 117504621761,
+  "root_causes": [
+    "Optional pypcode imported before private-ROM prerequisite check",
+    "Malformed-media unit test assumes private ROBOFULL image",
+    "Decompiler tests assume untracked firmware-source exports"
+  ],
+  "original_collection_reproduced": true,
+  "clean_checkout": {
+    "source": "git archive of b6cd25b09a837aeebe60259968bbab8577aae682 plus the three test fixes",
+    "python": "3.13.0",
+    "dependencies": "Isolated venv using the exact CI install list from .github/workflows/ci.yml; pypcode absent",
+    "native_test_support": "Local s760_cpp pybind extension and mock_core.dll copied; no native MAME or private firmware",
+    "passed": 460,
+    "skipped": 61,
+    "failed": 0,
+    "seconds": 44.6
+  },
+  "provisioned_full_suite": {
+    "passed": 548,
+    "failed": 0,
+    "seconds": 100.3,
+    "scope": "Full suite after optional-import fix; subsequent fixture changes separately verified by all nine affected tests"
+  },
+  "affected_tests": {
+    "passed": 9,
+    "failed": 0,
+    "seconds": 4.36,
+    "includes": "Two new synthetic decompiler checks and real ROM/native-media integrations"
+  },
+  "test_sources": {
+    "test_native_short_media.py": "0917092580d8739af17a2650222a7bfbe3052e4589efca1e0f37f53acfaf87ed",
+    "test_firmware_decompiler.py": "865328122e62d5f426b76621225e57faf50be117c462a662fec864e811d2953b",
+    "test_final_recovery_stress.py": "a15394ebe69b40793069b3e9d2e298eb8a72b0a2b93ce04df1a61c3291247056"
+  },
+  "limitations": [
+    "Local Python is 3.13.0; hosted CI uses 3.13.16",
+    "Clean suite skips private/native and optional-disassembler prerequisites; no private inputs are added to GitHub",
+    "Frontend and all C++ jobs succeeded on the preceding hosted run; their code is unchanged"
+  ]
+}

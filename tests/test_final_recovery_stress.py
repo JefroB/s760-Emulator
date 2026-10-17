@@ -1,14 +1,8 @@
 """Unit and integration regressions for broader malformed media and recovery stress."""
-import hashlib
-from pathlib import Path
 import struct
-import pytest
-
-ROOT = Path(__file__).resolve().parents[1]
 from scripts.verify_final_recovery_stress import (
     make_dos_fat12,
     generate_broader_malformed_media,
-    digest,
 )
 
 
@@ -27,10 +21,11 @@ def test_dos_fat12_geometry():
 
 def test_broader_malformed_profiles_generated(tmp_path):
     """Verify that all 7 broader malformed media profiles are correctly produced."""
-    source_disk = ROOT / 'roms/FDD/ROBOFULL.IMG'
-    assert source_disk.is_file()
-    source_bytes = source_disk.read_bytes()
-    assert len(source_bytes) == 737280
+    # These are byte-mutation/geometry checks, not firmware acceptance. Use
+    # invented nonzero bytes so preservation and zero-fill are checked in CI.
+    source = bytearray(b'\x5a' * 737280)
+    source[:32] = b'SYNTHETIC TEST MEDIA'.ljust(32, b' ')
+    source_bytes = bytes(source)
 
     profiles = generate_broader_malformed_media(tmp_path, source_bytes)
     assert len(profiles) == 7

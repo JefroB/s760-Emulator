@@ -17,7 +17,6 @@ import shutil
 import subprocess
 from pathlib import Path
 import pytest
-import pypcode
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -28,6 +27,7 @@ def test_boot_rom_density_and_loader_invariants():
     if not rom_path.is_file():
         pytest.skip("Boot ROM binary required")
 
+    pypcode = pytest.importorskip("pypcode", reason="Optional firmware disassembler required")
     data = rom_path.read_bytes()
     cs = pypcode.Context("MCS96:LE:16:default")
 

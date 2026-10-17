@@ -131,10 +131,54 @@ follow the schema so entries stay machine-greppable.
 | BUG-106 | FIXED | S2 | ui | Desktop has no clear safe Quit and can leave a worker waiting after window close | 2026-10-17 | 2026-10-17 |
 | BUG-107 | FIXED | S2 | build | Double-click runtime writes staged firmware into a research-style directory inside the package | 2026-10-17 | 2026-10-17 |
 | BUG-108 | FIXED | S3 | docs | Standalone archive omits an offline user documentation set | 2026-10-17 | 2026-10-17 |
+| BUG-109 | FIXED | S2 | tests | Optional firmware disassembler import prevents hosted CI test collection | 2026-10-17 | 2026-10-17 |
+| BUG-110 | FIXED | S2 | tests | Recovery and decompiler tests assume untracked private media and firmware exports | 2026-10-17 | 2026-10-17 |
 
-<!-- NEXT-ID: BUG-109 -->
+<!-- NEXT-ID: BUG-111 -->
 
 ## Details
+
+### BUG-110 — Clean checkout lacks private fixtures assumed by unit tests
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** Clean-checkout reproduction of GitHub CI
+
+**Summary:** After fixing BUG-109, the clean suite exposes four failures: malformed-media profile generation assumes `ROBOFULL.IMG`; three decompiler checks assume untracked exported firmware projects.
+
+**Repro:** Run the backend suite from tracked source with CI dependencies, no private media and no `firmware_source` exports.
+
+**Expected:** Public unit checks use synthetic input. Real firmware integration checks declare their private prerequisites.
+
+**Actual:** Four missing-file assertions/errors; the otherwise collected suite reports 457 passed and 58 skipped.
+
+**Evidence:** `temp/ci-2026-10-17/clean-tests.log` records the clean-checkout failures. All nine affected checks pass with the local private prerequisites after the fix.
+**Resolution:** Use invented bytes for malformed-media unit checks; add public synthetic decompiler CFG/link/export coverage and gate only the real exported-firmware integrations on their private prerequisites. The isolated tracked-source suite passes 460 tests with 61 declared prerequisite skips. The provisioned full suite passes 548 tests, and all nine affected tests pass including two new public checks. [Validation](../condensed/validation/bug109-110-ci-prerequisites-2026-10-17.json).
+
+
+### BUG-109 — Optional firmware disassembler prevents hosted CI collection
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User / GitHub Actions
+
+**Summary:** `test_native_short_media.py` imports optional `pypcode` during collection, before checking for the private boot ROM. Hosted CI cannot collect unrelated tests when the disassembler is absent.
+
+**Repro:** Run `pytest tests` on a clean Windows checkout with the CI dependencies and no `pypcode` or private firmware.
+
+**Expected:** Firmware-specific checks skip with their missing prerequisite; independent tests run.
+
+**Actual:** `ModuleNotFoundError: No module named 'pypcode'` aborts collection. Both the backend and aggregate gate fail; the frontend and C++ checks pass.
+
+**Evidence:** [Failed CI run](https://github.com/JefroB/s760-Emulator/actions/runs/39068727866), backend job 117501703345; the next push reproduces the same collection failure.
+**Resolution:** Load the optional disassembler inside the ROM-specific test after checking for the private ROM; preserve the independent native-media test. The isolated tracked-source suite passes 460 tests with 61 declared prerequisite skips. The provisioned full suite passes 548 tests, and all nine affected tests pass including two new public checks. [Validation](../condensed/validation/bug109-110-ci-prerequisites-2026-10-17.json).
+
 
 ### BUG-108 — Standalone archive omits offline user documentation
 
