@@ -118,6 +118,8 @@ class RuntimeConfig:
     diagnostic_combined_audio: bool = False
     wave_memory_mb: int = 32
     scsi_library: Path | None = None
+    pointing_device: str = 'mouse'
+    config_file: Path | None = None
 
     def audio_arguments(self):
         """OSD buffer target only; native transport stays stereo 44100 Hz."""
@@ -147,12 +149,14 @@ class RuntimeConfig:
     def validate(self):
         if type(self.diagnostic_combined_audio) is not bool:
             raise ValueError('Expected diagnostic combined audio boolean')
+        if self.pointing_device not in ('mouse', 'gb6', 'auto'):
+            raise ValueError('Pointing device must be mouse, gb6 or auto')
         self.audio_arguments()
         if not isinstance(self.recording_device, str) or len(self.recording_device)>256 or '\0' in self.recording_device:
             raise ValueError('Invalid recording device')
         if (self.recording_device or self.audio_backend=='asio') and not self.throttle:
             raise ValueError('Live recording requires normal-speed emulation; disable --fast')
-        for path in (self.executable, self.boot_rom, self.system_disk, self.sample_disk):
+        for path in (self.executable, self.boot_rom, self.system_disk, self.sample_disk, self.config_file):
             if path is not None and not path.is_file():
                 raise FileNotFoundError(path)
         if self.system_disk.stat().st_size != 1474560:
@@ -244,6 +248,10 @@ class NativeRuntime:
             if cfg.wave_dump:
                 env['S760_VDP_TRACE'] = '1'  # Existing exit observer, no guest writes.
                 env['S760_WAVE_DUMP'] = str(cfg.wave_dump.resolve())
+            if cfg.config_file is not None:
+                env['S760_CONFIG'] = str(cfg.config_file.resolve())
+            if cfg.pointing_device != 'mouse':
+                env['S760_POINTING_DEVICE'] = cfg.pointing_device
             stage_audio_mapping(cfg)
             command = [str(cfg.executable.resolve()), 's760', '-rompath',
                        str(rom_dir.parent.resolve()),

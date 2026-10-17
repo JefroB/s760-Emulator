@@ -41,7 +41,7 @@ passing model or native-runtime tests does not establish complete hardware parit
 | --- | --- |
 | Windows standalone | Original-firmware boot, live displays/controls, floppy load/save/export, MIDI playing, session recovery and supported 44.1 kHz MME/ASIO stereo sampling |
 | Native VST3 instrument | SoundCheck SDK discovery, MIDI/controller effects, stereo output, offline rendering, optional 44.1 kHz input and same-build project save/cold reopen |
-| GB-6 OS experiment | Reproducible mouse-decoder patches for user-supplied OS 2.24; v8 vertical movement user-confirmed, balanced v9 hardware acceptance pending |
+| GB-6 controller patches | Selectable 4th controller option (`GB-6 +CRT`, mode `3`) for IC15 Boot ROM v1.11 + OS 2.24 (`v8`/`v9`) verified in emulator (**not yet tested on real hardware**); legacy Mouse+CRT replacement patch (`patch_gb6_os.py`) `v8` vertical motion user-confirmed on hardware |
 
 Native-runtime testing also qualifies named Akai S1000 Convert Load and native
 Roland CD1 Load profiles. The full JMD Roland CD loads its K4 performance and79
@@ -105,13 +105,34 @@ and [host sampling](docs/emulator/runtime/native-vst3-sampling.md) for commands,
 
 ## GB-6 patching
 
-The [GB-6 patch guide](docs/firmware/os/gb6-os-patch.md) explains how to reproduce v8/v9 from
-an original, user-owned OS 2.24. The standard-library Python patcher verifies both
-input and output hashes and refuses to overwrite files. Only patch source,
-tests and instructions are versioned; generated images remain local.
+> **Hardware testing status:** The selectable 4th controller (`GB-6 +CRT`, mode `3`) Boot ROM + OS 2.24 patch has been verified end-to-end in the native MAME emulator, **but has not been tested yet on real S-760 hardware.** Always keep your original IC15 Boot EPROM and original OS 2.24 floppy/Gotek image untouched as a rollback baseline.
 
-These experiments replace the Mouse+CRT decoder. A combined mouse/RC-100/GB-6
-selection and boot-ROM changes remain deferred in the [controller plan](docs/project/gb6-controller-plan.md).
+The repository includes reproducible Python patchers that operate on copies of user-supplied original firmware (`Roland_S-760_v1.11.BIN`, SHA-256 `ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6`; `S760224.IMG`, SHA-256 `3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd`). Only the patch scripts, tests and documentation are committed to Git; original and patched `.BIN`/`.IMG` binaries remain local and git-ignored.
+
+### 1. Selectable 4th Controller Option (`GB-6 +CRT`, Mode `3`) — Boot ROM + OS 2.24
+
+Adds `GB-6 +CRT` (mode `3`) alongside `Panel+LCD` (`0`), `Mouse+CRT` (`1`) and `RC100+CRT` (`2`) in both the IC15 Power-On `Mode` Setup Menu and the OS 2.24 `System -> System PRM -> Page 2` menu while preserving `Mouse+CRT` and `RC100+CRT`:
+
+```powershell
+# Patch both IC15 Boot ROM v1.11 and OS 2.24 System Disk (default v9 = X*4, Y*4; or --profile v8 = X*8, Y*4)
+python scripts/build_gb6_combo.py --boot-input roms/BOOT/Roland_S-760_v1.11.BIN --os-input S760224.IMG --out-dir temp/work/gb6_combo --profile v9
+
+# Or patch the Boot ROM and OS Disk individually:
+python scripts/patch_gb6_boot_rom.py --input roms/BOOT/Roland_S-760_v1.11.BIN --output temp/work/gb6_combo/Roland_S-760_v1.11.GB6.BIN
+python scripts/patch_gb6_os_disk.py --input S760224.IMG --output temp/work/gb6_combo/S760224.GB6-v9.IMG --profile v9
+```
+
+| Output artifact | Size | Modified bytes | Output SHA-256 |
+| --- | --- | --- | --- |
+| `Roland_S-760_v1.11.GB6.BIN` | `32,768` (`0x8000`) | 13 bytes | `a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb` |
+| `S760224.GB6-v9.IMG` (`X*4, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `0a15c81ad6747803160815393f2c2c207f15861bd5671d349ebde4aa3929af15` |
+| `S760224.GB6-v8.IMG` (`X*8, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `6e32e3143dd06b2d93bdacaf765fd2ba68edeb2b64916dbf0d528262573b7403` |
+
+To emulate the Sony GB-6 trackball protocol on `0xF008` in the native emulator, pass a config file (`S760_CONFIG=s760_config.json` with `{"pointing_device": "gb6"}` or `"auto"`) or set `S760_POINTING_DEVICE=gb6`. Run `python -m pytest tests/test_gb6_combo.py` to execute the automated disassembly and emulator verification suite.
+
+### 2. Legacy OS-Only `Mouse+CRT` Replacement Patch
+
+The [GB-6 patch guide](docs/firmware/os/gb6-os-patch.md) also documents `scripts/patch_gb6_os.py`, which replaces the `Mouse+CRT` movement decoder in-place without requiring a Boot ROM change. See the [controller plan](docs/project/gb6-controller-plan.md) for background and EPROM notes.
 
 ## Documentation
 
