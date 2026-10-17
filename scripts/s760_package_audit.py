@@ -15,7 +15,7 @@ import shutil
 import sys
 from urllib.parse import unquote, urlsplit
 
-PRIVATE_SUFFIXES = {'.bin', '.rom', '.hex', '.img', '.iso', '.chd', '.hda',
+PRIVATE_SUFFIXES = {'.bin', '.rom', '.hex', '.img', '.out', '.iso', '.chd', '.hda',
                     '.dsk', '.raw', '.hfe', '.wav', '.aiff', '.s760state'}
 QUALIFICATION = 'docs/distribution/windows-standalone-2026-10-11.json'
 PYTHON_COMPONENTS = ('pywebview', 'websockets', 'pythonnet', 'clr_loader',

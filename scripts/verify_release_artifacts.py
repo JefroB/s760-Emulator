@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from configure_vst3 import validate as validate_vst3_settings, save_config
 
 FORBIDDEN_EXTENSIONS = {
-    '.bin', '.rom', '.hex', '.img', '.iso', '.chd', '.hda',
+    '.bin', '.rom', '.hex', '.img', '.out', '.iso', '.chd', '.hda',
     '.dsk', '.raw', '.hfe', '.wav', '.aiff', '.s760state',
 }
 

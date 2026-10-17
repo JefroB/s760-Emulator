@@ -1,20 +1,29 @@
 # Standalone clean-machine acceptance handoff
 
+**Accepted by the user on 2026-10-17 under a reduced launch/setup scope.** The
+separate clean Windows machine launches the executable and finds the IC15 ROM
+and OS disk. With no sample disk available there, the user explicitly waived
+the remaining full-workflow repetitions for this gate. See the
+[acceptance record and limits](clean-machine-acceptance-2026-10-17.md).
+The procedure below remains available for optional follow-up testing.
+
 This kit tests one frozen **standalone candidate**, including the layered
 WebView2 configuration interface. Extraction does not establish installation
 acceptance. The package's manifest and distribution profile identify whether
 its source/dependency contents have separately qualified for redistribution. The
 workstation workflow record and package manifest identify the exact bytes under
-test. Clean-machine acceptance remains pending until a separate Windows machine
-completes this procedure and its evidence is reviewed.
+test. The original full procedure remains unexecuted on the clean machine;
+user acceptance above closes the handoff without inventing those observations.
 
 ## What to provide
 
-Download the [complete standalone acceptance kit](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17/s760-standalone-acceptance-2026-10-17.zip)
-from the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17).
+Download the [complete standalone acceptance kit](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17-v2/s760-standalone-acceptance-2026-10-17-v2.zip)
+from the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v2).
 The [artifact directory](../../artifacts/standalone/README.md) records its checksum
 and local download location. No findings-folder access or source checkout is
-needed. This is the same frozen archive used for workstation qualification.
+needed. The v2 ZIP adds default ROM folders and IMG/OUT discovery; its own workstation
+checks are recorded in [media-defaults verification](standalone-media-defaults.md).
+The clean-machine user acceptance above identifies the original v1 ZIP.
 
 Before File Explorer extraction, verify the ZIP against the artifact checksum,
 then right-click the ZIP → Properties → **Unblock** → Apply. Extract into a fresh

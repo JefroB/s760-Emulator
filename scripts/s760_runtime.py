@@ -117,6 +117,7 @@ class RuntimeConfig:
     asio_buffer_frames: int = 512
     diagnostic_combined_audio: bool = False
     wave_memory_mb: int = 32
+    scsi_library: Path | None = None
 
     def audio_arguments(self):
         """OSD buffer target only; native transport stays stereo 44100 Hz."""
@@ -187,7 +188,6 @@ class NativeRuntime:
             from s760_asio import windows_outputs
             if not any(d['id']==cfg.audio_output_device for d in windows_outputs()):
                 raise ValueError('Selected Windows output endpoint is unavailable; refresh outputs and select it again')
-        self.scsi_identity = self._scsi_identity()
         cfg.state_dir.mkdir(parents=True, exist_ok=True)
         self.state_lock = (cfg.state_dir / 'runtime.lock').open('a+b')
         if self.state_lock.tell() == 0:
@@ -205,6 +205,10 @@ class NativeRuntime:
             self.state_lock.close()
             self.state_lock = None
             raise RuntimeError('State directory is in use; choose a different --state-dir') from None
+        if cfg.scsi_library is not None:
+            from s760_media_paths import stage_scsi_library
+            stage_scsi_library(cfg.scsi_library, cfg.state_dir)
+        self.scsi_identity = self._scsi_identity()
         root = application_root()
         # MAME's ROM definition expects this exact set/name. Stage the selected
         # user image privately so packaged launches don't rely on a repo ROM tree.

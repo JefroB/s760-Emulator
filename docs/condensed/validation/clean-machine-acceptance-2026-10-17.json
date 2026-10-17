@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-17",
+  "status": "ACCEPTED_BY_USER_WITH_REDUCED_SCOPE",
+  "archive_sha256": "b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9",
+  "environment": "Separate clean Windows machine; File Explorer extraction",
+  "observations": {
+    "executable_launch": "USER_REPORTED_PASS",
+    "ic15_rom_discovery": "USER_REPORTED_PASS",
+    "system_disk_discovery": "USER_REPORTED_PASS"
+  },
+  "initial_failure": "BUG-105; Python.Runtime.Loader.Initialize could not resolve",
+  "exact_remediation_performed": "Not specified by user",
+  "reason_for_reduced_scope": "No sample disk on the clean machine; user explicitly accepts handoff without further workflow testing",
+  "waived_for_this_gate": ["sample_media_load", "device_playback", "editing", "physical_sampling", "firmware_save_export", "session_restore", "cold_reopen", "two_complete_repetitions"],
+  "clean_machine_handoff_accepted": true,
+  "full_clean_machine_workflow_observed": false,
+  "new_package_revisions_executed_on_clean_machine": false,
+  "vst3_host_matrix_qualified": false
+}

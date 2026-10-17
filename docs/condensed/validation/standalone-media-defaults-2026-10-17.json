@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-17",
+  "archive": {
+    "archive": "D:\\S-760\\artifacts\\standalone\\s760-standalone-acceptance-2026-10-17-v2.zip",
+    "bytes": 287293134,
+    "sha256": "2a512ea752d8f613d2489cb790969474fe529780fc92d3abd1cd48fa52b213ab"
+  },
+  "package_files": 611,
+  "rom_folders": [
+    "roms/BOOT",
+    "roms/System",
+    "roms/FDD",
+    "roms/SCSI"
+  ],
+  "os_extensions": [
+    ".img",
+    ".out"
+  ],
+  "default_discovery": {
+    "explicit_and_saved_settings_take_priority": true,
+    "ambiguous_nonstandard_images_require_configuration": true,
+    "scsi_defaults_never_overwrite_private_media": true
+  },
+  "verification": {
+    "backend_tests_passed": 541,
+    "focused_configuration_checkpoint_tests_passed": 60,
+    "final_package_source_media_tests_passed": 35,
+    "real_frozen_out_boot": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 225776
+    },
+    "boot_filename": "roms/BOOT/ic15.rom",
+    "os_filename": "roms/System/Roland OS 2.24.OUT",
+    "firmware_paths_passed_on_command_line": false,
+    "native_regression": {
+      "native_boot_frames": true,
+      "long_mouse_jump": [
+        300,
+        120
+      ],
+      "midi_note": 60,
+      "held_peak_pcm16": 1019.0,
+      "release_tail_peak_pcm16": 0,
+      "sample_rate": 44100,
+      "note_start": 79.0,
+      "note_release": 81.216666666667,
+      "process_shutdown": "clean",
+      "system_audio": {
+        "enabled": false,
+        "backend_requested": "auto",
+        "buffer_target_ms": 0,
+        "throttled": false,
+        "device_latency_measured": false
+      },
+      "pull_render": {
+        "sizes": [
+          1,
+          63,
+          127,
+          256,
+          511,
+          1024,
+          4096,
+          8192
+        ],
+        "frames": 122616,
+        "wav_max_error_pcm16": 0.9999542236328125,
+        "dropped_frames": 0,
+        "paused_between_requests": true,
+        "release_tail_silent": true
+      },
+      "scheduled_midi": [
+        {
+          "seconds": 83.456009070295,
+          "sample": 3680410
+        },
+        {
+          "seconds": 84.456009070295,
+          "sample": 3724510
+        }
+      ]
+    },
+    "final_archive_helper": "PASS; all 611 package files verified after simulated browser marking"
+  },
+  "distribution_review": {
+    "distribution_qualified": true,
+    "exe_sha256": "e9435da9c01cef558494c0fe1c7d8df7167881a6e780f9b87bd59481559cec09",
+    "package_files": 611,
+    "policy": "docs/distribution/windows-standalone-2026-10-17-media-defaults.json",
+    "source_correspondence": true,
+    "source_files": 309
+  },
+  "native_and_third_party_binaries": "Unchanged from source-qualified original package",
+  "stdlib_zip": "All uncompressed entries identical; container metadata changed",
+  "clean_machine_handoff": "ACCEPTED_BY_USER_WITH_REDUCED_SCOPE_ON_ORIGINAL_KIT",
+  "v2_clean_machine_execution_observed": false,
+  "final_product_release_qualified": false
+}

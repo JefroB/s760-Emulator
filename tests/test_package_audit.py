@@ -60,7 +60,7 @@ def test_prepare_preserves_full_license_and_identifies_exact_artifact(package):
         require_release(result)
 
 
-@pytest.mark.parametrize('path', ['hidden.img', 'session.s760state', 'renamed.dat'])
+@pytest.mark.parametrize('path', ['hidden.img', 'hidden.OUT', 'session.s760state', 'renamed.dat'])
 def test_private_media_cannot_leak_even_when_renamed(package, path):
     repo, root = package
     prepare_notices(repo, root)

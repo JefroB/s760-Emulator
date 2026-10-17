@@ -128,7 +128,7 @@ follow the schema so entries stay machine-greppable.
 | BUG-103 | FIXED | S3 | build | Documentation moves and mutable checkout checks invalidate historical artifact identity | 2026-10-17 | 2026-10-17 |
 | BUG-104 | FIXED | S3 | tests | Static artifact checker claims unobserved clean-machine and DAW qualification | 2026-10-17 | 2026-10-17 |
 
-| BUG-105 | IN-PROGRESS | S2 | build | Downloaded acceptance ZIP extracts blocked .NET assemblies and fails before UI startup | 2026-10-17 | |
+| BUG-105 | FIXED | S2 | build | Downloaded acceptance ZIP extracts blocked .NET assemblies and fails before UI startup | 2026-10-17 | 2026-10-17 |
 
 <!-- NEXT-ID: BUG-106 -->
 
@@ -136,10 +136,11 @@ follow the schema so entries stay machine-greppable.
 
 ### BUG-105 — Downloaded acceptance kit fails at Python.Runtime startup
 
-- **Status:** IN-PROGRESS
+- **Status:** FIXED
 - **Severity:** S2
 - **Area:** build
 - **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
 - **Reported by:** User clean-machine acceptance, File Explorer extraction
 
 **Summary:** The GitHub-downloaded frozen acceptance kit fails before opening the desktop interface on a separate clean Windows machine. The handoff omitted the downloaded ZIP unblocking step and did not qualify File Explorer mark-of-the-web propagation.
@@ -152,7 +153,9 @@ follow the schema so entries stay machine-greppable.
 
 **Evidence:** User screenshot dated 2026-10-17 14:00:41 and confirmation that the test used a clean Windows machine with File Explorer. The frozen archive identity remains b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9.
 
-**Notes:** Locally reproduced with the packaged DLL: Zone.Identifier ZoneId=3 causes .NET FileLoadException / HRESULT 0x80131515; scoped unblocking allows Loader.Initialize resolution. Added checksum-first extraction helper and download/remediation instructions. Three guardrail regressions and extraction of the actual unchanged archive pass; all611 package files verify and the initializer resolves. User clean-machine retest after unblocking/re-extraction remains pending; keep this bug IN-PROGRESS and clean-machine qualification incomplete. See the durable validation record in docs/condensed/validation/bug105-downloaded-assembly-2026-10-17.json.
+**Notes:** Locally reproduced with the packaged DLL: Zone.Identifier ZoneId=3 causes .NET FileLoadException / HRESULT 0x80131515; scoped unblocking allows Loader.Initialize resolution. Added checksum-first extraction helper and download/remediation instructions. Three guardrail regressions and extraction of the actual unchanged archive pass; all611 package files verify and the initializer resolves. The user subsequently confirmed that the executable launches and discovers both firmware inputs on the clean machine. The precise remediation performed was not stated. The user accepts the handoff with remaining media workflows waived, as recorded separately. See the durable validation record in docs/condensed/validation/bug105-downloaded-assembly-2026-10-17.json.
+
+**Resolution:** Download trust instructions and a checksum-first extraction helper are published; the user reports successful clean-machine launch and firmware discovery. Full sample-media workflows were not observed and are not claimed.
 
 ### BUG-104 — Static artifact checks claim observed release acceptance
 

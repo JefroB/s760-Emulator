@@ -33,7 +33,7 @@ try {
     $package = "$output/dist/S760Studio"
     New-Item -ItemType Directory -Path "$package/audio" -Force | Out-Null
     Copy-Item -LiteralPath "$repo/mame-source/3rdparty/portaudio/LICENSE.txt" -Destination "$package/audio/PORTAUDIO-LICENSE.txt"
-    foreach ($folder in @('scripts','google-ui','mame-source','roms/FDD')) {
+    foreach ($folder in @('scripts','google-ui','mame-source','roms/BOOT','roms/System','roms/FDD','roms/SCSI')) {
         New-Item -ItemType Directory -Path "$package/$folder" -Force | Out-Null
     }
     Copy-Item -LiteralPath "$repo/scripts/s760_runtime.lua" -Destination "$package/scripts/"

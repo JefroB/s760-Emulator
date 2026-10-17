@@ -29,6 +29,22 @@ Supply these local files using paths in Configuration:
 | System disk (1.44MB) | Raw OS2.24 floppy image,1474560 bytes |
 | Media directory | An existing folder containing your raw720KB or1.44MB sample floppy images (`.img` or `.dsk`) |
 
+The ZIP includes these empty folders beside the executable:
+
+| Folder | Default use |
+| --- | --- |
+| `roms/BOOT/` | IC15 boot ROM; the standard filename or a single 32KB `.bin`/`.rom` file is discovered |
+| `roms/System/` | OS disk: `S760224.IMG` or `S760224.OUT`; a single correctly sized `.img`/`.out` alternative is also discovered |
+| `roms/FDD/` | Sample floppy library, shown in Gotek by default |
+| `roms/SCSI/` | SCSI images using the supported MAME names, such as `HD0.img` and `CD1.iso` |
+
+Roland's `.OUT` system disk is read as the same raw disk bytes as `.IMG`; no
+renaming or conversion is required. Saved Configuration and command-line paths
+take precedence over discovery. When several nonstandard candidates exist,
+choose the intended file in Configuration. The folders ship empty; users supply
+their own firmware/media. SCSI defaults seed private instance backing files on
+startup without replacing existing private disks or their edits.
+
 The CPU is IC1 and the boot EPROM is IC15. Tested SHA-256 identities:
 
 ```text

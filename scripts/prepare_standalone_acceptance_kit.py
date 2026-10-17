@@ -31,7 +31,8 @@ def main():
         shutil.copyfile(ROOT/source,output/name)
     with zipfile.ZipFile(archive,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=6) as zipped:
         for path in sorted(output.rglob('*')):
-            if path.is_file():zipped.write(path,output.name+'/'+path.relative_to(output).as_posix())
+            # Explicit directory entries preserve empty user-media folders.
+            zipped.write(path,output.name+'/'+path.relative_to(output).as_posix())
     digest=hashlib.sha256(archive.read_bytes()).hexdigest()
     archive.with_suffix('.zip.sha256').write_text(digest+' *'+archive.name+'\n',encoding='ascii')
     print(json.dumps({'archive':str(archive),'bytes':archive.stat().st_size,'sha256':digest,
