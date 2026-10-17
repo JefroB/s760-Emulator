@@ -114,15 +114,15 @@ manual steps, since this remains the development workstation.
 
 ## Remaining acceptance
 
-Clean-machine prerequisite discovery, installation/remediation, two complete
-workflows and evidence review still require a separate Windows installation.
-The user has no clean machine or VM available. Local inspection finds no
-Windows Sandbox, Hyper-V service/module, VirtualBox or VMware installation.
-Removing development-tool paths on this workstation does not close that gate.
+The user accepted the clean-machine handoff on 2026-10-17 after confirming
+that the executable launches and discovers IC15 and the OS disk on a separate
+clean Windows machine. No sample disk was available; full media workflows were
+explicitly waived for this gate. See [accepted scope](clean-machine-acceptance-2026-10-17.md).
+Final VST3 and final release-tag qualification remain separate.
 
 Use the [clean-machine handoff](standalone-clean-machine-handoff.md) with the
-promoted package's complete manifest. Its collector must retain incomplete
-status until actual observations and evidence exist. The original qualification
+promoted package's complete manifest. Historical collector files retain their original incomplete status; the later
+user acceptance is recorded separately rather than manufacturing missing passes. The original qualification
 run published no release or tag. Subsequent delivery through a qualification
 prerelease does not establish clean-machine acceptance, a final release or VST3
 qualification.

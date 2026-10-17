@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 import secrets
 import subprocess
+import sys
 import queue
 import threading
 import time
@@ -26,6 +27,7 @@ from s760_runtime import NativeRuntime, RuntimeConfig, application_root, midi_in
 from s760_readiness import FirmwareReadiness, SYSTEM_SHA256
 from s760_capture import WaveInput, devices as recording_devices
 from s760_asio import AsioHost, devices as asio_devices, windows_outputs
+from s760_media_paths import default_media_paths, default_state_directory
 
 ASIO_SETTINGS = {'asioDriver':'asio_driver','asioOutputChannel':'asio_output_channel',
                  'asioInputChannel':'asio_input_channel','asioBufferFrames':'asio_buffer_frames'}
@@ -100,7 +102,7 @@ def validate_input(message):
     elif kind in ('RESTART_RUNTIME', 'RESTORE_SESSION', 'RESTORE_RECOVERY', 'START_RECOVERY', 'QUIT_WITHOUT_RECOVERY'):
         if set(p) != {'discard'} or p['discard'] is not True:
             raise ValueError('Restart requires explicit discard confirmation')
-    elif kind in ('EXPORT_DISK', 'SAVE_SESSION', 'EJECT_DISK', 'MEDIA_STATUS', 'SAVE_RECOVERY', 'RECORDING_DEVICES', 'ASIO_DEVICES','AUDIO_OUTPUT_DEVICES','REOPEN_AUDIO'):
+    elif kind in ('QUIT_APPLICATION', 'EXPORT_DISK', 'SAVE_SESSION', 'EJECT_DISK', 'MEDIA_STATUS', 'SAVE_RECOVERY', 'RECORDING_DEVICES', 'ASIO_DEVICES','AUDIO_OUTPUT_DEVICES','REOPEN_AUDIO'):
         if p:
             raise ValueError('Export does not accept a client output path')
     else:
@@ -434,6 +436,8 @@ class StandaloneSession:
             if self.closing: return True
             r = self.runtime
             if self.startup_error or r.process is None or r.process.poll() is not None:
+                self.closing = True
+                self.stop.set()
                 return True # A dead/unstarted child cannot produce a newer checkpoint.
             try:
                 if self.recovery_pending:
@@ -472,6 +476,10 @@ class StandaloneSession:
             return {'type':'AUDIO_OUTPUT_DEVICES','audioOutputDevices':self.audio_output_devices}
         if kind == 'REOPEN_AUDIO':return self.reopen_audio()
         r = self.runtime
+        if kind == 'QUIT_APPLICATION':
+            if self.prepare_close():
+                return {'type': 'CLOSING'}
+            return {'type': 'QUIT_BLOCKED', 'message': self.recovery_message}
         if kind == 'QUIT_WITHOUT_RECOVERY':
             self.closing = True
             self.stop.set()
@@ -701,9 +709,27 @@ class StandaloneSession:
                     pass
 
 
+def request_desktop_close(window, session):
+    if session.closing or session.stop.is_set():
+        return True
+    def request():
+        try:
+            # Run outside the WinForms closing callback: JS completion needs
+            # that UI thread and waiting there would deadlock the window.
+            handled = window.evaluate_js("!window.dispatchEvent(new Event('s760-request-quit', {cancelable:true}))")
+            if handled:
+                return
+        except Exception:
+            pass  # Early window closure can precede the frontend listener.
+        if session.prepare_close():
+            window.destroy()
+    threading.Thread(target=request, daemon=True).start()
+    return False
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--state-dir', type=Path, default=ROOT / 'docs/ic20-hle-findings/chatGPT-work/standalone-state')
+    parser.add_argument('--state-dir', type=Path, default=default_state_directory())
     parser.add_argument('--media-dir', type=Path, default=None)
     parser.add_argument('--boot-rom', type=Path, default=None)
     parser.add_argument('--system-disk', type=Path, default=None)
@@ -733,9 +759,10 @@ def main():
         settings = load_settings(args.state_dir)
     except (OSError, ValueError) as error:
         settings, settings_warning = {}, f'Could not read saved settings: {error}'
-    args.boot_rom = args.boot_rom or Path(settings.get('bootRom',ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN'))
-    args.system_disk = args.system_disk or Path(settings.get('systemDisk',ROOT/'roms/System/S760224.IMG'))
-    args.media_dir = args.media_dir or Path(settings.get('mediaDirectory',ROOT/'roms/FDD'))
+    defaults = default_media_paths(ROOT)
+    args.boot_rom = args.boot_rom or Path(settings.get('bootRom', defaults['bootRom']))
+    args.system_disk = args.system_disk or Path(settings.get('systemDisk', defaults['systemDisk']))
+    args.media_dir = args.media_dir or Path(settings.get('mediaDirectory', defaults['mediaDirectory']))
     media_slot = args.state_dir / 'inserted-floppy.img'
     cfg = RuntimeConfig(ROOT / 'mame-source/mames760.exe', args.boot_rom, args.system_disk,
                         args.state_dir, media_slot if media_slot.exists() else args.system_disk,
@@ -745,7 +772,8 @@ def main():
                         audio_output_device=settings.get('audioOutputDevice',''),
                         audio_latency_ms=args.audio_latency_ms if args.audio_latency_ms is not None
                             else settings.get('audioLatencyMs', 0),
-                        recording_device=args.recording_device if args.recording_device is not None else settings.get('recordingDevice',''))
+                        recording_device=args.recording_device if args.recording_device is not None else settings.get('recordingDevice',''),
+                        scsi_library=ROOT/'roms/SCSI' if getattr(sys, 'frozen', False) else None)
     cfg=replace(cfg,**{field:settings[key] for key,field in ASIO_SETTINGS.items() if key in settings})
     cfg=replace(cfg,**{field:getattr(args,field) for field in ASIO_SETTINGS.values() if getattr(args,field) is not None})
     try:
@@ -786,7 +814,8 @@ def main():
                     import webview
                     window = webview.create_window('Roland S-760', url, width=1100, height=1050,
                                                    min_size=(760, 700), background_color='#0a0c0f')
-                    window.events.closing += session.prepare_close
+                    window.events.closing += lambda: request_desktop_close(window, session)
+                    window.events.closed += session.stop.set
                     def watch_window():
                         if args.verify_desktop:
                             try:

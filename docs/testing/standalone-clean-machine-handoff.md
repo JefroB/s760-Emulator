@@ -1,20 +1,38 @@
 # Standalone clean-machine acceptance handoff
 
+**Accepted by the user on 2026-10-17 under a reduced launch/setup scope.** The
+separate clean Windows machine launches the executable and finds the IC15 ROM
+and OS disk. With no sample disk available there, the user explicitly waived
+the remaining full-workflow repetitions for this gate. See the
+[acceptance record and limits](clean-machine-acceptance-2026-10-17.md).
+The procedure below remains available for optional follow-up testing.
+
 This kit tests one frozen **standalone candidate**, including the layered
 WebView2 configuration interface. Extraction does not establish installation
 acceptance. The package's manifest and distribution profile identify whether
 its source/dependency contents have separately qualified for redistribution. The
 workstation workflow record and package manifest identify the exact bytes under
-test. Clean-machine acceptance remains pending until a separate Windows machine
-completes this procedure and its evidence is reviewed.
+test. The original full procedure remains unexecuted on the clean machine;
+user acceptance above closes the handoff without inventing those observations.
 
 ## What to provide
 
-Download the [complete standalone acceptance kit](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17/s760-standalone-acceptance-2026-10-17.zip)
-from the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17).
+Download the [complete standalone acceptance kit](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17-v4/s760-standalone-acceptance-2026-10-17-v4.zip)
+from the [qualification prerelease](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v4).
 The [artifact directory](../../artifacts/standalone/README.md) records its checksum
 and local download location. No findings-folder access or source checkout is
-needed. This is the same frozen archive used for workstation qualification.
+needed. The v4 ZIP includes the S-760 floppy application icon, portable ROM folders, IMG/OUT discovery, working Quit,
+Local AppData profiles and offline user docs. See [v3 verification](standalone-exit-profile-and-docs.md).
+The clean-machine user acceptance above identifies the original v1 ZIP.
+
+Before File Explorer extraction, verify the ZIP against the artifact checksum,
+then right-click the ZIP → Properties → **Unblock** → Apply. Extract into a fresh
+folder. A browser-downloaded ZIP can pass Windows' internet-zone mark to .NET
+assemblies and fail with `Failed to resolve Python.Runtime.Loader.Initialize`.
+If that happens, retain the failed extraction/screenshot, unblock the original
+ZIP and extract again. The [verified extraction helper](../../artifacts/standalone/README.md#before-extracting-a-browser-download)
+provides an alternative without development tools. Record this remediation in
+the clean-machine evidence; a successful launch alone does not finish acceptance.
 
 Use a fresh Windows x64 installation or disposable VM without the source checkout,
 Python, Node, CMake or Visual Studio. Record the original machine/prerequisite

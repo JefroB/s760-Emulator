@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 ROOTS=('src','3rdparty','scripts','plugins','docs/legal','build/generated','build/projects/windows/mames760/vs2022')
 EXCLUDED={'.exe','.dll','.pdb','.lib','.exp','.obj','.pyc','.bin','.rom','.hex',
-          '.img','.iso','.chd','.hda','.dsk','.raw','.hfe','.wav','.aiff','.s760state'}
+          '.img','.out','.iso','.chd','.hda','.dsk','.raw','.hfe','.wav','.aiff','.s760state'}
 
 def bundle(repo, output, extracted):
     repo=Path(repo).resolve();output=Path(output).resolve();extracted=Path(extracted).resolve()

@@ -60,7 +60,7 @@ def test_prepare_preserves_full_license_and_identifies_exact_artifact(package):
         require_release(result)
 
 
-@pytest.mark.parametrize('path', ['hidden.img', 'session.s760state', 'renamed.dat'])
+@pytest.mark.parametrize('path', ['hidden.img', 'hidden.OUT', 'session.s760state', 'renamed.dat'])
 def test_private_media_cannot_leak_even_when_renamed(package, path):
     repo, root = package
     prepare_notices(repo, root)
@@ -79,6 +79,23 @@ def test_engine_drift_and_license_loss_fail_closed(package):
     assert not result['development_package_ok']
     assert any('mames760.exe' in error for error in result['errors'])
     assert any('GPL-2.0' in error for error in result['errors'])
+
+
+def test_empty_research_folder_is_not_allowed_in_distribution(package):
+    repo, root = package
+    prepare_notices(repo, root)
+    (root / 'docs/ic20-hle-findings').mkdir(parents=True)
+    result = audit_package(repo, root)
+    assert any('Research folder in distribution' in error for error in result['errors'])
+
+
+def test_executable_content_does_not_belong_in_user_docs(package):
+    repo, root = package
+    prepare_notices(repo, root)
+    (root / 'docs').mkdir()
+    (root / 'docs/tool.exe').write_bytes(b'not documentation')
+    result = audit_package(repo, root)
+    assert any('Executable content in documentation' in error for error in result['errors'])
 
 
 def test_license_file_alone_does_not_claim_dependency_or_source_clearance(package):

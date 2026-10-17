@@ -28,6 +28,28 @@ function renderStudio(settings=true){
 }
 
 describe('NativeStudio real-machine controls', () => {
+  it('offers visible quit with acknowledged recovery and explicit discard',()=>{
+    renderStudio(false);
+    fireEvent.click(screen.getByRole('button',{name:'Quit application'}));
+    expect(screen.getByRole('dialog',{name:'Quit S760Studio'})).toBeInTheDocument();
+    expect(screen.getByRole('button',{name:'Quit without saving'})).toBeDisabled();
+    fireEvent.click(screen.getByRole('button',{name:'Save recovery and quit'}));
+    expect(Socket.current.sent.at(-1)).toEqual({type:'QUIT_APPLICATION',payload:{}});
+    act(()=>Socket.current.onmessage?.({data:JSON.stringify({type:'QUIT_BLOCKED',message:'Existing recovery retained'})}));
+    expect(screen.getByRole('alert')).toHaveTextContent('Existing recovery retained');
+    fireEvent.click(screen.getByLabelText('I understand changes since the last save or recovery will be lost.'));
+    fireEvent.click(screen.getByRole('button',{name:'Quit without saving'}));
+    expect(Socket.current.sent.at(-1)).toEqual({type:'QUIT_WITHOUT_RECOVERY',payload:{discard:true}});
+  });
+  it('opens the same quit dialog for a desktop close request',()=>{
+    renderStudio(false);
+    const event=new Event('s760-request-quit',{cancelable:true});
+    act(()=>window.dispatchEvent(event));
+    expect(event.defaultPrevented).toBe(true);
+    expect(screen.getByRole('dialog',{name:'Quit S760Studio'})).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button',{name:'Keep working'}));
+    expect(screen.queryByRole('dialog',{name:'Quit S760Studio'})).not.toBeInTheDocument();
+  });
   it('reopens failed audio only on request and waits for acknowledgement',()=>{
     renderStudio();
     act(()=>Socket.current.onmessage?.({data:JSON.stringify({type:'FIRMWARE_STATUS',message:'Ready',recordingStatus:{state:'failed',message:'Sampler paused; reconnect audio.'}})}));

@@ -1,9 +1,19 @@
 # S760Studio Windows development package
 
+[Quick Start](docs/quick-start.md) · [User guide](docs/user-guide.md) ·
+[Controls](docs/controls.md) · [Troubleshooting](docs/troubleshooting.md)
+
 Keep the entire extracted folder together. Run `S760Studio.exe` from a writable
 folder. Python, Node, CMake and the source checkout are not needed to run this
 package. This is a development artifact; final installation and clean-machine
 release qualification remain open.
+
+For a browser-downloaded ZIP, verify its published checksum, right-click the ZIP
+→ Properties → Unblock → Apply **before extracting with File Explorer**. If the
+desktop fails with `Failed to resolve Python.Runtime.Loader.Initialize`, keep
+the failed extraction as evidence, unblock the original ZIP and extract into a
+fresh folder. Windows may otherwise block the packaged .NET assemblies. Python
+does not need to be installed separately.
 
 ## Prerequisites and your files
 
@@ -21,6 +31,22 @@ Supply these local files using paths in Configuration:
 | Boot ROM (32KB) | Raw IC15 boot EPROM version1.11,32768 bytes |
 | System disk (1.44MB) | Raw OS2.24 floppy image,1474560 bytes |
 | Media directory | An existing folder containing your raw720KB or1.44MB sample floppy images (`.img` or `.dsk`) |
+
+The ZIP includes these empty folders beside the executable:
+
+| Folder | Default use |
+| --- | --- |
+| `roms/BOOT/` | IC15 boot ROM; the standard filename or a single 32KB `.bin`/`.rom` file is discovered |
+| `roms/System/` | OS disk: `S760224.IMG` or `S760224.OUT`; a single correctly sized `.img`/`.out` alternative is also discovered |
+| `roms/FDD/` | Sample floppy library, shown in Gotek by default |
+| `roms/SCSI/` | SCSI images using the supported MAME names, such as `HD0.img` and `CD1.iso` |
+
+Roland's `.OUT` system disk is read as the same raw disk bytes as `.IMG`; no
+renaming or conversion is required. Saved Configuration and command-line paths
+take precedence over discovery. When several nonstandard candidates exist,
+choose the intended file in Configuration. The folders ship empty; users supply
+their own firmware/media. SCSI defaults seed private instance backing files on
+startup without replacing existing private disks or their edits.
 
 The CPU is IC1 and the boot EPROM is IC15. Tested SHA-256 identities:
 
@@ -45,8 +71,12 @@ required; PowerShell is included with Windows.
 
 Use a distinct writable state directory for each simultaneous instance. To reuse
 saved settings, launch with the same `--state-dir`; explicit firmware/media
-arguments override saved paths. Double-clicking uses a package-relative default
-profile, so the application folder must be writable for that launch method.
+arguments override saved paths. Double-clicking uses
+`%LOCALAPPDATA%\S760Studio\default` for private runtime state, logs and recovery.
+Staged firmware stays there; the package's `docs/` tree is documentation only.
+Older versions created a profile under `docs/ic20-hle-findings/chatGPT-work/standalone-state`.
+Keep that old folder if it contains sessions you need; use its path explicitly
+with `--state-dir` to open it. Updating the app does not delete or migrate it.
 
 If paths are missing, Configuration remains available. Enter **Boot ROM (32KB)**,
 **System disk (1.44MB)** and **Media directory**. Choose Wave memory8,16 or32MB
@@ -98,6 +128,14 @@ Automatic recovery runs periodically and on normal close. If a prior recovery is
 offered, restore it or explicitly start a new recovery history. Recovery is bounded
 by its last save; changes since that save can be lost. Export disks and save a
 session before deliberately restarting or replacing settings.
+
+## Quit
+
+Use **Quit application** at the top of the window, or the window's **X** button.
+Both open the same dialog. **Save recovery and quit** saves first; if saving
+fails, the application stays open and explains the error. You can keep working,
+or explicitly acknowledge possible loss of unsaved changes and choose **Quit
+without saving**. Accepted closure stops the application and its native process.
 
 ## Troubleshooting
 

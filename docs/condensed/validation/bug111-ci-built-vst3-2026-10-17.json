@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-17",
+  "bug": "BUG-111",
+  "failed_hosted_run": "https://github.com/JefroB/s760-Emulator/actions/runs/39070384486",
+  "failure": "Built VST3 present but independent native runtime absent: Missing runtime/editor file",
+  "fix": "Synthetic configuration fixtures, separate real-plugin audit and missing-runtime negative test; production validator unchanged",
+  "clean_full_suite": {
+    "passed": 464,
+    "skipped": 59,
+    "failed": 0,
+    "seconds": 36.07,
+    "built_artifacts": [
+      "s760_cpp.cp313-win_amd64.pyd",
+      "mock_core.dll",
+      "Roland_S760.vst3"
+    ],
+    "private_firmware": false,
+    "pypcode_installed": false
+  },
+  "provisioned_release_audit_module": {
+    "passed": 8,
+    "skipped": 0,
+    "failed": 0,
+    "seconds": 0.59
+  },
+  "clean_release_audit_module": {
+    "passed": 7,
+    "skipped": 1,
+    "failed": 0,
+    "seconds": 0.15,
+    "skip": "Separate native MAME architecture test; executable not provisioned"
+  },
+  "test_source_sha256": "b07bf30c69eaeb2fda0f621034bb7847a1a8ac90fe1017d0194cf80bf22735db",
+  "scope": "Test fixture correction; no application, plugin or validator implementation change"
+}

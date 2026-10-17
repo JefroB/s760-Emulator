@@ -1,5 +1,5 @@
 param(
-    [string]$OutputDirectory = "$PSScriptRoot/../docs/ic20-hle-findings/chatGPT-work/standalone-package",
+    [string]$OutputDirectory = "$PSScriptRoot/../build/standalone-package",
     [switch]$Release
 )
 $ErrorActionPreference = 'Stop'
@@ -23,7 +23,8 @@ try {
 } finally { Pop-Location }
 Push-Location $repo
 try {
-    & python -m PyInstaller --noconfirm --onedir --windowed --name S760Studio `
+    & python -m PyInstaller --noconfirm --clean --onedir --windowed --name S760Studio `
+        --icon "$repo/assets/s760-studio.ico" `
         --add-binary "$repo/build/Release/s760_asio.dll;audio" --add-binary "$asioPortAudio;audio" `
         --paths "$repo/scripts" --collect-all webview --exclude-module webview.__pyinstaller --exclude-module PyInstaller --copy-metadata pywebview `
         --copy-metadata websockets --copy-metadata pythonnet `
@@ -33,7 +34,7 @@ try {
     $package = "$output/dist/S760Studio"
     New-Item -ItemType Directory -Path "$package/audio" -Force | Out-Null
     Copy-Item -LiteralPath "$repo/mame-source/3rdparty/portaudio/LICENSE.txt" -Destination "$package/audio/PORTAUDIO-LICENSE.txt"
-    foreach ($folder in @('scripts','google-ui','mame-source','roms/FDD')) {
+    foreach ($folder in @('scripts','google-ui','mame-source','roms/BOOT','roms/System','roms/FDD','roms/SCSI')) {
         New-Item -ItemType Directory -Path "$package/$folder" -Force | Out-Null
     }
     Copy-Item -LiteralPath "$repo/scripts/s760_runtime.lua" -Destination "$package/scripts/"
@@ -45,6 +46,8 @@ try {
         Copy-Item -LiteralPath "$repo/LICENSE" -Destination "$package/LICENSE.txt"
     }
     Copy-Item -LiteralPath "$repo/docs/emulator/guides/standalone-package-readme.md" -Destination "$package/README.md"
+    & python "$repo/scripts/s760_user_docs.py" --repo $repo --package $package
+    if ($LASTEXITCODE -ne 0) { throw 'User documentation install failed' }
     & python "$repo/scripts/s760_distribution_inventory.py" --package $package --build "$output/build/S760Studio" --external-windows-runtime
     if ($LASTEXITCODE -ne 0) { throw 'Bundled input inventory failed' }
     & python "$repo/scripts/s760_package_audit.py" --repo $repo --package $package --prepare

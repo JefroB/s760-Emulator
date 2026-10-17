@@ -127,10 +127,160 @@ follow the schema so entries stay machine-greppable.
 | BUG-102 | FIXED | S3 | build | Dependency inventory accepts unattributed inputs and reports another installed version | 2026-10-17 | 2026-10-17 |
 | BUG-103 | FIXED | S3 | build | Documentation moves and mutable checkout checks invalidate historical artifact identity | 2026-10-17 | 2026-10-17 |
 | BUG-104 | FIXED | S3 | tests | Static artifact checker claims unobserved clean-machine and DAW qualification | 2026-10-17 | 2026-10-17 |
+| BUG-105 | FIXED | S2 | build | Downloaded acceptance ZIP extracts blocked .NET assemblies and fails before UI startup | 2026-10-17 | 2026-10-17 |
+| BUG-106 | FIXED | S2 | ui | Desktop has no clear safe Quit and can leave a worker waiting after window close | 2026-10-17 | 2026-10-17 |
+| BUG-107 | FIXED | S2 | build | Double-click runtime writes staged firmware into a research-style directory inside the package | 2026-10-17 | 2026-10-17 |
+| BUG-108 | FIXED | S3 | docs | Standalone archive omits an offline user documentation set | 2026-10-17 | 2026-10-17 |
+| BUG-109 | FIXED | S2 | tests | Optional firmware disassembler import prevents hosted CI test collection | 2026-10-17 | 2026-10-17 |
+| BUG-110 | FIXED | S2 | tests | Recovery and decompiler tests assume untracked private media and firmware exports | 2026-10-17 | 2026-10-17 |
+| BUG-111 | FIXED | S2 | tests | Built VST3 audit assumes a private runtime is installed on the CI runner | 2026-10-17 | 2026-10-17 |
 
-<!-- NEXT-ID: BUG-105 -->
+<!-- NEXT-ID: BUG-112 -->
 
 ## Details
+
+### BUG-111 — Built-plugin audit assumes a private runtime installation
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** GitHub revalidation of the CI prerequisite fixes
+
+**Summary:** CI builds `Roland_S760.vst3` but not the separately provisioned native MAME runtime. The VST3 audit contract test supplies checkout paths to the settings validator, which correctly rejects missing runtime/editor files.
+
+**Repro:** Build the VST3 on a clean checkout without MAME, private firmware or a built web editor, then run `tests/test_release_artifacts.py`.
+
+**Expected:** Audit unit tests provide synthetic configuration inputs; the actual built plugin still receives its binary checks.
+
+**Actual:** `ValueError: Missing runtime/editor file: ...mame-source/mames760.exe`. The first local clean reproduction lacked the VST3 binary and skipped this combination.
+
+**Evidence:** [Revalidation run](https://github.com/JefroB/s760-Emulator/actions/runs/39070384486), backend job 117506583913. All prior CI prerequisite failures are cleared; this run reports 446 passed, 74 skipped and this single failure.
+**Resolution:** Supply invented runtime/configuration files for the audit unit tests, retain a separate check of the actual built VST3, and verify that missing runtime files are still rejected. The isolated full suite with the built VST3 present passes 464 tests with 59 prerequisite skips; the provisioned release-audit module passes all eight tests. [Validation](../condensed/validation/bug111-ci-built-vst3-2026-10-17.json).
+
+
+### BUG-110 — Clean checkout lacks private fixtures assumed by unit tests
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** Clean-checkout reproduction of GitHub CI
+
+**Summary:** After fixing BUG-109, the clean suite exposes four failures: malformed-media profile generation assumes `ROBOFULL.IMG`; three decompiler checks assume untracked exported firmware projects.
+
+**Repro:** Run the backend suite from tracked source with CI dependencies, no private media and no `firmware_source` exports.
+
+**Expected:** Public unit checks use synthetic input. Real firmware integration checks declare their private prerequisites.
+
+**Actual:** Four missing-file assertions/errors; the otherwise collected suite reports 457 passed and 58 skipped.
+
+**Evidence:** `temp/ci-2026-10-17/clean-tests.log` records the clean-checkout failures. All nine affected checks pass with the local private prerequisites after the fix.
+**Resolution:** Use invented bytes for malformed-media unit checks; add public synthetic decompiler CFG/link/export coverage and gate only the real exported-firmware integrations on their private prerequisites. The isolated tracked-source suite passes 460 tests with 61 declared prerequisite skips. The provisioned full suite passes 548 tests, and all nine affected tests pass including two new public checks. [Validation](../condensed/validation/bug109-110-ci-prerequisites-2026-10-17.json).
+
+
+### BUG-109 — Optional firmware disassembler prevents hosted CI collection
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User / GitHub Actions
+
+**Summary:** `test_native_short_media.py` imports optional `pypcode` during collection, before checking for the private boot ROM. Hosted CI cannot collect unrelated tests when the disassembler is absent.
+
+**Repro:** Run `pytest tests` on a clean Windows checkout with the CI dependencies and no `pypcode` or private firmware.
+
+**Expected:** Firmware-specific checks skip with their missing prerequisite; independent tests run.
+
+**Actual:** `ModuleNotFoundError: No module named 'pypcode'` aborts collection. Both the backend and aggregate gate fail; the frontend and C++ checks pass.
+
+**Evidence:** [Failed CI run](https://github.com/JefroB/s760-Emulator/actions/runs/39068727866), backend job 117501703345; the next push reproduces the same collection failure.
+**Resolution:** Load the optional disassembler inside the ROM-specific test after checking for the private ROM; preserve the independent native-media test. The isolated tracked-source suite passes 460 tests with 61 declared prerequisite skips. The provisioned full suite passes 548 tests, and all nine affected tests pass including two new public checks. [Validation](../condensed/validation/bug109-110-ci-prerequisites-2026-10-17.json).
+
+
+### BUG-108 — Standalone archive omits offline user documentation
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** docs
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User acceptance follow-up
+
+**Summary:** The standalone has a root README but no curated user documentation under docs. The only docs folder seen by the user was generated runtime state.
+
+**Repro:** Extract the original standalone and look for offline user guides in docs.
+
+**Expected:** Distributed Quick Start, full guide, controls and troubleshooting with working relative links; documentation folders contain no runtime state.
+
+**Actual:** The package builder copies the README but installs no user documentation set.
+
+**Resolution:** Install five offline Markdown documents: index, Quick Start, full guide, controls and troubleshooting. Root README links them. Link tests validate every relative documentation link. Build output defaults to build/standalone-package; current QA output stays under temp. Executable content in docs is rejected. See docs/testing/standalone-exit-profile-and-docs.md and its validation record.
+
+### BUG-106 — Desktop Quit is undiscoverable and early close can leave the process running
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User acceptance follow-up
+
+**Summary:** Desktop Quit is undiscoverable and early close can leave the process running.
+
+**Repro:** Start the application and try to quit without killing its process. Window-close recovery failure can cancel closure without a focused quit choice; an unstarted/dead child path returns from prepare_close without signaling the window worker.
+
+**Expected:** Visible Quit and window X offer save-and-quit or explicit discard; accepted closure stops the app and owned native child.
+
+**Actual:** User reports needing to kill the application. Existing Quit without recovery is buried in Configuration. Closing an unstarted runtime does not signal the worker event.
+
+**Resolution:** Visible Quit and native window X share a save/discard dialog. Early/dead-runtime close signals the worker; WinForms close dispatch runs asynchronously to avoid UI deadlock. Actual frozen WebView2 tests pass missing-firmware X close, boot/save/quit, and existing-recovery refusal followed by explicit discard. App exits0 and owned MAME children stop. See docs/testing/standalone-exit-profile-and-docs.md and its validation record.
+
+### BUG-107 — Packaged default profile creates a research directory and staged firmware
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** build
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User acceptance follow-up
+
+**Summary:** Packaged default profile creates a research directory and staged firmware.
+
+**Repro:** Double-click the frozen executable without --state-dir; default state resolves below the application docs/ic20-hle-findings/chatGPT-work folder. NativeRuntime privately stages the user OS image under that directory.
+
+**Expected:** Private profiles, logs and staged firmware belong in per-user application data, outside the installed package.
+
+**Actual:** User reports finding an OS IMG under findings in the distributed folder. Initial inspection of both exact published ZIPs and their host-source archives found no findings or raw firmware entries. The runtime default deterministically creates that path after launch; the user confirmed the exact application-relative docs/ic20-hle-findings/chatGPT-work/standalone-state/roms/s760 path. The IMG is the staged user input, not a shipped firmware file.
+
+**Resolution:** Default private state is now Local AppData/S760Studio/default. Packaged boot and close tests use that default without --state-dir and leave package docs unchanged. Prior profiles are preserved; no automatic deletion or migration. The user confirmed the exact old generated state path. Archive/package checks reject any findings directory. See docs/testing/standalone-exit-profile-and-docs.md and its validation record.
+
+### BUG-105 — Downloaded acceptance kit fails at Python.Runtime startup
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** build
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User clean-machine acceptance, File Explorer extraction
+
+**Summary:** The GitHub-downloaded frozen acceptance kit fails before opening the desktop interface on a separate clean Windows machine. The handoff omitted the downloaded ZIP unblocking step and did not qualify File Explorer mark-of-the-web propagation.
+
+**Repro:** Download the acceptance prerelease ZIP in a browser, extract with File Explorer on a clean Windows installation, then double-click S760Studio.exe.
+
+**Expected:** The documented installation path opens the interface, or explains how to resolve blocked downloaded assemblies.
+
+**Actual:** The startup dialog reports Failed to resolve Python.Runtime.Loader.Initialize from the extracted _internal/pythonnet/runtime/Python.Runtime.dll.
+
+**Evidence:** User screenshot dated 2026-10-17 14:00:41 and confirmation that the test used a clean Windows machine with File Explorer. The frozen archive identity remains b1dd036c9331058fb2db0dde75d038e985fc75d5919c19040766460f5cdb08f9.
+
+**Notes:** Locally reproduced with the packaged DLL: Zone.Identifier ZoneId=3 causes .NET FileLoadException / HRESULT 0x80131515; scoped unblocking allows Loader.Initialize resolution. Added checksum-first extraction helper and download/remediation instructions. Three guardrail regressions and extraction of the actual unchanged archive pass; all611 package files verify and the initializer resolves. The user subsequently confirmed that the executable launches and discovers both firmware inputs on the clean machine. The precise remediation performed was not stated. The user accepts the handoff with remaining media workflows waived, as recorded separately. See the durable validation record in docs/condensed/validation/bug105-downloaded-assembly-2026-10-17.json.
+
+**Resolution:** Download trust instructions and a checksum-first extraction helper are published; the user reports successful clean-machine launch and firmware discovery. Full sample-media workflows were not observed and are not claimed.
 
 ### BUG-104 — Static artifact checks claim observed release acceptance
 
