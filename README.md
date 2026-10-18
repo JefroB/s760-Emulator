@@ -107,32 +107,97 @@ and [host sampling](docs/emulator/runtime/native-vst3-sampling.md) for commands,
 
 > **Hardware testing status:** The selectable 4th controller (`GB-6 +CRT`, mode `3`) Boot ROM + OS 2.24 patch has been verified end-to-end in the native MAME emulator, **but has not been tested yet on real S-760 hardware.** Always keep your original IC15 Boot EPROM and original OS 2.24 floppy/Gotek image untouched as a rollback baseline.
 
-The repository includes reproducible Python patchers that operate on copies of user-supplied original firmware (`Roland_S-760_v1.11.BIN`, SHA-256 `ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6`; `S760224.IMG`, SHA-256 `3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd`). Only the patch scripts, tests and documentation are committed to Git; original and patched `.BIN`/`.IMG` binaries remain local and git-ignored.
+No copyrighted Roland firmware binaries (original or patched) are stored in this repository. Instead, the repository provides reproducible Python patch scripts that verify the SHA-256 of your original files and write patched copies to `temp/work/` (which is git-ignored).
 
-### 1. Selectable 4th Controller Option (`GB-6 +CRT`, Mode `3`) — Boot ROM + OS 2.24
+### Prerequisites (Original Unmodified Files)
 
-Adds `GB-6 +CRT` (mode `3`) alongside `Panel+LCD` (`0`), `Mouse+CRT` (`1`) and `RC100+CRT` (`2`) in both the IC15 Power-On `Mode` Setup Menu and the OS 2.24 `System -> System PRM -> Page 2` menu while preserving `Mouse+CRT` and `RC100+CRT`:
+Place your unmodified Roland S-760 files at the default locations below (or pass custom paths via `--boot-input` / `--os-input`):
 
+| File | Default path | Required size | Required SHA-256 |
+| --- | --- | --- | --- |
+| **IC15 Boot ROM v1.11** | `roms/BOOT/Roland_S-760_v1.11.BIN` | `32,768` bytes (`0x8000`) | `ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6` |
+| **OS 2.24 System Disk** | `S760224.IMG` | `1,474,560` bytes (`0x168000`) | `3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd` |
+
+---
+
+### Option A: Selectable 4th Controller (`GB-6 +CRT`, Mode `3`) — Boot ROM + OS 2.24
+
+This patch adds **`GB-6 +CRT`** (mode `3`) as a selectable 4th controller alongside the three stock options (`0 = Panel+LCD`, `1 = Mouse+CRT`, `2 = RC100+CRT`) while keeping standard `Mouse+CRT` and `RC100+CRT` 100% intact.
+
+#### Step 1: Choose a sensitivity profile (`v9` or `v8`)
+- **`--profile v9` (default, balanced):** Scales both X and Y GB-6 trackball deltas by `4x` (`SHLB #2`) before stock OS cursor scaling.
+- **`--profile v8` (wider horizontal):** Scales X by `8x` (`SHLB #3`) and Y by `4x` (`SHLB #2`).
+
+#### Step 2: Run the patcher script
+
+**To patch both the IC15 Boot ROM and the OS 2.24 System Disk at once (recommended):**
 ```powershell
-# Patch both IC15 Boot ROM v1.11 and OS 2.24 System Disk (default v9 = X*4, Y*4; or --profile v8 = X*8, Y*4)
-python scripts/build_gb6_combo.py --boot-input roms/BOOT/Roland_S-760_v1.11.BIN --os-input S760224.IMG --out-dir temp/work/gb6_combo --profile v9
+# Build with the default balanced v9 profile (writes to temp/work/gb6_combo/):
+python scripts/build_gb6_combo.py --profile v9
 
-# Or patch the Boot ROM and OS Disk individually:
-python scripts/patch_gb6_boot_rom.py --input roms/BOOT/Roland_S-760_v1.11.BIN --output temp/work/gb6_combo/Roland_S-760_v1.11.GB6.BIN
-python scripts/patch_gb6_os_disk.py --input S760224.IMG --output temp/work/gb6_combo/S760224.GB6-v9.IMG --profile v9
+# Or build with the v8 profile:
+python scripts/build_gb6_combo.py --profile v8
 ```
 
-| Output artifact | Size | Modified bytes | Output SHA-256 |
+**Or patch each file individually with custom input/output paths:**
+```powershell
+# 1. Patch only the IC15 Boot ROM v1.11 (32 KB):
+python scripts/patch_gb6_boot_rom.py `
+  --input roms/BOOT/Roland_S-760_v1.11.BIN `
+  --output temp/work/gb6_combo/Roland_S-760_v1.11.GB6.BIN
+
+# 2. Patch only the OS 2.24 System Disk (1.44 MB, selectable 4-option version):
+python scripts/patch_gb6_os_disk.py `
+  --input S760224.IMG `
+  --output temp/work/gb6_combo/S760224.GB6-SELECTABLE-v9.IMG `
+  --profile v9
+```
+
+#### Step 3: Verify the generated output files
+
+The scripts automatically verify the input/output hashes and print a JSON summary. Your generated files in `temp/work/gb6_combo/` will match:
+
+| Generated output file | Size | Bytes changed | Expected output SHA-256 |
 | --- | --- | --- | --- |
 | `Roland_S-760_v1.11.GB6.BIN` | `32,768` (`0x8000`) | 13 bytes | `a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb` |
-| `S760224.GB6-v9.IMG` (`X*4, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `0a15c81ad6747803160815393f2c2c207f15861bd5671d349ebde4aa3929af15` |
-| `S760224.GB6-v8.IMG` (`X*8, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `6e32e3143dd06b2d93bdacaf765fd2ba68edeb2b64916dbf0d528262573b7403` |
+| `S760224.GB6-SELECTABLE-v9.IMG` | `1,474,560` (`0x168000`) | 220 bytes | `0a15c81ad6747803160815393f2c2c207f15861bd5671d349ebde4aa3929af15` |
+| `S760224.GB6-SELECTABLE-v8.IMG` | `1,474,560` (`0x168000`) | 220 bytes | `6e32e3143dd06b2d93bdacaf765fd2ba68edeb2b64916dbf0d528262573b7403` |
 
-To emulate the Sony GB-6 trackball protocol on `0xF008` in the native emulator, pass a config file (`S760_CONFIG=s760_config.json` with `{"pointing_device": "gb6"}` or `"auto"`) or set `S760_POINTING_DEVICE=gb6`. Run `python -m pytest tests/test_gb6_combo.py` to execute the automated disassembly and emulator verification suite.
+#### Step 4: How to select `GB-6 +CRT` on the S-760
+Once booted with the patched files, you can select `GB-6 +CRT` in either of two ways:
+1. **Power-On `Mode` Setup Menu (requires patched IC15 Boot ROM):** Hold the front-panel **`Mode`** button while powering on -> press **`Down`** to select `3.Controller` -> press **`S2` (`Inc`)** until it reads **`GB-6 +CRT`** -> press **`Exit`** to save to EEPROM and boot the OS.
+2. **OS `System Parameter 2` Menu (works from front panel, Mouse, or GB-6):** Open **`System`** -> **`System PRM`** -> switch to **`Page( 2)`** (`System Parameter 2`) -> change **`Controller`** (`Panel,Mouse,RC100,GB-6`) to **`GB-6 +CRT`**.
+   - *Note:* If you boot the patched `S760224.GB6-SELECTABLE-*.IMG` disk with an **unmodified** stock IC15 Boot ROM, you can still select `GB-6 +CRT` live inside the OS `System Parameter 2` menu, but a stock IC15 Boot ROM will reset controller values `> 2` back to `Panel+LCD` on cold power-up. Installing the patched IC15 Boot ROM (`Roland_S-760_v1.11.GB6.BIN`) allows `GB-6 +CRT` to persist across power cycles.
 
-### 2. Legacy OS-Only `Mouse+CRT` Replacement Patch
+#### Step 5: Testing in the Native Emulator
+Because a physical Sony GB-6 trackball uses a different hardware protocol on `0xF008` than the Roland MU-1 mouse, tell the emulator to emulate a GB-6 via a config file (`s760_config.json` in the working directory or via `S760_CONFIG`):
+```json
+{
+  "pointing_device": "auto"
+}
+```
+(`"auto"` automatically switches to GB-6 protocol when controller mode `3` is active and MU-1 mouse protocol when mode `1` is active; `"gb6"` forces GB-6 protocol; `"mouse"` forces MU-1 mouse protocol.) You can also run the full automated verification suite with:
+```powershell
+python -m pytest tests/test_gb6_combo.py -v
+```
 
-The [GB-6 patch guide](docs/firmware/os/gb6-os-patch.md) also documents `scripts/patch_gb6_os.py`, which replaces the `Mouse+CRT` movement decoder in-place without requiring a Boot ROM change. See the [controller plan](docs/project/gb6-controller-plan.md) for background and EPROM notes.
+---
+
+### Option B: Legacy Non-Selectable OS Patch (Replaces `Mouse+CRT` In-Place)
+
+If you do not want to modify the IC15 Boot ROM and want the S-760's existing **`Mouse+CRT`** setting (mode `1`) to decode a Sony GB-6 trackball directly (replacing standard mouse support on that disk), use `scripts/patch_gb6_os.py`:
+
+```powershell
+New-Item -ItemType Directory -Force temp/work/gb6
+python scripts/patch_gb6_os.py --input S760224.IMG --output temp/work/gb6/S760224.GB6-v9.IMG --profile v9
+```
+
+| Legacy output file | Gain profile | Expected output SHA-256 |
+| --- | --- | --- |
+| `S760224.GB6-v9.IMG` | `v9` (`X*4, Y*4`) | `c611e7156c9069dc632bcfd8e4d20a52da70ed2528112f29fe87258803f42deb` |
+| `S760224.GB6-v8.IMG` | `v8` (`X*8, Y*4`) | `cf29f7fdf75a3a672eefdd34d52f66aa25a6624632a85d52c0500d84223afead` |
+
+See the [GB-6 patch guide](docs/firmware/os/gb6-os-patch.md) and [controller plan](docs/project/gb6-controller-plan.md) for full technical details.
 
 ## Documentation
 
