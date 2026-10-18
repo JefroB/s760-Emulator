@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-17",
+  "bug": "BUG-112",
+  "introduced_after_green_commit": "1fb71641995f8346a7bf9060f1e5a404c736bd95",
+  "failed_main_commit": "09d09423d5145fc157002374f1d92a3e186e7fdf",
+  "failed_main_run": "https://github.com/JefroB/s760-Emulator/actions/runs/39081887060",
+  "failure": "GB-6 combo builder asserts private boot ROM exists on hosted runner",
+  "clean_full_suite": {
+    "passed": 469,
+    "skipped": 62,
+    "failed": 0,
+    "seconds": 45.95,
+    "pypcode": false,
+    "private_firmware": false
+  },
+  "main_based_targeted_suite": {
+    "passed": 5,
+    "skipped": 3,
+    "failed": 0,
+    "seconds": 0.1
+  },
+  "real_gb6_targeted_suite": {
+    "passed": 8,
+    "skipped": 0,
+    "failed": 0,
+    "seconds": 8.03
+  },
+  "provisioned_full_suite": {
+    "passed": 560,
+    "failed": 0,
+    "seconds": 102.3
+  },
+  "test_source_sha256": "92dffb66e0c8a9b7fd68af064aa3e16472ad4a8708643984c2fb572e2a95b910",
+  "scope": "Test prerequisites and public generated-code/safety cases; firmware patchers and emulator implementation unchanged"
+}

@@ -25,6 +25,7 @@ from build_gb6_combo import (
     OS_SIZE,
     OS_SOURCE_SHA256,
     build_combo,
+    build_os_gb6_poll_stub,
     patch_boot_rom_bytes,
     patch_os_disk_bytes,
     verify_disassembly,
@@ -34,11 +35,39 @@ from s760_runtime import NativeRuntime, RuntimeConfig
 MAME_EXE = ROOT / "mame-source" / "mames760.exe"
 
 
-def test_gb6_combo_builder_and_pypcode_disassembly(tmp_path: Path) -> None:
-    """Verify deterministic combo build, byte-diff boundaries, pypcode disassembly, and source immutability."""
-    assert DEFAULT_BOOT_SOURCE.is_file()
-    assert DEFAULT_OS_SOURCE.is_file()
+@pytest.fixture
+def combo_firmware():
+    """Only full firmware integrations need local proprietary inputs/tooling."""
+    if not all(path.is_file() for path in (DEFAULT_BOOT_SOURCE, DEFAULT_OS_SOURCE)):
+        pytest.skip("Private IC15 Boot ROM and OS 2.24 image required")
+    pytest.importorskip("pypcode", reason="Optional firmware disassembler required")
 
+
+@pytest.mark.parametrize("patch,size", [(patch_boot_rom_bytes, BOOT_SIZE), (patch_os_disk_bytes, OS_SIZE)])
+def test_combo_patch_rejects_unrecognized_baselines(patch, size):
+    for data in (b"not firmware", bytes(size)):
+        with pytest.raises(ValueError, match="unmodified"):
+            patch(data)
+
+
+@pytest.mark.parametrize("profile", ("v8", "v9"))
+def test_combo_dispatch_preserves_mouse_target_and_isolates_scaling(profile):
+    """Public generated-code checks require neither ROMs nor a disassembler."""
+    code = build_os_gb6_poll_stub(profile)
+    assert code[:6] == bytes.fromhex("99 01 DA D7 03 E7")
+    assert 0x7A20 + 8 + int.from_bytes(code[6:8], "little", signed=True) == 0x57B4
+    assert code[8:14] == bytes.fromhex("99 03 DA DF 01 F0")
+    other = build_os_gb6_poll_stub("v9" if profile == "v8" else "v8")
+    assert len(code) == len(other)
+    differences = [i for i, pair in enumerate(zip(code, other)) if pair[0] != pair[1]]
+    assert len(differences) == 1
+    index = differences[0]
+    assert code[index-1] == 0x19 and code[index+1] == 0xAD  # X-axis SHLB operand only
+    assert code[index] == (3 if profile == "v8" else 2)
+
+
+def test_gb6_combo_builder_and_pypcode_disassembly(tmp_path: Path, combo_firmware) -> None:
+    """Verify deterministic combo build, byte-diff boundaries, pypcode disassembly, and source immutability."""
     report_v9 = build_combo(
         boot_source=DEFAULT_BOOT_SOURCE,
         os_source=DEFAULT_OS_SOURCE,
@@ -93,7 +122,7 @@ def test_runtime_config_validates_pointing_device_and_config_file(tmp_path: Path
 
 
 @pytest.mark.skipif(not MAME_EXE.is_file(), reason="mames760.exe not built")
-def test_gb6_combo_mame_setup_persistence_and_native_gb6_config(tmp_path: Path) -> None:
+def test_gb6_combo_mame_setup_persistence_and_native_gb6_config(tmp_path: Path, combo_firmware) -> None:
     """Test IC15 Setup Menu, EEPROM cold-reboot persistence, native s760.cpp GB-6 config file,
     CRT cursor movement, System Parameter 2 Controller selection, and F00A=80 fallback."""
     out_dir = tmp_path / "images"
@@ -351,7 +380,7 @@ end)
 
 
 @pytest.mark.skipif(not MAME_EXE.is_file(), reason="mames760.exe not built")
-def test_gb6_combo_native_runtime_integration(tmp_path: Path) -> None:
+def test_gb6_combo_native_runtime_integration(tmp_path: Path, combo_firmware) -> None:
     """Verify NativeRuntime works with modified Boot ROM, modified OS disk, and GB-6 config file."""
     out_dir = tmp_path / "images"
     report = build_combo(
