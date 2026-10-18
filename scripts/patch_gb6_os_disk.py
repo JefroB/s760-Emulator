@@ -31,7 +31,7 @@ def patch_os_disk_file(
     out = (
         Path(output_path).resolve()
         if output_path
-        else (DEFAULT_OUT_DIR / f"S760224.GB6-{profile}.IMG").resolve()
+        else (DEFAULT_OUT_DIR / f"S760224.GB6-SELECTABLE-{profile}.IMG").resolve()
     )
     if out == source:
         raise ValueError("Output path must never equal the original S760224.IMG source file")
@@ -63,7 +63,7 @@ def main() -> None:
         "--output",
         type=Path,
         default=None,
-        help="Output path for patched OS 2.24 disk image (defaults to temp/work/gb6_combo/S760224.GB6-<profile>.IMG)",
+        help="Output path for patched OS 2.24 disk image (defaults to temp/work/gb6_combo/S760224.GB6-SELECTABLE-<profile>.IMG)",
     )
     parser.add_argument(
         "--profile",

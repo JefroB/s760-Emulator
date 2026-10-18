@@ -119,14 +119,14 @@ python scripts/build_gb6_combo.py --boot-input roms/BOOT/Roland_S-760_v1.11.BIN 
 
 # Or patch the Boot ROM and OS Disk individually:
 python scripts/patch_gb6_boot_rom.py --input roms/BOOT/Roland_S-760_v1.11.BIN --output temp/work/gb6_combo/Roland_S-760_v1.11.GB6.BIN
-python scripts/patch_gb6_os_disk.py --input S760224.IMG --output temp/work/gb6_combo/S760224.GB6-v9.IMG --profile v9
+python scripts/patch_gb6_os_disk.py --input S760224.IMG --output temp/work/gb6_combo/S760224.GB6-SELECTABLE-v9.IMG --profile v9
 ```
 
 | Output artifact | Size | Modified bytes | Output SHA-256 |
 | --- | --- | --- | --- |
 | `Roland_S-760_v1.11.GB6.BIN` | `32,768` (`0x8000`) | 13 bytes | `a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb` |
-| `S760224.GB6-v9.IMG` (`X*4, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `0a15c81ad6747803160815393f2c2c207f15861bd5671d349ebde4aa3929af15` |
-| `S760224.GB6-v8.IMG` (`X*8, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `6e32e3143dd06b2d93bdacaf765fd2ba68edeb2b64916dbf0d528262573b7403` |
+| `S760224.GB6-SELECTABLE-v9.IMG` (`X*4, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `0a15c81ad6747803160815393f2c2c207f15861bd5671d349ebde4aa3929af15` |
+| `S760224.GB6-SELECTABLE-v8.IMG` (`X*8, Y*4`) | `1,474,560` (`0x168000`) | 220 bytes | `6e32e3143dd06b2d93bdacaf765fd2ba68edeb2b64916dbf0d528262573b7403` |
 
 To emulate the Sony GB-6 trackball protocol on `0xF008` in the native emulator, pass a config file (`S760_CONFIG=s760_config.json` with `{"pointing_device": "gb6"}` or `"auto"`) or set `S760_POINTING_DEVICE=gb6`. Run `python -m pytest tests/test_gb6_combo.py` to execute the automated disassembly and emulator verification suite.
 

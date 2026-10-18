@@ -254,7 +254,7 @@ def build_combo(
     out_dir = Path(out_dir).resolve()
 
     boot_out = Path(boot_output).resolve() if boot_output else (out_dir / "Roland_S-760_v1.11.GB6.BIN")
-    os_out = Path(os_output).resolve() if os_output else (out_dir / f"S760224.GB6-{profile}.IMG")
+    os_out = Path(os_output).resolve() if os_output else (out_dir / f"S760224.GB6-SELECTABLE-{profile}.IMG")
     boot_out.parent.mkdir(parents=True, exist_ok=True)
     os_out.parent.mkdir(parents=True, exist_ok=True)
 
