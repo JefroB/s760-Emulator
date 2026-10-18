@@ -134,10 +134,32 @@ follow the schema so entries stay machine-greppable.
 | BUG-109 | FIXED | S2 | tests | Optional firmware disassembler import prevents hosted CI test collection | 2026-10-17 | 2026-10-17 |
 | BUG-110 | FIXED | S2 | tests | Recovery and decompiler tests assume untracked private media and firmware exports | 2026-10-17 | 2026-10-17 |
 | BUG-111 | FIXED | S2 | tests | Built VST3 audit assumes a private runtime is installed on the CI runner | 2026-10-17 | 2026-10-17 |
+| BUG-112 | FIXED | S2 | tests | GB-6 combo test assumes private firmware and disassembler on hosted CI | 2026-10-17 | 2026-10-17 |
 
-<!-- NEXT-ID: BUG-112 -->
+<!-- NEXT-ID: BUG-113 -->
 
 ## Details
+
+### BUG-112 — New GB-6 combo test assumes private firmware on hosted CI
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-17
+- **Resolved:** 2026-10-17
+- **Reported by:** User / GitHub Actions after GB-6 controller changes
+
+**Summary:** The GB-6 combo integration test introduced after the previously green CI run asserts that private boot/OS inputs exist. It also requires optional `pypcode`. Native GB-6 integrations check only the MAME executable before calling the same builder.
+
+**Repro:** Run `tests/test_gb6_combo.py` from the tracked checkout with CI dependencies and no private firmware.
+
+**Expected:** Public safety/code-generation checks run independently; real firmware integrations declare all prerequisites.
+
+**Actual:** `DEFAULT_BOOT_SOURCE.is_file()` fails. Main reports 450 passed, 76 skipped and one failure; frontend and C++ checks pass.
+
+**Evidence:** [Main CI failure](https://github.com/JefroB/s760-Emulator/actions/runs/39081887060), backend job 117540354538; the GB-6 feature branch reproduces the same failure.
+**Resolution:** Declare private boot/OS and optional disassembler prerequisites on all three combo integrations. Keep public baseline-rejection and generated dispatcher/profile tests active. The isolated suite passes 469 tests with 62 prerequisite skips; all eight GB-6 combo cases pass with the real local prerequisites. The full provisioned suite passes 560 tests. [Validation](../condensed/validation/bug112-gb6-ci-prerequisites-2026-10-17.json).
+
 
 ### BUG-111 — Built-plugin audit assumes a private runtime installation
 
