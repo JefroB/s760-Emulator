@@ -505,13 +505,16 @@ local function update_pointer()
         local registers = machine.devices[':maincpu'].spaces['register']
         local program = machine.devices[':maincpu'].spaces['program']
         local scale = (program:read_u8(0x2140) == 0 and program:read_u8(0x272e) == 0) and 2 or 1
+        local gb6 = program:read_u8(0x2476) == 3
+        local step_scale = scale * (gb6 and 4 or 1)
+        local max_step = gb6 and 7 or 63
         local function delta(target, current, low, high)
             local distance = math.max(low, math.min(high, target * 2)) - current
             -- At 2x sensitivity the guest may be on the opposite pixel parity.
             -- Truncate toward zero: nearest reachable pixel without oscillation.
-            local amount = distance / scale
+            local amount = distance / step_scale
             amount = amount < 0 and math.ceil(amount) or math.floor(amount)
-            return math.max(-63, math.min(63, amount))
+            return math.max(-max_step, math.min(max_step, amount))
         end
         local dx = delta(target_x, registers:read_u16(0xd0), program:read_u16(0x213a), program:read_u16(0x2138))
         local dy = delta(target_y, registers:read_u8(0xd2), program:read_u16(0x213e), program:read_u16(0x213c))
