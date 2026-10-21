@@ -7,8 +7,9 @@ proofs and physical media/configuration acceptance remain separate.
 
 ## OS disk
 
-The local handoff folder is
-`D:\S-760\temp\work\bluescsi-hardware-test-2026-10-21`.
+Build the [GB-6 + SCSI patch bundle](../../patches/gb6-scsi/README.md)
+from your original firmware. Its default output folder is
+`temp/work/patches/gb6-scsi/`.
 
 - `S760224-BS-IM1.IMG`: patched 1,474,560-byte OS floppy image.
 - SHA256: `606e277e5f11a4ca1b59dadaf4e9a8395e6c8eed1e3674b4efa78bf3bf1767e4`.
