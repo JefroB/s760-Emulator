@@ -91,9 +91,9 @@ across builds, concurrent UI actions and automated recovery remain open.
 Reproduce from the repository root with user-supplied firmware and ROBOFULL:
 
 ```powershell
-python scripts/verify_native_checkpoint.py --state-dir docs/ic20-hle-findings/chatGPT-work/checkpoint-test
-python scripts/verify_native_checkpoint.py --serial --state-dir docs/ic20-hle-findings/chatGPT-work/checkpoint-serial-test
-python scripts/verify_native_checkpoint.py --scheduled --state-dir docs/ic20-hle-findings/chatGPT-work/checkpoint-scheduled-test
+python scripts/verify_native_checkpoint.py --state-dir temp/work/checkpoint-test
+python scripts/verify_native_checkpoint.py --serial --state-dir temp/work/checkpoint-serial-test
+python scripts/verify_native_checkpoint.py --scheduled --state-dir temp/work/checkpoint-scheduled-test
 python scripts/verify_native_media.py --checkpoint
 ```
 

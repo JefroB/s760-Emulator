@@ -55,7 +55,7 @@ def test_native_pcm_origin_and_buffered_checkpoint(tmp_path):
 
 
 def test_modulation_wav_origin_matches_native_source_trace(tmp_path):
-    image = ROOT / 'docs/ic20-hle-findings/chatGPT-work/modulation-application-2026-10-15/MODDIAG.IMG'
+    image = ROOT / 'temp/fixtures/modulation/MODDIAG.IMG'
     exe = Path(os.environ.get('S760_MAME_EXE', ROOT / 'mame-source/mames760.exe'))
     if not all(p.is_file() for p in (image, exe, ROOT / 'roms/BOOT/Roland_S-760_v1.11.BIN',
                                     ROOT / 'roms/System/S760224.IMG')):

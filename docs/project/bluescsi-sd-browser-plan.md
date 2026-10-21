@@ -1,5 +1,9 @@
 # BlueSCSI V2 SD browser for the Roland S-760
 
+> **Current plan, 2026-10-19:** use the [image mounting plan](bluescsi-image-mount-plan.md), which supersedes both this early proposal and the intervening WAV-import delivery direction. Its folder-to-mount protocol and IMG support are explicit feasibility requirements.
+
+> **Superseded architecture — 2026-10-18:** use the [active Files/Folders roadmap](bluescsi-files-roadmap.md). The selected design retains existing HDD/CD images at the SD root and adds a separate `/Files` browser with mono and stereo PCM16 WAV import. The first milestone is a feasibility gate. The image-browser/virtual-disk implementation sequence below is historical research, not current delivery scope. The user confirms V2 hardware and current firmware; exact build/capability readback will be recorded during qualification.
+
 **Date:** 2026-10-13
 **Status:** researched implementation proposal; no firmware implementation or hardware test performed.
 **User decision:** pursue an SD library browser instead of larger Roland disk images. This request authorizes research and this document, not firmware flashing or OS patching.

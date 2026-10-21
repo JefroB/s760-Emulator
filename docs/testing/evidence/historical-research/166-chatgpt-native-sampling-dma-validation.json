@@ -1,0 +1,67 @@
+{
+  "result": "pass",
+  "profile": "OS 2.24 synchronous A7 sampling postprocessing DMA only",
+  "count_exhausted": true,
+  "waveform_review_reached": true,
+  "trace_capacity": 256,
+  "trace_dropped": 1713,
+  "trace_limit": "Read polls are aggregated; writes after capacity are counted as dropped.",
+  "unsupported_meter_read": "0x10001c returns 0xffff; ADC and recording position remain unimplemented.",
+  "limitations": [
+    "No external input, recorded PCM integrity, physical timing or sampling acceptance claim."
+  ],
+  "identities": {
+    "mame-source\\mames760.exe": "6ab0d057b23e2d3b0cc8c7e1c819e4ea3fa98a460a18ce30f001fe1d8fd41438",
+    "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "scripts\\s760_runtime.lua": "4f9de994075b7c004afacc8e8213d8e397599c74a38b6ea5250fb400a33c1f10",
+    "mame-source\\src\\mame\\roland\\s760.cpp": "63d855d3c7fbfe06c492cf0f6bc13d020db43ea9a4d8fd29e370ebc9b7767a87",
+    "scripts/verify_native_sampling_dma.py": "1deb482787e7daeb3240c50546a9cd6791a071cfac06bb2615f630c26792c3ff",
+    "scripts/verify_native_runtime.py": "1431d8ee43a7ae3d68db99a703703a1bacb38571c0adb603760a118669438164"
+  },
+  "observer_replay": {
+    "pcm_frames_exact": 131072,
+    "displays_exact": true,
+    "trace_rows": 256,
+    "trace_dropped": 525,
+    "pcm_sha256": "53ed4b3d0bc3854b76075aa85488b844f2991371d8f6329c1506f222259b2c16"
+  },
+  "backend_tests": {
+    "passed": 307,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 36.7
+  },
+  "baseline_runtime": {
+    "native_boot_frames": true,
+    "long_mouse_jump": [
+      300,
+      120
+    ],
+    "midi_note": 60,
+    "held_peak_pcm16": 1459.0,
+    "release_tail_peak_pcm16": 0,
+    "sample_rate": 44100,
+    "note_start": 78.883333333333,
+    "note_release": 81.083333333333,
+    "process_shutdown": "clean",
+    "system_audio": {
+      "enabled": false,
+      "backend_requested": "auto",
+      "buffer_target_ms": 0,
+      "throttled": false,
+      "device_latency_measured": false
+    }
+  },
+  "commands": [
+    "python scripts/verify_native_sampling_dma.py --state-dir docs/ic20-hle-findings/chatGPT-work/m3-sampling-dma-delivery",
+    "python scripts/verify_native_runtime.py --bus-trace --state-dir docs/ic20-hle-findings/chatGPT-work/m3-sampling-observer-delivery",
+    "python scripts/verify_native_runtime.py --state-dir docs/ic20-hle-findings/chatGPT-work/m3-sampling-baseline-regression",
+    "python docs/ic20-hle-findings/chatGPT-work/m3_pytest_runner.py"
+  ],
+  "before_fix": {
+    "executable_sha256": "cd0d7d9cbeb0e737b520cdf16b9aa667c972a6813300463894f5e4145d3eb35d",
+    "result": "fails count-exhaustion assertion",
+    "log_tail": "Traceback (most recent call last):\n  File \"D:\\S-760\\scripts\\verify_native_sampling_dma.py\", line 108, in <module>\n    main()\n    ~~~~^^\n  File \"D:\\S-760\\scripts\\verify_native_sampling_dma.py\", line 78, in main\n    assert polls and all(r['data'] == 0 for r in polls), 'BUG-043: A7 count did not exhaust'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: BUG-043: A7 count did not exhaust\n"
+  }
+}

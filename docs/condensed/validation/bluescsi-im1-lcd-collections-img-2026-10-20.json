@@ -1,0 +1,1730 @@
+{
+  "passed": true,
+  "date": "2026-10-20",
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "boot_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+  "emulator_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+  "commands": [
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_collections_img.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_lcd_disk_options.py"
+  ],
+  "prerequisites": "Genuine saved mode0 NVRAM; private A/B Roland ISO and512-sector IMG fixtures; panel inputs/read-only snapshots and taps; no forced guest state",
+  "originals_unchanged": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+  },
+  "results": {
+    "collections_img": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "states": [
+        {
+          "name": "collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "choose-10",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "catalog-10",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "preview-10",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "preview-11",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "identity-10",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-10",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-11",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-12",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-13",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-catalog-10",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-1-back0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-1-back1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-10",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-20",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-21",
+          "screen": 245,
+          "cursor": [
+            24,
+            40
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-22",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-23",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-24",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "catalog-20",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "preview-20",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "identity-20",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-20",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-21",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-22",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-23",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-catalog-20",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-2-back0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-2-back1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-20",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-30",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-31",
+          "screen": 245,
+          "cursor": [
+            24,
+            40
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-32",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-33",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "catalog-30",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "preview-30",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "preview-31",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "identity-30",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-30",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-31",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-32",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-33",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-catalog-30",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-3-back0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-3-back1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-30",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-60",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-61",
+          "screen": 245,
+          "cursor": [
+            24,
+            40
+          ],
+          "mode": 0,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "choose-62",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 0,
+          "target": 3,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "catalog-60",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "preview-60",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "preview-61",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 1,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "preview-62",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "identity-60",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-60",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-61",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-62",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-63",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 3,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "back-catalog-60",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-6-back0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-6-back1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 2,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "collections-from-60",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 6,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "fresh-collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "img-collection0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "img-collection1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "img-catalog0",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "img-B0",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "img-preview0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "mount-img0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "mount-img1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "mount-img2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "mounted-img0",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "loaded-img-B",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 13
+        },
+        {
+          "name": "perform",
+          "screen": 50,
+          "cursor": [
+            8,
+            8
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 13
+        }
+      ],
+      "rows": [
+        {
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "status": 0,
+          "seconds": 32.5218345,
+          "transport": 0
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "status": 0,
+          "seconds": 32.526286625,
+          "transport": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "status": 0,
+          "seconds": 32.52751475,
+          "transport": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "length": 80,
+          "status": 0,
+          "seconds": 32.535277875,
+          "transport": 0
+        },
+        {
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "status": 0,
+          "seconds": 50.32192825,
+          "transport": 0
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "status": 0,
+          "seconds": 50.3263805,
+          "transport": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "status": 0,
+          "seconds": 50.32760875,
+          "transport": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "length": 80,
+          "status": 0,
+          "seconds": 50.33538875,
+          "transport": 0
+        },
+        {
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "status": 0,
+          "seconds": 67.07193275,
+          "transport": 0
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "status": 0,
+          "seconds": 67.076385125,
+          "transport": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "status": 0,
+          "seconds": 67.0776135,
+          "transport": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "length": 80,
+          "status": 0,
+          "seconds": 67.085393625,
+          "transport": 0
+        },
+        {
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "status": 0,
+          "seconds": 83.872249125,
+          "transport": 0
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "status": 0,
+          "seconds": 83.876701875,
+          "transport": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "status": 0,
+          "seconds": 83.877930625,
+          "transport": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "length": 80,
+          "status": 0,
+          "seconds": 83.885694375,
+          "transport": 0
+        },
+        {
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "status": 0,
+          "seconds": 105.721793125,
+          "transport": 0
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "status": 0,
+          "seconds": 105.726245375,
+          "transport": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "status": 0,
+          "seconds": 105.727473625,
+          "transport": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "length": 80,
+          "status": 0,
+          "seconds": 105.735236875,
+          "transport": 0
+        },
+        {
+          "cdb": "d8010000000000000000",
+          "length": 0,
+          "status": 0,
+          "seconds": 112.051419375,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "status": 2,
+          "seconds": 112.07215375,
+          "transport": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "length": 18,
+          "status": 0,
+          "seconds": 112.074265,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "status": 2,
+          "seconds": 112.094981375,
+          "transport": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "length": 18,
+          "status": 0,
+          "seconds": 112.097092625,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "status": 0,
+          "seconds": 112.11782575,
+          "transport": 0
+        },
+        {
+          "cdb": "25000000000000000000",
+          "length": 8,
+          "status": 0,
+          "seconds": 112.119352,
+          "transport": 0
+        }
+      ],
+      "fixture_sha256": {
+        "CD1\\Collection1_A.iso": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+        "CD1\\Collection1_B.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+        "CD2\\Collection2_A.img": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+        "CD2\\Collection2_B.img": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+        "CD3\\Collection3_A.iso": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+        "CD3\\Collection3_B.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+        "CD6\\Collection6_A.iso": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+        "CD6\\Collection6_B.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7"
+      },
+      "exact_sample_bytes": 119808,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "library_unchanged": true,
+      "scope": "Native LCD all4 collection identities/preview Back/Collections/Exit fresh open; HD2 512-sector IMG index1 exact Load/playback. No physical or arbitrary IMG claim"
+    },
+    "disk_options": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "states": [
+        {
+          "name": "collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "disk-options0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "disk-options1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "disk-options2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "disk-options3",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "disk-options4",
+          "screen": 245,
+          "cursor": [
+            24,
+            40
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "disk-options5",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options0",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "fresh-collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-again0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-again1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-again2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-again3",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-again4",
+          "screen": 245,
+          "cursor": [
+            24,
+            40
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-again5",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "options-again0",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "native-load0",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "native-load1",
+          "screen": 245,
+          "cursor": [
+            24,
+            40
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "native-load2",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "native-load3",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "native-load4",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "native-load5",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 2,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "native-load0",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        }
+      ],
+      "rows": [],
+      "labels": [
+        "Load",
+        "Save",
+        "Copy",
+        "Delete",
+        "Utility",
+        "Save System",
+        "Optimize",
+        "Convert Load",
+        "Vol. Dump FD"
+      ],
+      "library_unchanged": true,
+      "scope": "Native LCD Disk options9 owned labels/scroll/Exit fresh reopen/native Load routing only; other8 operation execution and writeback not qualified"
+    }
+  },
+  "limitations": [
+    "Native emulation only; no physical configuration/timing claim",
+    "Named10MiB Roland512-sector HD2 IMG profile only; no arbitrary IMG support claim",
+    "Disk options labels/scroll/Exit/reopen/native Load route only; other8 operations/writeback not execution-qualified",
+    "Remaining LCD errors/cancellation/cold-state, RC100, ownership/reset/checkpoint/stack/full-fit/hardware gates open"
+  ]
+}

@@ -97,7 +97,7 @@ There is no automatic recovery of edits made after the last explicit save.
 Native acceptance:
 
 ```powershell
-python scripts/verify_native_checkpoint.py --standalone-session --state-dir docs/ic20-hle-findings/chatGPT-work/session-acceptance
+python scripts/verify_native_checkpoint.py --standalone-session --state-dir temp/work/session-acceptance
 ```
 
 The runner boots and loads through firmware controls, verifies131072 exact

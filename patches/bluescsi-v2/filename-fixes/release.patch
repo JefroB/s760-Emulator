@@ -1,0 +1,76 @@
+--- a/src/BlueSCSI_Toolbox.cpp
++++ b/src/BlueSCSI_Toolbox.cpp
+@@ -115,14 +115,12 @@
+             break;
+         }
+         bool isDir = file.isDirectory();
+-        size_t len = file.getName(name, MAX_FILE_PATH);
++        file.getName(name, MAX_FILE_PATH);
+         file.close();
+         if (isCD && isDir)
+             continue;
+-        // truncate filename the same way listing does, before validating name
+-        if (len > MAX_MAC_PATH)
+-            name[MAX_MAC_PATH] = 0x0;
+-        dbgmsg("TOOLBOX COUNT FILES: truncated filename is '", name, "'");
++        // Validate the same name as listing and selection, before wire truncation.
++        dbgmsg("TOOLBOX COUNT FILES: filename is '", name, "'");
+         // only count valid files.
+         if(toolboxFilenameValid(name, isCD))
+         {
+@@ -224,10 +222,8 @@
+             file_test.close();
+             continue;
+         }
+-        // truncate filename the same way listing does, before validating name
+-        size_t len = file_test.getName(name, MAX_FILE_PATH);
+-        if (len > MAX_MAC_PATH)
+-            name[MAX_MAC_PATH] = 0x0;
++        // Index the same pre-display-truncation name used by count and listing.
++        file_test.getName(name, MAX_FILE_PATH);
+         // validate filename
+         if(!toolboxFilenameValid(name, isCD))
+         {
+@@ -412,10 +408,20 @@
+     uint8_t file_index = scsiDev.cdb[1];
+     image_config_t &img = *(image_config_t*)scsiDev.target->cfg;
+     FsFile next_cd = get_file_from_index(file_index, img_dir, true);
+-    next_cd.getName(name, sizeof(name));
++    bool valid = next_cd.isOpen() && next_cd.getName(name, sizeof(name)) > 0;
+     next_cd.close();
+-    snprintf(full_path, (MAX_FILE_PATH * 2), "%s/%s", img_dir, name);
+-    switchNextImage(img, full_path);
++    int path_length = snprintf(full_path, sizeof(full_path), "%s/%s", img_dir, name);
++    // The switcher accepts MAX_FILE_PATH - 1 bytes plus NUL. Reject a long
++    // path before closing the current image; never mount a truncated prefix.
++    if (!valid || path_length < 0 || path_length >= MAX_FILE_PATH ||
++        !switchNextImage(img, full_path))
++    {
++        scsiDev.dataLen = 0;
++        scsiDev.status = CHECK_CONDITION;
++        scsiDev.target->sense.code = ILLEGAL_REQUEST;
++        scsiDev.target->sense.asc = INVALID_FIELD_IN_CDB;
++        scsiDev.phase = STATUS;
++    }
+ }
+ 
+ FsFile gFile; // global so we can keep it open while transferring.
+--- a/src/BlueSCSI_disk.cpp
++++ b/src/BlueSCSI_disk.cpp
+@@ -1457,7 +1457,15 @@
+     }
+     else
+     {
+-        strncpy(filename, next_filename, MAX_FILE_PATH);
++        size_t length = 0;
++        while (length < sizeof(filename) && next_filename[length] != '\0')
++            ++length;
++        if (length == sizeof(filename))
++        {
++            logmsg("Switch to next image failed because target path is too long.");
++            return false;
++        }
++        memcpy(filename, next_filename, length + 1);
+     }
+ 
+ #ifdef ENABLE_AUDIO_OUTPUT

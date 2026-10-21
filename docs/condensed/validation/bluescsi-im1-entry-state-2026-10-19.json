@@ -1,0 +1,2014 @@
+{
+  "passed": true,
+  "date": "2026-10-19",
+  "scope": "Native fresh-entry invalidation, actual Save System export/cold boot and exact Load/playback; not external checkpoint/device reset reconciliation",
+  "audit": {
+    "passed": true,
+    "firmware_sha256": "32143f104e4225d3b343f16b7bcd9221a7216ab5b2af60357cfba86cf99d98ca",
+    "rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+    "exe_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+    "originals": {
+      "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+    },
+    "originals_unchanged": true,
+    "exact_rebuild": true,
+    "intervals": [
+      [
+        "SDS remote",
+        15678,
+        640
+      ],
+      [
+        "SDS local",
+        16318,
+        160
+      ],
+      [
+        "SDS cancel",
+        16478,
+        31
+      ],
+      [
+        "browser",
+        16512,
+        3142
+      ],
+      [
+        "help and identity strings",
+        21760,
+        280
+      ],
+      [
+        "catalog",
+        22512,
+        224
+      ],
+      [
+        "resources",
+        22736,
+        739
+      ],
+      [
+        "context",
+        23488,
+        92
+      ],
+      [
+        "native operations labels",
+        23580,
+        100
+      ]
+    ],
+    "named_bytes": 5408,
+    "residual_bytes": 2594,
+    "code_adjacent_bytes": 2106,
+    "branch_targets": [
+      [
+        33927,
+        36847
+      ],
+      [
+        33953,
+        34375
+      ],
+      [
+        33956,
+        33961
+      ],
+      [
+        33958,
+        34357
+      ],
+      [
+        33976,
+        34078
+      ],
+      [
+        33982,
+        33987
+      ],
+      [
+        33984,
+        34115
+      ],
+      [
+        33991,
+        34066
+      ],
+      [
+        33997,
+        34002
+      ],
+      [
+        33999,
+        34369
+      ],
+      [
+        34031,
+        35156
+      ],
+      [
+        34038,
+        34043
+      ],
+      [
+        34040,
+        34308
+      ],
+      [
+        34043,
+        35341
+      ],
+      [
+        34050,
+        34055
+      ],
+      [
+        34052,
+        34308
+      ],
+      [
+        34055,
+        34375
+      ],
+      [
+        34058,
+        34063
+      ],
+      [
+        34060,
+        34357
+      ],
+      [
+        34063,
+        34318
+      ],
+      [
+        34075,
+        34318
+      ],
+      [
+        34100,
+        37054
+      ],
+      [
+        34112,
+        34369
+      ],
+      [
+        34119,
+        34124
+      ],
+      [
+        34121,
+        34258
+      ],
+      [
+        34128,
+        34133
+      ],
+      [
+        34130,
+        34281
+      ],
+      [
+        34149,
+        34154
+      ],
+      [
+        34151,
+        34369
+      ],
+      [
+        34164,
+        35463
+      ],
+      [
+        34171,
+        34176
+      ],
+      [
+        34173,
+        34308
+      ],
+      [
+        34176,
+        34375
+      ],
+      [
+        34179,
+        34184
+      ],
+      [
+        34181,
+        34357
+      ],
+      [
+        34203,
+        34868
+      ],
+      [
+        34245,
+        37046
+      ],
+      [
+        34252,
+        37058
+      ],
+      [
+        34255,
+        34369
+      ],
+      [
+        34267,
+        34313
+      ],
+      [
+        34278,
+        34043
+      ],
+      [
+        34298,
+        34369
+      ],
+      [
+        34305,
+        34043
+      ],
+      [
+        34318,
+        34868
+      ],
+      [
+        34331,
+        34565
+      ],
+      [
+        34342,
+        37054
+      ],
+      [
+        34354,
+        34369
+      ],
+      [
+        34366,
+        34313
+      ],
+      [
+        34383,
+        34393
+      ],
+      [
+        34401,
+        36847
+      ],
+      [
+        34418,
+        34461
+      ],
+      [
+        34455,
+        37046
+      ],
+      [
+        34458,
+        37058
+      ],
+      [
+        34469,
+        36847
+      ],
+      [
+        34485,
+        34480
+      ],
+      [
+        34487,
+        34868
+      ],
+      [
+        34490,
+        34565
+      ],
+      [
+        34506,
+        37054
+      ],
+      [
+        34526,
+        36847
+      ],
+      [
+        34537,
+        34564
+      ],
+      [
+        34552,
+        37054
+      ],
+      [
+        34592,
+        37050
+      ],
+      [
+        34628,
+        37050
+      ],
+      [
+        34642,
+        34614
+      ],
+      [
+        34650,
+        34569
+      ],
+      [
+        34665,
+        34726
+      ],
+      [
+        34675,
+        34726
+      ],
+      [
+        34690,
+        34726
+      ],
+      [
+        34700,
+        34726
+      ],
+      [
+        34710,
+        34726
+      ],
+      [
+        34720,
+        34726
+      ],
+      [
+        34743,
+        37050
+      ],
+      [
+        34768,
+        34784
+      ],
+      [
+        34778,
+        34784
+      ],
+      [
+        34801,
+        37050
+      ],
+      [
+        34841,
+        37050
+      ],
+      [
+        34865,
+        34821
+      ],
+      [
+        34896,
+        34891
+      ],
+      [
+        34902,
+        34965
+      ],
+      [
+        34908,
+        34982
+      ],
+      [
+        34914,
+        34919
+      ],
+      [
+        34916,
+        35079
+      ],
+      [
+        34923,
+        34928
+      ],
+      [
+        34925,
+        35101
+      ],
+      [
+        34944,
+        34949
+      ],
+      [
+        34946,
+        35140
+      ],
+      [
+        34962,
+        35105
+      ],
+      [
+        34979,
+        35105
+      ],
+      [
+        34986,
+        34995
+      ],
+      [
+        34992,
+        35105
+      ],
+      [
+        34999,
+        35023
+      ],
+      [
+        35005,
+        35010
+      ],
+      [
+        35007,
+        35140
+      ],
+      [
+        35020,
+        35105
+      ],
+      [
+        35032,
+        35140
+      ],
+      [
+        35047,
+        35105
+      ],
+      [
+        35057,
+        35066
+      ],
+      [
+        35063,
+        35105
+      ],
+      [
+        35070,
+        35105
+      ],
+      [
+        35076,
+        35105
+      ],
+      [
+        35092,
+        35105
+      ],
+      [
+        35098,
+        35105
+      ],
+      [
+        35118,
+        35140
+      ],
+      [
+        35123,
+        35130
+      ],
+      [
+        35128,
+        35133
+      ],
+      [
+        35138,
+        35112
+      ],
+      [
+        35150,
+        35155
+      ],
+      [
+        35152,
+        34881
+      ],
+      [
+        35163,
+        35615
+      ],
+      [
+        35170,
+        35175
+      ],
+      [
+        35172,
+        35340
+      ],
+      [
+        35179,
+        35184
+      ],
+      [
+        35181,
+        35878
+      ],
+      [
+        35193,
+        35198
+      ],
+      [
+        35195,
+        35878
+      ],
+      [
+        35207,
+        35212
+      ],
+      [
+        35209,
+        35878
+      ],
+      [
+        35221,
+        35226
+      ],
+      [
+        35223,
+        35878
+      ],
+      [
+        35235,
+        35240
+      ],
+      [
+        35237,
+        35878
+      ],
+      [
+        35253,
+        35258
+      ],
+      [
+        35255,
+        35878
+      ],
+      [
+        35265,
+        35615
+      ],
+      [
+        35272,
+        35340
+      ],
+      [
+        35278,
+        35283
+      ],
+      [
+        35280,
+        35878
+      ],
+      [
+        35292,
+        35297
+      ],
+      [
+        35294,
+        35878
+      ],
+      [
+        35305,
+        35310
+      ],
+      [
+        35307,
+        35878
+      ],
+      [
+        35331,
+        35336
+      ],
+      [
+        35333,
+        35878
+      ],
+      [
+        35338,
+        35322
+      ],
+      [
+        35353,
+        35615
+      ],
+      [
+        35360,
+        35462
+      ],
+      [
+        35366,
+        35371
+      ],
+      [
+        35368,
+        35878
+      ],
+      [
+        35382,
+        35387
+      ],
+      [
+        35384,
+        35878
+      ],
+      [
+        35400,
+        35407
+      ],
+      [
+        35427,
+        35615
+      ],
+      [
+        35434,
+        35462
+      ],
+      [
+        35444,
+        35449
+      ],
+      [
+        35446,
+        35878
+      ],
+      [
+        35457,
+        35462
+      ],
+      [
+        35459,
+        35878
+      ],
+      [
+        35475,
+        35615
+      ],
+      [
+        35487,
+        35564
+      ],
+      [
+        35493,
+        35565
+      ],
+      [
+        35500,
+        35564
+      ],
+      [
+        35507,
+        35615
+      ],
+      [
+        35514,
+        35539
+      ],
+      [
+        35520,
+        35564
+      ],
+      [
+        35529,
+        35615
+      ],
+      [
+        35534,
+        35493
+      ],
+      [
+        35536,
+        35878
+      ],
+      [
+        35546,
+        35615
+      ],
+      [
+        35553,
+        35564
+      ],
+      [
+        35559,
+        35564
+      ],
+      [
+        35561,
+        35878
+      ],
+      [
+        35572,
+        36527
+      ],
+      [
+        35584,
+        35607
+      ],
+      [
+        35596,
+        35612
+      ],
+      [
+        35600,
+        35572
+      ],
+      [
+        35653,
+        35665
+      ],
+      [
+        35677,
+        35691
+      ],
+      [
+        35699,
+        35708
+      ],
+      [
+        35705,
+        35743
+      ],
+      [
+        35711,
+        35734
+      ],
+      [
+        35716,
+        35743
+      ],
+      [
+        35830,
+        35883
+      ],
+      [
+        35833,
+        36760
+      ],
+      [
+        35855,
+        35877
+      ],
+      [
+        35860,
+        35878
+      ],
+      [
+        35871,
+        35877
+      ],
+      [
+        35883,
+        36760
+      ],
+      [
+        35895,
+        35902
+      ],
+      [
+        35913,
+        35918
+      ],
+      [
+        35915,
+        36264
+      ],
+      [
+        35982,
+        36460
+      ],
+      [
+        35985,
+        35990
+      ],
+      [
+        35987,
+        36292
+      ],
+      [
+        36001,
+        36006
+      ],
+      [
+        36003,
+        36271
+      ],
+      [
+        36017,
+        35982
+      ],
+      [
+        36019,
+        36364
+      ],
+      [
+        36022,
+        36027
+      ],
+      [
+        36024,
+        36292
+      ],
+      [
+        36030,
+        36035
+      ],
+      [
+        36032,
+        36278
+      ],
+      [
+        36043,
+        36393
+      ],
+      [
+        36046,
+        36051
+      ],
+      [
+        36048,
+        36292
+      ],
+      [
+        36053,
+        36019
+      ],
+      [
+        36055,
+        36364
+      ],
+      [
+        36058,
+        36063
+      ],
+      [
+        36060,
+        36292
+      ],
+      [
+        36066,
+        36071
+      ],
+      [
+        36068,
+        36213
+      ],
+      [
+        36074,
+        36103
+      ],
+      [
+        36079,
+        36084
+      ],
+      [
+        36081,
+        36278
+      ],
+      [
+        36087,
+        36092
+      ],
+      [
+        36089,
+        36285
+      ],
+      [
+        36100,
+        36203
+      ],
+      [
+        36106,
+        36111
+      ],
+      [
+        36108,
+        36278
+      ],
+      [
+        36114,
+        36119
+      ],
+      [
+        36116,
+        36285
+      ],
+      [
+        36127,
+        36195
+      ],
+      [
+        36133,
+        36158
+      ],
+      [
+        36143,
+        36153
+      ],
+      [
+        36155,
+        36170
+      ],
+      [
+        36162,
+        36170
+      ],
+      [
+        36168,
+        36183
+      ],
+      [
+        36176,
+        36203
+      ],
+      [
+        36180,
+        36203
+      ],
+      [
+        36186,
+        36170
+      ],
+      [
+        36191,
+        36170
+      ],
+      [
+        36203,
+        36393
+      ],
+      [
+        36206,
+        36292
+      ],
+      [
+        36210,
+        36055
+      ],
+      [
+        36218,
+        36393
+      ],
+      [
+        36221,
+        36292
+      ],
+      [
+        36223,
+        36364
+      ],
+      [
+        36226,
+        36292
+      ],
+      [
+        36231,
+        36278
+      ],
+      [
+        36238,
+        36393
+      ],
+      [
+        36241,
+        36292
+      ],
+      [
+        36243,
+        36460
+      ],
+      [
+        36246,
+        36292
+      ],
+      [
+        36259,
+        36243
+      ],
+      [
+        36261,
+        36292
+      ],
+      [
+        36268,
+        36292
+      ],
+      [
+        36275,
+        36292
+      ],
+      [
+        36282,
+        36292
+      ],
+      [
+        36289,
+        36292
+      ],
+      [
+        36295,
+        36363
+      ],
+      [
+        36353,
+        36363
+      ],
+      [
+        36357,
+        36342
+      ],
+      [
+        36364,
+        36460
+      ],
+      [
+        36367,
+        36459
+      ],
+      [
+        36389,
+        36364
+      ],
+      [
+        36401,
+        36460
+      ],
+      [
+        36404,
+        36459
+      ],
+      [
+        36417,
+        36401
+      ],
+      [
+        36422,
+        36428
+      ],
+      [
+        36424,
+        36364
+      ],
+      [
+        36436,
+        36460
+      ],
+      [
+        36439,
+        36459
+      ],
+      [
+        36452,
+        36436
+      ],
+      [
+        36471,
+        36476
+      ],
+      [
+        36473,
+        36527
+      ],
+      [
+        36498,
+        36515
+      ],
+      [
+        36507,
+        36515
+      ],
+      [
+        36511,
+        36521
+      ],
+      [
+        36602,
+        36760
+      ],
+      [
+        36636,
+        36654
+      ],
+      [
+        36768,
+        36846
+      ],
+      [
+        36779,
+        36846
+      ],
+      [
+        36812,
+        36846
+      ],
+      [
+        37046,
+        8320
+      ],
+      [
+        37050,
+        52756
+      ],
+      [
+        37054,
+        52717
+      ],
+      [
+        37058,
+        61608
+      ]
+    ],
+    "wire_bytes": 4000,
+    "retained_bytes": 224,
+    "filename_bytes": 32,
+    "implicit_index_contract": "All D7 wire indices must equal0..count-1 before publication; mismatch latches C+82 and rejects after successful drain. No filtering/reordering.",
+    "gb6_v9": {
+      "boot_banner_check": 1,
+      "boot_eeprom_check": 1,
+      "boot_setup4_inc": 1,
+      "boot_setup5_inc": 1,
+      "os_main_loop_poll_dispatch": 18,
+      "os_modal_poll_dispatch": 19,
+      "os_lcd_status_selector": 21,
+      "os_controller_hw_init": 56,
+      "os_mouse_poll_entry": 6,
+      "os_gb6_poll_stub": 41
+    },
+    "no_patch_byte_overlap": true
+  },
+  "baseline": {
+    "states": [
+      {
+        "name": "old-page",
+        "mode": 1,
+        "target": 1,
+        "count": 100,
+        "first": 7,
+        "error": 0
+      },
+      {
+        "name": "reopened-after-library-change",
+        "mode": 1,
+        "target": 1,
+        "count": 100,
+        "first": 7,
+        "error": 0
+      }
+    ],
+    "firmware_sha256": "9319be7485e1f06f4eefb414a2e3573826eb428330b6bfe407a9f6cdea585e77"
+  },
+  "reopen_and_save_states": [
+    {
+      "name": "old-page",
+      "mode": 1,
+      "target": 1,
+      "count": 100,
+      "first": 7,
+      "error": 0
+    },
+    {
+      "name": "reopened-after-library-change",
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "error": 0
+    },
+    {
+      "name": "fresh-catalog",
+      "mode": 1,
+      "target": 1,
+      "count": 1,
+      "first": 0,
+      "error": 0
+    },
+    {
+      "name": "save-system-entry",
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "error": 0
+    },
+    {
+      "name": "save-system-confirm",
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "error": 0
+    },
+    {
+      "name": "save-system-done",
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "error": 0
+    }
+  ],
+  "cancel": {
+    "passed": true,
+    "firmware_sha256": "32143f104e4225d3b343f16b7bcd9221a7216ab5b2af60357cfba86cf99d98ca",
+    "states": [
+      {
+        "name": "boot",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "collections",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "listing-cancelled",
+        "mode": 0,
+        "error": 7,
+        "cancel": 1,
+        "cancel_wire_count": 1397,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "listing-retry",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 1397,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "last-page",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 1397,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "switch-interrupted",
+        "mode": 0,
+        "error": 7,
+        "cancel": 1,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "fresh-catalog",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "retry-last-page",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "handoff",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "loaded",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 13
+      },
+      {
+        "name": "perform",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 13
+      },
+      {
+        "name": "sds-cancel",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 13
+      },
+      {
+        "name": "sds-reserved",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 14
+      },
+      {
+        "name": "sds-published",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 14
+      }
+    ],
+    "rows": [
+      {
+        "cdb": "00000000000000000000",
+        "transport": 0,
+        "length": 3840,
+        "seconds": 26.09017375,
+        "status": 0
+      },
+      {
+        "cdb": "12000000600000000000",
+        "transport": 0,
+        "length": 50,
+        "seconds": 28.822732875,
+        "status": 0
+      },
+      {
+        "cdb": "1a083100300000000000",
+        "transport": 0,
+        "length": 48,
+        "seconds": 28.827767375,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 28.8289955,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 29.17969575,
+        "status": 0
+      },
+      {
+        "cdb": "12000000600000000000",
+        "transport": 0,
+        "length": 50,
+        "seconds": 35.08900825,
+        "status": 0
+      },
+      {
+        "cdb": "1a083100300000000000",
+        "transport": 0,
+        "length": 48,
+        "seconds": 35.09404275,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 35.095270875,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 35.446627375,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 39.519505125,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 39.870652625,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 40.88597,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 41.2368935,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 42.286530125,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 42.637214625,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 43.75280425,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 44.10326475,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 45.253173625,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 45.603410125,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 46.65304675,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 47.00304425,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 48.036056,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 48.3858295,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 49.436535625,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 49.786085125,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 50.869475375,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 51.218830875,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 52.269537,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 52.6186235,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 53.669329625,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 54.018192125,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 55.1691705,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 55.517809,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 56.635537625,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 56.983952125,
+        "status": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "seconds": 58.08610625,
+        "status": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "seconds": 58.43440175,
+        "status": 0
+      },
+      {
+        "cdb": "d8630000000000000000",
+        "transport": 0,
+        "length": 0,
+        "seconds": 59.96896825,
+        "status": 0
+      }
+    ],
+    "physical_inputs": [
+      {
+        "down": true,
+        "reads": 255,
+        "reason": "D7-data-byte1200",
+        "seconds": 28.934763,
+        "mode": "list"
+      },
+      {
+        "down": false,
+        "reads": 255,
+        "reason": "bounded-command-return",
+        "seconds": 29.17969575,
+        "mode": "list"
+      },
+      {
+        "down": true,
+        "reads": 0,
+        "reason": "D8-command-first-byte",
+        "seconds": 59.9681465,
+        "mode": "switch"
+      },
+      {
+        "down": false,
+        "reads": 0,
+        "reason": "guest-Exit-latch-observed",
+        "seconds": 59.983435125,
+        "mode": "switch"
+      }
+    ],
+    "all_code_preserved": true,
+    "library_unchanged": true,
+    "listing_cancel_drains4000": true,
+    "post_d8_no_follow_on_commands": true,
+    "explicit_retry_native_load": true,
+    "exact_sample_bytes": 119808,
+    "exact_sds_bytes": 160,
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "limitations": [
+      "SCSI callbacks remain masked; no full IRQ/physical timing qualification",
+      "Interruption after D8 may change mounted media; no rollback or automatic native Load",
+      "Native load/save/format and relocated sender operation ownership still open"
+    ]
+  },
+  "cold": {
+    "passed": true,
+    "saved_system_sha256": "a0e3758dd5a17bb97535d12883559c2e715405b3648b4c5507b20cdb925b69ce",
+    "base_firmware_sha256": "32143f104e4225d3b343f16b7bcd9221a7216ab5b2af60357cfba86cf99d98ca",
+    "states": [
+      {
+        "name": "cold-boot",
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0
+      },
+      {
+        "name": "cold-collections",
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0
+      },
+      {
+        "name": "cold-fresh-catalog",
+        "mode": 1,
+        "target": 1,
+        "count": 1,
+        "first": 0
+      },
+      {
+        "name": "cold-native-load",
+        "mode": 0,
+        "target": 1,
+        "count": 1,
+        "first": 0
+      },
+      {
+        "name": "cold-perform",
+        "mode": 0,
+        "target": 1,
+        "count": 1,
+        "first": 0
+      }
+    ],
+    "rows": [
+      {
+        "cdb": "12000000600000000000",
+        "length": 50,
+        "status": 0,
+        "seconds": 28.022186375,
+        "transport": 0
+      },
+      {
+        "cdb": "1a083100300000000000",
+        "length": 48,
+        "status": 0,
+        "seconds": 28.0266385,
+        "transport": 0
+      },
+      {
+        "cdb": "da000000000000000000",
+        "length": 1,
+        "status": 0,
+        "seconds": 28.027866625,
+        "transport": 0
+      },
+      {
+        "cdb": "d7000000000000000000",
+        "length": 40,
+        "status": 0,
+        "seconds": 28.03282175,
+        "transport": 0
+      },
+      {
+        "cdb": "d8000000000000000000",
+        "length": 0,
+        "status": 0,
+        "seconds": 31.302912875,
+        "transport": 0
+      },
+      {
+        "cdb": "00000000000000000000",
+        "length": 0,
+        "status": 2,
+        "seconds": 31.32359025,
+        "transport": 0
+      },
+      {
+        "cdb": "03000000120000000000",
+        "length": 18,
+        "status": 0,
+        "seconds": 31.325701375,
+        "transport": 0
+      },
+      {
+        "cdb": "00000000000000000000",
+        "length": 0,
+        "status": 2,
+        "seconds": 31.34639425,
+        "transport": 0
+      },
+      {
+        "cdb": "03000000120000000000",
+        "length": 18,
+        "status": 0,
+        "seconds": 31.348505375,
+        "transport": 0
+      },
+      {
+        "cdb": "00000000000000000000",
+        "length": 0,
+        "status": 0,
+        "seconds": 31.3691815,
+        "transport": 0
+      },
+      {
+        "cdb": "25000000000000000000",
+        "length": 8,
+        "status": 0,
+        "seconds": 31.370707625,
+        "transport": 0
+      }
+    ],
+    "exact_sample_bytes": 119808,
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "library_unchanged": true,
+    "cold_context_zero": true,
+    "no_commands_before_collection": true,
+    "scope": "Native Save System export cold boot and exact ISO load/playback; not external checkpoint synchronization or physical media acceptance"
+  },
+  "saved_mutable_data": {
+    "buffer_prefix": "Fresh.iso",
+    "first_display_row": "Load",
+    "code_preserved": true
+  },
+  "reset_contract": {
+    "logical_start": 24528,
+    "logical_end_exclusive": 24604,
+    "physical_start": 23504,
+    "physical_end_exclusive": 23580,
+    "bytes": 76,
+    "stores": 38,
+    "preserved_callback_context_bytes": 16,
+    "decoded": [
+      {
+        "pc": 34480,
+        "bytes": "c22100",
+        "text": "ST ZR, [RW20]+"
+      },
+      {
+        "pc": 34483,
+        "bytes": "0522",
+        "text": "DEC RW22"
+      },
+      {
+        "pc": 34485,
+        "bytes": "d7f9",
+        "text": "JNE 0x86b0"
+      }
+    ]
+  },
+  "ram_observations": {
+    "native-entry-state": [
+      {
+        "snapshot": "frame-01.ram",
+        "sha256": "b97ad35cfa887f6853503595051a78ae82a592913f2adaa45ae3141547545126",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-02.ram",
+        "sha256": "febc235782fbf783eaa5c51ce71abf813cdbd983c7f8b651bfb9724a4c9a5578",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-03.ram",
+        "sha256": "f6fb742be57af946f64ad0dade853d3f9df8b34efd0c118b059281c764dd70f1",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-04.ram",
+        "sha256": "1c07ca2492fa22169b55df5c0ce93798b7291a832cf460b9355d42f5093e9563",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-05.ram",
+        "sha256": "a387c7667c1064eff71dc98bcf138aec4bd592a71393709c29accf86ef449225",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-06.ram",
+        "sha256": "cbfb5a893705487d4b7548090f896a2c0647676a801700e0669c99ed16a0a2e4",
+        "code_preserved": true
+      }
+    ],
+    "native-cold-saved-3": [
+      {
+        "snapshot": "frame-01.ram",
+        "sha256": "445829d20be743a4392f14384b7fd1b252ef87511ef4e63604ee9439516701eb",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-02.ram",
+        "sha256": "b99d5b3235b765742fdbf8323fc171f27a409c20a261206cd53039587d868218",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-03.ram",
+        "sha256": "d295d24e8fcd00fe268b414af7c28431a4a015b1e85a0d8ea963510bee875f8a",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-04.ram",
+        "sha256": "db1b5bd26a4e466ee6235dd0e5a5cfb9ad04c26c16d5c301225fe3b6d6d53da5",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-05.ram",
+        "sha256": "6dcabdb3c171a76971d5da08268dd0465e5beab54942941d535df063e0261e0f",
+        "code_preserved": true
+      }
+    ],
+    "native-cancel": [
+      {
+        "snapshot": "frame-01.ram",
+        "sha256": "d6136561776adb106fbe09b8f7e1a6a8579c571916fd0423fcac3a2d8895c133",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-02.ram",
+        "sha256": "8e8541c06ae3ccff7ca0ac6a865e5d0d39946b5f9bfc758183a8d605a13701f3",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-03.ram",
+        "sha256": "395b4d819490c5ac62d5d44f4a2765009e7c99da19705e1cc3d4d64c9a01e8da",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-04.ram",
+        "sha256": "0f5872f802702200fef35b21a88686617de4b676bd93b733b259b5889d7cb35a",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-05.ram",
+        "sha256": "e587a56d03d5369bfcb7981305bf5fdcf6cc5a24f087253482c033cf20092155",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-06.ram",
+        "sha256": "88f7f6c7b0f91e324b03432032b055d7ed40769a443ba77dce9bf5ad7db01f09",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-07.ram",
+        "sha256": "6d3c26f2b570847d127d8589d8b151179ef6bf29bd6142e6b30cc2b23bc4d27e",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-08.ram",
+        "sha256": "190791ef857bbe13774d809bb0b22cfe50f018d2a86d1de9fd78d2da1706b69b",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-09.ram",
+        "sha256": "6e0d6ca14bf87bee2842210f6609a0b142e6942e3097eabb630e926128c99b0f",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-10.ram",
+        "sha256": "ce5b3a99f8190342a3f9bb4fee6025fcd47da6ac2d0b2ea36e7ca1561792c399",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-11.ram",
+        "sha256": "34047d711aacfbeea5aa953d3999cc3747a30e0df4efa55e2a1b9f352906c317",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-12.ram",
+        "sha256": "265c87260bc78b562ad5314c8761732e163a090bf8d45ef9d48c14a8c6c3cde7",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-13.ram",
+        "sha256": "a68a6766a4d11bfc7f2e3f182ab53874c7503f6581363876e559a28cb8e468e1",
+        "code_preserved": true
+      },
+      {
+        "snapshot": "frame-14.ram",
+        "sha256": "d45229a657a72a50022d6da091a65bea04f2c910ec08249cd4e7da765af42b7f",
+        "code_preserved": true
+      }
+    ]
+  },
+  "case_observer_sha256": {
+    "native-entry-state": "b4062715da3d8d7633ef0f6edc54d7ede45e48e77f60afd98526b046af33a3d4",
+    "native-cold-saved-3": "c9a35a4ef29dc2b12e427f04d46899d9e15c4fc109356053c77c2957da6932f2",
+    "native-cancel": "b4062715da3d8d7633ef0f6edc54d7ede45e48e77f60afd98526b046af33a3d4"
+  },
+  "observer_note": "Initial cold diagnostic counted the init-context reset write as a zero CDB result. Final cold observer excludes only the decoded reset loop; firmware hash is unchanged.",
+  "sources": {
+    "build_browser.py": "274bb75296a51a0393f7768e473c114195102baa686e0030800e3e8d48343af5",
+    "build_full.py": "ac97f474e9a4b0b5767a90d96f2c02c48924cf2014757fe8e13fca1b0af8f566",
+    "audit.py": "8aa33f70384f63f5bdea27d660b1c59605d54d1a880847a05f2fbb35aba01f4d",
+    "observer.lua": "c9a35a4ef29dc2b12e427f04d46899d9e15c4fc109356053c77c2957da6932f2",
+    "run_cancel.py": "c8139028eece4afd580e72b1cc495184e1ba10b3dfffc3b770f8caa960be4292",
+    "run_cold_saved.py": "3f9d873ee616a032a1fa3c6e492d4bb93d4f71f6d1d6f6f98de09bee6aa73716"
+  },
+  "entry_script_sha256": "966af90ee0abb3eafa839daf0e234e02a83bbd53e2748cdb76a847dc82c038d4",
+  "limitations": [
+    "Collection mutation during an open browser remains outside supported profile",
+    "External BlueSCSI changes after emulator checkpoint restore remain open",
+    "No LCD/RC100/physical or full stack/ISR qualification",
+    "Broad IRQ/session and Save/cold Load matrices retain earlier-hash scope"
+  ]
+}

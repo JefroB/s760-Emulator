@@ -1,6 +1,6 @@
 # Source Map & Evidence Policy
 
-Current project qualification (2026-10-14): `docs/testing/soundcheck-projects.md`,
+Dated project qualification (2026-10-14): `docs/testing/soundcheck-projects.md`,
 `scripts/soundcheck_project.py`, `scripts/verify_soundcheck_project.py` and
 `tests/test_soundcheck_project.py` define the accepted SoundCheck SDK adapter/
 project-runner scope. Source/binary hashes,221184 exact-frame comparisons and
@@ -9,10 +9,7 @@ compatibility limits are recorded in
 This does not establish stock-GUI project integration, other DAW containers or
 cross-build/rate/negotiated-maximum migration.355 backend regressions pass.
 
-Updated 2026-10-10. Every public Markdown/text/JSON source under `docs/` is
-mapped below; private agent work folders and condensed outputs are excluded.
-Source documents remain intact as historical evidence. Raw catalogs/OCR/JSON
-retain their full data; condensation replaces repeated explanation, not raw records.
+This catalog began on 2026-10-10 and records the sources used for condensation at that time. It is not an exhaustive inventory of the growing documentation tree. The [2026-10-21 consolidation](../hardware/documentation-cleanup-2026-10-21.md) removed obsolete private work and archives after retaining reviewed conclusions and compact evidence. Use the maintained topic indexes for current navigation.
 
 ## How conflicts were resolved
 
@@ -20,13 +17,11 @@ Use visually checked primary hardware specifications for physical identity;
 current executable source/build configuration for implemented behavior; dated
 trace/hardware results for observed outcomes. A newer prose claim does not
 override those forms of evidence. Unproved hardware details are excluded from
-the specification and requested in the shared evidence note.
+the specification and recorded in the [hardware open questions](../hardware/evidence-and-open-questions.md).
 
 Important reconciliations: CPU IC1 / EPROM IC15 / I/O gate IC20; 24 physical
 voices versus 32 software slots; CS5339 ADC; four individual analog outputs;
-narrow LCD map; one 17-bit modeled VDP pointer; byte DSP latches; existing
-React/bridge tests; separate DSP implementations; latest stable run has no
-D010 enable write. Document 08 explains why old coverage totals are unsupported.
+contextual LCD/VDP maps; byte DSP latches; separate DSP implementations and test scopes. Current addresses and model limits are recorded in [hardware/](../hardware/README.md). Document 08 explains why old coverage totals are unsupported.
 
 ## Original-to-condensed mapping
 
@@ -43,7 +38,7 @@ D010 enable write. Document 08 explains why old coverage totals are unsupported.
 | [front-panel-button-mapping.md](../hardware/front-panel-button-mapping.md) | 07 |
 | [hardware-recording-parity-methodology.md](../hardware/captures/hardware-recording-parity-methodology.md) | 06, 10 |
 | [hil-deployment.md](../hardware/captures/hil-deployment.md) | 10 |
-| ic20-hle-findings (multi-agent boot/display/audio findings, numbered log) | 01–08 — see note below |
+| Former findings tree (removed; retained conclusions and evidence linked below) | 01–08; current hardware reference in [hardware/](../hardware/README.md) |
 | [lle-roadmap-and-fidelity-assessment.md](../project/lle-roadmap-and-fidelity-assessment.md) | 04, 06, 10 |
 | [manual-function-test-coverage.md](../testing/manual-function-test-coverage.md) | 08 |
 | [nextgen-os-features-and-feasibility.md](../firmware/os/nextgen-os-features-and-feasibility.md) | 10 |
@@ -83,17 +78,9 @@ D010 enable write. Document 08 explains why old coverage totals are unsupported.
 - [Layout extractor](../../.agents/scripts/extract_screen_layout.py): heuristic implementation, not claimed full field parser.
 - Calibration builder/extractor/analyzer scripts: current capability versus proposed measurement plan.
 
-## Note on the ic20-hle-findings log
+## Historical findings provenance
 
-The multi-agent reverse-engineering log in `docs/ic20-hle-findings/shared/` is a
-numbered, append-mostly working record (Kiro / Gemini / ChatGPT). Its CONFIRMED
-results are consolidated into condensed documents 01–08 as they land, and the
-superseded numbered entries are pruned once consolidated — so only the current
-head of each active thread normally remains in `shared/` (plus `archive/` for the
-earliest batch). The condensed documents are therefore the standalone source of
-truth; the shared log is the live scratch/evidence trail, not a stable citation
-target. Finding numbers referenced in the condensed prose (e.g. "finding 73") are
-historical labels for that evidence, not links.
+The former ignored findings tree was removed during the [2026-10-21 consolidation](../hardware/documentation-cleanup-2026-10-21.md). Reviewed hardware facts are maintained in [docs/hardware](../hardware/README.md); compact observations remain in `validation/` and [retained historical records](../hardware/evidence/historical-validation/README.md). Temporary output now belongs under `temp/work/`. Finding numbers below are historical labels, not live file links or current qualification claims.
 
 - finding58 - interactive ROM boot, grounded option-board identification, live VDP pointer, native LCD and requested EEPROM default.
 

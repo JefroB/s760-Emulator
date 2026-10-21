@@ -1,0 +1,119 @@
+{
+  "passed": true,
+  "date": "2026-10-20",
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "boot_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+  "emulator_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+  "command": "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_save.py",
+  "results": {
+    "passed": true,
+    "states": [
+      {
+        "name": "iso-handoff",
+        "cursor": 0,
+        "drive": 1
+      },
+      {
+        "name": "loaded",
+        "cursor": 13,
+        "drive": 1
+      },
+      {
+        "name": "perform",
+        "cursor": 13,
+        "drive": 1
+      },
+      {
+        "name": "utility",
+        "cursor": 13,
+        "drive": 1
+      },
+      {
+        "name": "utility-hd",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "format-dialog",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "format-confirm-1",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "format-confirm-2",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "initialized",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "save-screen",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "save-dialog",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "save-confirm",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "saved",
+        "cursor": 13,
+        "drive": 0
+      },
+      {
+        "name": "cold-list",
+        "cursor": 0,
+        "drive": 0
+      },
+      {
+        "name": "cold-perform",
+        "cursor": 13,
+        "drive": 0
+      }
+    ],
+    "source_hash": "8a940c7f114326aedbeb457ed3ed83bc7dbc4b2000ac552d8ff7c410bba43a6c",
+    "saved_hash": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+    "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+    "exact_pcm_bytes": 119808,
+    "before_audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "after_audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "limits": [
+      "Private HD0 quick initialization/save/export/cold Load; no physical library write-protect or concurrent operation proof"
+    ]
+  },
+  "code_and_sds_preserved_in_snapshots": 15,
+  "originals_unchanged": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+  },
+  "prerequisites": "Genuine persisted controller3 NVRAM; native GB6 pointer/panel/MIDI inputs; private10MiB HD0/512-sector fixture and valid Roland ISO B; read-only observers; no guest forcing",
+  "rc100_policy": "User2026-10-20 accepts untouched RC100 as assumed compatible; no controller available; input testing waived as IM1 gate, not verified compatibility",
+  "limitations": [
+    "Named native quick initialization/Save/export/fresh HDD Load only; no physical or arbitrary geometry claim",
+    "Interruption/write-protection/general concurrency not qualified",
+    "Remaining native operations, broader parent/ownership/reset/checkpoint/stack/full-fit and hardware gates open"
+  ]
+}

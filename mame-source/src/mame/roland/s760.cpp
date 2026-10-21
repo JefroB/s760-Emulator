@@ -21,6 +21,7 @@
 #include "cpu/mcs96/i8x9x.h"
 #include "machine/eepromser.h"
 #include "imagedev/midiin.h"
+#include "imagedev/midiout.h"
 #include "fileio.h"
 #include "screen.h"
 #include "speaker.h"
@@ -29,6 +30,8 @@
 #include <cmath>
 #include <fstream>
 #include <functional>
+#include "s760_toolbox_fixture.h"
+#include "s760_image_fixture.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -1031,6 +1034,7 @@ public:
 	std::unique_ptr<emu_file> m_runtime_midi;
 	void native_midi_rx_w(int state) { if (m_native_midi_experiment) rx_w(state); }
 	virtual void rcv_complete() override;
+	virtual void tra_callback() override;
 	bool m_native_midi_experiment = false;
 	bool m_native_midi_pending = false;
 	u8 m_native_midi_byte = 0;
@@ -1417,6 +1421,10 @@ private:
 	uint8_t m_scsi_cdb[16];   // Command Descriptor Block buffer
 	int m_scsi_cdb_idx;
 	int m_scsi_cdb_len;
+	s760_toolbox_fixture m_toolbox_fixture;
+	s760_image_fixture m_image_fixture;
+	// Host-timeline guard, recomputed on recall rather than serialized as guest state.
+	bool m_image_fixture_recalled_cdb = false;
 	std::vector<uint8_t> m_scsi_data_buffer;
 	// Save registration requires stable storage. READ/WRITE(10)'s largest
 	// existing transfer is 65535 blocks at 2048 bytes (CD target).
@@ -1460,6 +1468,9 @@ private:
 
 void s760_state::machine_start()
 {
+	m_toolbox_fixture.configure(std::getenv("S760_TOOLBOX_TEST_ROOT"), std::getenv("S760_TOOLBOX_TEST_TARGET"));
+	m_image_fixture.configure(std::getenv("S760_TOOLBOX_IMAGE_ROOT"), std::getenv("S760_TOOLBOX_IMAGE_STALL_AFTER"),
+        std::getenv("S760_IMAGE_WRITE_RESET_AFTER"));
 	save_item(NAME(m_panel_scan_row));
 	save_item(NAME(m_mouse_packet));
 	save_item(NAME(m_mouse_last_x));
@@ -1532,6 +1543,7 @@ void s760_state::machine_start()
 		}
 	set_data_frame(1, 8, PARITY_NONE, STOP_BITS_1);
 	set_rcv_rate(31250);
+	set_tra_rate(31250);
 	save_item(NAME(m_native_midi_pending));
 	save_item(NAME(m_native_midi_byte));
 	save_item(NAME(m_native_midi_fifo));
@@ -2186,6 +2198,12 @@ void s760_state::checkpoint_presave()
 
 void s760_state::checkpoint_postload()
 {
+	m_toolbox_fixture.reset(); // experimental directory/handles never survive state recall
+	m_image_fixture.invalidate(); // explicit re-selection required after recall
+	// The host catalog is not checkpointed. Even a partly received D8 must not
+	// reselect from it using a saved index after invalidating the mounted image.
+	m_image_fixture_recalled_cdb = m_scsi_bus_phase == 3
+		&& m_image_fixture.enabled(m_scsi_target_id);
 	if (m_checkpoint_scsi_transfer_size > m_checkpoint_scsi_transfer.size())
 		fatalerror("Invalid checkpoint SCSI transfer size");
 	m_scsi_data_buffer.assign(m_checkpoint_scsi_transfer.begin(),
@@ -2238,7 +2256,9 @@ u8 s760_state::banked_r(offs_t address)
 	}
 	if (m_native_midi_experiment)
 	{
-		if (address == 0x114) return (m_bank_regs[0x14] & 0xfe) | (m_native_midi_pending ? 1 : 0);
+		if (address == 0x114)
+			return (m_bank_regs[0x14] & 0xfc) | (m_native_midi_pending ? 1 : 0)
+				| (is_transmit_register_empty() ? 2 : 0);
 		if (address == 0x116)
 		{
 			const u8 value = m_native_midi_byte;
@@ -2271,6 +2291,19 @@ u8 s760_state::banked_r(offs_t address)
 
 void s760_state::banked_w(offs_t address, u8 data)
 {
+	if (m_native_midi_experiment && address == 0x116)
+	{
+		// The stock OS writes one byte then polls 0114 bit1 at001F:68A2.
+		// Complete an actual 31250-baud frame before advertising readiness.
+		if (is_transmit_register_empty())
+		{
+			transmit_register_setup(data);
+			logerror("[IC4MIDITX] byte=%02x time=%.9f\n", data, machine().time().as_double());
+		}
+		else
+			logerror("[IC4MIDITX] unsupported busy write=%02x\n", data);
+		return;
+	}
 	if (address >= 0x100 && address < 0x120)
 	{
 		m_bank_regs[address - 0x100] = data;
@@ -2314,7 +2347,16 @@ void s760_state::banked_w(offs_t address, u8 data)
                 && m_scsi_data_idx <= m_scsi_data_buffer.size()
                 && count <= m_scsi_data_buffer.size()-m_scsi_data_idx)
             {
-                for (u32 i=0; i<count; ++i) scsi_w(0x0a,bytes[source+i]);
+                for (u32 i=0; i<count; ++i) {
+                    scsi_w(0x0a,bytes[source+i]);
+                    if (m_image_fixture.write_reset_pending() && m_image_fixture.enabled(m_scsi_target_id)
+                        && m_image_fixture.interrupt_write(m_scsi_data_idx,m_scsi_data_buffer.size())) {
+                        logerror("[IMAGEWRITERESET] target=%d transferred=%u total=%u remaining=%u control=%02x\n",
+                            m_scsi_target_id,u32(m_scsi_data_idx),u32(m_scsi_data_buffer.size()),m_scsi_tc,data);
+                        machine().schedule_soft_reset();
+                        return; // Stop DMA before completion/counter publication.
+                    }
+                }
                 m_bank_regs[0x18]=m_bank_regs[0x19]=0;
                 if (data == 0x78) {
                     const u32 next=ram+count;
@@ -2620,6 +2662,12 @@ TIMER_CALLBACK_MEMBER(s760_state::native_loop_tick)
 {
 	m_sound->sync_native_monitor();
 	native_loop_reschedule();
+}
+
+void s760_state::tra_callback()
+{
+	if (auto *output = subdevice<midiout_device>("midiout"))
+		output->tx(transmit_register_get_data_bit());
 }
 
 void s760_state::rcv_complete()
@@ -3156,15 +3204,26 @@ ioport_value s760_state::native_pcm_depth()
 void s760_state::native_wave_w(offs_t offset,u8 data)
 {
 	m_native_wave_regs[offset] = data;
-	if (offset == 9)
+	if (offset == 9 || offset == 0xb)
 	{
 		const u32 word_address = u32(m_native_wave_regs[0xe]) | (u32(m_native_wave_regs[0xf])<<8) |
 			(u32(m_native_wave_regs[0xc])<<16) | (u32(m_native_wave_regs[0xd])<<24);
 		const u64 byte_address = u64(word_address)*2;
 		if (byte_address+1 < m_native_wave.size())
 		{
-			m_native_wave[byte_address] = m_native_wave_regs[8];
+			m_native_wave[byte_address] = m_native_wave_regs[offset - 1];
 			m_native_wave[byte_address+1] = data;
+		}
+		// C008 is fixed-address; stock SDS receive uses C00A repeatedly
+		// without reprogramming the address (001F:710C and72D0 writer).
+		// Commit/advance only on the high byte of the 16-bit transaction.
+		if (offset == 0xb)
+		{
+			const u32 next = word_address + 1;
+			m_native_wave_regs[0xe] = u8(next);
+			m_native_wave_regs[0xf] = u8(next >> 8);
+			m_native_wave_regs[0xc] = u8(next >> 16);
+			m_native_wave_regs[0xd] = u8(next >> 24);
 		}
 	}
 }
@@ -3207,6 +3266,8 @@ void s760_state::native_vdp_w(offs_t offset, u8 data)
 
 void s760_state::machine_reset()
 {
+	m_toolbox_fixture.reset();
+	m_image_fixture.invalidate(); // reset requires explicit re-selection for this fixture
  m_native_pcm_head = m_native_pcm_count = m_native_pcm_underruns = 0;
  m_native_pcm_last.fill(0);
  m_native_pcm_meter_channel = 0;
@@ -3219,6 +3280,7 @@ void s760_state::machine_reset()
 	m_native_midi_fifo_tail = 0;
 	m_native_midi_fifo_count = 0;
 	receive_register_reset();
+	transmit_register_reset();
 	m_native_envelope_bus.fill(0);
 	m_native_envelope_words.fill(0);
 	m_native_envelope_select = 0;
@@ -3994,6 +4056,9 @@ uint8_t s760_state::scsi_r(offs_t offset)
 
 		case 0x05: // PSNS (Phase Sense & Bus Lines)
 			val = m_scsi_psns;
+			if (m_banked_os && m_scsi_bus_phase == 4 && m_scsi_cdb[0] == 0xd7
+				&& m_image_fixture.enabled(m_scsi_target_id) && m_image_fixture.stall_listing(m_scsi_data_idx))
+				val &= ~0x80; // Opt-in peripheral fault: target withholds REQ, retains BSY.
 			break;
 
 		case 0x06: // SSTS (SPC Status Register)
@@ -4112,6 +4177,7 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 			m_scsi_sctl = data;
 			if (m_banked_os && (data & 0x40)) // SPC controller reset
 			{
+				m_image_fixture.release_stall();
 				m_scsi_bus_phase = 0;
 				m_scsi_psns = m_scsi_ints = 0;
 				m_scsi_cdb_idx = m_scsi_tc = 0;
@@ -4133,6 +4199,7 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 			m_scsi_scmd = data;
 			if (m_banked_os && (data & 0x10)) // SCSI bus reset, independent of command class
 			{
+				m_image_fixture.release_stall();
 				m_scsi_bus_phase = 0;
 				m_scsi_psns = 0;
 				m_scsi_ints = 0x01;
@@ -4161,6 +4228,7 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 					m_scsi_psns = 0x8A;   // BSY=1, REQ=1, Command Phase (010)
 					m_scsi_cdb_idx = 0;
 					m_scsi_cdb_len = 6;
+					m_image_fixture_recalled_cdb = false; // a new selection starts a new command
 					m_scsi_ints = m_banked_os ? 0x10 : 0x02; // Native command done; legacy fixture value
 					trigger_irq(IRQ_SCSI);
 				}
@@ -4191,6 +4259,7 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 			}
 			else if (cmd == 0x00) // Bus Release
 			{
+				m_image_fixture.release_stall();
 				m_scsi_bus_phase = 0;
 				m_scsi_psns = 0x00;
 				m_scsi_ints = 0x20; // Disconnected
@@ -4223,7 +4292,9 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
 				if (m_scsi_cdb_idx == 1)
 				{
 					uint8_t op = data;
-					if (op >= 0x20 && op <= 0x3F) m_scsi_cdb_len = 10;
+					if ((s760_toolbox_fixture::command(op) && m_toolbox_fixture.enabled(m_scsi_target_id))
+						|| (s760_image_fixture::command(op) && m_image_fixture.enabled(m_scsi_target_id))) m_scsi_cdb_len = 10;
+					else if (op >= 0x20 && op <= 0x3F) m_scsi_cdb_len = 10;
 					else if (op >= 0xA0 && op <= 0xBF) m_scsi_cdb_len = 12;
 					else m_scsi_cdb_len = 6;
 				}
@@ -4246,12 +4317,23 @@ void s760_state::scsi_w(offs_t offset, uint8_t data)
                     if (m_banked_os && m_scsi_tc) --m_scsi_tc;
 					if (m_scsi_data_idx >= m_scsi_data_buffer.size())
 					{
-						// Commit only a complete command into the private, checkpointed image.
-						// Library files are never overwritten by a guest WRITE.
+						if (m_toolbox_fixture.enabled(m_scsi_target_id) && m_scsi_cdb[0]==0xd9 && m_scsi_cdb[1]==2) {
+							auto reply=m_toolbox_fixture.set_directory(m_scsi_data_buffer);
+							m_scsi_target_status=reply.asc ? 2 : 0;
+							if (reply.asc) { m_scsi_sense_key[m_scsi_target_id]=5;m_scsi_sense_asc[m_scsi_target_id]=reply.asc; }
+							m_scsi_bus_phase=6;m_scsi_psns=0x8b;m_scsi_ints=0x08;
+							trigger_irq(IRQ_SCSI);break;
+						}
+						// Ordinary media remain private and explicitly exported. The opt-in
+						// switch fixture persists complete WRITEs to its selected IMG file.
 						auto &image = m_scsi_disk_images[m_scsi_target_id];
 						if (m_scsi_write_offset <= image.size()
-							&& m_scsi_data_buffer.size() <= image.size() - m_scsi_write_offset)
-							std::copy(m_scsi_data_buffer.begin(), m_scsi_data_buffer.end(), image.begin() + m_scsi_write_offset);
+							&& m_scsi_data_buffer.size() <= image.size() - m_scsi_write_offset) {
+							if (m_image_fixture.enabled(m_scsi_target_id)
+								&& !m_image_fixture.write(m_scsi_target_id,m_scsi_write_offset,m_scsi_data_buffer,image.size())) {
+								m_scsi_target_status=2;m_scsi_sense_key[m_scsi_target_id]=3;m_scsi_sense_asc[m_scsi_target_id]=0x0c;
+							} else std::copy(m_scsi_data_buffer.begin(), m_scsi_data_buffer.end(), image.begin() + m_scsi_write_offset);
+						}
 						else {
 							m_scsi_target_status = 2;
 							m_scsi_sense_key[m_scsi_target_id] = 5;
@@ -4298,11 +4380,83 @@ void s760_state::scsi_execute_cdb()
 	auto status = [&](u8 key = 0, u8 asc = 0) {
 		m_scsi_target_status = key ? 0x02 : 0x00;
 		if (key) { m_scsi_sense_key[target] = key; m_scsi_sense_asc[target] = asc; }
+		if (key && m_image_fixture.enabled(target)) m_image_fixture.media(target).qualifier=0;
 		m_scsi_bus_phase = 6;
 		m_scsi_psns = 0x8b;
 		m_scsi_ints = 0x08;
 		trigger_irq(IRQ_SCSI);
 	};
+
+
+ const bool image_profile=m_image_fixture.enabled(target);
+ if (m_image_fixture_recalled_cdb) {
+  m_image_fixture_recalled_cdb=false;
+  status(6,0x28); // UNIT ATTENTION: external media generation changed on recall
+  return;
+ }
+ auto data_in = [&](std::vector<uint8_t> data) {
+  m_scsi_data_buffer=std::move(data);m_scsi_data_idx=0;
+  if (m_scsi_data_buffer.empty()) { status();return; }
+  m_scsi_bus_phase=4;m_scsi_psns=0x89;m_scsi_ints=0x08;trigger_irq(IRQ_SCSI);
+ };
+ if (image_profile && opcode!=0x12 && opcode!=0x03 && m_image_fixture.media(target).attention) {
+  m_image_fixture.media(target).attention=false;status(6,0x28);return;
+ }
+ if (image_profile && (opcode==0xd7 || opcode==0xda || opcode==0xd8)) {
+  auto entries=m_image_fixture.list(target);
+  if (opcode==0xda) {
+   if (entries.overflow) { status(5,0);m_image_fixture.media(target).qualifier=1; }
+   else data_in({uint8_t(entries.paths.size())});
+  } else if (opcode==0xd7) data_in(m_image_fixture.rows(entries));
+  else {
+   m_image_fixture.select(target,m_scsi_cdb[1],dev_type==5 ? 2048 : 512,m_scsi_disk_images[target]);
+   status(); // upstream onSetNextCD discards the switch result (BUG-137)
+  }
+  return;
+ }
+ if (image_profile && opcode==0xd9) {
+  if (m_scsi_cdb[1]>1 || m_scsi_cdb[8]>8) { status(5,0x24);return; }
+  std::vector<uint8_t> data(8,m_scsi_cdb[1] ? 0 : 255);
+  if (m_scsi_cdb[1]==0) for (int id=0;id<7;++id)
+   if (m_image_fixture.enabled(id) && m_scsi_device_present[id]) data[id]=m_scsi_device_type[id]==5 ? 2 : (m_scsi_device_type[id]==7 ? 4 : 0);
+  data.resize(m_scsi_cdb[8] ? m_scsi_cdb[8] : 8);data_in(std::move(data));return;
+ }
+ if (image_profile && opcode!=0x12 && opcode!=0x03 && opcode!=0x1b && opcode!=0x1a) {
+  auto &media=m_image_fixture.media(target);
+  if (media.failed || m_scsi_disk_images[target].empty()) { status(2,0x04);return; }
+  if (media.ejected) { m_image_fixture.close(target);status(2,0x3a);return; }
+ }
+ if (image_profile && opcode==0x1b && (m_scsi_cdb[4]==2 || m_scsi_cdb[4]==3)) {
+  if (m_scsi_cdb[4]==3) m_image_fixture.close(target);
+  else m_image_fixture.eject(target,dev_type==5 ? 2048 : 512,m_scsi_disk_images[target]);
+  status();return;
+ }
+ if (image_profile && opcode==0x04) {
+  // BlueSCSI disk.cpp FORMAT UNIT is non-erasing. Qualify only the native
+  // S-760's observed 04 00 00 00 00 00 form; parameter lists are not modeled.
+  if (m_scsi_cdb[1] || m_scsi_cdb[2] || m_scsi_cdb[3] || m_scsi_cdb[4] || m_scsi_cdb[5]) {
+   status(5,0x24);return;
+  }
+  if (dev_type==5 || !m_image_fixture.media(target).writable) { status(7,0x27);return; }
+  status();return;
+ }
+
+	if (s760_toolbox_fixture::command(opcode) && m_toolbox_fixture.enabled(target)) {
+		auto reply = m_toolbox_fixture.execute(m_scsi_cdb);
+		if (reply.asc) { status(5, reply.asc); return; }
+		if (reply.data_out) {
+			m_scsi_data_buffer.assign(reply.data_out,0);m_scsi_data_idx=0;
+			m_scsi_bus_phase=5;m_scsi_psns=0x88;m_scsi_ints=0x08;trigger_irq(IRQ_SCSI);return;
+		}
+		m_scsi_data_buffer = std::move(reply.data);
+		m_scsi_data_idx = 0;
+		if (m_scsi_data_buffer.empty()) { status(); return; }
+		m_scsi_bus_phase = 4;
+		m_scsi_psns = 0x89;
+		m_scsi_ints = 0x08;
+		trigger_irq(IRQ_SCSI);
+		return;
+	}
 
 	switch (opcode)
 	{
@@ -4311,6 +4465,17 @@ void s760_state::scsi_execute_cdb()
 			m_scsi_psns = 0x8B;   // BSY=1, REQ=1, Status (011)
 			m_scsi_ints = 0x08;
 			trigger_irq(IRQ_SCSI);
+			break;
+
+		case 0x1b: // START STOP UNIT
+			// Native image targets are already loaded and ready. The boot ROM
+			// explicitly requests START before reading their system header.
+			// Stop/eject/power-condition transitions are not modeled.
+			if (m_banked_os && ((m_scsi_cdb[1] & ~0x01) || m_scsi_cdb[2]
+				|| m_scsi_cdb[3] || m_scsi_cdb[4] != 0x01 || m_scsi_cdb[5]))
+				status(5, 0x24); // ILLEGAL REQUEST: invalid field in CDB
+			else
+				status();
 			break;
 
 		case 0x12: // INQUIRY
@@ -4331,6 +4496,14 @@ void s760_state::scsi_execute_cdb()
 			memcpy(&m_scsi_data_buffer[16], product, 16);
 			memcpy(&m_scsi_data_buffer[32], "1.00", 4);
 
+			if (m_toolbox_fixture.enabled(target) || image_profile) {
+				// Explicit test identity, never a claim about the installed device firmware.
+				static constexpr char identity[] = "BlueSCSIvTEST";
+				m_scsi_data_buffer.resize(36 + sizeof(identity), 0);
+				m_scsi_data_buffer[4] = uint8_t(m_scsi_data_buffer.size() - 5);
+				memcpy(&m_scsi_data_buffer[36], identity, sizeof(identity)-1);
+			}
+
 			if ((size_t)alloc_len < m_scsi_data_buffer.size())
 				m_scsi_data_buffer.resize(alloc_len);
 
@@ -4342,6 +4515,26 @@ void s760_state::scsi_execute_cdb()
 			break;
 		}
 
+		case 0x1a: // MODE SENSE(6), fixture's current vendor page with DBD only
+		{
+			if (!m_toolbox_fixture.enabled(target) && !image_profile) { status(5, 0x20); break; }
+			if (m_scsi_cdb[1] != 8 || m_scsi_cdb[2] != 0x31 || m_scsi_cdb[3] || m_scsi_cdb[5]) {
+				status(5, 0x24); break;
+			}
+			static constexpr char signature[] = "BlueSCSI is the BEST STOLEN FROM BLUESCSI";
+			static_assert(sizeof(signature) == 42);
+			m_scsi_data_buffer.assign(48, 0);
+			m_scsi_data_buffer[0] = 47;
+			m_scsi_data_buffer[4] = 0x31;
+			m_scsi_data_buffer[5] = 42;
+			memcpy(&m_scsi_data_buffer[6], signature, sizeof(signature));
+			m_scsi_data_buffer.resize(std::min<size_t>(48, m_scsi_cdb[4]));
+			m_scsi_data_idx = 0;
+			if (m_scsi_data_buffer.empty()) { status(); break; }
+			m_scsi_bus_phase = 4; m_scsi_psns = 0x89; m_scsi_ints = 0x08;
+			trigger_irq(IRQ_SCSI); break;
+		}
+
 		case 0x03: // REQUEST SENSE (fixed format, per target)
 		{
 			m_scsi_data_buffer.assign(18, 0);
@@ -4349,6 +4542,7 @@ void s760_state::scsi_execute_cdb()
 			m_scsi_data_buffer[2] = m_scsi_sense_key[target];
 			m_scsi_data_buffer[7] = 10;
 			m_scsi_data_buffer[12] = m_scsi_sense_asc[target];
+			if (image_profile) { m_scsi_data_buffer[13]=m_image_fixture.media(target).qualifier;m_image_fixture.media(target).qualifier=0; }
 			m_scsi_sense_key[target] = m_scsi_sense_asc[target] = 0;
 			m_scsi_data_buffer.resize(std::min<size_t>(18, m_scsi_cdb[4]));
 			m_scsi_data_idx = 0;
@@ -4402,7 +4596,7 @@ void s760_state::scsi_execute_cdb()
 			const u64 bytes = u64(count) * block_size;
 			// WRITE(10)/READ(10) count zero is a no-op, never a stuck data phase.
 			if (!count) { status(); break; }
-			if (write && dev_type == 5) { status(7, 0x27); break; } // DATA PROTECT
+			if (write && (dev_type == 5 || (image_profile && !m_image_fixture.media(target).writable))) { status(7, 0x27); break; } // DATA PROTECT
 			const auto &image = m_scsi_disk_images[target];
 			if (offset > image.size() || bytes > image.size() - offset) {
 				status(5, 0x21); break; // ILLEGAL REQUEST: LBA out of range
@@ -4419,6 +4613,11 @@ void s760_state::scsi_execute_cdb()
 		}
 
 		default:
+			if (m_banked_os)
+			{
+				status(5, 0x20); // ILLEGAL REQUEST: invalid command operation code
+				break;
+			}
 			m_scsi_bus_phase = 6; // STATUS
 			m_scsi_psns = 0x8B;
 			m_scsi_ints = 0x08;
@@ -5712,7 +5911,10 @@ INPUT_PORTS_END
 void s760_state::s760(machine_config &config)
 {
 	if (getenv("S760_IC4_MIDI_EXPERIMENT"))
+	{
 		MIDIIN(config, "midiin").input_callback().set(FUNC(s760_state::native_midi_rx_w));
+		MIDIOUT(config, "midiout");
+	}
 	// Main CPU: Intel 80C196 / 8096 derivative @ 16 MHz
 	if (getenv("S760_BANKED_OS") || getenv("S760_ROM_BOOT")) I80C196KB(config, m_maincpu, 16_MHz_XTAL);
 	else N8097BH(config, m_maincpu, 16_MHz_XTAL);

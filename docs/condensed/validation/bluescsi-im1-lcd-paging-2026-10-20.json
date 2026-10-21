@@ -1,0 +1,5660 @@
+{
+  "date": "2026-10-20",
+  "passed": true,
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "command_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20",
+  "commands": [
+    "python -X utf8 run_pages.py",
+    "python -X utf8 run_names.py",
+    "python -X utf8 run_cancel.py",
+    "python -X utf8 audit.py"
+  ],
+  "prerequisites": "Native MAME1188bff3..., genuine saved LCD0/GB6 controller3 NVRAM; private generated100-name ASCII catalog and named A/B Roland ISO fixtures; physical panel/pointer/MIDI inputs, read-only observers; no guest-state forcing",
+  "baseline": {
+    "firmware_sha256": "efec015fa431f571b6bcb685d0ab0d20eb6de940d227cd40409fbd34a4f09996",
+    "native_immediate_previous_failed": true,
+    "actual_first": 98,
+    "expected_first": 91,
+    "disabled_next_scroll": 0
+  },
+  "results": {
+    "paging": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "names": [
+        "000_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "001_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "002_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "003_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "004_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "005_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "006_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "007_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "008_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "009_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "010_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "011_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "012_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "013_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "014_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "015_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "016_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "017_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "018_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "019_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "020_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "021_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "022_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "023_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "024_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "025_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "026_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "027_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "028_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "029_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "030_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "031_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "032_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "033_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "034_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "035_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "036_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "037_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "038_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "039_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "040_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "041_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "042_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "043_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "044_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "045_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "046_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "047_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "048_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "049_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "050_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "051_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "052_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "053_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "054_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "055_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "056_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "057_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "058_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "059_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "060_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "061_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "062_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "063_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "064_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "065_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "066_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "067_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "068_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "069_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "070_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "071_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "072_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "073_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "074_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "075_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "076_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "077_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "078_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "079_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "080_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "081_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "082_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "083_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "084_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "085_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "086_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "087_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "088_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "089_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "090_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "091_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "092_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "093_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "094_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "095_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "096_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "097_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "098_XXXXXXXXXXXXXXXXXXXXXXXX.iso",
+        "099_XXXXXXXXXXXXXXXXXXXXXXXX.iso"
+      ],
+      "states": [
+        {
+          "name": "collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "catalog0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "first",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-7-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-7",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 7,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-14-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 7,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-14",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 14,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-21-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 14,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-21",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 21,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-28-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 21,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-28",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 28,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-35-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 28,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-35",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 35,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-42-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 35,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-42",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 42,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-49-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 42,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-49",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 49,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-56-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 49,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-56",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 56,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-63-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 56,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-63",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 63,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-70-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 63,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-70",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 70,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-77-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 70,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-77",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 77,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-84-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 77,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-84",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 84,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-91-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 84,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-91",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 91,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "next-98-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 91,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-98",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 98,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "last-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 98,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "disabled-next",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 98,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "immediate-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 98,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "immediate-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 98,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "immediate-previous-result",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 91,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-84-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 91,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-84-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 91,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-84-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 91,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-84",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 84,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-77-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 84,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-77-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 84,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-77-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 84,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-77",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 77,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-70-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 77,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-70-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 77,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-70-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 77,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-70",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 70,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-63-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 70,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-63-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 70,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-63-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 70,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-63",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 63,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-56-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 63,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-56-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 63,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-56-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 63,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-56",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 56,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-49-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 56,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-49-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 56,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-49-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 56,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-49",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 49,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-42-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 49,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-42-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 49,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-42-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 49,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-42",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 42,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-35-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 42,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-35-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 42,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-35-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 42,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-35",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 35,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-28-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 35,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-28-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 35,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-28-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 35,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-28",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 28,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-21-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 28,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-21-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 28,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-21-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 28,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-21",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 21,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-14-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 21,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-14-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 21,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-14-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 21,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-14",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 14,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-7-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 14,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-7-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 14,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-7-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 14,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-7",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 7,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-0-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 7,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-0-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 7,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "previous-0-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 7,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "page-back-0",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "return-collections-bottom",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "return-collections-previous0",
+          "screen": 245,
+          "cursor": [
+            24,
+            56
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "return-collections-previous1",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 2,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "returned-collections",
+          "screen": 245,
+          "cursor": [
+            24,
+            48
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        }
+      ],
+      "rows": [
+        {
+          "seconds": 32.4553075,
+          "status": 0,
+          "length": 50,
+          "cdb": "12000000600000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 32.459759625,
+          "status": 0,
+          "length": 48,
+          "cdb": "1a083100300000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 32.46098775,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 32.802458875,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 37.6682785,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 38.009525625,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 42.968313375,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 43.3093365,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 48.218633125,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 48.55943225,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 53.43490175,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 53.775476875,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 58.718641875,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 59.05897625,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 63.9684055,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 64.308532625,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 69.101968625,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 69.44187175,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 74.251977,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 74.591656125,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 79.5349925,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 79.874447625,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 84.734983875,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 85.074215,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 89.901669125,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 90.24067625,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 95.135193875,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 95.473977,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 100.38516375,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 100.723722875,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 105.601813125,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 105.94020825,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 113.934900875,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 114.27344325,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 119.71857675,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 120.057359875,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 125.584827875,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 125.923835,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 131.285142,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 131.624373125,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 137.151952875,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 137.491408,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 142.8847605,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 143.224439625,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 148.618573375,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 148.9584765,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 154.384809,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 154.724919375,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 160.1519125,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 160.492246875,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 165.868616,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 166.209174375,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 171.6017065,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 171.942505625,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 177.35197925,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 177.693002375,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 183.118104,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 183.459351125,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 188.851481,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000",
+          "transport": 0
+        },
+        {
+          "seconds": 189.192952125,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000",
+          "transport": 0
+        }
+      ],
+      "library_unchanged": true,
+      "scope": "Native LCD all100 full32-byte catalog entries, 15 pages forward/back, last Next and Collections; no mount or hardware claim"
+    },
+    "names": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "names": [
+        "ABCDEFGHIJKLMNOPQRSTUAAA0000.iso",
+        "ABCDEFGHIJKLMNOPQRSTUBBB0000.iso",
+        "ABCDEFGHIJKLMNOPQRSTUCCC0000.iso"
+      ],
+      "states": [
+        {
+          "name": "collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "catalog0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "preview-A-choose0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "preview-A",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "back-A-choose0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "back-A-choose1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "back-A-choose2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "back-A-choose3",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "back-A0",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "preview-held-C-choose0",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "preview-held-C-choose1",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0
+        },
+        {
+          "name": "preview-held-C",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "back-C-choose0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "back-C-choose1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "back-C-choose2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "back-C-choose3",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "back-C0",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "preview-B-choose0",
+          "screen": 245,
+          "cursor": [
+            24,
+            32
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "preview-B-choose1",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "preview-B-choose2",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 2,
+          "allocations": 0
+        },
+        {
+          "name": "preview-B",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "confirm-B0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "confirm-B1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "confirm-B2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "mounted-B0",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 0
+        },
+        {
+          "name": "loaded-B",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 13
+        },
+        {
+          "name": "perform",
+          "screen": 50,
+          "cursor": [
+            8,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 3,
+          "first": 0,
+          "scroll": 0,
+          "index": 1,
+          "allocations": 13
+        }
+      ],
+      "rows": [
+        {
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "seconds": 32.37222925,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "seconds": 32.376681375,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 32.3779095,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "length": 120,
+          "seconds": 32.38907975,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "d8010000000000000000",
+          "length": 0,
+          "seconds": 53.901372125,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "seconds": 53.922089625,
+          "status": 2,
+          "transport": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "length": 18,
+          "seconds": 53.92420075,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "seconds": 53.94493375,
+          "status": 2,
+          "transport": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "length": 18,
+          "seconds": 53.947044875,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "seconds": 53.967761125,
+          "status": 0,
+          "transport": 0
+        },
+        {
+          "cdb": "25000000000000000000",
+          "length": 8,
+          "seconds": 53.96928725,
+          "status": 0,
+          "transport": 0
+        }
+      ],
+      "name_reads": [
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 3,
+          "text": "ISO A (ID 1)         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 4,
+          "text": "ISO A (ID 1)         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 3,
+          "text": "IMG (ID 2)           "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 4,
+          "text": "IMG (ID 2)           "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 3,
+          "text": "ISO B (ID 3)         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 4,
+          "text": "ISO B (ID 3)         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 3,
+          "text": "ISO C (ID 6)         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 4,
+          "text": "ISO C (ID 6)         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 3,
+          "text": "Disk options         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 4,
+          "text": "Disk options         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 17,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 18,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 17,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 18,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOP     "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOP     "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 3,
+          "text": "QRSTUAAA0000.iso     "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 4,
+          "text": "QRSTUAAA0000.iso     "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 3,
+          "text": "Mount + Load         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 4,
+          "text": "Mount + Load         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 3,
+          "text": "Back                 "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 4,
+          "text": "Back                 "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 3,
+          "text": "CD1                  "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 4,
+          "text": "CD1                  "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 17,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 18,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 17,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 18,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOP     "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOP     "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 3,
+          "text": "QRSTUCCC0000.iso     "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 4,
+          "text": "QRSTUCCC0000.iso     "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 3,
+          "text": "Mount + Load         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 4,
+          "text": "Mount + Load         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 3,
+          "text": "Back                 "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 4,
+          "text": "Back                 "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 3,
+          "text": "CD1                  "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 4,
+          "text": "CD1                  "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 17,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 18,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOPQRSTU"
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 0,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 1,
+          "text": "                         "
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 17,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 0,
+          "x": 18,
+          "text": "CD1"
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 3,
+          "text": "ABCDEFGHIJKLMNOP     "
+        },
+        {
+          "pc": 25850,
+          "y": 1,
+          "x": 4,
+          "text": "ABCDEFGHIJKLMNOP     "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 3,
+          "text": "QRSTUBBB0000.iso     "
+        },
+        {
+          "pc": 25850,
+          "y": 2,
+          "x": 4,
+          "text": "QRSTUBBB0000.iso     "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 3,
+          "text": "Mount + Load         "
+        },
+        {
+          "pc": 25850,
+          "y": 3,
+          "x": 4,
+          "text": "Mount + Load         "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 3,
+          "text": "Back                 "
+        },
+        {
+          "pc": 25850,
+          "y": 4,
+          "x": 4,
+          "text": "Back                 "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 3,
+          "text": "CD1                  "
+        },
+        {
+          "pc": 25850,
+          "y": 5,
+          "x": 4,
+          "text": "CD1                  "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 6,
+          "x": 4,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 3,
+          "text": "                     "
+        },
+        {
+          "pc": 25850,
+          "y": 7,
+          "x": 4,
+          "text": "                     "
+        }
+      ],
+      "preview_and_back_issue_no_mount": true,
+      "held_activation_no_mount": true,
+      "one_explicit_index1_mount": true,
+      "exact_sample_bytes": 119808,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "library_unchanged": true,
+      "scope": "Native LCD full32-byte split-name confirmation with shared21-byte prefixes; no hardware or complete LCD matrix claim"
+    },
+    "crt_sds": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "states": [
+        {
+          "name": "boot",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 0,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "collections",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 0,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "listing-cancelled",
+          "mode": 0,
+          "error": 7,
+          "cancel": 1,
+          "cancel_wire_count": 1376,
+          "mount_may_have_changed": 0,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "listing-retry",
+          "mode": 1,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 1376,
+          "mount_may_have_changed": 0,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "last-page",
+          "mode": 1,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 1376,
+          "mount_may_have_changed": 0,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "switch-interrupted",
+          "mode": 0,
+          "error": 7,
+          "cancel": 1,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 1,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "fresh-catalog",
+          "mode": 1,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 0,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "retry-last-page",
+          "mode": 1,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 0,
+          "handoff": 0,
+          "native_drive": 8,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "handoff",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 1,
+          "handoff": 30209,
+          "native_drive": 1,
+          "allocation_cursor": 0
+        },
+        {
+          "name": "loaded",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 1,
+          "handoff": 30209,
+          "native_drive": 1,
+          "allocation_cursor": 13
+        },
+        {
+          "name": "perform",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 1,
+          "handoff": 30209,
+          "native_drive": 1,
+          "allocation_cursor": 13
+        },
+        {
+          "name": "sds-cancel",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 1,
+          "handoff": 30209,
+          "native_drive": 1,
+          "allocation_cursor": 13
+        },
+        {
+          "name": "sds-reserved",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 1,
+          "handoff": 30209,
+          "native_drive": 1,
+          "allocation_cursor": 14
+        },
+        {
+          "name": "sds-published",
+          "mode": 0,
+          "error": 0,
+          "cancel": 0,
+          "cancel_wire_count": 0,
+          "mount_may_have_changed": 1,
+          "handoff": 30209,
+          "native_drive": 1,
+          "allocation_cursor": 14
+        }
+      ],
+      "rows": [
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "seconds": 28.67317625
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "seconds": 28.677628375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 28.6788565
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 29.029551375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "12000000600000000000",
+          "length": 50,
+          "seconds": 34.989693375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "1a083100300000000000",
+          "length": 48,
+          "seconds": 34.9941455
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 34.995373625
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 35.346730125
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 39.352632875
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 39.703780375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 40.7855335
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 41.136457
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 42.168822375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 42.519506875
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 43.618982375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 43.969427875
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 45.035601125
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 45.386405
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 46.40211925
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 46.75213175
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 47.836027375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 48.185830875
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 49.253075375
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 49.60323725
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 50.635602625
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 50.984928125
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 52.036087125
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 52.385173625
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 53.436332625
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 53.785195125
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 54.902412125
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 55.251050625
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 56.2855585
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 56.633973
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "seconds": 57.669552125
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "seconds": 58.017802625
+        },
+        {
+          "transport": 0,
+          "status": 0,
+          "cdb": "d8630000000000000000",
+          "length": 0,
+          "seconds": 59.5192445
+        }
+      ],
+      "physical_inputs": [
+        {
+          "down": true,
+          "mode": "list",
+          "reason": "D7-data-byte1200",
+          "reads": 255,
+          "seconds": 28.784624
+        },
+        {
+          "down": false,
+          "mode": "list",
+          "reason": "bounded-command-return",
+          "reads": 255,
+          "seconds": 29.029551375
+        },
+        {
+          "down": true,
+          "mode": "switch",
+          "reason": "D8-command-first-byte",
+          "reads": 0,
+          "seconds": 59.51842275
+        },
+        {
+          "down": false,
+          "mode": "switch",
+          "reason": "guest-Exit-latch-observed",
+          "reads": 0,
+          "seconds": 59.533354625
+        }
+      ],
+      "all_code_preserved": true,
+      "library_unchanged": true,
+      "listing_cancel_drains4000": true,
+      "post_d8_no_follow_on_commands": true,
+      "explicit_retry_native_load": true,
+      "exact_sample_bytes": 119808,
+      "exact_sds_bytes": 160,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "limitations": [
+        "SCSI callbacks remain masked; no full IRQ/physical timing qualification",
+        "Interruption after D8 may change mounted media; no rollback or automatic native Load",
+        "Native load/save/format and relocated sender operation ownership still open"
+      ]
+    },
+    "audit": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+      "exe_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+      "originals": {
+        "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+        "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+      },
+      "originals_unchanged": true,
+      "exact_rebuild": true,
+      "intervals": [
+        [
+          "SDS remote",
+          15678,
+          640
+        ],
+        [
+          "SDS local",
+          16318,
+          160
+        ],
+        [
+          "SDS cancel",
+          16478,
+          31
+        ],
+        [
+          "browser",
+          16512,
+          3951
+        ],
+        [
+          "help and identity strings",
+          21760,
+          312
+        ],
+        [
+          "LCD descriptor",
+          22096,
+          212
+        ],
+        [
+          "LCD temporary text",
+          22320,
+          26
+        ],
+        [
+          "catalog",
+          22512,
+          224
+        ],
+        [
+          "resources",
+          22736,
+          739
+        ],
+        [
+          "context",
+          23488,
+          92
+        ],
+        [
+          "native operations labels",
+          23580,
+          100
+        ]
+      ],
+      "named_bytes": 6487,
+      "residual_bytes": 1515,
+      "code_adjacent_bytes": 1297,
+      "branch_targets": [
+        [
+          33927,
+          37656
+        ],
+        [
+          33953,
+          34559
+        ],
+        [
+          33956,
+          33961
+        ],
+        [
+          33958,
+          34541
+        ],
+        [
+          33975,
+          33988
+        ],
+        [
+          33997,
+          34002
+        ],
+        [
+          33999,
+          34297
+        ],
+        [
+          34006,
+          34108
+        ],
+        [
+          34012,
+          34017
+        ],
+        [
+          34014,
+          34178
+        ],
+        [
+          34021,
+          34096
+        ],
+        [
+          34027,
+          34032
+        ],
+        [
+          34029,
+          34553
+        ],
+        [
+          34061,
+          35965
+        ],
+        [
+          34068,
+          34073
+        ],
+        [
+          34070,
+          34482
+        ],
+        [
+          34073,
+          36150
+        ],
+        [
+          34080,
+          34085
+        ],
+        [
+          34082,
+          34482
+        ],
+        [
+          34085,
+          34559
+        ],
+        [
+          34088,
+          34093
+        ],
+        [
+          34090,
+          34541
+        ],
+        [
+          34093,
+          34492
+        ],
+        [
+          34105,
+          34492
+        ],
+        [
+          34130,
+          34155
+        ],
+        [
+          34140,
+          37863
+        ],
+        [
+          34152,
+          34553
+        ],
+        [
+          34163,
+          37863
+        ],
+        [
+          34175,
+          34553
+        ],
+        [
+          34182,
+          34187
+        ],
+        [
+          34184,
+          34432
+        ],
+        [
+          34191,
+          34196
+        ],
+        [
+          34193,
+          34455
+        ],
+        [
+          34212,
+          34217
+        ],
+        [
+          34214,
+          34553
+        ],
+        [
+          34230,
+          34324
+        ],
+        [
+          34241,
+          35501
+        ],
+        [
+          34254,
+          35184
+        ],
+        [
+          34265,
+          34287
+        ],
+        [
+          34275,
+          37863
+        ],
+        [
+          34294,
+          34553
+        ],
+        [
+          34301,
+          34324
+        ],
+        [
+          34307,
+          34312
+        ],
+        [
+          34309,
+          34553
+        ],
+        [
+          34321,
+          34492
+        ],
+        [
+          34324,
+          36272
+        ],
+        [
+          34331,
+          34336
+        ],
+        [
+          34333,
+          34482
+        ],
+        [
+          34336,
+          34559
+        ],
+        [
+          34339,
+          34344
+        ],
+        [
+          34341,
+          34541
+        ],
+        [
+          34363,
+          35501
+        ],
+        [
+          34405,
+          37855
+        ],
+        [
+          34420,
+          34426
+        ],
+        [
+          34426,
+          37867
+        ],
+        [
+          34429,
+          34553
+        ],
+        [
+          34441,
+          34487
+        ],
+        [
+          34452,
+          34073
+        ],
+        [
+          34472,
+          34553
+        ],
+        [
+          34479,
+          34073
+        ],
+        [
+          34492,
+          35501
+        ],
+        [
+          34505,
+          35184
+        ],
+        [
+          34516,
+          34538
+        ],
+        [
+          34526,
+          37863
+        ],
+        [
+          34538,
+          34553
+        ],
+        [
+          34550,
+          34487
+        ],
+        [
+          34567,
+          34577
+        ],
+        [
+          34585,
+          37656
+        ],
+        [
+          34602,
+          34645
+        ],
+        [
+          34639,
+          37855
+        ],
+        [
+          34642,
+          37867
+        ],
+        [
+          34653,
+          37656
+        ],
+        [
+          34669,
+          34664
+        ],
+        [
+          34671,
+          35501
+        ],
+        [
+          34674,
+          35184
+        ],
+        [
+          34695,
+          34717
+        ],
+        [
+          34705,
+          37863
+        ],
+        [
+          34725,
+          37656
+        ],
+        [
+          34736,
+          34774
+        ],
+        [
+          34746,
+          34773
+        ],
+        [
+          34761,
+          37863
+        ],
+        [
+          34782,
+          34797
+        ],
+        [
+          34794,
+          33930
+        ],
+        [
+          34806,
+          34850
+        ],
+        [
+          34816,
+          34829
+        ],
+        [
+          34822,
+          34850
+        ],
+        [
+          34826,
+          34842
+        ],
+        [
+          34832,
+          34850
+        ],
+        [
+          34838,
+          34850
+        ],
+        [
+          34847,
+          34851
+        ],
+        [
+          34867,
+          34862
+        ],
+        [
+          34897,
+          37859
+        ],
+        [
+          34915,
+          34876
+        ],
+        [
+          34930,
+          34936
+        ],
+        [
+          34953,
+          37859
+        ],
+        [
+          34974,
+          34982
+        ],
+        [
+          34980,
+          35050
+        ],
+        [
+          35038,
+          37859
+        ],
+        [
+          35094,
+          35086
+        ],
+        [
+          35122,
+          37859
+        ],
+        [
+          35144,
+          35075
+        ],
+        [
+          35171,
+          37859
+        ],
+        [
+          35192,
+          35198
+        ],
+        [
+          35194,
+          34851
+        ],
+        [
+          35225,
+          37859
+        ],
+        [
+          35261,
+          37859
+        ],
+        [
+          35275,
+          35247
+        ],
+        [
+          35283,
+          35202
+        ],
+        [
+          35298,
+          35359
+        ],
+        [
+          35308,
+          35359
+        ],
+        [
+          35323,
+          35359
+        ],
+        [
+          35333,
+          35359
+        ],
+        [
+          35343,
+          35359
+        ],
+        [
+          35353,
+          35359
+        ],
+        [
+          35376,
+          37859
+        ],
+        [
+          35401,
+          35417
+        ],
+        [
+          35411,
+          35417
+        ],
+        [
+          35434,
+          37859
+        ],
+        [
+          35474,
+          37859
+        ],
+        [
+          35498,
+          35454
+        ],
+        [
+          35534,
+          35529
+        ],
+        [
+          35540,
+          35615
+        ],
+        [
+          35546,
+          35551
+        ],
+        [
+          35548,
+          35774
+        ],
+        [
+          35555,
+          35560
+        ],
+        [
+          35557,
+          35791
+        ],
+        [
+          35564,
+          35569
+        ],
+        [
+          35566,
+          35888
+        ],
+        [
+          35573,
+          35578
+        ],
+        [
+          35575,
+          35910
+        ],
+        [
+          35594,
+          35599
+        ],
+        [
+          35596,
+          35949
+        ],
+        [
+          35612,
+          35914
+        ],
+        [
+          35619,
+          35735
+        ],
+        [
+          35625,
+          35630
+        ],
+        [
+          35627,
+          35760
+        ],
+        [
+          35634,
+          35639
+        ],
+        [
+          35636,
+          35767
+        ],
+        [
+          35643,
+          35648
+        ],
+        [
+          35645,
+          35949
+        ],
+        [
+          35667,
+          35672
+        ],
+        [
+          35669,
+          35949
+        ],
+        [
+          35704,
+          35722
+        ],
+        [
+          35709,
+          35716
+        ],
+        [
+          35714,
+          35725
+        ],
+        [
+          35719,
+          35725
+        ],
+        [
+          35730,
+          35698
+        ],
+        [
+          35732,
+          35949
+        ],
+        [
+          35757,
+          35949
+        ],
+        [
+          35764,
+          35914
+        ],
+        [
+          35771,
+          35914
+        ],
+        [
+          35788,
+          35914
+        ],
+        [
+          35795,
+          35804
+        ],
+        [
+          35801,
+          35914
+        ],
+        [
+          35808,
+          35832
+        ],
+        [
+          35814,
+          35819
+        ],
+        [
+          35816,
+          35949
+        ],
+        [
+          35829,
+          35914
+        ],
+        [
+          35841,
+          35949
+        ],
+        [
+          35856,
+          35914
+        ],
+        [
+          35866,
+          35875
+        ],
+        [
+          35872,
+          35914
+        ],
+        [
+          35879,
+          35914
+        ],
+        [
+          35885,
+          35914
+        ],
+        [
+          35901,
+          35914
+        ],
+        [
+          35907,
+          35914
+        ],
+        [
+          35927,
+          35949
+        ],
+        [
+          35932,
+          35939
+        ],
+        [
+          35937,
+          35942
+        ],
+        [
+          35947,
+          35921
+        ],
+        [
+          35959,
+          35964
+        ],
+        [
+          35961,
+          35519
+        ],
+        [
+          35972,
+          36424
+        ],
+        [
+          35979,
+          35984
+        ],
+        [
+          35981,
+          36149
+        ],
+        [
+          35988,
+          35993
+        ],
+        [
+          35990,
+          36687
+        ],
+        [
+          36002,
+          36007
+        ],
+        [
+          36004,
+          36687
+        ],
+        [
+          36016,
+          36021
+        ],
+        [
+          36018,
+          36687
+        ],
+        [
+          36030,
+          36035
+        ],
+        [
+          36032,
+          36687
+        ],
+        [
+          36044,
+          36049
+        ],
+        [
+          36046,
+          36687
+        ],
+        [
+          36062,
+          36067
+        ],
+        [
+          36064,
+          36687
+        ],
+        [
+          36074,
+          36424
+        ],
+        [
+          36081,
+          36149
+        ],
+        [
+          36087,
+          36092
+        ],
+        [
+          36089,
+          36687
+        ],
+        [
+          36101,
+          36106
+        ],
+        [
+          36103,
+          36687
+        ],
+        [
+          36114,
+          36119
+        ],
+        [
+          36116,
+          36687
+        ],
+        [
+          36140,
+          36145
+        ],
+        [
+          36142,
+          36687
+        ],
+        [
+          36147,
+          36131
+        ],
+        [
+          36162,
+          36424
+        ],
+        [
+          36169,
+          36271
+        ],
+        [
+          36175,
+          36180
+        ],
+        [
+          36177,
+          36687
+        ],
+        [
+          36191,
+          36196
+        ],
+        [
+          36193,
+          36687
+        ],
+        [
+          36209,
+          36216
+        ],
+        [
+          36236,
+          36424
+        ],
+        [
+          36243,
+          36271
+        ],
+        [
+          36253,
+          36258
+        ],
+        [
+          36255,
+          36687
+        ],
+        [
+          36266,
+          36271
+        ],
+        [
+          36268,
+          36687
+        ],
+        [
+          36284,
+          36424
+        ],
+        [
+          36296,
+          36373
+        ],
+        [
+          36302,
+          36374
+        ],
+        [
+          36309,
+          36373
+        ],
+        [
+          36316,
+          36424
+        ],
+        [
+          36323,
+          36348
+        ],
+        [
+          36329,
+          36373
+        ],
+        [
+          36338,
+          36424
+        ],
+        [
+          36343,
+          36302
+        ],
+        [
+          36345,
+          36687
+        ],
+        [
+          36355,
+          36424
+        ],
+        [
+          36362,
+          36373
+        ],
+        [
+          36368,
+          36373
+        ],
+        [
+          36370,
+          36687
+        ],
+        [
+          36381,
+          37336
+        ],
+        [
+          36393,
+          36416
+        ],
+        [
+          36405,
+          36421
+        ],
+        [
+          36409,
+          36381
+        ],
+        [
+          36462,
+          36474
+        ],
+        [
+          36486,
+          36500
+        ],
+        [
+          36508,
+          36517
+        ],
+        [
+          36514,
+          36552
+        ],
+        [
+          36520,
+          36543
+        ],
+        [
+          36525,
+          36552
+        ],
+        [
+          36639,
+          36692
+        ],
+        [
+          36642,
+          37569
+        ],
+        [
+          36664,
+          36686
+        ],
+        [
+          36669,
+          36687
+        ],
+        [
+          36680,
+          36686
+        ],
+        [
+          36692,
+          37569
+        ],
+        [
+          36704,
+          36711
+        ],
+        [
+          36722,
+          36727
+        ],
+        [
+          36724,
+          37073
+        ],
+        [
+          36791,
+          37269
+        ],
+        [
+          36794,
+          36799
+        ],
+        [
+          36796,
+          37101
+        ],
+        [
+          36810,
+          36815
+        ],
+        [
+          36812,
+          37080
+        ],
+        [
+          36826,
+          36791
+        ],
+        [
+          36828,
+          37173
+        ],
+        [
+          36831,
+          36836
+        ],
+        [
+          36833,
+          37101
+        ],
+        [
+          36839,
+          36844
+        ],
+        [
+          36841,
+          37087
+        ],
+        [
+          36852,
+          37202
+        ],
+        [
+          36855,
+          36860
+        ],
+        [
+          36857,
+          37101
+        ],
+        [
+          36862,
+          36828
+        ],
+        [
+          36864,
+          37173
+        ],
+        [
+          36867,
+          36872
+        ],
+        [
+          36869,
+          37101
+        ],
+        [
+          36875,
+          36880
+        ],
+        [
+          36877,
+          37022
+        ],
+        [
+          36883,
+          36912
+        ],
+        [
+          36888,
+          36893
+        ],
+        [
+          36890,
+          37087
+        ],
+        [
+          36896,
+          36901
+        ],
+        [
+          36898,
+          37094
+        ],
+        [
+          36909,
+          37012
+        ],
+        [
+          36915,
+          36920
+        ],
+        [
+          36917,
+          37087
+        ],
+        [
+          36923,
+          36928
+        ],
+        [
+          36925,
+          37094
+        ],
+        [
+          36936,
+          37004
+        ],
+        [
+          36942,
+          36967
+        ],
+        [
+          36952,
+          36962
+        ],
+        [
+          36964,
+          36979
+        ],
+        [
+          36971,
+          36979
+        ],
+        [
+          36977,
+          36992
+        ],
+        [
+          36985,
+          37012
+        ],
+        [
+          36989,
+          37012
+        ],
+        [
+          36995,
+          36979
+        ],
+        [
+          37000,
+          36979
+        ],
+        [
+          37012,
+          37202
+        ],
+        [
+          37015,
+          37101
+        ],
+        [
+          37019,
+          36864
+        ],
+        [
+          37027,
+          37202
+        ],
+        [
+          37030,
+          37101
+        ],
+        [
+          37032,
+          37173
+        ],
+        [
+          37035,
+          37101
+        ],
+        [
+          37040,
+          37087
+        ],
+        [
+          37047,
+          37202
+        ],
+        [
+          37050,
+          37101
+        ],
+        [
+          37052,
+          37269
+        ],
+        [
+          37055,
+          37101
+        ],
+        [
+          37068,
+          37052
+        ],
+        [
+          37070,
+          37101
+        ],
+        [
+          37077,
+          37101
+        ],
+        [
+          37084,
+          37101
+        ],
+        [
+          37091,
+          37101
+        ],
+        [
+          37098,
+          37101
+        ],
+        [
+          37104,
+          37172
+        ],
+        [
+          37162,
+          37172
+        ],
+        [
+          37166,
+          37151
+        ],
+        [
+          37173,
+          37269
+        ],
+        [
+          37176,
+          37268
+        ],
+        [
+          37198,
+          37173
+        ],
+        [
+          37210,
+          37269
+        ],
+        [
+          37213,
+          37268
+        ],
+        [
+          37226,
+          37210
+        ],
+        [
+          37231,
+          37237
+        ],
+        [
+          37233,
+          37173
+        ],
+        [
+          37245,
+          37269
+        ],
+        [
+          37248,
+          37268
+        ],
+        [
+          37261,
+          37245
+        ],
+        [
+          37280,
+          37285
+        ],
+        [
+          37282,
+          37336
+        ],
+        [
+          37307,
+          37324
+        ],
+        [
+          37316,
+          37324
+        ],
+        [
+          37320,
+          37330
+        ],
+        [
+          37411,
+          37569
+        ],
+        [
+          37445,
+          37463
+        ],
+        [
+          37577,
+          37655
+        ],
+        [
+          37588,
+          37655
+        ],
+        [
+          37621,
+          37655
+        ],
+        [
+          37855,
+          8320
+        ],
+        [
+          37859,
+          52756
+        ],
+        [
+          37863,
+          52717
+        ],
+        [
+          37867,
+          61608
+        ]
+      ],
+      "wire_bytes": 4000,
+      "retained_bytes": 224,
+      "filename_bytes": 32,
+      "implicit_index_contract": "All D7 wire indices must equal0..count-1 before publication; mismatch latches C+82 and rejects after successful drain. No filtering/reordering.",
+      "gb6_v9": {
+        "boot_banner_check": 1,
+        "boot_eeprom_check": 1,
+        "boot_setup4_inc": 1,
+        "boot_setup5_inc": 1,
+        "os_main_loop_poll_dispatch": 18,
+        "os_modal_poll_dispatch": 19,
+        "os_lcd_status_selector": 21,
+        "os_controller_hw_init": 56,
+        "os_mouse_poll_entry": 6,
+        "os_gb6_poll_stub": 41
+      },
+      "no_patch_byte_overlap": true
+    }
+  },
+  "limitations": [
+    "Native emulation only; no physical BlueSCSI timing/configuration qualification",
+    "Remaining LCD collection/IMG/Disk/error/cancellation/cold-state and RC100 matrix open",
+    "Full ownership/reset/checkpoint/stack and complete feature fit remain open"
+  ]
+}

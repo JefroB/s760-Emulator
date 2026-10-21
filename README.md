@@ -1,232 +1,72 @@
-# Roland S-760 native emulator
+# S760Studio — Roland S-760 emulator
 
-An open-source Roland S-760 emulation project built around a modified MAME
-runtime, a Windows standalone player and a native VST3 instrument. The original
-firmware handles the sampler's interface and workflows; React/WebView2 displays
-the live CRT/LCD frames and provides the rack controls.
+S760Studio emulates the Roland S-760 sampler on Windows, using the original boot ROM and operating system. Load sample disks, play sounds over MIDI, and operate the sampler through its original screen and front-panel controls. It can also run as a VST3 instrument with a matching plugin build.
 
-![Native standalone with original firmware and optional keyboard](docs/images/standalone-keyboard.png)
+![S760Studio emulator with its original sampler display and on-screen keyboard](docs/images/standalone-keyboard.png)
 
-Download the [standalone clean-machine acceptance kit](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v4).
-See the [artifact index/checksum](artifacts/standalone/README.md) and
-[test instructions](docs/testing/standalone-clean-machine-handoff.md). The user accepted clean-machine launch/setup; full media workflows were waived.
+You must supply your own IC15 boot ROM, S-760 OS disk image and sample media. These are not included in the download.
 
-## Current status
+## Downloads
 
-As of **2026-10-17**, Milestones 1–5 are complete for their documented Windows
-development profiles. **SoundCheck is the automated DAW/host acceptance framework.**
-The [Milestone5 acceptance matrix](docs/testing/milestone-5-acceptance.md) records named
-sampler workflows and firmware restrictions. [Dated packaged editing acceptance](docs/testing/milestone-6-packaged-editing.md) now covers
-four named edits, firmware Save/cold Load and session restore through real browser controls.
-The [2026-10-17 packaged crash-recovery check](docs/testing/milestone-6-crash-recovery.md)
-adds three forced shutdown/relaunch cycles with exact dirty-disk and sample retention.
-[Checkpoint-publication fault tests](docs/testing/milestone-6-checkpoint-publication.md)
-also cover interrupted staging, Windows replacement denial and a successful retry.
-The [actual WebView2 desktop window](docs/testing/milestone-6-webview-editing.md)
-now passes all four named editing, Save, session-restore and cold-Load workflows.
-It also passes a [normal-speed physical stereo sampling workflow](docs/testing/milestone-6-webview-sampling.md),
-with firmware Save, session restore and exact sample retention after cold Load.
-A [frozen candidate with the layered configuration UI](docs/testing/milestone-6-complete-standalone-workflow.md)
-now passes two complete normal-speed load/play/edit/sample/save/restore/reopen cycles,
-including measured Windows-device playback, physical input and independent native readback.
-The [source-built standalone release archive](docs/testing/standalone-release-promotion.md)
-now has source/dependency distribution qualification and passes two complete
-workflows from its extracted bytes, with twelve independent native readbacks.
-Its GPLv3 ASIO source and native/Python dependency sources accompany the package.
-[Milestone 7](docs/project/completion-roadmap.md#milestone-7--editable-os-and-boot-rom-toolchain) is complete for its documented editable assembly, byte-exact rebuild, source-change and structured decompiler workflows for both the OS and boot ROM. The [toolchain guide](docs/firmware/tooling/firmware-toolchain.md) documents regeneration from user-supplied firmware; generated firmware exports stay local.
-The user has [accepted clean-machine launch and firmware discovery](docs/testing/clean-machine-acceptance-2026-10-17.md), explicitly waiving full media workflows on that machine. Remaining final-release gates are recorded in [Milestone6](docs/project/completion-roadmap.md). This is a development project;
-passing model or native-runtime tests does not establish complete hardware parity.
+- **[Download the Windows standalone ZIP](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17-v4/s760-standalone-acceptance-2026-10-17-v4.zip)**
+- **[Download the PowerShell installer helper](https://github.com/JefroB/s760-Emulator/releases/download/standalone-acceptance-2026-10-17-v4/install-acceptance-v4.ps1)**
+- [Release page and checksums](https://github.com/JefroB/s760-Emulator/releases/tag/standalone-acceptance-2026-10-17-v4)
 
-| Product | Qualified scope |
+The current download is a development prerelease. You do not need the source code, Python or Node to run it. The ZIP contains the standalone application; it does not include the VST3 plugin.
+
+## Install the standalone
+
+Use Windows 10 or 11, 64-bit, with the [Microsoft Visual C++ v14 Redistributable (x64)](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) and [Microsoft Edge WebView2 Runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) installed. The desktop host also uses [.NET Framework](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48).
+
+1. Download the ZIP above. In File Explorer, right-click it, choose **Properties → Unblock → Apply**, then extract it into a writable folder.
+2. Find the `S760Studio` folder inside the extraction. Keep all its files and subfolders together.
+3. Add your firmware and media as described below, then run **`S760Studio.exe`**.
+
+Alternatively, download the ZIP and installer helper into the same folder. Open PowerShell there and run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install-acceptance-v4.ps1 -Destination "$env:USERPROFILE\S760"
+```
+
+Choose a new destination folder. The helper verifies the download, unblocks it and extracts the application; it does not install Windows prerequisites or firmware. It prints the path to `S760Studio.exe` when finished.
+
+## Add your boot ROM, OS and sample disks
+
+The following paths are relative to the folder containing **`S760Studio.exe`**. The download includes empty `roms` folders ready for your files.
+
+| What you supply | Where to put it |
 | --- | --- |
-| Windows standalone | Original-firmware boot, live displays/controls, floppy load/save/export, MIDI playing, session recovery and supported 44.1 kHz MME/ASIO stereo sampling |
-| Native VST3 instrument | SoundCheck SDK discovery, MIDI/controller effects, stereo output, offline rendering, optional 44.1 kHz input and same-build project save/cold reopen |
-| GB-6 controller patches | Selectable 4th controller option (`GB-6 +CRT`, mode `3`) for IC15 Boot ROM v1.11 + OS 2.24 (`v8`/`v9`) verified in emulator (**not yet tested on real hardware**); legacy Mouse+CRT replacement patch (`patch_gb6_os.py`) `v8` vertical motion user-confirmed on hardware |
+| **IC15 boot ROM v1.11**, raw 32 KB binary (32,768 bytes) | `roms/BOOT/Roland_S-760_v1.11.BIN` |
+| **S-760 OS 2.24 system disk**, raw 1.44 MB image (1,474,560 bytes) | `roms/System/S760224.IMG` |
+| Sample floppy images, raw 720 KB or 1.44 MB `.IMG` / `.DSK` files | `roms/FDD/` — keep your own filenames |
+| SCSI hard-disk image, raw `.IMG` with 512-byte sectors, at SCSI ID 0 | `roms/SCSI/HD0.img` |
+| SCSI CD-ROM image, `.ISO` with 2,048-byte sectors, at SCSI ID 1 | `roms/SCSI/CD1.iso` |
 
-Native-runtime testing also qualifies named Akai S1000 Convert Load and native
-Roland CD1 Load profiles. The full JMD Roland CD loads its K4 performance and79
-byte-verified sample allocations, with playback/release and exact cold recall.
-See the [native Roland results and limits](docs/condensed/validation/milestone-5-roland-scsi-load-2026-10-14.json).
-Native HD0 initialization/Save/export/fresh Load also passes on the named10MiB profile;
-[SCSI write limits](docs/condensed/validation/milestone-5-scsi-save-2026-10-14.json)
-include explicit Python export only. Final packaged media selection/export remains unqualified.
-The original firmware mutes Disk/Quick Load/Sampling displays; disk/MIDI tests qualify
-safe completion and playback recovery, without musical continuity during disk operations.
+The boot ROM must be a raw binary, not an Intel HEX file. The OS can also be named `S760224.OUT`; a raw Roland `.OUT` system disk needs no conversion. The boot ROM and OS disk are both required to start the sampler.
 
-Native plugin output processing is tested at 44.1/48/96 kHz. Input and project
-profiles have narrower documented limits. Cross-build/rate/negotiated-maximum
-project migration is unsupported; incompatible recall rejects explicitly. Raw
-CC120/121 are unsupported by the qualified firmware profile; documented message
-sequences provide panic/reset. Live Sampler FX is unadvertised; VST2/CLAP and the
-historical core are diagnostic paths rather than qualified native products.
+You can keep your firmware elsewhere and select its paths using the **Configuration gear → Firmware & media**. Saved settings take precedence over automatic folder discovery.
 
-## Start here
+For SCSI media, use the filenames above and add the images **before starting the application**. Load their contents through the sampler's **Disk → Load** screen, selecting the appropriate SCSI device. Images must contain media the S-760 understands; renaming an arbitrary file to `.IMG` or `.ISO` does not convert it. Existing profiles retain private SCSI copies, so replacing a library image does not overwrite a profile's existing disk.
 
-1. Supply your own boot ROM and OS disk using [firmware setup](docs/emulator/guides/firmware-setup.md).
-   Firmware, sample libraries, patched OS images and hardware captures are excluded
-   from the repository and packages.
-2. Follow the [standalone guide](docs/emulator/guides/standalone-player.md) or
-   [VST3 configuration guide](docs/emulator/guides/native-plugin-configuration.md).
-3. Use Configuration for firmware/media paths, MIDI and audio devices in standalone.
-   In VST3, the host supplies audio/MIDI. Audio input and the on-screen keyboard
-   are opt-in.
+## Load a sound and play
 
-With a current native MAME build and Node/Python dependencies installed:
+1. Run `S760Studio.exe` and wait for the sampler to boot. If Configuration opens, select your boot ROM and system disk, then apply the settings.
+2. Open the **Configuration gear**, enable audio output, choose your output device and select your MIDI input. You can also enable the on-screen keyboard.
+3. For a sample floppy, use the **Gotek Up/Down** controls to choose an image and **Select** to insert it.
+4. On the sampler screen, open **Disk → Load**, select a volume or performance and execute **Load**. Wait for loading to finish.
+5. Return to **Perform → Perform Play**, then play your MIDI keyboard or the on-screen keys. Disk and Sampling screens can mute playback.
 
-```powershell
-python -m pip install -r scripts/requirements-standalone.txt
-npm --prefix google-ui ci
-npm --prefix google-ui run build
-python scripts/s760_standalone.py
-```
+Use the mouse on the CRT and the rack buttons to operate the original menus. The **VALUE** control changes the selected field; **OUTPUT LEVEL** controls playback volume.
 
-The desktop player requires Windows WebView2 Runtime. It does not download
-firmware. See the guide for explicit paths, startup recovery and browser mode.
+Use the sampler's **Disk → Save** to save edits to its private disk, then **Export disk** in Configuration to create an image you can keep. **Save session** saves a machine checkpoint separately. Export disks before updating the application; session checkpoints require the same build. Settings, recovery and private runtime files normally live under `%LOCALAPPDATA%\S760Studio\default`.
 
-## Build and test
+## Install and use the VST3
 
-The qualified development environment is Windows x64 with Visual Studio 2022 C++
-tools, CMake, Python and Node. The native MAME executable is built separately
-from the CMake host/plugins; see the [native build/runbook](docs/condensed/11-native-boot-and-audio-runbook.md).
+There is **no prebuilt VST3 download in the current release**. These instructions apply if you have a matching Windows VST3 development build.
 
-```powershell
-cmake -B build -S core -G "Visual Studio 17 2022" -A x64
-cmake --build build --config Release
-.\build\Release\s760_core_tests.exe
-.\build\Release\s760_plugin_tests.exe
-python -m pytest tests
-```
+1. Place **`Roland_S760.vst3`** and its matching runtime/editor files in `C:\Program Files\Common Files\VST3\S760\`. Keep the `mame-source`, `scripts` and `google-ui` folders beside the plugin, with their original contents. The `.vst3` file alone is not a complete installation.
+2. Restart or rescan plugins in your 64-bit DAW, then add the S-760 instrument to a track.
+3. Open the plugin editor's **Configuration gear**. Select the installation folder, a writable runtime-state folder, your IC15 boot ROM, OS disk and sample-media folder. Choose **Save plugin settings**, then remove and reload the plugin to apply them. A new, unconfigured instance opens this setup screen automatically.
+4. Route MIDI to the instrument track and enable its stereo audio output. Audio and MIDI device selection is handled by your DAW.
 
-Some tests require local firmware, native artifacts or optional dependencies;
-skips are reported separately. SoundCheck qualification uses actual native SDK
-processing and measured PCM. See [SoundCheck projects](docs/testing/soundcheck-projects.md),
-[controller tests](docs/emulator/runtime/native-vst3-midi.md), [rendering](docs/emulator/runtime/native-vst3-rendering.md)
-and [host sampling](docs/emulator/runtime/native-vst3-sampling.md) for commands, identities and limits.
-
-## GB-6 patching
-
-> **Hardware testing status:** The selectable 4th controller (`GB-6 +CRT`, mode `3`) Boot ROM + OS 2.24 patch has been verified end-to-end in the native MAME emulator, **but has not been tested yet on real S-760 hardware.** Always keep your original IC15 Boot EPROM and original OS 2.24 floppy/Gotek image untouched as a rollback baseline.
-
-No copyrighted Roland firmware binaries (original or patched) are stored in this repository. Instead, the repository provides reproducible Python patch scripts that verify the SHA-256 of your original files and write patched copies to `temp/work/` (which is git-ignored).
-
-### Prerequisites (Original Unmodified Files)
-
-Place your unmodified Roland S-760 files at the default locations below (or pass custom paths via `--boot-input` / `--os-input`):
-
-| File | Default path | Required size | Required SHA-256 |
-| --- | --- | --- | --- |
-| **IC15 Boot ROM v1.11** | `roms/BOOT/Roland_S-760_v1.11.BIN` | `32,768` bytes (`0x8000`) | `ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6` |
-| **OS 2.24 System Disk** | `S760224.IMG` | `1,474,560` bytes (`0x168000`) | `3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd` |
-
----
-
-### Option A: Selectable 4th Controller (`GB-6 +CRT`, Mode `3`) — Boot ROM + OS 2.24
-
-This patch adds **`GB-6 +CRT`** (mode `3`) as a selectable 4th controller alongside the three stock options (`0 = Panel+LCD`, `1 = Mouse+CRT`, `2 = RC100+CRT`) while keeping standard `Mouse+CRT` and `RC100+CRT` 100% intact.
-
-#### Step 1: Choose a sensitivity profile (`v9` or `v8`)
-- **`--profile v9` (default, balanced):** Scales both X and Y GB-6 trackball deltas by `4x` (`SHLB #2`) before stock OS cursor scaling.
-- **`--profile v8` (wider horizontal):** Scales X by `8x` (`SHLB #3`) and Y by `4x` (`SHLB #2`).
-
-#### Step 2: Run the patcher script
-
-**To patch both the IC15 Boot ROM and the OS 2.24 System Disk at once (recommended):**
-```powershell
-# Build with the default balanced v9 profile (writes to temp/work/gb6_combo/):
-python scripts/build_gb6_combo.py --profile v9
-
-# Or build with the v8 profile:
-python scripts/build_gb6_combo.py --profile v8
-```
-
-**Or patch each file individually with custom input/output paths:**
-```powershell
-# 1. Patch only the IC15 Boot ROM v1.11 (32 KB):
-python scripts/patch_gb6_boot_rom.py `
-  --input roms/BOOT/Roland_S-760_v1.11.BIN `
-  --output temp/work/gb6_combo/Roland_S-760_v1.11.GB6.BIN
-
-# 2. Patch only the OS 2.24 System Disk (1.44 MB, selectable 4-option version):
-python scripts/patch_gb6_os_disk.py `
-  --input S760224.IMG `
-  --output temp/work/gb6_combo/S760224.GB6-SELECTABLE-v9.IMG `
-  --profile v9
-```
-
-#### Step 3: Verify the generated output files
-
-The scripts automatically verify the input/output hashes and print a JSON summary. Your generated files in `temp/work/gb6_combo/` will match:
-
-| Generated output file | Size | Bytes changed | Expected output SHA-256 |
-| --- | --- | --- | --- |
-| `Roland_S-760_v1.11.GB6.BIN` | `32,768` (`0x8000`) | 13 bytes | `a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb` |
-| `S760224.GB6-SELECTABLE-v9.IMG` | `1,474,560` (`0x168000`) | 220 bytes | `0a15c81ad6747803160815393f2c2c207f15861bd5671d349ebde4aa3929af15` |
-| `S760224.GB6-SELECTABLE-v8.IMG` | `1,474,560` (`0x168000`) | 220 bytes | `6e32e3143dd06b2d93bdacaf765fd2ba68edeb2b64916dbf0d528262573b7403` |
-
-#### Step 4: How to select `GB-6 +CRT` on the S-760
-Once booted with the patched files, you can select `GB-6 +CRT` in either of two ways:
-1. **Power-On `Mode` Setup Menu (requires patched IC15 Boot ROM):** Hold the front-panel **`Mode`** button while powering on -> press **`Down`** to select `3.Controller` -> press **`S2` (`Inc`)** until it reads **`GB-6 +CRT`** -> press **`Exit`** to save to EEPROM and boot the OS.
-2. **OS `System Parameter 2` Menu (works from front panel, Mouse, or GB-6):** Open **`System`** -> **`System PRM`** -> switch to **`Page( 2)`** (`System Parameter 2`) -> change **`Controller`** (`Panel,Mouse,RC100,GB-6`) to **`GB-6 +CRT`**.
-   - *Note:* If you boot the patched `S760224.GB6-SELECTABLE-*.IMG` disk with an **unmodified** stock IC15 Boot ROM, you can still select `GB-6 +CRT` live inside the OS `System Parameter 2` menu, but a stock IC15 Boot ROM will reset controller values `> 2` back to `Panel+LCD` on cold power-up. Installing the patched IC15 Boot ROM (`Roland_S-760_v1.11.GB6.BIN`) allows `GB-6 +CRT` to persist across power cycles.
-
-#### Step 5: Testing in the Native Emulator
-Because a physical Sony GB-6 trackball uses a different hardware protocol on `0xF008` than the Roland MU-1 mouse, tell the emulator to emulate a GB-6 via a config file (`s760_config.json` in the working directory or via `S760_CONFIG`):
-```json
-{
-  "pointing_device": "auto"
-}
-```
-(`"auto"` automatically switches to GB-6 protocol when controller mode `3` is active and MU-1 mouse protocol when mode `1` is active; `"gb6"` forces GB-6 protocol; `"mouse"` forces MU-1 mouse protocol.) You can also run the full automated verification suite with:
-```powershell
-python -m pytest tests/test_gb6_combo.py -v
-```
-
----
-
-### Option B: Legacy Non-Selectable OS Patch (Replaces `Mouse+CRT` In-Place)
-
-If you do not want to modify the IC15 Boot ROM and want the S-760's existing **`Mouse+CRT`** setting (mode `1`) to decode a Sony GB-6 trackball directly (replacing standard mouse support on that disk), use `scripts/patch_gb6_os.py`:
-
-```powershell
-New-Item -ItemType Directory -Force temp/work/gb6
-python scripts/patch_gb6_os.py --input S760224.IMG --output temp/work/gb6/S760224.GB6-v9.IMG --profile v9
-```
-
-| Legacy output file | Gain profile | Expected output SHA-256 |
-| --- | --- | --- |
-| `S760224.GB6-v9.IMG` | `v9` (`X*4, Y*4`) | `c611e7156c9069dc632bcfd8e4d20a52da70ed2528112f29fe87258803f42deb` |
-| `S760224.GB6-v8.IMG` | `v8` (`X*8, Y*4`) | `cf29f7fdf75a3a672eefdd34d52f66aa25a6624632a85d52c0500d84223afead` |
-
-See the [GB-6 patch guide](docs/firmware/os/gb6-os-patch.md) and [controller plan](docs/project/gb6-controller-plan.md) for full technical details.
-
-## Documentation
-
-Start with the [documentation guide](docs/README.md) for task-based navigation and
-topic indexes covering setup, runtime, firmware, hardware, testing and plans.
-
-- [Completion roadmap](docs/project/completion-roadmap.md): completed gates and remaining work.
-- [Condensed technical references](docs/condensed/README.md): hardware, firmware and evidence.
-- [Media library](docs/emulator/guides/native-media-library.md) and [sessions/recovery](docs/emulator/guides/native-sessions.md).
-- [Sampling](docs/emulator/guides/native-sampling.md), [rack controls](docs/emulator/guides/native-rack-controls.md)
-  and [plugin state](docs/emulator/runtime/native-plugin-state.md).
-- [Bug backlog](docs/project/bug-backlog.md): known defects and their resolutions; BUG-060 functional QA now explicitly negotiates offline processing.
-- [Packaged media recovery](docs/testing/milestone-6-media-recovery.md): eight unformatted-media/reload cycles and dirty-session guard/export acceptance with cold native sample/audio checks.
-- [Packaged setup guide](docs/emulator/guides/standalone-package-readme.md) and [relocation acceptance](docs/testing/milestone-6-package-setup.md): self-contained instructions, startup repair and profile reopen without development environment variables.
-- [Distribution qualification](docs/testing/distribution-qualification.md): exact dated standalone artifact review;
-  final packages and clean-machine release acceptance remain open.
-
-`mame-source/` contains the native engine, `core/` the C++ host/plugins,
-`google-ui/` the shared interface and `scripts/` the runtime and verification tools.
-Historical coverage catalogs are inventories, not claims of complete product acceptance.
-The [Milestone6 claim audit](docs/testing/milestone-6-coverage-audit.md) records the reviewed
-historical claims and passing catalog safeguards; clean-machine release checks remain open.
-
-## License and attribution
-
-Project-owned code is [BSD-3-Clause](LICENSE); MAME and other dependencies retain
-their respective licenses and notices. See the distribution review before packaging.
-The source-built ASIO-enabled standalone distribution carries GPLv3 obligations;
-its source delivery and component terms are documented in the
-[release candidate review](docs/testing/standalone-release-promotion.md).
-Roland and other product names belong to their owners. This independent project
-is not affiliated with or endorsed by Roland Corporation.
+The plugin needs the same user-supplied firmware as the standalone. Its settings are stored separately in `%LOCALAPPDATA%\S760\plugin-settings.json`.

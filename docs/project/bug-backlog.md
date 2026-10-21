@@ -135,10 +135,1878 @@ follow the schema so entries stay machine-greppable.
 | BUG-110 | FIXED | S2 | tests | Recovery and decompiler tests assume untracked private media and firmware exports | 2026-10-17 | 2026-10-17 |
 | BUG-111 | FIXED | S2 | tests | Built VST3 audit assumes a private runtime is installed on the CI runner | 2026-10-17 | 2026-10-17 |
 | BUG-112 | FIXED | S2 | tests | GB-6 combo test assumes private firmware and disassembler on hosted CI | 2026-10-17 | 2026-10-17 |
+| BUG-113 | FIXED | S2 | mame-driver | Native SCSI rejects unsupported commands and explicitly supports boot-ROM START UNIT | 2026-10-18 | 2026-10-18 |
+| BUG-114 | FIXED | S3 | disk | Sample-disk builder conflates loop enable with sample-rate metadata | 2026-10-18 | 2026-10-18 |
+| BUG-115 | FIXED | S3 | disk | Sample-disk builder mislabels playback and release-loop addresses | 2026-10-18 | 2026-10-18 |
+| BUG-116 | FIXED | S2 | midi | Native MIDI output never becomes ready, stalling stock-OS SDS acknowledgment | 2026-10-18 | 2026-10-18 |
+| BUG-117 | FIXED | S2 | mame-driver | Native sequential wave-memory port discards stock-OS SDS sample writes | 2026-10-18 | 2026-10-18 |
+| BUG-118 | FIXED | S3 | midi | SDS retry during cancellation cleanup can retain an unpublished allocation | 2026-10-18 | 2026-10-18 |
+| BUG-119 | FIXED | S3 | midi | SDS header overlap during publication/error cleanup corrupts new transfer ownership | 2026-10-18 | 2026-10-18 |
+| BUG-120 | FIXED | S3 | midi | Outgoing SDS requests overwrite an active receive owner | 2026-10-18 | 2026-10-18 |
+| BUG-121 | FIXED | S3 | midi | Active SDS sender admits overlapping receive headers and dump requests | 2026-10-18 | 2026-10-18 |
+| BUG-122 | FIXED | S3 | midi | Experimental sender guard rejects receives after local Sample Dump exits | 2026-10-18 | 2026-10-18 |
+| BUG-123 | FIXED | S3 | midi | Remote SDS request remains busy after no-ACK stall and panel Exit | 2026-10-18 | 2026-10-18 |
+| BUG-124 | FIXED | S2 | midi | Local Sample Dump cleanup discards overlapping receive/request ownership | 2026-10-18 | 2026-10-18 |
+| BUG-125 | FIXED | S2 | midi | Early SDS CANCEL loses receive ownership and leaks its allocation | 2026-10-18 | 2026-10-18 |
+| BUG-126 | FIXED | S3 | tests | Private wave-DMA diagnostic results overlap its source buffer | 2026-10-18 | 2026-10-18 |
+| BUG-127 | FIXED | S3 | tests | Private pair-publication template guard overlaps DMA buffer | 2026-10-18 | 2026-10-18 |
+| BUG-128 | FIXED | S3 | tests | Private pair owner could remain latched after capacity rejection | 2026-10-18 | 2026-10-18 |
+| BUG-129 | FIXED | S3 | tests | Private streaming integration aliases native MIDI queue registers | 2026-10-19 | 2026-10-19 |
+| BUG-130 | FIXED | S3 | tests | Private pipeline loses cancellation precedence and aliases error/success markers | 2026-10-19 | 2026-10-19 |
+| BUG-131 | FIXED | S3 | tests | Private transport counts native service as target inactivity | 2026-10-19 | 2026-10-19 |
+| BUG-132 | FIXED | S3 | tests | Boundary fixture lacks trailing READ(10) backing extent | 2026-10-19 | 2026-10-19 |
+| BUG-133 | FIXED | S3 | tests | Directory failure verifier assumes zero DATA OUT count and zero boot wave RAM | 2026-10-19 | 2026-10-19 |
+| BUG-134 | FIXED | S3 | tests | Private catalog capacity branch rejects the first valid file | 2026-10-19 | 2026-10-19 |
+| BUG-135 | FIXED | S3 | mame-driver | Opt-in INQUIRY truncates the trailing API byte | 2026-10-19 | 2026-10-19 |
+| BUG-136 | FIXED | S3 | tests | Target 6 qualification stages an unsupported image filename | 2026-10-19 | 2026-10-19 |
+| BUG-137 | FIXED | S3 | hardware | Upstream Toolbox image selection discards switch failure result | 2026-10-19 | 2026-10-20 |
+| BUG-138 | FIXED | S3 | tests | Private mount runtime launcher drops the opt-in fixture environment | 2026-10-19 | 2026-10-19 |
+| BUG-139 | FIXED | S3 | tests | Same-session mount test leaves native clear-memory confirmation unanswered | 2026-10-19 | 2026-10-19 |
+| BUG-140 | WONTFIX | S3 | ui | Private full-screen image-library descriptor crashes on entry | 2026-10-19 | 2026-10-20 |
+| BUG-141 | FIXED | S3 | ui | Private image browser retains a listing after mount overwrites its buffer | 2026-10-19 | 2026-10-19 |
+| BUG-142 | FIXED | S3 | ui | Private browser redraw retains popup contexts during native handoff | 2026-10-19 | 2026-10-19 |
+| BUG-143 | FIXED | S3 | tests | Private read-only observer request replacement races a Windows file reader | 2026-10-19 | 2026-10-19 |
+| BUG-144 | FIXED | S3 | ui | Wide private browser leaves labels behind after native Exit | 2026-10-19 | 2026-10-19 |
+| BUG-145 | FIXED | S3 | hardware | Upstream Toolbox truncation changes filename filtering between list and selection | 2026-10-19 | 2026-10-20 |
+| BUG-146 | FIXED | S3 | hardware | Upstream image switch lacks path termination for64-byte or longer paths | 2026-10-19 | 2026-10-20 |
+| BUG-147 | FIXED | S3 | tests | Combined GB-6 browser qualification misses the requested image-row click | 2026-10-19 | 2026-10-19 |
+| BUG-148 | FIXED | S2 | disk | Private IM1 discovery dispatch sends INQUIRY as a ten-byte command | 2026-10-19 | 2026-10-19 |
+| BUG-149 | FIXED | S3 | tests | IM1 busy test expects a browser callback beneath the native SDS modal | 2026-10-19 | 2026-10-19 |
+| BUG-150 | FIXED | S3 | disk | Private image browser ignores Exit during its SCSI command sequence | 2026-10-19 | 2026-10-19 |
+| BUG-151 | FIXED | S3 | tests | Switch cancellation test releases Exit before the input port can sample it | 2026-10-19 | 2026-10-19 |
+| BUG-152 | FIXED | S3 | tests | Private IRQ probe passes a Lua array to the MIDI byte-string endpoint | 2026-10-19 | 2026-10-19 |
+| BUG-153 | FIXED | S2 | disk | IRQ-serviced browser queues Disk Load after incoming SDS claims sample memory | 2026-10-19 | 2026-10-19 |
+| BUG-154 | FIXED | S3 | disk | Browser idle watchdog counts native interrupt service as a stalled SCSI target | 2026-10-19 | 2026-10-19 |
+| BUG-155 | FIXED | S2 | disk | Browser commits native drive and Load while a MIDI/SCSI Remote Mode request is pending | 2026-10-19 | 2026-10-19 |
+| BUG-156 | FIXED | S2 | ui | Prototype Image Library replaces Disk menu and hides native Save and Utility access | 2026-10-19 | 2026-10-19 |
+| BUG-157 | FIXED | S3 | ui | Private Disk options page labels Volume Dump FD as OS Load | 2026-10-19 | 2026-10-19 |
+| BUG-158 | FIXED | S4 | ui | Image Library inherits misleading parent softkey labels | 2026-10-19 | 2026-10-19 |
+| BUG-159 | FIXED | S3 | ui | Cold Image Library hides its clickable Disk options label | 2026-10-19 | 2026-10-19 |
+| BUG-160 | FIXED | S2 | disk | Reopening Image Library retains stale catalog indices | 2026-10-19 | 2026-10-19 |
+| BUG-161 | FIXED | S3 | ui | Private LCD trial reuses selected-index diagnostic as scroll state | 2026-10-19 | 2026-10-19 |
+| BUG-162 | FIXED | S3 | ui | Private LCD filename confirmation bypasses printable-byte guard | 2026-10-19 | 2026-10-19 |
+| BUG-163 | FIXED | S3 | ui | Native LCD status can overwrite confirmation collection ID | 2026-10-19 | 2026-10-19 |
+| BUG-164 | FIXED | S3 | ui | Disabled LCD Next clears scroll without redrawing | 2026-10-20 | 2026-10-20 |
+| BUG-165 | FIXED | S3 | ui | Image Library Exit loses nested native mode ancestry | 2026-10-20 |  2026-10-20 |
+| BUG-166 | FIXED | S3 | mame-driver | Opt-in image fixture rejects full-size CDs above64MiB | 2026-10-20 |  2026-10-20 |
+| BUG-167 | FIXED | S2 | mame-driver | Image-switch fixture incorrectly forces writable SCSI IMG media read-only | 2026-10-20 | 2026-10-20 |
+| BUG-168 | FIXED | S2 | disk | Native disk-style performance suspension bounds browser service/deadline accounting | 2026-10-20 | 2026-10-20 |
+| BUG-169 | FIXED | S2 | midi | Experimental browser parser quota leaves audio active after dense-note release | 2026-10-20 | 2026-10-20 |
+| BUG-170 | FIXED | S2 | mame-driver | Partial image-switch CDB replays against changed host catalog after checkpoint recall | 2026-10-20 | 2026-10-20 |
+| BUG-171 | FIXED | S3 | mame-driver | Image fixture rejects native FORMAT UNIT instead of BlueSCSI no-op | 2026-10-20 | 2026-10-20 |
+| BUG-172 | FIXED | S4 | ui | Stock disk replacement warning omits the word data on CRT and LCD | 2026-10-20 | 2026-10-20 |
+| BUG-173 | FIXED | S3 | disk | Native Verify Medium omits the last sector in a 32MiB IMG case | 2026-10-20 | 2026-10-20 |
+| BUG-174 | FIXED | S2 | tests | Minimal authored OS ROM-loader test reads header but no resident tracks on both emulator builds | 2026-10-20 | 2026-10-20 |
+| BUG-175 | FIXED | S2 | midi | Browser CRT redraw masks MIDI long enough to lose incoming bytes after timeout | 2026-10-20 | 2026-10-20 |
+| BUG-176 | FIXED | S2 | disk | Browser transition ownership rechecked before SCSI/native handoff | 2026-10-21 | 2026-10-21 |
+| BUG-177 | FIXED | S2 | build | Relocating compiler emits incorrect ALU widths/opcodes and absolute long branches | 2026-10-21 | 2026-10-21 |
+| BUG-178 | OPEN | S3 | build | Compiler full-ISA completion claim misses SKIP and target mnemonic audit | 2026-10-21 | |
+| BUG-179 | OPEN | S2 | cpu | Native IDLPD handler advances time without implementing low-power behavior | 2026-10-21 | |
+| BUG-180 | FIXED | S2 | tests | Firmware-patch tests fail in CI when private OS images are absent | 2026-10-21 | 2026-10-21 |
 
-<!-- NEXT-ID: BUG-113 -->
+<!-- NEXT-ID: BUG-181 -->
 
 ## Details
+
+### BUG-180 — Firmware-patch tests require uncommitted OS images without guards
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-21
+- **Resolved:** 2026-10-21
+- **Reported by:** Codex checkout-like CI audit
+
+**Summary:** Four SDS patch test modules read private OS firmware directly. Public CI cannot obtain those ignored inputs, so a local green run does not establish fresh-checkout readiness.
+
+**Repro:** Copy the Git index plus nonignored working files into an isolated test tree without firmware, compiler/decompiler folders, private exports or agent tools; supply the built `s760_cpp` extension as CI does, then run `python -m pytest tests`.
+
+**Expected:** Synthetic tests run without Roland firmware. Only cases requiring original firmware explicitly skip when the input is absent, while still running against supplied local firmware.
+
+**Actual:** Initial checkout-like run: 87 failures, 595 passed, 109 skipped. All failures are FileNotFoundError in `test_sds_early_cancel`, `test_sds_local_cleanup`, `test_sds_local_owner` or `test_sds_remote_owner` for missing S760224.IMG.
+
+**Evidence:** [Precommit CI report](../testing/ci-precommit-check-2026-10-21.md); private raw audit output under `temp/work/ci-check-20261021/`. The initial run's failure families were recorded before test changes. Compiler/decompiler removal itself does not cause collection errors: 791 public tests collected before the fix.
+
+**Resolution:** Added on-demand private-input resolution and separated synthetic rejection/branch checks from image-rebuild checks. Firmware-free validation passes 599 tests with 196 explicit skips; all 104 checks in the corrected modules pass with local firmware. Final complete local backend: 1,239 passed, 2 existing skips. Updated seven local-only toolchain Git-tracking assertions; all 41 distribution-policy checks pass. CI now exposes MSVC to Python C++ probes, prints skip reasons and retains JUnit output. All six C++ CI executables, 128 frontend unit tests and 9 Playwright tests pass; 25 external/native Playwright cases explicitly skip. No private firmware was added or downloaded.
+
+**Notes:** Validation was local, not a hosted GitHub Actions run. Existing local C++ binaries and the Python extension were reused; fresh hosted builds remain the workflow's responsibility. The two existing authored-program boot skips do not establish new-OS execution acceptance.
+
+### BUG-179 — Native IDLPD handler lacks low-power behavior
+
+- **Status:** OPEN
+- **Severity:** S2
+- **Area:** cpu
+- **Opened:** 2026-10-21
+- **Reported by:** Codex independent toolchain ISA audit
+
+**Summary:** The native CPU's F6 handler is `idlpd none 196` followed only by `next_noirq(8)`. It does not implement the idle/powerdown state transitions described for the target. This is a source-level finding; no new guest execution or physical observation is claimed.
+
+**Repro:** Inspect `mame-source/src/devices/cpu/mcs96/mcs96ops.lst` at `f6 idlpd none 196`; search the CPU source directory for `idlpd` and low-power state implementation. Compare with Intel 80C196KB User's Guide 270651-003 sections 14.1/14.2.
+
+**Expected:** The target CPU implements the documented low-power entry and wake/reset behavior with independently established key semantics.
+
+**Actual:** The opcode handler consumes eight states without entering a low-power state. The assembler/SLEIGH one-byte form and the manual's key notation also require independent encoding reconciliation before a length change.
+
+**Evidence:** `toolchain/targets/s760/isa-audit.md` and `isa-disagreements.json`; local `mcs96ops.lst` and `scripts/ghidra/sleigh/MCS96.sinc`. Primary reference: https://www.syndex.org/kernels/196/27065103.pdf, printed page 69 (PDF page index 72), plus Table 3-2B.
+
+**Notes:** No native source or binary changed. Resolve key encoding from another primary reference, add entry/wakeup/reset execution probes, then implement and rebuild. Do not treat current IDLPD decoding or a firmware byte round trip as CPU-behavior qualification. Separate from BUG-178's assembler coverage defect.
+
+### BUG-178 — Compiler full-ISA completion claim misses SKIP and target mnemonic audit
+
+- **Status:** OPEN
+- **Severity:** S3
+- **Area:** build
+- **Opened:** 2026-10-21
+- **Reported by:** Codex arbitrary-software capability audit
+
+**Summary:** The firmware corpus passes, but the assembler cannot encode `SKIP`, so the complete-ISA checklist was closed prematurely. `XCH` and `XCHB` also appear in the recognized mnemonic set without encoders; their applicability to the actual target needs an independent audit before implementation or a support claim.
+
+**Repro:** From the repository root, run `python -c "import sys; sys.path.insert(0, 'scripts'); from mcs96_assembler import Assembler; Assembler().assemble_text('.section .text\nSKIP\n')"`. This is a host-side assembler probe; no emulator or firmware image is required.
+
+**Expected:** The assembler supports the target's documented `SKIP` instruction and the complete-ISA checkpoint requires coverage independent of the original firmware's mnemonic usage.
+
+**Actual:** `SKIP` raises `empty operand string has no Operand_Form`. `XCH 0x40, 0x42` and `XCHB 0x40, 0x42` raise `encoding not implemented for 2 operands`. The 25,808-line original firmware corpus does not expose these gaps.
+
+**Evidence:** `scripts/mcs96_isa.py` mnemonic and encoder tables; direct `Assembler.assemble_text` probes on 2026-10-21. Intel 80C196KB User's Guide 270651-003 tables 3.1/3.2 list `SKIP` as a two-byte instruction: https://www.syndex.org/kernels/196/27065103.pdf. Plan follow-up: `.kiro/specs/s760-os-compiler/tasks.md`, task 15.8.
+
+**Notes:** Separate from the corrected corpus encoding defects in BUG-177. A raw-byte directive is a workaround for a known instruction encoding, not evidence of a complete assembler. Task 17's full-image round trip remains valid; tasks 15/16/18 are reopened pending the target ISA audit.
+
+### BUG-177 — Relocating compiler instruction encodings disagree with the firmware
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-21
+- **Severity:** S2
+- **Area:** build
+- **Opened:** 2026-10-21
+- **Reported by:** Codex compiler-plan corpus verification
+
+**Summary:** The new assembler selects three-operand ALU opcodes for two-operand instructions, treats SUB as byte-width and LDBZE/LDBSE as word-width, encodes LJMP/LCALL targets as absolute addresses, accepts reserved operand forms, and drops some unresolved register operands. The previously skipped original-project test also lacks an importer for the exported layout/dialect.
+
+**Repro:** Run `python -m pytest tests/test_complete_mcs96_coverage.py tests/test_original_project_roundtrip_property.py`. Synthetic probes include `ADD #1, 0x40` (must start with 0x65), `SUB #0x1234, 0x40` (must occupy four bytes), and `LCALL 0x4020` at PC 0x4000 (must encode EF 1D 00).
+
+**Expected:** Every supported instruction matches Intel encodings; original exported instructions reassemble and link to the original image without taking bytes from comments.
+
+**Actual:** Prior focused tests passed while incorrect instruction encodings remained. The original full relink test was skipped based on stale encoder-table checks.
+
+**Evidence:** `tests/test_complete_mcs96_coverage.py`, `tests/test_exported_project_import.py`, and `tests/test_original_project_roundtrip_property.py`; private logs in `docs/ic20-hle-findings/chatGPT-work/compiler-20261021/`. Independent reference: Intel 80C196KB User's Guide, tables 3-1/3-2, https://www.syndex.org/kernels/196/27065103.pdf; local MAME `mcs96ops.lst` and SLEIGH `MCS96.sinc`.
+
+**Notes:** All 25,808 exported instruction lines (80 mnemonics) now match their annotations; the new pipeline reproduces all 1,474,560 image bytes. Compiler-focused qualification passes; the complete repository run plus corrected snapshot retries yields 1,182 passed and 2 documented boot-fixture skips (plan task 18). Original firmware remains read-only.
+
+**Resolution:** Corrected opcode quartets, immediate widths, relative long branches, register constant resolution, signed indexing, and invalid-form rejection; added the source-dialect/layout importer and activated full new-pipeline re-link verification. Exhaustive corpus and full-image identity checks pass.
+
+
+### BUG-176 — Ownership can change while native performance transitions enable interrupts
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-21
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-21
+- **Reported by:** Codex IM1 ownership/control-flow audit
+
+**Summary:** Predecessor e78750c2... checks2BBA/1FA4 before quiet_enter. Native transitions enable timer/MIDI interrupts while cached1BA5 is still active before4F99 or has become active again after4FBE. Queued parsing can acquire SDS/Remote Mode ownership after the prior check; performance reset does not clear those owners. Discovery/catalog/mount or native handoff can then use stale admission.
+
+**Repro:** Decoded-CFG interrupt-outcome analysis finds predecessor bypasses for ownership acquired at transition returns. This is a static race finding; no timed native or physical incident is claimed.
+
+**Fix:** Final OS606e277e5f11a4ca1b59dadaf4e9a8395e6c8eed1e3674b4efa78bf3bf1767e4 adds masked rechecks after suspension and restoration before both native handoffs. Busy is reported without another command/handoff; the common exit releases the performance lease.24 bytes added;6760/8002,1242 free. GB-6 v9/boot/SDS/Verify/warnings retained.
+
+**Validation:** Actual admission-byte510 cases across four transition returns (2040 combinations) have no repaired bypasses.65536 permission cases, fresh exact rebuild, unchanged166-byte synchronous bound,10 native production cases/101 snapshots and six additional ancestry/IRQ/write-reset workflows pass.236 commands/891942 exact elapsed samples and9003 preserved service pairs. Rebuilt emulator1123 backend passes/3skips. Physical and broader state/alias qualification remain separate.
+
+**Evidence:** [Results](bluescsi-im1-owner-and-recovery-results-2026-10-21.md), [self-contained validation](../condensed/validation/bluescsi-im1-owner-and-recovery-2026-10-21.json).
+
+### BUG-175 — Browser redraw starves MIDI after stalled-target timeout
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S2
+- **Area:** midi
+- **Opened:** 2026-10-20
+- **Reported by:** Codex simultaneous D7 stalled-target/MIDI qualification
+
+**Summary:** The combined browser callback remains interrupt-masked while clearing880 CRT characters. After a D7 timeout, incoming MIDI continues during this redraw and the native-read trace loses190 expected bytes. This is separated from BUG-168's timer-wrap accounting requirement; the previous batch attached the symptom there before its cause was narrowed.
+
+**Repro:** OS5581ee53a84ea5395ee0bb554fc2b31128bb5740835789b335c83b4c9a548f94 and emulatora42d26f755d2d902ac1adb79b76c60b3373be167e849c35ad09a568691bfa937. Load native stereo FDD content, enter Image Library, withhold D7 REQ after one byte and start769 serial MIDI stress bytes at the first withheld REQ. Retry explicitly and audition. No guest-state forcing.
+
+**Expected:** Browser error/retry and exact MIDI byte sequence, resident PCM and note release all preserved.
+
+**Actual:** Previous candidate records585 of775 expected reads including audition; largest post-release receive gap107.53925ms. A three-byte call to the existing caller-qualified cooperative service at each CRT character clear passes the same overlap case with all775 reads, exact239616-byte stereo PCM and silent release. Broader regression qualification is in progress.
+
+**Evidence:** Original failed rows in [gate-proof validation](../condensed/validation/bluescsi-im1-verify-stall-bounds-2026-10-20.json). New private reproductions under `docs/ic20-hle-findings/chatGPT-work/bluescsi-bug-fixes-2026-10-20`. Trial5e5ec01692ca7218f0a39e01aaff6ed0c45237cfd94af5f8f227dd86d0d19064 uses6583/8002 bytes and retains GB-6 v9/SDS/Verify Medium/warnings.
+
+**Notes:** Native emulator result, not physical MIDI FIFO/timing parity. At this repair, BUG-168 remained open for its separate service/deadline contract; its later native-policy resolution is recorded under BUG-168. This redraw result alone did not close it.
+
+**Resolution:** Three-byte service call in the880-character CRT clear loop. Candidate5e5ec016... passes actual simultaneous MIDI stalls after byte1 and before byte3999, each775 exact reads, resident239616-byte stereo PCM and playback/release. Original dense D7, CRT/LCD cancellation, SDS and Remote Mode regressions pass:10 native cases/104 snapshots. Exact rebuild and synchronous166-byte stack audit pass;6583/8002 leaves1419 bytes. BUG168 was separate and open at this repair; its later native-policy resolution is recorded under BUG-168. [results](bluescsi-im1-bug-fixes-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-bug-fixes-2026-10-20.json).
+
+### BUG-174 — Minimal authored OS ROM-loader test stops after header transfer
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S2
+- **Area:** tests
+- **Opened:** 2026-10-20
+- **Reported by:** Codex full backend regression run during IM1
+
+**Summary:** The minimal authored-OS loader test observes its512-byte header DMA but none of the112 expected resident-track transfers. It fails with both the current emulator and the saved pre-change executable. Root cause is not assigned to firmware, authoring output or test prerequisites yet.
+
+**Repro:** Run `python -X utf8 -m pytest tests/test_rom_boot_os_loader.py -q` with provisioned original IC15 and the repository's `examples/minimal_os`. The full serial suite uses emulator a42d26f755d2d902ac1adb79b76c60b3373be167e849c35ad09a568691bfa937; an isolated comparison sets `S760_MAME_EXE` to the saved57e45eaf6fa298b38f3454f4a2a8449c7e1569419b3f38fdfda9a0f4e1f613ec executable. Headless native ROM boot,60 emulated seconds; no guest-state forcing.
+
+**Expected:** Header transfer followed by112 contiguous resident track transfers.
+
+**Actual:** `expected 112 track transfers, got 0` in both executable runs. Full suite:1,088 passed,3 skipped,1 failed. An initial isolated attempt lacked its temporary parent and is excluded; the subsequent native baseline reproduction completed and failed the same assertion.
+
+**Evidence:** [Results](bluescsi-im1-verify-stall-bounds-results-2026-10-20.md) and failure identity/message records in [validation](../condensed/validation/bluescsi-im1-verify-stall-bounds-2026-10-20.json). Private logs/XML are under `docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-gate-proof-2026-10-20`.
+
+**Notes:** Separate from the opt-in D7 stall fixture and patched original-OS acceptance. Do not label the full suite green or change unrelated authored-OS work without diagnosing the input/header and loader prerequisites.
+
+**Resolution:** Corrected the minimal example header to four leading zeros, `S770 MR25A`, NUL and floppy type50. The native test now stops at first actual ROM handoff, retains the112-track census and compares all1,032,192 loaded bytes. Private cwd/config and explicit process-exit checks prevent unrelated or stale logs. Full suite1089 passes/3 skips. This qualifies LOAD only; the minimal example is not a complete OS. [results](bluescsi-im1-bug-fixes-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-bug-fixes-2026-10-20.json).
+
+### BUG-173 — Native Verify Medium leaves the last sector unread
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S3
+- **Area:** disk
+- **Opened:** 2026-10-20
+- **Reported by:** Codex final IM1 command-census audit
+
+**Summary:** The observed native Verify Medium pass on a 32MiB/512-byte-sector IMG reads LBA65534 down through0 exactly once, but never reads the final valid LBA65535. Format completes, so its success cannot establish that every sector was verified.
+
+**Repro:** Native OS `367f067d78c8e69a1b670efda1d7146b8843d79c59c16ab207df0fdbc0ce496c`, emulator `57e45eaf6fa298b38f3454f4a2a8449c7e1569419b3f38fdfda9a0f4e1f613ec`, private32MiB CD2 IMG. Browser mount; Utility/Format, Only Initialize No, Verify Medium Yes. Read-only observer records every completed CDB from before FORMAT UNIT through initialization.
+
+**Expected:** Verify Medium covers all65,536 valid sectors, or an explicit documented narrower extent.
+
+**Actual:** After FORMAT UNIT and READ CAPACITY,65,535 single-sector READ(10)s cover LBA65534..0; initialization writes then begin. There is no READ of65535 anywhere in the trace.
+
+**Evidence:** The `verify_medium` census, matched first/last command rows, trace identity and observer source in [validation](../condensed/validation/bluescsi-im1-format-fdc-stack-2026-10-20.json); [results and limits](bluescsi-im1-format-fdc-stack-results-2026-10-20.md).
+
+**Notes:** Original-loop byte identity and the inclusive READ CAPACITY contract establish an inherited decrement-before-first-read defect. Native reproduction used the preceding combined candidate, not a separate original-OS Format run. No native read-error fault or physical surface-verification claim is made.
+
+**Investigation:** A fresh79124692... native run reproduces the omission. Stack/bank capture identifies0129:B6EF; its48-byte loop at file052317 is byte-identical to original OS2.24. READ CAPACITY supplies the inclusive last LBA, but DEC/SUBC precedes the first read. A same-size trial moves decrement after the zero/end check, preserving native read/error/progress helpers. Decoded boundary tests reproduce the original failure; native qualification now passes on both successors.
+
+**Resolution:** [Guarded patcher](../../scripts/patch_disk_verify_extent.py) moves decrement after the zero/end check in the same48 bytes. Native complete65,536/65,537-sector descending read censuses pass on0be06d4d.../5581ee53..., including the last LBA and16-bit borrow boundary. Twelve decoded-loop tests and44 focused image/patch tests pass. GB-6 v9/SDS/wording and allocation are retained. [Results](bluescsi-im1-verify-stall-bounds-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-verify-stall-bounds-2026-10-20.json).
+
+### BUG-172 — Stock disk replacement warning omits data
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S4
+- **Area:** ui
+- **Opened:** 2026-10-20
+- **Reported by:** User during IM1 native floppy Save testing
+
+**Summary:** The original OS warning says “You will lose all the existing in this Disk.” The missing noun appears in both CRT and LCD resources for Sound Data and the generic disk replacement warning.
+
+**Repro:** Native Disk Save to a populated sound-data floppy; confirm marked files to reach the replacement warning. Original OS strings occur at file0C162C/0C168F and0C196C/0C19CA, with dynamic disk-name tokens.
+
+**Expected:** A complete sentence: “All existing data on this Disk will be lost.”
+
+**Actual:** The warning omits “data.”
+
+**Notes:** User explicitly requests fixing inherited Roland wording in the combined OS patch. Preserve dynamic disk labels, all original firmware inputs and resource sizes; qualify CRT and LCD rendering.
+
+**Resolution:** `scripts/patch_disk_warning_text.py` replaces all four label sequences with “All existing data on this Disk will be lost.”, retaining the dynamic label and original extents. The established and timing-trial combined builders include the patch;170 bytes change per image and allocation growth is zero. Native CRT Save and LCD Format warnings render correctly on both successors; CRT No and LCD F3/No preserve media. GB-6 v9, SDS, browser code and boot ROM remain byte-identical to their respective predecessors. [Results](bluescsi-im1-format-fdc-stack-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-format-fdc-stack-2026-10-20.json).
+
+### BUG-171 — Image fixture rejects native FORMAT UNIT
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S3
+- **Area:** mame-driver
+- **Opened:** 2026-10-20
+- **Reported by:** Codex native IM1 full Format probe
+
+**Summary:** The opt-in BlueSCSI image fixture returns unsupported-command sense for the S-760's `04 00 00 00 00 00` FORMAT UNIT. The reviewed BlueSCSI implementation accepts this no-parameter form without changing disk data. Quick Initialize remains available.
+
+**Repro:** Native OS `367f067d78c8e69a1b670efda1d7146b8843d79c59c16ab207df0fdbc0ce496c`, emulator `4cf1cfabaab8d3a9068ddac0ec81f60afb0dc92c903ae66cb5ed4ddac58fc4ee`, private 32MiB blank CD2 IMG. Browser mount, Disk Utility/Format, answer No to Only Initialize, then Yes to Verify Medium.
+
+**Expected:** Accept the observed no-data FORMAT UNIT, then allow the native initialization workflow. No surface erasure is implied.
+
+**Actual:** Command04 reaches the driver's unsupported-command branch. The native workflow exits without creating a Roland disk header.
+
+**Evidence:** Private `bluescsi-im1-remaining-2026-10-20/runs/full-format-probe` screenshots and full CDB trace; pinned BlueSCSI disk source commit `5e64e3b4a09088c67a2a6728385600ea67ddbe0d`, FORMAT UNIT branch. This is fixture coverage, not a physical firmware defect.
+
+**Notes:** Repair only the observed six-byte no-parameter form in the opt-in image profile; other FORMAT variants remain unsupported. Default-disabled behavior must remain unchanged.
+
+**Resolution:** The opt-in image profile accepts the observed no-parameter FORMAT UNIT as a non-erasing success on writable IMG, rejects nonzero fields and protects optical/read-only media. Repeated non-erasing SPC checks, both native Format options and the1,067-pass/3-skip serial suite pass on57e45eaf... . All32MiB fixture-disabled wave bytes and ordinary boot/input/MIDI/release match the earlier build. The native Verify Medium extent is separately tracked as BUG-173. [Results](bluescsi-im1-format-fdc-stack-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-format-fdc-stack-2026-10-20.json).
+
+### BUG-170 — Recalled partial switch command selects changed catalog media
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S2
+- **Area:** mame-driver
+- **Opened:** 2026-10-20
+- **Reported by:** Codex native IM1 partial-command checkpoint probe
+
+**Summary:** The opt-in image fixture invalidates its selected media after checkpoint recall, but a restored incomplete D8 CDB can finish and silently select an image from the current host catalog. The saved index can now identify different media.
+
+**Repro:** Native GB-6 browser OS `6297274dd5c33b0b37409d3cddcd53e40b8af6140f2c416fc0213181cd3ba628`, emulator `7c994e8679c51e71801ce7c4ad570983b5a7a7e55f1ae135ed5fc58dda658962`, `S760_TOOLBOX_IMAGE_ROOT` private fixture. Select B.iso/index1, pause after its first D8 CDB byte, save checkpoint, finish mount. Replace private B.iso with C.iso containing A, restore checkpoint and resume.
+
+**Expected:** The restored command fails without selecting external media; a fresh catalog and selection are required.
+
+**Actual:** D8 completes automatically, native Load opens the replacement, and all119808 loaded PCM bytes equal A instead of the selected B.
+
+**Evidence:** `docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-timing-2026-10-20/runs/checkpoint-partial-D8-changed/result.json`, command trace, screenshots and exact wave comparison. This is an emulator fixture recall defect, not a claim about physical BlueSCSI reset behavior.
+
+**Notes:** A completed-D8 checkpoint already fails safely. Incomplete CDB acceptance needs a separate host-timeline invalidation guard.
+
+**Resolution:** The opt-in fixture rejects a recalled active COMMAND phase with CHECK CONDITION / UNIT ATTENTION06/28, preventing the saved partial command from selecting current host media. New selection clears the guard. Twelve SPC boundary cases (0/1/5/9 bytes, optical/IMG/ordinary targets), three native first-byte recalls with catalog replacement, explicit exact Load/playback and959 backend tests pass on4cf1cfab... . Fixture-disabled native boot/input/MIDI/release and all33554432 wave bytes match the previous executable. Other transaction phases and physical resets remain separate. [Results](bluescsi-im1-timing-recovery-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-timing-recovery-2026-10-20.json).
+
+### BUG-169 — Experimental parser quota fails dense-note release
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S2
+- **Area:** midi
+- **Opened:** 2026-10-20
+- **Reported by:** Codex native BUG-168 repair trial
+
+**Summary:** The private eight-byte/four-millisecond parser-admission trial reduces native service latency, but the post-stress playback release check fails. This trial is not accepted as the current OS.
+
+**Repro:** Native emulator7c994e86..., trial OS5623b43af23a77cf4f4dfaf9077aa8b481820a70dffde914ef30af9743ddad14, unchanged selectable GB-6 ROM. Run private `bluescsi-im1-timing-2026-10-20/run_midi_stress.py`: loaded13-sample fixture,100-entry D7,769 ordinary serial MIDI bytes, then note60 audition/release.
+
+**Expected:** Receive/process the complete stream, preserve samples/context and release to silence after the final Note Off.
+
+**Actual:** Catalog/data/context assertions pass and longest observed service falls to8.002ms, but native audition raises `Loaded note failed to release`. No native ring-overflow flag is observed; maximum observed pending ring distance444. These observations do not yet identify the cause.
+
+**Evidence:** Private timing work directory retains trial builders, decoded97-byte helper, actual native logs and parser trace. Durable evidence will accompany the timing result. Baseline6297274d... passed the same release check.
+
+**Notes:** Diagnose parser/event preservation before accepting the timing change. Original firmware/media and the prior qualified candidate are unchanged.
+
+**Resolution:** Experimental OS367f067d... moves continuation scheduling into masked browser code and uses32-byte/16000-tick parser admission with a nominal32-wrap total budget. The same stress reproducer parses all775 bytes exactly, reports no overflow, and passes subsequent audition/release. Seven cancellation/SDS/LCD/Remote Mode regressions pass. This fixes the observed release regression in the private trial; it does not promote that OS or establish the precise control/envelope cause. The established6297274d... OS is unchanged; BUG168 remains IN-PROGRESS for full timing proof. [Results](bluescsi-im1-timing-recovery-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-timing-recovery-2026-10-20.json).
+
+### BUG-168 — Long MIDI service loses whole timer wraps from browser deadlines
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-20
+- **Reported by:** Codex IM1 native dense-note/listing stress
+
+**Summary:** The image browser samples a 16-bit timer around cooperative native service. Dense note traffic produces a service interval longer than seven complete timer wraps, which the outer elapsed-time budget cannot reconstruct. The total command deadline is therefore not a qualified wall-time bound.
+
+**Repro:** Headless native MAME `7c994e8679c51e71801ce7c4ad570983b5a7a7e55f1ae135ed5fc58dda658962`, combined OS `6297274dd5c33b0b37409d3cddcd53e40b8af6140f2c416fc0213181cd3ba628`, selectable GB-6 ROM `a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb`. Load the 13-sample B fixture, begin a100-entry D7 catalog and inject one clock plus128 Note On/128 Note Off messages through ordinary serial MIDI in four192-byte chunks. Private runner `docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-safety-batch-2026-10-20/run_midi_stress.py`; read-only `analyze_stress.py` validates matched service rows.
+
+**Expected:** Bound service execution and include all elapsed timer ticks in the total transfer deadline; service must not indefinitely postpone deadline/cancellation checks.
+
+**Actual:** One native service lasts479.111125ms. Timer-read interval479039 ticks becomes a16-bit difference20287, losing458752 ticks/seven wraps. The browser's outer budget uses the same modulo-difference approach. All769 MIDI bytes,188 matched service contexts,4000 catalog bytes,119808 resident PCM bytes and before/after playback pass; this does not pass timing or prove real-time audio under stress.
+
+**Evidence:** [Safety-batch results](bluescsi-im1-safety-batch-results-2026-10-20.md) and [validation](../condensed/validation/bluescsi-im1-safety-batch-2026-10-20.json) include exact identities, raw clock/context rows and embedded reproduction sources.
+
+**Notes:** Native MIDI parser000F:213A drains its live ring with arrivals enabled. Prior static analysis identified no service quota. RW38 idle adjustment remains correct modulo65536 and is not scratch corruption. Establish bounded scheduling/arrival behavior and wrap-safe elapsed accounting, then repeat dense traffic, timeout/cancel, SDS and Remote Mode cases. No firmware fix or physical parity is claimed; this is an explicit IM1 gate.
+
+**Progress (2026-10-20):** Trial367f067d... limits parser admission to32 bytes/16000 ticks per browser service and schedules pending work after masked return. Exact775-byte parsing, no overflow,188 context pairs, maximum28.006625ms and no lost timer wraps pass for the finite stress workload. CRT/LCD cancellation, SDS and Remote Mode regressions also pass. A full single-byte/control-ISR duration bound and wrap-safe total accounting are still required; the trial is not promoted. [Timing results](bluescsi-im1-timing-recovery-results-2026-10-20.md).
+
+**Additional qualification (2026-10-20):** Trial5581ee53... with a one-shot D7 REQ-withheld peripheral fault receives323 MIDI bytes during the stall but only585 of775 expected reads overall, a190-byte deficit. Browser error/no automatic D8, explicit retry and Exit occur; exact-byte assertion fails before PCM acceptance. Fault-to-release is113.279125ms, longest observed service31.747875ms. Diagnose receive handling across timeout/error return and bound native MIDI TX/wave-port waits; do not promote the trial. Four other stalled-target cases pass but their MIDI occurs before/after the actual stall. [Results](bluescsi-im1-verify-stall-bounds-results-2026-10-20.md), [raw rows](../condensed/validation/bluescsi-im1-verify-stall-bounds-2026-10-20.json).
+
+**Triage correction (2026-10-20):** The190-byte simultaneous-stall deficit is now independently diagnosed and fixed as BUG175 (masked CRT redraw). It is not evidence that the underlying timer-wrap requirement is closed. The new candidate retains the existing parser quota and passes the original dense-MIDI reproduction at27.990375ms maximum observed service. Full single-byte/control-ISR and wrap-safe deadline proof remains open. [results](bluescsi-im1-bug-fixes-results-2026-10-20.md).
+
+
+**Clock trial and scope review (2026-10-20):** A private wrap-counter/checkpoint prototype passes20,000 decoded-byte helper executions,132 historical479039-tick replays and458,752 origin/deadline arithmetic cases. Two native variants time out healthy D7 reads from excess overhead; the faster7a21c4eb... completes4000 catalog bytes and preserves769 MIDI bytes but fails note release after leaving the browser. None is accepted. Concurrent playback during SCSI is not a product requirement; notes were a timer stressor. The user raised stock disk playback suppression. Original001F:4F28/4F5E provides a conditional controller suspend/restore path, and1BA5=0 skips native parser dispatch. Qualify and reuse the applicable stock disk policy before expanding intrusive clock instrumentation. Correct playback/release after return remains required. [Trial evidence](../condensed/validation/bluescsi-bug168-clock-trial-2026-10-20.json).
+
+
+**Resolution (2026-10-20):** Candidatee78750c2... reuses001F:4F8D to suspend performance processing for admitted browser actions and restore the original mode afterward/before native UI handoff. Native timer/control dispatch skips the parser and43A3 whileR9D=1BA5=0, removing the long-service path from active SCSI commands. Caller interrupt permission and timer-mask guards prevent entering the native shutdown wait with its interrupt disabled. Ten native cases/101 snapshots,9003 restored service pairs,145 commands/502771 exact elapsed samples,65536 permission-prefix cases and byte-identical rebuild pass. A test-only one-wrap deadline expires at65789 ticks and recovers through explicit retry with samples/playback intact; production retains32 wraps.6736/8002 bytes leaves1266 free; boot/GB-6 v9 unchanged. Physical qualification and broader stack/ownership remain separate IM1 gates. [Results](bluescsi-bug168-native-policy-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-bug168-native-policy-2026-10-20.json).
+
+### BUG-167 — Switched SCSI IMG media incorrectly forced read-only
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S2
+- **Area:** mame-driver
+- **Opened:** 2026-10-20
+- **Reported by:** User clarification and native fixture regression
+
+**Summary:** The opt-in BlueSCSI image-switch fixture rejected every WRITE, including writable hard-disk IMG files. The user confirms that FDD and SCSI IMG media must remain writable; ISO/CD media remain read-only.
+
+**Repro:** `tests/test_native_toolbox_images.py::test_native_toolbox_writable_img_persists_across_switch` against native executable `5720c78bdc2e129d7f2264b524b86ab914a3c109cf86194a5131484952399540`. Synthetic SPC test mounts HD2, submits WRITE(10), switches away/back and checks persistence. Private files only.
+
+**Expected:** Writable disk IMG accepts completed writes and retains them across selection; protected IMG and CD targets refuse writes with DATA PROTECT. Ordinary fixture-disabled media behavior stays unchanged.
+
+**Actual:** Before correction, WRITE returns status before DATA OUT; the test fails `DATA OUT phase`.
+
+**Evidence:** [Final-gates results](bluescsi-im1-final-gates-results-2026-10-20.md) and [validation](../condensed/validation/bluescsi-im1-final-gates-2026-10-20.json) retain the old-executable failure, accepted native Save/reselect/cold Load and regression identities.
+
+**Notes:** This corrects the diagnostic model and the overly restrictive roadmap policy; the browser OS itself does not implement the native disk writer.
+
+**Resolution:** Opt-in writable512-byte IMG selection accepts completed WRITE commands and flushes them to its selected private backing file. Optical/protected IMG refuse; incomplete DATA OUT is uncommitted; missing/resized backing returns WRITE ERROR and invalidates media. Ten synthetic cases and773 backend tests pass on7c994e86... . Native Save/reselection/cold Load reproduces119808 exact bytes and playback; ordinary fixture-disabled native acceptance and exact prior media/display artifacts pass. OS6297274d... and selectable GB-6 Boot ROM are unchanged. Checkpoint restore does not roll back completed host-file writes; no physical or crash-atomicity claim.
+
+### BUG-166 — Image-switch fixture prevents full-size CD qualification
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** mame-driver
+- **Opened:** 2026-10-20
+- **Resolved:** 2026-10-20
+- **Reported by:** Codex IM1 closeout, full JMD CD browser test
+
+**Summary:** The opt-in image-switch test fixture has an intentional64MiB allocation cap, which prevents qualification of ordinary full CDs. It is a harness limitation, not a BlueSCSI or sampler firmware limit.
+
+**Repro:** Select the606709760-byte JMD_S760_Freeware_CD.iso through the native browser with S760_TOOLBOX_IMAGE_ROOT. D8 returnsGOOD as modeled, but four readiness attempts remain CHECK CONDITION and no Load is queued. The new67110912-byte synthetic capacity/first/last-sector test fails on executable1188bff3...; oversize/misaligned rejection controls pass.
+
+**Expected:** The opt-in fixture can exercise a complete CD while retaining a finite host allocation ceiling.
+
+**Actual:** Images above67108864 bytes are rejected before reading.
+
+**Evidence:** Native closeout scratch and tests/test_native_toolbox_images.py. Firmware6297274d... remains unchanged by the fixture correction.
+
+**Notes:** Increase only the opt-in ceiling to1GiB; verify actual capacity/end sectors, full native CD Load, default-profile regressions and original firmware hashes.
+
+**Resolution:** Raise only the opt-in image-switch fixture allocation ceiling from64MiB to1GiB. Old-exe large-image test fails; rebuilt5720c78b... passes all6 image tests,769 full backend tests, default native acceptance and606.7MB CD/79 exact sample Load. [Closeout results](bluescsi-im1-closeout-results-2026-10-20.md).
+
+### BUG-165 — Image Library Exit loses nested native mode ancestry
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-20
+- **Resolved:** 2026-10-20
+- **Reported by:** Codex IM1 native parent-screen matrix and matched Mouse comparison
+
+**Summary:** Exit redraws the expected parent screen but can remove its mode ancestor. Returning to System Parameter leaves Perform highlighted; the native menu stack is shallower than before entry. Native Mode selection restores the intended mode.
+
+**Repro:** Headless native MAME SHA256 `1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5`, browser OS `19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c`, selectable boot ROM `a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb`. Enter System Parameter1 through ordinary controls, open Image Library, press physical Exit. Reproduced in GB-6 mode3 and a matched Mouse mode1 comparison against original OS2.24.
+
+**Expected:** Preserve System page0121 and its native mode ancestor8120, with System highlighted. The original Mouse Disk menu preserves depth3→4→3.
+
+**Actual:** Patched Mouse depth3→4→2; page0121 replaces the ancestor at stack index2. System content remains visible but Perform is highlighted. GB-6 Convert Load also shows an incorrect top highlight after browser return. All26 tested returns preserve expected screen IDs and loaded PCM; final native Mode→Performance playback/release passes.
+
+**Evidence:** [Batch results](bluescsi-im1-multi-gates-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-im1-multi-gates-2026-10-20.json), [original return](../condensed/validation/bluescsi-im1-multi-gates-system-stock-return-2026-10-20.png), [browser return](../condensed/validation/bluescsi-im1-multi-gates-system-browser-return-2026-10-20.png). Read-only depth at physical0B6ED8 and stack entries at0B6CE4 confirm the structural difference.
+
+**Notes:** Audit the oversized-popup Exit replacement/repaint sequence and its native close/screen queue semantics. Cause is not yet proven. Reuse native Mode selection as a workaround; do not mark full parent-context or IM1 acceptance complete. Preserve prior Load, ordinary Exit, LCD, GB-6 v9 and SDS behavior when repairing it.
+
+**Resolution:** Replace extra event02/01 with native event0B; preserve nested mode ancestry. Combined OS6297274d... passes matched Mouse and26 GB-6 parent cycles, LCD/handoff/cancel regressions;35 bytes saved. [Closeout results](bluescsi-im1-closeout-results-2026-10-20.md).
+
+### BUG-164 — Disabled LCD Next clears scroll without redrawing
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-20
+- **Resolved:** 2026-10-20
+- **Reported by:** Native LCD all100 paging acceptance
+
+**Summary:** LCD action entry resets SCROLL before knowing whether an action changes the page. Disabled Next at FIRST98/COUNT100 returns without rendering, leaving the displayed bottom navigation and cursor inconsistent with action mapping.
+
+**Repro:** Candidate efec015fa431f571b6bcb685d0ab0d20eb6de940d227cd40409fbd34a4f09996; native Panel+LCD, browse100 names to FIRST98, scroll2/cursorY56, press Value Menu on Next. Read-only snapshot reports SCROLL0/cursorY56. Immediate Previous then incorrectly leaves FIRST98 instead of91.
+
+**Expected:** Ignored actions preserve scroll and visible action mapping. **Actual:** Scroll changes2→0 without redraw. Scrolling down again is a workaround.
+
+**Evidence:** Private lcd-names-qualified/native-pages-2026-10-20/result.json, last-bottom and disabled-next states. Candidate19448d85... moves the existing reset into render with zero code growth; exact rebuild and native paging/name/CRT-SDS regressions pass.
+
+
+**Resolution:** Moved reset into render with zero code growth. Native negative baseline fails immediate Previous (FIRST98 instead of91); corrected all100 forward/back/boundary/Collections, full-name/exact Load and CRT cancellation/SDS pass. [Results](bluescsi-im1-lcd-paging-results-2026-10-20.md).
+
+### BUG-163 — LCD confirmation collection ID overwritten by native status
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** LCD confirmation visual review
+
+**Summary:** The confirmation's CD target identifier only appears in the native header, which the OS can replace with its Open/status text.
+
+**Repro:** Native candidate937fca52... preview-A shows headerCD1 but preview-B shows Open/status in its place. The name remains complete; the collection identifier is no longer visible.
+
+**Expected:** Full filename and collection remain visible before mounting. **Actual:** Native status can obscure the collection ID.
+
+**Evidence:** Private lcd-names-2/native-names preview-A/B screenshots. Successorefec015f... adds a CD identifier on its own confirmation row; final-hash native RAM and renderer-read checks pass.
+
+**Resolution:** [LCD name-view results](bluescsi-im1-lcd-name-results-2026-10-19.md). List-header presentation remains a separate broader LCD gate.
+
+
+### BUG-162 — LCD confirmation bypasses printable-byte guard
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** IM1 LCD name-view static review
+
+**Summary:** The initial private confirmation view copies raw D7 bytes to LCD text, bypassing the existing printable-character guard. Unsupported control bytes could be interpreted as native LCD string control codes.
+
+**Repro:** Candidate937fca52... confirm_name_copy emits LDB/STB directly. A source byte01 is copied as01 instead of a safe display character. This is a static diagnostic case, not an observed hardware crash; supported preflight names are printable ASCII.
+
+**Expected:** Printable32..126 remain exact, NUL padding becomes space, other bytes become question marks. **Actual:** Initial confirmation copy leaves every byte unchanged.
+
+**Resolution:** Candidated26858d2... adds a24-byte decoded guard; all256 byte cases pass, and the raw-copy negative baseline fails as expected. Supported32-byte ASCII names retain their identity. Native final-hash workflow qualification is recorded separately.
+
+**Evidence:** Private lcd-names-final/filter-check.json; [LCD name-view results](bluescsi-im1-lcd-name-results-2026-10-19.md).
+
+
+### BUG-161 — LCD trial scroll state aliases selected-index diagnostic
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** IM1 private LCD prototype static review
+
+**Summary:** The private LCD trial assigns scroll origin to context+40, but its inherited image-action path also stores the selected protocol index there. A failed mount could then redraw using a value outside the intended0..2 scroll range.
+
+**Repro:** Inspect candidateb6562360... image-action store to C+40 and LCD row-pointer calculation. This is a static alias defect in an unaccepted trial, not an observed hardware failure.
+
+**Expected:** Only bounded scroll state controls the LCD row window. **Actual:** An obsolete diagnostic store can replace it with0..99.
+
+**Resolution:** Triale798c0bf... removes the five-byte diagnostic store; the actual mount index remains in C+42. The accepted CRT firmware32143f10... is unchanged. LCD qualification remains in progress.
+
+**Evidence:** [LCD results](bluescsi-im1-lcd-results-2026-10-19.md), private builders and decoded instruction reports. Final trial passes LCD native Load/playback and CRT/SDS regression.
+
+
+### BUG-160 — Reopening Image Library retains stale catalog indices
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** IM1 native entry-state baseline
+
+**Summary:** Browser init renders a retained catalog without refreshing it. After external media changes, displayed names and cached indices may describe different files.
+
+**Repro:** On candidate9319be74..., browse CD1 page7, Exit, replace only the private generated collection with Fresh.iso, reopen. Native baseline retains mode1/target1/count100/first7 although the directory now has one image. No guest RAM or PC forcing.
+
+**Expected:** Reentry starts at Collections with invalidated operation metadata; image selection requires a fresh catalog. **Actual:** Previous catalog remains actionable. Save System also persists mutable browser bytes, so cold-start initialization needs explicit qualification.
+
+**Evidence:** native-stale-baseline/first-result.json under the private help-identity-init work folder. Fresh-entry successor clears context offsets16..91, preserving callback save fields0..15; native reopen, Save System cold boot and exact Load/playback acceptance pass.
+
+**Resolution:** Candidate32143f10... invalidates all operation metadata at entry. [Results](bluescsi-im1-entry-state-results-2026-10-19.md). This does not support live collection mutation or external checkpoint reconciliation.
+
+
+### BUG-159 — Cold Image Library omits Disk options label
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** IM1 help/identity native visual review
+
+**Summary:** On first browser entry after cold boot, Disk options is clickable but blank because init draws initial resource strings without populating dynamic rows.
+
+**Repro:** Cold native boot, open Disk with GB-6; inspect row5 on help/identity SHAa7a61a9d... . Its RAM label is empty. Repainting through a collection makes the label appear.
+
+**Expected:** Disk options is visible on first entry. **Actual:** Only the four collection labels appear.
+
+**Evidence:** IM1 help/identity captures and baseline-missing-label.json in the private help-identity-init work directory. Init now calls render before clear_draw.
+
+**Resolution:** Candidate9319be74... passes the cold-entry label assertion, navigation/reopen and native Load/playback/SDS checks. [Results](bluescsi-im1-help-identity-results-2026-10-19.md).
+
+
+### BUG-158 — Image Library inherits misleading parent softkey labels
+
+- **Status:** FIXED
+- **Severity:** S4
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** IM1 native browser review
+
+**Summary:** The browser leaves Perform's Q-Samp, Sol/Mut, PartMap and VolInfo labels visible although its six softkey callbacks are no-ops.
+
+**Repro:** Open Image Library from Perform using GB-6 v9 in native MAME on page-window SHA512e3468...; inspect the bottom CRT rows.
+
+**Expected:** The browser owns its visible controls. **Actual:** Parent labels suggest unavailable actions.
+
+**Resolution:** Candidate18421aaa... clears rows23/24 as well as the browser body; no extra allocation or new bindings. Native Exit restores the parent's keyboard/footer.
+
+**Evidence:** [Results](bluescsi-im1-owned-footer-results-2026-10-19.md), with exact identities and durable screenshot validation. Dedicated help remains a roadmap task.
+
+
+### BUG-157 — Incorrect Volume Dump FD label
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** ChatGPT native Disk menu acceptance
+
+**Summary:** The new private Disk options page expanded the stock menu's compact text tokens incorrectly and labeled its ninth action Load OS FD.
+
+**Repro:** On private candidate `43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977`, enter Disk operations and select row9.
+
+**Expected:** The label identifies Volume Dump FD, preserving the native floppy volume workflow and its system-disk warning.
+
+**Actual:** Label says Load OS FD, but the original callback opens Volume Dump FD and its caution dialog. The test cancelled without confirming a write.
+
+**Evidence:** [Native row9 warning and label-correction results](bluescsi-im1-disk-operations-results-2026-10-19.md), [validation](../condensed/validation/bluescsi-im1-disk-operations-2026-10-19.json).
+
+**Notes:** Correct to Vol. Dump FD and shorten the entry button to Disk options. Only text/table bytes and one immediate label pointer change; no stock action or SCSI logic changes.
+
+**Resolution:** Native Disk options and the corrected Volume Dump FD label are qualified as described in [results](bluescsi-im1-disk-operations-results-2026-10-19.md), with source/binary identities and scoped persistence/navigation evidence.
+
+### BUG-156 — Image Library hides native Disk operations
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** ChatGPT IM1 native disk-safety qualification
+
+**Summary:** The prototype replaces screen00F4's Disk popup with Image Library. Its mount path reaches Disk Load, but native Save/Utility and the other Disk menu actions have no preserved navigation route.
+
+**Repro:** Boot the session-admission prototype (`75f79ba01597c5cc64f9119689c59645da98b3d3ca5bbb8ccebd71afd8762720`) with saved GB-6 mode and select Disk. The browser presents collections and paging without the original Disk operations.
+
+**Expected:** Image selection must preserve access to native Disk operations, especially a separate writable save destination and Utility/Format.
+
+**Actual:** Native Save/Format workflows cannot be qualified through this UI.
+
+**Evidence:** [Native Disk navigation and Save/cold-Load results](bluescsi-im1-disk-operations-results-2026-10-19.md), [validation](../condensed/validation/bluescsi-im1-disk-operations-2026-10-19.json).
+
+**Notes:** A compact Disk operations page reuses all nine field indices and the stock0196:94D9 action dispatcher. The initial33-byte catalog variant adds100 code and100 data bytes, leaving16 free. Validated implicit indices subsequently recover68 net bytes;84 remain free/68 code-adjacent. Full fit remains open.
+
+**Resolution:** Native Disk options and the corrected Volume Dump FD label are qualified as described in [results](bluescsi-im1-disk-operations-results-2026-10-19.md), with source/binary identities and scoped persistence/navigation evidence.
+
+### BUG-155 — Browser ignores pending MIDI/SCSI Remote Mode
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** ChatGPT native IM1 session-admission probe
+
+**Summary:** The private image browser checks SDS owner2BBA but omits the independent manufacturer41 Remote Mode flag1FA4. A real MIDI session request during mounting can queue native Load while that session is pending.
+
+**Repro:** Native MAME with saved GB-6 v9 controls and compact candidate SHA256 `b299af70002fb4e16177179bab3cf8b38a51bab03aaa3d7ed9cc1b422d7184d7`. Send `F0 41 00 34 12 01 00 00 08 00 01 76 F7` through the standard MIDI endpoint during D8/readiness, then observe callback completion.
+
+**Expected:** The late admission check refuses native drive/Load commitment while Remote Mode is pending, preserving the prior native drive and reporting uncertainty after a possible image switch.
+
+**Actual:** Native1FA4=1 and2BBA=0 coexist with drive1, handoff7601 and error0. The prior drive was8. No crash or data loss is claimed.
+
+**Evidence:** [Paired baseline/fix and session results](bluescsi-im1-session-admission-results-2026-10-19.md), [validation](../condensed/validation/bluescsi-im1-session-admission-2026-10-19.json).
+
+**Notes:** Add a specific Remote Mode check to the shared admission helper. This flag is not a generic disk-busy lock. Original firmware and boot ROM remain unchanged.
+
+**Resolution:** The shared admission helper now checks native1FA4 after confirming SDS idle. Paired list/mount races preserve drive8/handoff0 and report Busy11; five native session workflows, four browser regressions and exact rebuild pass. [Durable results](bluescsi-im1-session-admission-results-2026-10-19.md).
+
+### BUG-154 - Browser idle watchdog counts native interrupt service as a stalled SCSI target
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S3
+- **Area:** disk
+- **Opened:** 2026-10-19
+- **Reported by:** ChatGPT, incoming-SDS-during-list IRQ qualification
+
+**Summary:** After cooperative IRQ service is enabled, native SDS header handling can spend35.50175ms in a service call. The5ms no-progress watchdog includes that CPU time and reports timeout even though the SCSI target is ready and the initiator was occupied servicing the interrupt.
+
+**Repro:** Cooperative/ownership candidates receive a real21-byte SDS header after D7 data starts. Receive reserves cursor1/owner1 inside a service window; D7 then reports transport3/statusFFFF after373 of4,000 bytes. Native modal exclusion and cancellation/rollback remain safe, but enumeration has not completed successfully.
+
+**Expected:** Exclude measured service time from the last-progress clock while preserving the overall elapsed and poll deadlines. Drain listing, then reject catalog publication with Busy if SDS now owns sample memory.
+
+**Evidence:** Private `irq-service/qualified/native-sds-during-list` contains raw373-byte timeout,35.50175ms service measurement, native owner transition and normal cancellation rollback. Candidate `4196c31ec7466b53fa001f266cdad38eb506c5d0b48469122bc16a7b384538f3` adds modulo16-bit service-time adjustment of RW38, preserves other scratch words and total deadlines, and shares entry/post-catalog/post-mount owner checks. Native reruns are pending.
+
+**Notes:** This is distinct from a stuck target and from lost MIDI bytes. Physical target recovery, worst-case ISR/timer sampling bounds and general native-operation ownership remain qualification gates.
+
+**Resolution:** Final candidate `4196c31ec7466b53fa001f266cdad38eb506c5d0b48469122bc16a7b384538f3` measures service ticks and advances only RW38 by that modulo16-bit duration, preserving all other saved scratch including elapsed/poll counters.188 matched service pairs pass for both128 clock bytes and a21-byte incoming header, including real timer wraps. Header listing now drains4,000 bytes/status0/transport0 and returns Busy after the native receive claims memory; modal exclusion and cancellation rollback pass. Six native cases and exact rebuild pass. This does not bound every physical ISR or change the total transaction deadline. [Validation](../condensed/validation/bluescsi-im1-irq-ownership-2026-10-19.json).
+
+### BUG-153 - IRQ-serviced browser queues Disk Load after incoming SDS claims sample memory
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-19
+- **Reported by:** ChatGPT, native incoming-SDS-during-mount acceptance
+
+**Summary:** Checking SDS ownership only when the browser action begins is insufficient once MIDI interrupts are serviced. A genuine header arriving during D8/readiness can reserve sample memory before mount returns, yet the browser still updates the native selected drive and queues Disk Load.
+
+**Repro:** Candidate `48268118c49437b1419506606cad866a92768cf0a5f676bcc57728fa35e24d23`, ordinary UI enables SysEx, then the MIDI endpoint sends a21-byte receive header at D8 command start. Native snapshot shows allocation cursor1/owner1 while browser handoff marker7601 and native selected drive1 have already been written. Initial drive was8. No actual volume Load is invoked; the receive is cancelled and rolls back before test exit.
+
+**Expected:** Recheck the native owner immediately before committing drive selection and queueing Load. A newly busy owner must leave the native drive unchanged, queue no Load and report mount uncertainty because D8 may already have changed media.
+
+**Evidence:** Private `irq-service/qualified/native-sds-during-mount/result.json`, native snapshots and raw command/MIDI/owner observations preserve the failure. Candidate `40713592452a50945e00124e21206250f9e401e00d0fd11272a4f42da7aaf27f` adds the final check, removes unused field-debug snapshots and prioritizes uncertainty after a switch; native reruns are pending.
+
+**Notes:** IRQ-disabled predecessors could not expose this interleaving. No native runtime/emulator source changes or guest-state forcing. Header arrival during listing separately exits safely through bounded timeout recovery while native receive owns memory; that is not a successful uninterrupted listing.
+
+**Resolution:** Final candidate shares owner checks at action entry, after catalog drain and immediately before native drive/Load commit. The reproduced post-D8 header leaves cursor1/owner1 but now records error11/handoff0/native drive8, after a successful capacity reply. Native receive CANCEL rolls back0/0; explicit fresh selection loads13 samples/119,808 exact bytes and plays. Listing/header coexistence also passes after BUG-154, and cancellation, SDS publication, failure recovery, limits and code preservation pass on the same hash. General load/save/format and retained sender exclusions remain separate gates. [Validation](../condensed/validation/bluescsi-im1-irq-ownership-2026-10-19.json).
+
+### BUG-152 - Private IRQ probe passes a Lua array to the MIDI byte-string endpoint
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Reported by:** ChatGPT, IM1 IRQ/MIDI observer qualification
+
+**Summary:** Early private observers call `emu.midi_send` with a table of48 bytes. The native Lua binding takes a byte string, so no MIDI reaches the peripheral and the resulting zero-receive assertions cannot qualify firmware IRQ behavior.
+
+**Repro:** `irq-service/baseline/native-irq-v2` through `native-irq-v5`, and corresponding cooperative trials. The invalid trigger yields no accepted MIDI bytes. Initial instrumentation also used an unquoted Lua reserved label and initially misnamed stack-frame words; these failed/incorrect observations are retained and excluded from acceptance.
+
+**Expected:** Use the same byte-string ingress contract as the native runtime scheduler, record the accepted trigger and exact received bytes, and compare reception before command completion on otherwise identical firmware/fixtures.
+
+**Evidence:** `mame-source/src/frontend/mame/luaengine.cpp` defines `midi_send(const std::string &tag, const std::string &bytes)`. The private observer now supplies `string.rep(string.char(0xf8),48)` through the existing qualified D7 input-trigger site. Fresh baseline/cooperative runs are in progress; no emulator/runtime source changed.
+
+**Notes:** This is a test instrumentation defect. Zero-RX failed trials must not be presented as firmware MIDI loss. Caller-context fields are validated against the captured stack words, accounting for PUSH's predecrement at the data-bank read observer.
+
+**Resolution:** Use the native endpoint's byte-string format. The corrected matched test receives48 exact bytes after D7 in the masked baseline versus all48 during D7 in the cooperative build. A128-byte run also receives every byte inside service windows;188 service pairs preserve scratch/banks/SP, with no ISR SPC writes observed. Earlier invalid probes are excluded. These are scoped emulator results, not physical timing guarantees.
+
+### BUG-151 - Switch cancellation test releases Exit before the input port can sample it
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Reported by:** ChatGPT, native IM1 interrupted-switch acceptance
+
+**Summary:** The first D8 test pressed Exit at the first command byte and released it at command return, only0.821375ms later. The emulator's panel input did not expose that sub-frame pulse to the firmware; no cancellation was latched and normal handoff occurred.
+
+**Repro:** Private candidate `992ea7f8bd14d95c13873e6740b7cb252b46679f1ff8b01ea68edc3196cfb18f`, `cancel-recovery/qualified/native-cancel`: physical-input log switches down at59.88505475s and up at59.885876125s. The test incorrectly expects error7 despite cancel0. D7 cancellation in the same run uses a203ms press and passes.
+
+**Expected:** Hold an ordinary physical button press until the guest observes it, qualify the resulting interruption separately from raw transport/status, and avoid presenting a sub-frame pulse as a real front-panel test.
+
+**Evidence:** Failed input log, command log and switch-interrupted snapshot are preserved. The paced successor holds the switch-time press until the read-only cancel-latch observer sees actual guest acceptance. Its readiness probes are explicitly paced20ms apart with timer/poll bounds, rather than four immediate probes; physical readiness timing remains unqualified.
+
+**Notes:** No guest RAM/register/PC forcing or emulator changes. New candidate hash `668105f92fc19cf945cd638dcf81cc029e47addb6733b8d63c41662a3fb3d30f` passes the full native matrix below. The earlier203ms D7 failing baseline remains valid evidence for BUG-150.
+
+**Resolution:** Hold Exit until the guest cancel-latch write is observed, rather than releasing it after a sub-millisecond D8 completion. The paced successor accepts the physical press14.84675ms after command start, returns operation7 with raw D8 status0, issues no following command, shows the interrupted-mount message and requires explicit selection before native Load. Full cancellation/retry/SDS, failure recovery and catalog-boundary native runs pass. This is input timing qualification for the emulator, not a measured physical panel scan period. [Evidence](../condensed/validation/bluescsi-im1-cancel-recovery-2026-10-19.json).
+
+### BUG-150 - Private image browser ignores Exit during its SCSI command sequence
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S3
+- **Area:** disk
+- **Opened:** 2026-10-19
+- **Reported by:** ChatGPT, native IM1 cancellation baseline
+
+**Summary:** The private browser retains a bounded sender and raw Exit scanner, but its exchange disables cancellation and clears the latch for each command. A physical Exit press during a full D7 listing is ignored, so the browser proceeds to display the catalog.
+
+**Repro:** Preceding candidate `bcc31a783cb4e7cafbc4942eab3af98a8d0a3038632c6ea45341fb242b4b9f21`; ordinary GB-6 opens ISO A, then a timed physical front-panel Exit press starts at D7 byte1200 and releases at bounded command return. The read-only observer records the input interval and full4,000-byte response. The browser ends at mode1/error0/cancel0 instead of reporting cancellation. Native selected drive8 and allocation cursor0 remain unchanged.
+
+**Expected:** Drain the current bounded command, return cancellation separately from raw status/transport failures, stop the sequence and visibly report the result. After D8 may have run, require explicit fresh selection without claiming rollback or entering native Load automatically.
+
+**Evidence:** Private `bluescsi-im1-layout-2026-10-19/cancel-recovery/qualified/baseline-no-cancel/first-result.json`, `physical-input.jsonl` and snapshots preserve the failing baseline. New candidate `992ea7f8bd14d95c13873e6740b7cb252b46679f1ff8b01ea68edc3196cfb18f` is undergoing cancellation/retry/failure acceptance.
+
+**Notes:** Physical input is injected through the ordinary panel port; observers never write guest RAM/registers/PC. No emulator source change. This is a private OS patch defect, not a physical BlueSCSI firmware finding.
+
+**Resolution:** Candidate `668105f92fc19cf945cd638dcf81cc029e47addb6733b8d63c41662a3fb3d30f` enables Exit scanning, resets the latch per operation and converts successful drained exchanges to operation7 without overriding raw transport/status failures. D7 drains4,000 bytes and shows Cancelled; interruption after D8 shows uncertainty and queues no Load. Readiness polling has20ms timer/poll-bounded pacing, with at most four probes. Fresh selection then loads119,808 exact bytes and plays; SDS cancel/retry preserves prior descriptors/PCM and appends160 exact bytes. All code/library checks and exact rebuild pass. IRQ-serviced cancellation, full native-operation ownership and physical timing remain separate open gates. [Evidence](../condensed/validation/bluescsi-im1-cancel-recovery-2026-10-19.json).
+
+### BUG-149 - IM1 busy test expects a browser callback beneath the native SDS modal
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Reported by:** ChatGPT, native compact-discovery-v2 SDS acceptance
+
+**Summary:** The private concurrency test asserted browser error11 after clicking a collection during SDS receive. Native firmware instead opens its Sample Dump Receiving modal above the browser, so the collection callback is not entered.
+
+**Repro:** In candidate `bcc31a783cb4e7cafbc4942eab3af98a8d0a3038632c6ea45341fb242b4b9f21`, open the browser, send a genuine SDS receive header, then click ISO A. Cursor14/owner1 persist and the modal remains visible; no new SCSI command is sent. The test incorrectly fails on the absent browser error.
+
+**Expected:** Assert the observed modal contract: no browser state/listing mutation or SCSI command during active receive, then qualify cancellation/cleanup/retry. Keep direct browser guard execution unqualified unless separately exercised.
+
+**Evidence:** Failed private `compact-discovery-v2/native-linked-sds` snapshots19/20 and `busy-browser-rejected.png` are preserved. Corrected assertions and full lifecycle rerun are in `run_sds_lifecycle_v2.py` / `native-linked-sds-v2`.
+
+**Notes:** No firmware/runtime behavior was changed for this correction. It is a test expectation defect, not a failure of native SDS exclusion.
+
+**Resolution:** The corrected native run verifies identical92-byte browser context, all3,400 listing bytes and unchanged SCSI command stream while receive remains at cursor14/owner1. CANCEL cleans up to13/0; subsequent early cancel and retry publish14/0 with160 exact new PCM bytes, preserving the existing13 descriptors/119,808 PCM bytes and every packed code span. The native modal exclusion passes; direct execution of the browser's busy guard remains unqualified. [Validation](../condensed/validation/bluescsi-im1-discovery-fit-2026-10-19.json).
+
+### BUG-148 - Private IM1 discovery dispatch sends INQUIRY as a ten-byte command
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S2
+- **Area:** disk
+- **Opened:** 2026-10-19
+- **Reported by:** ChatGPT, native IM1 compact-discovery acceptance
+
+**Summary:** The first private compact-list browser candidate placed INQUIRY and MODE SENSE dispatch after an existing non-TUR branch directly to transport. INQUIRY therefore retained the ten-byte CDB length and zero allocation instead of six bytes and allocation96.
+
+**Repro:** Ordinary GB-6 input selects ISO A in private candidate SHA256 `512b463017d6919e831e5edbc5f1fc34238a659d232bef07fa4da69727403d48`. Native observer records CDB `12000000000000000000`, transport6 (phase error), statusFFFF and length0. Catalog selection returns to collections.
+
+**Expected:** INQUIRY uses `120000006000`, validates identity/API and the vendor page, then admits catalog commands only for a compatible target.
+
+**Actual:** Selection fails during discovery before listing or mounting; the transport error is retained separately from SCSI status.
+
+**Evidence:** Failed run remains in the private `bluescsi-im1-layout-2026-10-19/compact-discovery` work folder. The corrected `compact-discovery-v2` candidate has a distinct exclusive build and redirects non-TUR commands through the new six-byte dispatch. Its native non-Toolbox rejection already passes; positive browser/load/SDS checks are running. No original firmware or emulator source changed.
+
+**Notes:** This defect belongs to the new private browser patch, not BlueSCSI firmware. Do not count the failed first run as acceptance.
+
+**Resolution:** Corrected dispatch in private candidate `bcc31a783cb4e7cafbc4942eab3af98a8d0a3038632c6ea45341fb242b4b9f21`. Native positive INQUIRY/vendor-page/catalog on all four configured IDs, ISO index99 mount/native Load/playback, ordinary-target rejection and empty/1/100/101-entry cases pass. INQUIRY carries allocation96 and six-byte length; MODE SENSE carries DBD/page31/allocation48. Static decode/targets and exclusive byte-exact rebuild pass. See the discovery/fit validation referenced by the active image-mounting plan. The separate SDS modal test expectation is BUG-149.
+
+### BUG-147 - Combined GB-6 browser qualification misses the requested image-row click
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex mandatory combined GB-6/browser native qualification
+
+**Summary:** The first combined candidate passes GB-6 Setup/persistence/fallback and browsing through15 pages, but the requested second-row click on the last page sends no D8. Input positioning versus firmware hit testing is under investigation; no media or coexistence failure is established.
+
+**Repro:** Private `bluescsi-im1-gb6-2026-10-19/run_browser.py`, combined OS SHA256 `44a1141f0b8a1cfe10a0b03a76ae6a47f4bb58a621a95eeed32cca7a02ba50f4`, GB-6 ROM `a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb`, auto peripheral mode, EEPROM3 saved through ordinary Setup. Advance to FIRST98 then click runtime(50,30).
+
+**Expected:** The selected protocol index99 mounts and native Disk Load opens.
+
+**Actual:** Browser remains on the last page, mount marker is unset and command trace contains only DA/D7. The captured pointer appears away from the requested row. The native test asserts before mounting and is not a passing end-to-end run.
+
+**Evidence:** Private `bluescsi-im1-gb6-2026-10-19/native-gb6/{last-page.png,handoff.png,runtime/bs1-observer/toolbox.jsonl}`; read-only pointer trace candidate records register coordinates and native bounds.
+
+**Notes:** Investigate the host-to-GB-6 pointer path before changing guest code or weakening selection assertions. Keep the mandatory combined OS baseline and original firmware immutable.
+
+
+**Resolution:** Read-only cursor tracing establishes the unchanged v9 X4/Y4 path moves on an8-pixel grid in this native mode. Non-grid requests round toward the previous position and can land in a gap or just below a one-row field. The first centre-point attempt also misses Next. Private V3 targets exact reachable text rows (e.g. Next nativeY168 and second-imageY56), retains D8 index99 and exact PCM assertions, and passes ISO, IMG and same-session IMG B-to-A load/playback/Exit. No GB-6 decoder, sensitivity or runtime pointer implementation changed. All accepted runs use mandatory v9. Evidence: `docs/condensed/validation/bluescsi-im1-gb6-native-2026-10-19.json`.
+
+### BUG-146 - Upstream image switch lacks path termination for64-byte or longer paths
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S3
+- **Area:** hardware
+- **Opened:** 2026-10-19
+- **Reported by:** Codex IM1 filename-boundary source review
+
+**Summary:** Reviewed stock `switchNextImage` copies an explicit path using `strncpy(filename, next_filename, MAX_FILE_PATH)` into a64-byte array without forcing a trailing NUL. D8 constructs the full path in a128-byte buffer first. A path of64 or more bytes therefore leaves the local filename unterminated.
+
+**Repro:** Inspect pinned release4d0f96fe520688c666f34e6282a2f448f340a617 and main5e64e3b4a09088c67a2a6728385600ea67ddbe0d `BlueSCSI_disk.cpp` at switchNextImage. `CD1/` plus a60-byte filename reaches64 bytes before the NUL. No undefined-behavior runtime or physical test is claimed.
+
+**Expected:** A bounded, terminated path or an explicit length error.
+
+**Actual:** Source provides no terminator for an explicit path at/above64 bytes, before logging, geometry parsing and open.
+
+**Evidence:** `docs/condensed/validation/bluescsi-filename-boundaries-2026-10-19.json`; private filename harness sources. The59-byte filename /63-byte path passes the host harness.
+
+**Notes:** Limit qualification to total filename59 ASCII bytes including extension in stock `CD<id>` folders. Visible D7 name remains32 bytes. Keep32-byte names for fully visible first-version identification; reject unsupported/mismatched catalogs rather than reconstructing a guessed pathname. Upstream fix is separate from S-760 code; no issue was sent or device firmware changed.
+
+**Resolution:** Local source patch bounds explicit path scanning/copying and rejects overlong paths before audio or old-image side effects. D8 also checks its constructed path and returns CHECK CONDITION/ILLEGAL REQUEST24/00. Direct63-byte acceptance,64/65/127/128/255-byte refusal, old-image/content/flag retention, automatic cycling and D8 failures pass. [Patches](../../patches/bluescsi-v2/filename-fixes/README.md) apply to both reviewed full upstream revisions.21 focused tests/10,002 patched host assertions and the1,110-pass/3-skip backend suite pass. This FIXED status describes the supplied source repair; installed BlueSCSI firmware is unchanged and board build/device qualification remain open. [Results](bluescsi-filename-fixes-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-filename-fixes-2026-10-20.json).
+
+### BUG-145 - Upstream Toolbox truncation changes filename filtering between list and selection
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S3
+- **Area:** hardware
+- **Opened:** 2026-10-19
+- **Reported by:** Codex IM1 upstream-code filename harness
+
+**Summary:** Stock DA and D8 filter names after truncating to32 bytes; D7 filters the full name before truncating. A long ignored extension can disappear during truncation, producing different enumerators.
+
+**Repro:** Pinned source harness, sorted private CD1 contains29 `A` characters plus `.txt` (33 bytes) followed by `Z.iso`. DA reports2, D7 returns only `Z.iso` as index0, raw D8 index0 opens the long `.txt` file.14 harness assertions pass, including this reproducible defect. The prior assumption that all long ISO names fail was disproved: ordinary31/32/33/59-byte ISO names all mount in this harness. A36-byte valid ISO whose first32 bytes end in `.txt` instead reports count0/list1 and fails raw selection, proving that long ISO names can also be affected. Count/length equality alone is not a complete equivalence proof if filtering differences cancel.
+
+**Expected:** Count, list and selection use the same filtering and index space.
+
+**Actual:** Count2/list1; displayed index0 and selected index0 identify different files when a caller ignores the mismatch. The current S-760 prototype checks actual list transfer length against the count and must retain that refusal path; integrated fault qualification is still required.
+
+**Evidence:** `docs/condensed/validation/bluescsi-filename-boundaries-2026-10-19.json`; private `bluescsi-im1-filenames-2026-10-19/run.log` and executable/source hashes.
+
+**Notes:** Keep library leaves limited to intended image files. This is an upstream source/harness defect, not an observed physical device failure. No upstream patch or user SD-card change was made.
+
+
+**Resolution:** Local source patch removes pre-validation32-byte truncation from count and index selection. Count/list/D8 now use the same filename filter and preserve protocol indices. Original failures reproduce; patched host tests include both long-name cases and a count-equals-list/index-mismatch fixture across IDs1/2/3/6. [Patches](../../patches/bluescsi-v2/filename-fixes/README.md) apply to both reviewed full upstream revisions.21 focused tests/10,002 patched host assertions and the1,110-pass/3-skip backend suite pass. This FIXED status describes the supplied source repair; installed BlueSCSI firmware is unchanged and board build/device qualification remain open. [Results](bluescsi-filename-fixes-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-filename-fixes-2026-10-20.json).
+
+### BUG-144 - Wide private browser leaves labels behind after native Exit
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex IM1 screenshot review
+
+**Summary:** The private wide popup clears the native keyboard successfully, but native Exit does not fully restore the parent display. Parent content and browser labels overlap after closing. This does not invalidate the passing mount-to-load/playback path.
+
+**Repro:** Private `run-v7.py` using `browser-v6.img`: mount valid ISO, load/play, reopen collections, visit IDs3/2/6, return to collections, press native Exit.
+
+**Expected:** The parent native screen redraws fully, with no browser labels left behind.
+
+**Actual:** `native-v7/final-exit.png` retains Image Library and collection labels while parent Perform graphics reappear. The runner checks catalog state and playback, not this Exit visual contract; that part remains a failure.
+
+**Evidence:** Private `bluescsi-im1-ui-2026-10-19/native-v7/final-exit.png`, `run-v7.py`, `build-v6.py`.
+
+**Notes:** Derive and qualify native close/redraw ownership rather than forcing display RAM or PC. CRT Exit is not complete; LCD/GB-6, footer/help ownership and layout polish remain open as well.
+
+
+**Follow-up:** Private `exit-v8` queues native redraw event0F in the Exit callback. Its captured exit screen still retains browser labels; this candidate does not close the bug.
+
+**Resolution:** Native popup save at004B:62D4 rejects areas over620 character cells, so the40x20 browser had no saved parent surface. Private V8 now derives the parent from the native screen stack and queues native close/reopen/redraw on ordinary Exit, with a mount-handoff flag suppressing that reload during a switch. Exit-v9 repeated empty Perform restoration, native-v10 loaded Perform restoration/playback/release with stable repeated depth, and exit-disk-v11 Disk Load restoration all pass. Disk Load before/after matches all307200 RGB pixels. No external guest-state writes were used. Evidence: `docs/condensed/validation/bluescsi-im1-exit-filenames-2026-10-19.json`. Other parent/controller modes remain unqualified.
+
+### BUG-143 - Private read-only observer request replacement races a Windows file reader
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex IM1 private native-v6 run
+
+**Summary:** The private Python snapshot requester atomically replaces a file that the read-only Lua observer may briefly hold open. Windows can reject replacement with WinError 5.
+
+**Repro:** Private `run-v6.py` reaches its loaded screenshot; `probe_base.py` fails in `temporary.replace(snapshot-request.txt)` with `PermissionError: [WinError 5] Access is denied`. This is host file IPC, not guest or image behavior.
+
+**Expected:** A transient reader collision retries within a bounded deadline.
+
+**Actual:** The prior harness aborts the acceptance run, so it cannot be counted as passing.
+
+**Evidence:** Private `bluescsi-im1-ui-2026-10-19/native-v6/` and `probe_base.py`.
+
+**Resolution:** Private requester now retries only PermissionError at 10 ms intervals for at most two seconds, then preserves the exception. No guest state writes were added. The exact collision is nondeterministic; no deterministic reproduction of the fixed race is claimed.
+
+
+### BUG-142 - Private browser redraw retains popup contexts during native handoff
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex IM1 browser end-to-end qualification
+
+**Summary:** V4/V5 use the native screen-open queue for every page redraw and queue Disk Load without closing the browser. The loaded image is correct, but subsequent normal navigation remains in the Disk context. The suspected cause is retained popup contexts, not a media/load failure.
+
+**Repro:** Private `run-v5.py`, `browser-v4.img`, native executable SHA256 `1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5`: boot, open library, advance through 15 pages, mount index99 containing a valid Roland ISO, load its volume, then select Perform and audition.
+
+**Expected:** Native Perform opens and plays the loaded performance normally.
+
+**Actual:** All 119,808 expected sample bytes match variant B, but `perform.png` still shows Disk Load and the audition asserts on silence. The test is a failed end-to-end run.
+
+**Evidence:** Private `bluescsi-im1-ui-2026-10-19/native-v5/{handoff.png,loaded.png,perform.png,wave.bin}`, `run-v5.py`; V6 candidate `build-v6.py`.
+
+**Notes:** Candidate uses native drawing services directly for page changes, then queues native close event 2 before opening Disk Load. Verify playback/release, reopening, all collection targets and Exit before closing this bug.
+
+
+**Resolution:** V6 candidate redraws the existing descriptor through native CRT services and queues native close event 2 before Disk Load. Native-v7 reaches Perform, plays/releases and reopens the browser normally. Separate Exit visual restoration remains BUG-144.
+
+### BUG-141 - Private image browser retains a listing after mount overwrites its buffer
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex IM1 buffer-lifetime review
+
+**Summary:** The private V4 browser reuses its listing buffer for REQUEST SENSE and READ CAPACITY but retains image-list mode after mount. Reopening can display stale labels and resolve an early row from overwritten metadata. This is a private experimental firmware defect; no released firmware is affected.
+
+**Repro:** Inspect `build-v4.py` in private `bluescsi-im1-ui-2026-10-19`: D7 stores rows at logical 4C00; `mount` issues sense/capacity into the same buffer; the success path queues native Disk Load without invalidating list mode. After mounting, re-enter Image Library and choose an early row. Runtime reproduction of the wrong selection is not claimed.
+
+**Expected:** Successful mount invalidates the old listing; reopening starts at collections and fetches a fresh catalog.
+
+**Actual:** Code retains MODE=1 and stale labels while its row buffer has been overwritten. Static dataflow establishes the lifetime violation.
+
+**Evidence:** Private `build-v4.py`, `build-v4.json`, and V5 candidate `build-v5.py` (clears mode/page and regenerates collection labels before native handoff).
+
+**Notes:** Qualify V5 by mounting/loading, reopening through ordinary UI, and fetching each collection again. Keep failure paths under the integrated recovery gate.
+
+
+**Resolution:** V6 candidate clears mode/page and regenerates collection labels after mounting. Native-v7 loads exact B bytes, plays/releases, reopens at collections, and fetches all four 100-entry catalogs through ordinary input.
+
+### BUG-140 - Private full-screen image-library descriptor crashes on entry
+
+- **Status:** WONTFIX
+- **Resolved:** 2026-10-20
+- **Severity:** S3
+- **Area:** ui
+- **Opened:** 2026-10-19
+- **Reported by:** Codex IM1 native UI prototype
+
+**Summary:** Switching the private Image Library descriptor from the qualified popup mode to full-screen mode crashes the native emulator on screen entry. This is an experimental firmware resource contract failure, not an established CPU or baseline OS defect.
+
+**Repro:** Run `run.py` in the private `bluescsi-im1-ui-2026-10-19` work directory with `browser-v2.img`; boot normally and click Disk. Headless native executable SHA256 `1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5`. The V2 resource uses geometry mode 0 and a new blank softkey table.
+
+**Expected:** The custom collection screen opens normally.
+
+**Actual:** Runtime disconnects; log reports `Fatal error: Unhandled 1c (e002)`.
+
+**Evidence:** Private work directory `docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-ui-2026-10-19/native-v2/`, `build-v2.json`, `build.py`, and `browser-v2.img`.
+
+**Notes:** The popup V1 passes collection, paging and back navigation. Continue with the known popup contract and native clearing/drawing primitives; full-screen mode remains unqualified. No original image or driver was changed by this experiment.
+
+
+**Resolution:** WONTFIX for the abandoned full-screen-descriptor experiment. The selected oversized-popup design meets the no-keyboard browser workflow using known native resource contracts; current CRT/LCD entry/navigation/cancellation tests pass. The failing experimental binary remains historical evidence and is not released. This disposition does not assert that its unknown full-screen resource contract was repaired. [results](bluescsi-im1-bug-fixes-results-2026-10-20.md).
+
+### BUG-139 - Same-session mount test leaves native clear-memory confirmation unanswered
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex IM1 native qualification
+
+**Summary:** Same-session mount test leaves native clear-memory confirmation unanswered. This affects the private qualification harness.
+
+**Repro:** The first B-to-A native reload reaches Clear Internal Memory Before Loading and then reports silence because the harness assumes loading completed. The captured A-loaded.png shows the unanswered native dialog.
+
+**Expected:** Explicitly enable the intended fixture and complete all required native UI interactions before asserting loaded-media behavior.
+
+**Actual:** The harness exercises a different target or leaves the load pending; its acceptance assertion fails.
+
+**Resolution:** The final run_v3.py uses runtime coordinates54,62 to click Yes through normal mouse input before waiting for Load. Same-session native rescan/reload then passes exact119808-byte and playback/release checks. Expected native confirmation is part of the workflow, not a firmware defect. Final acceptance is recorded in the IM1 batch evidence.
+
+**Evidence:** [IM1 batch validation](../condensed/validation/bluescsi-im1-native-2026-10-19.json). Private failed and corrected runs are retained under docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19. Finding 267.
+
+### BUG-138 - Private mount runtime launcher drops the opt-in fixture environment
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex IM1 native qualification
+
+**Summary:** Private mount runtime launcher drops the opt-in fixture environment. This affects the private qualification harness.
+
+**Repro:** The first guest-1 native run completed with transport code 6 on count100 because NativeRuntime intentionally strips S760_* environment variables, and the private observer launcher did not restore S760_TOOLBOX_IMAGE_ROOT.
+
+**Expected:** Explicitly enable the intended fixture and complete all required native UI interactions before asserting loaded-media behavior.
+
+**Actual:** The harness exercises a different target or leaves the load pending; its acceptance assertion fails.
+
+**Resolution:** Explicitly forward the fixture root in the private probe_base.py launcher. The corrected native-v2 runs pass all18 commands twice on each of four targets. Production NativeRuntime environment policy is unchanged.
+
+**Evidence:** [IM1 batch validation](../condensed/validation/bluescsi-im1-native-2026-10-19.json). Private failed and corrected runs are retained under docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19. Finding 267.
+
+### BUG-137 - Upstream Toolbox image selection discards switch failure result
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-20
+- **Severity:** S3
+- **Area:** hardware
+- **Opened:** 2026-10-19
+- **Reported by:** Codex BlueSCSI V2 source inspection
+
+**Summary:** External BlueSCSI firmware risk: onSetNextCD ignores switchNextImage's Boolean result. Its handler has no explicit CHECK CONDITION mapping for index/open failure. The S-760 client cannot equate command success with mounted-media success.
+
+**Repro:** Source-level inspection only: BlueSCSI-v2 main 5e64e3b4a09088c67a2a6728385600ea67ddbe0d and release 4d0f96fe520688c666f34e6282a2f448f340a617. Trace an invalid index or failed image open through Toolbox onSetNextCD (lines 408-419 in both revisions) to switchNextImage (main lines 1470-1521; release 1449-1500). No hardware or emulator command reproduction performed in this batch.
+
+**Expected:** Failed image selection is distinguishable from a successful mount and the client safely reconciles media state.
+
+**Actual:** The source discards the failure return; the switcher closes the old file before attempting the new open. Exact on-wire failure status and resulting physical state remain unqualified.
+
+**Evidence:** [Mount protocol research](bluescsi-image-mount-protocol.md) and [source identities/comparisons](../condensed/validation/bluescsi-image-mount-protocol-2026-10-19.json). Finding 266.
+
+**Notes:** This is an upstream risk, not a newly observed regression in the S-760 emulator. No upstream report or firmware change made. Validate index/list identity and verify readiness, capacity and identifying sectors after selection; add failed-index/open hardware and native-fixture cases before closing.
+
+**Related progress (2026-10-20):** BUG145/146 source patches also propagate the D8 switcher result and reject invalid indices/overlong paths before mutation. Host tests exercise an explicit open failure, but this entry retains its separate native/device recovery qualification. No repaired device firmware is installed. [Source-patch scope](bluescsi-filename-fixes-results-2026-10-20.md).
+
+**Resolution (2026-10-20):** The D8 guard already supplied in the BUG145/146 source patches checks the selected file and switcher return, and reports CHECK CONDITION/STATUS/zero data with sense5/24/00 on failure. Dedicated short-name reproducers now isolate invalid-index, missing-directory and forced backing-open failures: original source reports false GOOD status; patched functions pass36 error cases and36 exact explicit retries across IDs1/2/3/6 (552 assertions). Retry/tray-close media-change signaling passes.33 focused tests and1,122 backend tests pass (3 skipped). Patch files are unchanged; the preparer manifest now explicitly lists137/145/146.
+
+This closes the source defect using the same local-patch scope as BUG145/146. Native installed-device recovery and board build/installation remain separate IM1 qualification gates. Invalid requests preserve old media; a real backing-open failure still closes it before reporting error, so no rollback is promised. [Results](bluescsi-switch-error-fix-results-2026-10-20.md), [validation](../condensed/validation/bluescsi-switch-error-fix-2026-10-20.json), [existing patch package](../../patches/bluescsi-v2/filename-fixes/README.md).
+
+### BUG-136 - Target 6 qualification stages an unsupported image filename
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex BS1 integrated qualification
+
+**Summary:** Target 6 qualification stages an unsupported image filename. This affects the private qualification client or opt-in emulator fixture.
+
+**Repro:** Run the initial target-6 variant with HD60_512.img. All seven discovery probes report absent targets and operation 8.
+
+**Expected:** Valid supported input completes the corresponding qualification step.
+
+**Actual:** The native target-6 CD slot expects CD60_2048.iso; the staged HD image was not mounted.
+
+**Resolution:** Use CD60_2048.iso in run_v2.py. Target mask 64 is discovered after six absent IDs and twelve public samples validate exactly. No driver change was needed.
+
+**Evidence:** [Integrated client validation](../condensed/validation/bluescsi-integrated-client-2026-10-19.json), including identity-bound results and reproduction sources. Finding 265. Private artifacts are under docs/ic20-hle-findings/chatGPT-work/.
+
+### BUG-135 - Opt-in INQUIRY truncates the trailing API byte
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** mame-driver
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex BS1 integrated qualification
+
+**Summary:** Opt-in INQUIRY truncates the trailing API byte. This affects the private qualification client or opt-in emulator fixture.
+
+**Repro:** Enable the Toolbox fixture and run tests/test_native_toolbox_discovery.py. The initial response fails fixture identification and API; the first full suite has one failure.
+
+**Expected:** Valid supported input completes the corresponding qualification step.
+
+**Actual:** A manually specified 49-byte response omits API byte zero after the 13-byte identity and 36-byte standard response.
+
+**Resolution:** Derive the allocation from sizeof(identity): 50 bytes, additional length 45. The final focused checks and all 745 backend tests pass.
+
+**Evidence:** [Integrated client validation](../condensed/validation/bluescsi-integrated-client-2026-10-19.json), including identity-bound results and reproduction sources. Finding 265. Private artifacts are under docs/ic20-hle-findings/chatGPT-work/.
+
+### BUG-134 - Private catalog capacity branch rejects the first valid file
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** Codex BS1 integrated qualification
+
+**Summary:** Private catalog capacity branch rejects the first valid file. This affects the private qualification client or opt-in emulator fixture.
+
+**Repro:** Run the private catalog diagnostic against 92 directories and eight WAV files. The original branch stops after D0 index 92, before D1.
+
+**Expected:** Valid supported input completes the corresponding qualification step.
+
+**Actual:** The comparison used JNH after comparing the result count with 8, rejecting count zero.
+
+**Resolution:** Compare with 7 and reject only greater counts; the final client reports operation 9 for exhausted result capacity. Corrected 100-entry and wide-read runs pass. Earlier interrupted runs remain failed attempts.
+
+**Evidence:** [Integrated client validation](../condensed/validation/bluescsi-integrated-client-2026-10-19.json), including identity-bound results and reproduction sources. Finding 265. Private artifacts are under docs/ic20-hle-findings/chatGPT-work/.
+
+### BUG-133 - Directory failure verifier uses invalid zero baselines
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** ChatGPT native directory preflight diagnostic
+
+**Summary:** The private missing-directory verifier expected no transferred bytes and entirely zero wave RAM. SET_WORKING_DIR sends12 DATA OUT bytes before the target can reject the path; ordinary boot initializes a small amount of wave RAM.
+
+**Repro:** Run `bluescsi-directory-missing-2026-10-19/run.py`, then its `run_v2.py`, in the ChatGPT scratch area with the empty fixture root. Both ordinary-input native runs return B5FF/operation2 and original status02. The first rejects `(0,12,2)` against `(0,0,2)`; the second incorrectly compares initialized wave RAM against zeros.
+
+**Expected:** Preserve original rejection status and validate no import effects against the actual boot baseline.
+
+**Actual:** Test-only assertions report failure despite the guest stopping before file processing. No production driver or guest firmware defect is established.
+
+**Resolution:** The separate read-only baseline verifier checks12 transferred path bytes,112 untouched result bytes and complete33,554,432-byte wave-RAM equality against an independent boot without invoking the callback. Both initial failing assertions remain preserved as negative evidence. No firmware change was needed.
+
+**Evidence:** [Directory validation](../condensed/validation/bluescsi-directory-native-2026-10-19.json); finding264. Reproduction sources and identities are embedded in that durable validation record.
+
+
+### BUG-132 - Boundary fixture lacks trailing READ(10) backing extent
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** BS1 longer streaming boundary matrix
+
+**Summary:** The last WAV fits its8KiB slot, but the sector-based diagnostic adapter reads a full4KiB starting at its final requested sector. The64KiB backing disk does not include that trailing extent.
+
+**Repro:** prepare_pipeline_boundaries.py, then the generated native run.py. The guest returns B5FF/operation2 with transport0, transferred0 and original SCSI status02.
+
+**Expected:** A valid diagnostic fixture includes every sector requested by its adapter.
+
+**Actual:** The final request extends past the backing image; the native target correctly rejects it. This is not a sampler/transport defect.
+
+**Resolution:** Add4KiB trailing backing space in the V2 fixture. Exact mono/stereo PCM and all131,072 guarded bytes then pass under MIDI. Preserve the failed run as a negative control. Fixed-block scheduling subsequently removes the sector-shifted addressing assumption; no Toolbox short-EOF claim is made.
+
+**Evidence:** [Identity-bound results and builder sources](../condensed/validation/bluescsi-block-windows-2026-10-19.json).
+
+
+
+### BUG-131 - Private transport counts native service as target inactivity
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Resolved:** 2026-10-19
+- **Reported by:** BS1 combined pipeline MIDI workload
+
+**Summary:** The private bounded transport charged its own native interrupt-service time against the target inactivity deadline.
+
+**Repro:** V4 pipeline run.py with 192 injected CC bytes after the first PCM read begins; native runtime, original OS/ROM as inputs and private patched disk. The run returns B5FF, operation2, transport3, transferred906, statusFFFF. Native MIDI queue pointers agree; this is distinct from BUG-129.
+
+**Expected:** Servicing initiator interrupts alone must not imply stalled target progress.
+
+**Actual:** A valid read aborts during the MIDI workload.
+
+**Resolution:** Shift the last-progress time by the measured native-service interval. Keep the total elapsed and finite polling limits. V5 completes all eight cases with exact 131,072 guarded wave bytes under the same workload; deliberate initiator-held ACK still returns transport3, length0, statusFFFF. Physical timing, timer-wrap service extremes and independent target faults remain unqualified. The repair is private diagnostic firmware, not a shipped OS/emulator change.
+
+**Evidence:** [Identity-bound native results and reproduction sources](../condensed/validation/bluescsi-pipeline-2026-10-19.json).
+
+
+
+### BUG-130 — Private pipeline outcome propagation is incomplete
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Reported by:** BS1 combined pipeline cancellation/input tests
+
+**Summary:** The V2 read provider checks transport status but omits the operation cancellation latch after a successful drain. The V3 diagnostic then encodes operation error2 as B502, colliding with its success marker. Full metadata/PCM verification catches the false marker: only the first case was reached under MIDI load.
+
+**Expected:** Cancellation prevents subsequent PCM DMA; errors have distinct completion markers and retain their transport cause.
+
+**Actual:** V2 never enables its cancellation scan flag and ignores the post-drain latch; the cancellation-only native control returns B502 and writes first PCM word1000 after Exit. V3 aliases error2 to B502 with seven untouched result records. The first mixed-input negative control hit a transport error and is excluded as cancellation proof.
+
+
+
+
+**Resolution:** Enable the active cancellation scan flag, reject a latched cancel after draining before PCM DMA, and separate B5FF error from B502 success. Old image writes PCM after Exit; corrected image leaves 16,384 sentinel bytes intact and same-session retry passes all eight cases. [Pipeline validation](../condensed/validation/bluescsi-pipeline-2026-10-19.json).
+
+### BUG-129 — Private streaming integration aliases native MIDI queue registers
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-19
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-19
+- **Reported by:** BS1 integrated SCSI/WAV/wave-memory diagnostic
+
+**Summary:** The private streaming loop uses R60..R74 as locals while its interrupt-service helper preserves only the earlier scratch range below R60. R6E/R70 are native MIDI queue pointers. Exposing the temporary values at EI makes the native parser consume a fictitious queue and prevents return to the extension.
+
+**Repro:** Ordinary Save System entry in the isolated bluescsi-pipeline-2026-10-19 image. Both native and native-trace runs stall after the first WAV validates and wave sentinel initialization completes. The trace captures native PC2195 with R6E=19A2 and R70=0002; the loop at213A..2172 cannot reconcile that queue. No guest state was forced.
+
+**Expected:** The next PIO read finishes and exact mono/stereo PCM reaches the guarded wave destinations.
+
+**Actual:** Completion marker remains zero; no second result is published. This is private diagnostic code, not a stock firmware or emulator defect.
+
+
+
+
+**Resolution:** Preserve native R60..R74 in owned context across explicit service windows, retaining native queue updates, and preserve file length across DMA. Eight combined cases pass under 192 MIDI controller bytes. [Pipeline validation](../condensed/validation/bluescsi-pipeline-2026-10-19.json).
+
+### BUG-128 — Private pair owner latched before capacity validation
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-18
+- **Resolved:** 2026-10-18
+- **Reported by:** BS1 checkpoint37 static error-path review
+
+**Summary:** The V1 diagnostic set its owner word before calling reserve. A capacity rejection branched to the failure return without clearing that word, leaving the newly added SDS admission gate busy. The tested normal-capacity V1 path did not hit this failure.
+
+**Repro:** Inspect the owner-store/reserve/failure-exit sequence in V1 image SHA25601f69ab937bf234009130fbae7994ad9a07d140bf84ee8354195cc93b490489d. A failed reserve takes the exit with owner1. This defect was identified by static control-flow review, not an observed V1 full-memory native run.
+
+**Expected:** A rejected reservation leaves the cursor and owner unchanged and allows retry.
+
+**Resolution:** V2 performs reservation and owner acquisition in one masked sequence, setting ownership only on success before any service window. Its native guest first rejects a65535-block claim and asserts cursor13/owner0, then successfully reserves26 blocks, services interrupts and publishes the pair. This closes capacity-rejection cleanup, not DMA-timeout or user-cancellation cleanup. [Evidence](../condensed/validation/bluescsi-pair-owner-2026-10-18.json).
+
+### BUG-127 — Pair-publication diagnostic guard aliases DMA source
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-18
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 checkpoint36 read-only native validator
+
+**Summary:** The private diagnostic placed its leading descriptor-template guard at physical00593E, inside the4096-byte DMA source interval004940..005940. The final source word overwrites the guard during ordinary guest filling.
+
+**Repro:** Run the private pair-publication V1 image SHA256 da5189b6fe47bfe2670a8214dab7f7579e3994032a658a22fec36173ddc6bf78, then its read-only analyzer after the HDD Load/Save System callback schedule.
+
+**Expected:** Independent guard words remain unchanged.
+
+**Actual:** The template guard assertion fails; the guard was incorrectly placed inside owned payload storage. Descriptor contents and cursor publication were observed, but V1 is not accepted as the completed guarded test.
+
+**Notes:** Related to BUG-126's diagnostic layout mistake. This is a private test-harness defect, not an original Roland firmware defect. V2 moves the template and both guards to005A0E..005A72, outside the source and result marker; all four final native case captures preserve both template and staging guards.
+
+**Resolution:** V2 isolates the guards from the source buffer; the final fresh native run passes exact staging, PCM, publication and occupied-slot retry checks. [Evidence](../condensed/validation/bluescsi-pair-publication-2026-10-18.json).
+
+### BUG-126 — Private wave-DMA diagnostic result/source alias
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** tests
+- **Opened:** 2026-10-18
+- **Reported by:** Codex native wave-adapter diagnostic
+
+**Summary:** The first private diagnostic stored result words at physical005900 inside its004940..005940 source buffer. Subsequent source-pattern fills overwrite prior results. This is a research harness defect, not an original-OS defect.
+
+**Repro:** Run the private wave-adapter build/run scripts through ordinary Save System callback after HDD Load. Image SHA256 `95c4942360447189d4c4b4161640d451202af356dca54aa8f00d1cce88969d79`.
+
+**Expected:** Result words survive all later cases.
+
+**Actual:** Native verification fails `('two', 64028)` instead of success0.
+
+**Evidence:** Private `bluescsi-wave-adapter-2026-10-18/native` captures; durable checkpoint evidence will retain the failure and corrected layout.
+
+**Notes:** V2 relocates records to005A00 and completion marker to005AF0, outside the source buffer. Original OS/media are unchanged.
+
+- **Resolved:** 2026-10-18
+
+**Resolution:** Nine native cases pass with73728 exact guarded bytes and119808 existing PCM bytes intact. Matched DMA writes confirm that rejected cases launch no payload transfer. [Evidence](../condensed/validation/bluescsi-wave-adapter-2026-10-18.json).
+
+### BUG-125 — Early SDS CANCEL leaks its reserved sample allocation
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Resolved:** 2026-10-18
+- **Reported by:** Codex native early-cancel probe
+
+**Summary:** A receive header followed immediately by CANCEL changes the receive owner to generic state0A before its foreground handler can roll back. Generic cleanup clears ownership without releasing the reserved block.
+
+**Repro:** Headless Mouse+CRT NativeRuntime with experimental local-owner image SHA256248b94253c95069070d4625168f867fdfcf20c98a699b0e09dbddd1038908431. Seed two41-word samples, then send a valid41-word slot2 header and CANCEL in one ordinary MIDI burst. No guest state forcing.
+
+**Expected:** Unpublished receive reservation rolls cursor3 back to2; retry uses block2.
+
+**Actual:** State returns0 but cursor remains3; retry publishes at block3 and cursor4. Existing seed samples remain intact.
+
+**Evidence:** [Prior-image controls, repair regressions and identities](../condensed/validation/bluescsi-early-cancel-2026-10-18.json).
+
+**Notes:** Distinguish pending receive cancellation from sender/general cancellation; duplicate CANCEL and completion-pending cancellation must retain rollback ownership. Workaround: wait for the receive foreground handler before cancelling, but its timing is not a supported user-facing guarantee.
+
+
+**Resolution:** Experimental patch_sds_early_cancel.py retains stateFE until receive rollback, preserving generic sender cancellation. Ten native cases,113 focused tests and ordinary native playback/audio pass. No production image or original firmware changed; physical acceptance remains open.
+
+### BUG-124 — Local Sample Dump completion admits a transfer before cleanup
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-18
+- **Severity:** S2
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 local-owner native overlap probe
+
+**Summary:** Local Sample Dump can expose sender-idle state before its UI
+cleanup finishes. A receive header or remote request is admitted in that gap,
+then the old local cleanup clears the new transfer's ownership.
+
+**Repro:** Native Mouse+CRT/32 MiB, checkpoint17 experimental image SHA256
+`46d2c6da3e35d2c6bfcc45e08820cebd40836343ed6de0f2cc3112f121a460b3`.
+Receive two 41-word seeds, open System MIDI / SmpDump, acknowledge packets,
+then queue ACK114 followed immediately by either a slot3 receive header or a
+slot1 remote request. These are ordinary runtime MIDI bytes, without guest
+state forcing. Private runs: `bluescsi-local-owner-2026-10-18`,
+`prior-completion-header` and `prior-completion-request`.
+
+**Expected:** Local ownership persists through cleanup. An overlapping header
+or request is rejected before allocation or sender setup; a settled retry works.
+
+**Actual:** In the header case the cursor advances2→3 and state becomes1,
+then local cleanup at0166:9AA0 clears it. A later successful receive advances
+cursor to4, leaving one unpublished block. In the request case remote state7
+is claimed, then the same cleanup clears it and B1AE becomesFF without serving
+that request. The exact outgoing dump itself still completes.
+
+**Evidence:** Read-only ownership logs record native stores at001F:6E69/6F49/
+6F90 and0166:9AA0, plus the remote claim at000F:078B. Snapshots, MIDI output,
+input sequences and source/binary identities are retained in the private runs;
+a durable validation record will accompany the repair.
+
+**Notes:** Local entry also bypasses the remote admission gate. A complete
+repair must claim ownership before shared setup, retain it through display
+cleanup, and release only when idle. Native Disk exclusion and physical timing
+remain separate BS1 work.
+
+**Resolution:** Experimental builder `scripts/patch_sds_local_owner.py`
+checks shared admission before local setup, claims state 8, and holds ownership
+through display cleanup. Final release sets sender idle, resets the parser and
+clears ownership atomically. Both native races now reject before allocation or
+new sender setup; settled retries publish at cursor 3 without the leaked block.
+Nine native cases,96 focused tests and ordinary playback/MIDI/audio pass.
+Exact evidence retains 27 received samples/4,320 PCM bytes, five complete dumps/
+46,080 bytes,81 ACKs, six CANCEL replies and 601 packets, plus both prior failures.
+Candidate SHA256 `248b94253c95069070d4625168f867fdfcf20c98a699b0e09dbddd1038908431`.
+[Contract](../firmware/os/os-transfer-lifecycle.md#local-ownership-through-setup-and-cleanup),
+[validation](../condensed/validation/bluescsi-local-owner-2026-10-18.json).
+Busy local entry and setup-failure paths have decoded/model coverage. Remaining
+preparation/cancel timing, native Disk exclusion, full stack/ISR bounds and
+physical/controller acceptance remain separate BS1 work. Original firmware is
+unchanged; this is a private native firmware fix, not a released OS.
+
+### BUG-123 — Remote SDS header wait has no observed local recovery
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-18
+- **Severity:** S3
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 remote-stall native acceptance probe
+
+**Summary:** A remotely requested SDS sender remains in header-wait state
+without peer ACK. Panel Exit does not release it in the observed workload;
+the shared guard consequently continues to treat the transfer as busy.
+
+**Repro:** Native headless Mouse+CRT/32 MiB, final local-cleanup private OS
+`472b656b5ab859d1c6eb9814e25a3d1ecad69785db47b50e72fe20d96649dbd3`.
+Receive two 41-word seeds, send `F0 7E 00 03 00 00 F7`, wait 60 emulated
+seconds without ACK, press/release ordinary panel Exit, then wait two seconds.
+
+**Expected:** A defined bounded timeout or local cancellation releases an
+abandoned sender safely, allowing a subsequent transfer without peer recovery.
+
+**Actual:** B1AE remains 1, 2BBA remains 0, and shared sender bytes/counters
+remain unchanged after the wait and Exit. Sending MIDI CANCEL releases the
+sender; a subsequent receive publishes the third sample with exact PCM.
+
+**Evidence:** [Validation](../condensed/validation/bluescsi-local-sender-lifecycle-2026-10-18.json),
+`v2-remote-stall`, retains elapsed times, full sender bytes, MIDI output,
+ordinary input sequence and source/binary hashes. Finding 236.
+
+**Notes:** The stock local Sample Dump UI has a different counted wait and
+unacknowledged-send fallback; do not attribute it to a remote request. This
+60-second observation is not proof of an infinite wait. Qualify both header
+and data stalls, timeout/Exit races, peer resumption and preserved samples
+for the repair below. MIDI CANCEL was the measured workaround.
+
+**Resolution:** Experimental builder `scripts/patch_sds_remote_owner.py` adds
+foreground state 7 ownership and a five-second no-progress deadline, panel Exit
+and a separate poll budget. Header/data stalls, resumed traffic, peer CANCEL,
+completion/retransmission and subsequent exact receive pass; four local UI
+compatibility runs and ordinary playback/MIDI/audio also pass. Eleven accepted
+native runs preserve 33 samples/5,280 received PCM bytes and 27,648 complete-send
+bytes;30 focused tests pass. The prior-image data-stall/Exit failure is retained
+alongside checkpoint 16's header counterexample. Candidate SHA256
+`46d2c6da3e35d2c6bfcc45e08820cebd40836343ed6de0f2cc3112f121a460b3`.
+[Recovery contract](../firmware/os/os-transfer-lifecycle.md#foreground-remote-sender-recovery),
+[validation](../condensed/validation/bluescsi-remote-recovery-2026-10-18.json).
+This closes the observed stall in private native firmware only. Local UI/Disk
+ownership, physical timing, stuck native callees and full stack/ISR bounds
+remain separate BS1 work; no released firmware or hardware acceptance.
+
+### BUG-122 — Local Sample Dump cleanup conflicts with sender admission
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 native local-sender lifecycle probe
+- **Resolved:** 2026-10-18
+
+**Summary:** BUG-121's experimental guard requires B1AE=FF for idle, but the
+stock local Sample Dump UI's three exit tails write B1AE=0. That value also
+means an active outgoing sender, so the next receive is rejected.
+
+**Repro:** Native Mouse+CRT, 32 MiB, sender-guard OS SHA256
+`a5817b0f891242b3f8e40f5caa86b46861f8feed58089bf279b78ba4d5f38684`.
+Receive two 41-word seed samples, open System MIDI and click SmpDump. Let the
+unacknowledged local dump complete, return to Perform and send a new header.
+
+**Expected:** A quiescent local sender allows the next transfer.
+
+**Actual:** B1AE remains 0; the new header receives CANCEL, cursor remains 2,
+and no third sample is published. Original stock firmware is not alleged to
+have this admission regression.
+
+**Evidence:** [Local-sender lifecycle validation](../condensed/validation/bluescsi-local-sender-lifecycle-2026-10-18.json), finding 236. Five accepted native runs plus three negative controls retain 115 snapshots and exact wire/PCM checks.
+
+**Resolution:** The private builder `scripts/patch_sds_local_cleanup.py`
+consolidates three existing tails and writes FF after parser/display cleanup,
+explicitly selecting and restoring data bank 02BE. Final image SHA256
+`472b656b5ab859d1c6eb9814e25a3d1ecad69785db47b50e72fe20d96649dbd3`.
+Twenty-four focused tests pass. Acknowledged/unacknowledged local completion
+and Exit cancellation all permit the next exact receive; runtime/audio pass.
+The first repair's bank-clobber failures are retained and excluded.
+
+**Notes:** Third error-tail coverage is decoded/unit only. Temporary selector
+save uses two stack bytes; complete stack bounds and local UI ownership races
+remain open. Remote no-ACK recovery is separately tracked as BUG-123.
+
+### BUG-121 — Active SDS sender admits another transfer
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 native sender-ownership probes
+- **Resolved:** 2026-10-18
+
+**Summary:** Admission checks only receive state 2BBA. An active sender uses
+B1AE (1 while waiting for the header ACK, 0 while sending data), leaving 2BBA
+zero and allowing another transfer to overwrite its shared counters and range.
+
+**Repro:** Native headless Mouse+CRT/32 MiB with Exclusive RX enabled, private
+request-guard OS `cb5f65ef1ea15646ccee1ec3e20eddc801e1ccc80d6198dac5a3022524537e40`.
+Receive two distinct 41-word seeds. Request a dump of slot 0, then either send
+a receive header while waiting for its ACK, or ACK packet 0 and request slot 1.
+
+**Expected:** Reject the overlapping transfer while preserving the original
+sender's metadata and PCM source until completion or explicit cancellation.
+
+**Actual:** The receive header sets state 1, advances cursor 2 to 3 and replaces
+the sender range; ACK then increments receive counters and sends its data.
+The competing dump request emits another header and changes source to slot 1.
+
+**Evidence:** [Sender-ownership validation](../condensed/validation/bluescsi-sender-ownership-2026-10-18.json)
+retains both failing controls, ten final native runs, 182 snapshots, complete
+MIDI messages, exact PCM/descriptor checks, patch bytes and reproduction source.
+
+**Resolution:** [Private OS patch builder](../../scripts/patch_sds_sender_guard.py)
+requires 2BBA=0 and B1AE=FF before admitting headers or dump requests. It reuses
+the existing counter initializer to fit the shared check in current code space.
+The combined BUG-118–121 image changes 146 bytes, with no new RAM allocation;
+admission/counter calls use temporary two-byte stack frames. Output SHA-256:
+`a5817b0f891242b3f8e40f5caa86b46861f8feed58089bf279b78ba4d5f38684`.
+
+Thirteen focused tests pass, including 131,072 admission cases. Ten native
+runs preserve 28 received samples/4,480 PCM bytes and four complete outgoing
+dumps/36,864 bytes. All 86 ACKs, nine CANCEL replies and 469 data packets match.
+Completion/cancellation and later stale ACK/NAK controls pass, as do ordinary
+playback/MIDI/audio. Original firmware/native sources remain unchanged; no
+physical or installed firmware fix is claimed.
+
+**Notes:** Abandoned-sender timeout/recovery, native disk exclusion, packet
+number wrap, receive pre-supervisor cancellation and stereo atomicity remain
+open. Complete or explicitly cancel an outgoing dump before starting another.
+
+### BUG-120 — Outgoing SDS request interrupts the receive owner
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 native command-exclusion probe
+- **Resolved:** 2026-10-18
+
+**Summary:** Incoming command 03 (sample dump request) bypasses the header
+lifecycle guard and enters the shared sender while a receive owns allocation
+and publication state.
+
+**Repro:** Native headless Mouse+CRT, Exclusive RX enabled, executable
+`ccb370a3f37c5fd7a9b2aa761ef339b9b5965d6211b64751dd7520557efb4dda`,
+private header-lifecycle OS
+`54c7b7ecb36b16c0f17b06b8f0ab2a0cbab5f04fad407e46cebc78db0f3f81e2`.
+Receive a 41-word seed, start another 41-word receive, deliver packet 0, then
+send `F0 7E 00 03 00 00 F7` before packet 1.
+
+**Expected:** Reject the competing request while preserving the receive owner,
+then publish the original sample when its last packet arrives.
+
+**Actual:** The request enters `001F:6990`, clears state 1 to 0 and replaces
+B180/B194..B1A2 with sender metadata. The last receive packet is ignored;
+supervisor timeout rolls the cursor from 2 back to 1 and publishes nothing.
+
+**Evidence:** [Command-exclusion validation](../condensed/validation/bluescsi-command-exclusion-2026-10-18.json)
+retains two failing controls, one prior ACK control, seven final native runs,
+118 snapshots, exact PCM/MIDI comparisons, patch bytes and reproduction sources.
+
+**Resolution:** [Private OS patch builder](../../scripts/patch_sds_request_guard.py)
+rejects command 03 while state 2BBA is nonzero, before decoding, voice stop or
+sender setup. Two existing spans add 19 changed bytes to the BUG-118/119 patch;
+the combined image changes 115 bytes and adds no RAM or stack frame. SHA-256:
+`cb5f65ef1ea15646ccee1ec3e20eddc801e1ccc80d6198dac5a3022524537e40`.
+
+Ten focused tests pass. Seven final native runs publish 18 exact samples/2,880
+PCM bytes and emit 56 ACKs/five CANCEL replies. Idle sender compatibility
+preserves 9,216 sample bytes, one exact retransmission and a follow-on receive.
+Ordinary playback, scheduled MIDI and audio checks pass. The fix is scoped to
+receive-owned requests in private firmware; no installed/physical fix is claimed.
+
+**Notes:** Avoid requesting a dump during incoming transfer/cleanup. Idle sender
+ownership, ACK/NAK state after a prior send, disk exclusion and stereo remain
+separate qualification work.
+
+### BUG-119 — SDS publication/error cleanup admits overlapping headers
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 native header lifecycle probes
+- **Resolved:** 2026-10-18
+
+**Summary:** The cancellation guard cannot exclude headers after the packet
+writer clears state for success or after the supervisor clears an error state.
+A new header can replace pending publication data or reserve an unpublished
+allocation while the old supervisor still owns cleanup.
+
+**Repro:** With Exclusive RX enabled, seed one 41-word sample. For completion,
+receive another 41-word sample and queue its last packet immediately followed
+by a 4,609-word header. For error cleanup, send slot 512 (invalid), wait 0.2
+emulated seconds, then send a valid 41-word header and both packets. Native
+executable `ccb370a3f37c5fd7a9b2aa761ef339b9b5965d6211b64751dd7520557efb4dda`,
+private cancellation-guard OS
+`0c24823eac6370ed9d9a382f499a602a2b8cb6593072c10f7fbf16ccb8cff59e`.
+
+**Expected:** Reject the new header until the original publication/error owner
+finishes; preserve the existing sample and allow later normal receives.
+
+**Actual:** Completion settles with cursor 4 instead of 2 after the replacement
+header sets state 1 and the original `0166:8905` clears it. The error case
+settles at cursor 2 instead of 1 without publishing the retry sample.
+
+**Evidence:** [Header lifecycle validation](../condensed/validation/bluescsi-header-lifecycle-2026-10-18.json)
+retains both failing controls, four positive native runs, 78 snapshots, exact
+PCM/response comparisons, patch bytes and reproduction sources.
+
+**Resolution:** [Private OS patch builder](../../scripts/patch_sds_header_lifecycle.py)
+retains completion state `FF` until publication/UI cleanup and keeps allocation
+errors busy until the shared final clear. The cancellation header guard remains
+included. All 96 changed bytes lie in six existing code spans totaling 123
+bytes; no additional RAM or free-space claim is needed. Output SHA-256:
+`54c7b7ecb36b16c0f17b06b8f0ab2a0cbab5f04fad407e46cebc78db0f3f81e2`.
+
+Four final native runs cover publication overlap, invalid-slot error/retry,
+completion before supervisor entry, and cancellation. Eleven samples match
+10,800 transmitted PCM bytes; 148 ACKs and five CANCEL responses match exactly.
+Seven focused tests and ordinary patched-OS playback/MIDI/audio checks pass.
+An intermediate `80` completion marker failed the early-completion case due to
+JGT's N/Z behavior; the final `FF` marker and corrected instruction-level test
+are qualified together. Original OS/ROM and emulator remain unchanged.
+
+**Scope:** This repairs the observed header-admission cases in an opt-in
+experimental image. Other SDS command families, cancellation before supervisor
+entry, native resource exhaustion, disk exclusion, atomic stereo publication
+and physical/controller behavior remain unqualified in BS1.4. The original
+image still requires waiting for each receive/error screen to finish.
+
+### BUG-118 — SDS early retry retains an unpublished allocation
+
+- **Status:** FIXED
+- **Severity:** S3
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 native SDS cancellation/retry control
+- **Resolved:** 2026-10-18
+
+**Summary:** In the native stock-OS model, a new SDS header accepted while the
+previous cancellation UI cleanup is still active can leave two reserved wave
+blocks with no public sample descriptor after the transfer state returns idle.
+
+**Repro:** Enable Exclusive RX; receive a4609-word header and one40-word packet;
+send SDS Cancel; wait one second, then send the same header and its packets.
+The cancellation snapshot has state0A/cursor0, the retry header state1/cursor2,
+and the final snapshot state0/cursor2 with the public descriptor still unused.
+Final native executable:
+`ccb370a3f37c5fd7a9b2aa761ef339b9b5965d6211b64751dd7520557efb4dda`.
+
+**Expected:** A new transfer is rejected/deferred while cleanup owns the
+transaction, or its reservation is either published or rolled back completely.
+
+**Actual:** The earlier cleanup and new transfer overlap; no sample publishes,
+but the allocation cursor remains advanced. Read-only native taps now identify
+the original `0166:8905` clear erasing the new active state, after rollback at
+`0166:8B6B` and new allocation/state writes at `001F:6F49/6F90`. Physical timing
+remains unqualified.
+
+**Evidence:** The early-retry counterexample and a successful settled retry
+are retained in the [SDS boundary validation](../condensed/validation/bluescsi-length-contract-2026-10-18.json).
+
+**Resolution:** Added [reproducible OS patch tooling](../../scripts/patch_sds_cancel_guard.py)
+that rejects headers while transfer state `2BBA` is nonzero, before decoding or
+allocation, using the existing CANCEL response. The 36 changed bytes stay within
+the existing 51-byte dispatcher; no free-space or new-RAM assumption is needed.
+Original firmware remains immutable. This is an opt-in experimental OS repair,
+not a change to installed hardware or the stock image. Output SHA-256:
+`0c24823eac6370ed9d9a382f499a602a2b8cb6593072c10f7fbf16ccb8cff59e`.
+
+Three fresh native cancellation timings (0.05/1.0/1.5 seconds) reject active and
+cancellation headers without changing reservations, staging, public descriptors
+or PCM, then publish exact
+settled retries and subsequent samples. Nine samples retain 28,800 transmitted
+PCM bytes; six CANCEL responses and 375 ACKs match exactly. Three focused tests
+pass, covering 65,536 decoded command/state combinations and image safety.
+Ordinary patched-OS playback, scheduled MIDI and audio rendering pass.
+[Repair evidence](../condensed/validation/bluescsi-cancel-ownership-2026-10-18.json).
+
+**Remaining scope:** Success and other error paths can clear state before
+cleanup is finished. Complete transaction ownership, stereo rollback, bounded
+WAV writing and physical/controller acceptance remain open in BS1.4. The patch
+does not repair the independently documented SDS write overruns.
+
+### BUG-117 — Sequential wave-memory writes are discarded
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-18
+- **Severity:** S2
+- **Area:** mame-driver
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 SDS exact-PCM comparison after MIDI acknowledgment repair
+
+**Summary:** native_wave_w implements fixed-address C008 writes but ignores
+the C00A sequential word-write port used by stock OS SDS receive and zero-fill.
+
+**Repro:** With BUG-116's MIDI fix, enable Exclusive RX and send a valid SDS
+header for41 words followed by two40-word deterministic packets. The OS reaches
+successful publication, but the wave dump differs from the transmitted PCM.
+
+**Expected:** Each completed C00A word write stores its two bytes and advances
+the word address once. C008 retains its existing fixed-address behavior.
+
+**Actual:** The driver only commits offset9 (C008 high byte); offset11 is stored
+as a backing register without changing wave memory or advancing the address.
+
+**Evidence:** [SDS boundary validation](../condensed/validation/bluescsi-length-contract-2026-10-18.json)
+retains native publication with incorrect PCM before repair, a failing port
+regression, final sources/build identities and exact native PCM afterward.
+
+**Resolution:** C00A commits the completed little-endian word and advances the
+word address once; C008 retains fixed-address writes. Component tests cover
+partial-byte writes, endian order, address carry, last valid word, out-of-range
+non-aliasing and port isolation. Eighteen native boundary cases plus settled
+cancel/retry retain249,760 transmitted PCM bytes. All590 backend tests pass
+with zero skips; normal native runtime/audio/MIDI checks also pass.
+
+**Notes:** Physical port semantics are inferred from byte-checked stock OS
+loops; native agreement does not establish physical timing or bus fidelity.
+
+### BUG-116 — Native MIDI transmit-ready and output path missing
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-18
+- **Severity:** S2
+- **Area:** midi
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 ordinary MIDI SDS boundary probe
+
+**Summary:** The native MIDI receive model leaves status register 0114 bit1
+clear and treats writes to data register 0116 as ordinary backing-register
+stores. The original OS blocks while transmitting its SDS acknowledgment.
+
+**Repro:** Boot stock OS 2.24 in the headless native runtime with
+S760_IC4_MIDI_EXPERIMENT, enable System MIDI Exclusive RX using ordinary
+mouse/encoder input, then send a valid 16-bit SDS header for 41 words.
+Native executable SHA-256:
+`b5036f4de04d0eb1007730a9120efb85278e219663bb73026ab32e4f0ec24524`.
+
+**Expected:** Transmit the acknowledgment bytes at MIDI baud, restore ready
+status and continue receiving the sample's packets.
+
+**Actual:** Allocation cursor becomes1 and transfer state1, but the CPU remains
+in 001F:68A2/68A7 polling status bit1 after writing the first reply byte. The
+packet counter remains FFFFFFFF and the public descriptor is unpublished.
+
+**Evidence:** [SDS boundary validation](../condensed/validation/bluescsi-length-contract-2026-10-18.json)
+retains the accepted header/stalled PC, red component test, before/after source
+and executable identities, final tests and ordinary firmware transfer records.
+
+**Resolution:** The existing opt-in native MIDI profile now serializes output
+at31250 baud through MIDIOUT; status bit1 reflects transmit-register readiness
+independently of RX bit0. Busy writes cannot replace an in-flight byte. Eleven
+serial output bytes, busy/ready timing and RX isolation pass the component
+regression. Ordinary stock-OS runs emit3143 exact acknowledgment messages;
+all590 backend tests and normal native runtime checks pass. Physical UART
+timing, a transmit FIFO and external MIDI-device output are not claimed.
+
+**Notes:** This is a native emulator defect, not evidence of a physical S-760
+failure. It blocks the native SDS boundary experiment in BS1.4.
+
+### BUG-115 — Sample-disk builder mislabels playback addresses
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-18
+- **Severity:** S3
+- **Area:** disk
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 native rate fixture
+
+**Summary:** The builder describes the first of five sample address fields as
+reserved and shifts its API names by one field. Original firmware and native
+Loop/Smoothing show Start, Loop, End, R.Loop, End at +10/+14/+18/+1C/+20.
+
+**Repro:** Load the rate fixture through stock OS 2.24. Its declared
+`loop_start=0, loop_end=4096` displays Loop=0, End=0, R.Loop=4096. RAM confirms
+the five rebased pointers; preview audio is silent. The address mapping is the
+confirmed defect; the silence is a fixture observation, not a DSP diagnosis.
+
+**Expected:** An explicit, unambiguous schema controls the five native points.
+**Actual:** Legacy `start` writes +14 and `loop_start` writes +18.
+
+**Evidence:** BS1 sample-contract validation retains native screenshot hashes,
+RAM rows and original OS 001F:7071..70D8 descriptor stores. Seven new mapping
+and rejection cases fail before implementation; legacy compatibility passes.
+
+**Notes:** Explicit `sample_points` now uses all five native field names;
+mixed schemas and invalid fixed-slot offsets are rejected. Legacy bytes remain
+compatible.
+
+**Resolution:** Corrected the canonical builder and skill documentation with
+explicit metadata controls and legacy byte compatibility. The two built-in
+preset images are byte-identical. Stock OS Load/preview qualifies ten exact
+allocations (92,160 bytes), eight rate labels/pitches, Forward/OneShot and
+asymmetric native playback points. All 28 focused tests and the full 588-test
+backend suite pass, zero skips. See the [sample contract](bluescsi-sample-contract.md)
+and [validation](../condensed/validation/bluescsi-sample-contract-2026-10-18.json).
+This is local source verification; no commit or physical acceptance is claimed.
+
+
+### BUG-114 — Sample-disk builder conflates loop enable with sample rate
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-18
+- **Severity:** S3
+- **Area:** disk
+- **Opened:** 2026-10-18
+- **Reported by:** BS1 stereo descriptor audit
+
+**Summary:** `scripts/build_sample_disk.py` writes `loop_enable` to sample
+descriptor `+2C`, which original OS code uses for sample rate. Loop mode lives
+at `+24`, which the builder clears. Changing the advertised loop setting can
+therefore change pitch/rate without selecting the requested looping behavior.
+
+**Repro:** Build otherwise identical samples with `loop_enable=0` and `1`.
+The only descriptor difference is `+2C=00/01`. Original OS `001F:71E8`
+writes its period-derived rate code there, while `001F:714C` writes loop mode
+to `+24`. The captured 44.1 kHz stereo fixture uses `+2C=01`, `+24=02`.
+
+**Expected:** Explicit sample rate and loop mode independently control their
+correct fields; existing fixture specifications retain reproducible bytes.
+
+**Actual:** The public parameter name and field documentation misidentify the
+rate byte, with no separate explicit rate setting.
+
+**Evidence:** Original-byte anchors and builder/native qualification are
+retained with the BS1 sample-contract validation. The immutable firmware
+and existing media are not modified.
+
+**Notes:** Explicit `sample_rate` and `loop_mode` fields are implemented.
+The old `loop_enable` byte is a documented legacy compatibility alias;
+ambiguous mixed rate settings are rejected.
+
+**Resolution:** Corrected the canonical builder and skill documentation with
+explicit metadata controls and legacy byte compatibility. The two built-in
+preset images are byte-identical. Stock OS Load/preview qualifies ten exact
+allocations (92,160 bytes), eight rate labels/pitches, Forward/OneShot and
+asymmetric native playback points. All 28 focused tests and the full 588-test
+backend suite pass, zero skips. See the [sample contract](bluescsi-sample-contract.md)
+and [validation](../condensed/validation/bluescsi-sample-contract-2026-10-18.json).
+This is local source verification; no commit or physical acceptance is claimed.
+
+
+### BUG-113 — Native SCSI reports success for unsupported commands
+
+- **Status:** FIXED
+- **Severity:** S2
+- **Area:** mame-driver
+- **Opened:** 2026-10-18
+- **Resolved:** 2026-10-18
+- **Reported by:** BlueSCSI feasibility guest probe
+
+**Summary:** The native SCSI command dispatcher's default branch returns GOOD
+without executing the requested command. Capability/error detection can therefore
+mistake an unsupported operation for a successful zero-data response.
+
+**Repro:** Headless NativeRuntime, stock IC15, private OS probe-v3 image entered
+through ordinary Disk → Save System controls, copied 10 MiB HD0 fixture. Send
+`3F A5 5A 12 34 56 78 9A BC DE` with native TEMP/ACK handshakes. Executable
+SHA-256 `b02811c0054209fbb64e8e6dabca10e1d84466869221273d7fb17cc216cc8e65`;
+probe image `92ffda9c9b939fbe1811f755a8fad7eda11fece5e596a25979d0d5907d1ed2fb`.
+No host-written guest RAM/registers/PC.
+
+**Expected:** Unsupported native command returns CHECK CONDITION and per-target
+ILLEGAL REQUEST / invalid-operation-code sense, with no media mutation.
+The assigned ASC/ASCQ is `20/00` ([T10 assignments](https://t10.t10.org/lists/asc-num.htm)).
+
+**Actual:** Status `00`, message `00`, zero data bytes, bus free. The default
+branch leaves `m_scsi_target_status` at its initialized zero value.
+
+**Evidence:** [Fourth BlueSCSI checkpoint](../condensed/validation/bluescsi-guest-transport-2026-10-18.json)
+retains raw guest SPC/timer observations, sources, red/green device fixtures,
+intermediate failures, build logs, native disk results and full-suite counts.
+
+**Resolution:** Working-tree `s760_state::scsi_execute_cdb` now returns native
+CHECK CONDITION with per-target `05/20/00` sense for unsupported opcodes.
+The catch-all fix exposed the boot ROM's dependence on START UNIT; explicit
+`1B` START support preserves already-ready image behavior, while unmodeled
+stop/eject/power transitions return `05/24/00`. Legacy flat behavior is retained.
+Final native executable SHA-256:
+`b5036f4de04d0eb1007730a9120efb85278e219663bb73026ab32e4f0ec24524`.
+Targeted device/boot/fallback checks pass 4/4; full backend suite passes 561/561,
+zero skips. The 14-case ordinary-entry guest probe, subsequent HDD Load/playback,
+stock-OS full-CD Load/playback/cold recall and standard runtime verification pass.
+Fifteen legacy screenshots are byte-identical and all corresponding parsed Lua
+outputs match the preserved baseline across 27 tests. No commit is implied.
+
+**Notes:** The initial broad run had eight private-runner snapshot-path failures
+and two actual START UNIT compatibility regressions. Both causes were corrected
+before the passing final run; retained evidence does not label that trial a pass.
+No physical target, complete SCSI standard or BlueSCSI Toolbox qualification is claimed.
 
 ### BUG-112 — New GB-6 combo test assumes private firmware on hosted CI
 

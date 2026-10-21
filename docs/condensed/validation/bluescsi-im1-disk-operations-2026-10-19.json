@@ -1,0 +1,2785 @@
+{
+  "date": "2026-10-19",
+  "bugs": [
+    "BUG-156",
+    "BUG-157"
+  ],
+  "audit": {
+    "passed": true,
+    "firmware_sha256": "8f59f0d0122bcd5dd113bf4820a75406bef026aee96d39e146299ba60fdfb9db",
+    "rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+    "exe_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+    "originals": {
+      "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+    },
+    "originals_unchanged": true,
+    "exact_rebuild": true,
+    "intervals": [
+      [
+        "SDS remote",
+        15678,
+        640
+      ],
+      [
+        "SDS local",
+        16318,
+        160
+      ],
+      [
+        "SDS cancel",
+        16478,
+        31
+      ],
+      [
+        "browser",
+        16512,
+        2956
+      ],
+      [
+        "catalog",
+        19536,
+        3200
+      ],
+      [
+        "resources",
+        22736,
+        739
+      ],
+      [
+        "context",
+        23488,
+        92
+      ],
+      [
+        "native operations labels",
+        23580,
+        100
+      ]
+    ],
+    "named_bytes": 7918,
+    "residual_bytes": 84,
+    "code_adjacent_bytes": 68,
+    "branch_targets": [
+      [
+        33927,
+        36661
+      ],
+      [
+        33953,
+        34375
+      ],
+      [
+        33956,
+        33961
+      ],
+      [
+        33958,
+        34357
+      ],
+      [
+        33976,
+        34078
+      ],
+      [
+        33982,
+        33987
+      ],
+      [
+        33984,
+        34115
+      ],
+      [
+        33991,
+        34066
+      ],
+      [
+        33997,
+        34002
+      ],
+      [
+        33999,
+        34369
+      ],
+      [
+        34031,
+        35007
+      ],
+      [
+        34038,
+        34043
+      ],
+      [
+        34040,
+        34308
+      ],
+      [
+        34043,
+        35192
+      ],
+      [
+        34050,
+        34055
+      ],
+      [
+        34052,
+        34308
+      ],
+      [
+        34055,
+        34375
+      ],
+      [
+        34058,
+        34063
+      ],
+      [
+        34060,
+        34357
+      ],
+      [
+        34063,
+        34318
+      ],
+      [
+        34075,
+        34318
+      ],
+      [
+        34100,
+        36868
+      ],
+      [
+        34112,
+        34369
+      ],
+      [
+        34119,
+        34124
+      ],
+      [
+        34121,
+        34258
+      ],
+      [
+        34128,
+        34133
+      ],
+      [
+        34130,
+        34281
+      ],
+      [
+        34149,
+        34154
+      ],
+      [
+        34151,
+        34369
+      ],
+      [
+        34164,
+        35299
+      ],
+      [
+        34171,
+        34176
+      ],
+      [
+        34173,
+        34308
+      ],
+      [
+        34176,
+        34375
+      ],
+      [
+        34179,
+        34184
+      ],
+      [
+        34181,
+        34357
+      ],
+      [
+        34203,
+        34722
+      ],
+      [
+        34245,
+        36860
+      ],
+      [
+        34252,
+        36872
+      ],
+      [
+        34255,
+        34369
+      ],
+      [
+        34267,
+        34313
+      ],
+      [
+        34278,
+        34318
+      ],
+      [
+        34298,
+        34369
+      ],
+      [
+        34305,
+        34318
+      ],
+      [
+        34318,
+        34722
+      ],
+      [
+        34331,
+        34547
+      ],
+      [
+        34342,
+        36868
+      ],
+      [
+        34354,
+        34369
+      ],
+      [
+        34366,
+        34313
+      ],
+      [
+        34383,
+        34393
+      ],
+      [
+        34401,
+        36661
+      ],
+      [
+        34418,
+        34461
+      ],
+      [
+        34455,
+        36860
+      ],
+      [
+        34458,
+        36872
+      ],
+      [
+        34469,
+        36661
+      ],
+      [
+        34472,
+        34547
+      ],
+      [
+        34488,
+        36868
+      ],
+      [
+        34508,
+        36661
+      ],
+      [
+        34519,
+        34546
+      ],
+      [
+        34534,
+        36868
+      ],
+      [
+        34574,
+        36864
+      ],
+      [
+        34610,
+        36864
+      ],
+      [
+        34624,
+        34596
+      ],
+      [
+        34632,
+        34551
+      ],
+      [
+        34655,
+        36864
+      ],
+      [
+        34695,
+        36864
+      ],
+      [
+        34719,
+        34675
+      ],
+      [
+        34750,
+        34745
+      ],
+      [
+        34756,
+        34816
+      ],
+      [
+        34762,
+        34833
+      ],
+      [
+        34768,
+        34773
+      ],
+      [
+        34770,
+        34930
+      ],
+      [
+        34777,
+        34782
+      ],
+      [
+        34779,
+        34952
+      ],
+      [
+        34798,
+        34803
+      ],
+      [
+        34800,
+        34991
+      ],
+      [
+        34813,
+        34956
+      ],
+      [
+        34830,
+        34956
+      ],
+      [
+        34837,
+        34846
+      ],
+      [
+        34843,
+        34956
+      ],
+      [
+        34850,
+        34874
+      ],
+      [
+        34856,
+        34861
+      ],
+      [
+        34858,
+        34991
+      ],
+      [
+        34871,
+        34956
+      ],
+      [
+        34883,
+        34991
+      ],
+      [
+        34898,
+        34956
+      ],
+      [
+        34908,
+        34917
+      ],
+      [
+        34914,
+        34956
+      ],
+      [
+        34921,
+        34956
+      ],
+      [
+        34927,
+        34956
+      ],
+      [
+        34943,
+        34956
+      ],
+      [
+        34949,
+        34956
+      ],
+      [
+        34969,
+        34991
+      ],
+      [
+        34974,
+        34981
+      ],
+      [
+        34979,
+        34984
+      ],
+      [
+        34989,
+        34963
+      ],
+      [
+        35001,
+        35006
+      ],
+      [
+        35003,
+        34735
+      ],
+      [
+        35014,
+        35451
+      ],
+      [
+        35021,
+        35026
+      ],
+      [
+        35023,
+        35191
+      ],
+      [
+        35030,
+        35035
+      ],
+      [
+        35032,
+        35702
+      ],
+      [
+        35044,
+        35049
+      ],
+      [
+        35046,
+        35702
+      ],
+      [
+        35058,
+        35063
+      ],
+      [
+        35060,
+        35702
+      ],
+      [
+        35072,
+        35077
+      ],
+      [
+        35074,
+        35702
+      ],
+      [
+        35086,
+        35091
+      ],
+      [
+        35088,
+        35702
+      ],
+      [
+        35104,
+        35109
+      ],
+      [
+        35106,
+        35702
+      ],
+      [
+        35116,
+        35451
+      ],
+      [
+        35123,
+        35191
+      ],
+      [
+        35129,
+        35134
+      ],
+      [
+        35131,
+        35702
+      ],
+      [
+        35143,
+        35148
+      ],
+      [
+        35145,
+        35702
+      ],
+      [
+        35156,
+        35161
+      ],
+      [
+        35158,
+        35702
+      ],
+      [
+        35182,
+        35187
+      ],
+      [
+        35184,
+        35702
+      ],
+      [
+        35189,
+        35173
+      ],
+      [
+        35204,
+        35451
+      ],
+      [
+        35211,
+        35298
+      ],
+      [
+        35217,
+        35222
+      ],
+      [
+        35219,
+        35702
+      ],
+      [
+        35233,
+        35238
+      ],
+      [
+        35235,
+        35702
+      ],
+      [
+        35263,
+        35451
+      ],
+      [
+        35270,
+        35298
+      ],
+      [
+        35280,
+        35285
+      ],
+      [
+        35282,
+        35702
+      ],
+      [
+        35293,
+        35298
+      ],
+      [
+        35295,
+        35702
+      ],
+      [
+        35311,
+        35451
+      ],
+      [
+        35323,
+        35400
+      ],
+      [
+        35329,
+        35401
+      ],
+      [
+        35336,
+        35400
+      ],
+      [
+        35343,
+        35451
+      ],
+      [
+        35350,
+        35375
+      ],
+      [
+        35356,
+        35400
+      ],
+      [
+        35365,
+        35451
+      ],
+      [
+        35370,
+        35329
+      ],
+      [
+        35372,
+        35702
+      ],
+      [
+        35382,
+        35451
+      ],
+      [
+        35389,
+        35400
+      ],
+      [
+        35395,
+        35400
+      ],
+      [
+        35397,
+        35702
+      ],
+      [
+        35408,
+        36341
+      ],
+      [
+        35420,
+        35443
+      ],
+      [
+        35432,
+        35448
+      ],
+      [
+        35436,
+        35408
+      ],
+      [
+        35489,
+        35501
+      ],
+      [
+        35513,
+        35527
+      ],
+      [
+        35535,
+        35544
+      ],
+      [
+        35541,
+        35579
+      ],
+      [
+        35547,
+        35570
+      ],
+      [
+        35552,
+        35579
+      ],
+      [
+        35654,
+        35707
+      ],
+      [
+        35657,
+        36574
+      ],
+      [
+        35679,
+        35701
+      ],
+      [
+        35684,
+        35702
+      ],
+      [
+        35695,
+        35701
+      ],
+      [
+        35707,
+        36574
+      ],
+      [
+        35719,
+        35726
+      ],
+      [
+        35737,
+        35742
+      ],
+      [
+        35739,
+        36078
+      ],
+      [
+        35806,
+        36274
+      ],
+      [
+        35809,
+        35814
+      ],
+      [
+        35811,
+        36106
+      ],
+      [
+        35825,
+        35830
+      ],
+      [
+        35827,
+        36085
+      ],
+      [
+        35841,
+        35806
+      ],
+      [
+        35843,
+        36178
+      ],
+      [
+        35846,
+        35851
+      ],
+      [
+        35848,
+        36106
+      ],
+      [
+        35854,
+        35859
+      ],
+      [
+        35856,
+        36092
+      ],
+      [
+        35867,
+        36207
+      ],
+      [
+        35870,
+        35875
+      ],
+      [
+        35872,
+        36106
+      ],
+      [
+        35877,
+        35843
+      ],
+      [
+        35879,
+        36178
+      ],
+      [
+        35882,
+        35887
+      ],
+      [
+        35884,
+        36106
+      ],
+      [
+        35890,
+        35895
+      ],
+      [
+        35892,
+        36027
+      ],
+      [
+        35898,
+        35927
+      ],
+      [
+        35903,
+        35908
+      ],
+      [
+        35905,
+        36092
+      ],
+      [
+        35911,
+        35916
+      ],
+      [
+        35913,
+        36099
+      ],
+      [
+        35924,
+        36017
+      ],
+      [
+        35930,
+        35935
+      ],
+      [
+        35932,
+        36092
+      ],
+      [
+        35938,
+        35943
+      ],
+      [
+        35940,
+        36099
+      ],
+      [
+        35951,
+        36009
+      ],
+      [
+        35957,
+        35982
+      ],
+      [
+        35967,
+        35977
+      ],
+      [
+        35979,
+        35994
+      ],
+      [
+        35986,
+        35994
+      ],
+      [
+        35992,
+        36007
+      ],
+      [
+        36000,
+        36017
+      ],
+      [
+        36004,
+        36017
+      ],
+      [
+        36017,
+        36207
+      ],
+      [
+        36020,
+        36106
+      ],
+      [
+        36024,
+        35879
+      ],
+      [
+        36032,
+        36207
+      ],
+      [
+        36035,
+        36106
+      ],
+      [
+        36037,
+        36178
+      ],
+      [
+        36040,
+        36106
+      ],
+      [
+        36045,
+        36092
+      ],
+      [
+        36052,
+        36207
+      ],
+      [
+        36055,
+        36106
+      ],
+      [
+        36057,
+        36274
+      ],
+      [
+        36060,
+        36106
+      ],
+      [
+        36073,
+        36057
+      ],
+      [
+        36075,
+        36106
+      ],
+      [
+        36082,
+        36106
+      ],
+      [
+        36089,
+        36106
+      ],
+      [
+        36096,
+        36106
+      ],
+      [
+        36103,
+        36106
+      ],
+      [
+        36109,
+        36177
+      ],
+      [
+        36167,
+        36177
+      ],
+      [
+        36171,
+        36156
+      ],
+      [
+        36178,
+        36274
+      ],
+      [
+        36181,
+        36273
+      ],
+      [
+        36203,
+        36178
+      ],
+      [
+        36215,
+        36274
+      ],
+      [
+        36218,
+        36273
+      ],
+      [
+        36231,
+        36215
+      ],
+      [
+        36236,
+        36242
+      ],
+      [
+        36238,
+        36178
+      ],
+      [
+        36250,
+        36274
+      ],
+      [
+        36253,
+        36273
+      ],
+      [
+        36266,
+        36250
+      ],
+      [
+        36285,
+        36290
+      ],
+      [
+        36287,
+        36341
+      ],
+      [
+        36312,
+        36329
+      ],
+      [
+        36321,
+        36329
+      ],
+      [
+        36325,
+        36335
+      ],
+      [
+        36416,
+        36574
+      ],
+      [
+        36450,
+        36468
+      ],
+      [
+        36582,
+        36660
+      ],
+      [
+        36593,
+        36660
+      ],
+      [
+        36626,
+        36660
+      ],
+      [
+        36860,
+        8320
+      ],
+      [
+        36864,
+        52756
+      ],
+      [
+        36868,
+        52717
+      ],
+      [
+        36872,
+        61608
+      ]
+    ],
+    "wire_bytes": 4000,
+    "retained_bytes": 3200,
+    "filename_bytes": 32,
+    "implicit_index_contract": "All D7 wire indices must equal0..count-1 before publication; mismatch latches C+82 and rejects after successful drain. No filtering/reordering.",
+    "gb6_v9": {
+      "boot_banner_check": 1,
+      "boot_eeprom_check": 1,
+      "boot_setup4_inc": 1,
+      "boot_setup5_inc": 1,
+      "os_main_loop_poll_dispatch": 18,
+      "os_modal_poll_dispatch": 19,
+      "os_lcd_status_selector": 21,
+      "os_controller_hw_init": 56,
+      "os_mouse_poll_entry": 6,
+      "os_gb6_poll_stub": 41
+    },
+    "no_patch_byte_overlap": true
+  },
+  "tests": {
+    "native-save-cold": {
+      "result": {
+        "passed": true,
+        "states": [
+          {
+            "name": "iso-handoff",
+            "cursor": 0,
+            "drive": 1
+          },
+          {
+            "name": "loaded",
+            "cursor": 13,
+            "drive": 1
+          },
+          {
+            "name": "perform",
+            "cursor": 13,
+            "drive": 1
+          },
+          {
+            "name": "utility",
+            "cursor": 13,
+            "drive": 1
+          },
+          {
+            "name": "utility-hd",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "format-dialog",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "format-confirm-1",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "format-confirm-2",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "initialized",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "save-screen",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "save-dialog",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "save-confirm",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "saved",
+            "cursor": 13,
+            "drive": 0
+          },
+          {
+            "name": "cold-list",
+            "cursor": 0,
+            "drive": 0
+          },
+          {
+            "name": "cold-perform",
+            "cursor": 13,
+            "drive": 0
+          }
+        ],
+        "source_hash": "8a940c7f114326aedbeb457ed3ed83bc7dbc4b2000ac552d8ff7c410bba43a6c",
+        "saved_hash": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+        "firmware_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+        "exact_pcm_bytes": 119808,
+        "before_audio": {
+          "channel": 1,
+          "note": 60,
+          "peak": 0.008473813533782959,
+          "silent_release_frames": 44100
+        },
+        "after_audio": {
+          "channel": 1,
+          "note": 60,
+          "peak": 0.008473813533782959,
+          "silent_release_frames": 44100
+        }
+      },
+      "raw_result_sha256": "44837112ade9e7a52a1153f1f37e52f98b11aceef2e4d357cc275d296fe13f42",
+      "firmware_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+      "code_and_label_table_preserved": true,
+      "snapshots": [
+        {
+          "runtime": "save",
+          "frame": "frame-01.ram",
+          "ram_sha256": "c61497b4d58a0b571035ae8ecfeb5b28ce521a92a64dcfe227e5e7d84c05f694"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-02.ram",
+          "ram_sha256": "ba2e03c1b01d3cbdc20ff2f586738cdd086ff107fa37e46119e21282144e3fee"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-03.ram",
+          "ram_sha256": "be72825f65139299308a49e0d8df60631eec13cd5721c8307efd9d1f4d27a131"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-04.ram",
+          "ram_sha256": "872e3a504f18f10574238ab541e85e9dd5fd12c93244ef2aa924d861286ddcf2"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-05.ram",
+          "ram_sha256": "35d99be8ba520f8aff78e3971ead9ff1beecf1c6b9702fb28f89a424ccfbcca3"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-06.ram",
+          "ram_sha256": "d8c9b29cd02379c0c0df6def0ee1e404f7b2c1af3ebb8ebdfe3f905b1fac2572"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-07.ram",
+          "ram_sha256": "c970454a0889ca1e06790a2503594028d96fa2851886df30ab51edf2f5533042"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-08.ram",
+          "ram_sha256": "7f06c1797128215d6642bf8662bdd9d5e29421dee1bf2edb8c91561c28645860"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-09.ram",
+          "ram_sha256": "bb411004811c3bcdbb87f2cdb8aaf0eb0ec6b621482d130377b04eca74e5ab59"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-10.ram",
+          "ram_sha256": "17df1a84a0c249fa71144d3b575e4a39f92231993fe39f83da17c3e78b36023b"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-11.ram",
+          "ram_sha256": "080bad2d270349cb363a945adc45450973dedc77be46e7aa120e29ec9ec0da86"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-12.ram",
+          "ram_sha256": "666e90a769dec3f2b112721331aadd7c60029918bdd7aa30280cdda46d186c75"
+        },
+        {
+          "runtime": "save",
+          "frame": "frame-13.ram",
+          "ram_sha256": "177f10358be749628833aa304c44db0635ae5acd86763bde29c5a3113743eab5"
+        },
+        {
+          "runtime": "reload",
+          "frame": "frame-01.ram",
+          "ram_sha256": "f4db0bd3df7ca90f5f003715446d051c658daacf587b7487a38b7cbf79f4e02b"
+        },
+        {
+          "runtime": "reload",
+          "frame": "frame-02.ram",
+          "ram_sha256": "66abd592503939d5347769471c9a2cfe167725aabf363c7e8e117dba4fc09cc1"
+        }
+      ]
+    },
+    "native-cancel": {
+      "result": {
+        "passed": true,
+        "firmware_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+        "states": [
+          {
+            "name": "boot",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 0,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "collections",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 0,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "listing-cancelled",
+            "mode": 0,
+            "error": 7,
+            "cancel": 1,
+            "cancel_wire_count": 1610,
+            "mount_may_have_changed": 0,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "listing-retry",
+            "mode": 1,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 1610,
+            "mount_may_have_changed": 0,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "last-page",
+            "mode": 1,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 1610,
+            "mount_may_have_changed": 0,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "switch-interrupted",
+            "mode": 0,
+            "error": 7,
+            "cancel": 1,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 1,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "fresh-catalog",
+            "mode": 1,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 0,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "retry-last-page",
+            "mode": 1,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 0,
+            "handoff": 0,
+            "native_drive": 8,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "handoff",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 1,
+            "handoff": 30209,
+            "native_drive": 1,
+            "allocation_cursor": 0
+          },
+          {
+            "name": "loaded",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 1,
+            "handoff": 30209,
+            "native_drive": 1,
+            "allocation_cursor": 13
+          },
+          {
+            "name": "perform",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 1,
+            "handoff": 30209,
+            "native_drive": 1,
+            "allocation_cursor": 13
+          },
+          {
+            "name": "sds-cancel",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 1,
+            "handoff": 30209,
+            "native_drive": 1,
+            "allocation_cursor": 13
+          },
+          {
+            "name": "sds-reserved",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 1,
+            "handoff": 30209,
+            "native_drive": 1,
+            "allocation_cursor": 14
+          },
+          {
+            "name": "sds-published",
+            "mode": 0,
+            "error": 0,
+            "cancel": 0,
+            "cancel_wire_count": 0,
+            "mount_may_have_changed": 1,
+            "handoff": 30209,
+            "native_drive": 1,
+            "allocation_cursor": 14
+          }
+        ],
+        "rows": [
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "12000000600000000000",
+            "seconds": 28.789762375,
+            "length": 50
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "1a083100300000000000",
+            "seconds": 28.794795,
+            "length": 48
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "da000000000000000000",
+            "seconds": 28.79602125,
+            "length": 1
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "d7000000000000000000",
+            "seconds": 29.139270125,
+            "length": 4000
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "12000000600000000000",
+            "seconds": 35.056119875,
+            "length": 50
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "1a083100300000000000",
+            "seconds": 35.060570125,
+            "length": 48
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "da000000000000000000",
+            "seconds": 35.061796375,
+            "length": 1
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "d7000000000000000000",
+            "seconds": 35.406230125,
+            "length": 4000
+          },
+          {
+            "status": 0,
+            "transport": 0,
+            "cdb": "d8630000000000000000",
+            "seconds": 59.385680375,
+            "length": 0
+          }
+        ],
+        "physical_inputs": [
+          {
+            "down": true,
+            "reads": 1200,
+            "reason": "D7-data-byte1200",
+            "seconds": 28.921182,
+            "mode": "list"
+          },
+          {
+            "down": false,
+            "reads": 1200,
+            "reason": "bounded-command-return",
+            "seconds": 29.139270125,
+            "mode": "list"
+          },
+          {
+            "down": true,
+            "reads": 0,
+            "reason": "D8-command-first-byte",
+            "seconds": 59.384858625,
+            "mode": "switch"
+          },
+          {
+            "down": false,
+            "reads": 0,
+            "reason": "guest-Exit-latch-observed",
+            "seconds": 59.4002885,
+            "mode": "switch"
+          }
+        ],
+        "all_code_preserved": true,
+        "library_unchanged": true,
+        "listing_cancel_drains4000": true,
+        "post_d8_no_follow_on_commands": true,
+        "explicit_retry_native_load": true,
+        "exact_sample_bytes": 119808,
+        "exact_sds_bytes": 160,
+        "audio": {
+          "channel": 1,
+          "note": 60,
+          "peak": 0.008473813533782959,
+          "silent_release_frames": 44100
+        }
+      },
+      "raw_result_sha256": "5c0e57f5a320203e0e12b2319e05a5d47325f43ad45c7b9c64a7affee588be45",
+      "firmware_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+      "code_and_label_table_preserved": true,
+      "snapshots": [
+        {
+          "runtime": "runtime",
+          "frame": "frame-01.ram",
+          "ram_sha256": "bc598e5f0306e005f779e5e3a1a7c59581a3163e56a2996cba49bdb49b93c203"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-02.ram",
+          "ram_sha256": "f2574db0fa212077536208ca696ffc0645b17ae96e1927a73f54653dbe541562"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-03.ram",
+          "ram_sha256": "de593ce287454bac53d75f8060ea591f03e09fc5da5682b31f5cabbbff1fa167"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-04.ram",
+          "ram_sha256": "4e6525753996cb2539c6284230812fa094b786cc0743f8e525ff4057b0981fe8"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-05.ram",
+          "ram_sha256": "109b6bbfb52946d61e5fce26ed207f27ac29a312329ae4c215dd23468842bd3d"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-06.ram",
+          "ram_sha256": "5ad861a5ed6cbe11d24f570f425396d6af57eef4758fcc891672ee894bbde339"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-07.ram",
+          "ram_sha256": "4ca2a229064474f5a047112c99788e4bef3bc2c0d016fed69240216468303b8f"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-08.ram",
+          "ram_sha256": "5b04271b686cb518b3da3457d234307ca1469b35b81ca424a25bba5b78d47d4a"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-09.ram",
+          "ram_sha256": "fac4f727f6c9c4636a9ddadaefed71b3c0d0cc2b8687dd1ecba2d11370ae0048"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-10.ram",
+          "ram_sha256": "dfb995af0b9432e4f6fd055168d7f39d6fabba73c7bd485499c6ba56b497ff51"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-11.ram",
+          "ram_sha256": "dd8129661c9e7eba78e3b40a5faed9b477816e72132c161e428d05e41815e490"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-12.ram",
+          "ram_sha256": "3ec474c91abc32cacb7aed50548f8ecf0b2ba5ddf8c9afa3042afcf15825c709"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-13.ram",
+          "ram_sha256": "1fdd1e418a0fa1603b0e05f801dcb99c4698b7c8548eec373b5cb3865258505e"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-14.ram",
+          "ram_sha256": "3240c96ac249d47a5249c059d596521768cda35e1ae5dad79f6623ed972f49a0"
+        }
+      ]
+    },
+    "native-catalog-v2": {
+      "result": {
+        "passed": true,
+        "results": [
+          {
+            "target": 1,
+            "fixture_count": 0,
+            "mode": 1,
+            "count": 0,
+            "error": 0,
+            "exact_retained_bytes": 0
+          },
+          {
+            "target": 2,
+            "fixture_count": 1,
+            "mode": 1,
+            "count": 1,
+            "error": 0,
+            "exact_retained_bytes": 32
+          },
+          {
+            "target": 3,
+            "fixture_count": 100,
+            "mode": 1,
+            "count": 100,
+            "error": 0,
+            "exact_retained_bytes": 3200
+          },
+          {
+            "target": 6,
+            "fixture_count": 101,
+            "mode": 0,
+            "count": 100,
+            "error": 9,
+            "exact_retained_bytes": 0
+          }
+        ],
+        "rows": [
+          {
+            "cdb": "12000000600000000000",
+            "seconds": 28.07254325,
+            "transport": 0,
+            "status": 0,
+            "length": 50
+          },
+          {
+            "cdb": "1a083100300000000000",
+            "seconds": 28.0769935,
+            "transport": 0,
+            "status": 0,
+            "length": 48
+          },
+          {
+            "cdb": "da000000000000000000",
+            "seconds": 28.07821975,
+            "transport": 0,
+            "status": 0,
+            "length": 1
+          },
+          {
+            "cdb": "d7000000000000000000",
+            "seconds": 28.0791645,
+            "transport": 0,
+            "status": 0,
+            "length": 0
+          },
+          {
+            "cdb": "12000000600000000000",
+            "seconds": 39.139531625,
+            "transport": 0,
+            "status": 0,
+            "length": 50
+          },
+          {
+            "cdb": "1a083100300000000000",
+            "seconds": 39.143982,
+            "transport": 0,
+            "status": 0,
+            "length": 48
+          },
+          {
+            "cdb": "da000000000000000000",
+            "seconds": 39.145208375,
+            "transport": 0,
+            "status": 0,
+            "length": 1
+          },
+          {
+            "cdb": "d7000000000000000000",
+            "seconds": 39.149496375,
+            "transport": 0,
+            "status": 0,
+            "length": 40
+          },
+          {
+            "cdb": "12000000600000000000",
+            "seconds": 50.188874125,
+            "transport": 0,
+            "status": 0,
+            "length": 50
+          },
+          {
+            "cdb": "1a083100300000000000",
+            "seconds": 50.193907,
+            "transport": 0,
+            "status": 0,
+            "length": 48
+          },
+          {
+            "cdb": "da000000000000000000",
+            "seconds": 50.1951335,
+            "transport": 0,
+            "status": 0,
+            "length": 1
+          },
+          {
+            "cdb": "d7000000000000000000",
+            "seconds": 50.538970125,
+            "transport": 0,
+            "status": 0,
+            "length": 4000
+          },
+          {
+            "cdb": "12000000600000000000",
+            "seconds": 61.289591125,
+            "transport": 0,
+            "status": 0,
+            "length": 50
+          },
+          {
+            "cdb": "1a083100300000000000",
+            "seconds": 61.294624375,
+            "transport": 0,
+            "status": 0,
+            "length": 48
+          },
+          {
+            "cdb": "da000000000000000000",
+            "seconds": 61.29577775,
+            "transport": 0,
+            "status": 2,
+            "length": 0
+          }
+        ],
+        "library_unchanged": true,
+        "all_code_preserved": true,
+        "full_32_byte_names_retained": true,
+        "scope": "native ordinary GB6 input; fixture 0/1/100/101 entry boundaries; no physical parity"
+      },
+      "raw_result_sha256": "f745e7727bd661a2a894f3e8528f4e6875985607102d42e36458ebc786b4fee3",
+      "firmware_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+      "code_and_label_table_preserved": true,
+      "snapshots": [
+        {
+          "runtime": "runtime",
+          "frame": "frame-01.ram",
+          "ram_sha256": "304cdac9f9d4fb47e2d880ca0c3f3373f1b4701775d407fb21052a5a7366f0bf"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-02.ram",
+          "ram_sha256": "940eb30913af815df268b8fba7135f735db7119e3d3c45a1b3544dcbe4b1ff98"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-03.ram",
+          "ram_sha256": "8c3e031bbbfe64c4316499aea358e2f9b7bf0981aa5d0c62f17dbd55dcb21fc8"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-04.ram",
+          "ram_sha256": "3e360b6bda37d054993c31e2fe3bcd7407ee7e19098215f67b714d61387c1684"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-05.ram",
+          "ram_sha256": "9043fbfd8361e387f1c25b217793ebd05e1e698e9480e692e0cc069b689a13f5"
+        }
+      ]
+    },
+    "native-mount-session-guard": {
+      "result": {
+        "passed": true,
+        "kind": "mount",
+        "firmware_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+        "states": [
+          {
+            "name": "boot",
+            "owner": 0,
+            "cursor": 0,
+            "mode": 0,
+            "drive": 8,
+            "session": 0,
+            "handoff": 0,
+            "error": 0
+          },
+          {
+            "name": "catalog-before",
+            "owner": 0,
+            "cursor": 0,
+            "mode": 1,
+            "drive": 8,
+            "session": 0,
+            "handoff": 0,
+            "error": 0
+          },
+          {
+            "name": "seed",
+            "owner": 0,
+            "cursor": 1,
+            "mode": 1,
+            "drive": 8,
+            "session": 0,
+            "handoff": 0,
+            "error": 0
+          },
+          {
+            "name": "browser-pre-race",
+            "owner": 0,
+            "cursor": 1,
+            "mode": 1,
+            "drive": 8,
+            "session": 0,
+            "handoff": 0,
+            "error": 0
+          },
+          {
+            "name": "request-during-browser",
+            "owner": 0,
+            "cursor": 1,
+            "mode": 0,
+            "drive": 8,
+            "session": 1,
+            "handoff": 0,
+            "error": 11
+          },
+          {
+            "name": "request-cancelled",
+            "owner": 0,
+            "cursor": 1,
+            "mode": 0,
+            "drive": 8,
+            "session": 0,
+            "handoff": 0,
+            "error": 11
+          },
+          {
+            "name": "post-release-menu",
+            "owner": 0,
+            "cursor": 1,
+            "mode": 0,
+            "drive": 8,
+            "session": 0,
+            "handoff": 0,
+            "error": 11
+          },
+          {
+            "name": "catalog-after",
+            "owner": 0,
+            "cursor": 1,
+            "mode": 1,
+            "drive": 8,
+            "session": 0,
+            "handoff": 0,
+            "error": 0
+          }
+        ],
+        "commands": [
+          {
+            "transport": 0,
+            "cdb": "12000000600000000000",
+            "seconds": 28.389202375,
+            "length": 50,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "1a083100300000000000",
+            "seconds": 28.394235,
+            "length": 48,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "da000000000000000000",
+            "seconds": 28.39546125,
+            "length": 1,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "d7000000000000000000",
+            "seconds": 28.739312625,
+            "length": 4000,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "d8000000000000000000",
+            "seconds": 50.8185735,
+            "length": 0,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "00000000000000000000",
+            "seconds": 50.83936975,
+            "length": 0,
+            "status": 2
+          },
+          {
+            "transport": 0,
+            "cdb": "03000000120000000000",
+            "seconds": 50.841973625,
+            "length": 18,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "00000000000000000000",
+            "seconds": 50.862684625,
+            "length": 0,
+            "status": 2
+          },
+          {
+            "transport": 0,
+            "cdb": "03000000120000000000",
+            "seconds": 50.864793875,
+            "length": 18,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "00000000000000000000",
+            "seconds": 50.885504875,
+            "length": 0,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "25000000000000000000",
+            "seconds": 50.887029125,
+            "length": 8,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "12000000600000000000",
+            "seconds": 59.305805625,
+            "length": 50,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "1a083100300000000000",
+            "seconds": 59.310255875,
+            "length": 48,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "da000000000000000000",
+            "seconds": 59.311482125,
+            "length": 1,
+            "status": 0
+          },
+          {
+            "transport": 0,
+            "cdb": "d7000000000000000000",
+            "seconds": 59.6553185,
+            "length": 4000,
+            "status": 0
+          }
+        ],
+        "all_code_preserved": true
+      },
+      "raw_result_sha256": "8ffe4175a7b37f3d16e5dc2345b64b56b55af7552eea3ccacb7a4a938d398dbd",
+      "firmware_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+      "code_and_label_table_preserved": true,
+      "snapshots": [
+        {
+          "runtime": "runtime",
+          "frame": "frame-01.ram",
+          "ram_sha256": "bc598e5f0306e005f779e5e3a1a7c59581a3163e56a2996cba49bdb49b93c203"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-02.ram",
+          "ram_sha256": "45acbcd0cec5f6072c58e4891cf4912cb7d339a393353a719628e425cd6cae78"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-03.ram",
+          "ram_sha256": "bb84bc55cf005aad79b800a5cd49790c0a22109c17321ca7527e3dff89d29df2"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-04.ram",
+          "ram_sha256": "8618eb99c5c8d3c4ad07859701293c2e24d2494f7d838a12eff2cbf5de7c6ede"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-05.ram",
+          "ram_sha256": "a1ab86ddcbfa74de66a3004cdd4b58145c01e66f45a58db1db9a907db8861bf7"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-06.ram",
+          "ram_sha256": "34ed28ee8d8123cf81143db9f2e33bb3773ff8e13006a8717773f79e7433d7ba"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-07.ram",
+          "ram_sha256": "5e0a31967b6146d5c004b78aed5baeeabeeacfd6bcd222228f320d5312aea9ac"
+        },
+        {
+          "runtime": "runtime",
+          "frame": "frame-08.ram",
+          "ram_sha256": "bc4cfb0b30f6fab1c5f3b152328deda9dc7837db99c266a7d1bdba5f6e6b9adf"
+        }
+      ]
+    },
+    "corrected-volume-dump-fd": {
+      "result": {
+        "row": 8,
+        "name": "Vol. Dump FD",
+        "screen": {
+          "audio_enabled": false,
+          "audio_dropped": 0,
+          "state": "running",
+          "ok": true,
+          "midi_pending": 0,
+          "midi_delivered": [],
+          "seconds": 36.016666666667,
+          "firmware_ready": "unknown",
+          "midi_error": ""
+        },
+        "mode": 0,
+        "cursor": 0
+      },
+      "context": {
+        "controller": 3,
+        "cursor": [
+          104,
+          168
+        ],
+        "bounds": [
+          319,
+          0,
+          199,
+          0
+        ],
+        "screen": 15,
+        "scale": [
+          0,
+          0
+        ]
+      },
+      "firmware_sha256": "8f59f0d0122bcd5dd113bf4820a75406bef026aee96d39e146299ba60fdfb9db",
+      "screenshot_sha256": "351c0ced59255725b37df9865bdb598b2c22ad54cf870bbfbcdc0d70a60c041f",
+      "scope": "Native system-disk warning cancelled; no Volume Dump write performed"
+    }
+  },
+  "menu_navigation": {
+    "passed": true,
+    "rows": [
+      {
+        "row": 0,
+        "name": "Load",
+        "expected_screen": 246,
+        "context": {
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ],
+          "screen": 246,
+          "controller": 3,
+          "scale": [
+            0,
+            0
+          ],
+          "cursor": [
+            104,
+            40
+          ]
+        },
+        "screen_sha256": "9eab5b7e8f8ac5093a7df97e514b67be0c5514b63ad721a42738c4fd0bb796e3",
+        "all_code_preserved": true
+      },
+      {
+        "row": 1,
+        "name": "Save",
+        "expected_screen": 248,
+        "context": {
+          "screen": 248,
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ],
+          "cursor": [
+            104,
+            56
+          ],
+          "controller": 3,
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "screen_sha256": "f957f9859f900e00b4e3dd9fb3c7756409eb7ca345214da3fe67a8aff0e5eb28",
+        "all_code_preserved": true
+      },
+      {
+        "row": 2,
+        "name": "Copy",
+        "expected_screen": 250,
+        "context": {
+          "controller": 3,
+          "cursor": [
+            104,
+            72
+          ],
+          "screen": 250,
+          "scale": [
+            0,
+            0
+          ],
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ]
+        },
+        "screen_sha256": "c16c7f21928da1360334bbfcf229dd3d0cc740de20aa2931583cd4a2ab1eaa28",
+        "all_code_preserved": true
+      },
+      {
+        "row": 3,
+        "name": "Delete",
+        "expected_screen": 252,
+        "context": {
+          "controller": 3,
+          "screen": 252,
+          "cursor": [
+            104,
+            88
+          ],
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ],
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "screen_sha256": "ac1755d07f4b465acf72cc8438f5a55f6ddfe5fbc67112fd1f9d28f2b5b6ea6f",
+        "all_code_preserved": true
+      },
+      {
+        "row": 4,
+        "name": "Utility",
+        "expected_screen": 260,
+        "context": {
+          "scale": [
+            0,
+            0
+          ],
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ],
+          "controller": 3,
+          "screen": 260,
+          "cursor": [
+            104,
+            104
+          ]
+        },
+        "screen_sha256": "aaa43a9970efe2f411a1369048eeba4001461444cfd8f6bb38a2a939354cffbe",
+        "all_code_preserved": true
+      },
+      {
+        "row": 5,
+        "name": "Save System",
+        "expected_screen": 274,
+        "context": {
+          "screen": 274,
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ],
+          "controller": 3,
+          "cursor": [
+            104,
+            120
+          ],
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "screen_sha256": "9c22fc2fe546e317d8008ecd9b64994d95b2be951c630a164c974da95763dc2c",
+        "all_code_preserved": true
+      },
+      {
+        "row": 6,
+        "name": "Optimize",
+        "expected_screen": 276,
+        "context": {
+          "cursor": [
+            104,
+            136
+          ],
+          "controller": 3,
+          "screen": 276,
+          "scale": [
+            0,
+            0
+          ],
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ]
+        },
+        "screen_sha256": "520860e6c862b8a855cd42d602eb13b2424178cc3a6a5ed8eba101581bad47db",
+        "all_code_preserved": true
+      },
+      {
+        "row": 7,
+        "name": "Convert Load",
+        "expected_screen": 254,
+        "context": {
+          "bounds": [
+            319,
+            0,
+            199,
+            0
+          ],
+          "cursor": [
+            104,
+            152
+          ],
+          "controller": 3,
+          "screen": 256,
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "screen_sha256": "3383cf3a5490b485f241fde6c4ff06b2a62dd3a23f6f5c9bb4b66c7a62d8b24d",
+        "all_code_preserved": true
+      }
+    ],
+    "stock_disk_screen_ids": [
+      246,
+      248,
+      250,
+      252,
+      260,
+      274,
+      276,
+      254,
+      284
+    ],
+    "limits": [
+      "All9 rows displayed;8 native target screens accepted; Load OS FD row still needs workflow qualification",
+      "Navigation is not Copy/Delete/Optimize/Save System execution"
+    ]
+  },
+  "menu_navigation_firmware_sha256": "0cd0cc77a089336186a9d858f654045b9be8782e76e356f3da95af69184bb844",
+  "index_checker": {
+    "passed": true,
+    "decoded_cases": 25700,
+    "valid_indices": 100,
+    "rejected_mismatch_pairs": 25500,
+    "retained_error_cases": 100,
+    "scope": "Instruction-decoded emitted index checker only; malformed D7 native drain not exercised"
+  },
+  "label_only_diff": {
+    "passed": true,
+    "prior_sha256": "43dddd251b6790fc13d6109420fa69e53753ff8296025eee2310c30ccfb21977",
+    "changed_offsets": [
+      35864,
+      42085,
+      42087,
+      42088,
+      42090,
+      42091,
+      42092,
+      42093,
+      42094,
+      42095,
+      42097,
+      42098,
+      42099,
+      42100,
+      42101,
+      42102,
+      42103,
+      42104,
+      42105,
+      42106,
+      42107,
+      42108,
+      42109,
+      42110
+    ],
+    "only_code_change": [
+      35864
+    ],
+    "scope": "One immediate label pointer and100-byte text table only; stock callbacks/transport/mount/save unchanged"
+  },
+  "sources": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\build_browser.py": "e3d34ff8e84c4b450187bea959335a1b11ffe4d1d1fb72dd4359364c429014cd",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\build_full.py": "cfb9dcd2989923c0bced61cef7832b86314fa9af227392281ea5836773254016",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\asmkit.py": "3ef918776fc4fa53feb4b0b6469061f9413e75be24358eb390959975958a1603",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\relax.py": "7b06ebeb9f3e2244e5ec351d3af07749f887580d9af883f73f39eafbbc168668",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\audit.py": "e0e97d6c30933bc9f173fe551c2b85b61ea7633bb98e6ae7eedbc18938077e7e",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\check_index.py": "a18433376e7ea8c5dcc99eef8d670da51b0c9269af408bfedc4a6d33edd62f6a",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\run_menu.py": "c983f5678e34445d2485362269e2ae2e4dd3380cbba36ea80283082af9e38ed2",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-final\\observer.lua": "82586676b71bf10f66ca8cee293536873050c378c7c447559332ed109043e13d",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops32\\run_save.py": "bccb4e0ddbed554e4aa0e8a18a854f0f9bea467e4ed784a80854ff0dfa9a2d64",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops32\\run_cancel.py": "c8139028eece4afd580e72b1cc495184e1ba10b3dfffc3b770f8caa960be4292",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops32\\run_catalog_refreshed.py": "a3ff2d554310eb774449dff618e569f190472c868dc4dbb56435ed5c2ac95ad1",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops32\\run_session_race.py": "9aef89ba797ef95075bdffb3715ca021703390bf71fa19b27039a88bd6f27f4c",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops-v2\\analyze_menu.py": "551083875e4bf769cdf0e86e4afc8a1cba7dfd9aec21aa374f34c6b43a60ffd5",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops32\\run_catalog_v2.py": "dfde0af79428384688083f49dc0ee563e1ab059322e9cb52f4cd83c0b3c020d5",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\disk-ops32\\check_index.py": "a18433376e7ea8c5dcc99eef8d670da51b0c9269af408bfedc4a6d33edd62f6a"
+  },
+  "fixtures": {
+    "sd/extra.bin": "5c691c2f118e9803290250ddc807a0098fc307d66c77f58818c1510b79390401",
+    "sd/CD1/000.iso": "3431383721510cf1c211de027cf958c183e16db5fabb6b230eb284c85e196aa9",
+    "sd/CD1/001.iso": "30d6bc164ea54188aa9df0c14f20c4fbc8a155c5644bcc9ef9eb05901cb07d70",
+    "sd/CD1/002.iso": "4539cc1fbc3c22bb131672c62f20ff87f3f587ba2d3d4c5b161c271c98c07b38",
+    "sd/CD1/003.iso": "39c080da1146fced48615c5577196a128f716fdb0ff952a615c0707989574eb3",
+    "sd/CD1/004.iso": "fb7363f1f02c2f244c32aa8076ef7edbc2e621137542836adc1e312143968d75",
+    "sd/CD1/005.iso": "300149a02cb87df26610b2e874637411f567bba9b586c90f47dc126ff203c0e8",
+    "sd/CD1/006.iso": "c9ac7b0624824f844f6c7f3d50fab9741a8914e878467e8daaedca143a34d90b",
+    "sd/CD1/007.iso": "1e640ad0fd3b249a835edf54dd802b9a4be0b093b17db2c60be2dd9c6b6c6ebf",
+    "sd/CD1/008.iso": "8027abbcb17ff5a4c6bf2a5a8761dbd29e465336b0bfbf9bcd77e0d8a622f2ff",
+    "sd/CD1/009.iso": "40bcea1a7a15701f47850819f064c5ea097d5ac9dce7a3861036b302ff82cc41",
+    "sd/CD1/010.iso": "3deff1bf6e362c3ab528926550faccbdca220dbb124fa28d88daa694072d165f",
+    "sd/CD1/011.iso": "c150fdde6caca7012e0b945b0917146ec19da5d03e9ca14685b66e4c8190f1b3",
+    "sd/CD1/012.iso": "ab3072409797eddf337b34f4c0e68c55c5d358b1b939031879f8d8b4922865cf",
+    "sd/CD1/013.iso": "eb12cdd03f846d40900de0534e04edd3fe464839bc40784678fa08f2f64da068",
+    "sd/CD1/014.iso": "a17f54b1452b2bda077b58ad5cec2b49764dddf1b09c9b345475ac603c514cf7",
+    "sd/CD1/015.iso": "a1d8e952ebca8e3b696a08bf238740eb415de106914f978637e097a0d785cdb7",
+    "sd/CD1/016.iso": "c663cfac30430ae0063ef566967a3309489f9a0b6f74b6feefd93f163a593bc4",
+    "sd/CD1/017.iso": "108e61a3206271b8ee237033cb15a240cb33b912ca7c2ee40f703409f7f044d8",
+    "sd/CD1/018.iso": "1fef5f6a0d5dcc70dc8b47de8920f3dbd014d89c81683f6f784e027562a49063",
+    "sd/CD1/019.iso": "3557087672712b6a65e7b37ceae836a58c2fe1739cb8fad5cb317ebb2ffb94e2",
+    "sd/CD1/020.iso": "a3ee21d0ee09617b7d834e76b0e08967e9a45576a299c3281af1ba34de4330fd",
+    "sd/CD1/021.iso": "4896f1347da904df64a01d201a2e24058481b430ce8c3e9b4ffd6e25b83bd09e",
+    "sd/CD1/022.iso": "7c118c7c0efdb62a070d76a3b1c13b565d27eb4bb9513660f93588115a7c30ab",
+    "sd/CD1/023.iso": "4c8eb34dd61fec7359a240d9639febfc5d7207307095cd26c0b9660cb8d56da9",
+    "sd/CD1/024.iso": "797d227c1422c1218cb2e87b6f07fcb8540048824006ce162fec7c92292357a1",
+    "sd/CD1/025.iso": "5facf3f3fc3cb9c9f9084538295bfbd6adc3fba2a4594fad8a230be3d3933b41",
+    "sd/CD1/026.iso": "9dceb988e4a670d7b0de6d850e263479acfa926c95a4de5fb4351dc8e15d866b",
+    "sd/CD1/027.iso": "abc2409e203f5318d39a29d9d858d266c0038f2fe4c7d84af7e40e57390af3bf",
+    "sd/CD1/028.iso": "c0bd750efb26f9bcc0c6e25617e3b19469e67810f5021540e08cf2b6caee8808",
+    "sd/CD1/029.iso": "a116c96f1957a844e61178d5275a1d3c8ac9cf835480f6e8a994019508ed08d6",
+    "sd/CD1/030.iso": "a89b419787d50277a297d4b0f7d1c8ac42041352a6c80e79675ee9b8dfb56491",
+    "sd/CD1/031.iso": "46e4e5b3fe2549da0ecfcf8d067ac060b3b8fd132981043eeb66c7c3be875848",
+    "sd/CD1/032.iso": "cd1b832ec1ca31a12fffd485be807d55c93f96659915d2f68b6eac558f7be121",
+    "sd/CD1/033.iso": "c1f4f9b7b95fd45ff6b7fbc2b094fddd0530f423ee84176527e15ce898aa40f0",
+    "sd/CD1/034.iso": "350984915d0b69e30ea9825331429b4167fee47cbc15463e7d1bcd9c6ca19994",
+    "sd/CD1/035.iso": "f2e9c435d1d875ca0735844d259d5a0305d65a05891e4587600308e53b3c3570",
+    "sd/CD1/036.iso": "0e78dafef09420534b54408540081bafe357f62155cefe6d6ebc79562dcd815a",
+    "sd/CD1/037.iso": "efae8e9485dcff6af40101e49af6f7e0a0166e50698e4b43d7d651b9ff921406",
+    "sd/CD1/038.iso": "6f433b338bb49b98b2b52646b2e48f85e5f74c76b2700bd16c45ac43c7083218",
+    "sd/CD1/039.iso": "b23ff692c8240eb7bc5f4ea6141fded18522743b592c0499c4bc8bf8ed84f44b",
+    "sd/CD1/040.iso": "56385de09f9179415d01a5b8ea5e31085370e6ff6c8481e43c5549a82b37ef94",
+    "sd/CD1/041.iso": "fa348f8e8bdec968196a69ee608e4844220726ebfc003ba533594f8d5f1be16e",
+    "sd/CD1/042.iso": "0fafb1415d574fc3b0e0417170268075c42e8a74e738b9b23d52e77e71e98826",
+    "sd/CD1/043.iso": "687e7a55ace12d766a6e2eaaa0ba0809b1a23f5d29fc1a27d95ba98db1e07f73",
+    "sd/CD1/044.iso": "fe0c3635dc23cab756bd3040dad1cc21db9774429aae6f3589298ff0785ef3cd",
+    "sd/CD1/045.iso": "26453427c13c85df2d9495ba1adc16b0d25e4b5f338118cfc368bc84ff1a29d1",
+    "sd/CD1/046.iso": "758cb190424ffcd26cc29e590b84c6116bc4a50cd116bf4535ce8200bd972894",
+    "sd/CD1/047.iso": "1d05a1711752d58cd7b1a0fc3b865510186533adc6b73b84fba762884acfa52d",
+    "sd/CD1/048.iso": "4fdd600892f7d61608383a6f94b6b68a8630b65c0976dea3f5e410d4c4ff0bbd",
+    "sd/CD1/049.iso": "c4e4416b00b3648466f272e781d2bbc5d7b2ef19a55ec3a565417f599ba1ae79",
+    "sd/CD1/050.iso": "3472c45e8a3bf5c75cc1f5d6d73c1b005c152e83c58b37e099849151a71973f7",
+    "sd/CD1/051.iso": "ab0befc5f6960968e802438bed9249a2311ccf45a7648ab4a924c56a317621ec",
+    "sd/CD1/052.iso": "1252602fa849acee588b513308777634f80524cf4d9a76c5efd20b837e4b3315",
+    "sd/CD1/053.iso": "50dbaa92c9fcde819aba759ad8c48554493e9fb89d3ad557e06b10fedd42e1aa",
+    "sd/CD1/054.iso": "1223dde07e0e3571d377800cde8d6e97188dd70a6d15e2c47ef530dc5b3ffc27",
+    "sd/CD1/055.iso": "c992c3ecd26c9973d7bb4a6ca34bb5cf2b4095a47d66a6d8ecf7ebf0b5dd4e13",
+    "sd/CD1/056.iso": "c18ee9a39242c810d4fb590385a683544ebbfecf330e2c320ecb0b3db3eb7595",
+    "sd/CD1/057.iso": "8f275decb00bc67066b27a037faf7deead84096646b8899fbaafc06f0eed5131",
+    "sd/CD1/058.iso": "6b388f465c3a98156065eadae4f8db7dde133f42533891e4ddf0957687f3ef06",
+    "sd/CD1/059.iso": "f03a56ab0b27e3c9920d766b208d04e0ebb6c2d5052bbe4ac0e273d33b855a59",
+    "sd/CD1/060.iso": "94ea46a3eceacc12d56fb06b5b8bd088f214c3f42204b2a718d68e777cc84d10",
+    "sd/CD1/061.iso": "90304659634b3b7f6ac9f20de8196aa65af06a1dfd4c8f90c8a3d2f821eeede2",
+    "sd/CD1/062.iso": "b591329970c973d7f0c085f49a62cb61609170dfc3d966ea2f7b83f6694c771f",
+    "sd/CD1/063.iso": "e5bdd48d0118bad7f82397c719214633757480391bd2d638e86dcce22723ab0b",
+    "sd/CD1/064.iso": "6896d9ea3f73a4434f5832bc65714e7d066f177373f36f34dc8a6f735daa41b1",
+    "sd/CD1/065.iso": "725bcd6c66d02acf6ebeab9c92410e010ea22e336876256aaf05a211f4ce1902",
+    "sd/CD1/066.iso": "b23f99e1f653e62fa5bc14cc528a9ec3b6d11be482b2ee51b519d1d6ad8c5466",
+    "sd/CD1/067.iso": "267e5d2bb42138bdf23ccb5fbdea09385169de4c686f7c12034ccd7bb0c6899d",
+    "sd/CD1/068.iso": "a3c255caf361412ed2cd90ecff6437ed02630ad54940e9024642e13cfc104c52",
+    "sd/CD1/069.iso": "1797ecdc67b266d5d8e2cbaccde6ba94832bf9fd692130f814eab087cb45d26f",
+    "sd/CD1/070.iso": "4f936eee8955a5e746d06143545f337bdc303a4b18b48220e3934c65e0c1c019",
+    "sd/CD1/071.iso": "0880f4f80c54d945fa5e8c63c0396bbf98973761809e93790788531c83b1314c",
+    "sd/CD1/072.iso": "4c5c140dc5279b6ed6caa87af8a10db1373bb8cca8f67031a56914b1fbafdd70",
+    "sd/CD1/073.iso": "bb010b0e1e07bbd52c9e81100fe81966e8576581df6d50c3402625458be318df",
+    "sd/CD1/074.iso": "4d7a05ee9d65536c0178c47509169bc34968353d8685de10939fdab3cadce354",
+    "sd/CD1/075.iso": "495b63b9b5c41b598d95c9b884215a755c800e1994630244c7b80498b719049c",
+    "sd/CD1/076.iso": "016e1ecb51650bef2394f52662bd7706375306efb5fba76b97983df9ee3568f9",
+    "sd/CD1/077.iso": "7824a27eb07f3e73a7d9948951e1f97c3deffa1958e7b1d370740b98fd5e7e0b",
+    "sd/CD1/078.iso": "957269f144778a4554482f666a89cbe723252ac16cf79c02fd0d5de9dd91dfa6",
+    "sd/CD1/079.iso": "26b7e40be0bcf3e6667020b3acf6e07faa17585b21b2936305dd6c9ad3860b15",
+    "sd/CD1/080.iso": "caef6174fb1bfe5ad1fb7626745a41377eea7ea5602b541feaf44f0fd8070db9",
+    "sd/CD1/081.iso": "764407ab1e783417ace1bd68942ee9a496d39a6089d416646be2f3275fa9bee1",
+    "sd/CD1/082.iso": "9ce2519c0561bb0b06617143d723160ce3a095ce9fa2bada3403d84d32045e47",
+    "sd/CD1/083.iso": "49f6cae3f0c85df26bb36f43311a05914726cc7cc1f057922652dbd2cae0cbbd",
+    "sd/CD1/084.iso": "0561079e4fe3390bc1d8bb706edb7d80243eeca7ddf876cefbaa8c1684db80c3",
+    "sd/CD1/085.iso": "7efbe488eeb8ed87554b3b6da2af209fb3271790f63db5bbd2ed98e3c76c42bd",
+    "sd/CD1/086.iso": "6f219d2a82a21e984cb3ad501a56dad2be4b96f8676569b5262fecc614818af0",
+    "sd/CD1/087.iso": "d349a508c76fad12956a99adc3346b607f2309a4e6f546872d04345ba781088c",
+    "sd/CD1/088.iso": "5c691c2f118e9803290250ddc807a0098fc307d66c77f58818c1510b79390401",
+    "sd/CD1/089.iso": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+    "sd/CD1/090.iso": "1eb6baec20bc9b85c225913476417d5356471a50effe0d77f5e94a033204ffa0",
+    "sd/CD1/091.iso": "ed9345ea3cbb19b8d167f8a5d6389af48181c3c6bf70d41839463d1b5293389c",
+    "sd/CD1/092.iso": "5beb28fd5ec9695d32216ec18eae2e5adb801fb07476829a493e7eb63dd74cc6",
+    "sd/CD1/093.iso": "19b8d483ca4077160c7be8bde6ca3881f7efd2e61c7b1e866cf0ad4e2cb5c9a9",
+    "sd/CD1/094.iso": "83a74b0bc426876693709d880fe752634ac073276c7b49f490b1e2f423362619",
+    "sd/CD1/095.iso": "bcabdc32fcfaca3fe4b8ecf0cc1ce54f43fc0fc2dd61477d1e09de34d4085298",
+    "sd/CD1/096.iso": "c93eee2d0db02f10acc7460d9576e122dcf8cd53c4bf8dfcae1b3e74ebcfff5a",
+    "sd/CD1/097.iso": "5389688abf55bc46639385085bfaf1fda3552f63303e4d4a55d664d0f515d6ac",
+    "sd/CD1/098.iso": "3abc94a93a42d0eee5c8dda0315f9f1343e2ba36b552ab512c435fd4989c1ac6",
+    "sd/CD1/099.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+    "sd/CD2/000.img": "14d6fc848712815bc1b5fe1ced1b8980eea1e0db781a946dac5aded9769d1984",
+    "sd/CD2/001.img": "fcb424e6d90e2da82f75e861af6e631e7d6b39d84b956bb83791ec42cce9b422",
+    "sd/CD2/002.img": "59c4f510b8a8d3fcfaf4debd27ad6711acce4899930c915eff5a455fa09ae971",
+    "sd/CD2/003.img": "1ba794e9305174cbcd58c9e8ce282af85b353d87ccd380db3a41c3bc4615d273",
+    "sd/CD2/004.img": "01d8e98fdbb8df935d42e035dbf72733a3ba1702a8df83356aceddc7fd9e500d",
+    "sd/CD2/005.img": "a99c07ce93703c7390589c5b007bd9a97a8b6de29e9a920d474d4f028ce2d42c",
+    "sd/CD2/006.img": "76dc13d83659a209fe0f516a18d82e0db47abbd96a1ab7dc65eca67455c3d7aa",
+    "sd/CD2/007.img": "666373a5c4cc310a18872ca337735981cd9764dac596b678394059833397681e",
+    "sd/CD2/008.img": "738c7aebba29b335a694d64478e480a60e74bcbe00b585063b4d290704e7e91a",
+    "sd/CD2/009.img": "5a5b87fc5a3c8e3133322bac66b3f74d61924c4c8daf700e7ce5a7696ed59c17",
+    "sd/CD2/010.img": "30453b84edee9ed037fa786f21c59a090e1296830f2d78bf08dad7afaf465ab0",
+    "sd/CD2/011.img": "4ecaea25b3c00c0c68693f9da847e0670aecbfda3d3e34e7648d91476219f69b",
+    "sd/CD2/012.img": "00e1a9190c9eddd2230cb01dfb25d0bf7ab529db08965a021ebb848b45d17c74",
+    "sd/CD2/013.img": "b3bc03eb368b99608517d7d5d4a6b29e76a87df726222ce44d44e8a1d9b32181",
+    "sd/CD2/014.img": "57ba70f7ac3b68d5bc59bb537aac0d4346c90a6daba6b46ac28f62b4fc9f48b4",
+    "sd/CD2/015.img": "9f36749c5fb3b23ed904ad1582f24a6a65ef3b9e263b1be28af4f792ea269f43",
+    "sd/CD2/016.img": "c04f5fef66dfe659abd081a6d49a478aee0b57b9d3986c04230bf77a2c52fe0f",
+    "sd/CD2/017.img": "b0a71dc97f14ecdb93b097a6f37119b1a1fa800283a42826faa4fc7d26c8fce5",
+    "sd/CD2/018.img": "7142d4166632b2d118bca6301456178185c234d7e1e1a302b38165521bcbff4d",
+    "sd/CD2/019.img": "2be5d9d612a6ba72f42c59dbe8b4a9b39c1608e8b3b6e7f8092e8b3217c62009",
+    "sd/CD2/020.img": "caa4e4cb33927d87037107a0db90be58edfd4e8d60bc3b09bc5c8b0090341be9",
+    "sd/CD2/021.img": "8d0cc08e82efdb062f0e8b03ebf2145d3b6e18e2bcd29a43beb49ab374b0d674",
+    "sd/CD2/022.img": "3ecd4c9ce8780ba3f122f4bdccb26ecb336a8a5d282af520dcbb791b32d31636",
+    "sd/CD2/023.img": "369b78f0f40774a0671b2f52de3162469146f1a1fc342a6430f05bb7a8723d17",
+    "sd/CD2/024.img": "89785c0b56092363e2a4200c560a310202032b363b9ed261037aa62ce031c301",
+    "sd/CD2/025.img": "6cc429586da533fcfe98ab5b9cfb909b8dadcdfb0727ecd39a4efd882202ec68",
+    "sd/CD2/026.img": "1a1fd2f3edb138da797c54921090d83956eed909a914fd3e38d36328e321fa5f",
+    "sd/CD2/027.img": "32c7fb6c11862c97d8cab9c0cda025dfdd397f887d5af9d1ce5c8c1c83198823",
+    "sd/CD2/028.img": "3fefe543bbd6d7e2a6bd42f37a409134166362a270336af15c3888ef76b92dfe",
+    "sd/CD2/029.img": "4e7307a964dfe25fa04057594d8122bdb8eaa8e9c13df4946ba2be961d0377a3",
+    "sd/CD2/030.img": "67fa8b7e479417053708e46f2b3669c2f1c2857df57acbff83ac6a06ea0232e9",
+    "sd/CD2/031.img": "431379dc3272b4227e74eadca33b071254ff006d74110b0de8d7ff9f2ac91de0",
+    "sd/CD2/032.img": "9512a6eeb321fca57e7470e193a589f05b58154719e99568099b1d6133818e5e",
+    "sd/CD2/033.img": "35ec88b3d7257f34fd068beb93a3d08596007e0be7f27eb2d5b292888852c669",
+    "sd/CD2/034.img": "54b5a03e26b99259570c6f302ac6268119d441583798f6d219f60417eef8f9fe",
+    "sd/CD2/035.img": "671d5459c6094abbf58b419bd79f3cb8598a1da697aa025ff82a98b4da8deb8b",
+    "sd/CD2/036.img": "ab7ec9d6cfa21c65d99f0007826bd96f8b1132a6f3c3cd2c788cfc9b9e08698c",
+    "sd/CD2/037.img": "4f1f3e5c43da7c45cf4f2e7690fcd99dbb6a3794ee4ec4ec3604cfd930a23409",
+    "sd/CD2/038.img": "1e08ed3a6f694d7c744ed57a27686369ed3f785f87e9a0982b3d7b97442ad1d6",
+    "sd/CD2/039.img": "8d08aef2cb0050a5e06c45ea7bf4b1495ff949ca2e95c0539143d08d297e3f54",
+    "sd/CD2/040.img": "b2256110f2c4226de0008dd4382a388e033f211b617bd3237135ab1d59a722b6",
+    "sd/CD2/041.img": "61aa76423b117ea657e0eb29aabb169aa8eaa6b82c22885a3293af5e30e07be8",
+    "sd/CD2/042.img": "66e45c485ca3bec4d115326662e3657e6a50db113ae7777652a9b2da5f66d466",
+    "sd/CD2/043.img": "c73ea29867a0c450b33fceaf2176c5e9032f3176d57f2759a44769d240b36afc",
+    "sd/CD2/044.img": "ca33403cfcb21bae20f21507475a3525c7f4bd36bb2a7074891e3307c5fd47d5",
+    "sd/CD2/045.img": "a1856eea8b6927f27285a45ffbdb21321fab660e80d4de7b6736b60332dafa15",
+    "sd/CD2/046.img": "35ae5091b37e8f0f306833ef57a635f9dc06738d7f4e563a610eec2adb26fe28",
+    "sd/CD2/047.img": "b4a38f5f5a21b6ba9f2008878beaa3a708866c66cbada71ba28ec359b5a53c3c",
+    "sd/CD2/048.img": "9d444075c26efabd2bbe2c90b3b5ce795b544fd39bcd4b1840d71d1bee71a541",
+    "sd/CD2/049.img": "4c86261b168e93c0b142c3ad52fc9d7ec2ff50e9c3b37556ef05e3349c9fde77",
+    "sd/CD2/050.img": "0de28f540931f39542812b4d7a0a084bee26cb077a2582ebc5b70d5142215fd5",
+    "sd/CD2/051.img": "12e80ac721320ca6de5d789f27d2f2425d380e1e825b866539a200b78d917e4b",
+    "sd/CD2/052.img": "259339b0bb91cea0710ad54d2625fc2eb247929f6c388978db2225082f41bfdd",
+    "sd/CD2/053.img": "5653ad5e78cb0d3f3b221c81f13a4e26b35bf0f4358cac70d482e0876bdc6b1f",
+    "sd/CD2/054.img": "2b46ba5dfc4e244bbf93e5a88c0dc175f7816cd9dcc32ce093662ca704c5ee83",
+    "sd/CD2/055.img": "9fff425edf058b960f3274d0cec021f956ca5b06ddef64bd5bca9c410a141fcc",
+    "sd/CD2/056.img": "17e3cf2edd8eb7b181b3bddff3b31e30256d15ed0a1271de859aca93e7c13414",
+    "sd/CD2/057.img": "ed6cbc906cbe36d7c4cee0e76483d330801d17e65f44b6d3f88ee02ec7423e2d",
+    "sd/CD2/058.img": "f11b82f1fa93e6c72c63090ad60c7c3cb823f2d4a8015a1eb3ba7233472bb27b",
+    "sd/CD2/059.img": "7b99bcd7a22f013e96ce2b6b47af5c2d884118a85cd2902723473e8c70feff7b",
+    "sd/CD2/060.img": "e820157e09a0e3aa44282cfe5f1bd161492025dff55fc9da38d39f9cf054edc4",
+    "sd/CD2/061.img": "60f2c90eec5fc7983e4673f51d076426335677f63fa1e49e97025c6056edc66a",
+    "sd/CD2/062.img": "3e7844d06a85d26d638db4389cc7fb2fcfa6f0e79b0eaf1decf1a58ca7f89d2b",
+    "sd/CD2/063.img": "6ab72eeb9e77b07540897e0c8d6d23ec8eef0f8c3a47e1b3f4e93443d9536bed",
+    "sd/CD2/064.img": "9b6ce55f379e9771551de6939556a7e6b949814ae27c2f5cfd5dbeb378ce7c2a",
+    "sd/CD2/065.img": "418bcc1d0a75aada93349f29d523e38aed97efe794df4c1971c311b2b4f752dd",
+    "sd/CD2/066.img": "5fcc445a936b3b6b827a49a81703a0f15b4f47cdc267a28225d589b2149673c4",
+    "sd/CD2/067.img": "7027515fbf2ca8d0dd931cbef2b7dda1716827cb4a0ef8adad10eaeb2c33860c",
+    "sd/CD2/068.img": "fa2a5e7b228adc7592461c8e580125312fd01c144b3e50913abc5691b2d16291",
+    "sd/CD2/069.img": "b54de8d8e7ed6289081b15a560eccab84dc52d58f4e1b7b6a6dd5a24f991807a",
+    "sd/CD2/070.img": "504f6002db046c5b36ddc7a028bb79763c5b682e23ec464a465760fd758edde2",
+    "sd/CD2/071.img": "8a3aa0465504b62e7c475e3dd2e15fde6ee25806531d279ee5e030f6ced2465c",
+    "sd/CD2/072.img": "d592c3cbaf5d17852d9cff7fd0002db9a336e3d41acee2456689b86b5521b238",
+    "sd/CD2/073.img": "7b30b56ecd653a72337d9863e9ccaeae85ad86a9d6d5b013ea661f92014dde1d",
+    "sd/CD2/074.img": "26ad8132e3b544caefd85b30bf36df8d012dc7245c9d2224e0f9f50a2ac55a61",
+    "sd/CD2/075.img": "112b1c34da42a6c07b3dee316e7a34baa30fac996a1294f56eb8a69004ae420c",
+    "sd/CD2/076.img": "53c43d45483ba7d3e45bb080e706277d34cec6b6f61d7e0fa323f301f08981c9",
+    "sd/CD2/077.img": "79df4082002a05ad915b81f695f4bef82003d44a56661ba01bcd237a23a3183c",
+    "sd/CD2/078.img": "9ea764ef654dc61f19ab23af219e5aa420b68157b1d135dc297ab0527941f951",
+    "sd/CD2/079.img": "eaeb456889f4b1d3024dbd844528401bc0745b08a9b5b651360c1c8b08879e82",
+    "sd/CD2/080.img": "dc78ef1f27b612d8de8cf8cb512fd737dd8fe1b2158db565a781aec4a13876de",
+    "sd/CD2/081.img": "529a14d56bad1f6bed4135a19babb5d605492da4887fbb991ed76cdac86fd535",
+    "sd/CD2/082.img": "24dc5098155ecc64dea87bee6e87675f5073b47e44867d7e30d915a13e46558a",
+    "sd/CD2/083.img": "9e1ca7712682c141e196917c6900f6e7c17cb6bfcb0e4f64f1186c32e50aae7a",
+    "sd/CD2/084.img": "5c5ac4b03ce8d746269ca530a86633ef1a07fd6be246ff34076bc5f54af2afec",
+    "sd/CD2/085.img": "46efa8ba88ef0f5afd690e05d0cd86e7d6c3d4dac84d7cfcd2c8d9621f294a0d",
+    "sd/CD2/086.img": "be1d2941b054626376fa58155ce0ef8d6357dd0defcbf9eaa37d19ff6098873c",
+    "sd/CD2/087.img": "7bdcf434d21c3f4a21da9a156c604401b543172ca6962d2e44ae76163b1776fc",
+    "sd/CD2/088.img": "e8fb68ce4d4d002dba40c0a459d96807c96ded1c2fdefae3f56f8a0c06a4fecf",
+    "sd/CD2/089.img": "3078ac4d707d9826111111f26010fcc94a443e23a6960445d5321bfcc5256fd3",
+    "sd/CD2/090.img": "f3643e49f4e9fb1a98eea6128c783f7d447866f68d327d82606a7608dbac99ab",
+    "sd/CD2/091.img": "4ad58e1ad2eb11bd4878050dc103b774882dd7accbba1f68a34a10ecf17c2dae",
+    "sd/CD2/092.img": "9bd1de74866bf3855272d420953cbc1be82bb6a7aea6f59613aaec4954d88aa2",
+    "sd/CD2/093.img": "6fa139bdc09bb8a5db40da951c2dc0c3ce51467aa023c2bdb0858256ceb0bf96",
+    "sd/CD2/094.img": "ac4601ebdc4d1301a36e7bf6e25b9e80cfd781c3da7a31b65fc1ac1ef7386f1c",
+    "sd/CD2/095.img": "2edc986847e209b4016e141a6dc8716d3207350f416969382d431539bf292e4a",
+    "sd/CD2/096.img": "0c66f2c45405de575189209a768399bcaf88ccc51002407e395c0136aad2844d",
+    "sd/CD2/097.img": "f03752e3f29c4db81cb1cb7d4c791bed8785e161d2447ccaa9a49f5c2bc38d06",
+    "sd/CD2/098.img": "e454f02c4b94e9e54b30e9c88b1236f30d7fdd63f0545540d597835904a6d84c",
+    "sd/CD2/099.img": "b45b15d5f8efa91c095635573da967c55ab1ff058943760702c9d60f6fb9a866",
+    "sd/CD3/000.iso": "4539cc1fbc3c22bb131672c62f20ff87f3f587ba2d3d4c5b161c271c98c07b38",
+    "sd/CD3/001.iso": "39c080da1146fced48615c5577196a128f716fdb0ff952a615c0707989574eb3",
+    "sd/CD3/002.iso": "fb7363f1f02c2f244c32aa8076ef7edbc2e621137542836adc1e312143968d75",
+    "sd/CD3/003.iso": "300149a02cb87df26610b2e874637411f567bba9b586c90f47dc126ff203c0e8",
+    "sd/CD3/004.iso": "c9ac7b0624824f844f6c7f3d50fab9741a8914e878467e8daaedca143a34d90b",
+    "sd/CD3/005.iso": "1e640ad0fd3b249a835edf54dd802b9a4be0b093b17db2c60be2dd9c6b6c6ebf",
+    "sd/CD3/006.iso": "8027abbcb17ff5a4c6bf2a5a8761dbd29e465336b0bfbf9bcd77e0d8a622f2ff",
+    "sd/CD3/007.iso": "40bcea1a7a15701f47850819f064c5ea097d5ac9dce7a3861036b302ff82cc41",
+    "sd/CD3/008.iso": "3deff1bf6e362c3ab528926550faccbdca220dbb124fa28d88daa694072d165f",
+    "sd/CD3/009.iso": "c150fdde6caca7012e0b945b0917146ec19da5d03e9ca14685b66e4c8190f1b3",
+    "sd/CD3/010.iso": "ab3072409797eddf337b34f4c0e68c55c5d358b1b939031879f8d8b4922865cf",
+    "sd/CD3/011.iso": "eb12cdd03f846d40900de0534e04edd3fe464839bc40784678fa08f2f64da068",
+    "sd/CD3/012.iso": "a17f54b1452b2bda077b58ad5cec2b49764dddf1b09c9b345475ac603c514cf7",
+    "sd/CD3/013.iso": "a1d8e952ebca8e3b696a08bf238740eb415de106914f978637e097a0d785cdb7",
+    "sd/CD3/014.iso": "c663cfac30430ae0063ef566967a3309489f9a0b6f74b6feefd93f163a593bc4",
+    "sd/CD3/015.iso": "108e61a3206271b8ee237033cb15a240cb33b912ca7c2ee40f703409f7f044d8",
+    "sd/CD3/016.iso": "1fef5f6a0d5dcc70dc8b47de8920f3dbd014d89c81683f6f784e027562a49063",
+    "sd/CD3/017.iso": "3557087672712b6a65e7b37ceae836a58c2fe1739cb8fad5cb317ebb2ffb94e2",
+    "sd/CD3/018.iso": "a3ee21d0ee09617b7d834e76b0e08967e9a45576a299c3281af1ba34de4330fd",
+    "sd/CD3/019.iso": "4896f1347da904df64a01d201a2e24058481b430ce8c3e9b4ffd6e25b83bd09e",
+    "sd/CD3/020.iso": "7c118c7c0efdb62a070d76a3b1c13b565d27eb4bb9513660f93588115a7c30ab",
+    "sd/CD3/021.iso": "4c8eb34dd61fec7359a240d9639febfc5d7207307095cd26c0b9660cb8d56da9",
+    "sd/CD3/022.iso": "797d227c1422c1218cb2e87b6f07fcb8540048824006ce162fec7c92292357a1",
+    "sd/CD3/023.iso": "5facf3f3fc3cb9c9f9084538295bfbd6adc3fba2a4594fad8a230be3d3933b41",
+    "sd/CD3/024.iso": "9dceb988e4a670d7b0de6d850e263479acfa926c95a4de5fb4351dc8e15d866b",
+    "sd/CD3/025.iso": "abc2409e203f5318d39a29d9d858d266c0038f2fe4c7d84af7e40e57390af3bf",
+    "sd/CD3/026.iso": "c0bd750efb26f9bcc0c6e25617e3b19469e67810f5021540e08cf2b6caee8808",
+    "sd/CD3/027.iso": "a116c96f1957a844e61178d5275a1d3c8ac9cf835480f6e8a994019508ed08d6",
+    "sd/CD3/028.iso": "a89b419787d50277a297d4b0f7d1c8ac42041352a6c80e79675ee9b8dfb56491",
+    "sd/CD3/029.iso": "46e4e5b3fe2549da0ecfcf8d067ac060b3b8fd132981043eeb66c7c3be875848",
+    "sd/CD3/030.iso": "cd1b832ec1ca31a12fffd485be807d55c93f96659915d2f68b6eac558f7be121",
+    "sd/CD3/031.iso": "c1f4f9b7b95fd45ff6b7fbc2b094fddd0530f423ee84176527e15ce898aa40f0",
+    "sd/CD3/032.iso": "350984915d0b69e30ea9825331429b4167fee47cbc15463e7d1bcd9c6ca19994",
+    "sd/CD3/033.iso": "f2e9c435d1d875ca0735844d259d5a0305d65a05891e4587600308e53b3c3570",
+    "sd/CD3/034.iso": "0e78dafef09420534b54408540081bafe357f62155cefe6d6ebc79562dcd815a",
+    "sd/CD3/035.iso": "efae8e9485dcff6af40101e49af6f7e0a0166e50698e4b43d7d651b9ff921406",
+    "sd/CD3/036.iso": "6f433b338bb49b98b2b52646b2e48f85e5f74c76b2700bd16c45ac43c7083218",
+    "sd/CD3/037.iso": "b23ff692c8240eb7bc5f4ea6141fded18522743b592c0499c4bc8bf8ed84f44b",
+    "sd/CD3/038.iso": "56385de09f9179415d01a5b8ea5e31085370e6ff6c8481e43c5549a82b37ef94",
+    "sd/CD3/039.iso": "fa348f8e8bdec968196a69ee608e4844220726ebfc003ba533594f8d5f1be16e",
+    "sd/CD3/040.iso": "0fafb1415d574fc3b0e0417170268075c42e8a74e738b9b23d52e77e71e98826",
+    "sd/CD3/041.iso": "687e7a55ace12d766a6e2eaaa0ba0809b1a23f5d29fc1a27d95ba98db1e07f73",
+    "sd/CD3/042.iso": "fe0c3635dc23cab756bd3040dad1cc21db9774429aae6f3589298ff0785ef3cd",
+    "sd/CD3/043.iso": "26453427c13c85df2d9495ba1adc16b0d25e4b5f338118cfc368bc84ff1a29d1",
+    "sd/CD3/044.iso": "758cb190424ffcd26cc29e590b84c6116bc4a50cd116bf4535ce8200bd972894",
+    "sd/CD3/045.iso": "1d05a1711752d58cd7b1a0fc3b865510186533adc6b73b84fba762884acfa52d",
+    "sd/CD3/046.iso": "4fdd600892f7d61608383a6f94b6b68a8630b65c0976dea3f5e410d4c4ff0bbd",
+    "sd/CD3/047.iso": "c4e4416b00b3648466f272e781d2bbc5d7b2ef19a55ec3a565417f599ba1ae79",
+    "sd/CD3/048.iso": "3472c45e8a3bf5c75cc1f5d6d73c1b005c152e83c58b37e099849151a71973f7",
+    "sd/CD3/049.iso": "ab0befc5f6960968e802438bed9249a2311ccf45a7648ab4a924c56a317621ec",
+    "sd/CD3/050.iso": "1252602fa849acee588b513308777634f80524cf4d9a76c5efd20b837e4b3315",
+    "sd/CD3/051.iso": "50dbaa92c9fcde819aba759ad8c48554493e9fb89d3ad557e06b10fedd42e1aa",
+    "sd/CD3/052.iso": "1223dde07e0e3571d377800cde8d6e97188dd70a6d15e2c47ef530dc5b3ffc27",
+    "sd/CD3/053.iso": "c992c3ecd26c9973d7bb4a6ca34bb5cf2b4095a47d66a6d8ecf7ebf0b5dd4e13",
+    "sd/CD3/054.iso": "c18ee9a39242c810d4fb590385a683544ebbfecf330e2c320ecb0b3db3eb7595",
+    "sd/CD3/055.iso": "8f275decb00bc67066b27a037faf7deead84096646b8899fbaafc06f0eed5131",
+    "sd/CD3/056.iso": "6b388f465c3a98156065eadae4f8db7dde133f42533891e4ddf0957687f3ef06",
+    "sd/CD3/057.iso": "f03a56ab0b27e3c9920d766b208d04e0ebb6c2d5052bbe4ac0e273d33b855a59",
+    "sd/CD3/058.iso": "94ea46a3eceacc12d56fb06b5b8bd088f214c3f42204b2a718d68e777cc84d10",
+    "sd/CD3/059.iso": "90304659634b3b7f6ac9f20de8196aa65af06a1dfd4c8f90c8a3d2f821eeede2",
+    "sd/CD3/060.iso": "b591329970c973d7f0c085f49a62cb61609170dfc3d966ea2f7b83f6694c771f",
+    "sd/CD3/061.iso": "e5bdd48d0118bad7f82397c719214633757480391bd2d638e86dcce22723ab0b",
+    "sd/CD3/062.iso": "6896d9ea3f73a4434f5832bc65714e7d066f177373f36f34dc8a6f735daa41b1",
+    "sd/CD3/063.iso": "725bcd6c66d02acf6ebeab9c92410e010ea22e336876256aaf05a211f4ce1902",
+    "sd/CD3/064.iso": "b23f99e1f653e62fa5bc14cc528a9ec3b6d11be482b2ee51b519d1d6ad8c5466",
+    "sd/CD3/065.iso": "267e5d2bb42138bdf23ccb5fbdea09385169de4c686f7c12034ccd7bb0c6899d",
+    "sd/CD3/066.iso": "a3c255caf361412ed2cd90ecff6437ed02630ad54940e9024642e13cfc104c52",
+    "sd/CD3/067.iso": "1797ecdc67b266d5d8e2cbaccde6ba94832bf9fd692130f814eab087cb45d26f",
+    "sd/CD3/068.iso": "4f936eee8955a5e746d06143545f337bdc303a4b18b48220e3934c65e0c1c019",
+    "sd/CD3/069.iso": "0880f4f80c54d945fa5e8c63c0396bbf98973761809e93790788531c83b1314c",
+    "sd/CD3/070.iso": "4c5c140dc5279b6ed6caa87af8a10db1373bb8cca8f67031a56914b1fbafdd70",
+    "sd/CD3/071.iso": "bb010b0e1e07bbd52c9e81100fe81966e8576581df6d50c3402625458be318df",
+    "sd/CD3/072.iso": "4d7a05ee9d65536c0178c47509169bc34968353d8685de10939fdab3cadce354",
+    "sd/CD3/073.iso": "495b63b9b5c41b598d95c9b884215a755c800e1994630244c7b80498b719049c",
+    "sd/CD3/074.iso": "016e1ecb51650bef2394f52662bd7706375306efb5fba76b97983df9ee3568f9",
+    "sd/CD3/075.iso": "7824a27eb07f3e73a7d9948951e1f97c3deffa1958e7b1d370740b98fd5e7e0b",
+    "sd/CD3/076.iso": "957269f144778a4554482f666a89cbe723252ac16cf79c02fd0d5de9dd91dfa6",
+    "sd/CD3/077.iso": "26b7e40be0bcf3e6667020b3acf6e07faa17585b21b2936305dd6c9ad3860b15",
+    "sd/CD3/078.iso": "caef6174fb1bfe5ad1fb7626745a41377eea7ea5602b541feaf44f0fd8070db9",
+    "sd/CD3/079.iso": "764407ab1e783417ace1bd68942ee9a496d39a6089d416646be2f3275fa9bee1",
+    "sd/CD3/080.iso": "9ce2519c0561bb0b06617143d723160ce3a095ce9fa2bada3403d84d32045e47",
+    "sd/CD3/081.iso": "49f6cae3f0c85df26bb36f43311a05914726cc7cc1f057922652dbd2cae0cbbd",
+    "sd/CD3/082.iso": "0561079e4fe3390bc1d8bb706edb7d80243eeca7ddf876cefbaa8c1684db80c3",
+    "sd/CD3/083.iso": "7efbe488eeb8ed87554b3b6da2af209fb3271790f63db5bbd2ed98e3c76c42bd",
+    "sd/CD3/084.iso": "6f219d2a82a21e984cb3ad501a56dad2be4b96f8676569b5262fecc614818af0",
+    "sd/CD3/085.iso": "d349a508c76fad12956a99adc3346b607f2309a4e6f546872d04345ba781088c",
+    "sd/CD3/086.iso": "5c691c2f118e9803290250ddc807a0098fc307d66c77f58818c1510b79390401",
+    "sd/CD3/087.iso": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+    "sd/CD3/088.iso": "1eb6baec20bc9b85c225913476417d5356471a50effe0d77f5e94a033204ffa0",
+    "sd/CD3/089.iso": "ed9345ea3cbb19b8d167f8a5d6389af48181c3c6bf70d41839463d1b5293389c",
+    "sd/CD3/090.iso": "5beb28fd5ec9695d32216ec18eae2e5adb801fb07476829a493e7eb63dd74cc6",
+    "sd/CD3/091.iso": "19b8d483ca4077160c7be8bde6ca3881f7efd2e61c7b1e866cf0ad4e2cb5c9a9",
+    "sd/CD3/092.iso": "83a74b0bc426876693709d880fe752634ac073276c7b49f490b1e2f423362619",
+    "sd/CD3/093.iso": "bcabdc32fcfaca3fe4b8ecf0cc1ce54f43fc0fc2dd61477d1e09de34d4085298",
+    "sd/CD3/094.iso": "c93eee2d0db02f10acc7460d9576e122dcf8cd53c4bf8dfcae1b3e74ebcfff5a",
+    "sd/CD3/095.iso": "5389688abf55bc46639385085bfaf1fda3552f63303e4d4a55d664d0f515d6ac",
+    "sd/CD3/096.iso": "3abc94a93a42d0eee5c8dda0315f9f1343e2ba36b552ab512c435fd4989c1ac6",
+    "sd/CD3/097.iso": "ef94c126bfb6793c3b46596f7acce4a98382cac6de2f3a2a2fe24aa64710c534",
+    "sd/CD3/098.iso": "ccda6c08aee28331768d1ac1a86581078e659a43c8500ec2eecbe189239d077d",
+    "sd/CD3/099.iso": "095b746c3a23191ffd7c7bab6057206f1ea49a6422f41416111b6360c7e4134f",
+    "sd/CD6/000.iso": "300149a02cb87df26610b2e874637411f567bba9b586c90f47dc126ff203c0e8",
+    "sd/CD6/001.iso": "c9ac7b0624824f844f6c7f3d50fab9741a8914e878467e8daaedca143a34d90b",
+    "sd/CD6/002.iso": "1e640ad0fd3b249a835edf54dd802b9a4be0b093b17db2c60be2dd9c6b6c6ebf",
+    "sd/CD6/003.iso": "8027abbcb17ff5a4c6bf2a5a8761dbd29e465336b0bfbf9bcd77e0d8a622f2ff",
+    "sd/CD6/004.iso": "40bcea1a7a15701f47850819f064c5ea097d5ac9dce7a3861036b302ff82cc41",
+    "sd/CD6/005.iso": "3deff1bf6e362c3ab528926550faccbdca220dbb124fa28d88daa694072d165f",
+    "sd/CD6/006.iso": "c150fdde6caca7012e0b945b0917146ec19da5d03e9ca14685b66e4c8190f1b3",
+    "sd/CD6/007.iso": "ab3072409797eddf337b34f4c0e68c55c5d358b1b939031879f8d8b4922865cf",
+    "sd/CD6/008.iso": "eb12cdd03f846d40900de0534e04edd3fe464839bc40784678fa08f2f64da068",
+    "sd/CD6/009.iso": "a17f54b1452b2bda077b58ad5cec2b49764dddf1b09c9b345475ac603c514cf7",
+    "sd/CD6/010.iso": "a1d8e952ebca8e3b696a08bf238740eb415de106914f978637e097a0d785cdb7",
+    "sd/CD6/011.iso": "c663cfac30430ae0063ef566967a3309489f9a0b6f74b6feefd93f163a593bc4",
+    "sd/CD6/012.iso": "108e61a3206271b8ee237033cb15a240cb33b912ca7c2ee40f703409f7f044d8",
+    "sd/CD6/013.iso": "1fef5f6a0d5dcc70dc8b47de8920f3dbd014d89c81683f6f784e027562a49063",
+    "sd/CD6/014.iso": "3557087672712b6a65e7b37ceae836a58c2fe1739cb8fad5cb317ebb2ffb94e2",
+    "sd/CD6/015.iso": "a3ee21d0ee09617b7d834e76b0e08967e9a45576a299c3281af1ba34de4330fd",
+    "sd/CD6/016.iso": "4896f1347da904df64a01d201a2e24058481b430ce8c3e9b4ffd6e25b83bd09e",
+    "sd/CD6/017.iso": "7c118c7c0efdb62a070d76a3b1c13b565d27eb4bb9513660f93588115a7c30ab",
+    "sd/CD6/018.iso": "4c8eb34dd61fec7359a240d9639febfc5d7207307095cd26c0b9660cb8d56da9",
+    "sd/CD6/019.iso": "797d227c1422c1218cb2e87b6f07fcb8540048824006ce162fec7c92292357a1",
+    "sd/CD6/020.iso": "5facf3f3fc3cb9c9f9084538295bfbd6adc3fba2a4594fad8a230be3d3933b41",
+    "sd/CD6/021.iso": "9dceb988e4a670d7b0de6d850e263479acfa926c95a4de5fb4351dc8e15d866b",
+    "sd/CD6/022.iso": "abc2409e203f5318d39a29d9d858d266c0038f2fe4c7d84af7e40e57390af3bf",
+    "sd/CD6/023.iso": "c0bd750efb26f9bcc0c6e25617e3b19469e67810f5021540e08cf2b6caee8808",
+    "sd/CD6/024.iso": "a116c96f1957a844e61178d5275a1d3c8ac9cf835480f6e8a994019508ed08d6",
+    "sd/CD6/025.iso": "a89b419787d50277a297d4b0f7d1c8ac42041352a6c80e79675ee9b8dfb56491",
+    "sd/CD6/026.iso": "46e4e5b3fe2549da0ecfcf8d067ac060b3b8fd132981043eeb66c7c3be875848",
+    "sd/CD6/027.iso": "cd1b832ec1ca31a12fffd485be807d55c93f96659915d2f68b6eac558f7be121",
+    "sd/CD6/028.iso": "c1f4f9b7b95fd45ff6b7fbc2b094fddd0530f423ee84176527e15ce898aa40f0",
+    "sd/CD6/029.iso": "350984915d0b69e30ea9825331429b4167fee47cbc15463e7d1bcd9c6ca19994",
+    "sd/CD6/030.iso": "f2e9c435d1d875ca0735844d259d5a0305d65a05891e4587600308e53b3c3570",
+    "sd/CD6/031.iso": "0e78dafef09420534b54408540081bafe357f62155cefe6d6ebc79562dcd815a",
+    "sd/CD6/032.iso": "efae8e9485dcff6af40101e49af6f7e0a0166e50698e4b43d7d651b9ff921406",
+    "sd/CD6/033.iso": "6f433b338bb49b98b2b52646b2e48f85e5f74c76b2700bd16c45ac43c7083218",
+    "sd/CD6/034.iso": "b23ff692c8240eb7bc5f4ea6141fded18522743b592c0499c4bc8bf8ed84f44b",
+    "sd/CD6/035.iso": "56385de09f9179415d01a5b8ea5e31085370e6ff6c8481e43c5549a82b37ef94",
+    "sd/CD6/036.iso": "fa348f8e8bdec968196a69ee608e4844220726ebfc003ba533594f8d5f1be16e",
+    "sd/CD6/037.iso": "0fafb1415d574fc3b0e0417170268075c42e8a74e738b9b23d52e77e71e98826",
+    "sd/CD6/038.iso": "687e7a55ace12d766a6e2eaaa0ba0809b1a23f5d29fc1a27d95ba98db1e07f73",
+    "sd/CD6/039.iso": "fe0c3635dc23cab756bd3040dad1cc21db9774429aae6f3589298ff0785ef3cd",
+    "sd/CD6/040.iso": "26453427c13c85df2d9495ba1adc16b0d25e4b5f338118cfc368bc84ff1a29d1",
+    "sd/CD6/041.iso": "758cb190424ffcd26cc29e590b84c6116bc4a50cd116bf4535ce8200bd972894",
+    "sd/CD6/042.iso": "1d05a1711752d58cd7b1a0fc3b865510186533adc6b73b84fba762884acfa52d",
+    "sd/CD6/043.iso": "4fdd600892f7d61608383a6f94b6b68a8630b65c0976dea3f5e410d4c4ff0bbd",
+    "sd/CD6/044.iso": "c4e4416b00b3648466f272e781d2bbc5d7b2ef19a55ec3a565417f599ba1ae79",
+    "sd/CD6/045.iso": "3472c45e8a3bf5c75cc1f5d6d73c1b005c152e83c58b37e099849151a71973f7",
+    "sd/CD6/046.iso": "ab0befc5f6960968e802438bed9249a2311ccf45a7648ab4a924c56a317621ec",
+    "sd/CD6/047.iso": "1252602fa849acee588b513308777634f80524cf4d9a76c5efd20b837e4b3315",
+    "sd/CD6/048.iso": "50dbaa92c9fcde819aba759ad8c48554493e9fb89d3ad557e06b10fedd42e1aa",
+    "sd/CD6/049.iso": "1223dde07e0e3571d377800cde8d6e97188dd70a6d15e2c47ef530dc5b3ffc27",
+    "sd/CD6/050.iso": "c992c3ecd26c9973d7bb4a6ca34bb5cf2b4095a47d66a6d8ecf7ebf0b5dd4e13",
+    "sd/CD6/051.iso": "c18ee9a39242c810d4fb590385a683544ebbfecf330e2c320ecb0b3db3eb7595",
+    "sd/CD6/052.iso": "8f275decb00bc67066b27a037faf7deead84096646b8899fbaafc06f0eed5131",
+    "sd/CD6/053.iso": "6b388f465c3a98156065eadae4f8db7dde133f42533891e4ddf0957687f3ef06",
+    "sd/CD6/054.iso": "f03a56ab0b27e3c9920d766b208d04e0ebb6c2d5052bbe4ac0e273d33b855a59",
+    "sd/CD6/055.iso": "94ea46a3eceacc12d56fb06b5b8bd088f214c3f42204b2a718d68e777cc84d10",
+    "sd/CD6/056.iso": "90304659634b3b7f6ac9f20de8196aa65af06a1dfd4c8f90c8a3d2f821eeede2",
+    "sd/CD6/057.iso": "b591329970c973d7f0c085f49a62cb61609170dfc3d966ea2f7b83f6694c771f",
+    "sd/CD6/058.iso": "e5bdd48d0118bad7f82397c719214633757480391bd2d638e86dcce22723ab0b",
+    "sd/CD6/059.iso": "6896d9ea3f73a4434f5832bc65714e7d066f177373f36f34dc8a6f735daa41b1",
+    "sd/CD6/060.iso": "725bcd6c66d02acf6ebeab9c92410e010ea22e336876256aaf05a211f4ce1902",
+    "sd/CD6/061.iso": "b23f99e1f653e62fa5bc14cc528a9ec3b6d11be482b2ee51b519d1d6ad8c5466",
+    "sd/CD6/062.iso": "267e5d2bb42138bdf23ccb5fbdea09385169de4c686f7c12034ccd7bb0c6899d",
+    "sd/CD6/063.iso": "a3c255caf361412ed2cd90ecff6437ed02630ad54940e9024642e13cfc104c52",
+    "sd/CD6/064.iso": "1797ecdc67b266d5d8e2cbaccde6ba94832bf9fd692130f814eab087cb45d26f",
+    "sd/CD6/065.iso": "4f936eee8955a5e746d06143545f337bdc303a4b18b48220e3934c65e0c1c019",
+    "sd/CD6/066.iso": "0880f4f80c54d945fa5e8c63c0396bbf98973761809e93790788531c83b1314c",
+    "sd/CD6/067.iso": "4c5c140dc5279b6ed6caa87af8a10db1373bb8cca8f67031a56914b1fbafdd70",
+    "sd/CD6/068.iso": "bb010b0e1e07bbd52c9e81100fe81966e8576581df6d50c3402625458be318df",
+    "sd/CD6/069.iso": "4d7a05ee9d65536c0178c47509169bc34968353d8685de10939fdab3cadce354",
+    "sd/CD6/070.iso": "495b63b9b5c41b598d95c9b884215a755c800e1994630244c7b80498b719049c",
+    "sd/CD6/071.iso": "016e1ecb51650bef2394f52662bd7706375306efb5fba76b97983df9ee3568f9",
+    "sd/CD6/072.iso": "7824a27eb07f3e73a7d9948951e1f97c3deffa1958e7b1d370740b98fd5e7e0b",
+    "sd/CD6/073.iso": "957269f144778a4554482f666a89cbe723252ac16cf79c02fd0d5de9dd91dfa6",
+    "sd/CD6/074.iso": "26b7e40be0bcf3e6667020b3acf6e07faa17585b21b2936305dd6c9ad3860b15",
+    "sd/CD6/075.iso": "caef6174fb1bfe5ad1fb7626745a41377eea7ea5602b541feaf44f0fd8070db9",
+    "sd/CD6/076.iso": "764407ab1e783417ace1bd68942ee9a496d39a6089d416646be2f3275fa9bee1",
+    "sd/CD6/077.iso": "9ce2519c0561bb0b06617143d723160ce3a095ce9fa2bada3403d84d32045e47",
+    "sd/CD6/078.iso": "49f6cae3f0c85df26bb36f43311a05914726cc7cc1f057922652dbd2cae0cbbd",
+    "sd/CD6/079.iso": "0561079e4fe3390bc1d8bb706edb7d80243eeca7ddf876cefbaa8c1684db80c3",
+    "sd/CD6/080.iso": "7efbe488eeb8ed87554b3b6da2af209fb3271790f63db5bbd2ed98e3c76c42bd",
+    "sd/CD6/081.iso": "6f219d2a82a21e984cb3ad501a56dad2be4b96f8676569b5262fecc614818af0",
+    "sd/CD6/082.iso": "d349a508c76fad12956a99adc3346b607f2309a4e6f546872d04345ba781088c",
+    "sd/CD6/083.iso": "5c691c2f118e9803290250ddc807a0098fc307d66c77f58818c1510b79390401",
+    "sd/CD6/084.iso": "f302957da5220938a7e3e51a8718c79b9e00dc13ab2119e8cfc978f041720382",
+    "sd/CD6/085.iso": "1eb6baec20bc9b85c225913476417d5356471a50effe0d77f5e94a033204ffa0",
+    "sd/CD6/086.iso": "ed9345ea3cbb19b8d167f8a5d6389af48181c3c6bf70d41839463d1b5293389c",
+    "sd/CD6/087.iso": "5beb28fd5ec9695d32216ec18eae2e5adb801fb07476829a493e7eb63dd74cc6",
+    "sd/CD6/088.iso": "19b8d483ca4077160c7be8bde6ca3881f7efd2e61c7b1e866cf0ad4e2cb5c9a9",
+    "sd/CD6/089.iso": "83a74b0bc426876693709d880fe752634ac073276c7b49f490b1e2f423362619",
+    "sd/CD6/090.iso": "bcabdc32fcfaca3fe4b8ecf0cc1ce54f43fc0fc2dd61477d1e09de34d4085298",
+    "sd/CD6/091.iso": "c93eee2d0db02f10acc7460d9576e122dcf8cd53c4bf8dfcae1b3e74ebcfff5a",
+    "sd/CD6/092.iso": "5389688abf55bc46639385085bfaf1fda3552f63303e4d4a55d664d0f515d6ac",
+    "sd/CD6/093.iso": "3abc94a93a42d0eee5c8dda0315f9f1343e2ba36b552ab512c435fd4989c1ac6",
+    "sd/CD6/094.iso": "ef94c126bfb6793c3b46596f7acce4a98382cac6de2f3a2a2fe24aa64710c534",
+    "sd/CD6/095.iso": "ccda6c08aee28331768d1ac1a86581078e659a43c8500ec2eecbe189239d077d",
+    "sd/CD6/096.iso": "095b746c3a23191ffd7c7bab6057206f1ea49a6422f41416111b6360c7e4134f",
+    "sd/CD6/097.iso": "6c6ea0d79c1c1083d65a01f34b4baf300fbfb15fb684b1adc7756072b9d9c59c",
+    "sd/CD6/098.iso": "7bcf29418f5200f1539d158a17f72a48e328ade71b0f60e6a707cc2e5e74dcb1",
+    "sd/CD6/099.iso": "04783e846d90853cbe1d658f88f6b4fdbaa45972ccf75f024a5880107bb604e9",
+    "sd/Library/ISO_B/Other.iso": "725bcd6c66d02acf6ebeab9c92410e010ea22e336876256aaf05a211f4ce1902",
+    "sd/CD1/Subcollection/Hidden.iso": "d349a508c76fad12956a99adc3346b607f2309a4e6f546872d04345ba781088c"
+  },
+  "scope": "Native MAME, ordinary saved GB6-v9 input; private HDD initialization/Save/export/cold Load; no hardware parity",
+  "limitations": [
+    "Direct final-hash native test covers corrected Volume Dump FD warning/cancel; full Save/cold Load and32-byte catalog cases use the immediately preceding label variant. Diff proves only text table and one label-pointer immediate changed.",
+    "Eight other native target-screen observations belong to the earlier33-byte Disk-menu build; Convert Load follows native device-dependent screen0100 rather than initial00FE.",
+    "Malformed index rejection has25700 instruction-decoded cases; malformed D7 full native drain has not been injected. Valid native0/1/100 and overflow101 tests pass.",
+    "No Copy/Delete/Optimize/Save System/Volume Dump execution claim beyond recorded navigation; system-disk caution was cancelled.",
+    "General concurrent Load/Save/Format, physical read-only enforcement, external sessions and remaining controller/UI/filename/media/reset/stack gates stay open.",
+    "Index compression does not fix upstream filter disagreement BUG145 or path termination BUG146. No filtering/reordering is permitted.",
+    "No runtime/C++ code change; prior748 backend suite is historical"
+  ],
+  "command_working_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19",
+  "acceptance_commands": [
+    "python -X utf8 disk-ops-v2/run_menu.py <0..7>",
+    "python -X utf8 disk-ops-v2/run_save.py",
+    "python -X utf8 disk-ops32/run_save.py",
+    "python -X utf8 disk-ops32/run_cancel.py",
+    "python -X utf8 disk-ops32/run_catalog_v2.py",
+    "python -X utf8 disk-ops32/run_session_race.py mount",
+    "python -X utf8 disk-ops-final/run_menu.py 8",
+    "python -X utf8 disk-ops-final/check_index.py",
+    "python -X utf8 disk-ops-final/audit.py"
+  ]
+}

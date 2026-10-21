@@ -1,0 +1,1260 @@
+{
+  "date": "2026-10-19",
+  "scope": "Static patch-address and in-memory composition audit, not a combined emulator/hardware acceptance run",
+  "new_browser_boot_rom_changes": 0,
+  "browser_uses_original_boot_rom": true,
+  "browser_os_sha256": "44dfc20939894f703ddd9ceed77715cad34a3ace474472c7a8b627802a7325e4",
+  "original_os_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "original_rom_sha256": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+  "gb6_profiles": {
+    "v8": {
+      "gb6_changed_bytes": 220,
+      "browser_changed_bytes": 2925,
+      "overlap_bytes": 0,
+      "gb6_ranges": [
+        {
+          "start": 26337,
+          "end_exclusive": 26338
+        },
+        {
+          "start": 78885,
+          "end_exclusive": 78886
+        },
+        {
+          "start": 90562,
+          "end_exclusive": 90564
+        },
+        {
+          "start": 90568,
+          "end_exclusive": 90570
+        },
+        {
+          "start": 90573,
+          "end_exclusive": 90575
+        },
+        {
+          "start": 90576,
+          "end_exclusive": 90595
+        },
+        {
+          "start": 100219,
+          "end_exclusive": 100220
+        },
+        {
+          "start": 101294,
+          "end_exclusive": 101299
+        },
+        {
+          "start": 110112,
+          "end_exclusive": 110239
+        },
+        {
+          "start": 125594,
+          "end_exclusive": 125595
+        },
+        {
+          "start": 487057,
+          "end_exclusive": 487059
+        },
+        {
+          "start": 487576,
+          "end_exclusive": 487578
+        },
+        {
+          "start": 773880,
+          "end_exclusive": 773881
+        },
+        {
+          "start": 773912,
+          "end_exclusive": 773921
+        },
+        {
+          "start": 773936,
+          "end_exclusive": 773940
+        },
+        {
+          "start": 781871,
+          "end_exclusive": 781880
+        },
+        {
+          "start": 781908,
+          "end_exclusive": 781918
+        },
+        {
+          "start": 781920,
+          "end_exclusive": 781942
+        }
+      ],
+      "gb6_os_sha256": "6e32e3143dd06b2d93bdacaf765fd2ba68edeb2b64916dbf0d528262573b7403",
+      "gb6_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+      "prospective_combined_sha256": "be4c67d533769bec2d4ce8c99bbf340e83d96980e0494fa353d8450feec06c08",
+      "gb6_bytes_retained": true,
+      "browser_bytes_retained": true,
+      "gb6_disassembly": {
+        "boot_banner_check": 1,
+        "boot_eeprom_check": 1,
+        "boot_setup4_inc": 1,
+        "boot_setup5_inc": 1,
+        "os_main_loop_poll_dispatch": 18,
+        "os_modal_poll_dispatch": 19,
+        "os_lcd_status_selector": 21,
+        "os_controller_hw_init": 56,
+        "os_mouse_poll_entry": 6,
+        "os_gb6_poll_stub": 41
+      }
+    },
+    "v9": {
+      "gb6_changed_bytes": 220,
+      "browser_changed_bytes": 2925,
+      "overlap_bytes": 0,
+      "gb6_ranges": [
+        {
+          "start": 26337,
+          "end_exclusive": 26338
+        },
+        {
+          "start": 78885,
+          "end_exclusive": 78886
+        },
+        {
+          "start": 90562,
+          "end_exclusive": 90564
+        },
+        {
+          "start": 90568,
+          "end_exclusive": 90570
+        },
+        {
+          "start": 90573,
+          "end_exclusive": 90575
+        },
+        {
+          "start": 90576,
+          "end_exclusive": 90595
+        },
+        {
+          "start": 100219,
+          "end_exclusive": 100220
+        },
+        {
+          "start": 101294,
+          "end_exclusive": 101299
+        },
+        {
+          "start": 110112,
+          "end_exclusive": 110239
+        },
+        {
+          "start": 125594,
+          "end_exclusive": 125595
+        },
+        {
+          "start": 487057,
+          "end_exclusive": 487059
+        },
+        {
+          "start": 487576,
+          "end_exclusive": 487578
+        },
+        {
+          "start": 773880,
+          "end_exclusive": 773881
+        },
+        {
+          "start": 773912,
+          "end_exclusive": 773921
+        },
+        {
+          "start": 773936,
+          "end_exclusive": 773940
+        },
+        {
+          "start": 781871,
+          "end_exclusive": 781880
+        },
+        {
+          "start": 781908,
+          "end_exclusive": 781918
+        },
+        {
+          "start": 781920,
+          "end_exclusive": 781942
+        }
+      ],
+      "gb6_os_sha256": "0a15c81ad6747803160815393f2c2c207f15861bd5671d349ebde4aa3929af15",
+      "gb6_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+      "prospective_combined_sha256": "44a1141f0b8a1cfe10a0b03a76ae6a47f4bb58a621a95eeed32cca7a02ba50f4",
+      "gb6_bytes_retained": true,
+      "browser_bytes_retained": true,
+      "gb6_disassembly": {
+        "boot_banner_check": 1,
+        "boot_eeprom_check": 1,
+        "boot_setup4_inc": 1,
+        "boot_setup5_inc": 1,
+        "os_main_loop_poll_dispatch": 18,
+        "os_modal_poll_dispatch": 19,
+        "os_lcd_status_selector": 21,
+        "os_controller_hw_init": 56,
+        "os_mouse_poll_entry": 6,
+        "os_gb6_poll_stub": 41
+      }
+    }
+  },
+  "browser_ranges": [
+    {
+      "start": 34110,
+      "end_exclusive": 34186
+    },
+    {
+      "start": 34187,
+      "end_exclusive": 34190
+    },
+    {
+      "start": 34191,
+      "end_exclusive": 34236
+    },
+    {
+      "start": 34238,
+      "end_exclusive": 34243
+    },
+    {
+      "start": 34244,
+      "end_exclusive": 34267
+    },
+    {
+      "start": 34268,
+      "end_exclusive": 34278
+    },
+    {
+      "start": 34279,
+      "end_exclusive": 34283
+    },
+    {
+      "start": 34285,
+      "end_exclusive": 34290
+    },
+    {
+      "start": 34291,
+      "end_exclusive": 34293
+    },
+    {
+      "start": 34294,
+      "end_exclusive": 34296
+    },
+    {
+      "start": 34297,
+      "end_exclusive": 34302
+    },
+    {
+      "start": 34303,
+      "end_exclusive": 34305
+    },
+    {
+      "start": 34306,
+      "end_exclusive": 34311
+    },
+    {
+      "start": 34312,
+      "end_exclusive": 34332
+    },
+    {
+      "start": 34333,
+      "end_exclusive": 34351
+    },
+    {
+      "start": 34352,
+      "end_exclusive": 34366
+    },
+    {
+      "start": 34368,
+      "end_exclusive": 34384
+    },
+    {
+      "start": 34385,
+      "end_exclusive": 34389
+    },
+    {
+      "start": 34390,
+      "end_exclusive": 34422
+    },
+    {
+      "start": 34423,
+      "end_exclusive": 34437
+    },
+    {
+      "start": 34438,
+      "end_exclusive": 34444
+    },
+    {
+      "start": 34445,
+      "end_exclusive": 34451
+    },
+    {
+      "start": 34453,
+      "end_exclusive": 34458
+    },
+    {
+      "start": 34459,
+      "end_exclusive": 34467
+    },
+    {
+      "start": 34468,
+      "end_exclusive": 34475
+    },
+    {
+      "start": 34476,
+      "end_exclusive": 34494
+    },
+    {
+      "start": 34495,
+      "end_exclusive": 34504
+    },
+    {
+      "start": 34505,
+      "end_exclusive": 34512
+    },
+    {
+      "start": 34513,
+      "end_exclusive": 34517
+    },
+    {
+      "start": 34518,
+      "end_exclusive": 34534
+    },
+    {
+      "start": 34535,
+      "end_exclusive": 34633
+    },
+    {
+      "start": 34634,
+      "end_exclusive": 34637
+    },
+    {
+      "start": 34638,
+      "end_exclusive": 34653
+    },
+    {
+      "start": 34654,
+      "end_exclusive": 34655
+    },
+    {
+      "start": 34657,
+      "end_exclusive": 34793
+    },
+    {
+      "start": 34794,
+      "end_exclusive": 34797
+    },
+    {
+      "start": 34798,
+      "end_exclusive": 34811
+    },
+    {
+      "start": 34812,
+      "end_exclusive": 34825
+    },
+    {
+      "start": 34826,
+      "end_exclusive": 34984
+    },
+    {
+      "start": 34985,
+      "end_exclusive": 34988
+    },
+    {
+      "start": 34989,
+      "end_exclusive": 35001
+    },
+    {
+      "start": 35002,
+      "end_exclusive": 35009
+    },
+    {
+      "start": 35010,
+      "end_exclusive": 35023
+    },
+    {
+      "start": 35024,
+      "end_exclusive": 35108
+    },
+    {
+      "start": 35109,
+      "end_exclusive": 35111
+    },
+    {
+      "start": 35112,
+      "end_exclusive": 35120
+    },
+    {
+      "start": 35121,
+      "end_exclusive": 35126
+    },
+    {
+      "start": 35127,
+      "end_exclusive": 35133
+    },
+    {
+      "start": 35134,
+      "end_exclusive": 35144
+    },
+    {
+      "start": 35145,
+      "end_exclusive": 35153
+    },
+    {
+      "start": 35154,
+      "end_exclusive": 35156
+    },
+    {
+      "start": 35157,
+      "end_exclusive": 35169
+    },
+    {
+      "start": 35170,
+      "end_exclusive": 35180
+    },
+    {
+      "start": 35181,
+      "end_exclusive": 35195
+    },
+    {
+      "start": 35196,
+      "end_exclusive": 35214
+    },
+    {
+      "start": 35215,
+      "end_exclusive": 35225
+    },
+    {
+      "start": 35226,
+      "end_exclusive": 35234
+    },
+    {
+      "start": 35235,
+      "end_exclusive": 35254
+    },
+    {
+      "start": 35255,
+      "end_exclusive": 35265
+    },
+    {
+      "start": 35266,
+      "end_exclusive": 35274
+    },
+    {
+      "start": 35275,
+      "end_exclusive": 35278
+    },
+    {
+      "start": 35279,
+      "end_exclusive": 35282
+    },
+    {
+      "start": 35283,
+      "end_exclusive": 35288
+    },
+    {
+      "start": 35290,
+      "end_exclusive": 35305
+    },
+    {
+      "start": 35306,
+      "end_exclusive": 35318
+    },
+    {
+      "start": 35320,
+      "end_exclusive": 35325
+    },
+    {
+      "start": 35326,
+      "end_exclusive": 35331
+    },
+    {
+      "start": 35332,
+      "end_exclusive": 35366
+    },
+    {
+      "start": 35367,
+      "end_exclusive": 35371
+    },
+    {
+      "start": 35372,
+      "end_exclusive": 35378
+    },
+    {
+      "start": 35379,
+      "end_exclusive": 35381
+    },
+    {
+      "start": 35382,
+      "end_exclusive": 35397
+    },
+    {
+      "start": 35398,
+      "end_exclusive": 35408
+    },
+    {
+      "start": 35410,
+      "end_exclusive": 35419
+    },
+    {
+      "start": 35420,
+      "end_exclusive": 35429
+    },
+    {
+      "start": 35430,
+      "end_exclusive": 35435
+    },
+    {
+      "start": 35436,
+      "end_exclusive": 35461
+    },
+    {
+      "start": 35462,
+      "end_exclusive": 35467
+    },
+    {
+      "start": 35468,
+      "end_exclusive": 35480
+    },
+    {
+      "start": 35481,
+      "end_exclusive": 35484
+    },
+    {
+      "start": 35485,
+      "end_exclusive": 35486
+    },
+    {
+      "start": 35488,
+      "end_exclusive": 35493
+    },
+    {
+      "start": 35494,
+      "end_exclusive": 35504
+    },
+    {
+      "start": 35505,
+      "end_exclusive": 35509
+    },
+    {
+      "start": 35510,
+      "end_exclusive": 35543
+    },
+    {
+      "start": 35544,
+      "end_exclusive": 35545
+    },
+    {
+      "start": 35547,
+      "end_exclusive": 35568
+    },
+    {
+      "start": 35570,
+      "end_exclusive": 35573
+    },
+    {
+      "start": 35574,
+      "end_exclusive": 35575
+    },
+    {
+      "start": 35577,
+      "end_exclusive": 35582
+    },
+    {
+      "start": 35583,
+      "end_exclusive": 35585
+    },
+    {
+      "start": 35586,
+      "end_exclusive": 35591
+    },
+    {
+      "start": 35592,
+      "end_exclusive": 35593
+    },
+    {
+      "start": 35595,
+      "end_exclusive": 35603
+    },
+    {
+      "start": 35604,
+      "end_exclusive": 35607
+    },
+    {
+      "start": 35608,
+      "end_exclusive": 35614
+    },
+    {
+      "start": 35615,
+      "end_exclusive": 35620
+    },
+    {
+      "start": 35621,
+      "end_exclusive": 35624
+    },
+    {
+      "start": 35625,
+      "end_exclusive": 35626
+    },
+    {
+      "start": 35628,
+      "end_exclusive": 35633
+    },
+    {
+      "start": 35634,
+      "end_exclusive": 35639
+    },
+    {
+      "start": 35640,
+      "end_exclusive": 35650
+    },
+    {
+      "start": 35651,
+      "end_exclusive": 35655
+    },
+    {
+      "start": 35656,
+      "end_exclusive": 35660
+    },
+    {
+      "start": 35661,
+      "end_exclusive": 35665
+    },
+    {
+      "start": 35666,
+      "end_exclusive": 35670
+    },
+    {
+      "start": 35671,
+      "end_exclusive": 35698
+    },
+    {
+      "start": 35699,
+      "end_exclusive": 35715
+    },
+    {
+      "start": 35716,
+      "end_exclusive": 35723
+    },
+    {
+      "start": 35724,
+      "end_exclusive": 35729
+    },
+    {
+      "start": 35730,
+      "end_exclusive": 35736
+    },
+    {
+      "start": 35737,
+      "end_exclusive": 35768
+    },
+    {
+      "start": 35769,
+      "end_exclusive": 35779
+    },
+    {
+      "start": 35780,
+      "end_exclusive": 35782
+    },
+    {
+      "start": 35783,
+      "end_exclusive": 35804
+    },
+    {
+      "start": 35805,
+      "end_exclusive": 35806
+    },
+    {
+      "start": 35807,
+      "end_exclusive": 35811
+    },
+    {
+      "start": 35812,
+      "end_exclusive": 35814
+    },
+    {
+      "start": 35815,
+      "end_exclusive": 35831
+    },
+    {
+      "start": 35833,
+      "end_exclusive": 35837
+    },
+    {
+      "start": 35838,
+      "end_exclusive": 35844
+    },
+    {
+      "start": 35845,
+      "end_exclusive": 35852
+    },
+    {
+      "start": 35853,
+      "end_exclusive": 35856
+    },
+    {
+      "start": 35858,
+      "end_exclusive": 35863
+    },
+    {
+      "start": 35864,
+      "end_exclusive": 35875
+    },
+    {
+      "start": 35876,
+      "end_exclusive": 35881
+    },
+    {
+      "start": 35882,
+      "end_exclusive": 35921
+    },
+    {
+      "start": 35922,
+      "end_exclusive": 35934
+    },
+    {
+      "start": 35935,
+      "end_exclusive": 35953
+    },
+    {
+      "start": 35954,
+      "end_exclusive": 35963
+    },
+    {
+      "start": 35964,
+      "end_exclusive": 35969
+    },
+    {
+      "start": 35970,
+      "end_exclusive": 35979
+    },
+    {
+      "start": 35980,
+      "end_exclusive": 35985
+    },
+    {
+      "start": 35986,
+      "end_exclusive": 35990
+    },
+    {
+      "start": 35991,
+      "end_exclusive": 35998
+    },
+    {
+      "start": 35999,
+      "end_exclusive": 36008
+    },
+    {
+      "start": 36009,
+      "end_exclusive": 36014
+    },
+    {
+      "start": 36015,
+      "end_exclusive": 36021
+    },
+    {
+      "start": 36022,
+      "end_exclusive": 36026
+    },
+    {
+      "start": 36027,
+      "end_exclusive": 36033
+    },
+    {
+      "start": 36034,
+      "end_exclusive": 36038
+    },
+    {
+      "start": 36039,
+      "end_exclusive": 36057
+    },
+    {
+      "start": 36058,
+      "end_exclusive": 36078
+    },
+    {
+      "start": 36079,
+      "end_exclusive": 36093
+    },
+    {
+      "start": 36094,
+      "end_exclusive": 36098
+    },
+    {
+      "start": 36099,
+      "end_exclusive": 36113
+    },
+    {
+      "start": 36114,
+      "end_exclusive": 36118
+    },
+    {
+      "start": 36119,
+      "end_exclusive": 36130
+    },
+    {
+      "start": 36131,
+      "end_exclusive": 36136
+    },
+    {
+      "start": 36137,
+      "end_exclusive": 36139
+    },
+    {
+      "start": 36140,
+      "end_exclusive": 36143
+    },
+    {
+      "start": 36144,
+      "end_exclusive": 36146
+    },
+    {
+      "start": 36147,
+      "end_exclusive": 36150
+    },
+    {
+      "start": 36151,
+      "end_exclusive": 36153
+    },
+    {
+      "start": 36154,
+      "end_exclusive": 36157
+    },
+    {
+      "start": 36158,
+      "end_exclusive": 36160
+    },
+    {
+      "start": 36161,
+      "end_exclusive": 36163
+    },
+    {
+      "start": 36165,
+      "end_exclusive": 36166
+    },
+    {
+      "start": 36167,
+      "end_exclusive": 36182
+    },
+    {
+      "start": 36183,
+      "end_exclusive": 36187
+    },
+    {
+      "start": 36188,
+      "end_exclusive": 36192
+    },
+    {
+      "start": 36193,
+      "end_exclusive": 36197
+    },
+    {
+      "start": 36198,
+      "end_exclusive": 36202
+    },
+    {
+      "start": 36203,
+      "end_exclusive": 36213
+    },
+    {
+      "start": 36214,
+      "end_exclusive": 36224
+    },
+    {
+      "start": 36225,
+      "end_exclusive": 36234
+    },
+    {
+      "start": 36235,
+      "end_exclusive": 36239
+    },
+    {
+      "start": 36240,
+      "end_exclusive": 36260
+    },
+    {
+      "start": 36261,
+      "end_exclusive": 36276
+    },
+    {
+      "start": 36277,
+      "end_exclusive": 36288
+    },
+    {
+      "start": 36289,
+      "end_exclusive": 36293
+    },
+    {
+      "start": 36294,
+      "end_exclusive": 36311
+    },
+    {
+      "start": 36312,
+      "end_exclusive": 36323
+    },
+    {
+      "start": 36324,
+      "end_exclusive": 36338
+    },
+    {
+      "start": 36339,
+      "end_exclusive": 36341
+    },
+    {
+      "start": 36343,
+      "end_exclusive": 36348
+    },
+    {
+      "start": 36349,
+      "end_exclusive": 36365
+    },
+    {
+      "start": 36366,
+      "end_exclusive": 36369
+    },
+    {
+      "start": 36370,
+      "end_exclusive": 36390
+    },
+    {
+      "start": 36391,
+      "end_exclusive": 36396
+    },
+    {
+      "start": 36397,
+      "end_exclusive": 36404
+    },
+    {
+      "start": 36405,
+      "end_exclusive": 36477
+    },
+    {
+      "start": 36478,
+      "end_exclusive": 36484
+    },
+    {
+      "start": 36485,
+      "end_exclusive": 36496
+    },
+    {
+      "start": 36497,
+      "end_exclusive": 36514
+    },
+    {
+      "start": 36515,
+      "end_exclusive": 36517
+    },
+    {
+      "start": 36518,
+      "end_exclusive": 36521
+    },
+    {
+      "start": 36522,
+      "end_exclusive": 36602
+    },
+    {
+      "start": 36603,
+      "end_exclusive": 36610
+    },
+    {
+      "start": 36611,
+      "end_exclusive": 36616
+    },
+    {
+      "start": 36617,
+      "end_exclusive": 36620
+    },
+    {
+      "start": 36622,
+      "end_exclusive": 36629
+    },
+    {
+      "start": 36630,
+      "end_exclusive": 36654
+    },
+    {
+      "start": 36655,
+      "end_exclusive": 36683
+    },
+    {
+      "start": 36684,
+      "end_exclusive": 36687
+    },
+    {
+      "start": 36688,
+      "end_exclusive": 36707
+    },
+    {
+      "start": 40960,
+      "end_exclusive": 40977
+    },
+    {
+      "start": 40978,
+      "end_exclusive": 40983
+    },
+    {
+      "start": 40984,
+      "end_exclusive": 40985
+    },
+    {
+      "start": 40988,
+      "end_exclusive": 40989
+    },
+    {
+      "start": 40990,
+      "end_exclusive": 40991
+    },
+    {
+      "start": 40992,
+      "end_exclusive": 40993
+    },
+    {
+      "start": 40994,
+      "end_exclusive": 41008
+    },
+    {
+      "start": 41009,
+      "end_exclusive": 41044
+    },
+    {
+      "start": 41045,
+      "end_exclusive": 41080
+    },
+    {
+      "start": 41081,
+      "end_exclusive": 41116
+    },
+    {
+      "start": 41117,
+      "end_exclusive": 41152
+    },
+    {
+      "start": 41153,
+      "end_exclusive": 41188
+    },
+    {
+      "start": 41189,
+      "end_exclusive": 41224
+    },
+    {
+      "start": 41225,
+      "end_exclusive": 41260
+    },
+    {
+      "start": 41261,
+      "end_exclusive": 41296
+    },
+    {
+      "start": 41297,
+      "end_exclusive": 41332
+    },
+    {
+      "start": 41333,
+      "end_exclusive": 41338
+    },
+    {
+      "start": 41339,
+      "end_exclusive": 41342
+    },
+    {
+      "start": 41344,
+      "end_exclusive": 41345
+    },
+    {
+      "start": 41346,
+      "end_exclusive": 41349
+    },
+    {
+      "start": 41350,
+      "end_exclusive": 41352
+    },
+    {
+      "start": 41353,
+      "end_exclusive": 41356
+    },
+    {
+      "start": 41357,
+      "end_exclusive": 41359
+    },
+    {
+      "start": 41360,
+      "end_exclusive": 41363
+    },
+    {
+      "start": 41364,
+      "end_exclusive": 41366
+    },
+    {
+      "start": 41367,
+      "end_exclusive": 41370
+    },
+    {
+      "start": 41371,
+      "end_exclusive": 41373
+    },
+    {
+      "start": 41374,
+      "end_exclusive": 41377
+    },
+    {
+      "start": 41378,
+      "end_exclusive": 41380
+    },
+    {
+      "start": 41381,
+      "end_exclusive": 41384
+    },
+    {
+      "start": 41385,
+      "end_exclusive": 41387
+    },
+    {
+      "start": 41388,
+      "end_exclusive": 41391
+    },
+    {
+      "start": 41392,
+      "end_exclusive": 41394
+    },
+    {
+      "start": 41395,
+      "end_exclusive": 41398
+    },
+    {
+      "start": 41399,
+      "end_exclusive": 41403
+    },
+    {
+      "start": 41404,
+      "end_exclusive": 41407
+    },
+    {
+      "start": 41408,
+      "end_exclusive": 41411
+    },
+    {
+      "start": 41412,
+      "end_exclusive": 41415
+    },
+    {
+      "start": 41416,
+      "end_exclusive": 41419
+    },
+    {
+      "start": 41420,
+      "end_exclusive": 41423
+    },
+    {
+      "start": 41424,
+      "end_exclusive": 41427
+    },
+    {
+      "start": 41428,
+      "end_exclusive": 41431
+    },
+    {
+      "start": 41432,
+      "end_exclusive": 41435
+    },
+    {
+      "start": 41436,
+      "end_exclusive": 41439
+    },
+    {
+      "start": 41440,
+      "end_exclusive": 41445
+    },
+    {
+      "start": 41446,
+      "end_exclusive": 41449
+    },
+    {
+      "start": 41450,
+      "end_exclusive": 41453
+    },
+    {
+      "start": 41455,
+      "end_exclusive": 41458
+    },
+    {
+      "start": 41459,
+      "end_exclusive": 41462
+    },
+    {
+      "start": 41463,
+      "end_exclusive": 41466
+    },
+    {
+      "start": 41467,
+      "end_exclusive": 41470
+    },
+    {
+      "start": 41471,
+      "end_exclusive": 41474
+    },
+    {
+      "start": 41475,
+      "end_exclusive": 41478
+    },
+    {
+      "start": 41479,
+      "end_exclusive": 41482
+    },
+    {
+      "start": 41483,
+      "end_exclusive": 41499
+    },
+    {
+      "start": 41503,
+      "end_exclusive": 41513
+    },
+    {
+      "start": 41519,
+      "end_exclusive": 41531
+    },
+    {
+      "start": 41535,
+      "end_exclusive": 41547
+    },
+    {
+      "start": 41551,
+      "end_exclusive": 41559
+    },
+    {
+      "start": 41567,
+      "end_exclusive": 41578
+    },
+    {
+      "start": 41583,
+      "end_exclusive": 41587
+    },
+    {
+      "start": 569296,
+      "end_exclusive": 569300
+    }
+  ],
+  "browser_reserved_file_span": {
+    "start": 34110,
+    "end_exclusive": 42112
+  },
+  "legacy_gb6_os_patch_overlap_bytes": 0,
+  "runtime_review": {
+    "browser_owned_phys_code": "0x3D3E..0x4762 (2597 bytes)",
+    "browser_listing": "0x4800..0x579F",
+    "browser_resources": "0x5800..0x5A7E",
+    "browser_context": "0x5BF0..0x5C4B",
+    "gb6_decoder": "004B:7A20, file0x01AE20",
+    "gb6_label_and_hint": "file0x0BEE54,0x0BEE60; distinct from native screen-stack tables read by browser Exit",
+    "controller_byte": "native02476 only read through services, not changed by browser",
+    "eeprom_controller": "0299:8F7C retained; browser native selected-drive field is adjacent0299:8F7D"
+  },
+  "limitations": [
+    "Current browser was booted/tested with original IC15/OS controller path, not the selectable GB6 combo",
+    "No new ROM change is needed for the scoped image feature; keep the existing GB6-selectable ROM if using controller3",
+    "No binary byte collision does not establish shared-service/timing/input/stack compatibility",
+    "Combined baseline still must qualify GB6 selection/persistence, all controller modes, modal input and exit/cancel, and complete SDS/other retained repairs",
+    "The8002-byte browser census is a region in OS disk-loaded RAM, not free space in IC15 ROM",
+    "No combined firmware image or original file was written"
+  ]
+}

@@ -1,0 +1,494 @@
+{
+  "checkpoint": 29,
+  "qualification": "Static byte-checked original firmware; no new native invocation",
+  "source_sha256": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+  "regions": [
+    {
+      "name": "fixed-copy",
+      "page": 90,
+      "start": 27185,
+      "end": 27260,
+      "file_offset": 121393,
+      "bytes": "c3010ec02cc3010cc02efdfdfdfdfdfdfdfdfdfdfdfdfdfdfdfda10e0058c7011c0158a102c058c3011a0158a10024bcc3011801bcb1bcdac7011d01da8b01180100d7f9b3011d0100f8f0",
+      "instructions": [
+        {
+          "pc": 27185,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW2C, 0xc00e, TABLE[ZR]"
+        },
+        {
+          "pc": 27190,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW2E, 0xc00c, TABLE[ZR]"
+        },
+        {
+          "pc": 27195,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27196,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27197,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27198,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27199,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27200,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27201,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27202,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27203,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27204,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27205,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27206,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27207,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27208,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27209,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27210,
+          "length": 1,
+          "mnemonic": "NOP",
+          "operands": ""
+        },
+        {
+          "pc": 27211,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RW58, #0xe"
+        },
+        {
+          "pc": 27215,
+          "length": 5,
+          "mnemonic": "STB",
+          "operands": "R58, 0x11c, LOOKUP[ZR]"
+        },
+        {
+          "pc": 27220,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RW58, #0xc002"
+        },
+        {
+          "pc": 27224,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW58, 0x11a, TABLE[ZR]"
+        },
+        {
+          "pc": 27229,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RWBC, #0x2400"
+        },
+        {
+          "pc": 27233,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RWBC, 0x118, TABLE[ZR]"
+        },
+        {
+          "pc": 27238,
+          "length": 3,
+          "mnemonic": "LDB",
+          "operands": "RDA, #-0x44"
+        },
+        {
+          "pc": 27241,
+          "length": 5,
+          "mnemonic": "STB",
+          "operands": "RDA, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 27246,
+          "length": 5,
+          "mnemonic": "CMP",
+          "operands": "ZR, 0x118, TABLE[ZR]"
+        },
+        {
+          "pc": 27251,
+          "length": 2,
+          "mnemonic": "JNE",
+          "operands": "0x6a6e"
+        },
+        {
+          "pc": 27253,
+          "length": 5,
+          "mnemonic": "LDB",
+          "operands": "ZRlo, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 27258,
+          "length": 1,
+          "mnemonic": "CLRC",
+          "operands": ""
+        },
+        {
+          "pc": 27259,
+          "length": 1,
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    },
+    {
+      "name": "block-caller",
+      "page": 90,
+      "start": 28895,
+      "end": 28947,
+      "file_offset": 123103,
+      "bytes": "a1001242644228a4002a0d0828c301c01b28c301c21b2ab3011d0100090142c301180142a15a001ca1c1731eef065dcf010c01f0",
+      "instructions": [
+        {
+          "pc": 28895,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RW42, #0x1200"
+        },
+        {
+          "pc": 28899,
+          "length": 3,
+          "mnemonic": "ADD",
+          "operands": "RW28, RW42"
+        },
+        {
+          "pc": 28902,
+          "length": 3,
+          "mnemonic": "ADDC",
+          "operands": "RW2A, ZR"
+        },
+        {
+          "pc": 28905,
+          "length": 3,
+          "mnemonic": "SHLL",
+          "operands": "RL28, #0x8"
+        },
+        {
+          "pc": 28908,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW28, 0x1bc0, TABLE[ZR]"
+        },
+        {
+          "pc": 28913,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW2A, 0x1bc2, TABLE[ZR]"
+        },
+        {
+          "pc": 28918,
+          "length": 5,
+          "mnemonic": "LDB",
+          "operands": "ZRlo, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 28923,
+          "length": 3,
+          "mnemonic": "SHL",
+          "operands": "RW42, #0x1"
+        },
+        {
+          "pc": 28926,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW42, 0x118, TABLE[ZR]"
+        },
+        {
+          "pc": 28931,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RW1C, #0x5a"
+        },
+        {
+          "pc": 28935,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RW1E, #0x73c1"
+        },
+        {
+          "pc": 28939,
+          "length": 3,
+          "mnemonic": "LCALL",
+          "operands": "0xce14"
+        },
+        {
+          "pc": 28942,
+          "length": 4,
+          "mnemonic": "POP",
+          "operands": "0x10c, TABLE[ZR]"
+        },
+        {
+          "pc": 28946,
+          "length": 1,
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    },
+    {
+      "name": "wave-to-ram",
+      "page": 90,
+      "start": 28947,
+      "end": 28978,
+      "file_offset": 123155,
+      "bytes": "b3011d0100090142c301180142c7011d01488b01180100d7f9b3011d0100f0",
+      "instructions": [
+        {
+          "pc": 28947,
+          "length": 5,
+          "mnemonic": "LDB",
+          "operands": "ZRlo, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 28952,
+          "length": 3,
+          "mnemonic": "SHL",
+          "operands": "RW42, #0x1"
+        },
+        {
+          "pc": 28955,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW42, 0x118, TABLE[ZR]"
+        },
+        {
+          "pc": 28960,
+          "length": 5,
+          "mnemonic": "STB",
+          "operands": "R48, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 28965,
+          "length": 5,
+          "mnemonic": "CMP",
+          "operands": "ZR, 0x118, TABLE[ZR]"
+        },
+        {
+          "pc": 28970,
+          "length": 2,
+          "mnemonic": "JNE",
+          "operands": "0x7125"
+        },
+        {
+          "pc": 28972,
+          "length": 5,
+          "mnemonic": "LDB",
+          "operands": "ZRlo, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 28977,
+          "length": 1,
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    },
+    {
+      "name": "staging-wrapper",
+      "page": 90,
+      "start": 29633,
+      "end": 29665,
+      "file_offset": 123841,
+      "bytes": "c8dac8b0b1bcb0a10e0058c7011c0158a112d758c3011a01582825ccb0ccdaf0",
+      "instructions": [
+        {
+          "pc": 29633,
+          "length": 2,
+          "mnemonic": "PUSH",
+          "operands": "RWDA"
+        },
+        {
+          "pc": 29635,
+          "length": 2,
+          "mnemonic": "PUSH",
+          "operands": "RWB0"
+        },
+        {
+          "pc": 29637,
+          "length": 3,
+          "mnemonic": "LDB",
+          "operands": "RB0, #-0x44"
+        },
+        {
+          "pc": 29640,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RW58, #0xe"
+        },
+        {
+          "pc": 29644,
+          "length": 5,
+          "mnemonic": "STB",
+          "operands": "R58, 0x11c, LOOKUP[ZR]"
+        },
+        {
+          "pc": 29649,
+          "length": 4,
+          "mnemonic": "LD",
+          "operands": "RW58, #0xd712"
+        },
+        {
+          "pc": 29653,
+          "length": 5,
+          "mnemonic": "ST",
+          "operands": "RW58, 0x11a, TABLE[ZR]"
+        },
+        {
+          "pc": 29658,
+          "length": 2,
+          "mnemonic": "SCALL",
+          "operands": "0x7401"
+        },
+        {
+          "pc": 29660,
+          "length": 2,
+          "mnemonic": "POP",
+          "operands": "RWB0"
+        },
+        {
+          "pc": 29662,
+          "length": 2,
+          "mnemonic": "POP",
+          "operands": "RWDA"
+        },
+        {
+          "pc": 29664,
+          "length": 1,
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    },
+    {
+      "name": "dma-wait",
+      "page": 90,
+      "start": 29697,
+      "end": 29720,
+      "file_offset": 123905,
+      "bytes": "b3011d0100c7011d01b08b01180100d7f9b3011d0100f0",
+      "instructions": [
+        {
+          "pc": 29697,
+          "length": 5,
+          "mnemonic": "LDB",
+          "operands": "ZRlo, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 29702,
+          "length": 5,
+          "mnemonic": "STB",
+          "operands": "RB0, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 29707,
+          "length": 5,
+          "mnemonic": "CMP",
+          "operands": "ZR, 0x118, TABLE[ZR]"
+        },
+        {
+          "pc": 29712,
+          "length": 2,
+          "mnemonic": "JNE",
+          "operands": "0x740b"
+        },
+        {
+          "pc": 29714,
+          "length": 5,
+          "mnemonic": "LDB",
+          "operands": "ZRlo, 0x11d, LOOKUP[ZR]"
+        },
+        {
+          "pc": 29719,
+          "length": 1,
+          "mnemonic": "RET",
+          "operands": ""
+        }
+      ]
+    }
+  ],
+  "instruction_count": 70,
+  "native_driver_sha256": "aa7d972308c86e7c098401ae50337e1f9f7c592cc56ba35081711abf7d4528d0",
+  "decision": "Reuse the DMA mechanism; fixed staging wrappers and unbounded wait are not approved as a bounded importer service.",
+  "required_adapter": [
+    "Even nonzero byte count <=4096, never zero-encoded DMA length.",
+    "Source extent confined to owned RAM and destination extent confined to one reserved channel.",
+    "Explicit wave word address and physical CPU RAM source address.",
+    "Exclusive DMA ownership and preservation of caller selectors/scratch/interrupt state.",
+    "Bounded progress wait and qualified abort/cleanup before releasing allocation.",
+    "Native write-extent tests with distinct channel data and adjacent sentinels."
+  ],
+  "limitations": [
+    "No direct-call register/stack contract verified.",
+    "No physical DMA timing or abort guarantee.",
+    "No native deinterleaving or stereo publication.",
+    "No new firmware size measurement."
+  ]
+}

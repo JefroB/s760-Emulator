@@ -1,0 +1,2111 @@
+{
+  "passed": true,
+  "date": "2026-10-19",
+  "scope": "Experimental LCD short-name browse/mount/native Load/playback plus GB6 CRT cancellation/SDS regression; not complete LCD qualification",
+  "audit": {
+    "passed": true,
+    "firmware_sha256": "e798c0bf83cfe49a2c736a63686e1437acbede0999e76cb6dea04874042781bf",
+    "rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+    "exe_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+    "originals": {
+      "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+    },
+    "originals_unchanged": true,
+    "exact_rebuild": true,
+    "intervals": [
+      [
+        "SDS remote",
+        15678,
+        640
+      ],
+      [
+        "SDS local",
+        16318,
+        160
+      ],
+      [
+        "SDS cancel",
+        16478,
+        31
+      ],
+      [
+        "browser",
+        16512,
+        3637
+      ],
+      [
+        "help and identity strings",
+        21760,
+        280
+      ],
+      [
+        "LCD descriptor",
+        22096,
+        212
+      ],
+      [
+        "LCD temporary text",
+        22320,
+        26
+      ],
+      [
+        "catalog",
+        22512,
+        224
+      ],
+      [
+        "resources",
+        22736,
+        739
+      ],
+      [
+        "context",
+        23488,
+        92
+      ],
+      [
+        "native operations labels",
+        23580,
+        100
+      ]
+    ],
+    "named_bytes": 6141,
+    "residual_bytes": 1861,
+    "code_adjacent_bytes": 1611,
+    "branch_targets": [
+      [
+        33927,
+        37342
+      ],
+      [
+        33953,
+        34453
+      ],
+      [
+        33956,
+        33961
+      ],
+      [
+        33958,
+        34435
+      ],
+      [
+        33975,
+        33993
+      ],
+      [
+        34002,
+        34104
+      ],
+      [
+        34008,
+        34013
+      ],
+      [
+        34010,
+        34174
+      ],
+      [
+        34017,
+        34092
+      ],
+      [
+        34023,
+        34028
+      ],
+      [
+        34025,
+        34447
+      ],
+      [
+        34057,
+        35651
+      ],
+      [
+        34064,
+        34069
+      ],
+      [
+        34066,
+        34376
+      ],
+      [
+        34069,
+        35836
+      ],
+      [
+        34076,
+        34081
+      ],
+      [
+        34078,
+        34376
+      ],
+      [
+        34081,
+        34453
+      ],
+      [
+        34084,
+        34089
+      ],
+      [
+        34086,
+        34435
+      ],
+      [
+        34089,
+        34386
+      ],
+      [
+        34101,
+        34386
+      ],
+      [
+        34126,
+        34151
+      ],
+      [
+        34136,
+        37549
+      ],
+      [
+        34148,
+        34447
+      ],
+      [
+        34159,
+        37549
+      ],
+      [
+        34171,
+        34447
+      ],
+      [
+        34178,
+        34183
+      ],
+      [
+        34180,
+        34326
+      ],
+      [
+        34187,
+        34192
+      ],
+      [
+        34189,
+        34349
+      ],
+      [
+        34208,
+        34213
+      ],
+      [
+        34210,
+        34447
+      ],
+      [
+        34218,
+        35958
+      ],
+      [
+        34225,
+        34230
+      ],
+      [
+        34227,
+        34376
+      ],
+      [
+        34230,
+        34453
+      ],
+      [
+        34233,
+        34238
+      ],
+      [
+        34235,
+        34435
+      ],
+      [
+        34257,
+        35363
+      ],
+      [
+        34299,
+        37541
+      ],
+      [
+        34314,
+        34320
+      ],
+      [
+        34320,
+        37553
+      ],
+      [
+        34323,
+        34447
+      ],
+      [
+        34335,
+        34381
+      ],
+      [
+        34346,
+        34069
+      ],
+      [
+        34366,
+        34447
+      ],
+      [
+        34373,
+        34069
+      ],
+      [
+        34386,
+        35363
+      ],
+      [
+        34399,
+        35046
+      ],
+      [
+        34410,
+        34432
+      ],
+      [
+        34420,
+        37549
+      ],
+      [
+        34432,
+        34447
+      ],
+      [
+        34444,
+        34381
+      ],
+      [
+        34461,
+        34471
+      ],
+      [
+        34479,
+        37342
+      ],
+      [
+        34496,
+        34539
+      ],
+      [
+        34533,
+        37541
+      ],
+      [
+        34536,
+        37553
+      ],
+      [
+        34547,
+        37342
+      ],
+      [
+        34563,
+        34558
+      ],
+      [
+        34565,
+        35363
+      ],
+      [
+        34568,
+        35046
+      ],
+      [
+        34589,
+        34611
+      ],
+      [
+        34599,
+        37549
+      ],
+      [
+        34619,
+        37342
+      ],
+      [
+        34630,
+        34668
+      ],
+      [
+        34640,
+        34667
+      ],
+      [
+        34655,
+        37549
+      ],
+      [
+        34676,
+        34691
+      ],
+      [
+        34688,
+        33930
+      ],
+      [
+        34699,
+        34712
+      ],
+      [
+        34705,
+        34733
+      ],
+      [
+        34709,
+        34725
+      ],
+      [
+        34715,
+        34733
+      ],
+      [
+        34721,
+        34733
+      ],
+      [
+        34730,
+        34734
+      ],
+      [
+        34750,
+        34745
+      ],
+      [
+        34780,
+        37545
+      ],
+      [
+        34798,
+        34759
+      ],
+      [
+        34821,
+        37545
+      ],
+      [
+        34842,
+        34912
+      ],
+      [
+        34900,
+        37545
+      ],
+      [
+        34956,
+        34948
+      ],
+      [
+        34984,
+        37545
+      ],
+      [
+        35006,
+        34937
+      ],
+      [
+        35033,
+        37545
+      ],
+      [
+        35054,
+        35060
+      ],
+      [
+        35056,
+        34734
+      ],
+      [
+        35087,
+        37545
+      ],
+      [
+        35123,
+        37545
+      ],
+      [
+        35137,
+        35109
+      ],
+      [
+        35145,
+        35064
+      ],
+      [
+        35160,
+        35221
+      ],
+      [
+        35170,
+        35221
+      ],
+      [
+        35185,
+        35221
+      ],
+      [
+        35195,
+        35221
+      ],
+      [
+        35205,
+        35221
+      ],
+      [
+        35215,
+        35221
+      ],
+      [
+        35238,
+        37545
+      ],
+      [
+        35263,
+        35279
+      ],
+      [
+        35273,
+        35279
+      ],
+      [
+        35296,
+        37545
+      ],
+      [
+        35336,
+        37545
+      ],
+      [
+        35360,
+        35316
+      ],
+      [
+        35391,
+        35386
+      ],
+      [
+        35397,
+        35460
+      ],
+      [
+        35403,
+        35477
+      ],
+      [
+        35409,
+        35414
+      ],
+      [
+        35411,
+        35574
+      ],
+      [
+        35418,
+        35423
+      ],
+      [
+        35420,
+        35596
+      ],
+      [
+        35439,
+        35444
+      ],
+      [
+        35441,
+        35635
+      ],
+      [
+        35457,
+        35600
+      ],
+      [
+        35474,
+        35600
+      ],
+      [
+        35481,
+        35490
+      ],
+      [
+        35487,
+        35600
+      ],
+      [
+        35494,
+        35518
+      ],
+      [
+        35500,
+        35505
+      ],
+      [
+        35502,
+        35635
+      ],
+      [
+        35515,
+        35600
+      ],
+      [
+        35527,
+        35635
+      ],
+      [
+        35542,
+        35600
+      ],
+      [
+        35552,
+        35561
+      ],
+      [
+        35558,
+        35600
+      ],
+      [
+        35565,
+        35600
+      ],
+      [
+        35571,
+        35600
+      ],
+      [
+        35587,
+        35600
+      ],
+      [
+        35593,
+        35600
+      ],
+      [
+        35613,
+        35635
+      ],
+      [
+        35618,
+        35625
+      ],
+      [
+        35623,
+        35628
+      ],
+      [
+        35633,
+        35607
+      ],
+      [
+        35645,
+        35650
+      ],
+      [
+        35647,
+        35376
+      ],
+      [
+        35658,
+        36110
+      ],
+      [
+        35665,
+        35670
+      ],
+      [
+        35667,
+        35835
+      ],
+      [
+        35674,
+        35679
+      ],
+      [
+        35676,
+        36373
+      ],
+      [
+        35688,
+        35693
+      ],
+      [
+        35690,
+        36373
+      ],
+      [
+        35702,
+        35707
+      ],
+      [
+        35704,
+        36373
+      ],
+      [
+        35716,
+        35721
+      ],
+      [
+        35718,
+        36373
+      ],
+      [
+        35730,
+        35735
+      ],
+      [
+        35732,
+        36373
+      ],
+      [
+        35748,
+        35753
+      ],
+      [
+        35750,
+        36373
+      ],
+      [
+        35760,
+        36110
+      ],
+      [
+        35767,
+        35835
+      ],
+      [
+        35773,
+        35778
+      ],
+      [
+        35775,
+        36373
+      ],
+      [
+        35787,
+        35792
+      ],
+      [
+        35789,
+        36373
+      ],
+      [
+        35800,
+        35805
+      ],
+      [
+        35802,
+        36373
+      ],
+      [
+        35826,
+        35831
+      ],
+      [
+        35828,
+        36373
+      ],
+      [
+        35833,
+        35817
+      ],
+      [
+        35848,
+        36110
+      ],
+      [
+        35855,
+        35957
+      ],
+      [
+        35861,
+        35866
+      ],
+      [
+        35863,
+        36373
+      ],
+      [
+        35877,
+        35882
+      ],
+      [
+        35879,
+        36373
+      ],
+      [
+        35895,
+        35902
+      ],
+      [
+        35922,
+        36110
+      ],
+      [
+        35929,
+        35957
+      ],
+      [
+        35939,
+        35944
+      ],
+      [
+        35941,
+        36373
+      ],
+      [
+        35952,
+        35957
+      ],
+      [
+        35954,
+        36373
+      ],
+      [
+        35970,
+        36110
+      ],
+      [
+        35982,
+        36059
+      ],
+      [
+        35988,
+        36060
+      ],
+      [
+        35995,
+        36059
+      ],
+      [
+        36002,
+        36110
+      ],
+      [
+        36009,
+        36034
+      ],
+      [
+        36015,
+        36059
+      ],
+      [
+        36024,
+        36110
+      ],
+      [
+        36029,
+        35988
+      ],
+      [
+        36031,
+        36373
+      ],
+      [
+        36041,
+        36110
+      ],
+      [
+        36048,
+        36059
+      ],
+      [
+        36054,
+        36059
+      ],
+      [
+        36056,
+        36373
+      ],
+      [
+        36067,
+        37022
+      ],
+      [
+        36079,
+        36102
+      ],
+      [
+        36091,
+        36107
+      ],
+      [
+        36095,
+        36067
+      ],
+      [
+        36148,
+        36160
+      ],
+      [
+        36172,
+        36186
+      ],
+      [
+        36194,
+        36203
+      ],
+      [
+        36200,
+        36238
+      ],
+      [
+        36206,
+        36229
+      ],
+      [
+        36211,
+        36238
+      ],
+      [
+        36325,
+        36378
+      ],
+      [
+        36328,
+        37255
+      ],
+      [
+        36350,
+        36372
+      ],
+      [
+        36355,
+        36373
+      ],
+      [
+        36366,
+        36372
+      ],
+      [
+        36378,
+        37255
+      ],
+      [
+        36390,
+        36397
+      ],
+      [
+        36408,
+        36413
+      ],
+      [
+        36410,
+        36759
+      ],
+      [
+        36477,
+        36955
+      ],
+      [
+        36480,
+        36485
+      ],
+      [
+        36482,
+        36787
+      ],
+      [
+        36496,
+        36501
+      ],
+      [
+        36498,
+        36766
+      ],
+      [
+        36512,
+        36477
+      ],
+      [
+        36514,
+        36859
+      ],
+      [
+        36517,
+        36522
+      ],
+      [
+        36519,
+        36787
+      ],
+      [
+        36525,
+        36530
+      ],
+      [
+        36527,
+        36773
+      ],
+      [
+        36538,
+        36888
+      ],
+      [
+        36541,
+        36546
+      ],
+      [
+        36543,
+        36787
+      ],
+      [
+        36548,
+        36514
+      ],
+      [
+        36550,
+        36859
+      ],
+      [
+        36553,
+        36558
+      ],
+      [
+        36555,
+        36787
+      ],
+      [
+        36561,
+        36566
+      ],
+      [
+        36563,
+        36708
+      ],
+      [
+        36569,
+        36598
+      ],
+      [
+        36574,
+        36579
+      ],
+      [
+        36576,
+        36773
+      ],
+      [
+        36582,
+        36587
+      ],
+      [
+        36584,
+        36780
+      ],
+      [
+        36595,
+        36698
+      ],
+      [
+        36601,
+        36606
+      ],
+      [
+        36603,
+        36773
+      ],
+      [
+        36609,
+        36614
+      ],
+      [
+        36611,
+        36780
+      ],
+      [
+        36622,
+        36690
+      ],
+      [
+        36628,
+        36653
+      ],
+      [
+        36638,
+        36648
+      ],
+      [
+        36650,
+        36665
+      ],
+      [
+        36657,
+        36665
+      ],
+      [
+        36663,
+        36678
+      ],
+      [
+        36671,
+        36698
+      ],
+      [
+        36675,
+        36698
+      ],
+      [
+        36681,
+        36665
+      ],
+      [
+        36686,
+        36665
+      ],
+      [
+        36698,
+        36888
+      ],
+      [
+        36701,
+        36787
+      ],
+      [
+        36705,
+        36550
+      ],
+      [
+        36713,
+        36888
+      ],
+      [
+        36716,
+        36787
+      ],
+      [
+        36718,
+        36859
+      ],
+      [
+        36721,
+        36787
+      ],
+      [
+        36726,
+        36773
+      ],
+      [
+        36733,
+        36888
+      ],
+      [
+        36736,
+        36787
+      ],
+      [
+        36738,
+        36955
+      ],
+      [
+        36741,
+        36787
+      ],
+      [
+        36754,
+        36738
+      ],
+      [
+        36756,
+        36787
+      ],
+      [
+        36763,
+        36787
+      ],
+      [
+        36770,
+        36787
+      ],
+      [
+        36777,
+        36787
+      ],
+      [
+        36784,
+        36787
+      ],
+      [
+        36790,
+        36858
+      ],
+      [
+        36848,
+        36858
+      ],
+      [
+        36852,
+        36837
+      ],
+      [
+        36859,
+        36955
+      ],
+      [
+        36862,
+        36954
+      ],
+      [
+        36884,
+        36859
+      ],
+      [
+        36896,
+        36955
+      ],
+      [
+        36899,
+        36954
+      ],
+      [
+        36912,
+        36896
+      ],
+      [
+        36917,
+        36923
+      ],
+      [
+        36919,
+        36859
+      ],
+      [
+        36931,
+        36955
+      ],
+      [
+        36934,
+        36954
+      ],
+      [
+        36947,
+        36931
+      ],
+      [
+        36966,
+        36971
+      ],
+      [
+        36968,
+        37022
+      ],
+      [
+        36993,
+        37010
+      ],
+      [
+        37002,
+        37010
+      ],
+      [
+        37006,
+        37016
+      ],
+      [
+        37097,
+        37255
+      ],
+      [
+        37131,
+        37149
+      ],
+      [
+        37263,
+        37341
+      ],
+      [
+        37274,
+        37341
+      ],
+      [
+        37307,
+        37341
+      ],
+      [
+        37541,
+        8320
+      ],
+      [
+        37545,
+        52756
+      ],
+      [
+        37549,
+        52717
+      ],
+      [
+        37553,
+        61608
+      ]
+    ],
+    "wire_bytes": 4000,
+    "retained_bytes": 224,
+    "filename_bytes": 32,
+    "implicit_index_contract": "All D7 wire indices must equal0..count-1 before publication; mismatch latches C+82 and rejects after successful drain. No filtering/reordering.",
+    "gb6_v9": {
+      "boot_banner_check": 1,
+      "boot_eeprom_check": 1,
+      "boot_setup4_inc": 1,
+      "boot_setup5_inc": 1,
+      "os_main_loop_poll_dispatch": 18,
+      "os_modal_poll_dispatch": 19,
+      "os_lcd_status_selector": 21,
+      "os_controller_hw_init": 56,
+      "os_mouse_poll_entry": 6,
+      "os_gb6_poll_stub": 41
+    },
+    "no_patch_byte_overlap": true
+  },
+  "lcd": {
+    "passed": true,
+    "firmware_sha256": "e798c0bf83cfe49a2c736a63686e1437acbede0999e76cb6dea04874042781bf",
+    "states": [
+      {
+        "name": "boot",
+        "screen": 50,
+        "controller": 0,
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "native-disk",
+        "screen": 247,
+        "controller": 0,
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "collections0",
+        "screen": 245,
+        "controller": 0,
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "catalog0",
+        "screen": 245,
+        "controller": 0,
+        "mode": 1,
+        "target": 1,
+        "count": 100,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "scroll-two",
+        "screen": 245,
+        "controller": 0,
+        "mode": 1,
+        "target": 1,
+        "count": 100,
+        "first": 0,
+        "scroll": 2,
+        "allocations": 0
+      },
+      {
+        "name": "next0",
+        "screen": 245,
+        "controller": 0,
+        "mode": 1,
+        "target": 1,
+        "count": 100,
+        "first": 7,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "closed",
+        "screen": 247,
+        "controller": 0,
+        "mode": 1,
+        "target": 1,
+        "count": 100,
+        "first": 7,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "fresh-collections0",
+        "screen": 245,
+        "controller": 0,
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "fresh-catalog0",
+        "screen": 245,
+        "controller": 0,
+        "mode": 1,
+        "target": 1,
+        "count": 100,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "mount-zero0",
+        "screen": 247,
+        "controller": 0,
+        "mode": 0,
+        "target": 1,
+        "count": 100,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "native-load-commands",
+        "screen": 247,
+        "controller": 0,
+        "mode": 0,
+        "target": 1,
+        "count": 100,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 0
+      },
+      {
+        "name": "loaded",
+        "screen": 247,
+        "controller": 0,
+        "mode": 0,
+        "target": 1,
+        "count": 100,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 13
+      },
+      {
+        "name": "perform",
+        "screen": 50,
+        "controller": 0,
+        "mode": 0,
+        "target": 1,
+        "count": 100,
+        "first": 0,
+        "scroll": 0,
+        "allocations": 13
+      }
+    ],
+    "rows": [
+      {
+        "transport": 0,
+        "seconds": 32.97216875,
+        "status": 0,
+        "cdb": "12000000600000000000",
+        "length": 50
+      },
+      {
+        "transport": 0,
+        "seconds": 32.976620875,
+        "status": 0,
+        "cdb": "1a083100300000000000",
+        "length": 48
+      },
+      {
+        "transport": 0,
+        "seconds": 32.977849,
+        "status": 0,
+        "cdb": "da000000000000000000",
+        "length": 1
+      },
+      {
+        "transport": 0,
+        "seconds": 33.319303375,
+        "status": 0,
+        "cdb": "d7000000000000000000",
+        "length": 4000
+      },
+      {
+        "transport": 0,
+        "seconds": 38.23536925,
+        "status": 0,
+        "cdb": "da000000000000000000",
+        "length": 1
+      },
+      {
+        "transport": 0,
+        "seconds": 38.576616375,
+        "status": 0,
+        "cdb": "d7000000000000000000",
+        "length": 4000
+      },
+      {
+        "transport": 0,
+        "seconds": 46.271918,
+        "status": 0,
+        "cdb": "12000000600000000000",
+        "length": 50
+      },
+      {
+        "transport": 0,
+        "seconds": 46.276370125,
+        "status": 0,
+        "cdb": "1a083100300000000000",
+        "length": 48
+      },
+      {
+        "transport": 0,
+        "seconds": 46.27759825,
+        "status": 0,
+        "cdb": "da000000000000000000",
+        "length": 1
+      },
+      {
+        "transport": 0,
+        "seconds": 46.619069375,
+        "status": 0,
+        "cdb": "d7000000000000000000",
+        "length": 4000
+      },
+      {
+        "transport": 0,
+        "seconds": 48.8347815,
+        "status": 0,
+        "cdb": "d8000000000000000000",
+        "length": 0
+      },
+      {
+        "transport": 0,
+        "seconds": 48.855499,
+        "status": 2,
+        "cdb": "00000000000000000000",
+        "length": 0
+      },
+      {
+        "transport": 0,
+        "seconds": 48.857610125,
+        "status": 0,
+        "cdb": "03000000120000000000",
+        "length": 18
+      },
+      {
+        "transport": 0,
+        "seconds": 48.878343125,
+        "status": 2,
+        "cdb": "00000000000000000000",
+        "length": 0
+      },
+      {
+        "transport": 0,
+        "seconds": 48.88045425,
+        "status": 0,
+        "cdb": "03000000120000000000",
+        "length": 18
+      },
+      {
+        "transport": 0,
+        "seconds": 48.9011705,
+        "status": 0,
+        "cdb": "00000000000000000000",
+        "length": 0
+      },
+      {
+        "transport": 0,
+        "seconds": 48.902696625,
+        "status": 0,
+        "cdb": "25000000000000000000",
+        "length": 8
+      }
+    ],
+    "exact_sample_bytes": 119808,
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "library_unchanged": true,
+    "scope": "Native mode0 LCD short-name trial; first page/scroll/Next/reopen/index0/native Load/playback; not full LCD/long-name qualification"
+  },
+  "crt": {
+    "passed": true,
+    "firmware_sha256": "e798c0bf83cfe49a2c736a63686e1437acbede0999e76cb6dea04874042781bf",
+    "states": [
+      {
+        "name": "boot",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "collections",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "listing-cancelled",
+        "mode": 0,
+        "error": 7,
+        "cancel": 1,
+        "cancel_wire_count": 1397,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "listing-retry",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 1397,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "last-page",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 1397,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "switch-interrupted",
+        "mode": 0,
+        "error": 7,
+        "cancel": 1,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "fresh-catalog",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "retry-last-page",
+        "mode": 1,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 0,
+        "handoff": 0,
+        "native_drive": 8,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "handoff",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 0
+      },
+      {
+        "name": "loaded",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 13
+      },
+      {
+        "name": "perform",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 13
+      },
+      {
+        "name": "sds-cancel",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 13
+      },
+      {
+        "name": "sds-reserved",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 14
+      },
+      {
+        "name": "sds-published",
+        "mode": 0,
+        "error": 0,
+        "cancel": 0,
+        "cancel_wire_count": 0,
+        "mount_may_have_changed": 1,
+        "handoff": 30209,
+        "native_drive": 1,
+        "allocation_cursor": 14
+      }
+    ],
+    "rows": [
+      {
+        "seconds": 28.889215625,
+        "cdb": "12000000600000000000",
+        "transport": 0,
+        "length": 50,
+        "status": 0
+      },
+      {
+        "seconds": 28.89366775,
+        "cdb": "1a083100300000000000",
+        "transport": 0,
+        "length": 48,
+        "status": 0
+      },
+      {
+        "seconds": 28.894895875,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 29.245596125,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 35.13918375,
+        "cdb": "12000000600000000000",
+        "transport": 0,
+        "length": 50,
+        "status": 0
+      },
+      {
+        "seconds": 35.14421825,
+        "cdb": "1a083100300000000000",
+        "transport": 0,
+        "length": 48,
+        "status": 0
+      },
+      {
+        "seconds": 35.145446375,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 35.496802875,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 39.6525545,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 40.003702,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 41.0521145,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 41.403620375,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 42.452032875,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 42.80331475,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 43.95215875,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 44.303216625,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 45.452060625,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 45.8028945,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 46.88569725,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 47.23569475,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 48.286832125,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 48.636605625,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 49.68667175,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 50.03622125,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 51.119024,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 51.4683345,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 52.519471875,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 52.868558375,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 53.903044625,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 54.251907125,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 55.3030445,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 55.651683,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 56.768878375,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 57.117292875,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 58.1695015,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1,
+        "status": 0
+      },
+      {
+        "seconds": 58.517752,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 4000,
+        "status": 0
+      },
+      {
+        "seconds": 60.06933925,
+        "cdb": "d8630000000000000000",
+        "transport": 0,
+        "length": 0,
+        "status": 0
+      }
+    ],
+    "physical_inputs": [
+      {
+        "seconds": 29.000663375,
+        "down": true,
+        "mode": "list",
+        "reads": 255,
+        "reason": "D7-data-byte1200"
+      },
+      {
+        "seconds": 29.245596125,
+        "down": false,
+        "mode": "list",
+        "reads": 255,
+        "reason": "bounded-command-return"
+      },
+      {
+        "seconds": 60.0685175,
+        "down": true,
+        "mode": "switch",
+        "reads": 0,
+        "reason": "D8-command-first-byte"
+      },
+      {
+        "seconds": 60.083365,
+        "down": false,
+        "mode": "switch",
+        "reads": 0,
+        "reason": "guest-Exit-latch-observed"
+      }
+    ],
+    "all_code_preserved": true,
+    "library_unchanged": true,
+    "listing_cancel_drains4000": true,
+    "post_d8_no_follow_on_commands": true,
+    "explicit_retry_native_load": true,
+    "exact_sample_bytes": 119808,
+    "exact_sds_bytes": 160,
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "limitations": [
+      "SCSI callbacks remain masked; no full IRQ/physical timing qualification",
+      "Interruption after D8 may change mounted media; no rollback or automatic native Load",
+      "Native load/save/format and relocated sender operation ownership still open"
+    ]
+  },
+  "ram": [
+    {
+      "snapshot": "frame-01.ram",
+      "sha256": "d38831a928236ebe200d8dea078217e0b0bc1ce51b2573593e9e6ea4112b0026",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-02.ram",
+      "sha256": "0935a769837877b8ada5e4205580e14c8f8c85164f09adaba7ed2dbf31184ff3",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-03.ram",
+      "sha256": "708a123c8f9133808f1667cb1aecb2b26f8d4dd6bf5f60f3f7fd1bc3724a268e",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-04.ram",
+      "sha256": "8b9b0f5c2a6f163d30f1a8d4e4e8f7789c15ef99900ba2b1d940d9e88074349d",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-05.ram",
+      "sha256": "d9a8e888d95f58929714ee723ef5a16fd4d4ffb48e8835e0decd1cac5a5ec760",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-06.ram",
+      "sha256": "e4b856e07e9428fa5a6ddae193ea88055e1f9890d21cd5972ffcf8d154c09825",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-07.ram",
+      "sha256": "b9044b7f91db35131904f0522805cb71e7276f0d3f328099a9456367f2dc08ad",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-08.ram",
+      "sha256": "6eae6620f3ab7cbea4712e28a317b1467ab2ccdc98a16d6a4a594c3f781190b6",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-09.ram",
+      "sha256": "229d439d0e1b3d00b6c23382205c05f888b7355ce806aa2fa95a80afd5025df6",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-10.ram",
+      "sha256": "366084d8af87041a194c0cac7fe5058b83f0bb708ce94d8d279b23449ae10268",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-11.ram",
+      "sha256": "43127311bd776127c59ad0060db2740da4628630ff1cacb36127fec4e405f82c",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-12.ram",
+      "sha256": "f1f08965b5aff80842a533c90ee10befcf61a3694d655709d04402d484978607",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    },
+    {
+      "snapshot": "frame-13.ram",
+      "sha256": "55067a9c7805417ab48c5286b0781f3a63f50975861b3aa141c048de9f9471cd",
+      "browser_code_and_lcd_pointer_header_preserved": true
+    }
+  ],
+  "sources": {
+    "build_browser.py": "cd5b39525ec769f22f8e50cda29fb70ccab762295111ba7e2ff0bb5e536037b7",
+    "build_full.py": "ec208f3b4c22eb704ce72f2ad9056e29457cedffd6085bddeb3a6daf96ad4356",
+    "audit.py": "b670011b9ff1efa96255e759a1ff3c05d6d11bf825e31d7e7666032bd5e27524",
+    "observer.lua": "d250d52fdec80a401a29f371fb136c2d618f9c1028fc061e512144d74307ffda",
+    "run_lcd.py": "16d82b38e64782f67e78ab06ce449a3cbff135ff45729a3da3e675d7eb739482",
+    "run_cancel.py": "c8139028eece4afd580e72b1cc495184e1ba10b3dfffc3b770f8caa960be4292",
+    "probe_panel.py": "8a1c1b895c4e646cade89f8f1011ffad428e322b2685aa8b66e6b11ff451a4c4"
+  },
+  "layout": {
+    "code_bytes": 3637,
+    "lcd_descriptor_physical": 22096,
+    "lcd_descriptor_bytes": 212,
+    "lcd_temporary_physical": 22320,
+    "lcd_temporary_bytes": 26,
+    "original_crt_baseline_sha256": "32143f104e4225d3b343f16b7bcd9221a7216ab5b2af60357cfba86cf99d98ca"
+  },
+  "limits": [
+    "LCD displays21 name bytes; long-name identity/full view and collisions remain open",
+    "Only page0/Next7, seven-row scroll2, reopen and index0 ISO native Load qualified on LCD",
+    "LCD IMG, all100 forward/back, Disk options, cancellation, Save System cold state remain open",
+    "Mouse/IRQ/session broad matrices retain earlier-hash scope",
+    "No RC100 input, full stack/ISR or hardware claim"
+  ]
+}

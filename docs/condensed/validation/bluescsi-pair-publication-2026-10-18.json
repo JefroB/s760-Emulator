@@ -1,0 +1,1923 @@
+{
+  "checkpoint": 36,
+  "passed": true,
+  "build": {
+    "sha256": "d5df8827994664cf766d61eedd204c62817f49aad210091bd23f5e8cf08ce152",
+    "code_bytes": 1167,
+    "template": "4253313a506169725465737420207f4c00080000000800000096dd000000ea000004ea000200000000000d00013c00004253313a506169725465737420207f520008ea000008ea000096c7010000d4010004d401020000000d000d00013c0000",
+    "template_evidence_sha256": "e71b89bde467036752426b4c8ca6f00964aa4658bf281cedc5f204ce5da08793",
+    "labels": {
+      "channel_0": 844,
+      "channel_1": 914,
+      "publish": 974,
+      "occupied": 1019,
+      "dma_failed": 1040,
+      "failed": 1052,
+      "exit": 1061,
+      "copy": 1149,
+      "reserve": 1163,
+      "rollback": 1206,
+      "fill": 1222,
+      "fill_loop": 1230,
+      "fill_pattern": 1241,
+      "fill_pattern_loop": 1249,
+      "adapter": 1264,
+      "invalid": 1394,
+      "cancel": 1399,
+      "busy": 1404,
+      "dma": 1409,
+      "poll": 1451,
+      "done": 1477
+    },
+    "decoded": [
+      {
+        "pc": 318,
+        "bytes": "f4",
+        "text": "PUSHA "
+      },
+      {
+        "pc": 319,
+        "bytes": "cb010a01",
+        "text": "PUSH 0x10a, TABLE[ZR]"
+      },
+      {
+        "pc": 323,
+        "bytes": "cb010c01",
+        "text": "PUSH 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 327,
+        "bytes": "c81c",
+        "text": "PUSH RW1C"
+      },
+      {
+        "pc": 329,
+        "bytes": "c81e",
+        "text": "PUSH RW1E"
+      },
+      {
+        "pc": 331,
+        "bytes": "c820",
+        "text": "PUSH RW20"
+      },
+      {
+        "pc": 333,
+        "bytes": "c822",
+        "text": "PUSH RW22"
+      },
+      {
+        "pc": 335,
+        "bytes": "c824",
+        "text": "PUSH RW24"
+      },
+      {
+        "pc": 337,
+        "bytes": "c826",
+        "text": "PUSH RW26"
+      },
+      {
+        "pc": 339,
+        "bytes": "c828",
+        "text": "PUSH RW28"
+      },
+      {
+        "pc": 341,
+        "bytes": "c82a",
+        "text": "PUSH RW2A"
+      },
+      {
+        "pc": 343,
+        "bytes": "c82c",
+        "text": "PUSH RW2C"
+      },
+      {
+        "pc": 345,
+        "bytes": "c82e",
+        "text": "PUSH RW2E"
+      },
+      {
+        "pc": 347,
+        "bytes": "c830",
+        "text": "PUSH RW30"
+      },
+      {
+        "pc": 349,
+        "bytes": "c832",
+        "text": "PUSH RW32"
+      },
+      {
+        "pc": 351,
+        "bytes": "c834",
+        "text": "PUSH RW34"
+      },
+      {
+        "pc": 353,
+        "bytes": "c836",
+        "text": "PUSH RW36"
+      },
+      {
+        "pc": 355,
+        "bytes": "c838",
+        "text": "PUSH RW38"
+      },
+      {
+        "pc": 357,
+        "bytes": "c83a",
+        "text": "PUSH RW3A"
+      },
+      {
+        "pc": 359,
+        "bytes": "c83c",
+        "text": "PUSH RW3C"
+      },
+      {
+        "pc": 361,
+        "bytes": "c83e",
+        "text": "PUSH RW3E"
+      },
+      {
+        "pc": 363,
+        "bytes": "c840",
+        "text": "PUSH RW40"
+      },
+      {
+        "pc": 365,
+        "bytes": "c842",
+        "text": "PUSH RW42"
+      },
+      {
+        "pc": 367,
+        "bytes": "c844",
+        "text": "PUSH RW44"
+      },
+      {
+        "pc": 369,
+        "bytes": "c846",
+        "text": "PUSH RW46"
+      },
+      {
+        "pc": 371,
+        "bytes": "c848",
+        "text": "PUSH RW48"
+      },
+      {
+        "pc": 373,
+        "bytes": "c84a",
+        "text": "PUSH RW4A"
+      },
+      {
+        "pc": 375,
+        "bytes": "c84c",
+        "text": "PUSH RW4C"
+      },
+      {
+        "pc": 377,
+        "bytes": "c84e",
+        "text": "PUSH RW4E"
+      },
+      {
+        "pc": 379,
+        "bytes": "c850",
+        "text": "PUSH RW50"
+      },
+      {
+        "pc": 381,
+        "bytes": "c852",
+        "text": "PUSH RW52"
+      },
+      {
+        "pc": 383,
+        "bytes": "c854",
+        "text": "PUSH RW54"
+      },
+      {
+        "pc": 385,
+        "bytes": "c856",
+        "text": "PUSH RW56"
+      },
+      {
+        "pc": 387,
+        "bytes": "c858",
+        "text": "PUSH RW58"
+      },
+      {
+        "pc": 389,
+        "bytes": "c85a",
+        "text": "PUSH RW5A"
+      },
+      {
+        "pc": 391,
+        "bytes": "c85c",
+        "text": "PUSH RW5C"
+      },
+      {
+        "pc": 393,
+        "bytes": "c85e",
+        "text": "PUSH RW5E"
+      },
+      {
+        "pc": 395,
+        "bytes": "c8da",
+        "text": "PUSH RWDA"
+      },
+      {
+        "pc": 397,
+        "bytes": "b10014",
+        "text": "LDB WSR, #0x0"
+      },
+      {
+        "pc": 400,
+        "bytes": "a10f001c",
+        "text": "LD RW1C, #0xf"
+      },
+      {
+        "pc": 404,
+        "bytes": "c3010a011c",
+        "text": "ST RW1C, 0x10a, TABLE[ZR]"
+      },
+      {
+        "pc": 409,
+        "bytes": "a14a031c",
+        "text": "LD RW1C, #0x34a"
+      },
+      {
+        "pc": 413,
+        "bytes": "c3010c011c",
+        "text": "ST RW1C, 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 418,
+        "bytes": "b301708244",
+        "text": "LDB R44, 0x8270, LOOKUP[ZR]"
+      },
+      {
+        "pc": 423,
+        "bytes": "997f44",
+        "text": "CMPB R44, #0x7f"
+      },
+      {
+        "pc": 426,
+        "bytes": "df03",
+        "text": "JE 0x1af"
+      },
+      {
+        "pc": 428,
+        "bytes": "e74c02",
+        "text": "LJMP 0x3fb"
+      },
+      {
+        "pc": 431,
+        "bytes": "b301a08244",
+        "text": "LDB R44, 0x82a0, LOOKUP[ZR]"
+      },
+      {
+        "pc": 436,
+        "bytes": "997f44",
+        "text": "CMPB R44, #0x7f"
+      },
+      {
+        "pc": 439,
+        "bytes": "df03",
+        "text": "JE 0x1bc"
+      },
+      {
+        "pc": 441,
+        "bytes": "e73f02",
+        "text": "LJMP 0x3fb"
+      },
+      {
+        "pc": 444,
+        "bytes": "a301163638",
+        "text": "LD RW38, 0x3616, TABLE[ZR]"
+      },
+      {
+        "pc": 449,
+        "bytes": "890d0038",
+        "text": "CMP RW38, #0xd"
+      },
+      {
+        "pc": 453,
+        "bytes": "df03",
+        "text": "JE 0x1ca"
+      },
+      {
+        "pc": 455,
+        "bytes": "e75202",
+        "text": "LJMP 0x41c"
+      },
+      {
+        "pc": 458,
+        "bytes": "a199021c",
+        "text": "LD RW1C, #0x299"
+      },
+      {
+        "pc": 462,
+        "bytes": "c3010c011c",
+        "text": "ST RW1C, 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 467,
+        "bytes": "a3019e8f3a",
+        "text": "LD RW3A, 0x8f9e, TABLE[ZR]"
+      },
+      {
+        "pc": 472,
+        "bytes": "a301a08f3c",
+        "text": "LD RW3C, 0x8fa0, TABLE[ZR]"
+      },
+      {
+        "pc": 477,
+        "bytes": "a11a0020",
+        "text": "LD RW20, #0x1a"
+      },
+      {
+        "pc": 481,
+        "bytes": "efa702",
+        "text": "LCALL 0x48b"
+      },
+      {
+        "pc": 484,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 488,
+        "bytes": "df03",
+        "text": "JE 0x1ed"
+      },
+      {
+        "pc": 490,
+        "bytes": "e72f02",
+        "text": "LJMP 0x41c"
+      },
+      {
+        "pc": 493,
+        "bytes": "a1105e48",
+        "text": "LD RW48, #0x5e10"
+      },
+      {
+        "pc": 497,
+        "bytes": "a1005f4a",
+        "text": "LD RW4A, #0x5f00"
+      },
+      {
+        "pc": 501,
+        "bytes": "a130004c",
+        "text": "LD RW4C, #0x30"
+      },
+      {
+        "pc": 505,
+        "bytes": "ef8102",
+        "text": "LCALL 0x47d"
+      },
+      {
+        "pc": 508,
+        "bytes": "a301105f44",
+        "text": "LD RW44, 0x5f10, TABLE[ZR]"
+      },
+      {
+        "pc": 513,
+        "bytes": "a301125f46",
+        "text": "LD RW46, 0x5f12, TABLE[ZR]"
+      },
+      {
+        "pc": 518,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 522,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 526,
+        "bytes": "c301105f44",
+        "text": "ST RW44, 0x5f10, TABLE[ZR]"
+      },
+      {
+        "pc": 531,
+        "bytes": "c301125f46",
+        "text": "ST RW46, 0x5f12, TABLE[ZR]"
+      },
+      {
+        "pc": 536,
+        "bytes": "a301145f44",
+        "text": "LD RW44, 0x5f14, TABLE[ZR]"
+      },
+      {
+        "pc": 541,
+        "bytes": "a301165f46",
+        "text": "LD RW46, 0x5f16, TABLE[ZR]"
+      },
+      {
+        "pc": 546,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 550,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 554,
+        "bytes": "c301145f44",
+        "text": "ST RW44, 0x5f14, TABLE[ZR]"
+      },
+      {
+        "pc": 559,
+        "bytes": "c301165f46",
+        "text": "ST RW46, 0x5f16, TABLE[ZR]"
+      },
+      {
+        "pc": 564,
+        "bytes": "a301185f44",
+        "text": "LD RW44, 0x5f18, TABLE[ZR]"
+      },
+      {
+        "pc": 569,
+        "bytes": "a3011a5f46",
+        "text": "LD RW46, 0x5f1a, TABLE[ZR]"
+      },
+      {
+        "pc": 574,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 578,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 582,
+        "bytes": "c301185f44",
+        "text": "ST RW44, 0x5f18, TABLE[ZR]"
+      },
+      {
+        "pc": 587,
+        "bytes": "c3011a5f46",
+        "text": "ST RW46, 0x5f1a, TABLE[ZR]"
+      },
+      {
+        "pc": 592,
+        "bytes": "a3011c5f44",
+        "text": "LD RW44, 0x5f1c, TABLE[ZR]"
+      },
+      {
+        "pc": 597,
+        "bytes": "a3011e5f46",
+        "text": "LD RW46, 0x5f1e, TABLE[ZR]"
+      },
+      {
+        "pc": 602,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 606,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 610,
+        "bytes": "c3011c5f44",
+        "text": "ST RW44, 0x5f1c, TABLE[ZR]"
+      },
+      {
+        "pc": 615,
+        "bytes": "c3011e5f46",
+        "text": "ST RW46, 0x5f1e, TABLE[ZR]"
+      },
+      {
+        "pc": 620,
+        "bytes": "a301205f44",
+        "text": "LD RW44, 0x5f20, TABLE[ZR]"
+      },
+      {
+        "pc": 625,
+        "bytes": "a301225f46",
+        "text": "LD RW46, 0x5f22, TABLE[ZR]"
+      },
+      {
+        "pc": 630,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 634,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 638,
+        "bytes": "c301205f44",
+        "text": "ST RW44, 0x5f20, TABLE[ZR]"
+      },
+      {
+        "pc": 643,
+        "bytes": "c301225f46",
+        "text": "ST RW46, 0x5f22, TABLE[ZR]"
+      },
+      {
+        "pc": 648,
+        "bytes": "a301285f44",
+        "text": "LD RW44, 0x5f28, TABLE[ZR]"
+      },
+      {
+        "pc": 653,
+        "bytes": "650d0044",
+        "text": "ADD RW44, #0xd"
+      },
+      {
+        "pc": 657,
+        "bytes": "c301285f44",
+        "text": "ST RW44, 0x5f28, TABLE[ZR]"
+      },
+      {
+        "pc": 662,
+        "bytes": "a301405f44",
+        "text": "LD RW44, 0x5f40, TABLE[ZR]"
+      },
+      {
+        "pc": 667,
+        "bytes": "a301425f46",
+        "text": "LD RW46, 0x5f42, TABLE[ZR]"
+      },
+      {
+        "pc": 672,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 676,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 680,
+        "bytes": "c301405f44",
+        "text": "ST RW44, 0x5f40, TABLE[ZR]"
+      },
+      {
+        "pc": 685,
+        "bytes": "c301425f46",
+        "text": "ST RW46, 0x5f42, TABLE[ZR]"
+      },
+      {
+        "pc": 690,
+        "bytes": "a301445f44",
+        "text": "LD RW44, 0x5f44, TABLE[ZR]"
+      },
+      {
+        "pc": 695,
+        "bytes": "a301465f46",
+        "text": "LD RW46, 0x5f46, TABLE[ZR]"
+      },
+      {
+        "pc": 700,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 704,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 708,
+        "bytes": "c301445f44",
+        "text": "ST RW44, 0x5f44, TABLE[ZR]"
+      },
+      {
+        "pc": 713,
+        "bytes": "c301465f46",
+        "text": "ST RW46, 0x5f46, TABLE[ZR]"
+      },
+      {
+        "pc": 718,
+        "bytes": "a301485f44",
+        "text": "LD RW44, 0x5f48, TABLE[ZR]"
+      },
+      {
+        "pc": 723,
+        "bytes": "a3014a5f46",
+        "text": "LD RW46, 0x5f4a, TABLE[ZR]"
+      },
+      {
+        "pc": 728,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 732,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 736,
+        "bytes": "c301485f44",
+        "text": "ST RW44, 0x5f48, TABLE[ZR]"
+      },
+      {
+        "pc": 741,
+        "bytes": "c3014a5f46",
+        "text": "ST RW46, 0x5f4a, TABLE[ZR]"
+      },
+      {
+        "pc": 746,
+        "bytes": "a3014c5f44",
+        "text": "LD RW44, 0x5f4c, TABLE[ZR]"
+      },
+      {
+        "pc": 751,
+        "bytes": "a3014e5f46",
+        "text": "LD RW46, 0x5f4e, TABLE[ZR]"
+      },
+      {
+        "pc": 756,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 760,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 764,
+        "bytes": "c3014c5f44",
+        "text": "ST RW44, 0x5f4c, TABLE[ZR]"
+      },
+      {
+        "pc": 769,
+        "bytes": "c3014e5f46",
+        "text": "ST RW46, 0x5f4e, TABLE[ZR]"
+      },
+      {
+        "pc": 774,
+        "bytes": "a301505f44",
+        "text": "LD RW44, 0x5f50, TABLE[ZR]"
+      },
+      {
+        "pc": 779,
+        "bytes": "a301525f46",
+        "text": "LD RW46, 0x5f52, TABLE[ZR]"
+      },
+      {
+        "pc": 784,
+        "bytes": "65000044",
+        "text": "ADD RW44, #0x0"
+      },
+      {
+        "pc": 788,
+        "bytes": "a5ea0046",
+        "text": "ADDC RW46, #0xea"
+      },
+      {
+        "pc": 792,
+        "bytes": "c301505f44",
+        "text": "ST RW44, 0x5f50, TABLE[ZR]"
+      },
+      {
+        "pc": 797,
+        "bytes": "c301525f46",
+        "text": "ST RW46, 0x5f52, TABLE[ZR]"
+      },
+      {
+        "pc": 802,
+        "bytes": "a301585f44",
+        "text": "LD RW44, 0x5f58, TABLE[ZR]"
+      },
+      {
+        "pc": 807,
+        "bytes": "650d0044",
+        "text": "ADD RW44, #0xd"
+      },
+      {
+        "pc": 811,
+        "bytes": "c301585f44",
+        "text": "ST RW44, 0x5f58, TABLE[ZR]"
+      },
+      {
+        "pc": 816,
+        "bytes": "a1010044",
+        "text": "LD RW44, #0x1"
+      },
+      {
+        "pc": 820,
+        "bytes": "c301005e44",
+        "text": "ST RW44, 0x5e00, TABLE[ZR]"
+      },
+      {
+        "pc": 825,
+        "bytes": "a100124c",
+        "text": "LD RW4C, #0x1200"
+      },
+      {
+        "pc": 829,
+        "bytes": "ef9901",
+        "text": "LCALL 0x4d9"
+      },
+      {
+        "pc": 832,
+        "bytes": "a108ea2c",
+        "text": "LD RW2C, #0xea08"
+      },
+      {
+        "pc": 836,
+        "bytes": "a1000034",
+        "text": "LD RW34, #0x0"
+      },
+      {
+        "pc": 840,
+        "bytes": "a11d0036",
+        "text": "LD RW36, #0x1d"
+      },
+      {
+        "pc": 844,
+        "bytes": "a1404928",
+        "text": "LD RW28, #0x4940"
+      },
+      {
+        "pc": 848,
+        "bytes": "a100102a",
+        "text": "LD RW2A, #0x1000"
+      },
+      {
+        "pc": 852,
+        "bytes": "ef2a02",
+        "text": "LCALL 0x581"
+      },
+      {
+        "pc": 855,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 859,
+        "bytes": "df03",
+        "text": "JE 0x360"
+      },
+      {
+        "pc": 861,
+        "bytes": "e7b000",
+        "text": "LJMP 0x410"
+      },
+      {
+        "pc": 864,
+        "bytes": "6500082c",
+        "text": "ADD RW2C, #0x800"
+      },
+      {
+        "pc": 868,
+        "bytes": "a5000034",
+        "text": "ADDC RW34, #0x0"
+      },
+      {
+        "pc": 872,
+        "bytes": "0536",
+        "text": "DEC RW36"
+      },
+      {
+        "pc": 874,
+        "bytes": "df03",
+        "text": "JE 0x36f"
+      },
+      {
+        "pc": 876,
+        "bytes": "e7ddff",
+        "text": "LJMP 0x34c"
+      },
+      {
+        "pc": 879,
+        "bytes": "a100042a",
+        "text": "LD RW2A, #0x400"
+      },
+      {
+        "pc": 883,
+        "bytes": "ef0b02",
+        "text": "LCALL 0x581"
+      },
+      {
+        "pc": 886,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 890,
+        "bytes": "df03",
+        "text": "JE 0x37f"
+      },
+      {
+        "pc": 892,
+        "bytes": "e79100",
+        "text": "LJMP 0x410"
+      },
+      {
+        "pc": 895,
+        "bytes": "a100424c",
+        "text": "LD RW4C, #0x4200"
+      },
+      {
+        "pc": 899,
+        "bytes": "ef5301",
+        "text": "LCALL 0x4d9"
+      },
+      {
+        "pc": 902,
+        "bytes": "a108d42c",
+        "text": "LD RW2C, #0xd408"
+      },
+      {
+        "pc": 906,
+        "bytes": "a1010034",
+        "text": "LD RW34, #0x1"
+      },
+      {
+        "pc": 910,
+        "bytes": "a11d0036",
+        "text": "LD RW36, #0x1d"
+      },
+      {
+        "pc": 914,
+        "bytes": "a1404928",
+        "text": "LD RW28, #0x4940"
+      },
+      {
+        "pc": 918,
+        "bytes": "a100102a",
+        "text": "LD RW2A, #0x1000"
+      },
+      {
+        "pc": 922,
+        "bytes": "efe401",
+        "text": "LCALL 0x581"
+      },
+      {
+        "pc": 925,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 929,
+        "bytes": "df03",
+        "text": "JE 0x3a6"
+      },
+      {
+        "pc": 931,
+        "bytes": "e76a00",
+        "text": "LJMP 0x410"
+      },
+      {
+        "pc": 934,
+        "bytes": "6500082c",
+        "text": "ADD RW2C, #0x800"
+      },
+      {
+        "pc": 938,
+        "bytes": "a5000034",
+        "text": "ADDC RW34, #0x0"
+      },
+      {
+        "pc": 942,
+        "bytes": "0536",
+        "text": "DEC RW36"
+      },
+      {
+        "pc": 944,
+        "bytes": "df03",
+        "text": "JE 0x3b5"
+      },
+      {
+        "pc": 946,
+        "bytes": "e7ddff",
+        "text": "LJMP 0x392"
+      },
+      {
+        "pc": 949,
+        "bytes": "a100042a",
+        "text": "LD RW2A, #0x400"
+      },
+      {
+        "pc": 953,
+        "bytes": "efc501",
+        "text": "LCALL 0x581"
+      },
+      {
+        "pc": 956,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 960,
+        "bytes": "df03",
+        "text": "JE 0x3c5"
+      },
+      {
+        "pc": 962,
+        "bytes": "e74b00",
+        "text": "LJMP 0x410"
+      },
+      {
+        "pc": 965,
+        "bytes": "a1020044",
+        "text": "LD RW44, #0x2"
+      },
+      {
+        "pc": 969,
+        "bytes": "c301005e44",
+        "text": "ST RW44, 0x5e00, TABLE[ZR]"
+      },
+      {
+        "pc": 974,
+        "bytes": "a14a031c",
+        "text": "LD RW1C, #0x34a"
+      },
+      {
+        "pc": 978,
+        "bytes": "c3010c011c",
+        "text": "ST RW1C, 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 983,
+        "bytes": "a1005f48",
+        "text": "LD RW48, #0x5f00"
+      },
+      {
+        "pc": 987,
+        "bytes": "a170824a",
+        "text": "LD RW4A, #0x8270"
+      },
+      {
+        "pc": 991,
+        "bytes": "a130004c",
+        "text": "LD RW4C, #0x30"
+      },
+      {
+        "pc": 995,
+        "bytes": "ef9700",
+        "text": "LCALL 0x47d"
+      },
+      {
+        "pc": 998,
+        "bytes": "a1030044",
+        "text": "LD RW44, #0x3"
+      },
+      {
+        "pc": 1002,
+        "bytes": "c301005e44",
+        "text": "ST RW44, 0x5e00, TABLE[ZR]"
+      },
+      {
+        "pc": 1007,
+        "bytes": "a102b544",
+        "text": "LD RW44, #0xb502"
+      },
+      {
+        "pc": 1011,
+        "bytes": "c301f05e44",
+        "text": "ST RW44, 0x5ef0, TABLE[ZR]"
+      },
+      {
+        "pc": 1016,
+        "bytes": "e72a00",
+        "text": "LJMP 0x425"
+      },
+      {
+        "pc": 1019,
+        "bytes": "a1040044",
+        "text": "LD RW44, #0x4"
+      },
+      {
+        "pc": 1023,
+        "bytes": "c301005e44",
+        "text": "ST RW44, 0x5e00, TABLE[ZR]"
+      },
+      {
+        "pc": 1028,
+        "bytes": "a103b544",
+        "text": "LD RW44, #0xb503"
+      },
+      {
+        "pc": 1032,
+        "bytes": "c301f05e44",
+        "text": "ST RW44, 0x5ef0, TABLE[ZR]"
+      },
+      {
+        "pc": 1037,
+        "bytes": "e71500",
+        "text": "LJMP 0x425"
+      },
+      {
+        "pc": 1040,
+        "bytes": "a1ffb544",
+        "text": "LD RW44, #0xb5ff"
+      },
+      {
+        "pc": 1044,
+        "bytes": "c301f05e44",
+        "text": "ST RW44, 0x5ef0, TABLE[ZR]"
+      },
+      {
+        "pc": 1049,
+        "bytes": "e70900",
+        "text": "LJMP 0x425"
+      },
+      {
+        "pc": 1052,
+        "bytes": "a1adde44",
+        "text": "LD RW44, #0xdead"
+      },
+      {
+        "pc": 1056,
+        "bytes": "c301f05e44",
+        "text": "ST RW44, 0x5ef0, TABLE[ZR]"
+      },
+      {
+        "pc": 1061,
+        "bytes": "ccda",
+        "text": "POP RWDA"
+      },
+      {
+        "pc": 1063,
+        "bytes": "cc5e",
+        "text": "POP RW5E"
+      },
+      {
+        "pc": 1065,
+        "bytes": "cc5c",
+        "text": "POP RW5C"
+      },
+      {
+        "pc": 1067,
+        "bytes": "cc5a",
+        "text": "POP RW5A"
+      },
+      {
+        "pc": 1069,
+        "bytes": "cc58",
+        "text": "POP RW58"
+      },
+      {
+        "pc": 1071,
+        "bytes": "cc56",
+        "text": "POP RW56"
+      },
+      {
+        "pc": 1073,
+        "bytes": "cc54",
+        "text": "POP RW54"
+      },
+      {
+        "pc": 1075,
+        "bytes": "cc52",
+        "text": "POP RW52"
+      },
+      {
+        "pc": 1077,
+        "bytes": "cc50",
+        "text": "POP RW50"
+      },
+      {
+        "pc": 1079,
+        "bytes": "cc4e",
+        "text": "POP RW4E"
+      },
+      {
+        "pc": 1081,
+        "bytes": "cc4c",
+        "text": "POP RW4C"
+      },
+      {
+        "pc": 1083,
+        "bytes": "cc4a",
+        "text": "POP RW4A"
+      },
+      {
+        "pc": 1085,
+        "bytes": "cc48",
+        "text": "POP RW48"
+      },
+      {
+        "pc": 1087,
+        "bytes": "cc46",
+        "text": "POP RW46"
+      },
+      {
+        "pc": 1089,
+        "bytes": "cc44",
+        "text": "POP RW44"
+      },
+      {
+        "pc": 1091,
+        "bytes": "cc42",
+        "text": "POP RW42"
+      },
+      {
+        "pc": 1093,
+        "bytes": "cc40",
+        "text": "POP RW40"
+      },
+      {
+        "pc": 1095,
+        "bytes": "cc3e",
+        "text": "POP RW3E"
+      },
+      {
+        "pc": 1097,
+        "bytes": "cc3c",
+        "text": "POP RW3C"
+      },
+      {
+        "pc": 1099,
+        "bytes": "cc3a",
+        "text": "POP RW3A"
+      },
+      {
+        "pc": 1101,
+        "bytes": "cc38",
+        "text": "POP RW38"
+      },
+      {
+        "pc": 1103,
+        "bytes": "cc36",
+        "text": "POP RW36"
+      },
+      {
+        "pc": 1105,
+        "bytes": "cc34",
+        "text": "POP RW34"
+      },
+      {
+        "pc": 1107,
+        "bytes": "cc32",
+        "text": "POP RW32"
+      },
+      {
+        "pc": 1109,
+        "bytes": "cc30",
+        "text": "POP RW30"
+      },
+      {
+        "pc": 1111,
+        "bytes": "cc2e",
+        "text": "POP RW2E"
+      },
+      {
+        "pc": 1113,
+        "bytes": "cc2c",
+        "text": "POP RW2C"
+      },
+      {
+        "pc": 1115,
+        "bytes": "cc2a",
+        "text": "POP RW2A"
+      },
+      {
+        "pc": 1117,
+        "bytes": "cc28",
+        "text": "POP RW28"
+      },
+      {
+        "pc": 1119,
+        "bytes": "cc26",
+        "text": "POP RW26"
+      },
+      {
+        "pc": 1121,
+        "bytes": "cc24",
+        "text": "POP RW24"
+      },
+      {
+        "pc": 1123,
+        "bytes": "cc22",
+        "text": "POP RW22"
+      },
+      {
+        "pc": 1125,
+        "bytes": "cc20",
+        "text": "POP RW20"
+      },
+      {
+        "pc": 1127,
+        "bytes": "cc1e",
+        "text": "POP RW1E"
+      },
+      {
+        "pc": 1129,
+        "bytes": "cc1c",
+        "text": "POP RW1C"
+      },
+      {
+        "pc": 1131,
+        "bytes": "cf010c01",
+        "text": "POP 0x10c, TABLE[ZR]"
+      },
+      {
+        "pc": 1135,
+        "bytes": "cf010a01",
+        "text": "POP 0x10a, TABLE[ZR]"
+      },
+      {
+        "pc": 1139,
+        "bytes": "f5",
+        "text": "POPA "
+      },
+      {
+        "pc": 1140,
+        "bytes": "a171011c",
+        "text": "LD RW1C, #0x171"
+      },
+      {
+        "pc": 1144,
+        "bytes": "a15e9b1e",
+        "text": "LD RW1E, #0x9b5e"
+      },
+      {
+        "pc": 1148,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1149,
+        "bytes": "a24944",
+        "text": "LD RW44, [RW48]+"
+      },
+      {
+        "pc": 1152,
+        "bytes": "c24b44",
+        "text": "ST RW44, [RW4A]+"
+      },
+      {
+        "pc": 1155,
+        "bytes": "054c",
+        "text": "DEC RW4C"
+      },
+      {
+        "pc": 1157,
+        "bytes": "df03",
+        "text": "JE 0x48a"
+      },
+      {
+        "pc": 1159,
+        "bytes": "e7f3ff",
+        "text": "LJMP 0x47d"
+      },
+      {
+        "pc": 1162,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1163,
+        "bytes": "a301183644",
+        "text": "LD RW44, 0x3618, TABLE[ZR]"
+      },
+      {
+        "pc": 1168,
+        "bytes": "883844",
+        "text": "CMP RW44, RW38"
+      },
+      {
+        "pc": 1171,
+        "bytes": "db03",
+        "text": "JC 0x498"
+      },
+      {
+        "pc": 1173,
+        "bytes": "e7da00",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1176,
+        "bytes": "683844",
+        "text": "SUB RW44, RW38"
+      },
+      {
+        "pc": 1179,
+        "bytes": "884420",
+        "text": "CMP RW20, RW44"
+      },
+      {
+        "pc": 1182,
+        "bytes": "d103",
+        "text": "JNH 0x4a3"
+      },
+      {
+        "pc": 1184,
+        "bytes": "e7cf00",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1187,
+        "bytes": "a03844",
+        "text": "LD RW44, RW38"
+      },
+      {
+        "pc": 1190,
+        "bytes": "642044",
+        "text": "ADD RW44, RW20"
+      },
+      {
+        "pc": 1193,
+        "bytes": "c301163644",
+        "text": "ST RW44, 0x3616, TABLE[ZR]"
+      },
+      {
+        "pc": 1198,
+        "bytes": "c3019e8f44",
+        "text": "ST RW44, 0x8f9e, TABLE[ZR]"
+      },
+      {
+        "pc": 1203,
+        "bytes": "013e",
+        "text": "CLR RW3E"
+      },
+      {
+        "pc": 1205,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1206,
+        "bytes": "c301163638",
+        "text": "ST RW38, 0x3616, TABLE[ZR]"
+      },
+      {
+        "pc": 1211,
+        "bytes": "c3019e8f3a",
+        "text": "ST RW3A, 0x8f9e, TABLE[ZR]"
+      },
+      {
+        "pc": 1216,
+        "bytes": "c301a08f3c",
+        "text": "ST RW3C, 0x8fa0, TABLE[ZR]"
+      },
+      {
+        "pc": 1221,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1222,
+        "bytes": "a1404d48",
+        "text": "LD RW48, #0x4d40"
+      },
+      {
+        "pc": 1226,
+        "bytes": "a100084a",
+        "text": "LD RW4A, #0x800"
+      },
+      {
+        "pc": 1230,
+        "bytes": "c2494c",
+        "text": "ST RW4C, [RW48]+"
+      },
+      {
+        "pc": 1233,
+        "bytes": "054a",
+        "text": "DEC RW4A"
+      },
+      {
+        "pc": 1235,
+        "bytes": "df03",
+        "text": "JE 0x4d8"
+      },
+      {
+        "pc": 1237,
+        "bytes": "e7f6ff",
+        "text": "LJMP 0x4ce"
+      },
+      {
+        "pc": 1240,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1241,
+        "bytes": "a1404d48",
+        "text": "LD RW48, #0x4d40"
+      },
+      {
+        "pc": 1245,
+        "bytes": "a100084a",
+        "text": "LD RW4A, #0x800"
+      },
+      {
+        "pc": 1249,
+        "bytes": "c2494c",
+        "text": "ST RW4C, [RW48]+"
+      },
+      {
+        "pc": 1252,
+        "bytes": "6501014c",
+        "text": "ADD RW4C, #0x101"
+      },
+      {
+        "pc": 1256,
+        "bytes": "054a",
+        "text": "DEC RW4A"
+      },
+      {
+        "pc": 1258,
+        "bytes": "df03",
+        "text": "JE 0x4ef"
+      },
+      {
+        "pc": 1260,
+        "bytes": "e7f2ff",
+        "text": "LJMP 0x4e1"
+      },
+      {
+        "pc": 1263,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1264,
+        "bytes": "89000032",
+        "text": "CMP RW32, #0x0"
+      },
+      {
+        "pc": 1268,
+        "bytes": "df03",
+        "text": "JE 0x4f9"
+      },
+      {
+        "pc": 1270,
+        "bytes": "e77e00",
+        "text": "LJMP 0x577"
+      },
+      {
+        "pc": 1273,
+        "bytes": "8900002a",
+        "text": "CMP RW2A, #0x0"
+      },
+      {
+        "pc": 1277,
+        "bytes": "d703",
+        "text": "JNE 0x502"
+      },
+      {
+        "pc": 1279,
+        "bytes": "e77000",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1282,
+        "bytes": "8900102a",
+        "text": "CMP RW2A, #0x1000"
+      },
+      {
+        "pc": 1286,
+        "bytes": "d103",
+        "text": "JNH 0x50b"
+      },
+      {
+        "pc": 1288,
+        "bytes": "e76700",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1291,
+        "bytes": "a02a44",
+        "text": "LD RW44, RW2A"
+      },
+      {
+        "pc": 1294,
+        "bytes": "61010044",
+        "text": "AND RW44, #0x1"
+      },
+      {
+        "pc": 1298,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 1302,
+        "bytes": "df03",
+        "text": "JE 0x51b"
+      },
+      {
+        "pc": 1304,
+        "bytes": "e75700",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1307,
+        "bytes": "89404928",
+        "text": "CMP RW28, #0x4940"
+      },
+      {
+        "pc": 1311,
+        "bytes": "db03",
+        "text": "JC 0x524"
+      },
+      {
+        "pc": 1313,
+        "bytes": "e74e00",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1316,
+        "bytes": "89405928",
+        "text": "CMP RW28, #0x5940"
+      },
+      {
+        "pc": 1320,
+        "bytes": "d103",
+        "text": "JNH 0x52d"
+      },
+      {
+        "pc": 1322,
+        "bytes": "e74500",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1325,
+        "bytes": "a1405944",
+        "text": "LD RW44, #0x5940"
+      },
+      {
+        "pc": 1329,
+        "bytes": "682844",
+        "text": "SUB RW44, RW28"
+      },
+      {
+        "pc": 1332,
+        "bytes": "88442a",
+        "text": "CMP RW2A, RW44"
+      },
+      {
+        "pc": 1335,
+        "bytes": "d103",
+        "text": "JNH 0x53c"
+      },
+      {
+        "pc": 1337,
+        "bytes": "e73600",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1340,
+        "bytes": "882e2c",
+        "text": "CMP RW2C, RW2E"
+      },
+      {
+        "pc": 1343,
+        "bytes": "db03",
+        "text": "JC 0x544"
+      },
+      {
+        "pc": 1345,
+        "bytes": "e72e00",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1348,
+        "bytes": "88302c",
+        "text": "CMP RW2C, RW30"
+      },
+      {
+        "pc": 1351,
+        "bytes": "d103",
+        "text": "JNH 0x54c"
+      },
+      {
+        "pc": 1353,
+        "bytes": "e72600",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1356,
+        "bytes": "a03044",
+        "text": "LD RW44, RW30"
+      },
+      {
+        "pc": 1359,
+        "bytes": "682c44",
+        "text": "SUB RW44, RW2C"
+      },
+      {
+        "pc": 1362,
+        "bytes": "a02a46",
+        "text": "LD RW46, RW2A"
+      },
+      {
+        "pc": 1365,
+        "bytes": "080146",
+        "text": "SHR RW46, #0x1"
+      },
+      {
+        "pc": 1368,
+        "bytes": "884446",
+        "text": "CMP RW46, RW44"
+      },
+      {
+        "pc": 1371,
+        "bytes": "d103",
+        "text": "JNH 0x560"
+      },
+      {
+        "pc": 1373,
+        "bytes": "e71200",
+        "text": "LJMP 0x572"
+      },
+      {
+        "pc": 1376,
+        "bytes": "a301180144",
+        "text": "LD RW44, 0x118, TABLE[ZR]"
+      },
+      {
+        "pc": 1381,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 1385,
+        "bytes": "df03",
+        "text": "JE 0x56e"
+      },
+      {
+        "pc": 1387,
+        "bytes": "e70e00",
+        "text": "LJMP 0x57c"
+      },
+      {
+        "pc": 1390,
+        "bytes": "ef1000",
+        "text": "LCALL 0x581"
+      },
+      {
+        "pc": 1393,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1394,
+        "bytes": "a101003e",
+        "text": "LD RW3E, #0x1"
+      },
+      {
+        "pc": 1398,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1399,
+        "bytes": "a103003e",
+        "text": "LD RW3E, #0x3"
+      },
+      {
+        "pc": 1403,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1404,
+        "bytes": "a104003e",
+        "text": "LD RW3E, #0x4"
+      },
+      {
+        "pc": 1408,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1409,
+        "bytes": "b3011d0100",
+        "text": "LDB ZRlo, 0x11d, LOOKUP[ZR]"
+      },
+      {
+        "pc": 1414,
+        "bytes": "c3010ec02c",
+        "text": "ST RW2C, 0xc00e, TABLE[ZR]"
+      },
+      {
+        "pc": 1419,
+        "bytes": "c3010cc034",
+        "text": "ST RW34, 0xc00c, TABLE[ZR]"
+      },
+      {
+        "pc": 1424,
+        "bytes": "c3011a0128",
+        "text": "ST RW28, 0x11a, TABLE[ZR]"
+      },
+      {
+        "pc": 1429,
+        "bytes": "c7011c0100",
+        "text": "STB ZRlo, 0x11c, LOOKUP[ZR]"
+      },
+      {
+        "pc": 1434,
+        "bytes": "c30118012a",
+        "text": "ST RW2A, 0x118, TABLE[ZR]"
+      },
+      {
+        "pc": 1439,
+        "bytes": "b1bc44",
+        "text": "LDB R44, #-0x44"
+      },
+      {
+        "pc": 1442,
+        "bytes": "c7011d0144",
+        "text": "STB R44, 0x11d, LOOKUP[ZR]"
+      },
+      {
+        "pc": 1447,
+        "bytes": "a1000146",
+        "text": "LD RW46, #0x100"
+      },
+      {
+        "pc": 1451,
+        "bytes": "a301180144",
+        "text": "LD RW44, 0x118, TABLE[ZR]"
+      },
+      {
+        "pc": 1456,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 1460,
+        "bytes": "d703",
+        "text": "JNE 0x5b9"
+      },
+      {
+        "pc": 1462,
+        "bytes": "e70c00",
+        "text": "LJMP 0x5c5"
+      },
+      {
+        "pc": 1465,
+        "bytes": "0546",
+        "text": "DEC RW46"
+      },
+      {
+        "pc": 1467,
+        "bytes": "df03",
+        "text": "JE 0x5c0"
+      },
+      {
+        "pc": 1469,
+        "bytes": "e7ebff",
+        "text": "LJMP 0x5ab"
+      },
+      {
+        "pc": 1472,
+        "bytes": "a102003e",
+        "text": "LD RW3E, #0x2"
+      },
+      {
+        "pc": 1476,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 1477,
+        "bytes": "b3011d0100",
+        "text": "LDB ZRlo, 0x11d, LOOKUP[ZR]"
+      },
+      {
+        "pc": 1482,
+        "bytes": "013e",
+        "text": "CLR RW3E"
+      },
+      {
+        "pc": 1484,
+        "bytes": "f0",
+        "text": "RET "
+      }
+    ]
+  },
+  "native": {
+    "passed": true,
+    "identities": {
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-feasibility-2026-10-18\\scsi-03\\saved-hd.img": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+      "mame-source\\mames760.exe": "ccb370a3f37c5fd7a9b2aa761ef339b9b5965d6211b64751dd7520557efb4dda",
+      "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-pair-publication-2026-10-18\\S760224.PAIR-PUBLICATION-V2.IMG": "d5df8827994664cf766d61eedd204c62817f49aad210091bd23f5e8cf08ce152",
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-pair-publication-2026-10-18\\observer.lua": "6cb230a6dad34a0a230d6707778535ae407cedf57374edb9e8cadc279829643b",
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-pair-publication-2026-10-18\\probe_base.py": "0ea52dff38874e06a2895c409eb3130eccbdc62b0248e777ba7c7bd0b9d79298",
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-pair-publication-2026-10-18\\run.py": "67bd22c713c8390e4b99392208991b985bc32f46442036741ad0613ff4c57b33"
+    },
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.01694745011627674,
+      "silent_release_frames": 44100
+    },
+    "media_unchanged": true
+  },
+  "analysis": {
+    "passed": true,
+    "cases": [
+      {
+        "case": 1,
+        "cursor": 39,
+        "staged_pair_exact": true,
+        "public_pair_published": false,
+        "other_510_descriptors_unchanged": true,
+        "pcm_written": false,
+        "existing_pcm_exact": true,
+        "guards_intact": true
+      },
+      {
+        "case": 2,
+        "cursor": 39,
+        "staged_pair_exact": true,
+        "public_pair_published": false,
+        "other_510_descriptors_unchanged": true,
+        "pcm_written": true,
+        "existing_pcm_exact": true,
+        "guards_intact": true
+      },
+      {
+        "case": 3,
+        "cursor": 39,
+        "staged_pair_exact": true,
+        "public_pair_published": true,
+        "other_510_descriptors_unchanged": true,
+        "pcm_written": true,
+        "existing_pcm_exact": true,
+        "guards_intact": true
+      },
+      {
+        "case": 4,
+        "cursor": 39,
+        "staged_pair_exact": true,
+        "public_pair_published": true,
+        "other_510_descriptors_unchanged": true,
+        "pcm_written": true,
+        "existing_pcm_exact": true,
+        "guards_intact": true
+      }
+    ],
+    "cursor_writes": [
+      {
+        "mask": 65535,
+        "data": 39,
+        "seconds": 146.959885,
+        "pc": 1193
+      }
+    ],
+    "expected_pair_hex": "4253313a506169725465737420207f4c0008ea000008ea000096c7010000d4010004d401020000000d000d00013c00004253313a506169725465737420207f520008d4010008d4010096b1020000be020004be02020000001a000d00013c0000",
+    "exact_pair_pcm_bytes": 239616,
+    "guarded_wave_bytes": 368656,
+    "case_hashes": {
+      "case-1.ram": "6e281d6c55ff803e4266a7a5f68492e4b075f6b06221e57f7bc2f6606331daa3",
+      "case-1.wave": "3e558d41b1f127751268fbefa3906b433513a50c183ac7dfd0d2d223d165b20c",
+      "case-2.ram": "c7a6625ca1b015d596d239d445b5561be6a95f30d94707d81c82b73b908a2138",
+      "case-2.wave": "558094e5fd7635568a4bd98216639e24c26e8d65a764efb099af1fb0ac3327c3",
+      "case-3.ram": "f53f31626b3316eeceb8bff39a3e92e5d0ff9023510d6e05e31dec646e0d2747",
+      "case-3.wave": "558094e5fd7635568a4bd98216639e24c26e8d65a764efb099af1fb0ac3327c3",
+      "case-4.ram": "a08c8dbf71072aeb13eff5764b0612e336f30d4ceefaf760feb0d1b709becf14",
+      "case-4.wave": "558094e5fd7635568a4bd98216639e24c26e8d65a764efb099af1fb0ac3327c3"
+    },
+    "native_selection": {
+      "public_table_exact": true,
+      "preview_refs": [
+        512,
+        513
+      ],
+      "preview_block_bases": [
+        13,
+        26
+      ],
+      "pan_bytes": [
+        224,
+        32
+      ],
+      "snapshot_sha256": "a6ba508e530b759a8c7aace2687d1b2e3ef1060a963a4ed7692a489f044539d7"
+    }
+  },
+  "reproduction": [
+    "python build.py (fresh private directory; image creation is exclusive)",
+    "python prepare_run.py",
+    "python run.py (NativeRuntime localhost access)",
+    "python analyze.py"
+  ],
+  "sources": {
+    "build.py": "from pathlib import Path\nimport hashlib,json,struct\nfrom build_transfer import Asm,ROOT,HOOK,HOOK_PC,BASE,SOURCE_SHA\nP=Path(__file__).resolve().parent\nprior=ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-pair-rollback-2026-10-18'\nevidence=ROOT/'docs/condensed/validation/bluescsi-permanent-assignment-2026-10-18.json'\ndef records(x):\n if isinstance(x,dict):\n  if 'sample0' in x and 'sample1' in x:yield x\n  for v in x.values():yield from records(v)\n elif isinstance(x,list):\n  for v in x:yield from records(v)\nsource=next(records(json.loads(evidence.read_text())))\ntemplate=bytearray(bytes.fromhex(source['sample0'])+bytes.fromhex(source['sample1']))\nassert len(template)==96\nfor ch in range(2):\n d=template[ch*48:(ch+1)*48]\n assert d[14:16]==bytes([127,ord('LR'[ch])])\n assert struct.unpack_from('<HH',d,40)==(ch*13,13)\n template[ch*48:ch*48+14]=b'BS1:PairTest  '\noriginal=(ROOT/'S760224.IMG').read_bytes()\nassert len(original)==1474560 and hashlib.sha256(original).hexdigest()==SOURCE_SHA\nassert original[0x853e:0xa480]==bytes(8002)\nassert original[HOOK:HOOK+8]==bytes.fromhex('a171011ca15e9b1e')\na=Asm();saved=list(range(0x1c,0x60,2))+[0xda]\na.emit(0xf4,0xcb,1,0x0a,1,0xcb,1,0x0c,1)\nfor r in saved:a.emit(0xc8,r)\na.byte(0x14,0);a.imm(0x1c,15);a.st(0x1c,0x10a)\n# Both public slots must be empty before allocation or staging changes.\na.imm(0x1c,0x34a);a.st(0x1c,0x10c)\nfor address in (0x8270,0x82a0):\n a.ldb(0x44,address);a.cmpb(0x44,127);a.cond(0xd7,'occupied')\na.ld(0x38,0x3616);a.cmp(0x38,13);a.cond(0xd7,'failed')\na.imm(0x1c,0x299);a.st(0x1c,0x10c)\na.ld(0x3a,0x8f9e);a.ld(0x3c,0x8fa0)\na.imm(0x20,26);a.call('reserve');a.cmp(0x3e,0);a.cond(0xd7,'failed')\n# Copy a recorded, qualified pair into private 96-byte staging.\na.imm(0x48,0x5e10);a.imm(0x4a,0x5f00);a.imm(0x4c,48);a.call('copy')\n# Rebase all five fixed-point addresses and allocation indices by 13 blocks.\nfor ch in range(2):\n for offset in (16,20,24,28,32):\n  addr=0x5f00+ch*48+offset\n  a.ld(0x44,addr);a.ld(0x46,addr+2)\n  a.emit(0x65,0,0,0x44,0xa5,0xea,0,0x46)\n  a.st(0x44,addr);a.st(0x46,addr+2)\n a.ld(0x44,0x5f28+ch*48);a.emit(0x65,13,0,0x44);a.st(0x44,0x5f28+ch*48)\na.imm(0x44,1);a.st(0x44,0x5e00)\n# Generate distinct channel data and fill the whole 13-block channel extents.\nfor ch in range(2):\n a.imm(0x4c,0x1200+ch*0x3000);a.call('fill_pattern')\n dest=8+(13+ch*13)*4608\n a.imm(0x2c,dest&65535);a.imm(0x34,dest>>16);a.imm(0x36,29)\n a.label('channel_'+str(ch));a.imm(0x28,0x4940);a.imm(0x2a,4096);a.call('dma')\n a.cmp(0x3e,0);a.cond(0xd7,'dma_failed')\n a.emit(0x65,0,8,0x2c,0xa5,0,0,0x34,5,0x36);a.cond(0xd7,'channel_'+str(ch))\n a.imm(0x2a,1024);a.call('dma');a.cmp(0x3e,0);a.cond(0xd7,'dma_failed')\na.imm(0x44,2);a.st(0x44,0x5e00)\na.label('publish');a.imm(0x1c,0x34a);a.st(0x1c,0x10c)\na.imm(0x48,0x5f00);a.imm(0x4a,0x8270);a.imm(0x4c,48);a.call('copy')\na.imm(0x44,3);a.st(0x44,0x5e00)\na.imm(0x44,0xb502);a.st(0x44,0x5ef0);a.jmp('exit')\na.label('occupied');a.imm(0x44,4);a.st(0x44,0x5e00);a.imm(0x44,0xb503);a.st(0x44,0x5ef0);a.jmp('exit')\n# A timeout does not prove DMA is quiescent: retain ownership/reservation.\na.label('dma_failed');a.imm(0x44,0xb5ff);a.st(0x44,0x5ef0);a.jmp('exit')\na.label('failed');a.imm(0x44,0xdead);a.st(0x44,0x5ef0)\na.label('exit')\nfor r in reversed(saved):a.emit(0xcc,r)\na.emit(0xcf,1,0x0c,1,0xcf,1,0x0a,1,0xf5,*original[HOOK:HOOK+8],0xf0)\na.label('copy');a.emit(0xa2,0x49,0x44,0xc2,0x4b,0x44,5,0x4c);a.cond(0xd7,'copy');a.emit(0xf0)\n# Reuse unchanged reserve, fill, adapter and DMA definitions from checkpoint35.\nold=(prior/'build.py').read_text()\nexec(old[old.index(\"a.label('reserve')\"):old.index('code=a.finish()')])\ncode=a.finish();assert len(code)<0xc02\nimage=bytearray(original);image[0x853e:0x853e+len(code)]=code\nimage[0x4800+0x5a0e:0x4800+0x5a72]=b'\\xa5\\x5a'+template+b'\\x5a\\xa5'\nimage[0x4800+0x5afe:0x4800+0x5b62]=b'\\xa5\\x5a'+bytes(96)+b'\\x5a\\xa5'\nimage[HOOK:HOOK+8]=bytes([0xef])+struct.pack('<H',(BASE-HOOK_PC-3)&65535)+bytes([0xfd])*5\nwith (P/'S760224.PAIR-PUBLICATION-V2.IMG').open('xb') as f:f.write(image)\n(P/'build.json').write_text(json.dumps(dict(sha256=hashlib.sha256(image).hexdigest(),code_bytes=len(code),template=template.hex(),template_evidence_sha256=hashlib.sha256(evidence.read_bytes()).hexdigest(),labels=a.labels,decoded=a.rows),indent=2)+'\\n')\nprint('Built',len(code),'bytes')\n",
+    "build_transfer.py": "\"\"\"Private, ordinary-callback guest SCSI experiment; not release firmware.\"\"\"\nfrom pathlib import Path\nimport argparse, hashlib, json, struct\nimport pypcode\n\nROOT=Path(__file__).resolve().parents[4]\nHERE=Path(__file__).resolve().parent\nBASE=0x013e\nBUFFER=0x4800\nTABLE=0x5804\nRECORDS=0x5a00\nRECORD_SIZE=32\nCONTROL=0x5ff0\nSOURCE_SHA='3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd'\nHOOK_PC=0x9040\nHOOK=0x4800+(0x181<<10)+(HOOK_PC&0x3fff)\nCASES=[{'name': 'read-4k', 'cdb': '28 00 00 00 00 00 00 00 08 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 4096, 'status': 0, 'expected': 'scratch-first'}, {'name': 'write-4k', 'cdb': '2a 00 00 00 00 08 00 00 08 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 4096, 'status': 0, 'direction': 1, 'seed': 4951}, {'name': 'readback-4k', 'cdb': '28 00 00 00 00 08 00 00 08 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 4096, 'status': 0, 'expected': 'written'}, {'name': 'partial-write', 'cdb': '2a 00 00 00 00 00 00 00 08 00', 'target': 2, 'capacity': 4095, 'code': 5, 'length': 4095, 'status': 255, 'direction': 1, 'seed': 9320}, {'name': 'read-after-partial', 'cdb': '28 00 00 00 00 00 00 00 08 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 4096, 'status': 0, 'expected': 'scratch-first'}, {'name': 'out-of-range-write', 'cdb': '2a 00 ff ff ff ff 00 00 08 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 0, 'status': 2, 'direction': 1}, {'name': 'range-sense', 'cdb': '03 00 00 00 12 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 18, 'status': 0, 'sense': [5, 33]}, {'name': 'protected-write', 'cdb': '2a 00 00 00 00 00 00 00 02 00', 'target': 1, 'capacity': 4096, 'code': 0, 'length': 0, 'status': 2, 'direction': 1}, {'name': 'protected-sense', 'cdb': '03 00 00 00 12 00', 'target': 1, 'capacity': 4096, 'code': 0, 'length': 18, 'status': 0, 'sense': [7, 39]}, {'name': 'read-protected-cd', 'cdb': '28 00 00 00 00 00 00 00 02 00', 'target': 1, 'capacity': 4096, 'code': 0, 'length': 4096, 'status': 0, 'expected': 'cd-first'}, {'name': 'invalid-start', 'cdb': '1b 00 00 00 03 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 0, 'status': 2}, {'name': 'invalid-field-sense', 'cdb': '03 00 00 00 12 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 18, 'status': 0, 'sense': [5, 36]}, {'name': 'unsupported', 'cdb': '3f a5 5a 12 34 56 78 9a bc de', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 0, 'status': 2}, {'name': 'unsupported-sense', 'cdb': '03 00 00 00 12 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 18, 'status': 0, 'sense': [5, 32]}, {'name': 'sense-cleared', 'cdb': '03 00 00 00 12 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 18, 'status': 0, 'sense': [0, 0]}, {'name': 'ready-after-errors', 'cdb': '00 00 00 00 00 00', 'target': 2, 'capacity': 4096, 'code': 0, 'length': 0, 'status': 0}]\n\nclass Asm:\n def __init__(self): self.code=bytearray();self.labels={};self.fixups=[];self.rows=[]\n @property\n def pc(self):return BASE+len(self.code)\n def label(self,n):assert n not in self.labels;self.labels[n]=self.pc\n def emit(self,*b):self.code.extend(b)\n def word(self,n):self.code.extend(struct.pack('<H',n&65535))\n def imm(self,r,n):self.emit(0xa1);self.word(n);self.emit(r)\n def byte(self,r,n):self.emit(0xb1,n&255,r)\n def ld(self,r,a):self.emit(0xa3,1);self.word(a);self.emit(r)\n def ldb(self,r,a):self.emit(0xb3,1);self.word(a);self.emit(r)\n def st(self,r,a):self.emit(0xc3,1);self.word(a);self.emit(r)\n def stb(self,r,a):self.emit(0xc7,1);self.word(a);self.emit(r)\n def mov(self,r,s):self.emit(0xa0,s,r)\n def clr(self,r):self.emit(1,r)\n def cmp(self,r,n):self.emit(0x89);self.word(n);self.emit(r)\n def cmpb(self,r,n):self.emit(0x99,n&255,r)\n def jmp(self,label,op=0xe7):\n  self.emit(op);self.fixups.append((len(self.code),label,self.pc+2));self.word(0)\n def call(self,label):self.jmp(label,0xef)\n def cond(self,op,label):\n  # Inverse conditional skips a long jump, avoiding hidden short-branch limits.\n  self.emit(op^8,3);self.jmp(label)\n def finish(self):\n  for index,label,after in self.fixups:\n   assert label in self.labels,label\n   self.code[index:index+2]=struct.pack('<H',(self.labels[label]-after)&65535)\n  ctx=pypcode.Context('MCS96:LE:16:default')\n  ins=ctx.disassemble(bytes(self.code),base_address=BASE).instructions\n  assert sum(i.length for i in ins)==len(self.code)\n  starts={i.addr.offset for i in ins}\n  assert all(v in starts for k,v in self.labels.items() if k!='code_end')\n  for i in ins:\n   if i.mnem in ('LJMP','LCALL','JE','JNE','JC','JNC','JH','JNH'):\n    assert int(i.body,16) in starts,(i.mnem,i.body)\n  self.rows=[dict(pc=i.addr.offset,bytes=bytes(self.code[i.addr.offset-BASE:i.addr.offset-BASE+i.length]).hex(),text=i.mnem+' '+i.body) for i in ins]\n  return bytes(self.code)\n\ndef build(output):\n original=(ROOT/'S760224.IMG').read_bytes()\n assert len(original)==0x168000 and hashlib.sha256(original).hexdigest()==SOURCE_SHA\n assert original[0x853e:0xa480]==bytes(8002)\n assert original[HOOK:HOOK+8]==bytes.fromhex('a1 71 01 1c a1 5e 9b 1e')\n a=Asm();a.label('entry');a.emit(0xf4) # Save PSW, WSR and MASK1; interrupts masked.\n a.label('entry_bank_read');a.emit(0xcb,1,0x0a,1)\n # WSR is zero at this qualified callback. Save all registers this probe uses.\n saved=list(range(0x1c,0x60,2))+[0xda]\n for r in saved:a.emit(0xc8,r)\n a.byte(0x14,0);a.imm(0x1c,15);a.st(0x1c,0x10a)\n # Capture the native bank and PUSHA frame through the guest's own stack.\n for offset,dest in [(70,6),(72,10),(74,8)]:\n  a.emit(0xa3,0x19);a.word(offset);a.emit(0x44);a.st(0x44,CONTROL+dest)\n a.ldb(0x44,0x115);a.stb(0x44,CONTROL+14)\n # Own the PIO controller: mask native SCSI/DMA completion while preserving\n # the other IC4 sources; timer ISR ORs 0x44, leaving this bit clear.\n a.emit(0x71,0xef,0x44);a.stb(0x44,0x115)\n a.st(0,CONTROL+16);a.st(0,CONTROL+18);a.st(0,CONTROL+20);a.st(0,CONTROL+22);a.st(0,CONTROL+24)\n a.imm(0x44,0xb501);a.st(0x44,CONTROL)\n a.imm(0x20,TABLE);a.imm(0x22,RECORDS);a.imm(0x24,len(CASES));a.clr(0x26)\n a.label('case_loop');a.st(0x26,CONTROL+2)\n # Clear only the current diagnostic record. This is extension-owned test RAM.\n a.mov(0x48,0x22);a.imm(0x4a,RECORD_SIZE//2)\n a.label('clear_record');a.emit(0xc2,0x49,0);a.emit(5,0x4a);a.cond(0xd7,'clear_record')\n # Case layout: mask, CDB length, hold-ACK, reserved, capacity, poll limit,\n # unused word, CDB bytes at+10 (padded to14), total record24.\n a.emit(0xb2,0x21,0x50,0xb2,0x21,0x52,0xb2,0x21,0x54,0xb2,0x21,0x5c)\n a.emit(0xa2,0x21,0x2e,0xa2,0x21,0x3a,0xa2,0x21,0x56)\n a.mov(0x28,0x20);a.mov(0x2a,0x52);a.emit(0x61,0xff,0,0x2a)\n a.imm(0x2c,BUFFER)\n a.imm(0x48,BUFFER);a.imm(0x4a,2048);a.mov(0x4c,0x56)\n a.label('fill_buffer');a.emit(0xc2,0x49,0x4c);a.emit(0x65,1,1,0x4c)\n a.mov(0x44,0x4a);a.emit(0x61,63,0,0x44);a.cmp(0x44,0);a.cond(0xd7,'fill_continue');a.call('service')\n a.label('fill_continue');a.emit(5,0x4a);a.cond(0xd7,'fill_buffer')\n a.imm(0x44,0xa55a);a.st(0x44,BUFFER-2);a.st(0x44,BUFFER+4096)\n a.clr(0x30);a.clr(0x34);a.clr(0x36);a.clr(0x3e);a.clr(0x58)\n a.imm(0x40,0xffff);a.mov(0x32,0x0a);a.mov(0x38,0x32);a.mov(0x5a,0x32)\n a.byte(0x44,1);a.stb(0x44,CONTROL+18)\n a.call('transaction');a.stb(0,CONTROL+18)\n # Cancellation is an operation result after a successful command drain.\n # Transport failures and original CHECK CONDITION keep precedence.\n a.ld(0x44,CONTROL+16);a.cmp(0x44,0);a.cond(0xdf,'record_result')\n a.cmp(0x3e,0);a.cond(0xd7,'record_result');a.cmpb(0x40,0);a.cond(0xd7,'record_result')\n a.imm(0x3e,7)\n a.label('record_result')\n # Capture results without interpreting status as the transport outcome.\n for reg,offset in [(0x3e,0),(0x30,2),(0x40,4),(0x34,8),(0x36,10),(0x3a,12),(0x32,14),(0x2a,16),(0x5a,18),(0x26,20)]:\n  a.emit(0xc3,0x23);a.word(offset);a.emit(reg)\n a.ldb(0x44,0xe40a);a.emit(0xc7,0x23,6,0,0x44)\n for address,offset in [(BUFFER-2,22),(BUFFER+4096,24)]:\n  a.ld(0x44,address);a.emit(0xc3,0x23);a.word(offset);a.emit(0x44)\n for address,offset in [(CONTROL+16,26),(CONTROL+20,28),(CONTROL+22,30)]:\n  a.ld(0x44,address);a.emit(0xc3,0x23);a.word(offset);a.emit(0x44)\n a.label('case_complete');a.st(0x26,CONTROL+4)\n a.ld(0x44,CONTROL+16);a.cmp(0x44,0);a.cond(0xd7,'finish_operation')\n a.emit(0x65,14,0,0x20,0x65,RECORD_SIZE,0,0x22,7,0x26,5,0x24);a.cond(0xd7,'case_loop')\n a.label('finish_operation');a.ldb(0x44,CONTROL+14);a.stb(0x44,0x115)\n a.imm(0x44,0xb502);a.st(0x44,CONTROL)\n for r in reversed(saved):a.emit(0xcc,r)\n a.label('exit_bank_write');a.emit(0xcf,1,0x0a,1);a.emit(0xf5)\n a.label('original_replay');a.emit(*original[HOOK:HOOK+8]);a.emit(0xf0)\n\n a.label('transaction')\n a.call('cancel_scan');a.ld(0x44,CONTROL+16);a.cmp(0x44,0);a.cond(0xdf,'acquire_bus')\n a.imm(0x3e,7);a.emit(0xf0)\n a.label('acquire_bus')\n a.ldb(0x44,0xe40a);a.emit(0x71,0x48,0x44);a.cmpb(0x44,0);a.cond(0xd7,'busy')\n a.byte(0x44,255);a.stb(0x44,0xe408)\n a.byte(0x44,1);a.ldb(0x46,0x3623);a.emit(0x19,0x46,0x44,0x90,0x50,0x44);a.stb(0x44,0xe416)\n a.byte(0x44,0x10);a.stb(0x44,0xe418);a.stb(0,0xe41a);a.byte(0x44,4);a.stb(0x44,0xe41c)\n a.stb(0,0xe410);a.byte(0x44,0x24);a.stb(0x44,0xe404);a.byte(0x58,1)\n a.label('selection');a.call('budget');a.cond(0xdb,'cleanup')\n a.ldb(0x44,0xe408);a.emit(0x71,4,0x44);a.cmpb(0x44,0);a.cond(0xd7,'absent')\n a.ldb(0x44,0xe408);a.emit(0x71,0x10,0x44);a.cmpb(0x44,0);a.cond(0xdf,'selection')\n a.label('cdb_loop');a.call('req');a.cond(0xdb,'cleanup')\n a.cmpb(0x43,2);a.cond(0xd7,'phase_error')\n a.emit(0xb2,0x29,0x44);a.stb(0x44,0xe416);a.call('ack');a.cond(0xdb,'cleanup')\n a.emit(5,0x2a);a.cond(0xd7,'cdb_loop')\n a.label('data_loop');a.call('req');a.cond(0xdb,'cleanup')\n a.cmpb(0x43,3);a.cond(0xdf,'status')\n a.cmpb(0x5c,0);a.cond(0xdf,'data_in')\n a.cmpb(0x43,0);a.cond(0xd7,'phase_error')\n a.emit(0x88,0x2e,0x30);a.cond(0xdb,'capacity')\n a.emit(0xb2,0x2d,0x44);a.stb(0x44,0xe416);a.jmp('data_ack')\n a.label('data_in')\n a.cmpb(0x43,1);a.cond(0xd7,'phase_error')\n a.emit(0x88,0x2e,0x30);a.cond(0xdb,'capacity')\n a.ldb(0x44,0xe416);a.emit(0xc6,0x2d,0x44)\n a.label('data_ack');a.call('ack');a.cond(0xdb,'cleanup');a.emit(7,0x30);a.jmp('data_loop')\n a.label('status');a.ldb(0x40,0xe416);a.call('ack');a.cond(0xdb,'cleanup')\n a.call('req');a.cond(0xdb,'cleanup');a.cmpb(0x43,7);a.cond(0xd7,'phase_error')\n a.ldb(0x41,0xe416);a.call('ack');a.cond(0xdb,'cleanup')\n a.label('completion');a.call('budget');a.cond(0xdb,'cleanup');a.ldb(0x44,0xe40a);a.emit(0x71,0x48,0x44);a.cmpb(0x44,0);a.cond(0xd7,'completion');a.jmp('cleanup')\n for name,code in [('busy',1),('absent',2),('phase_error',6),('capacity',5)]:\n  a.label(name);a.imm(0x3e,code);a.jmp('cleanup')\n a.label('cleanup');a.cmpb(0x58,0);a.cond(0xdf,'return')\n # Experimental model cleanup: release ACK and bus; never invoke native init.\n a.byte(0x44,0xc4);a.stb(0x44,0xe404);a.stb(0,0xe404)\n for addr in [0xe418,0xe41a,0xe41c,0xe410]:a.stb(0,addr)\n a.byte(0x44,255);a.stb(0x44,0xe408);a.imm(0x48,64)\n a.label('cleanup_wait');a.ldb(0x44,0xe40a);a.emit(0x71,0x48,0x44);a.cmpb(0x44,0);a.cond(0xdf,'return')\n a.emit(5,0x48);a.cond(0xd7,'cleanup_wait');a.emit(0x81,0x80,0,0x3e)\n a.label('return');a.emit(0xf0)\n\n a.label('req');a.call('budget');a.cond(0xdb,'helper_return')\n a.ldb(0x42,0xe40a);a.emit(0xb0,0x42,0x43,0x71,7,0x43)\n a.mov(0x44,0x42);a.emit(0x71,0x80,0x44);a.cmpb(0x44,0);a.cond(0xdf,'req')\n a.emit(0xf8,0xf0)\n a.label('ack');a.byte(0x44,0xe4);a.stb(0x44,0xe404)\n a.label('ack_req_low');a.call('budget');a.cond(0xdb,'helper_return');a.ldb(0x44,0xe40a);a.emit(0x71,0x80,0x44);a.cmpb(0x44,0);a.cond(0xd7,'ack_req_low')\n a.cmpb(0x54,0);a.cond(0xdf,'ack_release')\n # Intentionally hold our ACK to exercise a real guest polling timeout.\n # This is not an emulated target fault or a physical stuck-device test.\n a.call('req');a.emit(0xf0)\n a.label('ack_release');a.byte(0x44,0xc4);a.stb(0x44,0xe404)\n a.label('ack_low');a.call('budget');a.cond(0xdb,'helper_return');a.ldb(0x44,0xe40a);a.emit(0x71,0x40,0x44);a.cmpb(0x44,0);a.cond(0xd7,'ack_low')\n a.mov(0x38,0x0a);a.emit(0xf8,0xf0)\n a.label('helper_return');a.emit(0xf0)\n\n a.label('budget')\n a.mov(0x44,0x3a);a.emit(0x61,63,0,0x44);a.cmp(0x44,0);a.cond(0xd7,'budget_sample');a.call('service')\n a.label('budget_sample');a.mov(0x46,0x0a);a.mov(0x44,0x46);a.emit(0x68,0x32,0x44);a.mov(0x32,0x46)\n a.emit(0x64,0x44,0x34,0xa4,0,0x36)\n # Experimental 16*65536 tick total budget permits full PIO blocks. This\n # explicitly does not qualify the masked interval for production use.\n a.cmp(0x36,16);a.cond(0xdb,'deadline')\n a.emit(0x68,0x38,0x46);a.cmp(0x46,5000);a.cond(0xdb,'deadline')\n a.emit(5,0x3a);a.cond(0xdf,'poll_limit');a.emit(0xf8,0xf0)\n a.label('deadline');a.imm(0x3e,3);a.emit(0xf9,0xf0)\n a.label('poll_limit');a.imm(0x3e,4);a.emit(0xf9,0xf0)\n # All service calls occur masked with WSR=0 and no live flags contract.\n # Preserve the transport scratch registers, but allow OS ISR-owned globals\n # (MIDI ring pointers, timer counters, etc.) to advance normally.\n a.label('service');a.emit(0x8b,1,(CONTROL+12)&255,(CONTROL+12)>>8,0)\n for r in saved:a.emit(0xc8,r)\n a.call('cancel_scan')\n a.ld(0x44,CONTROL+8);a.ld(0x46,CONTROL+10);a.ld(0x48,CONTROL+6)\n a.label('service_native_bank');a.st(0x48,0x10a)\n # No unconditional EI: the original caller must have its I bit set.\n a.emit(0x39,0x45,3);a.jmp('service_mask')\n a.emit(0xb0,0x44,8,0xb0,0x47,0x13)\n a.label('service_enable');a.emit(0xfb,*([0xfd]*8))\n a.label('service_mask');a.emit(0xfa);a.byte(8,0);a.byte(0x13,0)\n a.imm(0x48,15);a.label('service_probe_bank');a.st(0x48,0x10a)\n for r in reversed(saved):a.emit(0xcc,r)\n a.label('service_exit');a.emit(0x8b,1,(CONTROL+12)&255,(CONTROL+12)>>8,0);a.emit(0xf0)\n # Model-qualified raw scan follows the original 003B:4320 four-row access.\n # No native event queue, descriptor callback, or old button state is forced.\n # Scan only within an operation, while masked, with the MMIO bank unchanged.\n a.label('cancel_scan');a.ldb(0x44,CONTROL+18);a.cmpb(0x44,0);a.cond(0xdf,'cancel_scan_return')\n a.ld(0x44,CONTROL+16);a.cmp(0x44,0);a.cond(0xd7,'cancel_scan_return')\n a.stb(0,0xf00a);a.ldb(0x44,0xf00a);a.label('cancel_exit_row');a.ldb(0x46,0xf00a)\n a.ldb(0x44,0xf00a);a.ldb(0x44,0xf00a)\n a.emit(0x71,2,0x46);a.cmpb(0x46,0);a.cond(0xd7,'cancel_scan_return')\n a.st(0x30,CONTROL+20);a.mov(0x44,0x0a);a.st(0x44,CONTROL+22)\n a.ldb(0x44,0xe40a);a.stb(0x44,CONTROL+24)\n a.imm(0x44,1);a.label('cancel_latch');a.st(0x44,CONTROL+16)\n a.label('cancel_scan_return');a.emit(0xf0)\n a.label('code_end')\n code=a.finish();assert a.pc<=0x7fe\n result=bytearray(original);result[0x853e:0x853e+len(code)]=code\n table=bytearray()\n for case in CASES:\n  cdb=bytes.fromhex(case['cdb']);assert len(cdb) in (6,10)\n  table.extend(struct.pack('<BBBBHHH',1<<case['target'],len(cdb),case.get('hold_ack',0),case.get('direction',0),case['capacity'],case.get('poll_limit',65535),case.get('seed',0xdcba))+cdb+bytes(14-len(cdb)))\n table_offset=0x4800+(15<<10)+(TABLE&0x3fff)\n result[table_offset:table_offset+len(table)]=table\n hook=bytes([0xef])+struct.pack('<H',(BASE-(HOOK_PC+3))&65535)+bytes([0xfd])*5\n result[HOOK:HOOK+8]=hook\n decoded_hook=pypcode.Context('MCS96:LE:16:default').disassemble(hook,base_address=HOOK_PC).instructions\n assert decoded_hook[0].mnem=='LCALL' and int(decoded_hook[0].body,16)&65535==BASE\n diffs=[dict(offset=i,before=x,after=y) for i,(x,y) in enumerate(zip(original,result)) if x!=y]\n assert all(0x853e<=d['offset']<0xa480 or HOOK<=d['offset']<HOOK+8 for d in diffs)\n with output.open('xb') as f:f.write(result)\n report=dict(source_sha256=SOURCE_SHA,output_sha256=hashlib.sha256(result).hexdigest(),image_bytes=len(result),hook_file_offset=HOOK,hook_original=original[HOOK:HOOK+8].hex(),hook_new=hook.hex(),code_base=BASE,code_bytes=len(code),labels=a.labels,decoded=a.rows,cases=CASES,table_bytes=len(table),record_size=RECORD_SIZE,record_base=RECORDS,control=CONTROL,buffer=BUFFER,buffer_size=4096,saved_registers=saved,stack_local_bytes=4+2+2*len(saved),byte_diffs=diffs,qualifications=['Private research image; not released firmware.','Guest reads/commands through normal Save System entry; observer must not force guest state.','Interrupts permitted only at explicit service points; physical timing and worst-case IRQ latency remain unqualified.','Held-ACK cases deliberately stall the initiator handshake, not a simulated target fault.','Exit latches cancellation, drains the current bounded command, and stops subsequent operations. No physical abort/reset or write rollback claim.','Standard ten-byte command with byte-sensitive payload is not a BlueSCSI Toolbox command.'])\n output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\\n')\n print(json.dumps(dict(code_bytes=len(code),table_bytes=len(table),record_bytes=len(CASES)*RECORD_SIZE,stack_local_bytes=report['stack_local_bytes'],output_sha256=report['output_sha256'],decoded_instructions=len(a.rows))))\n\nif __name__=='__main__':\n ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--output',type=Path,required=True);args=ap.parse_args();build(args.output)\n",
+    "prepare_run.py": "from pathlib import Path\nP=Path(__file__).resolve().parent\nold=P.parent/'bluescsi-pair-rollback-2026-10-18'\ns=(old/'observer.lua').read_text().replace('16+16*9216','16+40*9216')\n(P/'observer.lua').write_text(s)\ns=(old/'run.py').read_text().replace('PAIR-ROLLBACK','PAIR-PUBLICATION-V2').replace(\"HERE/'native'\",\"HERE/'native-v3'\")\ns=s[:s.index('assert (work/')] + '''\nassert (work/'wave.bin').read_bytes()[16:119824]==b''.join(samples(fixture))\nassert (work/'export.img').read_bytes()==fixture.read_bytes()\nassert all(sha(ROOT/p)==v for p,v in identities.items())\nreport=dict(passed=True,identities=identities,audio=audio,media_unchanged=True)\n(work/'result.json').write_text(json.dumps(report,indent=2)+'\\\\n');print(json.dumps(report),flush=True)\n'''\ns=s.replace(\"shot('adapter-return.png')\", \"\"\"shot('adapter-return.png')\n click(10,5);click(15,22);wait(1);click(118,5);click(90,62);wait(2);shot('retry-return.png')\n click(100,5);click(80,26);wait(3);shot('sample-loop.png')\n rt.request('pointer',x=75,y=18);wait(.3)\n for _ in range(13):rt.request('dial',id='ALPHA',delta=1);wait(1)\n wait(2);shot('sample-pair.png')\"\"\")\n(P/'run.py').write_text(s)\n",
+    "run.py": "from pathlib import Path\nimport json,hashlib,shutil\nfrom probe_base import ROOT,HERE,ObservedRuntime\nfrom s760_runtime import RuntimeConfig\nfrom verify_native_scsi_save import controls,samples\nfrom verify_native_roland_load import audition\nwork=HERE/'native-v3';work.mkdir(exist_ok=False)\nfixture=ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-feasibility-2026-10-18/scsi-03/saved-hd.img'\ncfg=RuntimeConfig(ROOT/'mame-source/mames760.exe',ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN',HERE/'S760224.PAIR-PUBLICATION-V2.IMG',work/'runtime',sound=False,throttle=False,wave_dump=work/'wave.bin')\nmedia=cfg.state_dir/'roms/SCSI';media.mkdir(parents=True);shutil.copyfile(fixture,media/'HD00_512.img')\ndef sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()\npaths=[fixture,cfg.executable,cfg.boot_rom,cfg.system_disk,HERE/'observer.lua',HERE/'probe_base.py',Path(__file__)]\nidentities={str(p.relative_to(ROOT)):sha(p) for p in paths}\nwith ObservedRuntime(cfg) as rt:\n wait,button,click,shot,select_hd=controls(rt,work)\n wait(25);shot('boot.png');click(118,5);click(80,22);wait(8);select_hd();shot('list.png')\n print('HDD list ready',flush=True)\n click(50,34);click(76,98);wait(60);click(10,5);click(15,22);wait(3);shot('loaded.png')\n rt.request('pause');rt.request('audio_capture',enabled=True)\n pcm,audio=audition(rt,0,60);(work/'audio.pcm').write_bytes(pcm)\n rt.request('audio_capture',enabled=False);rt.request('resume');rt.export_scsi_hd0(work/'export.img')\n click(118,5);click(90,62);wait(2);shot('adapter-return.png')\n click(10,5);click(15,22);wait(1);click(118,5);click(90,62);wait(2);shot('retry-return.png')\n click(100,5);click(80,26);wait(3);shot('sample-loop.png')\n rt.request('pointer',x=75,y=18);wait(.3)\n for _ in range(13):rt.request('dial',id='ALPHA',delta=1);wait(1)\n wait(2);shot('sample-pair.png')\n\nassert (work/'wave.bin').read_bytes()[16:119824]==b''.join(samples(fixture))\nassert (work/'export.img').read_bytes()==fixture.read_bytes()\nassert all(sha(ROOT/p)==v for p,v in identities.items())\nreport=dict(passed=True,identities=identities,audio=audio,media_unchanged=True)\n(work/'result.json').write_text(json.dumps(report,indent=2)+'\\n');print(json.dumps(report),flush=True)\n",
+    "analyze.py": "from pathlib import Path\nimport json,struct,hashlib\nP=Path(__file__).resolve().parent;obs=P/'native-v3/runtime/bs1-observer'\nb=json.loads((P/'build.json').read_text());expected=bytearray.fromhex(b['template'])\nfor ch in range(2):\n for off in (16,20,24,28,32):\n  pos=ch*48+off;v=struct.unpack_from('<I',expected,pos)[0]\n  struct.pack_into('<I',expected,pos,v+(13*4608<<8))\n struct.pack_into('<H',expected,ch*48+40,13+ch*13)\n # Independently establish all five addresses remain within their reservation.\n points=[struct.unpack_from('<I',expected,ch*48+off)[0] for off in (16,20,24,28,32)]\n base=(8+(13+ch*13)*4608)<<8;end=base+(13*4608<<8)\n assert all(base<=v<end for v in points)\n assert points[0]<=points[1]<points[2]<=points[3]<=points[4]\nbase=(obs/'frame-03.ram').read_bytes();start=0xd2800+13*48\nwave0=(obs/'frame-03.wave').read_bytes();payload=[]\nfor ch in range(2):\n chunk=b''.join(struct.pack('<H',(0x1200+ch*0x3000+j*0x101)&65535) for j in range(2048))\n payload.append(chunk*29+chunk[:1024])\nrows=[]\nfor case in range(1,5):\n r=(obs/f'case-{case}.ram').read_bytes();w=(obs/f'case-{case}.wave').read_bytes()\n assert struct.unpack_from('<H',r,0x84616)[0]==39\n assert struct.unpack_from('<H',r,0xa739e)[0]==39\n assert r[0xa73a0:0xa73a2]==base[0xa73a0:0xa73a2]\n assert r[0x82fa0:0x82fa2]==base[0x82fa0:0x82fa2]\n assert r[0x5b00:0x5b60]==expected\n assert r[0x5a0e:0x5a72]==b'\\xa5\\x5a'+bytes.fromhex(b['template'])+b'\\x5a\\xa5'\n assert r[0x5afe:0x5b00]==b'\\xa5\\x5a' and r[0x5b60:0x5b62]==b'\\x5a\\xa5'\n assert r[0xd2800:start]==base[0xd2800:start]\n assert r[start+96:0xd8800]==base[start+96:0xd8800]\n assert r[start:start+96]==(expected if case>=3 else base[start:start+96])\n assert w[:119824]==wave0[:119824]\n if case>=2:assert w[119824:119824+239616]==b''.join(payload)\n else:assert w[119824:119824+239616]==wave0[119824:119824+239616]\n assert w[119824+239616:]==wave0[119824+239616:]\n rows.append(dict(case=case,cursor=39,staged_pair_exact=True,public_pair_published=case>=3,other_510_descriptors_unchanged=True,pcm_written=case>=2,existing_pcm_exact=True,guards_intact=True))\nassert (obs/'case-3.wave').read_bytes()==(obs/'case-4.wave').read_bytes()\nassert (obs/'case-3.ram').read_bytes()[start:start+96]==(obs/'case-4.ram').read_bytes()[start:start+96]\nassert struct.unpack_from('<H',(obs/'frame-05.ram').read_bytes(),0x5af0)[0]==0xb503\nupdates=[json.loads(s) for s in (obs/'cursor.jsonl').read_text().splitlines()]\nupdates=[r for r in updates if b['labels']['reserve']<=r['pc']<b['labels']['rollback']]\nassert [r['data'] for r in updates]==[39]\nfinal=(obs/'frame-07.ram').read_bytes()\npublic=bytearray(base[0xd2800:0xd8800]);public[13*48:15*48]=expected\nassert final[0xd2800:0xd8800]==public\nassert [struct.unpack_from('<H',final,p)[0] for p in (0xd2790,0xd27a0)]==[512,513]\nassert [final[p] for p in (0xd2794,0xd27a4)]==[0xe0,0x20]\nassert [struct.unpack_from('<H',final,p)[0] for p in (0xd8828,0xd8858)]==[13,26]\nreport=dict(passed=True,cases=rows,cursor_writes=updates,expected_pair_hex=expected.hex(),exact_pair_pcm_bytes=239616,guarded_wave_bytes=len(wave0),case_hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in obs.glob('case-*')})\nreport['native_selection']=dict(public_table_exact=True,preview_refs=[512,513],preview_block_bases=[13,26],pan_bytes=[224,32],snapshot_sha256=hashlib.sha256(final).hexdigest())\n(P/'analysis.json').write_text(json.dumps(report,indent=2)+'\\n')\nprint(json.dumps(report,indent=2))\n",
+    "observer.lua": "local json=require('json');local m=manager.machine;local cpu=m.devices[':maincpu'];local p=cpu.spaces['program'];local ram,banks,wave\nlocal folder=assert(os.getenv('BS1_OBSERVER_DIR'))\nfor n,i in pairs(m.devices[':'].items) do\n if n:match('/m_banked_ram$') then ram=emu.item(i) end\n if n:match('/m_bank_regs$') then banks=emu.item(i) end\n if n:match('/m_native_wave$') then wave=emu.item(i) end\nend\nlocal function bank(a) return banks:read(a-0x100)|(banks:read(a-0xff)<<8) end\nlocal function dump(name)\n local f=assert(io.open(folder..'/'..name..'.ram','wb'));f:write(ram:read_block(0,ram.count));f:close()\n f=assert(io.open(folder..'/'..name..'.wave','wb'));f:write(wave:read_block(0,16+40*9216));f:close()\nend\nlocal log=assert(io.open(folder..'/cursor.jsonl','w'));_G.pair_taps={}\ntable.insert(_G.pair_taps,p:install_write_tap(0x3616,0x3617,'pair-cursor',function(a,d,mask)\n if bank(0x108)==0x204 then log:write(json.stringify({seconds=m.time:as_double(),pc=cpu.state['CURPC'].value,data=d,mask=mask})..'\\n');log:flush() end\nend))\ntable.insert(_G.pair_taps,p:install_write_tap(0x5e00,0x5e01,'pair-result',function(a,d,mask)\n if bank(0x10a)==15 and d>=1 and d<=4 then dump('case-'..d) end\nend))\nlocal seen=''\nemu.register_periodic(function()\n local f=io.open(folder..'/snapshot-request.txt','r');if not f then return end\n local tag=f:read('*a');f:close();if tag==seen or not tag:match('^[%w_-]+$') then return end;seen=tag;dump(tag)\n f=assert(io.open(folder..'/'..tag..'.json','w'));f:write('{}');f:close()\nend)\n",
+    "probe_base.py": "\"\"\"Run existing native acceptance workflows with read-only BS1 observations.\"\"\"\nimport argparse\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport runpy\nimport shutil\nimport subprocess\nimport sys\nimport time\nfrom unittest.mock import patch\n\nROOT=Path(__file__).resolve().parents[4]\nHERE=Path(__file__).resolve().parent\nsys.path.insert(0,str(ROOT/'scripts'))\nimport s760_runtime\n\nclass ObservedRuntime(s760_runtime.NativeRuntime):\n    def _start(self,timeout):\n        folder=self.config.state_dir.resolve()/'bs1-observer'\n        folder.mkdir(parents=True,exist_ok=False)\n        wrapper=folder/'wrapper.lua'\n        observer=folder/'observer.lua'\n        shutil.copyfile(HERE/'observer.lua',observer)\n        wrapper.write_text('dofile('+json.dumps((ROOT/'scripts/s760_runtime.lua').as_posix())+')\\n'\n                           +'dofile('+json.dumps(observer.as_posix())+')\\n',encoding='utf-8')\n        launch=subprocess.Popen\n        def observed(command,**kwargs):\n            command=list(command)\n            command[command.index('-autoboot_script')+1]=str(wrapper)\n            kwargs['env']['BS1_OBSERVER_DIR']=folder.as_posix()\n            return launch([*command,'-log'],**kwargs)\n        self.observation_folder=folder\n        self.snapshot_count=0\n        with patch('s760_runtime.subprocess.Popen',side_effect=observed):\n            super()._start(timeout)\n\n    def request(self,operation,**kwargs):\n        result=super().request(operation,**kwargs)\n        if operation=='frames':\n            self.snapshot_count+=1\n            tag=f'frame-{self.snapshot_count:02}'\n            temporary=self.observation_folder/'snapshot-request.tmp'\n            temporary.write_text(tag,encoding='ascii')\n            temporary.replace(self.observation_folder/'snapshot-request.txt')\n            deadline=time.monotonic()+10\n            while not (self.observation_folder/(tag+'.json')).exists():\n                if self.process.poll() is not None:raise RuntimeError('Observer process stopped')\n                if time.monotonic()>deadline:raise TimeoutError('Read-only snapshot timed out')\n                time.sleep(.02)\n        return result\n\ndef main():\n    parser=argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--workflow',choices=('stereo','scsi-save'),required=True)\n    parser.add_argument('--output',type=Path,required=True)\n    args=parser.parse_args()\n    workflow=ROOT/'scripts'/('verify_native_sampling_input.py' if args.workflow=='stereo' else 'verify_native_scsi_save.py')\n    files=[Path(__file__),HERE/'observer.lua',workflow,ROOT/'scripts/s760_runtime.py',ROOT/'scripts/s760_runtime.lua',ROOT/'mame-source/mames760.exe',ROOT/'S760224.IMG',ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN']\n    identity={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}\n    sys.argv=[str(workflow),'--state-dir',str(args.output.resolve())]\n    if args.workflow=='stereo':\n        sys.argv+=['--blank-disk',str(ROOT/'docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img')]\n    with patch.object(s760_runtime,'NativeRuntime',ObservedRuntime):\n        runpy.run_path(str(workflow),run_name='__main__')\n    assert all(hashlib.sha256(p.read_bytes()).hexdigest()==identity[str(p.relative_to(ROOT))] for p in files), 'Input changed during observation'\n    (args.output/'observer-identities.json').write_text(json.dumps(identity,indent=2)+'\\n')\n\nif __name__=='__main__':main()\n"
+  },
+  "reused_helper_source": "from pathlib import Path\nimport hashlib,json,struct\nfrom build_transfer import Asm,ROOT,HOOK,HOOK_PC,BASE,SOURCE_SHA\nP=Path(__file__).resolve().parent\noriginal=(ROOT/'S760224.IMG').read_bytes();assert hashlib.sha256(original).hexdigest()==SOURCE_SHA\na=Asm();saved=list(range(0x1c,0x60,2))+[0xda]\na.emit(0xf4,0xcb,1,0x0a,1,0xcb,1,0x0c,1)\nfor r in saved:a.emit(0xc8,r)\na.byte(0x14,0);a.imm(0x1c,15);a.st(0x1c,0x10a)\na.imm(0x1c,0x299);a.st(0x1c,0x10c)\na.ld(0x38,0x3616);a.cmp(0x38,13);a.cond(0xd7,'failed')\na.ld(0x3a,0x8f9e);a.ld(0x3c,0x8fa0)\nfor case in range(3):\n a.imm(0x20,2);a.call('reserve');a.cmp(0x3e,0);a.cond(0xd7,'failed')\n a.imm(0x4c,0xa55a);a.call('fill')\n for ch in range(2):\n  for offset,count in [(0,4096),(2048,4096),(4096,1024)]:\n   dest=8+(13+ch)*4608+offset\n   a.imm(0x28,0x4940);a.imm(0x2a,count);a.imm(0x2c,dest&65535);a.imm(0x34,dest>>16);a.call('dma')\n   a.cmp(0x3e,0);a.cond(0xd7,'failed')\n a.imm(0x4c,0x1234+case);a.call('fill_pattern')\n for ch in range(2):\n  dest=8+(13+ch)*4608\n  values=[(0x28,0x4940+ch*1024),(0x2a,1025 if case==0 and ch else 1024),(0x2c,dest),(0x34,0),(0x2e,dest),(0x30,dest+512),(0x32,1 if case==1 and ch else 0)]\n  for reg,val in values:a.imm(reg,val)\n  a.call('adapter')\n  a.cmp(0x3e,(1 if case==0 else 3 if case==1 else 0) if ch else 0);a.cond(0xd7,'failed')\n a.call('rollback');a.imm(0x44,case+1);a.st(0x44,0x5e00)\n# Insufficient-capacity input rejects before reserve; native capacity is untouched.\na.imm(0x20,65535);a.call('reserve');a.cmp(0x3e,1);a.cond(0xd7,'failed')\na.imm(0x44,4);a.st(0x44,0x5e00)\na.imm(0x44,0xb502);a.st(0x44,0x5ef0);a.jmp('exit')\na.label('failed');a.imm(0x44,0xdead);a.st(0x44,0x5ef0)\na.label('exit')\nfor r in reversed(saved):a.emit(0xcc,r)\na.emit(0xcf,1,0x0c,1,0xcf,1,0x0a,1,0xf5);a.emit(*original[HOOK:HOOK+8]);a.emit(0xf0)\na.label('reserve');a.ld(0x44,0x3618);a.emit(0x88,0x38,0x44);a.cond(0xd3,'invalid')\na.emit(0x68,0x38,0x44,0x88,0x44,0x20);a.cond(0xd9,'invalid')\na.mov(0x44,0x38);a.emit(0x64,0x20,0x44);a.st(0x44,0x3616);a.st(0x44,0x8f9e);a.clr(0x3e);a.emit(0xf0)\na.label('rollback');a.st(0x38,0x3616);a.st(0x3a,0x8f9e);a.st(0x3c,0x8fa0);a.emit(0xf0)\nfor name,increment in [('fill',0),('fill_pattern',0x101)]:\n a.label(name);a.imm(0x48,0x4d40);a.imm(0x4a,2048);a.label(name+'_loop')\n a.emit(0xc2,0x49,0x4c)\n if increment:a.emit(0x65,1,1,0x4c)\n a.emit(5,0x4a);a.cond(0xd7,name+'_loop');a.emit(0xf0)\na.label('adapter')\na.cmp(0x32,0);a.cond(0xd7,'cancel')\na.cmp(0x2a,0);a.cond(0xdf,'invalid');a.cmp(0x2a,4096);a.cond(0xd9,'invalid')\na.mov(0x44,0x2a);a.emit(0x61,1,0,0x44);a.cmp(0x44,0);a.cond(0xd7,'invalid')\na.cmp(0x28,0x4940);a.cond(0xd3,'invalid');a.cmp(0x28,0x5940);a.cond(0xd9,'invalid')\na.imm(0x44,0x5940);a.emit(0x68,0x28,0x44);a.emit(0x88,0x44,0x2a);a.cond(0xd9,'invalid')\na.emit(0x88,0x2e,0x2c);a.cond(0xd3,'invalid');a.emit(0x88,0x30,0x2c);a.cond(0xd9,'invalid')\na.mov(0x44,0x30);a.emit(0x68,0x2c,0x44);a.mov(0x46,0x2a);a.emit(0x08,1,0x46);a.emit(0x88,0x44,0x46);a.cond(0xd9,'invalid')\na.ld(0x44,0x118);a.cmp(0x44,0);a.cond(0xd7,'busy');a.call('dma');a.emit(0xf0)\nfor label,code in [('invalid',1),('cancel',3),('busy',4)]:a.label(label);a.imm(0x3e,code);a.emit(0xf0)\na.label('dma');a.ldb(0,0x11d);a.st(0x2c,0xc00e);a.st(0x34,0xc00c)\na.st(0x28,0x11a);a.stb(0,0x11c);a.st(0x2a,0x118);a.byte(0x44,0xbc);a.stb(0x44,0x11d)\na.imm(0x46,256);a.label('poll');a.ld(0x44,0x118);a.cmp(0x44,0);a.cond(0xdf,'done');a.emit(5,0x46);a.cond(0xd7,'poll')\na.imm(0x3e,2);a.emit(0xf0)\na.label('done');a.ldb(0,0x11d);a.clr(0x3e);a.emit(0xf0)\ncode=a.finish();assert len(code)<0xc02\nimage=bytearray(original);image[0x853e:0x853e+len(code)]=code\nimage[HOOK:HOOK+8]=bytes([0xef])+struct.pack('<H',(BASE-HOOK_PC-3)&65535)+bytes([0xfd])*5\nwith (P/'S760224.PAIR-ROLLBACK.IMG').open('xb') as f:f.write(image)\n(P/'build.json').write_text(json.dumps(dict(sha256=hashlib.sha256(image).hexdigest(),code_bytes=len(code),labels=a.labels,decoded=a.rows),indent=2)+'\\n')\nprint('Built',len(code),'bytes')\n",
+  "rejected_runs": [
+    "V1: template leading guard overlapped DMA source; BUG-127.",
+    "V2 first run: publication byte checks passed, but exploratory UI dial targeted loop-start rather than sample selection; excluded from final UI acceptance."
+  ],
+  "limitations": [
+    "Known recorded 44.1kHz stereo descriptor template and generated PCM; no WAV metadata constructor or BlueSCSI input.",
+    "Fixed public slots13/14 and 13 blocks/channel; no general free-slot scan, fragmentation or slot-exhaustion test.",
+    "Interrupts masked throughout; pair copies are protected only against ordinary CPU interrupt readers in this diagnostic.",
+    "No published-pair audio, Save/cold Load, dependent permanent objects, in-flight DMA failure/abort, power-loss or physical-hardware qualification.",
+    "No combined transport/parser/publication code fit, stack bound or interrupt-serviced allocation ownership."
+  ]
+}

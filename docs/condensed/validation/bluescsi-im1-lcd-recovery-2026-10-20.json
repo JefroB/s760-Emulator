@@ -1,0 +1,1443 @@
+{
+  "passed": true,
+  "date": "2026-10-20",
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "boot_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+  "emulator_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+  "commands": [
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_lcd_errors.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_lcd_cancel.py"
+  ],
+  "prerequisites": "Genuine saved controller0 NVRAM; private zero-length fault/100-entry catalog and named valid Roland A/B ISO fixtures; physical panel controls/read-only observers",
+  "originals_unchanged": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+  },
+  "results": {
+    "errors": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "states": [
+        {
+          "name": "boot",
+          "screen": 50,
+          "cursor": [
+            8,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "ordinary-target0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "ordinary-target1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "ordinary-refused",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 9,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fault-target0",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 9,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fault-target1",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 2,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 9,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fault-catalog0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "empty-image0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fault-preview0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fault-mount0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fault-mount1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fault-mount2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "failed-mount",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 9,
+          "phase": 1,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-target0",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 2,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 9,
+          "phase": 1,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-catalog0",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-image0",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-image1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-image2",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-preview0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-mount0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-mount1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-mount2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "recovery-handoff0",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 1,
+          "handoff": 30209,
+          "native_drive": 3
+        },
+        {
+          "name": "loaded-B",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 13,
+          "error": 0,
+          "phase": 1,
+          "handoff": 30209,
+          "native_drive": 3
+        },
+        {
+          "name": "perform",
+          "screen": 50,
+          "cursor": [
+            8,
+            8
+          ],
+          "mode": 0,
+          "target": 3,
+          "count": 1,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 13,
+          "error": 0,
+          "phase": 1,
+          "handoff": 30209,
+          "native_drive": 3
+        }
+      ],
+      "rows": [
+        {
+          "cdb": "12000000600000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 33.45401425,
+          "length": 36
+        },
+        {
+          "cdb": "12000000600000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 37.738802375,
+          "length": 50
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 37.7432545,
+          "length": 48
+        },
+        {
+          "cdb": "da000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 37.744482625,
+          "length": 1
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 37.75224575,
+          "length": 80
+        },
+        {
+          "cdb": "d8000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 44.285121125,
+          "length": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "status": 2,
+          "transport": 0,
+          "seconds": 44.305838625,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 44.30794975,
+          "length": 18
+        },
+        {
+          "cdb": "00000000000000000000",
+          "status": 2,
+          "transport": 0,
+          "seconds": 44.32868275,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 44.330793875,
+          "length": 18
+        },
+        {
+          "cdb": "00000000000000000000",
+          "status": 2,
+          "transport": 0,
+          "seconds": 44.351510125,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 44.35362125,
+          "length": 18
+        },
+        {
+          "cdb": "00000000000000000000",
+          "status": 2,
+          "transport": 0,
+          "seconds": 44.37435425,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 44.376465375,
+          "length": 18
+        },
+        {
+          "cdb": "12000000600000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 50.055383875,
+          "length": 50
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 50.05983625,
+          "length": 48
+        },
+        {
+          "cdb": "da000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 50.061064625,
+          "length": 1
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 50.065420875,
+          "length": 40
+        },
+        {
+          "cdb": "d8000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 57.635162,
+          "length": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "status": 2,
+          "transport": 0,
+          "seconds": 57.65587975,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 57.657991125,
+          "length": 18
+        },
+        {
+          "cdb": "00000000000000000000",
+          "status": 2,
+          "transport": 0,
+          "seconds": 57.678707625,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 57.680819,
+          "length": 18
+        },
+        {
+          "cdb": "00000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 57.70155225,
+          "length": 0
+        },
+        {
+          "cdb": "25000000000000000000",
+          "status": 0,
+          "transport": 0,
+          "seconds": 57.703078625,
+          "length": 8
+        }
+      ],
+      "fixture_sha256": {
+        "CD1\\000-empty.iso": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CD1\\001-valid.iso": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+        "CD3\\000-valid.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7"
+      },
+      "exact_sample_bytes": 119808,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "library_unchanged": true,
+      "scope": "LCD ordinary-target refusal, silent D8 failure four TUR/sense attempts, independent-target exact Load/playback recovery",
+      "lcd_status_draws": [
+        {
+          "y": 5,
+          "x": 3,
+          "pc": 25850,
+          "text": "SCSI error           "
+        },
+        {
+          "y": 5,
+          "x": 4,
+          "pc": 25850,
+          "text": "SCSI error           "
+        },
+        {
+          "y": 5,
+          "x": 3,
+          "pc": 25850,
+          "text": "Mount uncertain; sele"
+        },
+        {
+          "y": 5,
+          "x": 4,
+          "pc": 25850,
+          "text": "Mount uncertain; sele"
+        }
+      ]
+    },
+    "cancellation": {
+      "passed": true,
+      "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+      "states": [
+        {
+          "name": "boot",
+          "screen": 50,
+          "cursor": [
+            8,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "collections0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "list-cancelled",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 7,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "retry-list0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 7,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "retry-catalog0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "retry-image0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "preview0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "cancel-mount0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "cancel-mount1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "cancel-mount2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "mount-cancelled",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 7,
+          "phase": 1,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fresh-target0",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 7,
+          "phase": 1,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fresh-catalog0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 0,
+          "count": 0,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fresh-catalog1",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fresh-image0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 1,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "fresh-preview0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "explicit-retry0",
+          "screen": 245,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "explicit-retry1",
+          "screen": 245,
+          "cursor": [
+            24,
+            16
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "explicit-retry2",
+          "screen": 245,
+          "cursor": [
+            24,
+            24
+          ],
+          "mode": 3,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 0,
+          "handoff": 0,
+          "native_drive": 8
+        },
+        {
+          "name": "handoff0",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 0,
+          "error": 0,
+          "phase": 1,
+          "handoff": 30209,
+          "native_drive": 1
+        },
+        {
+          "name": "loaded-B",
+          "screen": 247,
+          "cursor": [
+            24,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 13,
+          "error": 0,
+          "phase": 1,
+          "handoff": 30209,
+          "native_drive": 1
+        },
+        {
+          "name": "perform",
+          "screen": 50,
+          "cursor": [
+            8,
+            8
+          ],
+          "mode": 0,
+          "target": 1,
+          "count": 100,
+          "first": 0,
+          "scroll": 0,
+          "index": 0,
+          "allocations": 13,
+          "error": 0,
+          "phase": 1,
+          "handoff": 30209,
+          "native_drive": 1
+        }
+      ],
+      "rows": [
+        {
+          "cdb": "12000000600000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 33.122154,
+          "length": 50
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 33.126606125,
+          "length": 48
+        },
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 33.12783425,
+          "length": 1
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 33.46859475,
+          "length": 4000
+        },
+        {
+          "cdb": "12000000600000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 38.90528525,
+          "length": 50
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 38.909737375,
+          "length": 48
+        },
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 38.9109655,
+          "length": 1
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 39.252436625,
+          "length": 4000
+        },
+        {
+          "cdb": "d8000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 45.768506875,
+          "length": 0
+        },
+        {
+          "cdb": "12000000600000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 54.422157125,
+          "length": 50
+        },
+        {
+          "cdb": "1a083100300000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 54.42660925,
+          "length": 48
+        },
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 54.427837375,
+          "length": 1
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 54.7693085,
+          "length": 4000
+        },
+        {
+          "cdb": "d8000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 61.085057875,
+          "length": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "status": 2,
+          "seconds": 61.105792125,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 61.10790325,
+          "length": 18
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "status": 2,
+          "seconds": 61.1286195,
+          "length": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 61.130730625,
+          "length": 18
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 61.151446875,
+          "length": 0
+        },
+        {
+          "cdb": "25000000000000000000",
+          "transport": 0,
+          "status": 0,
+          "seconds": 61.152973,
+          "length": 8
+        }
+      ],
+      "fixture_sha256": {
+        "CD1\\000.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+        "CD1\\001.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\002.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\003.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\004.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\005.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\006.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\007.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\008.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\009.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\010.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\011.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\012.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\013.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\014.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\015.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\016.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\017.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\018.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\019.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\020.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\021.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\022.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\023.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\024.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\025.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\026.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\027.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\028.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\029.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\030.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\031.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\032.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\033.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\034.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\035.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\036.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\037.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\038.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\039.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\040.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\041.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\042.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\043.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\044.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\045.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\046.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\047.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\048.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\049.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\050.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\051.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\052.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\053.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\054.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\055.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\056.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\057.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\058.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\059.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\060.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\061.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\062.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\063.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\064.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\065.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\066.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\067.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\068.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\069.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\070.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\071.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\072.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\073.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\074.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\075.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\076.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\077.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\078.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\079.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\080.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\081.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\082.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\083.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\084.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\085.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\086.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\087.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\088.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\089.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\090.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\091.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\092.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\093.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\094.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\095.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\096.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\097.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\098.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "CD1\\099.iso": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad"
+      },
+      "exact_sample_bytes": 119808,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "library_unchanged": true,
+      "scope": "LCD D7 drain cancellation, D8 interruption no follow-on, explicit retry exact Load/playback",
+      "lcd_status_draws": [
+        {
+          "pc": 25850,
+          "text": "Cancelled            ",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "pc": 25850,
+          "text": "Cancelled            ",
+          "x": 4,
+          "y": 5
+        },
+        {
+          "pc": 25850,
+          "text": "Mount uncertain; sele",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "pc": 25850,
+          "text": "Mount uncertain; sele",
+          "x": 4,
+          "y": 5
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Native emulation only; modeled zero-length switch failure is not physical failure parity",
+    "D8 interruption may change backing image; no rollback or automatic Load",
+    "Current-hash LCD Save System/cold-state, other Disk operations, RC100, ownership/reset/checkpoint/stack/full-fit/hardware gates open"
+  ]
+}

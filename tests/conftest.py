@@ -8,6 +8,7 @@ regressions when scripts change. Host-side only (no hardware needed).
 import os
 import subprocess
 import sys
+from pathlib import Path
 import pytest
 
 # --- repo layout -------------------------------------------------------------
@@ -77,10 +78,15 @@ def synthetic_completion_root(tmp_path):
 
 @pytest.fixture(scope="session")
 def image_bytes():
-    if not os.path.exists(IMAGE):
-        pytest.skip(f"Local Roland system image required: {IMAGE}")
-    with open(IMAGE, "rb") as f:
-        return f.read()
+    return require_system_image().read_bytes()
+
+
+def require_system_image():
+    """Resolve private firmware only for tests that actually need original bytes."""
+    source = Path(IMAGE)
+    if not source.is_file():
+        pytest.skip(f"Local Roland system image required: {source}")
+    return source
 
 
 @pytest.fixture(scope="session")

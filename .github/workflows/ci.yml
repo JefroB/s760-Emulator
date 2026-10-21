@@ -9,8 +9,8 @@
 # both so a red suite fails the overall check.
 #
 # Platform notes / prerequisites encoded here:
-#   * The C++ toolchain + the `s760.ps1` analyzer the Python suite shells out to
-#     are Windows/MSVC/PowerShell based (see docs/testing/testing.md and the
+#   * The C++ toolchain and native integration tests are Windows/MSVC based
+#     (see docs/testing/testing.md and the
 #     s760-build-and-test runbook), so the backend job runs on windows-latest and
 #     targets Python 3.13 (core/CMakeLists.txt `find_package(Python 3.13 ...)`).
 #   * The MAME binary (`mames760.exe`) and the S-760 ROM set are local/hardware
@@ -88,11 +88,32 @@ jobs:
       - name: Native callback stream tests
         run: .\build\Release\s760_native_stream_tests.exe
 
+      - name: Expose MSVC to Python C++ probe tests
+        shell: pwsh
+        run: |
+          $ciVswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          $ciCompiler = @(& $ciVswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -find 'VC\Tools\MSVC\**\bin\Hostx64\x64\cl.exe')[0]
+          if (-not $ciCompiler -or -not (Test-Path -LiteralPath $ciCompiler)) {
+            throw 'Visual C++ compiler required for the Python C++ probe tests was not found'
+          }
+          Split-Path -Parent $ciCompiler | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
       # The pybind11 module is emitted into `tests/` (LIBRARY/RUNTIME_OUTPUT_DIRECTORY
       # in core/CMakeLists.txt), so `import s760_cpp` resolves when pytest runs there.
+      # A fresh checkout excludes local compiler/decompiler tests and private
+      # firmware. Tests needing original firmware must report explicit skips;
+      # synthetic tests remain active. Never download firmware for CI.
       - name: Run Python test suite (pytest tests)
         shell: pwsh
-        run: pytest tests
+        run: python -m pytest tests -ra --junitxml=temp/ci/pytest-results.xml
+
+      - name: Upload backend test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-pytest-results
+          path: temp/ci/pytest-results.xml
+          if-no-files-found: ignore
 
   # ---------------------------------------------------------------------------
   # Frontend: google-ui React suites — Vitest + Playwright.

@@ -263,8 +263,8 @@ def main():
     package_dir = args.package
     if not package_dir:
         candidates = [
-            ROOT / 'docs/ic20-hle-findings/chatGPT-work/m6-complete-workflow-2026-10-17/Frozen acceptance kit/S760Studio',
-            ROOT / 'docs/ic20-hle-findings/chatGPT-work/m6-crash-2026-10-17/package/dist/S760Studio',
+            ROOT / 'dist/S760Studio',
+            ROOT / 'artifacts/standalone/S760Studio',
         ]
         for c in candidates:
             if c.is_dir():

@@ -1,0 +1,663 @@
+{
+  "date": "2026-10-17",
+  "completed_scope": "Two complete normal-speed frozen-candidate workstation workflows and a clean-machine handoff kit; clean-machine and final release qualification remain pending",
+  "source_revision": "d8ff83ad1b5da2d157c1d323baf1d1d14fc1cc41",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "google-ui/e2e/packaged-workflow.spec.ts": "e3dcbf3490ee56733f0f7985e75ae35cc9ac69fdda8bf3316440e4f4024cd8b7",
+    "google-ui/e2e/standalone-handoff.spec.ts": "4669ba04c2e28d152775d634151c7257847825cc90850e24ba8bbc5cf65c48a6",
+    "google-ui/e2e/native-controls.ts": "8cff868e1b4f672c0556e4ecdeafc9e59f5f59ac27b4c36affbf0f2fa284fe33",
+    "google-ui/playwright.packaged.config.ts": "a4477dae87334397821503dace84cebaf0effc6be986e961e6798bd5da115901",
+    "scripts/verify_packaged_workflow.py": "edd6033410711f5e4c49209aff3642a4698b7b67dadc19120a38ad92080efaad",
+    "scripts/verify_packaged_edit_audio.py": "9d73544d88f3fed2ad0e97b2165aa52258e5441fa567b6b8e7ba1c7932f1c291",
+    "scripts/verify_packaged_sampling.py": "ee73c22334f53b3b9b0450d985a564b20092a738910b8fac6c7cd4fa55251450",
+    "scripts/prepare_standalone_acceptance_kit.py": "29eaf4eaa276e3cc0981c55bff044f2f5700ee19dfe43c28984bc51e31b0e91e",
+    "scripts/start_standalone_acceptance.ps1": "c5c37c20c89f0c799dfda01c037074b26a2f3b048a9e536599e1957b5d674cb8",
+    "scripts/complete_standalone_acceptance.ps1": "d4a32b9b98abfdeeda50224471805f2585fcde06c99d8cd78aae2171ef1a93d0",
+    "scripts/qa/windows-loopback.cpp": "89f9a7cee6ca877bde1fbefabe37923c2e9b4fc0adb23cdf80f8f26321c186ec",
+    "scripts/qa/CMakeLists.txt": "8fd85eb841b13319cda95a4b1728d5cf6361a1c1eb10398538d830ce039574f1",
+    "scripts/s760_runtime.py": "dc2874394a1fba81ba80d2109267d612d4beea74f352564d65049e27dbbc7723",
+    "scripts/s760_runtime.lua": "1c19bfa59ad1ba7d7eb1558cbac22e9746bda0d2a43b3d08547bb5ba103d95d2",
+    "scripts/s760_standalone.py": "bb7f88eec729b7293323b003b884294184303a7ec0d9c19593bba937def8355a",
+    "scripts/s760_capture.py": "ad794bede82d0c7ad0f24e2adf42c97f7bbce842135fd6e9c63f4546a5efeea0",
+    "scripts/s760_asio.py": "6508edee315654e34250b1e00ccead69291b919fd332866e41e732fb297d777e",
+    "google-ui/src/NativeStudio.tsx": "a6dc6b1ef25e3cf28f701800be7681ae129f1d1b27603dea361b7a533dd56eab",
+    "google-ui/src/components/RuntimeSettings.tsx": "cb2fd3f20a4c699ecd209b31d6d2284213e630c8f65b1c65cb14863adae97107",
+    "google-ui/src/components/SettingsLayer.tsx": "d090cf4ffcceb6205b666d7b90d88d938a68f1f270b0f3e1c9761360ebe0e5d2",
+    "mame-source/src/mame/roland/s760.cpp": "43727978af8c9fb59726dc67aa8f5c56060d8140288a95232b6d99b6c083696b"
+  },
+  "fixture_sha256": {
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "roms/System/S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/FDD/ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+    "private/formatted-empty-720kb.img": "f9fce7624a8ce5c68575c52994a3f3702a43cd4f19d30e8ec8c60ad4b9b9510b"
+  },
+  "original_fixtures_preserved": true,
+  "candidate": {
+    "files": 572,
+    "bytes": 55281183,
+    "manifest_sha256": "377bdc783ac9685893a503758b0feacc777240fb340c3be39407958a52e3a461",
+    "committed_manifest": "milestone-6-standalone-candidate-manifest-2026-10-17.json",
+    "unchanged_across_both_cycles": true,
+    "executable_sha256": "fdcade2450d67c7bafeaf2b80bfe4fee68b044e3eefa006222f2944e18cdbc4b",
+    "development_only": true,
+    "release_qualified": false
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_qa": "3.13.0 (tags/v3.13.0:60403a5, Oct  7 2024, 09:38:07) [MSC v.1941 64 bit (AMD64)]",
+    "node_qa": "v22.17.1",
+    "windows_powershell": "5.1.26100.9711",
+    "workstation": {
+      "Caption": "Microsoft Windows 11 Pro",
+      "Version": "10.0.26200",
+      "BuildNumber": "26200",
+      "OSArchitecture": "64-bit"
+    }
+  },
+  "cases": [
+    {
+      "passed": true,
+      "ui": {
+        "passed": true,
+        "cycle": 1,
+        "interface": "Packaged WebView2",
+        "renderers": [
+          "Edg/155.0.4283.60",
+          "Edg/155.0.4283.60"
+        ],
+        "throttle": true,
+        "playback": {
+          "baseline": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 383520,
+              "packets": 799,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1053327275201,
+              "last_qpc_100ns": 1053407074071
+            },
+            "peak": 0.008416865020990372,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "4b98656361d8d157ab49c3afb0c79f4226a82a1a349221f16ea048aae47eec71",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          },
+          "edited": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 384000,
+              "packets": 800,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1053526272338,
+              "last_qpc_100ns": 1053606171095
+            },
+            "peak": 0.004231181461364031,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "a837c9b6beea955560e645c7c7418b3210dda94589494a7cd08737bffa0e42b8",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          },
+          "restored": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 383520,
+              "packets": 799,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1055032703698,
+              "last_qpc_100ns": 1055112502443
+            },
+            "peak": 0.004231181461364031,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "2abcc1b3e19ce7493ec4c27b97cb33c1b193210b5bce7a23a1dab72855762385",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          },
+          "cold-restored": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 383520,
+              "packets": 799,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1055378555541,
+              "last_qpc_100ns": 1055458354346
+            },
+            "peak": 0.0042311809957027435,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "c323c153b9d119ba9a5c1055d39e1655d8dec1c77b3196b9811a89840f959984",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          }
+        },
+        "outputEndpoint": "{0.0.0.00000000}.{07ef8be9-58bc-4ceb-8e7d-70fde0d7dc99}",
+        "recordingDevice": "3:Stereo In 1-2 (MOTU Pro Audio v",
+        "captureStatus": "Recording: Stereo In 1-2 (MOTU Pro Audio v \u2014 44.1 kHz stereo PCM16. Input frames discarded: 2048. Capture restarts: 3.",
+        "before": 4121272165,
+        "edited": 3401795101,
+        "sample_disk_sha256": "94a7ad703c601fde94d4ce31aab6d7b54034ccb9fb4f7d169c00085f1306bd5a",
+        "edited_disk_sha256": "5b34184a12ccc7fe7fc2bfd013edc7a03a8f726d8a0c7ab8fdb567fc7e2efdca",
+        "package_manifest_sha256": "377bdc783ac9685893a503758b0feacc777240fb340c3be39407958a52e3a461"
+      },
+      "sample_readbacks": [
+        {
+          "process": "recorded",
+          "channels": [
+            {
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "recorded_marker_frames": 66223,
+              "sample_end_frame": 69116,
+              "nonzero_extent_frames": 66223,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 138240,
+              "frequency_hz": 440.0848388671875,
+              "pcm_sha256": "5624727c0ceb4843e723013f2baa4abb1ed5815d8d1609b1c5749c64240760e7",
+              "wave_disk_equal": true
+            },
+            {
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "recorded_marker_frames": 66223,
+              "sample_end_frame": 69116,
+              "nonzero_extent_frames": 66223,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 138240,
+              "frequency_hz": 879.8332214355469,
+              "pcm_sha256": "a3deea9b0e14e71fe910f67a455c748fad9d40ea55216f3916aa0303f72c8e7e",
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808
+        },
+        {
+          "process": "restored",
+          "channels": [
+            {
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "recorded_marker_frames": 66223,
+              "sample_end_frame": 69116,
+              "nonzero_extent_frames": 66223,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 138240,
+              "frequency_hz": 440.0848388671875,
+              "pcm_sha256": "5624727c0ceb4843e723013f2baa4abb1ed5815d8d1609b1c5749c64240760e7",
+              "wave_disk_equal": true
+            },
+            {
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "recorded_marker_frames": 66223,
+              "sample_end_frame": 69116,
+              "nonzero_extent_frames": 66223,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 138240,
+              "frequency_hz": 879.8332214355469,
+              "pcm_sha256": "a3deea9b0e14e71fe910f67a455c748fad9d40ea55216f3916aa0303f72c8e7e",
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808
+        },
+        {
+          "process": "cold",
+          "channels": [
+            {
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "recorded_marker_frames": 66223,
+              "sample_end_frame": 69116,
+              "nonzero_extent_frames": 66223,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 138240,
+              "frequency_hz": 440.0848388671875,
+              "pcm_sha256": "5624727c0ceb4843e723013f2baa4abb1ed5815d8d1609b1c5749c64240760e7",
+              "wave_disk_equal": true
+            },
+            {
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "recorded_marker_frames": 66223,
+              "sample_end_frame": 69116,
+              "nonzero_extent_frames": 66223,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 138240,
+              "frequency_hz": 879.8332214355469,
+              "pcm_sha256": "a3deea9b0e14e71fe910f67a455c748fad9d40ea55216f3916aa0303f72c8e7e",
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808
+        }
+      ],
+      "native_state_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\native-final-cycle1",
+      "native_program_playback": {
+        "baseline": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        "edited_disk": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        "combined_restored_session": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      },
+      "limits": [
+        "Native readback is accelerated; actual UI workflow and Windows endpoint playback are normal-speed",
+        "Windows digital loopback is not analog output parity or physical latency measurement",
+        "No clean-machine or final-release qualification is inferred"
+      ],
+      "case": 1,
+      "evidence_sha256": {
+        "baseline-analysis.json": "1f4007b6268f3833f1ae4da89129e4d5c00cb0a5555be5e4a4b361bfafdda536",
+        "baseline.json": "c2533be779d527901f94cad58cd94503d0946314c136dd0484523232508cd25f",
+        "baseline.raw": "4b98656361d8d157ab49c3afb0c79f4226a82a1a349221f16ea048aae47eec71",
+        "baseline.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "cold-restored-analysis.json": "f46b11db27ccf89aac5b37cad1fa3558c6e0af9cc058eb9ad18d3afdb864cbd6",
+        "cold-restored.json": "204066cf7a67cd20b795586da418a3b78ad9487b93498b9c2627549000df1d87",
+        "cold-restored.png": "890cbca1c7ac5cfac35d176813dfdf04792a00161a6b8be477694dda1fabf65e",
+        "cold-restored.raw": "c323c153b9d119ba9a5c1055d39e1655d8dec1c77b3196b9811a89840f959984",
+        "cold-restored.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "edited-analysis.json": "14e4a81cd3abd3c0ce15346626773fa46641548cad333ef6da2c575f5de04985",
+        "edited.json": "72f59a948758e3502b063fb3ca99f51f1e46993873a6ff1c3f58b67b24273800",
+        "edited.raw": "a837c9b6beea955560e645c7c7418b3210dda94589494a7cd08737bffa0e42b8",
+        "edited.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "recorded.png": "3d3d3b7cf9c4028d3d28afce592991b2434f4dc3f290cf1ec9a5e9e3547c928a",
+        "recorded.s760state": "08baf74043556d8639f1b0f58cbbfeae0cd1672e61c661f8f3d941cae9e9735c",
+        "restored-analysis.json": "e20a5e34fb1148f24cae6befc381a580c7967d899a1acd0114a57421f09aa3ba",
+        "restored.json": "471817bd0afe2143c9274706caf2b161882f96c8a28e73dc24e36de1881de7a0",
+        "restored.raw": "2abcc1b3e19ce7493ec4c27b97cb33c1b193210b5bce7a23a1dab72855762385",
+        "restored.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "restored.s760state": "e66e805377ae95436ea735d14fd904f478a53fd7402ade96e703eb07e32fbb72",
+        "result.json": "d9b089e0e9c2a6e1091a1892c8a99c481760b626579e5f4b170364481e3953a9",
+        "tone.json": "90d116463a359532db173a9139f2cdf217273e9fdff709d94e17bcaafe4abd2b",
+        "verification.json": "7c7ea16f30d241bca77d253376362f8e495352529177bcd5a85370bf04085a78"
+      },
+      "exported_edited_volume_original_sample_bytes_preserved": 119808,
+      "windows_peak_ratio": 0.5027027819517258
+    },
+    {
+      "passed": true,
+      "ui": {
+        "passed": true,
+        "cycle": 2,
+        "interface": "Packaged WebView2",
+        "renderers": [
+          "Edg/155.0.4283.60",
+          "Edg/155.0.4283.60"
+        ],
+        "throttle": true,
+        "playback": {
+          "baseline": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 384000,
+              "packets": 800,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1056289703536,
+              "last_qpc_100ns": 1056369602297
+            },
+            "peak": 0.008416865020990372,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "b78afbc6bed3bcf1b8d99582dfe14fd6c2a80240769ff7b9bd844f19511888ed",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          },
+          "edited": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 383520,
+              "packets": 799,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1056503600405,
+              "last_qpc_100ns": 1056583399310
+            },
+            "peak": 0.004231181461364031,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "6515142172976acbc3aba27f87253c0c684eda1079ea87b6da3c6d954c299f1c",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          },
+          "restored": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 383520,
+              "packets": 799,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1058028282220,
+              "last_qpc_100ns": 1058108081060
+            },
+            "peak": 0.0042311809957027435,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "0a9c0f5a774363a700498063e39554d0644fe1e35e51de2252a40b391f66f102",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          },
+          "cold-restored": {
+            "passed": true,
+            "endpoint_capture": {
+              "rate": 48000,
+              "channels": 2,
+              "format": "float32",
+              "frames": 383520,
+              "packets": 799,
+              "discontinuity_flags": 1,
+              "silent_frames": 0,
+              "first_qpc_100ns": 1058374519905,
+              "last_qpc_100ns": 1058454318815
+            },
+            "peak": 0.004231181461364031,
+            "frequency_hz": 20004.2724609375,
+            "last_second_peak": 9.938877498782972e-10,
+            "silent_release": true,
+            "raw_sha256": "2e2108f1449550de7535b7dd85889b2a0ea98e405da2f0f8758bcdf542df3bad",
+            "domain": "Selected Windows WASAPI shared-mode digital output, not analog converter output"
+          }
+        },
+        "outputEndpoint": "{0.0.0.00000000}.{07ef8be9-58bc-4ceb-8e7d-70fde0d7dc99}",
+        "recordingDevice": "3:Stereo In 1-2 (MOTU Pro Audio v",
+        "captureStatus": "Recording: Stereo In 1-2 (MOTU Pro Audio v \u2014 44.1 kHz stereo PCM16. Input frames discarded: 2048. Capture restarts: 3.",
+        "before": 4121272165,
+        "edited": 3401795101,
+        "sample_disk_sha256": "006028271ed27354c1f686fed548266760c333549d342a63ce841073d1a74691",
+        "edited_disk_sha256": "e960c2d0449bc7ccb9443b2d8ebbb6bb6020e96d10b06415ed4c9e11165671c0",
+        "package_manifest_sha256": "377bdc783ac9685893a503758b0feacc777240fb340c3be39407958a52e3a461"
+      },
+      "sample_readbacks": [
+        {
+          "process": "recorded",
+          "channels": [
+            {
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "recorded_marker_frames": 87535,
+              "sample_end_frame": 87548,
+              "nonzero_extent_frames": 87542,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 175104,
+              "frequency_hz": 440.0848388671875,
+              "pcm_sha256": "ef49355cd811fda3b0ebe0d090e01aebc20066f8af81f8ff1845403e1583495f",
+              "wave_disk_equal": true
+            },
+            {
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "recorded_marker_frames": 87535,
+              "sample_end_frame": 87548,
+              "nonzero_extent_frames": 87542,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 175104,
+              "frequency_hz": 879.8332214355469,
+              "pcm_sha256": "6fbc3729b766a216b87b89692c013edab87c84acb0cbc8914c4aa5bd44483f2c",
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808
+        },
+        {
+          "process": "restored",
+          "channels": [
+            {
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "recorded_marker_frames": 87535,
+              "sample_end_frame": 87548,
+              "nonzero_extent_frames": 87542,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 175104,
+              "frequency_hz": 440.0848388671875,
+              "pcm_sha256": "ef49355cd811fda3b0ebe0d090e01aebc20066f8af81f8ff1845403e1583495f",
+              "wave_disk_equal": true
+            },
+            {
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "recorded_marker_frames": 87535,
+              "sample_end_frame": 87548,
+              "nonzero_extent_frames": 87542,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 175104,
+              "frequency_hz": 879.8332214355469,
+              "pcm_sha256": "6fbc3729b766a216b87b89692c013edab87c84acb0cbc8914c4aa5bd44483f2c",
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808
+        },
+        {
+          "process": "cold",
+          "channels": [
+            {
+              "index": 13,
+              "name": "SINE BIN0023AA\u007fL",
+              "recorded_marker_frames": 87535,
+              "sample_end_frame": 87548,
+              "nonzero_extent_frames": 87542,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 175104,
+              "frequency_hz": 440.0848388671875,
+              "pcm_sha256": "ef49355cd811fda3b0ebe0d090e01aebc20066f8af81f8ff1845403e1583495f",
+              "wave_disk_equal": true
+            },
+            {
+              "index": 14,
+              "name": "SINE BIN0023AA\u007fR",
+              "recorded_marker_frames": 87535,
+              "sample_end_frame": 87548,
+              "nonzero_extent_frames": 87542,
+              "padding_after_sample_end_zero": true,
+              "allocation_bytes": 175104,
+              "frequency_hz": 879.8332214355469,
+              "pcm_sha256": "6fbc3729b766a216b87b89692c013edab87c84acb0cbc8914c4aa5bd44483f2c",
+              "wave_disk_equal": true
+            }
+          ],
+          "original_sample_bytes_preserved": 119808
+        }
+      ],
+      "native_state_directory": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\native-final-cycle2",
+      "native_program_playback": {
+        "baseline": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.01694745011627674,
+          "silent_release": true
+        },
+        "edited_disk": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        },
+        "combined_restored_session": {
+          "bend": "centre",
+          "frequency_hz": 20004,
+          "peak": 0.008537158370018005,
+          "silent_release": true
+        }
+      },
+      "limits": [
+        "Native readback is accelerated; actual UI workflow and Windows endpoint playback are normal-speed",
+        "Windows digital loopback is not analog output parity or physical latency measurement",
+        "No clean-machine or final-release qualification is inferred"
+      ],
+      "case": 2,
+      "evidence_sha256": {
+        "baseline-analysis.json": "5f24adfe70cf40cc6f7835eee7e9047b054590425a3ff78e8694a404af542fa1",
+        "baseline.json": "e6480af538b08e0d69062234ff05f86030f6862eb84808e09f8b51ce4a58b14d",
+        "baseline.raw": "b78afbc6bed3bcf1b8d99582dfe14fd6c2a80240769ff7b9bd844f19511888ed",
+        "baseline.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "cold-restored-analysis.json": "5f79a91dabe36d1d5290e8a70b44674356c90af73d372433b0f7464b92233e2a",
+        "cold-restored.json": "05e25bdc766961819e206d5116ef75295b4daa62546526489a7e33df21e129c2",
+        "cold-restored.png": "adde90ebf19d6527f71ec6b6b6959f006c5847ed7f27680c0949a79b046e8053",
+        "cold-restored.raw": "2e2108f1449550de7535b7dd85889b2a0ea98e405da2f0f8758bcdf542df3bad",
+        "cold-restored.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "edited-analysis.json": "8037982eb7a181b933ee5d89ebd43b7273555aa7020cc08fe3d8820d1b0785eb",
+        "edited.json": "88b13552c91d3fe9c13dc5bb33223522669341a10134162dea1281146ef68c37",
+        "edited.raw": "6515142172976acbc3aba27f87253c0c684eda1079ea87b6da3c6d954c299f1c",
+        "edited.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "recorded.png": "1d2b046c472d7af370845781c6050039b2020ba45c408b36bba6ec936db2ad7a",
+        "recorded.s760state": "310465af9c30268debfcd1423e6048bbaabc4e000a22460c344ab1c5e50bb081",
+        "restored-analysis.json": "0caf4130bf1983a59648b04c573dfa9a24829a7e9ecab195402312b464f27ffb",
+        "restored.json": "502865b7ced533a5547da5684d0028afecb0da938cc79a74957d9c1963d27701",
+        "restored.raw": "0a9c0f5a774363a700498063e39554d0644fe1e35e51de2252a40b391f66f102",
+        "restored.raw.ready": "5d1dbce82e135ab816d7c6d1f5f9020b94000975fa77f0a349a5b4d226d82332",
+        "restored.s760state": "929da113a09362a8cb9c5494274900115b363b1b428ee61968058c29783f4b02",
+        "result.json": "3912da527905bab3665e44cc6a83143c1177b9fe04ae84aedcb5b4b4708c98b7",
+        "tone.json": "90d116463a359532db173a9139f2cdf217273e9fdff709d94e17bcaafe4abd2b",
+        "verification.json": "dddcc100ee0414bedf0db5ee81f1c008d2ea23e6b4dffeae6c24ebd434c60f79"
+      },
+      "exported_edited_volume_original_sample_bytes_preserved": 119808,
+      "windows_peak_ratio": 0.5027027819517258
+    }
+  ],
+  "handoff_kit": {
+    "archive": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\S760 clean machine handoff 2026-10-17-v2.zip",
+    "bytes": 21562136,
+    "sha256": "8f2905876c5818bad15d671e813c1e4a4457e4edb338d1c63f3d6fc9d956c482",
+    "package_files": 572,
+    "clean_machine_acceptance": "pending",
+    "release_qualified": false
+  },
+  "handoff_workstation_boot_smoke": {
+    "passed": true,
+    "interface": "Packaged WebView2",
+    "renderer": "Edg/155.0.4283.60",
+    "coloredPixels": 225776,
+    "packageManifest": "377bdc783ac9685893a503758b0feacc777240fb340c3be39407958a52e3a461",
+    "scope": "Extracted archive, default kit paths, Windows PowerShell launcher, unrelated working directory and stripped child development environment; workstation boot/UI smoke only",
+    "cleanMachine": false,
+    "completeWorkflow": false
+  },
+  "handoff_boot_only_report_status": "INCOMPLETE",
+  "webview_processes": [
+    {
+      "ProcessId": 25032,
+      "ParentProcessId": 24908,
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --embedded-browser-webview=1 --webview-exe-name=S760Studio.exe --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\handoff-smoke-v2\\profile\\webview\\EBWebView\" --noerrdialogs --embedded-browser-webview-dpi-awareness=1 --allow-file-access-from-files --disable-features=ElasticOverscroll --remote-debugging-address=127.0.0.1 --remote-debugging-port=56436 --mojo-named-platform-channel-pipe=24908.9112.4072964297887676724 /pfhostedapp:a0e6e500f7520e5c8fae7b41b296625fed7101ea"
+    },
+    {
+      "ProcessId": 26444,
+      "ParentProcessId": 25032,
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=crashpad-handler --user-data-dir=D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\handoff-smoke-v2\\profile\\webview\\EBWebView /prefetch:4 /pfhostedapp:a0e6e500f7520e5c8fae7b41b296625fed7101ea --monitor-self-annotation=ptype=crashpad-handler --database=D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\handoff-smoke-v2\\profile\\webview\\EBWebView\\Crashpad --annotation=IsOfficialBuild=1 --annotation=channel= --annotation=chromium-version=155.0.8059.80 \"--annotation=exe=C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --annotation=plat=Win64 \"--annotation=prod=Edge WebView2\" --annotation=ver=155.0.4283.60 --initial-client-data=0x178,0x17c,0x180,0x154,0x188,0x7ff8c64683e0,0x7ff8c64683f0,0x7ff8c6468400"
+    },
+    {
+      "ProcessId": 15012,
+      "ParentProcessId": 25032,
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=gpu-process --gpu-recent-crash-count=0 --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\handoff-smoke-v2\\profile\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --gpu-preferences=WAAAAAAAAADgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAAEAAAAAIAAAABAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --startup-read-main-dll --metrics-shmem-handle=1804,i,14545209824346792936,3618346150176285182,262144 --field-trial-handle=1920,i,13542443939270791078,6583225835474870267,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1924,i,7861463473695250987,15387630542108312524,4 --trace-process-track-uuid=3190708988185955192 --mojo-platform-channel-handle=1856 /prefetch:2 /pfhostedapp:a0e6e500f7520e5c8fae7b41b296625fed7101ea"
+    },
+    {
+      "ProcessId": 10468,
+      "ParentProcessId": 25032,
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\handoff-smoke-v2\\profile\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --startup-read-main-dll --metrics-shmem-handle=2140,i,14214069885848577648,4933723607650259755,524288 --field-trial-handle=1920,i,13542443939270791078,6583225835474870267,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1924,i,7861463473695250987,15387630542108312524,4 --trace-process-track-uuid=3190708989122997041 --mojo-platform-channel-handle=2116 /prefetch:11 /pfhostedapp:a0e6e500f7520e5c8fae7b41b296625fed7101ea"
+    },
+    {
+      "ProcessId": 26644,
+      "ParentProcessId": 25032,
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=service --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\handoff-smoke-v2\\profile\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --startup-read-main-dll --metrics-shmem-handle=2484,i,12535725638913336383,9416676723707578466,524288 --field-trial-handle=1920,i,13542443939270791078,6583225835474870267,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1924,i,7861463473695250987,15387630542108312524,4 --trace-process-track-uuid=3190708990060038890 --mojo-platform-channel-handle=2508 /prefetch:13 /pfhostedapp:a0e6e500f7520e5c8fae7b41b296625fed7101ea"
+    },
+    {
+      "ProcessId": 30060,
+      "ParentProcessId": 25032,
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe",
+      "CommandLine": "\"C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.60\\msedgewebview2.exe\" --type=renderer --noerrdialogs --user-data-dir=\"D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\handoff-smoke-v2\\profile\\webview\\EBWebView\" --webview-exe-name=S760Studio.exe --embedded-browser-webview=1 --embedded-browser-webview-dpi-awareness=1 --allow-file-access-from-files --remote-debugging-port=56436 --video-capture-use-gpu-memory-buffer --lang=en-US --js-flags --device-scale-factor=1.5 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --ssd-no-pressure-read-main-dll --launch-time-ticks=106052769077 --metrics-shmem-handle=3936,i,1484932125058671798,13119292292638824322,1048576 --field-trial-handle=1920,i,13542443939270791078,6583225835474870267,262144 --disable-features=ElasticOverscroll --variations-seed-version --pseudonymization-salt-handle=1924,i,7861463473695250987,15387630542108312524,4 --trace-process-track-uuid=3190708990997080739 --mojo-platform-channel-handle=3944 /pfhostedapp:a0e6e500f7520e5c8fae7b41b296625fed7101ea /prefetch:1"
+    }
+  ],
+  "loopback_qa_executable_sha256": "55d17b8fc268d799f79ecdbcf99db739dff6843900e4ebb96397352d91cda7fa",
+  "validation": {
+    "complete_ui_cycles_passed": 2,
+    "frozen_app_launches": 4,
+    "independent_final_native_processes_passed": 12,
+    "measured_windows_playback_windows": 8,
+    "normal_speed_ui_and_device_io": true,
+    "typescript": "passed",
+    "handoff_windows_powershell5_default_paths_boot": "passed",
+    "handoff_changed_manifest_rejected": true,
+    "verify_only_cannot_claim_workflow_pass": true,
+    "clean_machine_available": false,
+    "clean_machine_test": "pending by user instruction",
+    "remaining_test_owned_processes": 0
+  },
+  "commands": {
+    "ui_cwd": "google-ui",
+    "ui": "node node_modules/@playwright/test/cli.js test packaged-workflow.spec.ts --config=playwright.packaged.config.ts --output=<private-results>",
+    "environment": {
+      "S760_WORKFLOW_PACKAGE": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\Frozen acceptance kit\\S760Studio",
+      "S760_WORKFLOW_MANIFEST": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\Frozen acceptance kit\\PACKAGE-MANIFEST.json",
+      "S760_WORKFLOW_WORK": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\run4",
+      "S760_WORKFLOW_BLANK": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\media-verification-20261012-065549\\formatted.img",
+      "S760_WORKFLOW_INPUT": "3:Stereo In 1-2 (MOTU Pro Audio v",
+      "S760_WORKFLOW_LOOPBACK": "D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17\\loopback-build\\Release\\windows_loopback.exe"
+    },
+    "native": "python scripts/verify_packaged_workflow.py verify --package <same-frozen-package> --work <work-parent>/cycle-N --state-dir <fresh-native-directory>",
+    "qa_helper": "cmake -S scripts/qa -B <private-build> -A x64; cmake --build <private-build> --config Release",
+    "handoff": "python scripts/prepare_standalone_acceptance_kit.py --package <frozen-package> --manifest <manifest> --output <fresh-kit-directory>",
+    "handoff_smoke": "Start-Acceptance.ps1 from re-extracted kit under Windows PowerShell 5.1, default package paths, unrelated cwd, then standalone-handoff.spec.ts attached to actual WebView2"
+  },
+  "raw_evidence_private": "docs\\ic20-hle-findings\\chatGPT-work\\m6-complete-workflow-2026-10-17",
+  "trial_notes": [
+    "Initial QA check() assumed immediate preference acknowledgement; changed to click plus acknowledged state wait",
+    "Loaded-library Sampling must use firmware New before Ready to preserve existing samples",
+    "Normal Perform field view is compared after leaving active edit highlighting; Level64 confirmed independently",
+    "Cold Sample Load of fifteen files exceeded an earlier fixed35-second wait; final verifier waits for actual firmware completion",
+    "Second capture has seven nonzero frames after the default loop-start marker, still before serialized sample end; full allocations are preserved and padding is checked beyond sample end",
+    "BUG-101: kit default paths are now resolved after script startup, verified in Windows PowerShell5.1 from unrelated cwd"
+  ],
+  "limitations": [
+    "This is a frozen development candidate, not a tagged or distribution-reviewed final release",
+    "No clean Windows machine or VM was available; user requested workstation completion plus handoff",
+    "Eight Windows captures measure shared-mode digital endpoint output at48000Hz, not analog output or physical latency; discontinuity flags remain reported",
+    "Known physical input uses MOTU ASIO outputs3/4 to Windows MME inputs1/2 at44100Hz; input counters do not prove lossless physical-driver capture or long-term drift",
+    "Recorded-marker frame counts are not a guarantee of recording duration; serialized end markers and final-block tail are retained",
+    "Final distribution/source/notices review, clean-machine installation and VST3 release/host matrix remain separate"
+  ]
+}
