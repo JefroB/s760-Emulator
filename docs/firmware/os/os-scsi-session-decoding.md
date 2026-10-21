@@ -1,6 +1,6 @@
 # SCSI session and object notifications
 
-This is static analysis of the original OS image. [588 instruction anchors](../../condensed/validation/os-scsi-session-2026-10-16.json) are checked against its bytes. No native SCSI transaction or physical MIDI capture validates these paths yet.
+This is static analysis of the original OS image. [588 instruction anchors](../../condensed/validation/os-scsi-session-2026-10-16.json) are checked against its bytes. Native session/SDS interoperation is qualified below for the experimental image. External SCSI transactions and physical MIDI captures remain unqualified.
 
 ## Invocation and ownership
 
@@ -56,3 +56,17 @@ The normal manufacturer41 parser supplies the request fields. Under its establis
 This connects incoming requests to the outgoing session, enumeration and deletion messages. Initialization0000:C7F4..C802 sets1FA4=0,1FA5=FF,1FA6=FFFF. The main loop checks1FA4 before entering0166:8B91; the session polls it for exit. All requests still pass the existing manufacturer/device/model, receive-enable and additive checksum gates. Two-nibble helpers have an earlyF7 error return that callers do not check locally; valid-frame behavior is qualified, malformed reachability remains open.
 
 The [request/DMA evidence](../../condensed/validation/os-scsi-request-dma-2026-10-16.json) anchors this connection. This is an end-to-end static chain, not an executed command test.
+
+
+## Native session/SDS qualification (2026-10-18)
+
+The twenty-third checkpoint qualifies the separate manufacturer41 Remote Mode (MIDI/SCSI) session using ordinary MIDI requests. Five native cases cover remote-send timeout, peer cancellation, full completion, session exit requested during a stalled send, and receive publication. All return through the session caller at0166:8C68 and exit cleanly where applicable; remote scratch RW1C..6A, bank selectors and WSR match entry, with the expected18-byte wrapper/return stack difference. The two timeouts measure5,000,069 and5,000,056 timer microseconds. An exit request clears1FA4 while state7 remains owned, then the session exits after timeout recovery; it is not an immediate transfer abort. Across76 snapshots,16 received samples/2,560 PCM bytes and118 sent packets match exactly, including a full9,216-byte allocation and wire padding. All ten manufacturer entry/exit notifications match their bytes and checksum. Observed stack use reaches196 bytes relative to the session continuation, and the largest observed clock-service gap is42.780 ms; these are not complete stack/ISR bounds. No firmware/runtime changes or new confirmed defect. External SCSI initiator operations, enumeration/deletion, remaining entry/cancel boundaries and hardware/controller cases remain open. [Session evidence](../../condensed/validation/bluescsi-session-2026-10-18.json).
+
+Entry request is `F0 41 00 34 12 01 00 00 08 00 01 76 F7`; exit replaces
+mode01/checksum76 with00/77. The ordinary session UI renders Remote Mode
+(MIDI/SCSI). Read-only observation confirms1FA4=1 after entry and0 after exit.
+Four remote-send cases enter the experimental owner and return at8C68 through
+the CDED/CE05 wrapper; the receive case publishes through the original session
+transfer-supervisor path. This does not establish object-operation semantics
+or external SCSI bus transaction correctness. Original firmware files remain
+unchanged; the candidate is the same local-owner image qualified previously.

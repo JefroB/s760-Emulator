@@ -1,5 +1,7 @@
 # Native VST3 engine selection
 
+Historical paths into the former findings tree below identify past runs; that scratch tree was removed on 2026-10-21. Generate new run output under `temp/work/`. See [hardware evidence policy](../../hardware/evidence-and-open-questions.md).
+
 The exported `Roland_S760.vst3` factory creates the native MAME processor only.
 Its bridge, MIDI and PCM use the same child process. It does not consult the
 historical `S760_BACKEND` selector and never falls back to the buffer-only core

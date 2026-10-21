@@ -1,0 +1,680 @@
+{
+  "checkpoint": 31,
+  "native": {
+    "identities": {
+      "mame-source\\mames760.exe": "ccb370a3f37c5fd7a9b2aa761ef339b9b5965d6211b64751dd7520557efb4dda",
+      "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+      "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-ui-reuse-2026-10-18\\observer.lua": "3e4b71b5fa6e6640cdaddd9a2df0b3f1899948042d14d7c765c0f65b0ca326e1",
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-ui-reuse-2026-10-18\\probe_base.py": "0ea52dff38874e06a2895c409eb3130eccbdc62b0248e777ba7c7bd0b9d79298",
+      "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-ui-reuse-2026-10-18\\run.py": "8b8a78325f40db0dc638b66b76e6008dd601ac56f4f07161015e37673bbae897"
+    },
+    "actions": [
+      {
+        "name": "perform",
+        "frame": 1,
+        "seconds": 25.666666666667
+      },
+      {
+        "name": "disk-menu",
+        "frame": 2,
+        "seconds": 27.266666666667
+      },
+      {
+        "name": "disk-menu-down",
+        "frame": 3,
+        "seconds": 28.05
+      },
+      {
+        "name": "menu-exit",
+        "frame": 4,
+        "seconds": 29.983333333333
+      },
+      {
+        "name": "disk-load",
+        "frame": 5,
+        "seconds": 35.916666666667
+      },
+      {
+        "name": "save-system",
+        "frame": 6,
+        "seconds": 40.85
+      },
+      {
+        "name": "perform-return",
+        "frame": 7,
+        "seconds": 45.883333333333
+      }
+    ],
+    "source_unchanged": true
+  },
+  "screen_loads": [
+    {
+      "page": 636,
+      "pointer": 37800,
+      "seconds": 7.884527,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 304
+    },
+    {
+      "page": 537,
+      "pointer": 35032,
+      "seconds": 12.57617225,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 34
+    },
+    {
+      "page": 650,
+      "pointer": 32768,
+      "seconds": 12.576730375,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 36
+    },
+    {
+      "page": 0,
+      "pointer": 0,
+      "seconds": 12.577286875,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 65535
+    },
+    {
+      "page": 537,
+      "pointer": 34052,
+      "seconds": 12.57890875,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 0
+    },
+    {
+      "page": 650,
+      "pointer": 32768,
+      "seconds": 12.658104375,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 36
+    },
+    {
+      "page": 650,
+      "pointer": 32874,
+      "seconds": 12.6643875,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 37
+    },
+    {
+      "page": 537,
+      "pointer": 37070,
+      "seconds": 26.192335625,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 244
+    },
+    {
+      "page": 650,
+      "pointer": 32874,
+      "seconds": 28.13328975,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 37
+    },
+    {
+      "page": 537,
+      "pointer": 37070,
+      "seconds": 30.46000075,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 244
+    },
+    {
+      "page": 650,
+      "pointer": 32874,
+      "seconds": 31.76885875,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 37
+    },
+    {
+      "page": 650,
+      "pointer": 32768,
+      "seconds": 31.775616375,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 36
+    },
+    {
+      "page": 537,
+      "pointer": 34052,
+      "seconds": 31.78242325,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 0
+    },
+    {
+      "page": 575,
+      "pointer": 37516,
+      "seconds": 31.790511375,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 246
+    },
+    {
+      "page": 537,
+      "pointer": 37070,
+      "seconds": 36.358827125,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 244
+    },
+    {
+      "page": 575,
+      "pointer": 37516,
+      "seconds": 37.749314,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 246
+    },
+    {
+      "page": 537,
+      "pointer": 34052,
+      "seconds": 37.75607175,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 0
+    },
+    {
+      "page": 575,
+      "pointer": 45610,
+      "seconds": 37.7635775,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 274
+    },
+    {
+      "page": 537,
+      "pointer": 35032,
+      "seconds": 41.306855625,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 34
+    },
+    {
+      "page": 575,
+      "pointer": 45610,
+      "seconds": 42.574618125,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 274
+    },
+    {
+      "page": 537,
+      "pointer": 34052,
+      "seconds": 42.581149,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 0
+    },
+    {
+      "page": 650,
+      "pointer": 32768,
+      "seconds": 42.58865475,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 36
+    },
+    {
+      "page": 650,
+      "pointer": 32874,
+      "seconds": 42.594937875,
+      "pc": 17171,
+      "mask": 65535,
+      "index": 37
+    }
+  ],
+  "snapshots": [
+    {
+      "action": {
+        "name": "perform",
+        "frame": 1,
+        "seconds": 25.666666666667
+      },
+      "page": 650,
+      "pointer": 32874,
+      "descriptor": "7a8089809980b880e880ea80ec806482",
+      "geometry": "0000032816f0c000ffdf0000d0007e00",
+      "callback_pairs": [
+        [
+          38503,
+          421
+        ],
+        [
+          38508,
+          421
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          38511,
+          421
+        ],
+        [
+          38514,
+          421
+        ],
+        [
+          38458,
+          421
+        ],
+        [
+          38469,
+          421
+        ],
+        [
+          38480,
+          421
+        ],
+        [
+          38491,
+          421
+        ],
+        [
+          32768,
+          369
+        ]
+      ],
+      "screen_sha256": "08253464df2027349121c862bcbc9c62703dba4d99659054a331b94a4169deb8"
+    },
+    {
+      "action": {
+        "name": "disk-menu",
+        "frame": 2,
+        "seconds": 27.266666666667
+      },
+      "page": 537,
+      "pointer": 37070,
+      "descriptor": "de90df90ef904691469146914891b291",
+      "geometry": "0111031014f0c000f40000009600c400",
+      "callback_pairs": [
+        [
+          37984,
+          406
+        ],
+        [
+          33068,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ]
+      ],
+      "screen_sha256": "b4b30dd9d6e393f33a20a798d3586c44d44093300058ee21fefec02bbce5fe0b"
+    },
+    {
+      "action": {
+        "name": "disk-menu-down",
+        "frame": 3,
+        "seconds": 28.05
+      },
+      "page": 537,
+      "pointer": 37070,
+      "descriptor": "de90df90ef904691469146914891b291",
+      "geometry": "0111031014f0c000f40000009600c400",
+      "callback_pairs": [
+        [
+          37984,
+          406
+        ],
+        [
+          33068,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ]
+      ],
+      "screen_sha256": "f34c20e308ec5fb6670cf1bed5b67fc25187c435ac17b0a4d5fe31ef3dbe55b0"
+    },
+    {
+      "action": {
+        "name": "menu-exit",
+        "frame": 4,
+        "seconds": 29.983333333333
+      },
+      "page": 650,
+      "pointer": 32874,
+      "descriptor": "7a8089809980b880e880ea80ec806482",
+      "geometry": "0000032816f0c000ffdf0000ec000a00",
+      "callback_pairs": [
+        [
+          38503,
+          421
+        ],
+        [
+          38508,
+          421
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          38511,
+          421
+        ],
+        [
+          38514,
+          421
+        ],
+        [
+          38458,
+          421
+        ],
+        [
+          38469,
+          421
+        ],
+        [
+          38480,
+          421
+        ],
+        [
+          38491,
+          421
+        ],
+        [
+          32768,
+          369
+        ]
+      ],
+      "screen_sha256": "4725cc334bef4878875038f19b296d12d59d6fc27f18b2a69e50dcf635dff626"
+    },
+    {
+      "action": {
+        "name": "disk-load",
+        "frame": 5,
+        "seconds": 35.916666666667
+      },
+      "page": 575,
+      "pointer": 37516,
+      "descriptor": "9c92a692b692d5920693069308930a93",
+      "geometry": "0000032816f0c000ff9d00002e002f00",
+      "callback_pairs": [
+        [
+          38848,
+          385
+        ],
+        [
+          39055,
+          385
+        ],
+        [
+          39514,
+          385
+        ],
+        [
+          39551,
+          385
+        ],
+        [
+          39600,
+          385
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          45382,
+          266
+        ],
+        [
+          40567,
+          385
+        ],
+        [
+          37182,
+          455
+        ],
+        [
+          32768,
+          369
+        ]
+      ],
+      "screen_sha256": "a69ae5ba6f3202527c84e209beaf8e6b5d26e804f7881ddb897e56d648eff5b3"
+    },
+    {
+      "action": {
+        "name": "save-system",
+        "frame": 6,
+        "seconds": 40.85
+      },
+      "page": 575,
+      "pointer": 45610,
+      "descriptor": "3ab246b256b293b2c4b2c4b2c6b2d8b2",
+      "geometry": "0000032816f0c000ff9400009600c400",
+      "callback_pairs": [
+        [
+          36928,
+          385
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          47999,
+          297
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          37182,
+          455
+        ],
+        [
+          32768,
+          369
+        ]
+      ],
+      "screen_sha256": "2beedd2c802a30e429f81ba7135d029c38fe493c5baa5201acfb4f37b62303f0"
+    },
+    {
+      "action": {
+        "name": "perform-return",
+        "frame": 7,
+        "seconds": 45.883333333333
+      },
+      "page": 650,
+      "pointer": 32874,
+      "descriptor": "7a8089809980b880e880ea80ec806482",
+      "geometry": "0000032816f0c000ffdf0000a0002c00",
+      "callback_pairs": [
+        [
+          38503,
+          421
+        ],
+        [
+          38508,
+          421
+        ],
+        [
+          32768,
+          369
+        ],
+        [
+          38511,
+          421
+        ],
+        [
+          38514,
+          421
+        ],
+        [
+          38458,
+          421
+        ],
+        [
+          38469,
+          421
+        ],
+        [
+          38480,
+          421
+        ],
+        [
+          38491,
+          421
+        ],
+        [
+          32768,
+          369
+        ]
+      ],
+      "screen_sha256": "ea826a65cde5121e58d1d934dc9afad8db5cb23662cd971fe6de8abcb289c376"
+    }
+  ],
+  "menu_index": 244,
+  "menu_resource_bytes": "de90df90ef904691469146914891b291000111031014f0c000f40000009600c4000100800185200188000102f0018b000104f0018c000106f0018d000108f0018e00010af0018f00010cf0018c20018600010ef04f7074696d697a65000110f0436f6e7665727420018b000112f0018020019020464400ff4a918c9100021002000004000410020001040006100200020400081002000304000a1002000404000c1002000504000e10020006040010100200070400121002000804ffff00d9949601d9949601d9949601d9949601d9949601d9949601d9949601d9949601d9949601ffff609496012c8171010080710100807101008071010080710100807101008071010080710100807101",
+  "menu_local_extent_bytes": 268,
+  "index_entry_bytes": 4,
+  "minimum_descriptor_geometry_callbacks_bytes": 76,
+  "dispatch_prefix": {
+    "page": 406,
+    "pc": 38105,
+    "bytes": "a14b001cc30102011cef77d2b3014321da9900dad707b1014421252122",
+    "instructions": [
+      {
+        "pc": 38105,
+        "mnemonic": "LD",
+        "operands": "RW1C, #0x4b"
+      },
+      {
+        "pc": 38109,
+        "mnemonic": "ST",
+        "operands": "RW1C, 0x102, TABLE[ZR]"
+      },
+      {
+        "pc": 38114,
+        "mnemonic": "LCALL",
+        "operands": "0x675c"
+      },
+      {
+        "pc": 38117,
+        "mnemonic": "LDB",
+        "operands": "RDA, 0x2143, LOOKUP[ZR]"
+      },
+      {
+        "pc": 38122,
+        "mnemonic": "CMPB",
+        "operands": "RDA, #0x0"
+      },
+      {
+        "pc": 38125,
+        "mnemonic": "JNE",
+        "operands": "0x94f6"
+      },
+      {
+        "pc": 38127,
+        "mnemonic": "LDB",
+        "operands": "R44, #0x1"
+      },
+      {
+        "pc": 38130,
+        "mnemonic": "SJMP",
+        "operands": "0x9619"
+      },
+      {
+        "pc": 38132,
+        "mnemonic": "SJMP",
+        "operands": "0x9618"
+      }
+    ]
+  },
+  "limitations": [
+    "CRT Mouse baseline and one Panel Down/Exit sequence only.",
+    "No new browser screen, 100-row list, scroll capacity, LCD or GB-6 qualification.",
+    "268-byte local extent plus4-byte index entry is not a complete transitive resource size or browser estimate.",
+    "No reused callback ABI or code savings measurement."
+  ]
+}

@@ -1,0 +1,850 @@
+{
+  "status": "EXPERIMENTAL-NOT-ACCEPTED",
+  "bug": "BUG-168",
+  "candidate_sha256": "7a21c4eb18df22efe62c8cb7900af418908a02b02d534196da1466c0c1b4cfbd",
+  "native_executable_sha256": "a42d26f755d2d902ac1adb79b76c60b3373be167e849c35ad09a568691bfa937",
+  "micro_validation": {
+    "passed": true,
+    "firmware_sha256": "7a21c4eb18df22efe62c8cb7900af418908a02b02d534196da1466c0c1b4cfbd",
+    "helper_byte_executions": 20000,
+    "context_preserved": [
+      "PSW",
+      "MASK1",
+      "WSR",
+      "DATA1",
+      "RW44",
+      "RW46"
+    ],
+    "lease": "RW1A intentionally becomes last timer during enabled service; service must save/restore it",
+    "historical_replays": [
+      {
+        "origin": 0,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 1,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 20287,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 65535,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 22313,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 43804,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 24642,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 16563,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 6784,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 46829,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 21584,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 20717,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 40588,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 55984,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 55703,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 8919,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 63294,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 41997,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 24858,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 36171,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 4649,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 37055,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 27065,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 36102,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 44741,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 5337,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 7844,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 50278,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 60847,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 45900,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 35839,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 46792,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 52959,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 63446,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 33917,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 63964,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 7434,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 46439,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 39353,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 8486,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 34214,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 11739,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 19036,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 18760,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 43191,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 61952,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 49812,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 25121,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 59944,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 52034,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 45514,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 48829,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 29867,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 44881,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 15692,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 31006,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 27609,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 46415,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 26858,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 20648,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 21374,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 30223,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 11904,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 43771,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 38877,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 4478,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 29955,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 56322,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 1664,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 22680,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 25160,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 9912,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 39238,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 37772,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 42726,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 19680,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 56858,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 52886,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 32516,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 40282,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 31385,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 4937,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 12917,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 47937,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 41930,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 58227,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 4169,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 10863,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 57957,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 27012,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 48492,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 54656,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 63868,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 20785,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 51228,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 59560,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 26498,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 64051,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 37519,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 32124,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 43028,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 8457,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 50622,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 27604,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 30454,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 58947,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 14469,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 5441,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 59510,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 40058,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 47593,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 59817,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 21792,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 15219,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 24553,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 9416,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 40123,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 13659,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 14700,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 48565,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 4049,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 58424,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 50270,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 1600,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 34157,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 21590,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 36136,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 6290,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 5860,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 39507,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 31354,
+        "high": 7,
+        "recovered": 479039,
+        "old_modulo": 20287
+      },
+      {
+        "origin": 59969,
+        "high": 8,
+        "recovered": 479039,
+        "old_modulo": 20287
+      }
+    ],
+    "all_origin_deadline_arithmetic_cases": 458752,
+    "limitation": "Decoded-byte interpreter checks this helper only. Native integration, graph timing coverage, readiness and hardware parity are separate."
+  },
+  "allocation": {
+    "named": 7674,
+    "reserved": 8002,
+    "free": 328
+  },
+  "native_results": [
+    {
+      "candidate": "168f6d77",
+      "result": "Rejected: healthy D7 timed out at1824 of4000 bytes; excessive checkpoint overhead"
+    },
+    {
+      "candidate": "e280b822",
+      "result": "Rejected: healthy D7 timed out at1824 of4000 bytes"
+    },
+    {
+      "candidate": "7a21c4eb",
+      "result": "Not accepted: D7 completes4000 bytes, all769 MIDI bytes preserved; post-browser audition fails silent note release"
+    }
+  ],
+  "requirements": {
+    "concurrent_playback": "Not a product requirement. Dense notes were a diagnostic stressor.",
+    "required": "Finite transfer/cancellation, safe incoming MIDI behavior, preserved samples, and correct playback/release after return."
+  },
+  "native_reuse_evidence": {
+    "controller_reset": "001F:4F8D writes1BA5=0 then4FC5 requests voice shutdown; timer ISR skips parser when1BA5=0.",
+    "scsi_pair": "001F:4F28/4F5E conditionally call4F7F to suspend/restore according to0299:8F9C; meaning and ordinary disk coverage need native confirmation.",
+    "next": "Qualify the existing native disk suspend/resume behavior before introducing broad clock hooks. Do not assume every SCSI CDB disables performance, or equate mute with disabling MIDI/control execution."
+  },
+  "limitations": [
+    "BUG-168 remains IN-PROGRESS. No candidate promoted.",
+    "Hardware-ready waits and total service termination remain unqualified.",
+    "No full regression suite is claimed for these rejected experimental images."
+  ],
+  "originals_unchanged": true
+}

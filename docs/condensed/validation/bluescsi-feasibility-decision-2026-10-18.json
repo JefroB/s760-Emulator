@@ -1,0 +1,1742 @@
+{
+  "date": "2026-10-18",
+  "decision": "REVISE",
+  "scope": "Current retained component mix and single-region memory plan; not a proof of feature impossibility",
+  "census": {
+    "code_ceiling": 3074,
+    "data_allowance": 4928,
+    "total_candidate": 8002,
+    "transport": {
+      "total": 1571,
+      "test_entry_before_transaction": 621,
+      "transaction_and_handshake": 643,
+      "service": 211,
+      "cancel_scan": 96
+    },
+    "pair": {
+      "total": 1882,
+      "reserve": 43,
+      "rollback": 16,
+      "bounded_writer": 221,
+      "claim": 22,
+      "service_and_panel_scan": 275,
+      "sds_gate": 39,
+      "copy": 14
+    },
+    "existing_sds_helpers": {
+      "remote": 640,
+      "local": 160,
+      "early_cancel": 31
+    },
+    "ui": {
+      "qualified_menu_resources": 268,
+      "index_entry": 4,
+      "qualified_trivial_callback": 36
+    },
+    "stereo_split": 32,
+    "measured_component_subtotal": 2408,
+    "residual_before_missing_functions": 666,
+    "pair_wrapper": {
+      "entry_before_admission": 136,
+      "exit_restore_and_native_replay": 88
+    },
+    "current_wrapper_bytes": 224,
+    "static_parser_and_rate_table": 655,
+    "current_mix_with_wrapper_and_static_parser": 3287,
+    "current_mix_over_ceiling": 213,
+    "missing_functions": [
+      "General slot selection and 32-bit reservation/address arithmetic",
+      "General descriptor construction, naming and publication orchestration",
+      "Parser read provider, stream orchestration, metadata persistence and runtime validation",
+      "Toolbox discovery/count/list/path/read command construction and status/sense handling",
+      "Browser list bindings/navigation/scrolling and LCD/controller variants",
+      "Independent-target-fault recovery"
+    ],
+    "limitations": [
+      "Component census only; not a link or production lower bound. Existing helpers may be optimized or replaced and shared service must satisfy all callers.",
+      "Diagnostic transaction includes held-ACK test handling; some bytes may be removed.",
+      "The missing code is not assigned speculative byte counts. Positive residual is not a fit and a negative diagnostic sum is not impossibility."
+    ]
+  },
+  "static_parser": {
+    "status": "STATIC SIZE PROTOTYPE ONLY: not runtime validated or production parser",
+    "parser_code_bytes": 639,
+    "rate_table_bytes": 16,
+    "read_provider_stub_bytes": 5,
+    "labels": {
+      "inspect": 318,
+      "file_large": 336,
+      "riff_large": 434,
+      "chunk": 472,
+      "header_fits": 510,
+      "padded": 600,
+      "test_data": 635,
+      "format": 656,
+      "format_fits": 690,
+      "channels_ok": 745,
+      "rate_compare": 821,
+      "rate_loop": 835,
+      "format_done": 860,
+      "data": 867,
+      "next": 899,
+      "finish": 908,
+      "return": 951,
+      "invalid": 952,
+      "read_at": 957
+    },
+    "decoded": [
+      {
+        "pc": 318,
+        "bytes": "8900002a",
+        "text": "CMP RW2A, #0x0"
+      },
+      {
+        "pc": 322,
+        "bytes": "df03",
+        "text": "JE 0x147"
+      },
+      {
+        "pc": 324,
+        "bytes": "e70900",
+        "text": "LJMP 0x150"
+      },
+      {
+        "pc": 327,
+        "bytes": "890c0028",
+        "text": "CMP RW28, #0xc"
+      },
+      {
+        "pc": 331,
+        "bytes": "db03",
+        "text": "JC 0x150"
+      },
+      {
+        "pc": 333,
+        "bytes": "e76802",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 336,
+        "bytes": "0120",
+        "text": "CLR RW20"
+      },
+      {
+        "pc": 338,
+        "bytes": "0122",
+        "text": "CLR RW22"
+      },
+      {
+        "pc": 340,
+        "bytes": "a02020",
+        "text": "LD RW20, RW20"
+      },
+      {
+        "pc": 343,
+        "bytes": "a02222",
+        "text": "LD RW22, RW22"
+      },
+      {
+        "pc": 346,
+        "bytes": "a10c0024",
+        "text": "LD RW24, #0xc"
+      },
+      {
+        "pc": 350,
+        "bytes": "ef5c02",
+        "text": "LCALL 0x3bd"
+      },
+      {
+        "pc": 353,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 357,
+        "bytes": "df03",
+        "text": "JE 0x16a"
+      },
+      {
+        "pc": 359,
+        "bytes": "e74d02",
+        "text": "LJMP 0x3b7"
+      },
+      {
+        "pc": 362,
+        "bytes": "a22744",
+        "text": "LD RW44, [RW26]+"
+      },
+      {
+        "pc": 365,
+        "bytes": "89524944",
+        "text": "CMP RW44, #0x4952"
+      },
+      {
+        "pc": 369,
+        "bytes": "df03",
+        "text": "JE 0x176"
+      },
+      {
+        "pc": 371,
+        "bytes": "e74202",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 374,
+        "bytes": "a22744",
+        "text": "LD RW44, [RW26]+"
+      },
+      {
+        "pc": 377,
+        "bytes": "89464644",
+        "text": "CMP RW44, #0x4646"
+      },
+      {
+        "pc": 381,
+        "bytes": "df03",
+        "text": "JE 0x182"
+      },
+      {
+        "pc": 383,
+        "bytes": "e73602",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 386,
+        "bytes": "a22730",
+        "text": "LD RW30, [RW26]+"
+      },
+      {
+        "pc": 389,
+        "bytes": "a22732",
+        "text": "LD RW32, [RW26]+"
+      },
+      {
+        "pc": 392,
+        "bytes": "a22744",
+        "text": "LD RW44, [RW26]+"
+      },
+      {
+        "pc": 395,
+        "bytes": "89574144",
+        "text": "CMP RW44, #0x4157"
+      },
+      {
+        "pc": 399,
+        "bytes": "df03",
+        "text": "JE 0x194"
+      },
+      {
+        "pc": 401,
+        "bytes": "e72402",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 404,
+        "bytes": "a22744",
+        "text": "LD RW44, [RW26]+"
+      },
+      {
+        "pc": 407,
+        "bytes": "89564544",
+        "text": "CMP RW44, #0x4556"
+      },
+      {
+        "pc": 411,
+        "bytes": "df03",
+        "text": "JE 0x1a0"
+      },
+      {
+        "pc": 413,
+        "bytes": "e71802",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 416,
+        "bytes": "89000032",
+        "text": "CMP RW32, #0x0"
+      },
+      {
+        "pc": 420,
+        "bytes": "df03",
+        "text": "JE 0x1a9"
+      },
+      {
+        "pc": 422,
+        "bytes": "e70900",
+        "text": "LJMP 0x1b2"
+      },
+      {
+        "pc": 425,
+        "bytes": "89040030",
+        "text": "CMP RW30, #0x4"
+      },
+      {
+        "pc": 429,
+        "bytes": "db03",
+        "text": "JC 0x1b2"
+      },
+      {
+        "pc": 431,
+        "bytes": "e70602",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 434,
+        "bytes": "a02844",
+        "text": "LD RW44, RW28"
+      },
+      {
+        "pc": 437,
+        "bytes": "a02a46",
+        "text": "LD RW46, RW2A"
+      },
+      {
+        "pc": 440,
+        "bytes": "69080044",
+        "text": "SUB RW44, #0x8"
+      },
+      {
+        "pc": 444,
+        "bytes": "a9000046",
+        "text": "SUBC RW46, #0x0"
+      },
+      {
+        "pc": 448,
+        "bytes": "c54430",
+        "text": "CMPL RL30, RL44"
+      },
+      {
+        "pc": 451,
+        "bytes": "d103",
+        "text": "JNH 0x1c8"
+      },
+      {
+        "pc": 453,
+        "bytes": "e7f001",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 456,
+        "bytes": "65080030",
+        "text": "ADD RW30, #0x8"
+      },
+      {
+        "pc": 460,
+        "bytes": "a5000032",
+        "text": "ADDC RW32, #0x0"
+      },
+      {
+        "pc": 464,
+        "bytes": "a10c0034",
+        "text": "LD RW34, #0xc"
+      },
+      {
+        "pc": 468,
+        "bytes": "0136",
+        "text": "CLR RW36"
+      },
+      {
+        "pc": 470,
+        "bytes": "013c",
+        "text": "CLR RW3C"
+      },
+      {
+        "pc": 472,
+        "bytes": "c53034",
+        "text": "CMPL RL34, RL30"
+      },
+      {
+        "pc": 475,
+        "bytes": "d703",
+        "text": "JNE 0x1e0"
+      },
+      {
+        "pc": 477,
+        "bytes": "e7ac01",
+        "text": "LJMP 0x38c"
+      },
+      {
+        "pc": 480,
+        "bytes": "a03044",
+        "text": "LD RW44, RW30"
+      },
+      {
+        "pc": 483,
+        "bytes": "a03246",
+        "text": "LD RW46, RW32"
+      },
+      {
+        "pc": 486,
+        "bytes": "683444",
+        "text": "SUB RW44, RW34"
+      },
+      {
+        "pc": 489,
+        "bytes": "a83646",
+        "text": "SUBC RW46, RW36"
+      },
+      {
+        "pc": 492,
+        "bytes": "89000046",
+        "text": "CMP RW46, #0x0"
+      },
+      {
+        "pc": 496,
+        "bytes": "df03",
+        "text": "JE 0x1f5"
+      },
+      {
+        "pc": 498,
+        "bytes": "e70900",
+        "text": "LJMP 0x1fe"
+      },
+      {
+        "pc": 501,
+        "bytes": "89080044",
+        "text": "CMP RW44, #0x8"
+      },
+      {
+        "pc": 505,
+        "bytes": "db03",
+        "text": "JC 0x1fe"
+      },
+      {
+        "pc": 507,
+        "bytes": "e7ba01",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 510,
+        "bytes": "a03420",
+        "text": "LD RW20, RW34"
+      },
+      {
+        "pc": 513,
+        "bytes": "a03622",
+        "text": "LD RW22, RW36"
+      },
+      {
+        "pc": 516,
+        "bytes": "a1080024",
+        "text": "LD RW24, #0x8"
+      },
+      {
+        "pc": 520,
+        "bytes": "efb201",
+        "text": "LCALL 0x3bd"
+      },
+      {
+        "pc": 523,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 527,
+        "bytes": "df03",
+        "text": "JE 0x214"
+      },
+      {
+        "pc": 529,
+        "bytes": "e7a301",
+        "text": "LJMP 0x3b7"
+      },
+      {
+        "pc": 532,
+        "bytes": "65040026",
+        "text": "ADD RW26, #0x4"
+      },
+      {
+        "pc": 536,
+        "bytes": "a22738",
+        "text": "LD RW38, [RW26]+"
+      },
+      {
+        "pc": 539,
+        "bytes": "a2273a",
+        "text": "LD RW3A, [RW26]+"
+      },
+      {
+        "pc": 542,
+        "bytes": "69080026",
+        "text": "SUB RW26, #0x8"
+      },
+      {
+        "pc": 546,
+        "bytes": "65080034",
+        "text": "ADD RW34, #0x8"
+      },
+      {
+        "pc": 550,
+        "bytes": "a5000036",
+        "text": "ADDC RW36, #0x0"
+      },
+      {
+        "pc": 554,
+        "bytes": "a03458",
+        "text": "LD RW58, RW34"
+      },
+      {
+        "pc": 557,
+        "bytes": "a0365a",
+        "text": "LD RW5A, RW36"
+      },
+      {
+        "pc": 560,
+        "bytes": "643858",
+        "text": "ADD RW58, RW38"
+      },
+      {
+        "pc": 563,
+        "bytes": "a43a5a",
+        "text": "ADDC RW5A, RW3A"
+      },
+      {
+        "pc": 566,
+        "bytes": "d303",
+        "text": "JNC 0x23b"
+      },
+      {
+        "pc": 568,
+        "bytes": "e77d01",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 571,
+        "bytes": "a03844",
+        "text": "LD RW44, RW38"
+      },
+      {
+        "pc": 574,
+        "bytes": "61010044",
+        "text": "AND RW44, #0x1"
+      },
+      {
+        "pc": 578,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 582,
+        "bytes": "d703",
+        "text": "JNE 0x24b"
+      },
+      {
+        "pc": 584,
+        "bytes": "e70d00",
+        "text": "LJMP 0x258"
+      },
+      {
+        "pc": 587,
+        "bytes": "65010058",
+        "text": "ADD RW58, #0x1"
+      },
+      {
+        "pc": 591,
+        "bytes": "a500005a",
+        "text": "ADDC RW5A, #0x0"
+      },
+      {
+        "pc": 595,
+        "bytes": "d303",
+        "text": "JNC 0x258"
+      },
+      {
+        "pc": 597,
+        "bytes": "e76001",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 600,
+        "bytes": "c53058",
+        "text": "CMPL RL58, RL30"
+      },
+      {
+        "pc": 603,
+        "bytes": "d103",
+        "text": "JNH 0x260"
+      },
+      {
+        "pc": 605,
+        "bytes": "e75801",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 608,
+        "bytes": "a22744",
+        "text": "LD RW44, [RW26]+"
+      },
+      {
+        "pc": 611,
+        "bytes": "a22746",
+        "text": "LD RW46, [RW26]+"
+      },
+      {
+        "pc": 614,
+        "bytes": "89666d44",
+        "text": "CMP RW44, #0x6d66"
+      },
+      {
+        "pc": 618,
+        "bytes": "df03",
+        "text": "JE 0x26f"
+      },
+      {
+        "pc": 620,
+        "bytes": "e70c00",
+        "text": "LJMP 0x27b"
+      },
+      {
+        "pc": 623,
+        "bytes": "89742046",
+        "text": "CMP RW46, #0x2074"
+      },
+      {
+        "pc": 627,
+        "bytes": "d703",
+        "text": "JNE 0x278"
+      },
+      {
+        "pc": 629,
+        "bytes": "e71800",
+        "text": "LJMP 0x290"
+      },
+      {
+        "pc": 632,
+        "bytes": "e70000",
+        "text": "LJMP 0x27b"
+      },
+      {
+        "pc": 635,
+        "bytes": "89646144",
+        "text": "CMP RW44, #0x6164"
+      },
+      {
+        "pc": 639,
+        "bytes": "df03",
+        "text": "JE 0x284"
+      },
+      {
+        "pc": 641,
+        "bytes": "e7ff00",
+        "text": "LJMP 0x383"
+      },
+      {
+        "pc": 644,
+        "bytes": "89746146",
+        "text": "CMP RW46, #0x6174"
+      },
+      {
+        "pc": 648,
+        "bytes": "d703",
+        "text": "JNE 0x28d"
+      },
+      {
+        "pc": 650,
+        "bytes": "e7d600",
+        "text": "LJMP 0x363"
+      },
+      {
+        "pc": 653,
+        "bytes": "e7f300",
+        "text": "LJMP 0x383"
+      },
+      {
+        "pc": 656,
+        "bytes": "a03c44",
+        "text": "LD RW44, RW3C"
+      },
+      {
+        "pc": 659,
+        "bytes": "61010044",
+        "text": "AND RW44, #0x1"
+      },
+      {
+        "pc": 663,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 667,
+        "bytes": "df03",
+        "text": "JE 0x2a0"
+      },
+      {
+        "pc": 669,
+        "bytes": "e71801",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 672,
+        "bytes": "8900003a",
+        "text": "CMP RW3A, #0x0"
+      },
+      {
+        "pc": 676,
+        "bytes": "df03",
+        "text": "JE 0x2a9"
+      },
+      {
+        "pc": 678,
+        "bytes": "e70900",
+        "text": "LJMP 0x2b2"
+      },
+      {
+        "pc": 681,
+        "bytes": "89100038",
+        "text": "CMP RW38, #0x10"
+      },
+      {
+        "pc": 685,
+        "bytes": "db03",
+        "text": "JC 0x2b2"
+      },
+      {
+        "pc": 687,
+        "bytes": "e70601",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 690,
+        "bytes": "a03420",
+        "text": "LD RW20, RW34"
+      },
+      {
+        "pc": 693,
+        "bytes": "a03622",
+        "text": "LD RW22, RW36"
+      },
+      {
+        "pc": 696,
+        "bytes": "a1100024",
+        "text": "LD RW24, #0x10"
+      },
+      {
+        "pc": 700,
+        "bytes": "effe00",
+        "text": "LCALL 0x3bd"
+      },
+      {
+        "pc": 703,
+        "bytes": "8900003e",
+        "text": "CMP RW3E, #0x0"
+      },
+      {
+        "pc": 707,
+        "bytes": "df03",
+        "text": "JE 0x2c8"
+      },
+      {
+        "pc": 709,
+        "bytes": "e7ef00",
+        "text": "LJMP 0x3b7"
+      },
+      {
+        "pc": 712,
+        "bytes": "a22744",
+        "text": "LD RW44, [RW26]+"
+      },
+      {
+        "pc": 715,
+        "bytes": "89010044",
+        "text": "CMP RW44, #0x1"
+      },
+      {
+        "pc": 719,
+        "bytes": "df03",
+        "text": "JE 0x2d4"
+      },
+      {
+        "pc": 721,
+        "bytes": "e7e400",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 724,
+        "bytes": "a22740",
+        "text": "LD RW40, [RW26]+"
+      },
+      {
+        "pc": 727,
+        "bytes": "89010040",
+        "text": "CMP RW40, #0x1"
+      },
+      {
+        "pc": 731,
+        "bytes": "d703",
+        "text": "JNE 0x2e0"
+      },
+      {
+        "pc": 733,
+        "bytes": "e70900",
+        "text": "LJMP 0x2e9"
+      },
+      {
+        "pc": 736,
+        "bytes": "89020040",
+        "text": "CMP RW40, #0x2"
+      },
+      {
+        "pc": 740,
+        "bytes": "df03",
+        "text": "JE 0x2e9"
+      },
+      {
+        "pc": 742,
+        "bytes": "e7cf00",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 745,
+        "bytes": "a22748",
+        "text": "LD RW48, [RW26]+"
+      },
+      {
+        "pc": 748,
+        "bytes": "a2274a",
+        "text": "LD RW4A, [RW26]+"
+      },
+      {
+        "pc": 751,
+        "bytes": "8900004a",
+        "text": "CMP RW4A, #0x0"
+      },
+      {
+        "pc": 755,
+        "bytes": "df03",
+        "text": "JE 0x2f8"
+      },
+      {
+        "pc": 757,
+        "bytes": "e7c000",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 760,
+        "bytes": "a22720",
+        "text": "LD RW20, [RW26]+"
+      },
+      {
+        "pc": 763,
+        "bytes": "a22722",
+        "text": "LD RW22, [RW26]+"
+      },
+      {
+        "pc": 766,
+        "bytes": "a22754",
+        "text": "LD RW54, [RW26]+"
+      },
+      {
+        "pc": 769,
+        "bytes": "a22744",
+        "text": "LD RW44, [RW26]+"
+      },
+      {
+        "pc": 772,
+        "bytes": "89100044",
+        "text": "CMP RW44, #0x10"
+      },
+      {
+        "pc": 776,
+        "bytes": "df03",
+        "text": "JE 0x30d"
+      },
+      {
+        "pc": 778,
+        "bytes": "e7ab00",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 781,
+        "bytes": "a04044",
+        "text": "LD RW44, RW40"
+      },
+      {
+        "pc": 784,
+        "bytes": "644444",
+        "text": "ADD RW44, RW44"
+      },
+      {
+        "pc": 787,
+        "bytes": "884454",
+        "text": "CMP RW54, RW44"
+      },
+      {
+        "pc": 790,
+        "bytes": "df03",
+        "text": "JE 0x31b"
+      },
+      {
+        "pc": 792,
+        "bytes": "e79d00",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 795,
+        "bytes": "a04844",
+        "text": "LD RW44, RW48"
+      },
+      {
+        "pc": 798,
+        "bytes": "0146",
+        "text": "CLR RW46"
+      },
+      {
+        "pc": 800,
+        "bytes": "644444",
+        "text": "ADD RW44, RW44"
+      },
+      {
+        "pc": 803,
+        "bytes": "a40046",
+        "text": "ADDC RW46, ZR"
+      },
+      {
+        "pc": 806,
+        "bytes": "89010040",
+        "text": "CMP RW40, #0x1"
+      },
+      {
+        "pc": 810,
+        "bytes": "d703",
+        "text": "JNE 0x32f"
+      },
+      {
+        "pc": 812,
+        "bytes": "e70600",
+        "text": "LJMP 0x335"
+      },
+      {
+        "pc": 815,
+        "bytes": "644444",
+        "text": "ADD RW44, RW44"
+      },
+      {
+        "pc": 818,
+        "bytes": "a44646",
+        "text": "ADDC RW46, RW46"
+      },
+      {
+        "pc": 821,
+        "bytes": "c54420",
+        "text": "CMPL RL20, RL44"
+      },
+      {
+        "pc": 824,
+        "bytes": "df03",
+        "text": "JE 0x33d"
+      },
+      {
+        "pc": 826,
+        "bytes": "e77b00",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 829,
+        "bytes": "a1805e20",
+        "text": "LD RW20, #0x5e80"
+      },
+      {
+        "pc": 833,
+        "bytes": "0142",
+        "text": "CLR RW42"
+      },
+      {
+        "pc": 835,
+        "bytes": "a22144",
+        "text": "LD RW44, [RW20]+"
+      },
+      {
+        "pc": 838,
+        "bytes": "884844",
+        "text": "CMP RW44, RW48"
+      },
+      {
+        "pc": 841,
+        "bytes": "d703",
+        "text": "JNE 0x34e"
+      },
+      {
+        "pc": 843,
+        "bytes": "e70e00",
+        "text": "LJMP 0x35c"
+      },
+      {
+        "pc": 846,
+        "bytes": "0742",
+        "text": "INC RW42"
+      },
+      {
+        "pc": 848,
+        "bytes": "89080042",
+        "text": "CMP RW42, #0x8"
+      },
+      {
+        "pc": 852,
+        "bytes": "db03",
+        "text": "JC 0x359"
+      },
+      {
+        "pc": 854,
+        "bytes": "e7eaff",
+        "text": "LJMP 0x343"
+      },
+      {
+        "pc": 857,
+        "bytes": "e75c00",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 860,
+        "bytes": "8101003c",
+        "text": "OR RW3C, #0x1"
+      },
+      {
+        "pc": 864,
+        "bytes": "e72000",
+        "text": "LJMP 0x383"
+      },
+      {
+        "pc": 867,
+        "bytes": "a03c44",
+        "text": "LD RW44, RW3C"
+      },
+      {
+        "pc": 870,
+        "bytes": "61020044",
+        "text": "AND RW44, #0x2"
+      },
+      {
+        "pc": 874,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 878,
+        "bytes": "df03",
+        "text": "JE 0x373"
+      },
+      {
+        "pc": 880,
+        "bytes": "e74500",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 883,
+        "bytes": "a0344c",
+        "text": "LD RW4C, RW34"
+      },
+      {
+        "pc": 886,
+        "bytes": "a0364e",
+        "text": "LD RW4E, RW36"
+      },
+      {
+        "pc": 889,
+        "bytes": "a03850",
+        "text": "LD RW50, RW38"
+      },
+      {
+        "pc": 892,
+        "bytes": "a03a52",
+        "text": "LD RW52, RW3A"
+      },
+      {
+        "pc": 895,
+        "bytes": "8102003c",
+        "text": "OR RW3C, #0x2"
+      },
+      {
+        "pc": 899,
+        "bytes": "a05834",
+        "text": "LD RW34, RW58"
+      },
+      {
+        "pc": 902,
+        "bytes": "a05a36",
+        "text": "LD RW36, RW5A"
+      },
+      {
+        "pc": 905,
+        "bytes": "e74cfe",
+        "text": "LJMP 0x1d8"
+      },
+      {
+        "pc": 908,
+        "bytes": "8903003c",
+        "text": "CMP RW3C, #0x3"
+      },
+      {
+        "pc": 912,
+        "bytes": "df03",
+        "text": "JE 0x395"
+      },
+      {
+        "pc": 914,
+        "bytes": "e72300",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 917,
+        "bytes": "a05044",
+        "text": "LD RW44, RW50"
+      },
+      {
+        "pc": 920,
+        "bytes": "805244",
+        "text": "OR RW44, RW52"
+      },
+      {
+        "pc": 923,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 927,
+        "bytes": "d703",
+        "text": "JNE 0x3a4"
+      },
+      {
+        "pc": 929,
+        "bytes": "e71400",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 932,
+        "bytes": "a05444",
+        "text": "LD RW44, RW54"
+      },
+      {
+        "pc": 935,
+        "bytes": "0544",
+        "text": "DEC RW44"
+      },
+      {
+        "pc": 937,
+        "bytes": "605044",
+        "text": "AND RW44, RW50"
+      },
+      {
+        "pc": 940,
+        "bytes": "89000044",
+        "text": "CMP RW44, #0x0"
+      },
+      {
+        "pc": 944,
+        "bytes": "df03",
+        "text": "JE 0x3b5"
+      },
+      {
+        "pc": 946,
+        "bytes": "e70300",
+        "text": "LJMP 0x3b8"
+      },
+      {
+        "pc": 949,
+        "bytes": "013e",
+        "text": "CLR RW3E"
+      },
+      {
+        "pc": 951,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 952,
+        "bytes": "a101003e",
+        "text": "LD RW3E, #0x1"
+      },
+      {
+        "pc": 956,
+        "bytes": "f0",
+        "text": "RET "
+      },
+      {
+        "pc": 957,
+        "bytes": "a1ff003e",
+        "text": "LD RW3E, #0xff"
+      },
+      {
+        "pc": 961,
+        "bytes": "f0",
+        "text": "RET "
+      }
+    ],
+    "missing": [
+      "Production read_at adapter and cancellation/error integration",
+      "Output persistence and frame-count division",
+      "Runtime and malformed-file equivalence against host reference",
+      "Cross-chunk byte carry and combined memory/ABI qualification"
+    ]
+  },
+  "workload_analysis": {
+    "passed": true,
+    "phase": 5,
+    "native": {
+      "passed": true,
+      "phase": 5,
+      "exit_press_seconds": 159.16666666667,
+      "identities": {
+        "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-feasibility-2026-10-18\\scsi-03\\saved-hd.img": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+        "mame-source\\mames760.exe": "ccb370a3f37c5fd7a9b2aa761ef339b9b5965d6211b64751dd7520557efb4dda",
+        "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\S760224.PAIR-CANCEL.IMG": "be59793b78c7593e6df2cb87f5f2326dd9588e6158f55a853ec2456649cdaafc",
+        "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\observer.lua": "4e0c4ed8b883e4d127b96313a292e247f6e20998725145a5f62b903fb8c3c812",
+        "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\probe_base.py": "0ea52dff38874e06a2895c409eb3130eccbdc62b0248e777ba7c7bd0b9d79298",
+        "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\run.py": "a3e38ab6270f9d1669abb8e13d35683481c8e30499d1fdbfa3b68fd94f853291"
+      },
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.01694745011627674,
+        "silent_release_frames": 44100
+      },
+      "media_unchanged": true
+    },
+    "cursor_writes": [
+      {
+        "data": 39,
+        "pc": 1543,
+        "mask": 65535,
+        "seconds": 153.603042125
+      },
+      {
+        "data": 13,
+        "pc": 1556,
+        "mask": 65535,
+        "seconds": 159.183512625
+      },
+      {
+        "data": 39,
+        "pc": 1543,
+        "mask": 65535,
+        "seconds": 166.9765825
+      }
+    ],
+    "owner_writes": [
+      {
+        "name": "owner-write-1",
+        "seconds": 153.60304825,
+        "pc": 1851,
+        "cursor": 39,
+        "owner": 0
+      },
+      {
+        "name": "owner-write-0",
+        "seconds": 159.183651375,
+        "pc": 1343,
+        "cursor": 13,
+        "owner": 1
+      },
+      {
+        "name": "owner-write-1",
+        "seconds": 166.976588625,
+        "pc": 1851,
+        "cursor": 39,
+        "owner": 0
+      },
+      {
+        "name": "owner-write-0",
+        "seconds": 177.999323875,
+        "pc": 1259,
+        "cursor": 39,
+        "owner": 1
+      }
+    ],
+    "cancel_latch": {
+      "name": "cancel-write-1",
+      "seconds": 159.18342875,
+      "pc": 2014,
+      "cursor": 39,
+      "owner": 1
+    },
+    "latch_to_release_seconds": 0.00022262500002057095,
+    "timer_ios_reads": 1147,
+    "cancel_public_table_unchanged": true,
+    "staging_invalidated_before_release": true,
+    "allocation_mirrors_restored": true,
+    "cancel_wave_sha256": "db5f3a1c3edb2b1d79c7835e1bdeeb35178d464ea9de9f237ef2c6009976accc",
+    "retry_pair_pcm_bytes": 239616,
+    "existing_pcm_bytes": 119808,
+    "guarded_wave_bytes": 368656,
+    "retry_preview_refs": [
+      512,
+      513
+    ],
+    "retry_block_bases": [
+      13,
+      26
+    ],
+    "case_hashes": {
+      "attempt-1-case-1.ram": "e13ce5115346553120dcc8decae6a661d3ef2de91b48662bfa14b258d6a6e8ea",
+      "attempt-1-case-1.wave": "3e558d41b1f127751268fbefa3906b433513a50c183ac7dfd0d2d223d165b20c",
+      "attempt-1-case-5.ram": "dcba8b1577e25ba45af9ef6a6aa5d389b5fdb300eff5a2833f7e950c33ea1c70",
+      "attempt-1-case-5.wave": "db5f3a1c3edb2b1d79c7835e1bdeeb35178d464ea9de9f237ef2c6009976accc",
+      "attempt-1-case-6.ram": "b931d406f057e95b49b3ff69f135d8a8da7179d8e312dd95115730390f7d33de",
+      "attempt-1-case-6.wave": "db5f3a1c3edb2b1d79c7835e1bdeeb35178d464ea9de9f237ef2c6009976accc",
+      "attempt-1-case-7.ram": "0acfb8989b72e4f8015714e33e41ec46a08c6c35bfa31581dce155f16733baeb",
+      "attempt-1-case-7.wave": "db5f3a1c3edb2b1d79c7835e1bdeeb35178d464ea9de9f237ef2c6009976accc",
+      "attempt-2-case-1.ram": "484cfe25043e86734c8416ac05d8c36c48b22eb0d5a02977fd44ad2639a59653",
+      "attempt-2-case-1.wave": "db5f3a1c3edb2b1d79c7835e1bdeeb35178d464ea9de9f237ef2c6009976accc",
+      "attempt-2-case-2.ram": "3b13ad0857a1079e78e075f1e950579374ae749e5a5d2225978009caeb624eb3",
+      "attempt-2-case-2.wave": "558094e5fd7635568a4bd98216639e24c26e8d65a764efb099af1fb0ac3327c3",
+      "attempt-2-case-3.ram": "7cc5a4c07ec7c573b1e8ad92b698046f06d80eaff7f14ee537877160124955b9",
+      "attempt-2-case-3.wave": "558094e5fd7635568a4bd98216639e24c26e8d65a764efb099af1fb0ac3327c3",
+      "attempt-2-case-5.ram": "62921c65ba3ab291c1f48ea7f371cc1e41a1fad8928e24eb10e38cd094d411a9",
+      "attempt-2-case-5.wave": "db5f3a1c3edb2b1d79c7835e1bdeeb35178d464ea9de9f237ef2c6009976accc"
+    }
+  },
+  "stack_rows": [
+    {
+      "name": "entry-after-pusha",
+      "sp": 4314,
+      "seconds": 153.6029475
+    },
+    {
+      "seconds": 153.603049125,
+      "sp": 4242,
+      "pc": 1856,
+      "writes": 1,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603054375,
+      "sp": 4240,
+      "pc": 629,
+      "writes": 2,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603284625,
+      "sp": 4238,
+      "pc": 1861,
+      "writes": 5,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.60328625,
+      "sp": 4236,
+      "pc": 1886,
+      "writes": 6,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603287625,
+      "sp": 4234,
+      "pc": 1890,
+      "writes": 7,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603288625,
+      "sp": 4232,
+      "pc": 1892,
+      "writes": 8,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603289625,
+      "sp": 4230,
+      "pc": 1894,
+      "writes": 9,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603290625,
+      "sp": 4228,
+      "pc": 1896,
+      "writes": 10,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603291625,
+      "sp": 4226,
+      "pc": 1898,
+      "writes": 11,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603292625,
+      "sp": 4224,
+      "pc": 1900,
+      "writes": 12,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603293625,
+      "sp": 4222,
+      "pc": 1902,
+      "writes": 13,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603294625,
+      "sp": 4220,
+      "pc": 1904,
+      "writes": 14,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603295625,
+      "sp": 4218,
+      "pc": 1906,
+      "writes": 15,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603296625,
+      "sp": 4216,
+      "pc": 1908,
+      "writes": 16,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603297625,
+      "sp": 4214,
+      "pc": 1910,
+      "writes": 17,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603298625,
+      "sp": 4212,
+      "pc": 1912,
+      "writes": 18,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603299625,
+      "sp": 4210,
+      "pc": 1914,
+      "writes": 19,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603300625,
+      "sp": 4208,
+      "pc": 1916,
+      "writes": 20,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603301625,
+      "sp": 4206,
+      "pc": 1918,
+      "writes": 21,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603302625,
+      "sp": 4204,
+      "pc": 1920,
+      "writes": 22,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603303625,
+      "sp": 4202,
+      "pc": 1922,
+      "writes": 23,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603304625,
+      "sp": 4200,
+      "pc": 1924,
+      "writes": 24,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603305625,
+      "sp": 4198,
+      "pc": 1926,
+      "writes": 25,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603306625,
+      "sp": 4196,
+      "pc": 1928,
+      "writes": 26,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603307625,
+      "sp": 4194,
+      "pc": 1930,
+      "writes": 27,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603308625,
+      "sp": 4192,
+      "pc": 1932,
+      "writes": 28,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603309625,
+      "sp": 4190,
+      "pc": 1934,
+      "writes": 29,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603310625,
+      "sp": 4188,
+      "pc": 1936,
+      "writes": 30,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603311625,
+      "sp": 4186,
+      "pc": 1938,
+      "writes": 31,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603312625,
+      "sp": 4184,
+      "pc": 1940,
+      "writes": 32,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603313625,
+      "sp": 4182,
+      "pc": 1942,
+      "writes": 33,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603314625,
+      "sp": 4180,
+      "pc": 1944,
+      "writes": 34,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603315625,
+      "sp": 4178,
+      "pc": 1946,
+      "writes": 35,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603316625,
+      "sp": 4176,
+      "pc": 1948,
+      "writes": 36,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603317625,
+      "sp": 4174,
+      "pc": 1950,
+      "writes": 37,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603318625,
+      "sp": 4172,
+      "pc": 1952,
+      "writes": 38,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603319625,
+      "sp": 4170,
+      "pc": 1954,
+      "writes": 39,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603320625,
+      "sp": 4168,
+      "pc": 1956,
+      "writes": 40,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.603321625,
+      "sp": 4166,
+      "pc": 1958,
+      "writes": 41,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605236625,
+      "sp": 4164,
+      "pc": 2062,
+      "writes": 1226,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605236625,
+      "sp": 4160,
+      "pc": 51921,
+      "writes": 1227,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605245875,
+      "sp": 4158,
+      "pc": 51971,
+      "writes": 1228,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605247625,
+      "sp": 4156,
+      "pc": 51978,
+      "writes": 1229,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605249375,
+      "sp": 4154,
+      "pc": 51985,
+      "writes": 1230,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605253375,
+      "sp": 4152,
+      "pc": 52005,
+      "writes": 1231,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605255,
+      "sp": 4150,
+      "pc": 16384,
+      "writes": 1232,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.6052575,
+      "sp": 4148,
+      "pc": 16396,
+      "writes": 1233,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.6052585,
+      "sp": 4146,
+      "pc": 16398,
+      "writes": 1234,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605263125,
+      "sp": 4144,
+      "pc": 16457,
+      "writes": 1235,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605272,
+      "sp": 4142,
+      "pc": 17379,
+      "writes": 1236,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605419375,
+      "sp": 4140,
+      "pc": 20048,
+      "writes": 1239,
+      "mask": 65535
+    },
+    {
+      "seconds": 153.605564625,
+      "sp": 4138,
+      "pc": 35109,
+      "writes": 1248,
+      "mask": 65535
+    },
+    {
+      "seconds": 154.151323,
+      "sp": 4136,
+      "pc": 312,
+      "writes": 240270,
+      "mask": 65535
+    },
+    {
+      "seconds": 154.15196275,
+      "sp": 4132,
+      "pc": 312,
+      "writes": 240330,
+      "mask": 65535
+    },
+    {
+      "seconds": 154.152282625,
+      "sp": 4130,
+      "pc": 312,
+      "writes": 240367,
+      "mask": 65535
+    },
+    {
+      "name": "summary",
+      "writes": 2388855,
+      "low": 4130
+    },
+    {
+      "name": "entry-after-pusha",
+      "sp": 4314,
+      "seconds": 166.976487875
+    },
+    {
+      "name": "summary",
+      "writes": 9069710,
+      "low": 4130
+    }
+  ],
+  "owned_service_event_counts": {
+    "timer-ios": 1147,
+    "midi-data": 384,
+    "command-byte": 128,
+    "cancel-write-1": 1,
+    "owner-write-0": 2
+  },
+  "stack_observed_bytes_below_post_pusha_entry": 184,
+  "limitations": [
+    "Parser is static assembly only; read provider is a failing stub and rate table is not linked into a runnable image.",
+    "Component sum is not a production link or theoretical minimum.",
+    "Notes and controllers were sent; audio during ownership and active voice count were not measured.",
+    "Stack low-water observation is not a worst-case bound or a reservation.",
+    "Physical BlueSCSI and independently stuck-target recovery remain unqualified."
+  ],
+  "recovery_audit": {
+    "source": "mame-source\\src\\mame\\roland\\s760.cpp",
+    "sha256": "aa7d972308c86e7c098401ae50337e1f9f7c592cc56ba35081711abf7d4528d0",
+    "observation": "SCMD 00 Bus Release directly clears bus phase and PSNS in the current model; successful release here cannot establish recovery from an independently stuck physical target.",
+    "excerpt": "\t\t\telse if (cmd == 0x00) // Bus Release\n\t\t\t{\n\t\t\t\tm_scsi_bus_phase = 0;\n\t\t\t\tm_scsi_psns = 0x00;\n\t\t\t\tm_scsi_ints = 0x20; // Disconnected\n\t\t\t}\n\t\t\tbreak;\n\t\t}"
+  },
+  "reproduction_sources": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-decision-2026-10-18\\census.py": {
+      "sha256": "e0e322f26bdfc775b80371e0926af802b50e0f3f43dbd50ec0ad8bc4b4f44c5a",
+      "text": "from pathlib import Path\nimport json,hashlib\nP=Path(__file__).resolve().parent;W=P.parent\nt=json.loads((W/'bluescsi-combined-layout-2026-10-18/relocated-transport.json').read_text())\nc=json.loads((W/'bluescsi-pair-cancel-2026-10-18/build.json').read_text())\ndef span(build,start,end=None):\n labels=build['labels'];return (labels[end] if end else 0x13e+build['code_bytes'])-labels[start]\nresult=dict(code_ceiling=3074,data_allowance=4928,total_candidate=8002,\n transport=dict(total=t['code_bytes'],test_entry_before_transaction=t['labels']['transaction']-0x13e,transaction_and_handshake=span(t,'transaction','service'),service=span(t,'service','cancel_scan'),cancel_scan=span(t,'cancel_scan','code_end')),\n pair=dict(total=c['code_bytes'],reserve=span(c,'reserve','rollback'),rollback=span(c,'rollback','fill'),bounded_writer=span(c,'adapter','claim'),claim=span(c,'claim','hold'),service_and_panel_scan=span(c,'service','sds_gate'),sds_gate=span(c,'sds_gate'),copy=span(c,'copy','reserve')),\n existing_sds_helpers=dict(remote=640,local=160,early_cancel=31),\n ui=dict(qualified_menu_resources=268,index_entry=4,qualified_trivial_callback=36),stereo_split=32)\n# This deliberately omits harness code and counts a shared service once.\nresult['measured_component_subtotal']=sum([result['transport']['transaction_and_handshake'],result['pair']['service_and_panel_scan'],result['pair']['reserve'],result['pair']['rollback'],result['pair']['bounded_writer'],result['pair']['claim'],result['pair']['sds_gate'],result['pair']['copy'],831,268,4,32])\nresult['residual_before_missing_functions']=3074-result['measured_component_subtotal']\nfirst_admission=next(row['pc'] for row in c['decoded'] if row['bytes']=='b301ba2b44')\nresult['pair_wrapper']=dict(entry_before_admission=first_admission-0x13e,exit_restore_and_native_replay=span(c,'exit','copy'))\nresult['current_wrapper_bytes']=sum(result['pair_wrapper'].values())\nparser=json.loads((P/'parser-size.json').read_text())\nresult['static_parser_and_rate_table']=parser['parser_code_bytes']+parser['rate_table_bytes']\nresult['current_mix_with_wrapper_and_static_parser']=result['measured_component_subtotal']+result['current_wrapper_bytes']+result['static_parser_and_rate_table']\nresult['current_mix_over_ceiling']=result['current_mix_with_wrapper_and_static_parser']-3074\nresult['missing_functions']=['General slot selection and 32-bit reservation/address arithmetic', 'General descriptor construction, naming and publication orchestration', 'Parser read provider, stream orchestration, metadata persistence and runtime validation', 'Toolbox discovery/count/list/path/read command construction and status/sense handling', 'Browser list bindings/navigation/scrolling and LCD/controller variants', 'Independent-target-fault recovery']\nresult['limitations']=['Component census only; not a link or production lower bound. Existing helpers may be optimized or replaced and shared service must satisfy all callers.','Diagnostic transaction includes held-ACK test handling; some bytes may be removed.','The missing code is not assigned speculative byte counts. Positive residual is not a fit and a negative diagnostic sum is not impossibility.']\n(P/'census.json').write_text(json.dumps(result,indent=2)+'\\n');print(json.dumps(result,indent=2))\n"
+    },
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-decision-2026-10-18\\parser_size.py": {
+      "sha256": "257a89ccb713668edd479bf119d190e0de796cfc9b203f528f30849069513efc",
+      "text": "\"\"\"Size a direct MCS96 RIFF validator port; static assembly evidence only.\n\nread_at is an external ABI: offset R20/R22, count R24 -> pointer R26,\nstatus R3E. It must preserve R28..R5A except scratch R44/R46 and status.\nThe production transport/read adapter is deliberately not counted here.\n\"\"\"\nfrom pathlib import Path\nimport sys,json\nP=Path(__file__).resolve().parent\nsys.path.insert(0,str(P.parent/'bluescsi-pair-cancel-2026-10-18'))\nfrom build_transfer import Asm\na=Asm()\ndef add32(lo,hi,value):a.emit(0x65,value&255,value>>8,lo,0xa5,0,0,hi)\ndef sub32(dl,dh,sl,sh):a.emit(0x68,sl,dl,0xa8,sh,dh)\ndef cmp32(left,right):a.emit(0xc5,right,left)\ndef read(offsetlow,offsethigh,count):\n a.mov(0x20,offsetlow);a.mov(0x22,offsethigh);a.imm(0x24,count);a.call('read_at');a.cmp(0x3e,0);a.cond(0xd7,'return')\ndef post(reg):a.emit(0xa2,0x27,reg)\ndef tag(first,second,success,otherwise):\n a.cmp(0x44,first);a.cond(0xd7,otherwise);a.cmp(0x46,second);a.cond(0xdf,success);a.jmp(otherwise)\na.label('inspect');a.cmp(0x2a,0);a.cond(0xd7,'file_large');a.cmp(0x28,12);a.cond(0xd3,'invalid')\na.label('file_large');a.clr(0x20);a.clr(0x22);read(0x20,0x22,12)\npost(0x44);a.cmp(0x44,0x4952);a.cond(0xd7,'invalid');post(0x44);a.cmp(0x44,0x4646);a.cond(0xd7,'invalid')\npost(0x30);post(0x32);post(0x44);a.cmp(0x44,0x4157);a.cond(0xd7,'invalid');post(0x44);a.cmp(0x44,0x4556);a.cond(0xd7,'invalid')\na.cmp(0x32,0);a.cond(0xd7,'riff_large');a.cmp(0x30,4);a.cond(0xd3,'invalid')\na.label('riff_large');a.mov(0x44,0x28);a.mov(0x46,0x2a);a.emit(0x69,8,0,0x44,0xa9,0,0,0x46)\ncmp32(0x30,0x44);a.cond(0xd9,'invalid');add32(0x30,0x32,8)\na.imm(0x34,12);a.clr(0x36);a.clr(0x3c)\na.label('chunk');cmp32(0x34,0x30);a.cond(0xdf,'finish')\na.mov(0x44,0x30);a.mov(0x46,0x32);sub32(0x44,0x46,0x34,0x36)\na.cmp(0x46,0);a.cond(0xd7,'header_fits');a.cmp(0x44,8);a.cond(0xd3,'invalid')\na.label('header_fits');read(0x34,0x36,8)\na.emit(0x65,4,0,0x26);post(0x38);post(0x3a);a.emit(0x69,8,0,0x26)\nadd32(0x34,0x36,8)\na.mov(0x58,0x34);a.mov(0x5a,0x36);a.emit(0x64,0x38,0x58,0xa4,0x3a,0x5a);a.cond(0xdb,'invalid')\na.mov(0x44,0x38);a.emit(0x61,1,0,0x44);a.cmp(0x44,0);a.cond(0xdf,'padded')\nadd32(0x58,0x5a,1);a.cond(0xdb,'invalid')\na.label('padded');cmp32(0x58,0x30);a.cond(0xd9,'invalid');post(0x44);post(0x46)\ntag(0x6d66,0x2074,'format','test_data')\na.label('test_data');tag(0x6164,0x6174,'data','next')\na.label('format');a.mov(0x44,0x3c);a.emit(0x61,1,0,0x44);a.cmp(0x44,0);a.cond(0xd7,'invalid')\na.cmp(0x3a,0);a.cond(0xd7,'format_fits');a.cmp(0x38,16);a.cond(0xd3,'invalid')\na.label('format_fits');read(0x34,0x36,16)\npost(0x44);a.cmp(0x44,1);a.cond(0xd7,'invalid');post(0x40)\na.cmp(0x40,1);a.cond(0xdf,'channels_ok');a.cmp(0x40,2);a.cond(0xd7,'invalid')\na.label('channels_ok');post(0x48);post(0x4a);a.cmp(0x4a,0);a.cond(0xd7,'invalid')\npost(0x20);post(0x22);post(0x54);post(0x44);a.cmp(0x44,16);a.cond(0xd7,'invalid')\na.mov(0x44,0x40);a.emit(0x64,0x44,0x44,0x88,0x44,0x54);a.cond(0xd7,'invalid')\na.mov(0x44,0x48);a.clr(0x46);a.emit(0x64,0x44,0x44,0xa4,0,0x46)\na.cmp(0x40,1);a.cond(0xdf,'rate_compare');a.emit(0x64,0x44,0x44,0xa4,0x46,0x46)\na.label('rate_compare');cmp32(0x20,0x44);a.cond(0xd7,'invalid')\na.imm(0x20,0x5e80);a.clr(0x42)\na.label('rate_loop');a.emit(0xa2,0x21,0x44,0x88,0x48,0x44);a.cond(0xdf,'format_done')\na.emit(7,0x42);a.cmp(0x42,8);a.cond(0xd3,'rate_loop');a.jmp('invalid')\na.label('format_done');a.emit(0x81,1,0,0x3c);a.jmp('next')\na.label('data');a.mov(0x44,0x3c);a.emit(0x61,2,0,0x44);a.cmp(0x44,0);a.cond(0xd7,'invalid')\na.mov(0x4c,0x34);a.mov(0x4e,0x36);a.mov(0x50,0x38);a.mov(0x52,0x3a);a.emit(0x81,2,0,0x3c)\na.label('next');a.mov(0x34,0x58);a.mov(0x36,0x5a);a.jmp('chunk')\na.label('finish');a.cmp(0x3c,3);a.cond(0xd7,'invalid');a.mov(0x44,0x50);a.emit(0x80,0x52,0x44);a.cmp(0x44,0);a.cond(0xdf,'invalid')\na.mov(0x44,0x54);a.emit(5,0x44,0x60,0x50,0x44);a.cmp(0x44,0);a.cond(0xd7,'invalid')\na.clr(0x3e);a.label('return');a.emit(0xf0)\na.label('invalid');a.imm(0x3e,1);a.emit(0xf0)\na.label('read_at');a.imm(0x3e,255);a.emit(0xf0) # Explicit unimplemented provider; never false success.\ntry:code=a.finish()\nexcept AssertionError:\n import pypcode\n rows=pypcode.Context('MCS96:LE:16:default').disassemble(bytes(a.code),base_address=0x13e).instructions\n print('decode',len(a.code),sum(i.length for i in rows),[(hex(i.addr.offset),i.mnem,i.body) for i in rows[-8:]])\n raise\nparser_bytes=a.labels['read_at']-a.labels['inspect']\nreport=dict(status='STATIC SIZE PROTOTYPE ONLY: not runtime validated or production parser',parser_code_bytes=parser_bytes,rate_table_bytes=16,read_provider_stub_bytes=len(code)-parser_bytes,labels=a.labels,decoded=a.rows,missing=['Production read_at adapter and cancellation/error integration','Output persistence and frame-count division','Runtime and malformed-file equivalence against host reference','Cross-chunk byte carry and combined memory/ABI qualification'])\n(P/'parser-size.json').write_text(json.dumps(report,indent=2)+'\\n');print(json.dumps({k:v for k,v in report.items() if k not in ('labels','decoded')},indent=2))\n"
+    },
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\run.py": {
+      "sha256": "a3e38ab6270f9d1669abb8e13d35683481c8e30499d1fdbfa3b68fd94f853291",
+      "text": "from pathlib import Path\nimport json,hashlib,shutil,argparse,time,struct\nfrom probe_base import ROOT,HERE,ObservedRuntime\nfrom s760_runtime import RuntimeConfig\nfrom verify_native_scsi_save import controls,samples\nfrom verify_native_roland_load import audition\nap=argparse.ArgumentParser();ap.add_argument('--phase',type=int,choices=[1,5,2],required=True);args=ap.parse_args()\nwork=HERE/('native-qualified-phase-'+str(args.phase));work.mkdir(exist_ok=False)\nfixture=ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-feasibility-2026-10-18/scsi-03/saved-hd.img'\ncfg=RuntimeConfig(ROOT/'mame-source/mames760.exe',ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN',HERE/'S760224.PAIR-CANCEL.IMG',work/'runtime',sound=False,throttle=False,wave_dump=work/'wave.bin')\nmedia=cfg.state_dir/'roms/SCSI';media.mkdir(parents=True);shutil.copyfile(fixture,media/'HD00_512.img')\ndef sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()\npaths=[fixture,cfg.executable,cfg.boot_rom,cfg.system_disk,HERE/'observer.lua',HERE/'probe_base.py',Path(__file__)]\nidentities={str(p.relative_to(ROOT)):sha(p) for p in paths}\nwith ObservedRuntime(cfg) as rt:\n wait,button,click,shot,select_hd=controls(rt,work)\n wait(25);shot('boot.png');click(118,5);click(80,22);wait(8);select_hd();shot('list.png')\n print('HDD list ready',flush=True)\n click(50,34);click(76,98);wait(60);click(10,5);click(15,22);wait(3);shot('loaded.png')\n rt.request('pause');rt.request('audio_capture',enabled=True)\n pcm,audio=audition(rt,0,60);(work/'audio.pcm').write_bytes(pcm)\n rt.request('audio_capture',enabled=False);rt.request('resume');rt.export_scsi_hd0(work/'export.img')\n click(142,5);click(100,38);rt.request('pointer',x=141,y=50);wait(.3);rt.request('dial',id='ALPHA',delta=1);wait(1)\n click(10,5);click(15,22);wait(1)\n # Sustain 16 ordinary notes while the guest transaction runs.\n rt.request('midi',bytes=sum(([0x90,n,90] for n in range(48,64)),[]));wait(.1)\n click(118,5);click(90,62)\n def await_case(attempt,case):\n  deadline=time.monotonic()+90\n  while not (rt.observation_folder/f'attempt-{attempt}-case-{case}.ready').exists():\n   assert time.monotonic()<deadline,'Diagnostic stage deadline'\n   rt.request('status');time.sleep(.01)\n await_case(1,1)\n # 384 bytes of ordinary channel-controller traffic during the service hold.\n \n for start in (0,64):rt.request('midi',bytes=sum(([0xb0,1,n] for n in range(start,start+64)),[]))\n wait(.3)\n await_case(1,args.phase)\n pressed=rt.request('status')[0]['seconds']\n rt.request('button',port=':PANEL1',name='Exit',down=True);wait(.15)\n rt.request('button',port=':PANEL1',name='Exit',down=False)\n await_case(1,7);wait(2);shot('cancelled.png')\n r=(rt.observation_folder/'frame-04.ram').read_bytes()\n assert struct.unpack_from('<H',r,0x5af0)[0]==0xb504\n click(10,5);click(15,22);wait(1);click(118,5);click(90,62)\n await_case(2,3)\n rt.request('midi',bytes=sum(([0x80,n,0] for n in range(48,64)),[]));wait(2);shot('retry-published.png')\n click(100,5);click(80,26);wait(3);shot('sample-loop.png')\n rt.request('pointer',x=75,y=18);wait(.3)\n for _ in range(13):rt.request('dial',id='ALPHA',delta=1);wait(1)\n wait(2);shot('sample-pair.png')\n\nassert (work/'wave.bin').read_bytes()[16:119824]==b''.join(samples(fixture))\nassert (work/'export.img').read_bytes()==fixture.read_bytes()\nassert all(sha(ROOT/p)==v for p,v in identities.items())\nreport=dict(passed=True,phase=args.phase,exit_press_seconds=pressed,identities=identities,audio=audio,media_unchanged=True)\n(work/'result.json').write_text(json.dumps(report,indent=2)+'\\n');print(json.dumps(report),flush=True)\n"
+    },
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\observer.lua": {
+      "sha256": "4e0c4ed8b883e4d127b96313a292e247f6e20998725145a5f62b903fb8c3c812",
+      "text": "local json=require('json');local m=manager.machine;local cpu=m.devices[':maincpu'];local p=cpu.spaces['program'];local ram,banks,wave\nlocal folder=assert(os.getenv('BS1_OBSERVER_DIR'))\nfor n,i in pairs(m.devices[':'].items) do\n if n:match('/m_banked_ram$') then ram=emu.item(i) end\n if n:match('/m_bank_regs$') then banks=emu.item(i) end\n if n:match('/m_native_wave$') then wave=emu.item(i) end\nend\nlocal function bank(a) return banks:read(a-0x100)|(banks:read(a-0xff)<<8) end\nlocal function dump(name)\n local f=assert(io.open(folder..'/'..name..'.ram','wb'));f:write(ram:read_block(0,ram.count));f:close()\n f=assert(io.open(folder..'/'..name..'.wave','wb'));f:write(wave:read_block(0,16+40*9216));f:close()\nend\nlocal log=assert(io.open(folder..'/cursor.jsonl','w'));_G.pair_taps={}\ntable.insert(_G.pair_taps,p:install_write_tap(0x3616,0x3617,'pair-cursor',function(a,d,mask)\n if bank(0x108)==0x204 then log:write(json.stringify({seconds=m.time:as_double(),pc=cpu.state['CURPC'].value,data=d,mask=mask})..'\\n');log:flush() end\nend))\nlocal attempt=0\ntable.insert(_G.pair_taps,p:install_write_tap(0x5e00,0x5e01,'pair-result',function(a,d,mask)\n if bank(0x10a)==15 and d>=1 and d<=7 then\n  if d==1 then attempt=attempt+1 end\n  local name='attempt-'..attempt..'-case-'..d;dump(name)\n  local ready=assert(io.open(folder..'/'..name..'.ready','w'));ready:write('ok');ready:close()\n end\nend))\nlocal seen=''\nemu.register_periodic(function()\n local f=io.open(folder..'/snapshot-request.txt','r');if not f then return end\n local tag=f:read('*a');f:close();if tag==seen or not tag:match('^[%w_-]+$') then return end;seen=tag;dump(tag)\n f=assert(io.open(folder..'/'..tag..'.json','w'));f:write('{}');f:close()\nend)\n\nlocal events=assert(io.open(folder..'/service.jsonl','w'))\nlocal function event(name)\n events:write(json.stringify({name=name,seconds=m.time:as_double(),pc=cpu.state['CURPC'].value,owner=ram:read(0x5bf0),cursor=ram:read(0x84616)|(ram:read(0x84617)<<8)})..'\\n');events:flush()\nend\n\nlocal regs=cpu.spaces['register']\ntable.insert(_G.pair_taps,regs:install_read_tap(0x16,0x17,'timer-ios',function(a,d,mask) if ram:read(0x5bf0)==1 then event('timer-ios') end end))\ntable.insert(_G.pair_taps,p:install_read_tap(0x116,0x117,'midi-data',function(a,d,mask) if ram:read(0x5bf0)==1 then event('midi-data') end end))\ntable.insert(_G.pair_taps,p:install_read_tap(0x5ff0,0x5ff1,'gate-flag',function(a,d,mask)\n if bank(0x10a)==15 then\n  events:write(json.stringify({name='sds-gate',seconds=m.time:as_double(),pc=cpu.state['CURPC'].value,owner=ram:read(0x5bf0),command=ram:read(0xb2848),cursor=ram:read(0x84616)|(ram:read(0x84617)<<8)})..'\\n');events:flush()\n end\nend))\ntable.insert(_G.pair_taps,p:install_write_tap(0x5ff0,0x5ff1,'owner',function(a,d,mask) if bank(0x10a)==15 then event('owner-write-'..d) end end))\n\ntable.insert(_G.pair_taps,p:install_write_tap(0xb048,0xb049,'command-byte',function(a,d,mask)\n if bank(0x10c)==0x2be then\n  events:write(json.stringify({name='command-byte',seconds=m.time:as_double(),pc=cpu.state['CURPC'].value,owner=ram:read(0x5bf0),data=d,mask=mask})..'\\n');events:flush()\n end\nend))\ntable.insert(_G.pair_taps,p:install_write_tap(0x2bba,0x2bbb,'sds-state',function(a,d,mask)\n if bank(0x108)==0x204 then\n  events:write(json.stringify({name='sds-state',seconds=m.time:as_double(),pc=cpu.state['CURPC'].value,owner=ram:read(0x5bf0),data=d,mask=mask})..'\\n');events:flush()\n end\nend))\n\ntable.insert(_G.pair_taps,p:install_write_tap(0x5ff2,0x5ff3,'cancel-latch',function(a,d,mask) if bank(0x10a)==15 then event('cancel-write-'..d) end end))\n\nlocal stacklog=assert(io.open(folder..'/stack.jsonl','w'));local guard=false;local low=65535;local writes=0\ntable.insert(_G.pair_taps,regs:install_write_tap(0x18,0x19,'owner-stack',function(a,d,mask)\n if guard or ram:read(0x5bf0)~=1 then return end\n guard=true\n writes=writes+1;if d<low then low=d;stacklog:write(json.stringify({seconds=m.time:as_double(),pc=cpu.state['CURPC'].value,sp=d,mask=mask,writes=writes})..'\\n');stacklog:flush() end\n guard=false\nend))\ntable.insert(_G.pair_taps,p:install_read_tap(0x10a,0x10b,'entry-stack',function(a,d,mask)\n if cpu.state['CURPC'].value~=0x13f or bank(0x100)~=15 then return end\n stacklog:write(json.stringify({name='entry-after-pusha',seconds=m.time:as_double(),sp=regs:read_u16(0x18)})..'\\n');stacklog:flush()\nend))\n\ntable.insert(_G.pair_taps,p:install_write_tap(0x5ff0,0x5ff1,'stack-summary',function(a,d,mask) if bank(0x10a)==15 and d==0 then stacklog:write(json.stringify({name='summary',low=low,writes=writes})..'\\n');stacklog:flush() end end))\n"
+    },
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\analyze.py": {
+      "sha256": "b816b778331d4a1dac25823b07db3afc0194e0e236f6ff6e1f459733fbf5d80a",
+      "text": "from pathlib import Path\nimport json,struct,hashlib,argparse\nP=Path(__file__).resolve().parent\nap=argparse.ArgumentParser();ap.add_argument('--phase',type=int,required=True);args=ap.parse_args()\nwork=P/('native-qualified-phase-'+str(args.phase));obs=work/'runtime/bs1-observer'\nnative=json.loads((work/'result.json').read_text());b=json.loads((P/'build.json').read_text())\ndef read(a,c,ext='ram'):return (obs/f'attempt-{a}-case-{c}.{ext}').read_bytes()\ndef word(r,p):return struct.unpack_from('<H',r,p)[0]\nbase=(obs/'frame-03.ram').read_bytes();wave0=(obs/'frame-03.wave').read_bytes();start=0xd2800+13*48\npair=bytearray.fromhex(b['template'])\nfor ch in range(2):\n for off in (16,20,24,28,32):\n  pos=ch*48+off;struct.pack_into('<I',pair,pos,struct.unpack_from('<I',pair,pos)[0]+(13*4608<<8))\n struct.pack_into('<H',pair,ch*48+40,13+ch*13)\nchunks=[]\nfor ch in range(2):\n chunk=b''.join(struct.pack('<H',(0x1200+ch*0x3000+j*0x101)&65535) for j in range(2048))\n chunks.append(chunk*29+chunk[:1024])\ncancel_wave=bytearray(wave0)\nif args.phase in (5,2):cancel_wave[119824:239632]=chunks[0]\nif args.phase==2:cancel_wave[239632:359440]=chunks[1]\nfull_wave=bytearray(wave0);full_wave[119824:359440]=b''.join(chunks)\nfor case,owner in [(6,1),(7,0)]:\n r=read(1,case)\n assert word(r,0x84616)==13 and r[0xa739e:0xa73a2]==base[0xa739e:0xa73a2]\n assert r[0xd2800:0xd8800]==base[0xd2800:0xd8800]\n assert r[0x82fa0:0x82fa2]==base[0x82fa0:0x82fa2]\n assert r[0x5b00:0x5b60]==bytes(96) and word(r,0x5bf0)==owner and word(r,0x5bf2)==1\n assert read(1,case,'wave')==cancel_wave\n assert r[0x5afe:0x5b00]==b'\\xa5\\x5a' and r[0x5b60:0x5b62]==b'\\x5a\\xa5'\nassert not (obs/'attempt-1-case-3.ready').exists()\nr=read(2,1);assert word(r,0x84616)==39 and word(r,0x5bf2)==0 and r[0x5b00:0x5b60]==pair\nassert r[0xd2800:0xd8800]==base[0xd2800:0xd8800] and read(2,1,'wave')==cancel_wave\npublic=bytearray(base[0xd2800:0xd8800]);public[13*48:15*48]=pair\nr=read(2,3);assert r[0xd2800:0xd8800]==public and word(r,0x84616)==39\nassert read(2,3,'wave')==full_wave\nfinal=(obs/'frame-07.ram').read_bytes()\nassert final[0xd2800:0xd8800]==public and word(final,0x5bf0)==0 and word(final,0x5bf2)==0\nassert [word(final,p) for p in (0xd2790,0xd27a0,0xd8828,0xd8858)]==[512,513,13,26]\nassert [final[p] for p in (0xd2794,0xd27a4)]==[224,32]\ncursor=[json.loads(s) for s in (obs/'cursor.jsonl').read_text().splitlines()]\ncursor=[x for x in cursor if b['labels']['reserve']<=x['pc']<b['labels']['fill']]\nassert [x['data'] for x in cursor]==[39,13,39],cursor\nevents=[json.loads(s) for s in (obs/'service.jsonl').read_text().splitlines()]\nowners=[x for x in events if x['name'].startswith('owner-write-')]\nassert [x['name'] for x in owners]==['owner-write-1','owner-write-0','owner-write-1','owner-write-0']\nlatches=[x for x in events if x['name']=='cancel-write-1'];assert len(latches)==1 and latches[0]['owner']==1 and latches[0]['cursor']==39\nassert owners[1]['owner']==1 and owners[1]['cursor']==13\ntimer=[x for x in events if x['name']=='timer-ios'];assert len(timer)>10\nreport=dict(passed=True,phase=args.phase,native=native,cursor_writes=cursor,owner_writes=owners,cancel_latch=latches[0],latch_to_release_seconds=owners[1]['seconds']-latches[0]['seconds'],timer_ios_reads=len(timer),cancel_public_table_unchanged=True,staging_invalidated_before_release=True,allocation_mirrors_restored=True,cancel_wave_sha256=hashlib.sha256(cancel_wave).hexdigest(),retry_pair_pcm_bytes=239616,existing_pcm_bytes=119808,guarded_wave_bytes=len(full_wave),retry_preview_refs=[512,513],retry_block_bases=[13,26],case_hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in obs.glob('attempt-*') if p.suffix in ('.ram','.wave')})\n(work/'analysis.json').write_text(json.dumps(report,indent=2)+'\\n');print(json.dumps({k:v for k,v in report.items() if k not in ('case_hashes','native')},indent=2))\n"
+    },
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-workload-2026-10-18\\probe_base.py": {
+      "sha256": "0ea52dff38874e06a2895c409eb3130eccbdc62b0248e777ba7c7bd0b9d79298",
+      "text": "\"\"\"Run existing native acceptance workflows with read-only BS1 observations.\"\"\"\nimport argparse\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport runpy\nimport shutil\nimport subprocess\nimport sys\nimport time\nfrom unittest.mock import patch\n\nROOT=Path(__file__).resolve().parents[4]\nHERE=Path(__file__).resolve().parent\nsys.path.insert(0,str(ROOT/'scripts'))\nimport s760_runtime\n\nclass ObservedRuntime(s760_runtime.NativeRuntime):\n    def _start(self,timeout):\n        folder=self.config.state_dir.resolve()/'bs1-observer'\n        folder.mkdir(parents=True,exist_ok=False)\n        wrapper=folder/'wrapper.lua'\n        observer=folder/'observer.lua'\n        shutil.copyfile(HERE/'observer.lua',observer)\n        wrapper.write_text('dofile('+json.dumps((ROOT/'scripts/s760_runtime.lua').as_posix())+')\\n'\n                           +'dofile('+json.dumps(observer.as_posix())+')\\n',encoding='utf-8')\n        launch=subprocess.Popen\n        def observed(command,**kwargs):\n            command=list(command)\n            command[command.index('-autoboot_script')+1]=str(wrapper)\n            kwargs['env']['BS1_OBSERVER_DIR']=folder.as_posix()\n            return launch([*command,'-log'],**kwargs)\n        self.observation_folder=folder\n        self.snapshot_count=0\n        with patch('s760_runtime.subprocess.Popen',side_effect=observed):\n            super()._start(timeout)\n\n    def request(self,operation,**kwargs):\n        result=super().request(operation,**kwargs)\n        if operation=='frames':\n            self.snapshot_count+=1\n            tag=f'frame-{self.snapshot_count:02}'\n            temporary=self.observation_folder/'snapshot-request.tmp'\n            temporary.write_text(tag,encoding='ascii')\n            temporary.replace(self.observation_folder/'snapshot-request.txt')\n            deadline=time.monotonic()+10\n            while not (self.observation_folder/(tag+'.json')).exists():\n                if self.process.poll() is not None:raise RuntimeError('Observer process stopped')\n                if time.monotonic()>deadline:raise TimeoutError('Read-only snapshot timed out')\n                time.sleep(.02)\n        return result\n\ndef main():\n    parser=argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--workflow',choices=('stereo','scsi-save'),required=True)\n    parser.add_argument('--output',type=Path,required=True)\n    args=parser.parse_args()\n    workflow=ROOT/'scripts'/('verify_native_sampling_input.py' if args.workflow=='stereo' else 'verify_native_scsi_save.py')\n    files=[Path(__file__),HERE/'observer.lua',workflow,ROOT/'scripts/s760_runtime.py',ROOT/'scripts/s760_runtime.lua',ROOT/'mame-source/mames760.exe',ROOT/'S760224.IMG',ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN']\n    identity={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}\n    sys.argv=[str(workflow),'--state-dir',str(args.output.resolve())]\n    if args.workflow=='stereo':\n        sys.argv+=['--blank-disk',str(ROOT/'docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img')]\n    with patch.object(s760_runtime,'NativeRuntime',ObservedRuntime):\n        runpy.run_path(str(workflow),run_name='__main__')\n    assert all(hashlib.sha256(p.read_bytes()).hexdigest()==identity[str(p.relative_to(ROOT))] for p in files), 'Input changed during observation'\n    (args.output/'observer-identities.json').write_text(json.dumps(identity,indent=2)+'\\n')\n\nif __name__=='__main__':main()\n"
+    }
+  }
+}

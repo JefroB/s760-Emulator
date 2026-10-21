@@ -1,0 +1,116 @@
+{
+  "passed": true,
+  "date": "2026-10-20",
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "boot_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+  "emulator_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+  "commands": [
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\optimize-lean\\run_optimize.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\optimize-lean\\run_optimize_cold.py"
+  ],
+  "inputs": [
+    {
+      "click": [
+        62,
+        66
+      ],
+      "wait": 55
+    },
+    {
+      "button": [
+        ":PANEL2",
+        "Panel F3"
+      ],
+      "wait": 3
+    },
+    {
+      "click": [
+        88,
+        66
+      ],
+      "wait": 2,
+      "export": true
+    },
+    {
+      "stop": true
+    }
+  ],
+  "states": [
+    {
+      "name": "optimize-entry",
+      "cursor": 0,
+      "drive": 7
+    },
+    {
+      "name": "optimize-hd",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "optimize-dialog",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "command-1",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "command-2",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "command-3",
+      "cursor": 0,
+      "drive": 0
+    }
+  ],
+  "cold": {
+    "passed": true,
+    "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+    "optimized_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+    "source_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+    "counts": [
+      1,
+      22,
+      88,
+      13
+    ],
+    "exact_sample_bytes": 119808,
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "states": [
+      {
+        "name": "cold-list",
+        "cursor": 0,
+        "drive": 0
+      },
+      {
+        "name": "cold-perform",
+        "cursor": 13,
+        "drive": 0
+      }
+    ],
+    "scope": "Native Optimize on named saved HD0 and fresh native Load13 allocations119808 exact bytes/playback; fragmentation/movement scope requires separate evidence"
+  },
+  "export_byte_identical": true,
+  "source_and_export_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+  "code_sds_preserved_snapshots": 8,
+  "originals_unchanged": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+  },
+  "prerequisites": "Private verified10MiB512-sector saved HD0, genuine mode3 NVRAM, real native pointer/panel/MIDI inputs, read-only snapshots/no guest forcing",
+  "observer_change": "Initial full register trace generated818370698-byte loader log and timed out120wallseconds. Accepted repeat disables broad loader taps and -log, retains snapshots and unchanged emulator/firmware; bounded600wallsecond wait. No failed-run acceptance claim.",
+  "limitations": [
+    "Scoped valid already-packed image/no-change Optimize roundtrip; no fragmented relocation/free-space recovery proof",
+    "No interruption/arbitrary geometry/physical/concurrency qualification",
+    "RC100 waived by user; other IM1 gates remain open"
+  ]
+}

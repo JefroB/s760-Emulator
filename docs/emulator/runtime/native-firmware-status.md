@@ -62,7 +62,7 @@ selection is a later standalone objective.
 Reproduce with user-supplied firmware and ROBOFULL.IMG:
 
 ```powershell
-python scripts/verify_native_readiness.py --state-dir docs/ic20-hle-findings/chatGPT-work/readiness-test
+python scripts/verify_native_readiness.py --state-dir temp/work/readiness-test
 ```
 
 For browser acceptance launch the standalone service with `--no-browser

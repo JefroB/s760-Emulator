@@ -10,7 +10,7 @@ roms/*
 !roms/FDD/.gitkeep
 !roms/SCSI/
 !roms/SCSI/.gitkeep
-# IC20 BOOT ROM: track the README (how to obtain it) but NOT the ROM binaries.
+# IC15 boot ROM: track the README (how to obtain it) but NOT the ROM binaries.
 # The actual *.BIN/*.HEX dumps stay ignored (copyrighted Roland firmware) via the
 # global *.BIN/*.HEX/*.bin rules below.
 !roms/BOOT/
@@ -54,6 +54,21 @@ roms/*
 *.WAV
 *.aiff
 *.AIFF
+# Other recordings, machine checkpoints and compressed CD images stay local.
+*.[aA][iI][fF]
+*.[fF][lL][aA][cC]
+*.[mM][pP]3
+*.s760state
+*.s760state.*
+*.[iI][sS][oO]
+*.[iI][sS][oO].*
+
+# Local environment credentials (example templates may be committed).
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
 
 # Copyrighted manuals and documentation PDFs
 Manuals/
@@ -120,9 +135,8 @@ temp/
 .soundcheck/
 sample_cds/
 
-# Multi-agent reverse-engineering working log (not committed): live scratch,
-# findings, captures and agent work dirs. Confirmed results are consolidated into
-# docs/condensed/, which is the committed standalone source of truth.
+# Keep the retired scratch-tree path excluded if an old external workflow
+# recreates it. Maintained hardware documentation lives in docs/hardware/.
 docs/ic20-hle-findings/
 
 # Original hardware captures stay local; commit summaries and hashes instead.
@@ -140,3 +154,81 @@ docs/ic20-hle-findings/
 .DS_Store
 Thumbs.db
 
+# ====================================================================
+# s760-os-compiler: derived firmware source + proprietary binaries
+# (Requirement 15.2 — derived/generated source and proprietary binaries
+#  are excluded from the distributable file set. S760224.IMG, *.IMG/*.img,
+#  *.BIN/*.bin, roms/BOOT/*.BIN, temp/, and /firmware_source/ are already
+#  covered by the rules above; the entries below make the compiler's own
+#  derived-export locations explicit so the policy is self-documenting.)
+# ====================================================================
+# Generated/derived firmware source exported by export_firmware_source.py
+# (and any sibling export dirs the toolchain writes).
+/firmware_source/
+/firmware_export/
+firmware_source/
+firmware_export/
+# Derived disassembly / build outputs produced under temp/ by the toolchain.
+temp/firmware_export/
+temp/firmware_source/
+temp/*.img
+temp/*.IMG
+temp/*.bin
+temp/*.BIN
+temp/*.map
+
+# Local compiler/decompiler development, compatibility tools and supporting docs.
+/compiler/
+/decompiler/
+/docs/firmware/authoring/
+/docs/firmware/tooling/
+/docs/testing/evidence/toolchain/
+/examples/minimal_os/
+/include/s760_registers.inc
+/scripts/analyze_firmware_routines.py
+/scripts/build_firmware_image.py
+/scripts/decompile_firmware_routines.py
+/scripts/export_firmware_source.py
+/scripts/mcs96_assembler.py
+/scripts/mcs96_firmware_source.py
+/scripts/mcs96_isa.py
+/scripts/mcs96_linker.py
+/scripts/s760_os_build.py
+/scripts/s760_qualify_toolchain.py
+/scripts/reconcile_equates.py
+/scripts/check_authoring_citations.py
+/scripts/distribution_policy.py
+
+# Compiler/decompiler unit, property, build, export and acceptance tests.
+/tests/toolchain/
+/tests/test_assembler_directives.py
+/tests/test_authoring_citations.py
+/tests/test_complete_mcs96_coverage.py
+/tests/test_distribution_policy.py
+/tests/test_example_project_build.py
+/tests/test_exported_project_import.py
+/tests/test_firmware_decompiler.py
+/tests/test_firmware_routines.py
+/tests/test_from_scratch_os_boot.py
+/tests/test_ic15_source_export_and_rebuild.py
+/tests/test_legacy_reconstruct_regression.py
+/tests/test_linker_boundaries.py
+/tests/test_mcs96_isa.py
+/tests/test_milestone7_source_behavior_change.py
+/tests/test_original_project_roundtrip_property.py
+/tests/test_prop_*.py
+/tests/test_reconcile_equates.py
+/tests/test_rom_boot_os_loader.py
+/tests/test_s760_emitter.py
+/tests/test_s760_os_build.py
+/tests/test_s760_os_build_orchestration.py
+/tests/test_source_export_and_rebuild.py
+/tests/test_source_toolchain_acceptance.py
+/tests/test_toolchain_layout.py
+
+# Generated property-test state.
+/.hypothesis/
+
+# Large generated runtime trace reports stay local; retain the written summaries.
+/docs/condensed/validation/bluescsi-im1-bug-fixes-2026-10-20.json
+/docs/condensed/validation/bluescsi-im1-owner-and-recovery-2026-10-21.json

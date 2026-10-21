@@ -73,8 +73,8 @@ qualifies the observed transfer workflow, not ADC capture, recorded PCM integrit
 normalization accuracy or physical hardware equivalence.
 
 ```powershell
-python scripts/verify_native_sampling_dma.py --state-dir docs/ic20-hle-findings/chatGPT-work/sampling-dma-check
-python scripts/verify_native_runtime.py --bus-trace --state-dir docs/ic20-hle-findings/chatGPT-work/sampling-observer-check
+python scripts/verify_native_sampling_dma.py --state-dir temp/work/sampling-dma-check
+python scripts/verify_native_runtime.py --bus-trace --state-dir temp/work/sampling-observer-check
 ```
 
 Prerequisites: local IC15 v1.11, OS2.24 and built native MAME; observer playback

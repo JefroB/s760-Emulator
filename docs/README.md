@@ -52,7 +52,4 @@ historical records. Their early CPU hypotheses are superseded by the consolidate
 [hardware and memory map](condensed/01-hardware-and-memory-map.md), which identifies
 the Intel 80C196KB CPU.
 
-Committed validation artifacts live in `condensed/validation/`. The local
-`ic20-hle-findings/` tree is ignored scratch work and is not a durable link target.
-Keep confirmed conclusions and their caveats in the relevant technical reference;
-use the topic indexes for navigation rather than duplicating technical claims.
+Maintained hardware documentation lives in [hardware/](hardware/README.md), including reviewed results from the former findings tree. Validation artifacts remain in `condensed/validation/` and explicitly indexed evidence directories. Generated runs belong under `temp/work/`; private fixtures under `temp/fixtures/`. The old findings tree and its shared/working archives were removed during the [2026-10-21 consolidation](hardware/documentation-cleanup-2026-10-21.md).

@@ -89,7 +89,7 @@ emu.register_frame_done(function() if not entered then mode:set_value(1) local p
         if case != 'scsi-absent':
             source = ROOT / 'roms/SCSI/HD00_512.img'
             if case == 'scsi-valid':
-                source = ROOT / 'docs/ic20-hle-findings/chatGPT-work/rom-scsi-contract-2026-10-16/native-scsi-valid-header/roms/SCSI/HD00_512.img'
+                source = ROOT / 'temp/fixtures/ic15-residual/HD00_512.img'
             shutil.copyfile(source, target_dir / 'HD00_512.img')
     lua = output / 'observer.lua'
     lua.write_text(code, encoding='utf-8')
@@ -117,7 +117,7 @@ emu.register_frame_done(function() if not entered then mode:set_value(1) local p
     # Retain an independent original-ROM reconstruction alongside raw history.
     # Debugger history uses current fetch selectors, not saved per-entry banks.
     import re
-    analysis = json.loads((ROOT / 'docs/ic20-hle-findings/chatGPT-work/rom-residual-text-2026-10-16/analysis.json').read_text())
+    analysis = json.loads((ROOT / 'temp/fixtures/ic15-residual/analysis.json').read_text())
     instructions = {(r['page'], i['pc']): i for r in analysis['regions'] for i in r['instructions']}
     contexts = []
     for block in log.split('[CONTEXT-BEGIN] ')[1:]:

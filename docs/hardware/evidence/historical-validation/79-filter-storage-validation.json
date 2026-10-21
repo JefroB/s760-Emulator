@@ -1,0 +1,58 @@
+{
+  "independently_replayed_filter_writes": 518,
+  "channels": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "registers": [
+    8,
+    10,
+    48,
+    50
+  ],
+  "mode_words": [
+    0,
+    1024,
+    512
+  ],
+  "off_bfff_preserved": true,
+  "stereo_pcm_identical_to_76": true,
+  "final_words": {
+    "0": {
+      "50": 0,
+      "48": 32768,
+      "10": 0,
+      "8": 4095
+    },
+    "1": {
+      "50": 0,
+      "48": 32768,
+      "10": 0,
+      "8": 4095
+    },
+    "2": {
+      "50": 0,
+      "48": 32768,
+      "10": 0,
+      "8": 4095
+    },
+    "3": {
+      "50": 0,
+      "48": 32768,
+      "10": 0,
+      "8": 4095
+    },
+    "4": {
+      "50": 0,
+      "48": 32768,
+      "10": 0,
+      "8": 4095
+    }
+  },
+  "trace_sha256": "04e2bf1af552e8a5d078214ea8db1c806caa52e132acfbac5207571ce937df31",
+  "executable_sha256": "51f98b6b2d3e2248c04a900bd70ac310e1a797e6baea3df42c3f7b9872dce9aa",
+  "scope": "Write-side state only; full filter DSP, readback, byte-write behavior and save-state round-trip remain unverified."
+}

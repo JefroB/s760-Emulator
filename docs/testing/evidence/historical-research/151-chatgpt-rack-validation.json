@@ -1,0 +1,20 @@
+{
+  "sha256": {
+    "mame-source/mames760.exe": "36586c69380af4be084a307a055958dae4cdd29999bf193f53dba08c95d8a544",
+    "docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3": "6d98b31644716886d789b600fd6c321062ba795e57ec0d45e95c9461ee26a1a5",
+    "google-ui/src/components/NativePanelControls.tsx": "ed8fa433d699576a8cd00180b54311b8b3567d87b5e461ce0daabbb58741da30",
+    "google-ui/src/components/NativeDriveBay.tsx": "7e519f5477bd10395e9d2b7efcf2dde75baa57a5d8b83f329e78b6dd2146a6de",
+    "google-ui/src/components/RackKnob.tsx": "18fb64bc95b7e92fe53216fa9d5ed66ecb950de4c62d5e88649f949480094b46"
+  },
+  "evidence": "chatGPT-work/soundcheck/153-layout",
+  "uiRegression": {
+    "fullSuitePassed": 106,
+    "focusedAfterAddedDriveTest": 6
+  },
+  "lcdReplayPixelDifferences": 0,
+  "limits": [
+    "native rack encoders, Menu and level controls disabled",
+    "Gotek list only session-entered paths",
+    "loaded-sample SoundCheck audio acceptance still open"
+  ]
+}

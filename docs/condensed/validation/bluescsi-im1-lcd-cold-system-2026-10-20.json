@@ -1,0 +1,621 @@
+{
+  "passed": true,
+  "date": "2026-10-20",
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "boot_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+  "emulator_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+  "saved_system_sha256": "74bbfa288f06ec8c9d9cfdb9898f34542c85cff732a67607b5b007e911128a31",
+  "commands": [
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_lcd_save_system.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_lcd_cold_system.py"
+  ],
+  "save_input_commands": [
+    {
+      "button": [
+        ":PANEL3",
+        "Panel F2"
+      ],
+      "wait": 3
+    },
+    {
+      "button": [
+        ":PANEL2",
+        "Panel F1"
+      ],
+      "wait": 5
+    },
+    {
+      "button": [
+        ":PANEL0",
+        "S2"
+      ],
+      "wait": 50
+    },
+    {
+      "button": [
+        ":PANEL2",
+        "Panel F3"
+      ],
+      "wait": 3
+    },
+    {
+      "wait": 55,
+      "export": true
+    },
+    {
+      "stop": true
+    }
+  ],
+  "save_states": [
+    {
+      "name": "collections0",
+      "screen": 245,
+      "cursor": [
+        24,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "disk-options0",
+      "screen": 245,
+      "cursor": [
+        24,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "disk-options1",
+      "screen": 245,
+      "cursor": [
+        24,
+        16
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "disk-options2",
+      "screen": 245,
+      "cursor": [
+        24,
+        24
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "disk-options3",
+      "screen": 245,
+      "cursor": [
+        24,
+        32
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "disk-options4",
+      "screen": 245,
+      "cursor": [
+        24,
+        40
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "disk-options5",
+      "screen": 245,
+      "cursor": [
+        24,
+        48
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "options0",
+      "screen": 245,
+      "cursor": [
+        24,
+        48
+      ],
+      "mode": 2,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "save-system0",
+      "screen": 245,
+      "cursor": [
+        24,
+        48
+      ],
+      "mode": 2,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "save-system-entry",
+      "screen": 275,
+      "cursor": [
+        160,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "save-system-confirm",
+      "screen": 18,
+      "cursor": [
+        160,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "command-1",
+      "screen": 18,
+      "cursor": [
+        160,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "command-2",
+      "screen": 275,
+      "cursor": [
+        160,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "command-3",
+      "screen": 275,
+      "cursor": [
+        160,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "command-4",
+      "screen": 275,
+      "cursor": [
+        160,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    },
+    {
+      "name": "command-5",
+      "screen": 275,
+      "cursor": [
+        160,
+        8
+      ],
+      "mode": 0,
+      "target": 0,
+      "count": 0,
+      "first": 0,
+      "scroll": 0,
+      "index": 0,
+      "allocations": 0
+    }
+  ],
+  "export_static": {
+    "passed": true,
+    "saved_system_sha256": "74bbfa288f06ec8c9d9cfdb9898f34542c85cff732a67607b5b007e911128a31",
+    "gb6_v9": {
+      "boot_banner_check": 1,
+      "boot_eeprom_check": 1,
+      "boot_setup4_inc": 1,
+      "boot_setup5_inc": 1,
+      "os_main_loop_poll_dispatch": 18,
+      "os_modal_poll_dispatch": 19,
+      "os_lcd_status_selector": 21,
+      "os_controller_hw_init": 56,
+      "os_mouse_poll_entry": 6,
+      "os_gb6_poll_stub": 41
+    },
+    "browser_code_preserved": true,
+    "lcd_descriptor_preserved": true,
+    "sds_preserved": true,
+    "changed_bytes": 11444
+  },
+  "cold": {
+    "passed": true,
+    "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+    "saved_system_sha256": "74bbfa288f06ec8c9d9cfdb9898f34542c85cff732a67607b5b007e911128a31",
+    "states": [
+      {
+        "name": "cold-collections0",
+        "screen": 245,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0,
+        "scroll": 0,
+        "index": 0,
+        "allocations": 0
+      },
+      {
+        "name": "cold-target0",
+        "screen": 245,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 0,
+        "target": 0,
+        "count": 0,
+        "first": 0,
+        "scroll": 0,
+        "index": 0,
+        "allocations": 0
+      },
+      {
+        "name": "cold-catalog0",
+        "screen": 245,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 1,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 0,
+        "allocations": 0
+      },
+      {
+        "name": "cold-B0",
+        "screen": 245,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 1,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 0,
+        "allocations": 0
+      },
+      {
+        "name": "cold-B1",
+        "screen": 245,
+        "cursor": [
+          24,
+          16
+        ],
+        "mode": 1,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 0,
+        "allocations": 0
+      },
+      {
+        "name": "cold-preview0",
+        "screen": 245,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 3,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 1,
+        "allocations": 0
+      },
+      {
+        "name": "cold-confirm0",
+        "screen": 245,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 3,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 1,
+        "allocations": 0
+      },
+      {
+        "name": "cold-confirm1",
+        "screen": 245,
+        "cursor": [
+          24,
+          16
+        ],
+        "mode": 3,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 1,
+        "allocations": 0
+      },
+      {
+        "name": "cold-confirm2",
+        "screen": 245,
+        "cursor": [
+          24,
+          24
+        ],
+        "mode": 3,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 1,
+        "allocations": 0
+      },
+      {
+        "name": "cold-handoff0",
+        "screen": 247,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 0,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 1,
+        "allocations": 0
+      },
+      {
+        "name": "cold-loaded-B",
+        "screen": 247,
+        "cursor": [
+          24,
+          8
+        ],
+        "mode": 0,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 1,
+        "allocations": 13
+      },
+      {
+        "name": "cold-perform",
+        "screen": 50,
+        "cursor": [
+          8,
+          8
+        ],
+        "mode": 0,
+        "target": 1,
+        "count": 2,
+        "first": 0,
+        "scroll": 0,
+        "index": 1,
+        "allocations": 13
+      }
+    ],
+    "rows": [
+      {
+        "seconds": 32.721938625,
+        "status": 0,
+        "cdb": "12000000600000000000",
+        "transport": 0,
+        "length": 50
+      },
+      {
+        "seconds": 32.72639075,
+        "status": 0,
+        "cdb": "1a083100300000000000",
+        "transport": 0,
+        "length": 48
+      },
+      {
+        "seconds": 32.727618875,
+        "status": 0,
+        "cdb": "da000000000000000000",
+        "transport": 0,
+        "length": 1
+      },
+      {
+        "seconds": 32.735382,
+        "status": 0,
+        "cdb": "d7000000000000000000",
+        "transport": 0,
+        "length": 80
+      },
+      {
+        "seconds": 39.784832,
+        "status": 0,
+        "cdb": "d8010000000000000000",
+        "transport": 0,
+        "length": 0
+      },
+      {
+        "seconds": 39.8055495,
+        "status": 2,
+        "cdb": "00000000000000000000",
+        "transport": 0,
+        "length": 0
+      },
+      {
+        "seconds": 39.807660625,
+        "status": 0,
+        "cdb": "03000000120000000000",
+        "transport": 0,
+        "length": 18
+      },
+      {
+        "seconds": 39.828393625,
+        "status": 2,
+        "cdb": "00000000000000000000",
+        "transport": 0,
+        "length": 0
+      },
+      {
+        "seconds": 39.83050475,
+        "status": 0,
+        "cdb": "03000000120000000000",
+        "transport": 0,
+        "length": 18
+      },
+      {
+        "seconds": 39.851221,
+        "status": 0,
+        "cdb": "00000000000000000000",
+        "transport": 0,
+        "length": 0
+      },
+      {
+        "seconds": 39.852747125,
+        "status": 0,
+        "cdb": "25000000000000000000",
+        "transport": 0,
+        "length": 8
+      }
+    ],
+    "fixture_sha256": {
+      "CD1\\Collection1_A.iso": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+      "CD1\\Collection1_B.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+      "CD2\\Collection2_A.img": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+      "CD2\\Collection2_B.img": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+      "CD3\\Collection3_A.iso": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+      "CD3\\Collection3_B.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+      "CD6\\Collection6_A.iso": "eca334f9bcebb1eb1b02fe5aad0a1c42f1363f4a2b4cda8aa77ddc94895697b8",
+      "CD6\\Collection6_B.iso": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7"
+    },
+    "exact_sample_bytes": 119808,
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "library_unchanged": true,
+    "cold_context_zero": true,
+    "no_commands_before_collection": true,
+    "code_and_lcd_descriptor_preserved": true,
+    "gb6_v9": {
+      "boot_banner_check": 1,
+      "boot_eeprom_check": 1,
+      "boot_setup4_inc": 1,
+      "boot_setup5_inc": 1,
+      "os_main_loop_poll_dispatch": 18,
+      "os_modal_poll_dispatch": 19,
+      "os_lcd_status_selector": 21,
+      "os_controller_hw_init": 56,
+      "os_mouse_poll_entry": 6,
+      "os_gb6_poll_stub": 41
+    },
+    "scope": "Native LCD Save System exported image cold boot and explicit ISO index1 exact Load/playback; no external checkpoint or physical media claim"
+  },
+  "originals_unchanged": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+  },
+  "prerequisites": "Private blank1474560-byte floppy; real panel Save System/format/S2 confirmation; genuine saved mode0 NVRAM; isolated fresh emulator cold process; named A/B valid Roland ISO fixtures; read-only snapshots/no guest forcing",
+  "limitations": [
+    "Native emulation; no physical media or timing claim",
+    "No interrupted format/Save System or arbitrary disk geometry qualification",
+    "No external emulator checkpoint synchronization; other native Disk operations, RC100, broader ownership/reset/stack/full fit and physical BlueSCSI gates open"
+  ]
+}

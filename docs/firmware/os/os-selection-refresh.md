@@ -1,6 +1,6 @@
 # Sample selection, stereo pairing and preview state
 
-The SCSI session calls four page007F services through explicit fetch-selector writes. Their closure and page004B selection/name helpers have [694 byte-checked instruction anchors](../../condensed/validation/os-selection-refresh-2026-10-16.json). These are static findings; stereo pairing and preview playback have not been exercised.
+The SCSI session calls four page007F services through explicit fetch-selector writes. Their closure and page004B selection/name helpers have [694 byte-checked instruction anchors](../../condensed/validation/os-selection-refresh-2026-10-16.json). The local contracts below originated as static findings. The [2026-10-18 native follow-up](../../condensed/validation/bluescsi-stereo-ui-followup-2026-10-18.json) now exercises stereo preview selection and routing for one cold-loaded 44.1 kHz pair; construction, other rates and physical fidelity remain separate.
 
 Page004B:6B2E maps current selection registers to the existing descriptor lookup6A26: types2/11 useRE7, type3 usesRE6, types4/12 useRFD, and type5 usesRWFE. Type1 selects index0. Type8 separately returns data0356:7060. Other types return zero.
 
@@ -16,7 +16,30 @@ Page004B:6B2E maps current selection registers to the existing descriptor lookup
 
 004B:6B9F performs the exact16-byte comparison and returns carry set with indexRW4C on a match. The type5 search scans512 indices when2460 is zero,510 when it equals2, and511 for other nonzero values. No match returnsFFFF with carry clear. The other supported type counts are1/64/128/255.
 
-The selected partner index is retained inRWB8 and246A is set. Depending on2469, the caller either uses that partner or selects a single sample. Reserved type4 descriptor255 receives references at+10/+20, and paired records receive opposite signed byte valuesE0/20 at+14/+24. Calling these pan values is a likely interpretation, not independently verified units. Under2A30, references512/513 substitute for the original indices, connecting the path to preview descriptors beyond the ordinary512 slots.
+The selected partner index is retained inRWB8 and246A is set. Depending on2469, the caller either uses that partner or selects a single sample. Reserved type4 descriptor255 receives references at+10/+20, and paired records receive opposite signed byte valuesE0/20 at+14/+24. Under2A30, references512/513 substitute for the original indices, connecting the path to preview descriptors beyond the ordinary512 slots.
+
+The native follow-up confirms the channel-routing role for these opposite values without calibrating the full pan scale. After cold Sample Load, entering Loop/Smoothing builds preview references512/513. Selecting L gives preview block bases0/13 and routingE0/20; selecting R gives13/0 and20/E0. Distinct recorded patterns remain on their original output channels with a common source-frame position, and mono selection centers the selected member. The source descriptors and allocations remain unchanged. This is a preview-selection contract, not proof that pairing names alone constructs every object needed by an importer. [Workflow and limits](../../project/bluescsi-feasibility.md#cold-load-selection-and-playback-follow-up).
+
+## Permanent assignment follow-up
+
+The [stock-OS assignment follow-up](../../condensed/validation/bluescsi-permanent-assignment-2026-10-18.json)
+qualifies a separate permanent path for the same 44.1 kHz recorded pair.
+Ordinary Partial SMT stereo search assigns public samples 0/1 to partial0
+words +10/+20 and E0/20 to +14/+24; Patch Split Set maps its 88 keys to that
+partial; Perform part1 selects patch0. Naming each object changes its initial
+7F marker to space and makes the hierarchy eligible for Disk Save. The manual
+explicitly excludes unnamed sounds from Disk operations (PDF page141).
+
+Performance Save and fresh-process Load preserve all 736 bytes of the five
+native records and all 239,616 sample allocation bytes. Cold Perform Play
+auditions before entering Sample/Partial modes while preview partial255 still
+has four FFFF references. Seven audio cases preserve L/R and common timing.
+Read-only taps retain 238 object writes, replayed exactly with no dropped rows;
+the validation byte-checks eleven original-OS store instructions. These are
+internal store anchors, not callable construction ABIs. See the
+[permanent hierarchy contract](../../project/bluescsi-sample-contract.md#permanent-playable-hierarchy-and-persistence)
+for offsets, naming, disk serialization and scope. Arbitrary importer-driven
+initialization, collision policy and transactional stereo publication remain open.
 
 ## Preview mapping remains partially bounded
 

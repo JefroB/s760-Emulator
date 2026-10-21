@@ -56,13 +56,12 @@ OFFSET MAP (file offsets, hex) — all CONFIRMED against the working builders
   0x2E00 + 16*i       Sample catalog name (16 bytes)
   0x18E00 + (i//10)*512 + (i%10)*48   Sample record (48 bytes, 10 per 512B sector):
                         +0x00  name (16 bytes)
-                        +0x10  5 x u32 LE: reserved(0), start<<8, loopstart<<8,
-                               loopend<<8, end<<8   (addresses are value<<8, i.e.
-                               8 fractional bits)
-                        +0x24  (4 bytes) zeroed
+                        +0x10  5 x u32 LE: start, loop start, loop end,
+                               release-loop start, release-loop end (each <<8)
+                        +0x24  loop mode (0=forward, 2=one shot); +0x25..27 zero
                         +0x28  cluster (u16 LE) = i + 5
                         +0x2A  clusters (u16 LE) = 1
-                        +0x2C  loop-enable (1 byte)
+                        +0x2C  sample-rate code (0=48k, 1=44.1k; see SAMPLE_RATES)
                         +0x2D  root key (1 byte, MIDI note)
   0x2AC00 + i*0x2400  PCM data slot (0x2400 bytes = 4608 int16 LE = 4096 waveform
                                       + 512 wrap-padding samples)
@@ -106,6 +105,12 @@ OFF_PCM = 0x2AC00                  # +i*0x2400
 PCM_SLOT_BYTES = 0x2400            # 4608 int16
 PCM_WAVE_SAMPLES = 4096
 PCM_WRAP_SAMPLES = 512
+
+# Original OS 001F:71E8 writes this byte; 001F:714C writes loop mode.
+SAMPLE_RATES = {48000: 0, 44100: 1, 24000: 2, 22050: 3,
+                30000: 4, 15000: 5, 32000: 6, 16000: 7}
+LOOP_MODES = {'forward': 0, 'one_shot': 2}
+SAMPLE_POINT_FIELDS = ('start', 'loop_start', 'loop_end', 'release_start', 'release_end')
 
 MIDI_KEY_LO = 21                   # first key covered by the 88-key map (0x20)
 MIDI_KEY_HI = 108                  # last key (inclusive) -> 88 entries
@@ -314,23 +319,50 @@ def _write_partial(d: bytearray, template: bytes, i: int, partial: dict):
 
 
 def _write_sample(d: bytearray, template: bytes, i: int, sample: dict):
+    # loop_enable was historically misnamed: it wrote the rate code. Preserve
+    # those bytes for existing fixture specs, but require new specs to use Hz.
+    if 'sample_rate' in sample:
+        rate = sample['sample_rate']
+        if 'loop_enable' in sample:
+            raise ValueError('Use sample_rate or legacy loop_enable, not both')
+        if type(rate) is not int or rate not in SAMPLE_RATES:
+            raise ValueError(f'Unsupported sample_rate: {rate!r}')
+        rate_code = SAMPLE_RATES[rate]
+    else:
+        rate_code = sample.get('loop_enable', 0) & 0xFF
+    mode = sample.get('loop_mode', 'forward')
+    if not isinstance(mode, str) or mode not in LOOP_MODES:
+        raise ValueError(f'Unsupported loop_mode: {mode!r}')
+
+    if 'sample_points' in sample:
+        points = sample['sample_points']
+        if any(key in sample for key in ('start', 'end', 'loop_start', 'loop_end')):
+            raise ValueError('Do not mix sample_points with legacy address fields')
+        if not isinstance(points, dict) or set(points) != set(SAMPLE_POINT_FIELDS):
+            raise ValueError(f'sample_points requires exactly {SAMPLE_POINT_FIELDS}')
+        addresses = [points[key] for key in SAMPLE_POINT_FIELDS]
+        if any(type(value) is not int or not 0 <= value < PCM_SLOT_BYTES // 2
+               for value in addresses):
+            raise ValueError('sample_points must be integer offsets within the PCM slot')
+    else:
+        # Historical API labels were shifted by one field. Retain its bytes;
+        # explicit native points belong in sample_points above.
+        addresses = [0, sample.get('start', 0), sample.get('loop_start', 0),
+                     sample.get('loop_end', PCM_WAVE_SAMPLES),
+                     sample.get('end', PCM_WAVE_SAMPLES)]
+
     so = OFF_SAMPLE_SECTOR + (i // 10) * 512 + (i % 10) * 48
     rec = bytearray(template[so:so + 48])
     name = _name(sample.get('name', f'SAMPLE {i + 1:02}'))
     rec[0:16] = name
 
-    start = sample.get('start', 0)
-    end = sample.get('end', PCM_WAVE_SAMPLES)
-    loop_start = sample.get('loop_start', 0)
-    loop_end = sample.get('loop_end', PCM_WAVE_SAMPLES)
-    # 5 x u32: reserved, start<<8, loopstart<<8, loopend<<8, end<<8
-    struct.pack_into('<5I', rec, 16, 0, start << 8, loop_start << 8,
-                     loop_end << 8, end << 8)
+    struct.pack_into('<5I', rec, 16, *(value << 8 for value in addresses))
     rec[0x24:0x28] = bytes(4)
+    rec[0x24] = LOOP_MODES[mode]
     # Cluster layout: PCM slot i lives at cluster i+5, one cluster long.
     struct.pack_into('<H', rec, 0x28, i + 5)
     struct.pack_into('<H', rec, 0x2A, 1)
-    rec[0x2C] = sample.get('loop_enable', 0) & 0xFF
+    rec[0x2C] = rate_code
     rec[0x2D] = _clamp(sample.get('root_key', 60), 0, 127)
 
     d[so:so + 48] = rec
@@ -434,7 +466,8 @@ def preset_demo_synth() -> dict:
             'name': f'{i + 1:02} {label}',
             'root_key': 60,
             'start': 0, 'end': 4096,
-            'loop_start': 0, 'loop_end': 4096, 'loop_enable': 1,
+            'loop_start': 0, 'loop_end': 4096,
+            'sample_rate': 44100, 'loop_mode': 'forward',
             'pcm': dict(waveform=kind, amp=8192, cycles=1, **kw),
         })
     return {
@@ -458,7 +491,8 @@ def preset_filter_sweep() -> dict:
         'samples': [{
             'name': '01 SWEEP SAW', 'root_key': 60,
             'start': 0, 'end': 4096,
-            'loop_start': 0, 'loop_end': 4096, 'loop_enable': 1,
+            'loop_start': 0, 'loop_end': 4096,
+            'sample_rate': 44100, 'loop_mode': 'forward',
             'pcm': {'waveform': 'saw', 'amp': 10000, 'cycles': 1, 'harmonics': 96},
         }],
     }

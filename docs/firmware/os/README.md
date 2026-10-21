@@ -8,6 +8,7 @@ OS 2.24 subsystem decoding, disk structures, UI descriptors, MIDI and SCSI behav
 
 - [Filter modulation dataflow recovered from bounded OS analysis](filter-modulation-dataflow.md)
 - [Sony GB-6 experimental OS patch](gb6-os-patch.md)
+- [GB-6 and GB-6 + SCSI patch bundles](../../../patches/README.md)
 - [Firmware modulation path audit — 2026-10-15](modulation-firmware-path.md)
 - [Roland S-760 Next-Gen OS — Feature Roadmap, Modern Sampler Inspiration & Hardware Feasibility Analysis](nextgen-os-features-and-feasibility.md)
 - [Controller assignment, registered parameters and routing refresh](os-controller-and-routing-decoding.md)

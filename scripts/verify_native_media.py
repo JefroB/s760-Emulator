@@ -45,7 +45,7 @@ def main():
     args = parser.parse_args()
     if args.format and args.write_protect:
         parser.error('Run formatting and write-protection workflows separately')
-    work = args.state_dir.resolve() if args.state_dir else ROOT / 'docs/ic20-hle-findings/chatGPT-work' / ('media-verification-' + time.strftime('%Y%m%d-%H%M%S'))
+    work = args.state_dir.resolve() if args.state_dir else ROOT / 'temp/work' / ('media-verification-' + time.strftime('%Y%m%d-%H%M%S'))
     if work.exists() and any(work.iterdir()):parser.error('Use a fresh private state directory')
     work.mkdir(parents=True, exist_ok=True)
     source = ROOT / 'roms/FDD/ROBOFULL.IMG'

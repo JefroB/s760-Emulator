@@ -1,5 +1,7 @@
 # Native C++ runtime adapter
 
+Historical paths into the former findings tree below identify past runs; that scratch tree was removed on 2026-10-21. Generate new run output under `temp/work/`. See [hardware evidence policy](../../hardware/evidence-and-open-questions.md).
+
 The Windows `NativeRuntimeClient` launches the same MAME executable and Lua
 protocol used by the Python standalone. It does not use Python, a second synth,
 or a separate display model. It is a blocking worker-side interface.
@@ -64,7 +66,7 @@ Use a private state path under `docs/ic20-hle-findings/chatGPT-work`.
 cmake --build build --config Release
 ./build/Release/s760_native_audio_queue_tests.exe
 ./build/Release/s760_native_runtime_tests.exe . docs/ic20-hle-findings/chatGPT-work/cpp-native-test
-python scripts/verify_native_runtime.py --runtime-contract --pull-render --scheduled-midi --state-dir docs/ic20-hle-findings/chatGPT-work/midi-native-test
+python scripts/verify_native_runtime.py --runtime-contract --pull-render --scheduled-midi --state-dir temp/work/midi-native-test
 ```
 
 The C++ native test boots, loads via firmware, checks exact converted displays,
@@ -115,7 +117,7 @@ Native acceptance commands (requires user-supplied firmware and ROBOFULL):
 ./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/plugin-test
 ./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/plugin-paced --paced
 ./build/Release/s760_native_plugin_tests.exe . docs/ic20-hle-findings/chatGPT-work/plugin-var --paced-var
-python scripts/verify_native_midi_queue.py --state-dir docs/ic20-hle-findings/chatGPT-work/midi-queue-test
+python scripts/verify_native_midi_queue.py --state-dir temp/work/midi-queue-test
 ```
 
 Sixty-second varied64/127/256/511/1024 callback runs pass at44.1/48/96kHz on the

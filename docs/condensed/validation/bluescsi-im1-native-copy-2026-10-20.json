@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "date": "2026-10-20",
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "boot_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+  "emulator_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+  "commands": [
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\optimize-lean\\run_copy.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\optimize-lean\\run_copy_cold.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\optimize-lean\\run_copy_cancel.py"
+  ],
+  "inputs": [
+    {
+      "click": [
+        100,
+        46
+      ],
+      "wait": 8
+    },
+    {
+      "click": [
+        50,
+        32
+      ],
+      "button": [
+        ":PANEL2",
+        "Panel F3"
+      ],
+      "wait": 15
+    },
+    {
+      "button": [
+        ":PANEL2",
+        "Panel F1"
+      ],
+      "wait": 1
+    },
+    {
+      "button": [
+        ":PANEL2",
+        "Panel F3"
+      ],
+      "wait": 20
+    },
+    {
+      "click": [
+        104,
+        70
+      ],
+      "wait": 5,
+      "export": true
+    },
+    {
+      "stop": true
+    }
+  ],
+  "states": [
+    {
+      "name": "copy-entry",
+      "cursor": 0,
+      "drive": 7
+    },
+    {
+      "name": "copy-hd0",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "drive-chooser",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "command-1",
+      "cursor": 0,
+      "drive": 2
+    },
+    {
+      "name": "command-2",
+      "cursor": 0,
+      "drive": 2
+    },
+    {
+      "name": "command-3",
+      "cursor": 0,
+      "drive": 2
+    },
+    {
+      "name": "command-4",
+      "cursor": 0,
+      "drive": 2
+    },
+    {
+      "name": "command-5",
+      "cursor": 0,
+      "drive": 2
+    }
+  ],
+  "source_hd2_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+  "initial_hd0_sha256": "bf00cd22655accd5294585642d267b402486dae2e68a9abdc5b45d5e0307d463",
+  "copied_hd0_sha256": "3648dc7201126a4d971bf0f1c6ec8d3c3ce0671558392f252d69e48b6bea0876",
+  "before_counts": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "after_counts": [
+    1,
+    22,
+    88,
+    13
+  ],
+  "changed_destination_bytes": 34358,
+  "cold": {
+    "passed": true,
+    "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+    "copied_sha256": "3648dc7201126a4d971bf0f1c6ec8d3c3ce0671558392f252d69e48b6bea0876",
+    "source_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+    "counts": [
+      1,
+      22,
+      88,
+      13
+    ],
+    "exact_sample_bytes": 119808,
+    "audio": {
+      "channel": 1,
+      "note": 60,
+      "peak": 0.008473813533782959,
+      "silent_release_frames": 44100
+    },
+    "states": [
+      {
+        "name": "cold-list",
+        "cursor": 0,
+        "drive": 0
+      },
+      {
+        "name": "cold-perform",
+        "cursor": 13,
+        "drive": 0
+      }
+    ],
+    "scope": "Native Copy HD2-to-HD0 and repeated-copy overwrite Cancel and fresh native Load13 allocations119808 exact bytes/playback; arbitrary media and overwrite Yes/No policy require separate evidence"
+  },
+  "overwrite_cancel": {
+    "passed": true,
+    "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+    "destination_sha256": "3648dc7201126a4d971bf0f1c6ec8d3c3ce0671558392f252d69e48b6bea0876",
+    "source_backing_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+    "states": [
+      {
+        "name": "overwrite-prompt",
+        "cursor": 0,
+        "drive": 2
+      },
+      {
+        "name": "overwrite-cancelled",
+        "cursor": 0,
+        "drive": 2
+      }
+    ],
+    "overwrite_cancel_byte_identical": true,
+    "scope": "Native Copy existing-name warning/Cancel on private HD2-to-HD0, byte-identical destination export; overwrite Yes/No not tested"
+  },
+  "source_backing_unchanged": true,
+  "originals_unchanged": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+  },
+  "code_sds_preserved_snapshots": 12,
+  "prerequisites": "Private10MiB512-sector HD2 source and empty formatted HD0 destination; genuine mode3 NVRAM; real GB6 pointer/panel/MIDI inputs and lean read-only snapshots; no guest forcing",
+  "limitations": [
+    "Selected performance plus related hierarchy; no arbitrary geometry/type or physical source write-protection claim",
+    "Overwrite Cancel qualified; overwrite Yes/No and interruption/general concurrency remain unqualified",
+    "No complete IM1 GO; RC100 remains user-waived"
+  ]
+}

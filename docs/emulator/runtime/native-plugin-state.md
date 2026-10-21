@@ -1,5 +1,7 @@
 # Native plugin state contract
 
+Historical paths into the former findings tree below identify past runs; that scratch tree was removed on 2026-10-21. Generate new run output under `temp/work/`. See [hardware evidence policy](../../hardware/evidence-and-open-questions.md).
+
 ## SoundCheck project document — 2026-10-14
 
 SoundCheck is the user-accepted DAW/host matrix for Milestone4. Its private SDK

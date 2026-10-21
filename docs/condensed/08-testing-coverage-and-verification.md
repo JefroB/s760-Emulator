@@ -230,3 +230,10 @@ interrupt acceptance/vector/return, controller writes, VRAM-active,
 enabled-ever, and authentic frame content. Preserve run configuration and trace
 identity. Never infer firmware completion solely from process survival,
 a screenshot existing, or a nonblack fallback/background pixel.
+
+
+## Opt-in image-fixture incomplete-WRITE reset
+
+`S760_IMAGE_WRITE_RESET_AFTER` alongside `S760_TOOLBOX_IMAGE_ROOT` enables a one-shot diagnostic on native output DMA modes78/A0. A strictly decimal1..16777215 threshold interrupts an incomplete image-fixture WRITE after that many command bytes, logs IMAGEWRITERESET, schedules emulator soft reset and returns before DMA completion counters publish. The default path performs no fixture directory check per byte when the hook is disabled/consumed. Host-timeline fault state is not checkpointed and guest reset does not rearm it. `tests/test_image_write_reset_hook.py` qualifies disabled/invalid/edge/one-shot behavior. This changes the emulator test instrument, not guest firmware or physical bus behavior.
+
+Final OS606e277e... on emulatorca9ecc94... passes cuts1/511/1023 of1024 bytes and explicit remount/reinitialize. The fixture commits completed commands only, so unchanged backing bytes after an interrupted command do not imply physical atomicity. The rebuilt backend suite passes1123 tests/3skips. Initial private runner directory failures and observer setup trials are excluded. [Evidence](validation/bluescsi-im1-owner-and-recovery-2026-10-21.json).

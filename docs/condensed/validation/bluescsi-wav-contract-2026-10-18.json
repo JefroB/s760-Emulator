@@ -1,0 +1,29 @@
+{
+  "checkpoint": 27,
+  "scope": "Host WAV reference only",
+  "command": "python -m pytest tests/test_bluescsi_wav_contract.py -q -p no:cacheprovider",
+  "passed": 39,
+  "failed": 0,
+  "source_sha256": {
+    "scripts/bluescsi_wav_contract.py": "6741ad983b7ae15cc116ce19a5887c3ac1c47361e2cd88758f25b633589a999e",
+    "tests/test_bluescsi_wav_contract.py": "5b9700564b8cc6b0a06bbf51baf82629327dfa85290332fc2368013046cdea60"
+  },
+  "max_read_bytes": 4096,
+  "candidate_rates": [
+    48000,
+    44100,
+    24000,
+    22050,
+    30000,
+    15000,
+    32000,
+    16000
+  ],
+  "limits": [
+    "No native guest implementation or measured firmware size.",
+    "No wave memory writing, allocation or object publication.",
+    "Stereo tests preserve interleaved channel order; native stereo transactions remain open.",
+    "Same stable source file required between inspection and streaming; external file changes need transport-level handling.",
+    "Metadata scan work scales with chunk count; cancellation is checked before every read, not a total scan deadline."
+  ]
+}

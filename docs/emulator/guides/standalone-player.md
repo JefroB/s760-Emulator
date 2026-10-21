@@ -1,5 +1,7 @@
 # Native standalone player
 
+Historical paths into the former findings tree below identify past runs; that scratch tree was removed on 2026-10-21. Generate new run output under `temp/work/`. See [hardware evidence policy](../../hardware/evidence-and-open-questions.md).
+
 Development implementation, 2026-10-10. The player runs one native MAME machine
 and displays its actual CRT/LCD surfaces in React, hosted in a Windows WebView2
 window. The original OS handles mouse/panel controls, disk loading and MIDI.

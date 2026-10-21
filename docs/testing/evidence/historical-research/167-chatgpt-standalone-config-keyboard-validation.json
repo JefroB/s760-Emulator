@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-12",
+  "result": "pass",
+  "scope": "Standalone configuration and optional on-screen keyboard; VST unchanged",
+  "source_sha256": {
+    "scripts/s760_standalone.py": "c7d8d7da043cc50dbbb1c271193bda9d8a1b738216ce47f1645886f0c72fbf74",
+    "google-ui/src/NativeStudio.tsx": "b39492f0b16cb0f1988ea0d8995814263e874e79fc72a25ec9b8385e349ef32f",
+    "google-ui/src/components/RuntimeSettings.tsx": "0c7fbdd612c83432c2f8eb3dcabffab520fe5dc3245a5da72419a7624889f88a",
+    "google-ui/src/components/StandaloneKeyboard.tsx": "891087acf9df763eeaa412e24c670ae11b95e0da83e132516f59fb458ea74baa",
+    "google-ui/src/components/StandaloneKeyboard.test.tsx": "f11da60034b8aaa5910f895642ac79f7983b41e9359658da39b50b81ee2e543a",
+    "google-ui/e2e/standalone-configuration.spec.ts": "69168b95aace8485d0ca3599510185213764acd4e425bc3fc2c87644abef4aab",
+    "tests/test_standalone_configuration.py": "a2fdff4e1f5af35140a8ba46fd3b7341b754cb511cf23792250762a81bd93704"
+  },
+  "package_executable_sha256": "862402bebcff21e2a02c5b929ba77e846d111d791c5fe8412814f2a0dfece73b",
+  "native_executable_sha256": "6ab0d057b23e2d3b0cc8c7e1c819e4ea3fa98a460a18ce30f001fe1d8fd41438",
+  "checks": {
+    "typescript": "pass",
+    "react_tests": 117,
+    "backend_tests": 312,
+    "packaged_browser_tests": 1,
+    "desktop": {
+      "status": "OS ready \u2014 Perform Play.",
+      "width": 640,
+      "height": 480,
+      "nonzero": 225776
+    },
+    "development_package_ok": true
+  },
+  "behavior": [
+    "Keyboard hidden by default, persisted atomically per standalone state directory",
+    "Configuration contains acknowledged MIDI selection, audio backend/buffer/output settings and firmware/media paths",
+    "25-key C3-C5 polyphonic keyboard, channel1 velocity100; pointer and keyboard hold/release with lifecycle cleanup",
+    "Keyboard preferences apply immediately; audio/firmware changes require confirmed restart",
+    "VST uses host MIDI/audio; standalone components do not enter its editor"
+  ],
+  "commands": [
+    "npm run lint",
+    "node node_modules/vitest/vitest.mjs run --maxWorkers=4",
+    "python docs/ic20-hle-findings/chatGPT-work/m3_pytest_runner.py",
+    "scripts/build_standalone.ps1 -OutputDirectory docs/ic20-hle-findings/chatGPT-work/standalone-config-package",
+    "node node_modules/@playwright/test/cli.js test e2e/standalone-configuration.spec.ts --workers=1",
+    "S760Studio.exe --verify-desktop --no-sound --fast --seconds 60 --state-dir <private> --boot-rom <user IC15> --system-disk <user OS> --media-dir <user media>"
+  ],
+  "limitations": [
+    "Browser/native tests accelerated with audio output muted",
+    "No physical MIDI reconnect, capture device, live recording, endpoint selection or measured latency acceptance",
+    "MIDI selection must be repeated after native sampler restart",
+    "Development package audit passes; release/clean-machine approval remains open",
+    "The four remaining Milestone3 objectives remain open"
+  ]
+}

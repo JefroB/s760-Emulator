@@ -37,26 +37,6 @@ The six documented Shift functions are F4, F5, F6, Home, Mark and Jump.
 S1/S2 functions are context dependent; they are not substitutes for encoder
 rotation. Basic 7-10 limits Value operation to Dec/Inc or -100/+100 contexts.
 
-## Embedded rack presentation
+## Software controls
 
-F1–F6 sit beneath the LCD. F4–F6, Home, Mark and Jump send their native
-Shift chords, releasing the target before Shift. Mode/Command/Exit remain
-separate. The six navigation controls retain the physical arrangement above;
-Home/Mark/Jump sit beneath Left/Down/Right.
-
-Input Level and Output Level are separate knobs left of the LCD, per the
-owner's description of the concentric hardware control. Value has a separate
-Menu button. The three knobs remain disabled pending verified routing. Menu is wired to the
-SC0/SP4 push switch documented on Service Notes p18 and opens the firmware menu.
-Absolute mouse positioning after Menu/Exit remains BUG-030.
-
-The Gotek has its own encoder and Up/Down/Select buttons. They browse the host-owned default floppy inventory and successfully inserted
-paths; Select opens the image dialog, prefilled with the selected path, for confirmation or choosing another image. Its display
-separates selection from the last backend-confirmed inserted filename. This is
-an emulator media UI, not FlashFloppy firmware emulation or automatic USB scanning. The host starts with `roms/FDD`; Select offers recursive folder configuration.
-Independent selection and inserted-source metadata survive editor recreation and
-version-2 native plugin-state recall. See [media limits and qualification](../emulator/guides/native-media-library.md).
-
-This mapping supersedes the earlier 23-entry unverified demonstration inventory.
-`NativePanelControls.tsx` implements the verified native mapping. The old
-`shiftButtonMap.ts` remains a legacy demo/spec fixture and is not hardware evidence.
+The physical labels and Shift chords above are the hardware reference. Application routing, controller modes and UI qualification belong in the [emulator documentation](../emulator/README.md); historical disabled-knob and bug-status notes are not a hardware specification.

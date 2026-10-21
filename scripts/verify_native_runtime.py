@@ -29,7 +29,7 @@ def main():
     parser.add_argument('--combined-baseline', action='store_true', help='With --combined-audio, verify a six-case normal filter/stereo smoke matrix')
     parser.add_argument('--disk-voice-stress', action='store_true', help='Qualify Disk/Load note restrictions and recovery against a Perform completion-status control')
     parser.add_argument('--sample-disk', type=Path, default=ROOT / 'roms/FDD/ROBOFULL.IMG')
-    parser.add_argument('--state-dir', type=Path, default=ROOT / 'docs/ic20-hle-findings/chatGPT-work/native-runtime-verification')
+    parser.add_argument('--state-dir', type=Path, default=ROOT / 'temp/work/native-runtime-verification')
     parser.add_argument('--wave-dump', type=Path, help='Read-only wave RAM dump for persistence verification')
     parser.add_argument('--system-audio', action='store_true', help='Enable real MAME device output at normal speed')
     parser.add_argument('--empty-drive', action='store_true', help='Qualify empty-drive firmware response, reinsertion and loaded playback after ejection')

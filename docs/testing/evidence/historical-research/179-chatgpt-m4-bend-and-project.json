@@ -1,0 +1,199 @@
+{
+  "project": {
+    "date": "2026-10-13",
+    "gate": "Milestone 4 native QA disk-backed project save/cold reopen subset",
+    "identity": {
+      "source_revision": "d6264da54caa89b09fcd894ce7d9dba322df856e",
+      "sha256": {
+        "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+        "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+        "roms\\FDD\\ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+        "scripts\\s760_runtime.lua": "5ee465c4e011217c7d635df28f820285e36b1ab126711745acba2859b6ec52d1",
+        "core\\src\\s760_vst3_plugin.cpp": "e358b87993111c44f963b7cda2175a78872fad1a7ce3c01d77c8aee92bd28e2b",
+        "scripts\\verify_vst3_project_portability.py": "f5c4db7929d033830c8213bc3ec79a34310d1e7f8b95680f98bd08207f96280f",
+        "scripts\\verify_vst3_configured_bend.py": "59afbe098f41bb258eceed53c65ded8eada5c3a957f72e0908cbb6c31b9e4773",
+        "docs\\condensed\\validation\\soundcheck-project-qa-2026-10-13.patch": "5b226a4f038c963a5481b82b31542798c86f3779b25e01a9ba33693fb2adeb06",
+        "docs\\ic20-hle-findings\\chatGPT-work\\m2-webview-build\\Release\\Roland_S760.vst3": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe",
+        "docs\\ic20-hle-findings\\chatGPT-work\\sdk150\\host\\build\\Release\\SoundCheckServer.exe": "ab0c38385f72551077957ce278c96cd3fa1f1fc3b5b8ddd0296ec704b52eb61f"
+      },
+      "runtime_module_changed": false
+    },
+    "command": "python scripts/verify_vst3_project_portability.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-project-final-181",
+    "result": {
+      "host": "SoundCheck 1.0.0 Windows x64 native SDK QA host",
+      "sampleRate": 44100,
+      "blockSize": 512,
+      "frames": 221184,
+      "exact_pcm": true,
+      "corrupt_rejection_preserves_pcm": true,
+      "release_tail_peak": 0.0,
+      "original_library_missing": true,
+      "original_native_state_directory_missing": true,
+      "firmware_relocated": true,
+      "settings_persisted": true,
+      "project_bytes": 160646896,
+      "project_sha256": "754ae3eec5200527bffca971368877edcf51326d60c12af61f585276314f1a2a",
+      "module_sha256": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe"
+    },
+    "comparison": "Full-rate (L+R)/2 waveform,512 frames/request;221184 frames exact before/after cold host exit and again after corrupt-file rejection",
+    "prerequisites": [
+      "Windows x64; WebView-enabled native instrument",
+      "Private SoundCheck1.0.0 SDK QA host built with committed adapter patch",
+      "Original IC15 v1.11, OS2.24 and ROBOFULL fixtures",
+      "Python websockets/playwright/numpy; free loopback4000 and9231"
+    ],
+    "regressions": "354 passed in36.02s; native process access permitted. An initial restricted sandbox run stalled and was stopped; it is not passing evidence.",
+    "limitations": [
+      "Native QA host component-state files, not actual DAW project containers",
+      "Same build,44100Hz,512-frame setup; local product configuration persists separately",
+      "No cross-build/rate/block migration, per-project firmware overrides or SCSI portability qualification",
+      "L/R-average comparison does not independently compare stereo channels",
+      "Captures and proprietary project-state archive remain private"
+    ],
+    "private_evidence": "docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-project-final-181"
+  },
+  "midi": {
+    "date": "2026-10-13",
+    "gate": "Milestone 4 configured audible pitch-bend subset",
+    "identity": {
+      "source_revision": "d6264da54caa89b09fcd894ce7d9dba322df856e",
+      "sha256": {
+        "mame-source\\mames760.exe": "2a57e2f1118c9f599f23bb6e7bf0e4dc34d6a061b67b72a4bf78816ffab952cd",
+        "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+        "roms\\System\\S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+        "roms\\FDD\\ROBOFULL.IMG": "8377fb7ce8370a4ffbe281fcd3934e9f9c2dc25612bd6f207bdaea7e660448ae",
+        "scripts\\s760_runtime.lua": "5ee465c4e011217c7d635df28f820285e36b1ab126711745acba2859b6ec52d1",
+        "core\\src\\s760_vst3_plugin.cpp": "e358b87993111c44f963b7cda2175a78872fad1a7ce3c01d77c8aee92bd28e2b",
+        "scripts\\verify_vst3_project_portability.py": "f5c4db7929d033830c8213bc3ec79a34310d1e7f8b95680f98bd08207f96280f",
+        "scripts\\verify_vst3_configured_bend.py": "59afbe098f41bb258eceed53c65ded8eada5c3a957f72e0908cbb6c31b9e4773",
+        "docs\\condensed\\validation\\soundcheck-project-qa-2026-10-13.patch": "5b226a4f038c963a5481b82b31542798c86f3779b25e01a9ba33693fb2adeb06",
+        "docs\\ic20-hle-findings\\chatGPT-work\\m2-webview-build\\Release\\Roland_S760.vst3": "e4c398d55480b7e57342ee2191a0c4618b4c4339f18e88069d0e7fcbf52adfbe",
+        "docs\\ic20-hle-findings\\chatGPT-work\\sdk150\\host\\build\\Release\\SoundCheckServer.exe": "ab0c38385f72551077957ce278c96cd3fa1f1fc3b5b8ddd0296ec704b52eb61f"
+      },
+      "runtime_module_changed": false
+    },
+    "host": "SoundCheck1.0.0 Windows x64 private native SDK QA host",
+    "rate": 44100,
+    "block_frames": 512,
+    "fixture_configuration": "Original OS2.24 CRT/Value controls set ROBOFULL patch01 Bend Up and Bend Down from0 to12; no guest RAM/PC overrides or ROM/disk changes",
+    "command": "python scripts/verify_vst3_configured_bend.py --host docs/ic20-hle-findings/chatGPT-work/sdk150/host/build/Release/SoundCheckServer.exe --module docs/ic20-hle-findings/chatGPT-work/m2-webview-build/Release/Roland_S760.vst3 --state-dir docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-bend-final-181",
+    "measured_bend": {
+      "baseline": {
+        "peak": 0.04453751817345619,
+        "rms": 0.03149336576461792,
+        "frequency": 20004.0
+      },
+      "bend-high": {
+        "peak": 0.020241212099790573,
+        "rms": 0.01211457047611475,
+        "frequency": 4108.0
+      },
+      "bend-center": {
+        "peak": 0.04440206289291382,
+        "rms": 0.03139493614435196,
+        "frequency": 20004.0
+      },
+      "bend-low": {
+        "peak": 0.018063483759760857,
+        "rms": 0.01277274452149868,
+        "frequency": 10002.0
+      },
+      "bend-restored": {
+        "peak": 0.04440206289291382,
+        "rms": 0.03139770030975342,
+        "frequency": 20004.0
+      },
+      "released": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0
+      }
+    },
+    "controlled_reset_and_pedal": {
+      "baseline": {
+        "peak": 0.04453751817345619,
+        "rms": 0.03149063140153885,
+        "frequency": 20004.0
+      },
+      "pedal-up-initial": {
+        "peak": 0.04453751817345619,
+        "rms": 0.031495146453380585,
+        "frequency": 20004.8464752907
+      },
+      "pedal-down": {
+        "peak": 0.04453751817345619,
+        "rms": 0.031490474939346313,
+        "frequency": 20004.8464752907
+      },
+      "held-before-reset": {
+        "peak": 0.04453751817345619,
+        "rms": 0.03149499371647835,
+        "frequency": 20004.0
+      },
+      "reset-sustain": {
+        "peak": 0.04453751817345619,
+        "rms": 0.03149063140153885,
+        "frequency": 20004.0
+      },
+      "pedal-up-after-reset": {
+        "peak": 0.04453751817345619,
+        "rms": 0.02609453722834587,
+        "frequency": 20004.8464752907
+      },
+      "fresh-note": {
+        "peak": 0.04453751817345619,
+        "rms": 0.031491149216890335,
+        "frequency": 20004.0
+      },
+      "half-volume": {
+        "peak": 0.02243787609040737,
+        "rms": 0.015866825357079506,
+        "frequency": 20004.0
+      },
+      "reset-volume": {
+        "peak": 0.02243787609040737,
+        "rms": 0.015865152701735497,
+        "frequency": 20004.0
+      },
+      "pedal-down-again": {
+        "peak": 0.02243787609040737,
+        "rms": 0.015867210924625397,
+        "frequency": 20004.8464752907
+      },
+      "held-before-panic": {
+        "peak": 0.02243787609040737,
+        "rms": 0.015865152701735497,
+        "frequency": 20004.0
+      },
+      "other-channel-all-notes-off": {
+        "peak": 0.02243787609040737,
+        "rms": 0.015866825357079506,
+        "frequency": 20004.0
+      },
+      "same-channel-all-notes-off": {
+        "peak": 0.02243787609040737,
+        "rms": 0.015865152701735497,
+        "frequency": 20004.0
+      },
+      "pedal-up-cleanup": {
+        "peak": 0.0,
+        "rms": 0.0,
+        "frequency": 0.0
+      }
+    },
+    "result": "Configured up/down bend, centre restoration and release assertions pass; script exit0",
+    "reset_result": "CC121 leaves an audible sustain-held note and CC7 volume unchanged. Other-channel and same-channel CC123 preserve held-pedal audio until CC64 up releases it.",
+    "limitations": [
+      "Audible effect in a single native host/fixture profile, not hardware pitch/alias/amplitude parity",
+      "Upward bend of the high source tone folds into output band",
+      "Other controllers, configured expression/modulation, CC120 and supported reset/panic behavior remain open",
+      "Captured waveform is full-rate L/R average"
+    ],
+    "regressions": "354 backend tests passed in36.02s",
+    "private_evidence": [
+      "docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-bend-final-181",
+      "docs/ic20-hle-findings/chatGPT-work/soundcheck/m4-midi-reset-179"
+    ]
+  }
+}

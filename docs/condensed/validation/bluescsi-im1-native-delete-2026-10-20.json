@@ -1,0 +1,100 @@
+{
+  "passed": true,
+  "date": "2026-10-20",
+  "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+  "boot_rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+  "emulator_sha256": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+  "commands": [
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_delete_2.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_delete_3.py",
+    "python -X utf8 D:\\S-760\\docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-layout-2026-10-19\\lcd-navigation-2026-10-20\\run_delete_cold.py"
+  ],
+  "preconfirmation_commands": [
+    {
+      "wait": 55,
+      "export": true
+    },
+    {
+      "stop": true
+    }
+  ],
+  "preconfirmation_export_unchanged": true,
+  "source_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+  "deleted_sha256": "bf00cd22655accd5294585642d267b402486dae2e68a9abdc5b45d5e0307d463",
+  "changed_bytes": 34358,
+  "save_states": [
+    {
+      "name": "delete-entry",
+      "cursor": 0,
+      "drive": 7
+    },
+    {
+      "name": "delete-hd",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "delete-dialog",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "delete-confirmation",
+      "cursor": 0,
+      "drive": 0
+    },
+    {
+      "name": "delete-done",
+      "cursor": 0,
+      "drive": 0
+    }
+  ],
+  "cold": {
+    "passed": true,
+    "firmware_sha256": "19448d85773dd99081a45cdc33ca7defd82f4a4bd3b9cb28a2b533676d68a45c",
+    "before_sha256": "a8259a569101440c0ba30d96c63f1811d30f3c294e2f0fc69364fd4698c644f7",
+    "deleted_sha256": "bf00cd22655accd5294585642d267b402486dae2e68a9abdc5b45d5e0307d463",
+    "performance_counts": [
+      1,
+      0
+    ],
+    "before_counts": [
+      1,
+      22,
+      88,
+      13
+    ],
+    "after_counts": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "remaining_sample_allocations": 0,
+    "states": [
+      {
+        "name": "cold-deleted-list",
+        "cursor": 0,
+        "drive": 0
+      },
+      {
+        "name": "cold-perform-empty",
+        "cursor": 0,
+        "drive": 0
+      }
+    ],
+    "scope": "Native performance Delete/private HD0, exported metadata1-to0 and deleted related hierarchy, fresh-process native empty performance listing; visual list confirmation separate, no physical/concurrency/all-type Delete claim"
+  },
+  "code_and_sds_preserved_snapshots": 7,
+  "native_empty_list_visually_reviewed": true,
+  "originals_unchanged": {
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms/BOOT/Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6"
+  },
+  "prerequisites": "Private clone of verified10MiB512-sector saved HD0; genuine mode3 NVRAM; native pointer/panel inputs and read-only snapshots; no guest forcing",
+  "limitations": [
+    "Native selected performance plus related hierarchy only; no arbitrary object/unused-item policy or physical/concurrency/interruption claim",
+    "Directory/allocation deletion, not secure erasure",
+    "RC100 waived by user; remaining native operations/parent/reset/checkpoint/stack/full-fit/hardware open"
+  ]
+}

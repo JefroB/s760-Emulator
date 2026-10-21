@@ -1,0 +1,13 @@
+# IM1 contextual help and collection identity
+
+2026-10-19. Candidate SHA256 `9319be7485e1f06f4eefb414a2e3573826eb428330b6bfe407a9f6cdea585e77` adds the active collection and SCSI target ID to the Image Library title, with contextual bottom-row instructions for collection selection, image mount/Load and native Disk options. The complete32-byte filename stays visible. These are instructions for existing row clicks and physical Exit; no unqualified softkey bindings are introduced. The keyboard remains absent in the browser.
+
+Native ordinary GB-6 input qualifies all four titles (ISO A/1, IMG/2, ISO B/3, ISO C/6), Next/Previous and return to Collections for each, Disk options, Exit and reopen. Read-only data taps observe all nine title/help strings in the native CRT rendering routine, with screen-coordinate records. Code and all280 added string bytes remain unchanged across every navigation snapshot. Screenshots were visually reviewed for the title, help and restored parent screen.
+
+Visual review found BUG-159: first cold browser entry had an invisible but clickable Disk options row. Its init callback drew initial resource bytes without first rendering dynamic labels. A three-byte call to render before drawing fixes the missing label and refreshes labels on reopen. The failing RAM-label baseline and passing first-entry assertion are preserved.
+
+On this same final hash, D7 Exit drains the4000-byte transfer without mounting; interrupted D8 reports uncertainty with no follow-on commands; explicit retry reaches index99, native Load restores119808 exact sample bytes, playback/release passes, and retained SDS cancel/retry publishes160 exact new bytes. The library and packed repair code remain unchanged. Exact rebuild, decoded branch-target and immutable-original audits pass; mandatory GB-6 v9 and the existing selectable boot ROM are retained.
+
+The browser adds131 code bytes and280 string bytes relative to owned-footer:5393/8002 named bytes,2609 free,2121 immediately after code. Layout: browser physical4080..4CB7; strings5500..5618; page buffer57F0..58D0; existing descriptors/context/native labels retain their addresses. Bytes between these named allocations remain free. Full stack/ISR fit is still open.
+
+[Validation](../condensed/validation/bluescsi-im1-help-identity-2026-10-19.json) contains both native results, matched title/help reads, exact identities and interval audit. [Screenshot](../condensed/validation/bluescsi-im1-help-identity-2026-10-19.png). Earlier Save/cold Load, IRQ and Remote Mode matrices remain evidence for their earlier hashes. This checkpoint does not qualify LCD, RC-100, physical BlueSCSI, other parent contexts or Save System mutable-state cold startup. Full IM1 GO remains open.

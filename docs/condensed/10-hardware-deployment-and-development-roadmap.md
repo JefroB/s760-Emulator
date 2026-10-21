@@ -462,3 +462,312 @@ is the sole remaining Milestone 4 checkbox. See the
 
 
 [Versioned firmware acceptance scopes](../firmware/firmware-completion-matrix.md) provide a separate decoding research metric:ROM46/60=76.67%,OS36/96=37.50%,combined82/156=52.56% at the initial2026-10-16 baseline. These are binary documented-context/layout/behavior/native-execution gates, not estimated effort or complete hardware fidelity. Unmapped functional families and unknown payload remain open; historical catalogue addresses/status are not credited. Physical parity and Milestone7 source/rebuild acceptance retain their own criteria. [Machine score](validation/firmware-completion-score-v1-2026-10-16.json).
+
+## BS1 decision — REVISE (2026-10-18)
+
+The current single-region plan does not support a go to full implementation.
+Its 8,002-byte candidate assigns 4,928 bytes to local data, leaving 3,074 bytes
+for code, constants and UI. Measured reusable components total 2,408 bytes;
+the diagnostic entry/exit wrapper adds 224 and a statically assembled RIFF
+validator plus rate table adds 655: **3,287 bytes, 213 over the ceiling**.
+General metadata/slot handling, file streaming, Toolbox command orchestration,
+browser behavior and independent fault recovery still need code.
+
+This is a component census, not a linked production image or minimum possible
+implementation. The parser has decoded instruction/branch checks only; it has
+not run against WAV fixtures. Optimization, native reuse, a smaller working
+set or separately proved placement could change the result. Mono and stereo,
+the 100-entry directory limit and required error/ownership repairs remain in scope.
+
+Checkpoint 39 passes the existing stereo cancel/retry diagnostic with sustained
+note/controller input: existing PCM and all descriptors survive cancellation,
+staging clears before owner release, and retry publishes exact left/right PCM.
+The observed stack low-water mark is 0x1022 versus post-PUSHA entry 0x10DA
+(184 bytes); this is not a worst-case stack bound. Audio during ownership and
+the number of sounding voices were not measured.
+
+Checkpoint 40 establishes the sizing decision above. Checkpoint 41 audits the
+recovery evidence: the emulator's Bus Release clears its own phase/PSNS directly,
+so current successful cleanup cannot qualify an independently stuck target.
+Physical controller/reset recovery remains open.
+
+**Reopen BS1 for a revised design in this order:**
+
+1. Produce an optimized integrated map and byte-counted build, accounting for
+   all retained fixes and shared code/data lifetimes. Investigate native reuse
+   and streaming workspace reductions before relying on another RAM region.
+2. Validate the guest parser and general mono/stereo metadata construction,
+   including arbitrary lengths, capacity failures and atomic publication.
+3. Qualify independent target faults, cancellation/retry and stack/interrupt
+   bounds; assign the physical-device checks explicitly.
+4. Reissue PASS only when the complete design fits and the ownership/recovery
+   contracts are justified. BS2–BS6 integration remains unstarted.
+
+The decision is **revise the memory/implementation plan**, not abandon the feature.
+See [reproducible evidence](validation/bluescsi-feasibility-decision-2026-10-18.json).
+
+## BlueSCSI feasibility update (2026-10-19)
+
+Native diagnostics qualify full-response draining into a guarded 1 KiB receive
+window, in-place stereo splitting with a 1,536-byte workspace, compacted pair
+cancellation/retry, 88 guest RIFF cases and ten parser/standard-SCSI cases.
+The proposed code ceiling rises from 3,074 to 5,634 bytes; a conservative component
+census initially totaled 3,749 bytes (superseded below). That residual excluded Toolbox,
+metadata and UI work. BS1 remains REVISE, with no feature-level no-go established.
+Physical recovery, combined ownership and full code/stack fit remain unqualified.
+[Evaluation](../project/bluescsi-workaround-evaluation.md) · [Evidence](validation/bluescsi-workarounds-2026-10-19.json).
+
+
+The combined pipeline now passes eight mono/stereo 1/511/512/513-frame cases
+under 192 MIDI controller bytes with 131,072 exact guarded wave bytes.
+Cancellation preserves 16,384 sentinel bytes before the first PCM write;
+ordinary UI retry completes all eight cases. Native MIDI register ownership,
+cancellation precedence and false inactivity timeouts were repaired in the
+private diagnostic (BUG-129/130/131). Initiator-held ACK still returns timeout.
+This is READ(10), not Toolbox, and does not publish/play public samples.
+The 2,830-byte diagnostic plus retained independent helpers gives a conservative
+4,343-byte census (1,291 remaining), superseding the earlier 3,749-byte estimate.
+Diagnostic overhead remains; required Toolbox/metadata/UI code and full memory,
+stack and independent-target recovery are unqualified. BS1 remains REVISE.
+[Combined pipeline evidence](validation/bluescsi-pipeline-2026-10-19.json).
+
+The latest fixed-block guest pipeline additionally qualifies eight odd-padded,
+255/257/1023/1537-frame mono/stereo files, including a frame split across4KiB
+responses, with exact131,072 guarded wave bytes under MIDI. Shared context copying
+and ABI-based save reduction yield2,783 code bytes; native cancel/retry and
+held-ACK error checks pass. Decoded extension paths require at most264 stack bytes
+including the hook return, excluding native ISR/caller depth. The conservative
+census is now4,285 bytes (1,349 remaining), superseding4,343. Actual Toolbox framing,
+EOF/open handling, full32-bit offsets, public samples/UI and final fit/recovery
+remain open. BS1 stays REVISE.
+[Evidence](validation/bluescsi-block-windows-2026-10-19.json).
+
+The earlier D1 qualification introduced an opt-in, target-scoped file fixture.
+Actual guest ten-byte D1 reads replace the READ(10) stand-in in the named
+mono/stereo pipeline, with exact131,072 guarded wave bytes, MIDI, short EOF,
+reopen and cancellation/retry. Missing-file status02 preserves seven completed
+cases. A read-only69-command trace verifies lengths/status/open state. All743
+backend tests pass; disabled-fixture wave RAM matches33,554,432 prior-build
+bytes. Guest code2,880 bytes gives a4,382-byte partial census (1,252 remaining);
+extension stack266 bytes excludes native ISR/caller depth. BS1 remains REVISE;
+discovery/directories, physical protocol, public samples/UI and complete fit/
+recovery remain unqualified. Numeric fixture files are not FAT enumeration.
+[Contract](../project/bluescsi-toolbox-fixture.md) and [evidence](validation/bluescsi-toolbox-native-2026-10-19.json).
+
+The directory extension now qualifies D0/D2 listing/count and D9 capabilities/
+path changes in the opt-in fixture. Ordinary guest input selects `/Files/Keys`,
+then derives D1 indices/sizes from retained40-byte rows. Eight mono/stereo files
+pass MIDI with131,072 exact guarded wave bytes; cancellation/retry and missing-
+directory rejection pass. A read-only81-command trace validates sequencing,
+windows and lengths. All744 backend tests and boot/load/playback pass; disabled
+wave RAM matches33,554,432 prior-build bytes. Code3,346 plus1,502 retained helper
+bytes gives a4,848-byte partial census (786 remaining), superseding4,382. Stack
+remains266 bytes excluding native ISR/caller depth. Sorted host enumeration is
+not FAT parity; fixed target/path/eight-file selection is not a browser. Discovery,
+general32-bit files, public samples/UI, final ownership/recovery and full fit
+remain open. BS1 remains REVISE.
+[Directory evidence](validation/bluescsi-directory-native-2026-10-19.json).
+
+The integrated private client now discovers targets by INQUIRY/API and vendor
+page31, processes100 mixed directory entries, carries32-bit read offsets and
+creates12 public descriptors from eight mono/stereo WAVs. Full wave RAM, bounded
+padding and all512 descriptors match; rollback/retry, occupied-slot rejection,
+malformed-input preservation and native preview audition pass. Reused native
+menu dispatch runs the whole path. Constructor reuse leaves4,507 code bytes;
+the conservative partial census is6,009 (375 over5,634), superseding4,848.
+That census retains possible duplicate helpers and is not a minimum/full build.
+Extension stack268 bytes excludes native ISR/caller depth. All745 backend tests,
+ordinary boot/load/playback and32MiB disabled-fixture equivalence pass.
+Fresh fixed slots, cursor<=12, one4608-word block/channel and the tested
+44.1kHz/root60/OneShot policy limit this constructor. General allocation and
+competing-operation ownership, complete UI, permanent assignment, Save/cold
+Load, endpoint policy, physical behavior and full fit remain open. BS1 REVISE.
+[Integrated evidence](validation/bluescsi-integrated-client-2026-10-19.json).
+
+## BlueSCSI image mount protocol (2026-10-19)
+
+Source inspection of BlueSCSI-v2 main 5e64e3b4a09088c67a2a6728385600ea67ddbe0d and release 4d0f96fe520688c666f34e6282a2f448f340a617 confirms DA/D7/D8 count/list/direct image switching and START STOP UNIT virtual eject/load. D8 resolves a file index from CD<target ID> and immediately calls the generic switcher, retaining device type. D7/DA use the same hardwired directory and skip subdirectories; D9/02 shared-file path changes and configured ImgDir do not redirect the Toolbox picker. Multiple target folders fit within available SCSI IDs; arbitrary collection folders on one target require an additional mechanism. The 100-entry per-folder limit stays fixed. Failed switching is not reliably propagated by onSetNextCD (BUG-137); verify media after readiness/sense handling. No runtime/hardware qualification or code-size saving follows from this source inspection. See the [protocol contract](../project/bluescsi-image-mount-protocol.md), [active plan](../project/bluescsi-image-mount-plan.md) and [source identities](validation/bluescsi-image-mount-protocol-2026-10-19.json).
+
+The follow-up native image profile qualifies four100-image target folders (three optical, one IMG),144 actual guest commands through ordinary UI entry, distinct first/last sector payloads, and repeated selection. Valid Roland IMG A/B and optical loading restore13 allocations/119808 exact bytes per independent run and native playback/release. Same-session B-to-A reload passes after the normal clear-memory confirmation; final bytes and2:1 playback amplitude distinguish the media.748 backend tests pass; fixture-disabled wave RAM matches all33554432 prior reference bytes. The command diagnostic is1451 code bytes (1475 with alternating selection), with6585 named diagnostic bytes in the8002-byte candidate; complete UI/ownership/retained repairs/full stack fit remains open. Physical parity, arbitrary folders beyond free SCSI IDs, distinct stereo media and integrated repeated automatic refresh remain unqualified. See [IM1 results](../project/bluescsi-im1-results-2026-10-19.md) and [native evidence](validation/bluescsi-im1-native-2026-10-19.json).
+
+The private CRT browser now reuses native nine-row field selection, highlighting and drawing with seven image rows plus Previous/Collections and Next. It fetches four100-entry target catalogs, reaches ISO A index99 through15 pages, mounts a valid Roland ISO, and queues native close before Disk Load. Ordinary native Load/Perform restores13 allocations/119808 exact bytes with playback/release and reopens to fresh collection selection. Listing invalidation and redraw lifetime fixes are BUG-141/142. The keyboard is cleared; the body uses blue. Native Exit is fixed by a source-derived parent reload (BUG-144): repeated loaded Perform restoration preserves playback; native Disk Load return matches307200 RGB pixels. Full-screen descriptor mode failed (BUG-140). LCD/GB-6, footer/help, discovery, ownership/recovery, repeat refresh and browser-to-IMG integration remain open. The current partial linked census is7328/8002 bytes (2597 code,639 resources,4000 list,92 context), excluding retained repairs and complete stack bounds. This does not establish a feature-level GO. See [browser results](../project/bluescsi-im1-ui-results-2026-10-19.md) and [UI evidence](validation/bluescsi-im1-ui-2026-10-19.json).
+
+D7 exposes32 name bytes including extension; the current screen displays32 printable ASCII characters. The reviewed stock64-byte mount-path buffer bounds the `CD<id>/` candidate to59 full filename bytes including extension, with no unconditional long-name promise. Fourteen upstream-code host assertions show ordinary31/32/33/59-byte ISO selection and demonstrate truncation-before/after-filter index divergence (BUG-145); source also lacks termination for explicit paths at/above64 bytes (BUG-146). A59-byte name with unique32-byte prefix passes native index99 selection, exact load and playback/Exit. Prefix collisions, filtering-equivalence enforcement, SD preflight, Unicode and physical behavior remain open. Keep32-byte fully visible names for the first profile. See [filename contract](../project/bluescsi-image-mount-protocol.md), [upstream boundaries](validation/bluescsi-filename-boundaries-2026-10-19.json), and [Exit/native long-name evidence](validation/bluescsi-im1-exit-filenames-2026-10-19.json).
+
+The image browser requires no additional IC15 modification. Its8002-byte candidate resides in OS disk-loaded RAM. The user requires selectable **v9 GB-6, X4/Y4**, in the resulting OS; v8 is excluded from delivery. The earlier static overlap audit remains valid but is supplemented by native combined tests. Keep the existing selectable GB-6 ROM for mode3. Controller EEPROM0299:8F7C is distinct from the browser's native selected-drive field8F7D. [Static coexistence audit](validation/bluescsi-gb6-coexistence-2026-10-19.json).
+
+The mandatory v9/browser candidate passes ordinary Setup limits0,0,1,2,3,3, cold-reboot mode3 persistence, no-CRT fallback, modes0/1/2 selection/boot and original Mouse movement. Native GB-6 ISO/CD1 and IMG/HD2 browser workflows reach index99 through15 pages and restore13 samples/119808 exact bytes with playback/release/Exit. Same-session IMG B99 to A0 switching uses automatic handoff plus native clear-memory confirmation and restores both PCM variants with playback ratio1.999979. BUG-147 corrects only private input targets to reachable text rows on the unchanged v9 path. RC-100 packets and the LCD browser remain unqualified. [Combined results](../project/bluescsi-im1-gb6-results-2026-10-19.md), [native evidence](validation/bluescsi-im1-gb6-native-2026-10-19.json).
+
+Retained SDS helpers at their old addresses conflict with the earlier browser code. Sharing callback entry/exit saves319 code bytes; regenerated/relocated SDS helpers and repacked buffers produce a7840/8002-byte partial candidate (2278 browser code+831 SDS helpers+639 resources+4000 list+92 context). Its exact native build passes GB-6 ISO loading/playback/Exit and sequential SDS receive CANCEL/rollback/retry/publication after loading:13 samples/119808 existing PCM bytes and13 descriptors remain exact,160 appended PCM bytes match, and all code spans survive. The common callback local frame is80 bytes; full caller/ISR bounds remain open. Only162 named bytes remain before discovery, operation admission/cancel/recovery and unfinished UI. Relocated remote/local sender paths, concurrent operations, general media/cache/reset cases, the final linked controller/media matrix and hardware remain open. This supersedes the earlier7328-byte census and closes neither complete fit nor feature-level GO. [Packed native evidence](validation/bluescsi-im1-packed-sds-2026-10-19.json).
+
+The next mandatory v9/browser/SDS candidate supersedes that partial census: streaming each40-byte D7 row into34 retained bytes preserves wire index/type/all32 filename bytes, omitting the wire terminator and size. Selected configured-target INQUIRY/API plus full vendor MODE SENSE page31 checks now fit at7583/8002 named bytes (2577 code+831 SDS+683 resources+3400 list+92 context), leaving419 split bytes,239 contiguous after code. Native exact100-row RAM comparisons,0/1/100 catalogs,101-entry CHECK CONDITION without D7, ordinary-target rejection before Toolbox commands, ISO index99 native load/playback/Exit and exact rebuild pass. A native SDS receive modal above the browser blocks collection clicks without changing browser state/listing or issuing SCSI; cancel/retry publishes160 exact bytes preserving119808 prior PCM bytes and13 descriptors. This does not exercise the linked busy guard or establish general operation ownership. BUG148 fixes private discovery dispatch; BUG149 corrects the test's modal assumption. Dynamic target-map/version handling, cancellation/recovery, masked IRQ/MIDI timing, error UI, filename policy, retained sender paths and full stack/hardware qualification remain open. IM1 remains OPEN. [Discovery/fit evidence](validation/bluescsi-im1-discovery-fit-2026-10-19.json).
+
+
+The scoped cancellation/paced-readiness successor now measures7835/8002 bytes, leaving167 split bytes (43 contiguous after code). Physical panel Exit during D7 drains4000 bytes without switching; after D8 starts it shows Mount uncertain; select again and queues no following command/Load. Explicit selection then loads13 samples/119808 exact bytes and plays. Silent D8 open failure despite GOOD is detected through four paced TUR/sense attempts; same-target catalog retry and independent-target exact ISO Load recover without reset. Ordinary-target/overflow errors are visible;0/1/100/101 catalogs and subsequent SDS cancel/retry with160 exact appended bytes preserve prior PCM/descriptors and every packed code span. Exact rebuild and originals pass; BUG150/151 fixed. IRQ/MIDI service during callbacks, full native operation ownership, retained sender paths, complete UI/filename policy, stack/ISR, stereo/cache/geometry/reset/save and physical qualification remain OPEN. User-reported physical boot-ROM GB6 selection/restart persistence is confirmed separately, without an installed binary hash or browser-hardware claim. [Results](../project/bluescsi-im1-cancel-recovery-results-2026-10-19.md), [evidence](validation/bluescsi-im1-cancel-recovery-2026-10-19.json).
+
+
+The next mandatory v9/browser/discovery/SDS build closes scoped caller-conditional IRQ/MIDI service and incoming receive admission at7876/8002 named bytes (2814 code+831 SDS+739 resources+3400 list+92 context). All128 realtime-clock bytes arrive during D7;188 matched service pairs preserve bank/mask/SP context and34 scratch words, advancing RW38 by exact service ticks with real timer wraps. Native timer/MIDI vectors run without observed SPC writes. Clock-run service/bracket maxima are1.033/3.000ms; the SDS header's35.482ms service requires idle-time exclusion (BUG154). These brackets include enabled work and are not physical/worst-case latency bounds. A late native owner claim could previously queue Load (BUG153); entry/catalog/mount checks now drain listing then show Busy, or block post-D8 drive/Load commit. Receive cleanup plus explicit selection loads119808 exact bytes and plays. Six native cases, both IRQ analyses, code preservation and exact rebuild pass. Observed extra stack192 is not a complete stack bound. Only2 contiguous bytes follow code despite126 total free; general disk/SDS sender admission, UI/filename policy, full fit and remaining media/controller/hardware gates stay OPEN. [Results](../project/bluescsi-im1-irq-ownership-results-2026-10-19.md), [evidence](validation/bluescsi-im1-irq-ownership-2026-10-19.json).
+
+The next compact-catalog candidate retains the D7 mount index and all32 filename bytes in33 bytes, discarding the constant file-type byte on the directory-free stock CD picker. Wire input remains40 bytes/record. Moving3300-byte storage to physical4BE0 gives7776/8002 named bytes,226 free and98 contiguous after2814-byte code; mandatory v9 GB-6 and retained SDS helpers remain included. Six native workflows pass: exact0/1/100 records and101 rejection, cancellation/retry/exact Load/playback/SDS, failed mount recovery, incoming SDS during list/mount and128 MIDI clocks during D7. Exact rebuild and immutable originals pass. Full admission/UI/fit/stack/media/controller/hardware gates remain open;1FA4 is a Remote Mode session flag, not generic disk ownership. [Results](../project/bluescsi-im1-catalog33-results-2026-10-19.md), [validation](validation/bluescsi-im1-catalog33-2026-10-19.json).
+
+Seven native workflows on the unchanged7776/8002 compact candidate qualify remote/local sender cancellation, a local no-click control, complete116-packet sends with9216 exact allocation bytes each and96 zero encoded padding bytes, and outgoing requests during D7/mount-readiness. Remote owner7 blocks browser commands; local owner8 cancels on input while the control remains active. Requests trigger late Busy without drive/Load commit; explicit cleanup restores browsing. No new firmware bytes;226 free/98 code-adjacent remain. This qualifies scoped sender paths, not concurrent native Load/Save/Format, the manufacturer41 session caller, full ISR/stack or physical timing. [Results](../project/bluescsi-im1-sender-admission-results-2026-10-19.md), [validation](validation/bluescsi-im1-sender-admission-2026-10-19.json).
+
+BUG155 is reproduced on the prior browser: manufacturer41 Remote Mode1FA4 becomes pending while SDS2BBA stays0, yet D8 readiness commits native drive1/handoff7601. A specific shared1FA4 check at entry/catalog/mount adds10 bytes and refuses publication/Load with Busy, retaining drive8 and handoff0; both paired race tests recover after session exit. Eleven primary native cases pass:2 races,5 Remote Mode cases and4 browser regressions. Complete116-packet/9216-byte send and160-byte receive publication are exact. Complete/cancel/timeout restore40 scratch words/selectors/WSR at the caller. Deferred exit first differs in3 scratch words at the later continuation; a twelfth native run confirms isolated helper restoration and a matching continuation. Original differing rows remain; broad ISR/caller proof stays open. Mandatory GB6-v9 remains at7786/8002,216 free/88 code-adjacent; exact rebuild passes. General disk/external-session safety, full fit/stack/UI/media/controller/hardware gates remain open. [Results](../project/bluescsi-im1-session-admission-results-2026-10-19.md), [validation](validation/bluescsi-im1-session-admission-2026-10-19.json).
+
+Native Disk options preserves all9 stock actions via0196:94D9 instead of a second menu clone (BUG156). Eight native screens and corrected Volume Dump FD warning/cancel are observed; BUG157 fixes its initial OS-Load mislabel. Browser ISO index99 -> separate private10MiB HD0 initialization/Save/export -> fresh cold Load preserves13 allocations/119808 exact bytes and playback peak. New32-byte records validate every D7 index as its ordinal before implicit storage;25700 decoded cases and native0/1/100/101/index99/cancel/SDS/Remote Mode checks pass. Current7918/8002 has84 free/68 code-adjacent, mandatory GB6-v9 and exact rebuild retained. Full persistence uses the preceding label variant; final labels change only the text table and one immediate pointer, with warning/cancel and rebuild acceptance. Malformed-index native draining, concurrent operations, full UI/fit/controller/media/stack/hardware gates remain open. [Results](../project/bluescsi-im1-disk-operations-results-2026-10-19.md), [validation](validation/bluescsi-im1-disk-operations-2026-10-19.json).
+
+Visible-page catalog storage reclaims2936 net bytes in the same candidate:3200 ->224 data bytes for40 added code bytes. The full D7 stream and all indices are still validated, retaining seven32-byte names; Next/Previous reread DA/D7. Current4982/8002 leaves3020 free,3004 directly after code. Nine native workflows on the same hash cover all100 names forward/back, shrink clamp, failed refresh/no stale mount, boundaries, exact Load/SDS/cancel/recovery, HDD Save/export/cold Load, Remote Mode and128-clock/SDS-during-Next IRQ service. Index/window models cover25700/10000 cases; exact rebuild and originals pass. Catalog rereads measure median349.998ms from DA-end to D7-end, not physical latency. Scoped extra stack reaches194, not a full bound. Remaining UI/policy/controllers/media/concurrency/stack/hardware and full feature fit remain open; another RAM region is deferred. [Results](../project/bluescsi-im1-page-window-results-2026-10-19.md), [validation](validation/bluescsi-im1-page-window-2026-10-19.json).
+
+
+## IM1 contextual CRT help and identity — 2026-10-19
+
+The final browser candidate adds collection/target titles and bottom-row instructions without hiding any of the32 filename bytes. Init renders dynamic rows before drawing, fixing BUG-159 (invisible cold-entry Disk options). Two native workflows qualify all4 collection identities, paging, Disk options, Exit/reopen, exact119808-byte Load/playback and retained SDS cancellation/retry. Allocation5393/8002,2609 free/2121 code-adjacent; remaining LCD/controller/parent, Save System cold-state, concurrency/reset/stack and physical gates remain open. Earlier broad matrices retain their earlier-hash scope. [Validation](validation/bluescsi-im1-help-identity-2026-10-19.json). Finding282.
+
+
+## IM1 fresh-entry and Save System cold-start update - 2026-10-19
+
+BUG-160 is fixed by clearing76 operation bytes on every browser entry, preserving16 callback-save bytes. A native stale-catalog baseline fails as expected; fresh reentry and actual Save System export/new-process cold boot rebuild Collections before commands. Saved stale page/labels remain on disk but cannot be selected; explicit new catalog/index0 Load restores119808 exact bytes with playback/release. Final-hash cancellation/SDS and rebuild pass. Footprint5408/8002,2594 free/2106 code-adjacent supersedes earlier values above. External checkpoint/device reset reconciliation, live collection mutation, controller/LCD, full stack and physical gates remain open. [Validation](validation/bluescsi-im1-entry-state-2026-10-19.json). Finding283.
+
+
+## IM1 Mouse+CRT qualification — 2026-10-19
+
+Current firmware32143f10... passes all4 collection identities/paging/help/Disk options/Exit/fresh reopen and exact119808-byte Load/playback/cancellation/SDS in native mode1 with genuinely saved NVRAM. Firmware remains5408/8002,2594 free. Mode0 stock Mode->Disk LoadF7 and Command are separately observed; native LCD F5/F7 descriptor neighborhoods remain original. CRT browserF4 does not qualify the separate LCD layout; dedicated LCD UI and RC100 packet input remain open, along with other parent/concurrency/reset/stack/hardware gates. [Validation](validation/bluescsi-im1-controllers-2026-10-19.json). Finding284.
+
+
+## IM1 LCD feasibility prototype — 2026-10-19
+
+A separate LCD F5 resource/renderer shares the existing protocol/admission callbacks. Triale798c0bf... passes mode0 seven-row scrolling over a100-image ISO catalog, Next/reopen, index0 mount to nativeF7,119808 exact loaded bytes and playback/release. Same-hash GB-6 CRT cancellation/Load/SDS regression and rebuild pass. Trial6141/8002,1861 free/1611 code-adjacent; broader CRT baseline32143f10... remains separate. LCD shows21 name bytes: full32-byte identity/viewing, complete paging/IMG/Disk/error/cancellation/cold-state and RC100/stack/hardware gates remain open. BUG161 removes a trial-only diagnostic/scroll alias. [Validation](validation/bluescsi-im1-lcd-prototype-2026-10-19.json). Finding285.
+
+
+## IM1 LCD full-name confirmation — 2026-10-19
+
+Candidateefec015f... displays the32 returned ASCII filename bytes in two16-byte lines before explicit Mount + Load, with Back and a separate CD identity row. Native shared21-byte-prefix fixtures, Back/preview/held-key noD8, index1 exact119808-byte Load/playback and same-hash CRT cancellation/SDS pass.256 decoded byte-filter cases and rebuild pass; BUG162/163 are fixed. Trial6487/8002,1515 free/1297 code-adjacent. This does not expose names beyond D7's32-byte field or lock external directory changes; final-hash LCD paging/IMG/Disk/error/cancellation/cold state, broader controllers/reset/stack and hardware remain open. [Validation](validation/bluescsi-im1-lcd-names-2026-10-19.json). Finding286.
+
+
+### BlueSCSI LCD paging boundary — 2026-10-20
+
+Native candidate19448d85... verifies all100 full32-byte catalog names across15 pages forward/back and Collections without mounting. BUG164: disabled Next formerly reset scroll without redraw, making immediate Previous ineffective; moving reset into render fixes the native negative case without growth. Same-hash name confirmation/exact119808-byte Load/playback, CRT cancellation/SDS and exact rebuild pass. Footprint6487/8002,1515 free/1297 code-adjacent. Remaining LCD/RC100/ownership/reset/stack/hardware gates stay open; no full IM1 GO. [Validation](validation/bluescsi-im1-lcd-paging-2026-10-20.json).
+
+
+### BlueSCSI LCD collections and IMG — 2026-10-20
+
+Unchanged19448d85... passes all4 configured LCD collection identities/preview Back/Collections/fresh reopen and target2 IMG index1 native Load13 allocations/119808 exact bytes/playback. Named10MiB Roland512-sector HD2 fixture only; no arbitrary IMG/hardware claim. Separate LCD Disk options verifies9 labels/scroll/Exit/reopen/native Load routing; other8 operations/writeback remain execution-unqualified.6487/8002,1515 free. LCD errors/cancellation/cold-state, RC100, ownership/reset/stack/hardware/full-fit gates stay open. [Validation](validation/bluescsi-im1-lcd-collections-img-2026-10-20.json).
+
+
+### BlueSCSI LCD recovery — 2026-10-20
+
+Unchanged19448d85... passes native LCD ordinary-target refusal/error9 and modeled D8 GOOD/open-failure bounded4 TUR/sense pairs, with no handoff/allocations. Physical Exit D7 drains4000 bytes then cancels; D8 interruption has no follow-on/native Load and explicitly reports uncertainty. Independent-target error recovery and fresh explicit cancellation retry each Load119808 exact sample bytes/13 allocations and pass playback/release. LCD renderer reads confirm status messages. No rollback or physical-failure parity claim.6487/8002,1515 free. LCD Save System/cold-state, native operations, RC100 and broader ownership/reset/stack/hardware/full-fit gates stay open. [Validation](validation/bluescsi-im1-lcd-recovery-2026-10-20.json).
+
+
+### BlueSCSI LCD Save System cold boot — 2026-10-20
+
+Unchanged19448d85... executes LCD native Save System/blank-floppy format/S2 Yes/export. Saved1474560-byte image74bbfa28... preserves3951 browser code bytes,212-byte LCD descriptor, SDS spans and mandatory GB-6 v9 checks. Fresh-process cold boot clears all76 operation-context bytes, issues no image command before collection choice, and explicitly loads ISO index1/13 allocations/119808 exact bytes with playback/release. Native emulator scope; no external checkpoint synchronization, interrupted save/format or physical media claim.6487/8002,1515 free. Remaining Disk operations, RC100, ownership/reset/stack/hardware/full-fit gates stay open. [Validation](validation/bluescsi-im1-lcd-cold-system-2026-10-20.json).
+
+
+### BlueSCSI current-build HDD persistence and RC-100 scope — 2026-10-20
+
+Unchanged19448d85... passes native GB6 browser ISO index99 Load, Disk options Utility/private HD0 quick initialization, Save/export and fresh-process HDD Load.13 sample allocations/119808 bytes match expectedB exactly before/after export; playback/release passes. All observed RAM snapshots retain browser/SDS code; original media unchanged. Named10MiB512-sector native profile only, no physical/arbitrary geometry/interruption/concurrency claim. User waived RC-100 input testing as an IM1 gate: its untouched implementation is assumed compatible, no controller available; this is not verified protocol compatibility and supersedes earlier RC100 release-blocking wording.6487/8002,1515 free. Remaining native operations/parent/ownership/reset/checkpoint/stack/hardware/full-fit gates stay open. [Validation](validation/bluescsi-im1-hdd-save-current-2026-10-20.json).
+
+
+### BlueSCSI native Delete — 2026-10-20
+
+Unchanged19448d85... passes native GB6 Disk options Delete/private HD0 selected performance with related hierarchy. Preconfirmation export equals source; confirmed export counters0x116/118/11A/11C change1/22/88/13→0/0/0/0 and independent sample reader finds0 allocations. Fresh-process native Load scan shows empty performance list; Perform allocation count0. Source/golden media and captured browser/SDS code preserved. Named10MiB512-sector hierarchy-deletion scope only, not secure erase, arbitrary types, interruption/concurrency or hardware acceptance.6487/8002,1515 free. RC100 remains assumed under user waiver; other IM1 gates open. [Validation](validation/bluescsi-im1-native-delete-2026-10-20.json).
+
+
+### BlueSCSI native Optimize no-change roundtrip — 2026-10-20
+
+Unchanged19448d85... passes scoped native Optimize warning/Yes/return on private already-packed10MiB512-sector HD0, byte-identical export, fresh Load13 allocations/119808 exact bytes and playback/release. All captured browser/SDS code and original media remain intact. No fragmented relocation/free-space recovery/interruption/physical claim. High-volume observer timeout is excluded; accepted run removes broad read-only register logging without changing firmware/emulator.6487/8002,1515 free. Other IM1 gates remain open; RC100 remains assumed under user waiver. [Validation](validation/bluescsi-im1-optimize-roundtrip-2026-10-20.json).
+
+
+### BlueSCSI native Copy — 2026-10-20
+
+Unchanged19448d85... passes private10MiB512-sector HD2→HD0 selected performance/hierarchy Copy: counts0/0/0/0→1/22/88/13; exported samples119808 exact bytes; fresh native Load13 allocations and playback/release. Separate same-name overwrite Cancel leaves destination export byte-identical. Source backing/golden inputs and all observed browser/SDS code preserved. No physical write-protection/arbitrary geometry/type/interruption/concurrency or overwrite Yes/No claim.6487/8002,1515 free. RC100 remains user-waived; other IM1 gates open. [Validation](validation/bluescsi-im1-native-copy-2026-10-20.json).
+
+
+## IM1 multi-gate batch and nested-mode defect — 2026-10-20
+
+Unchanged19448d85... candidate passes browser-mounted native Akai Convert Load with30 samples/13,568,196 exact converted PCM bytes,15 distinct L/R pairs and stereo playback/release; same-process checkpoint stale-load refusal and explicit119808-byte image reselection; and current Mouse+CRT D7/D8 cancellation/Load/SDS160-byte retry. A26-cycle/13-screen GB-6 matrix preserves screen IDs, browser/SDS code and loaded PCM with final playback, but full parent acceptance is OPEN: matched original/current Mouse evidence proves BUG-165. Native System mode ancestor8120 survives original depth3→4→3; browser Exit collapses it to depth2/page0121 and highlights Perform. Native Mode selection is a workaround. Private Volume Dump FD initialization/export reaches an empty4-slot directory; populated save/reload remains unqualified. No firmware growth:6487/8002,1515 free/1297 contiguous. Stack/resource lifetime, general concurrency, broader media/reset/cold recall and physical qualification remain open; RC100 stays assumed under the user waiver. [Results](../project/bluescsi-im1-multi-gates-results-2026-10-20.md), [validation](validation/bluescsi-im1-multi-gates-2026-10-20.json).
+
+
+## Current IM1 closeout status (2026-10-20)
+
+Candidate6297274d... retains mandatory GB-6 v9/SDS and uses6452/8002 bytes,1550 free/1332 adjacent. Prior current-image passes cover CRT ancestry, LCD/IMG/errors, full606.7MB Roland CD, writable-IMG Save/reselect/cold Load, Copy overwrite Yes/No, both Optimize options, Akai stereo and cancellation/MIDI/SDS/Remote Mode races. FDD/SCSI IMG remain writable; ISO stays read-only. BUG167 is fixed in the opt-in fixture; the same unchanged emulator7c994e86... retains its earlier773-test baseline.
+
+The latest16 native case records close eight named compatibility/recovery checks: complete Volume Dump restore with its matching native-saved whole-Volume HDD; distinct Roland stereo on32MiB writable IMG; current100-name LCD paging; LCD Save System/cold boot; three machine soft-reset boundaries; completed-D8/pre-readiness checkpoint recovery including changed catalog; browser/Mode exclusion during Save; and mounted-IMG Delete/cold empty directory. All7360 immutable/gap bytes survive177 additional snapshots;642 mutable bytes remain excluded.
+
+Full IM1 remains OPEN. Dense-note stress receives769 exact MIDI bytes, preserves188 service contexts/loaded PCM and completes D7, but exposes BUG168: a479ms service interval loses seven complete TIMER1 wraps from outer elapsed accounting. Bound service and fix wrap-safe deadlines before claiming bounded recovery. The166-byte custom and conditional62-byte IRQ bounds still lack complete native caller/callee composition; indirect aliases/DMA, remaining native Disk/FDC/conversion conflicts, partial-CDB replay and reset during writes remain open. Physical configuration/available IDs, actual library preflight and hardware timing/write behavior remain separate. RC100 input stays user-waived. No new memory region or Boot ROM change is needed for the completed checks. [Latest results](../project/bluescsi-im1-safety-batch-results-2026-10-20.md), [validation](validation/bluescsi-im1-safety-batch-2026-10-20.json), [prior writable-media results](../project/bluescsi-im1-final-gates-results-2026-10-20.md).
+
+
+### IM1 timing and partial-command recovery
+
+The latest IM1 batch adds13 passing native cases and111 memory snapshots. Load/quick Initialize/Copy/Delete input exclusion passes; partial-command recall BUG170 is fixed with12 SPC cases and3 native changed-catalog recalls.959 backend tests and fixture-disabled32MiB wave equivalence pass on emulator4cf1cfab... .
+
+Established OS6297274d... remains6452/8002 bytes. Experimental367f067d... uses6580/8002, leaving1422 free/1191 largest code gap; exact rebuild and retained GB-6 v9/SDS pass.32-byte/16000-tick parser admission reduces the finite dense-MIDI stress maximum from479ms to28.007ms without dropped/misparsed bytes, overflow, lost timer wraps or stuck release. BUG169 is fixed in this trial; BUG168 remains IN-PROGRESS for worst-case service/deadline proof. Complete native caller/callee/ISR stack, indirect aliases/DMA, FDC/conversion/full-format conflicts, other recovery phases and native-write resets still block full IM1 GO. Physical BlueSCSI timing/configuration remains separate. [Results](../project/bluescsi-im1-timing-recovery-results-2026-10-20.md), [validation](validation/bluescsi-im1-timing-recovery-2026-10-20.json).
+
+
+### IM1 Format/FDD/callee gates and warning correction (2026-10-20)
+
+Eleven new native cases and91 memory snapshots pass: full Format option,
+conversion/FDD input exclusion, exact stereo Save/cold Load and four CRT/LCD
+warning checks. BUG171 fixture FORMAT UNIT and BUG172 inherited warning wording
+are fixed. Synchronous browser/native-callee stack composition closes at166
+bytes; dispatcher ancestry and IRQ/state assumptions remain separate.
+The serial backend suite passes1067 tests with3 documented skips. Native
+fixture-disabled boot/input/MIDI/release and33554432 wave bytes match the prior
+executable. Wording successors ecdbd721... and79124692... add no allocation.
+
+IM1 remains open for BUG168 worst-case service/deadline proof, total native
+stack/indirect ownership, DMA and remaining recovery/native-write reset. BUG173
+records the last unread sector in native Verify Medium; cause and original-OS
+comparison are unresolved. Physical configuration/library/timing/write testing
+remains separate. RC100 input remains user-waived and assumed compatible.
+[Working plan](../project/bluescsi-image-mount-plan.md) and
+[latest evidence](validation/bluescsi-im1-format-fdc-stack-2026-10-20.json).
+
+
+## IM1 Verify Medium and stalled-target qualification (2026-10-20)
+
+BUG-173 is fixed by reordering the inherited48-byte loop at0129:B717/file052317: READ CAPACITY supplies an inclusive last LBA, so decrement now follows the zero/end check. Original bytes match OS2.24. Native complete65,536/65,537-sector censuses pass on established0be06d4d... and trial5581ee53..., with zero growth and GB-6 v9/SDS retained. Nine accepted native cases and93 memory snapshots pass. Immediate dispatcher frames are12 bytes; a conditional sentinel scan bound is32 comparisons per scan/528 total, not a complete native time/stack proof.
+
+The default-disabled one-shot D7 REQ-withheld fixture passes first/last-byte recovery and explicit retry. The actual simultaneous-MIDI case fails:323 reads overlap the stall,585 of775 expected reads appear overall; release occurs after113.279125ms. BUG-168 remains open for this byte deficit, native hardware-poll bounds and total deadlines. Full suite:1,088 pass,3 skip,1 minimal authored-OS ROM-loader failure reproduced on the prior executable (BUG-174);44 focused tests pass. All32MiB wave bytes match with the fixture disabled. Physical parity, total stack/IRQ/ownership and other write-reset phases remain unqualified. See [results](../project/bluescsi-im1-verify-stall-bounds-results-2026-10-20.md) and [validation](validation/bluescsi-im1-verify-stall-bounds-2026-10-20.json).
+
+
+## IM1 repaired redraw and authored-image loading (2026-10-20)
+
+Candidate5e5ec016... adds3 bytes to call the existing caller-qualified service between880 CRT character clears. Both actual simultaneous D7 stall/MIDI cases (byte1/3999) preserve775 reads,239616 stereo bytes and playback/release. Original dense D7, CRT/LCD cancellation/names, SDS and Remote Mode regressions pass:10 native cases/104 snapshots. BUG175 is fixed independently of BUG168, whose full service/deadline proof remains open. Allocation6583/8002 leaves1419 free; synchronous stack166 bytes unchanged, no total IRQ/ancestry proof. GB-6 v9/boot/SDS/Verify Medium/warnings retained. BUG174 fixes the minimal authored header and tests first real ROM handoff with112 tracks/all1032192 loaded bytes; no runnable-example-OS claim. Full suite1089 pass/3 skip, no failures. Physical qualification and upstream BlueSCSI defects remain separate. BUG140's abandoned descriptor experiment is WONTFIX, not repaired. [Evidence](validation/bluescsi-im1-bug-fixes-2026-10-20.json).
+
+
+## BlueSCSI filename source repair (2026-10-20)
+
+Local patches fix BUG145/146 in reviewed BlueSCSI-v2 revisions5e64e3b4... and4d0f96fe.... Count/list/selection validate the same pre-display-truncation name;32-byte wire labels and100-entry cap stay unchanged. Explicit switch paths must fit63 bytes plus NUL; longer inputs are refused before old-medium/audio side effects. D8 rejects overlong constructed paths/invalid indices and propagates switch failure with CHECK CONDITION. Real backing-open failure retains upstream close-before-open behavior; no rollback claim. Both full-source patch applications and21 focused tests/10,002 host assertions pass; backend suite1110pass/3skip. This is a local source repair, not an RP2040/RP2350 cross-build, installed firmware or physical acceptance. Existing32-byte preflight profile, S-760/GB-6 v9 binaries, BUG168 and broader IM1 gates are unchanged. [Results](../project/bluescsi-filename-fixes-results-2026-10-20.md), [validation](validation/bluescsi-filename-fixes-2026-10-20.json).
+
+
+## BlueSCSI failed-switch source contract (2026-10-20)
+
+BUG137 is fixed in the same local BlueSCSI source patches as145/146; published patch bytes are unchanged. Dedicated short-name invalid-index, missing-directory and backing-open reproducers show original false GOOD status. Patched D8 returns CHECK CONDITION, STATUS phase, zero data and sense5/24/00. Host execution checks36 errors/36 explicit retries across four target IDs and three getName conventions (552 assertions); exact image contents and subsequent tray-close unit attention pass.33 focused tests and1122 backend passes/3skips. Invalid requests preserve old media; actual backing-open failure still closes the old backing before error, without rollback. Source-defect closure is distinct from installed-board build/flash and physical/native recovery qualification. BUG168 and full IM1 safety remain open. [Results](../project/bluescsi-switch-error-fix-results-2026-10-20.md), [validation](validation/bluescsi-switch-error-fix-2026-10-20.json).
+
+
+## Native browser performance suspension (2026-10-20)
+
+BUG168 is fixed in native candidatee78750c2... by reusing001F:4F8D during admitted browser actions and restoring the prior1BA5/R9D mode afterward/before UI handoff. The caller's I flag and software-timer mask must permit the native wait; other callers are refused. At mode0, timer dispatch skips the MIDI parser and4000 skips43A3; raw MIDI receive interrupts remain serviced. Complete busy-time traffic is discarded by the native reset. Idle browser SDS/Remote Mode, cancellation, exact Load and playback/release afterward pass. This is performance state, separate from the device-controller setting2476/GB-6 v9.
+
+Ten native cases/101 snapshots pass.9003 suspended-service pairs preserve context;145 commands/502771 accumulated-time samples match raw timer and native wall-time values. Largest timer sample gap0.300250ms; longest observed full suspended service0.430125ms. A separate one-wrap test image times out at65789 ticks and explicitly recovers; production retains32 wraps.65536 permission-prefix cases and exact rebuild pass.6736/8002 named bytes leaves1266 free. The selectable boot ROM and original images are unchanged. The subsequent current-image analysis includes the transition callee and retains a166-byte synchronous maximum; complete stack/IRQ/ownership, reset contracts and physical BlueSCSI qualification remain open. No fresh backend-suite result is implied. [Results](../project/bluescsi-bug168-native-policy-results-2026-10-20.md), [self-contained validation](validation/bluescsi-bug168-native-policy-2026-10-20.json).
+
+
+## Current BlueSCSI synchronous stack (2026-10-21)
+
+Currente78750c2... resolves11 synchronous helper roots through54 contextual functions/1211 instructions. Native001F:4F8D has an eight-function closure with8 local stack bytes; its browser path peaks at112 bytes. Callback maxima remain action166/exit90/init156/update166, including80-byte common frame. All synchronous native returns balance and decoded bytes match the current and original OS; independent bound recurrence passes. Immediate dispatcher frames are12 additional bytes. Current full active IRQ graph closes at152 functions/9212 instructions under declared state domains; its62-byte contribution remains conditional. Outer/recursive dispatcher ancestry and IRQ nesting/state invariants remain open:166+12+62 is not a complete stack proof. Firmware/allocation/GB-6 v9 are unchanged. Static analysis only; no new native/backend/hardware test. [Results](../project/bluescsi-im1-current-stack-results-2026-10-21.md), [validation](validation/bluescsi-im1-current-stack-2026-10-21.json).
+
+
+## Native browser callback ancestry (2026-10-21)
+
+Currente78750c2... has15309 read-only observed callbacks across CRT/GB-6 collection/paging/Exit and native Disk Load handoff. All restore entry SP at000F:947D and none nest. Every synthetic/native return chain matches audited prefixes: update28/action30/open62/exit62 bytes from initial SP1120. CF7F/D3A8 retries use tail jumps and do not accumulate call frames. The current closed synchronous native and declared-domain IRQ graphs do not reach resident browser dispatchers/callbacks; browser calls/jumps do not target callback entry prologues. This qualifies no synchronous self-reentry under the recorded graph/state/normal-return assumptions. Observed total depth248 is not a worst-case bound. Additional modal/LCD/screen-transition ancestry and IRQ nesting/state/ownership/recovery/physical gates remain open. Firmware,1266 free bytes and GB-6 v9 unchanged. [Results](../project/bluescsi-im1-ancestry-results-2026-10-21.md), [raw trace and validation](validation/bluescsi-im1-ancestry-2026-10-21.json).
+
+
+## Current BlueSCSI transition ownership and hardware-test candidate
+
+Final606e277e... (2026-10-21) fixes BUG176 with three masked owner rechecks after performance suspension and pre-handoff restoration. A queued parser could acquire2BBA/1FA4 during native transition IRQ windows before4F99 or after4FBE; the predecessor could use stale admission. Decoded admission510 values across four transition returns (2040 combinations) now blocks every modeled SCSI/handoff bypass. This is static race evidence, not a timed native/hardware reproduction. Code grows24 bytes to4135; total6760/8002 leaves1242 free. Boot, GB-6 v9, SDS, Verify Medium and warning repairs remain unchanged. Fresh-source rebuild is exact.
+
+Sixteen final-image native workflows pass: ten production cases/101 snapshots, CRT/LCD/IRQ ancestry and three incomplete-WRITE resets.9003 service pairs preserve context;236 commands/891942 raw timer samples exactly match accumulated elapsed time. Callback counts15387/50345/15154 have no nesting and restore SP; prefixes28/30/62 remain.2677 balanced native IRQ pairs include nine MIDI-in-timer nestings. Under20/20 masks, normal returns and declared state domains, IRQ use is56 bytes and the named-route envelope is62+166+56=284. This is not a universal stack-region/alias or physical proof. Three1024-byte Initialize WRITEs interrupted at1/511/1023 bytes leave unfinished command buffers uncommitted; explicit remount/reinitialize yields one identical final hash. Physical writes need not be atomic at a command boundary.
+
+A default-disabled, one-shot image-fixture DMA-reset hook is implemented in rebuilt emulatorca9ecc94...;1123 backend tests pass/3skip. No emulator hook enters the hardware OS. The OS and concrete CD1/CD2/CD3/CD6 configuration/test guide are staged locally for controlled hardware testing. Broader native state/caller/alias, remaining fault/persistence and physical qualification keep IM1 open. [Results](../project/bluescsi-im1-owner-and-recovery-results-2026-10-21.md), [self-contained raw evidence](validation/bluescsi-im1-owner-and-recovery-2026-10-21.json), [hardware guide](../project/bluescsi-hardware-test-guide.md).

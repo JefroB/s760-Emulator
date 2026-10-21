@@ -6,6 +6,7 @@ Test instructions, coverage inventories and dated milestone acceptance. Coverage
 
 ## References
 
+- [Precommit CI check after documentation/toolchain cleanup — 2026-10-21](ci-precommit-check-2026-10-21.md)
 - [Windows standalone distribution qualification](distribution-qualification.md)
 - [Source-built standalone release candidate promotion](standalone-release-promotion.md)
 - [Manual workflow research inventory](manual-function-test-coverage.md)

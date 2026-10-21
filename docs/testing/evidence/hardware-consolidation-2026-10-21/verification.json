@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-21",
+  "scope": "Hardware documentation consolidation, scratch deletion and fixture/evidence relocation; no native implementation changes.",
+  "test_counts": {
+    "tests": 1237,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 2,
+    "passed": 1235
+  },
+  "elapsed_seconds": 245.83,
+  "skips": [
+    {
+      "name": "test_from_scratch_os_boots_and_drives_display",
+      "reason": "from-scratch MAME boot verification not observable in this environment; blockers:\n  - harness/driver cannot map the from-scratch image as the maincpu region: the `s760` driver hardwires s760224.img (fixed CRC/SHA1) as maincpu and tests/mame_harness.py exposes no image-override for the CPU program region (Req 13.1 unsatisfiable for the fixture)\n  - example fixture contains no branch/jump instruction; its source still needs a main-loop upgrade (compiler encoders are available)\n  - example fixture contains no ST/STB store instruction; its display accesses are loads (compiler encoders are available)"
+    },
+    {
+      "name": "test_emitted_minimal_os_boots_empirically",
+      "reason": "empirical bootability property not observable in this environment; blockers:\n  - harness/driver cannot map the from-scratch image as the maincpu region: the `s760` driver hardwires s760224.img (fixed CRC/SHA1) as maincpu and tests/mame_harness.py exposes no image-override for the CPU program region (Req 13.1 unsatisfiable for the fixture)\n  - example fixture contains no branch/jump instruction; its source still needs a main-loop upgrade (compiler encoders are available)\n  - example fixture contains no ST/STB store instruction; its display accesses are loads (compiler encoders are available)"
+    }
+  ],
+  "preserved_artifacts_hash_verified": 44,
+  "local_markdown_documents_checked": 30,
+  "broken_local_links": 0,
+  "old_tree_absent": true,
+  "compiler_gates": {
+    "target-contract": "passed",
+    "baseline": "passed"
+  },
+  "command": [
+    "python",
+    "temp/work/hardware-findings-cleanup/run_tests.py"
+  ],
+  "runner_source": "from pathlib import Path\nimport sys\nR=Path('D:/S-760')\nW=R/'temp/work/hardware-findings-cleanup/final-run'\nsys.path[:0]=[str(R/'tests'),str(R/'scripts'),str(R)]\nimport mame_harness\nmame_harness.SCRATCH_DIR=str(W/'harness')\nmame_harness.SNAP_DIR=str(W/'snap/s760')\nPath(mame_harness.SCRATCH_DIR).mkdir(parents=True,exist_ok=True)\nPath(mame_harness.SNAP_DIR).mkdir(parents=True,exist_ok=True)\nimport pytest\nraise SystemExit(pytest.main(['tests','-q','--tb=short','-o',f'cache_dir={W}/pytest-cache',f'--basetemp={W}/pytest-tmp',f'--junitxml={W}/suite-results.xml']))\n",
+  "limitations": [
+    "Two existing authored-program boot checks remain skipped; no new-program, full C/C++, physical-chip or release acceptance is implied.",
+    "Historical records retain original command strings and input hashes; private generated files were retired."
+  ],
+  "evidence": [
+    {
+      "path": "docs/testing/evidence/hardware-consolidation-2026-10-21/suite-results.xml",
+      "sha256": "1109ca69fc32b37b0c46d3e7524e008f89fbf2be6a85539239805114f9ae83f0"
+    },
+    {
+      "path": "docs/testing/evidence/hardware-consolidation-2026-10-21/suite.log",
+      "sha256": "a00bce68b654c022a0335a95cb1726f6c4ffa64084328ffae948ddf770ef92ef"
+    },
+    {
+      "path": "docs/hardware/evidence/preserved-artifacts-2026-10-21.json",
+      "sha256": "cc95b5eda65a790fd450f8645b8abd29675942e0b5fb211c34961ddb19e07e79"
+    }
+  ]
+}

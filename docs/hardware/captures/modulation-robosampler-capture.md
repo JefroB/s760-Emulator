@@ -6,7 +6,7 @@ Use3 seconds held and3 seconds release, velocity127, one layer, channel1. Initia
 
 ## Louder V2
 
-MODV2.IMG raises the exact existing source PCM by15x (+23.52dB). Original noise sample values are multiplied; noise is not regenerated from different RNG bounds. Patch maps, envelopes, filters and partial/sample routing are unchanged. Only PCM and version labels differ from V1. Both builds remain preserved.
+MODV2.IMG raises the exact existing source PCM by15x (+23.52dB). Original noise sample values are multiplied; noise is not regenerated from different RNG bounds. Patch maps, envelopes, filters and partial/sample routing are unchanged. Only PCM and version labels differ from V1. The linked validation records preserve the compared build identities; regenerate private images with the maintained builder when needed.
 
 The first gain pilot is patch01 SURVEY at numeric MIDI73, velocity127,3s hold/3s release: one WAV plus normal RoboSampler metadata. This is a level check, not a request to repeat the previous survey. Verify the hardware recording is unclipped; the native headroom check cannot establish interface headroom.
 

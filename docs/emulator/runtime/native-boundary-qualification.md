@@ -85,8 +85,8 @@ Passing unit tests or a development audit does not unlock them.
 python scripts/s760_package_audit.py --package <package-directory> --prepare
 
 # Fresh private output directory required; crashes only its own test parent.
-python scripts/verify_native_boundary.py --work docs/ic20-hle-findings/chatGPT-work/boundary-check
-python scripts/verify_native_checkpoint.py --standalone-session --state-dir docs/ic20-hle-findings/chatGPT-work/session-check
+python scripts/verify_native_boundary.py --work temp/work/boundary-check
+python scripts/verify_native_checkpoint.py --standalone-session --state-dir temp/work/session-check
 ```
 
 The native verifier requires local original firmware, ROBOFULL and built Release

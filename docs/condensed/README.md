@@ -1,5 +1,7 @@
 # Roland S-760 Condensed Reference
 
+For the maintained hardware entry point and evidence limits, use [docs/hardware](../hardware/README.md). The former findings scratch tree has been removed; historical run paths below are provenance, not current dependencies.
+
 Current product status (2026-10-14): Milestones1–5 are complete for the documented Windows development profiles. The [acceptance matrix](../testing/milestone-5-acceptance.md) controls supported sampler claims, including disk-mode mute/recovery and named SCSI writes. Final shipped-artifact and clean-machine qualification remains Milestone6; physical fidelity limits remain explicit. The dated checkpoint below is historical.
 
 Current checkpoint: 2026-10-11, findings through146. Native original-ROM boot
@@ -24,8 +26,7 @@ The exact Windows standalone artifact has passed [distribution qualification](..
 For product completion and review gates, use the [completion roadmap](../project/completion-roadmap.md). Dated milestone histories in these references are subordinate to their current-status summaries.
 
 Start with [the native boot/audio runbook](11-native-boot-and-audio-runbook.md)
-for current launch flags, validation, limits and commit scope. MAME and core/plugin
-builds pass; both C++ suites and all152 Python tests pass locally. Original
+for current launch flags, validation, limits and commit scope. Build and test counts in dated reports apply only to their recorded source and profile. Original
 firmware, captures and private research remain local; committed references
 contain the supported conclusions.
 

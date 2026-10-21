@@ -1,5 +1,7 @@
 # OS decoding work queue
 
+Scratch references in dated checkpoint entries below are retired provenance. Regenerate analysis from the named maintained manifests into `temp/work/<task>/`; no current resume step depends on the deleted findings tree. Durable validation records remain under `docs/condensed/validation/`.
+
 Latest boot-ROM acceptance (2026-10-16): BUG-080 command-phase transfer is fixed and qualified with ordinary original-ROM input;452 tests and native runtime verification pass. A private valid-header fixture now reaches payload DMA269D with IC4 count0000/SPC080000, exposing separate BUG-082. Service Notes confirms SCSI INT1 and DREQ/DACK0 wiring; internal IC4 DMA extent/vector/acknowledgment semantics remain unresolved. See [transport report](../boot-rom/ic15-scsi-boot-transport.md). Current classified bytes: ROM26,101/32,768 (79.65%; +0.00 points), OS62,736/1,032,192 (6.08%; +0.01); overall not yet quantifiable. Gemini's additional OS candidates in temp/os-exploration-round3 are being independently reviewed; their raw totals are not yet promoted into maintained coverage.
 
 Scope: systematic OS understanding, independently of filter relevance. Source-language identification is optional. Full Milestone 7 rebuild/modified-firmware acceptance is separately tracked in the completion roadmap.
@@ -23,7 +25,7 @@ Latest investigation: `docs/firmware/os/os-transfer-lifecycle.md` explains reser
 
 Start OS-001 at instruction page 001F:6FBF and follow descriptor preparation and subsequent memory allocation/error exits. Review OS-002 alongside it at 001F:6D10 onward and response entries 7481/748B/7495. Existing decoded views cover much of this region; prioritize semantics and missing callees, not redundant disassembly.
 
-Inputs/tools: `scripts/firmware_manifests/os_exploration.json`, `scripts/analyze_firmware_routines.py`, `scripts/firmware_coverage.py`. Generate fresh analysis under a unique directory in `docs/ic20-hle-findings/chatGPT-work/`. Durable current coverage is `docs/condensed/validation/os-exploration-coverage-2026-10-16.json`. Inspect hashes/current files rather than assuming the checkpoint counts are current.
+Inputs/tools: `scripts/firmware_manifests/os_exploration.json`, `scripts/analyze_firmware_routines.py`, `scripts/firmware_coverage.py`. Generate fresh analysis under a unique directory in `temp/work/`. Durable current coverage is `docs/condensed/validation/os-exploration-coverage-2026-10-16.json`. Inspect hashes/current files rather than assuming the checkpoint counts are current.
 
 No external input currently blocks static work. Hardware transfer behavior remains unvalidated. The rollback mapping is now established conditionally through 0000:C869/C86D/C872 -> 0166:87B5 -> 8B5F; the earlier 0160 alias was discarded. The manifest now includes this supervisor (298 instructions, 988 bytes).
 

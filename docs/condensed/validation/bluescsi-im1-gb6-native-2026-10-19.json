@@ -1,0 +1,585 @@
+{
+  "date": "2026-10-19",
+  "scope": "Mandatory selectableGB6-v9 X4/Y4 + browser-v8 native emulator acceptance; first ISO/IMG and same-target IMG repeat; no physical parity",
+  "gb6_v9_mandatory": true,
+  "build": {
+    "scope": "private combined selectable GB6-v9 plus browser-v8; no SDS/other repairs",
+    "boot_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+    "os_sha256": "44a1141f0b8a1cfe10a0b03a76ae6a47f4bb58a621a95eeed32cca7a02ba50f4",
+    "browser_sha256": "44dfc20939894f703ddd9ceed77715cad34a3ace474472c7a8b627802a7325e4",
+    "gb6_checks": {
+      "boot_banner_check": 1,
+      "boot_eeprom_check": 1,
+      "boot_setup4_inc": 1,
+      "boot_setup5_inc": 1,
+      "os_main_loop_poll_dispatch": 18,
+      "os_modal_poll_dispatch": 19,
+      "os_lcd_status_selector": 21,
+      "os_controller_hw_init": 56,
+      "os_mouse_poll_entry": 6,
+      "os_gb6_poll_stub": 41
+    },
+    "overlap": 0
+  },
+  "reproducible_rebuild": {
+    "scope": "private GB6-v9 plus browser-v8, not release; SDS/other repairs not linked",
+    "gb6_mandatory": true,
+    "controller_modes": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "os_sha256": "44a1141f0b8a1cfe10a0b03a76ae6a47f4bb58a621a95eeed32cca7a02ba50f4",
+    "rom_sha256": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+    "browser_sha256": "44dfc20939894f703ddd9ceed77715cad34a3ace474472c7a8b627802a7325e4",
+    "gb6_code_retained": true,
+    "overlap": 0,
+    "disassembly": {
+      "boot_banner_check": 1,
+      "boot_eeprom_check": 1,
+      "boot_setup4_inc": 1,
+      "boot_setup5_inc": 1,
+      "os_main_loop_poll_dispatch": 18,
+      "os_modal_poll_dispatch": 19,
+      "os_lcd_status_selector": 21,
+      "os_controller_hw_init": 56,
+      "os_mouse_poll_entry": 6,
+      "os_gb6_poll_stub": 41
+    }
+  },
+  "setup": {
+    "passed": true,
+    "phases": [
+      {
+        "phase": "setup",
+        "passed": true,
+        "observed": "setup_field=2\nsetup_vals=0,0,1,2,3,3\nos_2476=3 start_cursor=(0,0)\nat_system=(288,8)\nat_controller=(240,112)\n",
+        "expected": [
+          "setup_field=2",
+          "setup_vals=0,0,1,2,3,3",
+          "os_2476=3 start_cursor=(0,0)",
+          "at_system=(288,8)",
+          "at_controller=(240,112)"
+        ]
+      },
+      {
+        "phase": "reboot",
+        "passed": true,
+        "observed": "reboot_4cb2=3 reboot_2476=3\n",
+        "expected": [
+          "reboot_4cb2=3 reboot_2476=3"
+        ]
+      },
+      {
+        "phase": "fallback",
+        "passed": true,
+        "observed": "nocrt_4cb2=0 nocrt_2476=0\n",
+        "expected": [
+          "nocrt_4cb2=0 nocrt_2476=0"
+        ]
+      }
+    ],
+    "scope": "combined private browser+GB6, ordinary physical-port inputs and read-only observers; saved EEPROM from real Setup controls"
+  },
+  "other_modes": {
+    "passed": true,
+    "phases": [
+      {
+        "mode": 0,
+        "passed": true,
+        "observed": "setup=0 mode=0 cursor=8,8 first=-1,-1\n"
+      },
+      {
+        "mode": 1,
+        "passed": true,
+        "observed": "setup=1 mode=1 cursor=10,6 first=0,0\n"
+      },
+      {
+        "mode": 2,
+        "passed": true,
+        "observed": "setup=2 mode=2 cursor=0,0 first=-1,-1\n"
+      }
+    ],
+    "limits": [
+      "RC100 boot/selection only, no remote packet input",
+      "Panel mode selection/boot/LCD, not complete browser on LCD"
+    ]
+  },
+  "media": {
+    "ISO": {
+      "passed": true,
+      "scope": "ordinary-input full-width native browser, 100 files/15 pages, last index mount, automatic Disk Load handoff, native volume load and playback",
+      "controller": 3,
+      "after_exit_audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "exact_sample_bytes": 119808,
+      "sample_count": 13,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "all_four_collections_browsed": true,
+      "reentry_invalidates_old_listing": true,
+      "library_unchanged": true,
+      "rows": [
+        {
+          "cdb": "da000000000000000000",
+          "length": 1,
+          "status": 0,
+          "seconds": 29.969011,
+          "transport": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "length": 4000,
+          "status": 0,
+          "seconds": 30.268483375,
+          "transport": 0
+        },
+        {
+          "cdb": "d8630000000000000000",
+          "length": 0,
+          "status": 0,
+          "seconds": 64.952625375,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "status": 2,
+          "seconds": 64.95326775,
+          "transport": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "length": 18,
+          "status": 0,
+          "seconds": 64.95527175,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "status": 2,
+          "seconds": 64.95591375,
+          "transport": 0
+        },
+        {
+          "cdb": "03000000120000000000",
+          "length": 18,
+          "status": 0,
+          "seconds": 64.95791775,
+          "transport": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "length": 0,
+          "status": 0,
+          "seconds": 64.95855975,
+          "transport": 0
+        },
+        {
+          "cdb": "25000000000000000000",
+          "length": 8,
+          "status": 0,
+          "seconds": 64.960029625,
+          "transport": 0
+        }
+      ],
+      "limitations": [
+        "source-backed emulator fixture, not hardware",
+        "native Scan not invoked manually",
+        "native rescan/cache and repeat-switch contract remain incomplete",
+        "combined includes selectableGB6-v9 but not retained SDS/error repairs",
+        "masked transaction; ownership/recovery and physical timing open"
+      ],
+      "library_files": 403,
+      "library_manifest_sha256": "38f50cafb2e4fcf5236ee561791a9b3c39605b7aafaeeb9f84a9657bdedb5a7f"
+    },
+    "IMG": {
+      "passed": true,
+      "scope": "mandatory GB6-v9 combined native IMG browser, 100 files/15 pages, target2 index99, automatic HD2 handoff, exact load/playback and Exit",
+      "controller": 3,
+      "after_exit_audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "exact_sample_bytes": 119808,
+      "sample_count": 13,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "all_four_collections_browsed": true,
+      "reentry_invalidates_old_listing": true,
+      "library_unchanged": true,
+      "rows": [
+        {
+          "seconds": 29.93561325,
+          "transport": 0,
+          "status": 0,
+          "length": 1,
+          "cdb": "da000000000000000000"
+        },
+        {
+          "seconds": 30.23508575,
+          "transport": 0,
+          "status": 0,
+          "length": 4000,
+          "cdb": "d7000000000000000000"
+        },
+        {
+          "seconds": 64.98583425,
+          "transport": 0,
+          "status": 0,
+          "length": 0,
+          "cdb": "d8630000000000000000"
+        },
+        {
+          "seconds": 64.98647675,
+          "transport": 0,
+          "status": 2,
+          "length": 0,
+          "cdb": "00000000000000000000"
+        },
+        {
+          "seconds": 64.988480875,
+          "transport": 0,
+          "status": 0,
+          "length": 18,
+          "cdb": "03000000120000000000"
+        },
+        {
+          "seconds": 64.989123,
+          "transport": 0,
+          "status": 2,
+          "length": 0,
+          "cdb": "00000000000000000000"
+        },
+        {
+          "seconds": 64.991127125,
+          "transport": 0,
+          "status": 0,
+          "length": 18,
+          "cdb": "03000000120000000000"
+        },
+        {
+          "seconds": 64.99176925,
+          "transport": 0,
+          "status": 0,
+          "length": 0,
+          "cdb": "00000000000000000000"
+        },
+        {
+          "seconds": 64.99323925,
+          "transport": 0,
+          "status": 0,
+          "length": 8,
+          "cdb": "25000000000000000000"
+        }
+      ],
+      "limitations": [
+        "source-backed emulator fixture, not hardware",
+        "native Scan not invoked manually",
+        "repeated automatic refresh/cache contract remains incomplete",
+        "combined includes selectableGB6-v9 but not retained SDS/error repairs",
+        "masked transaction; ownership/recovery and physical timing open"
+      ],
+      "library_files": 403,
+      "library_manifest_sha256": "0d42c15d049412385c4431f6f018698191a24bc8aa6ff7fc3e619aa786ffd889"
+    },
+    "IMG-repeat": {
+      "passed": true,
+      "scope": "mandatory GB6-v9 combined native IMG browser, 100 files/15 pages, target2 index99, automatic HD2 handoff, exact load/playback and Exit",
+      "controller": 3,
+      "repeat_switches": [
+        "d8630000000000000000",
+        "d8000000000000000000"
+      ],
+      "second_audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.01694745011627674,
+        "silent_release_frames": 44100
+      },
+      "peak_ratio": 1.9999791178684223,
+      "after_exit_audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "exact_sample_bytes": 119808,
+      "sample_count": 13,
+      "audio": {
+        "channel": 1,
+        "note": 60,
+        "peak": 0.008473813533782959,
+        "silent_release_frames": 44100
+      },
+      "all_four_collections_browsed": true,
+      "reentry_invalidates_old_listing": true,
+      "library_unchanged": true,
+      "rows": [
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "length": 1,
+          "seconds": 30.002756375,
+          "status": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "length": 4000,
+          "seconds": 30.302228875,
+          "status": 0
+        },
+        {
+          "cdb": "d8630000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 64.73524325,
+          "status": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 64.73588575,
+          "status": 2
+        },
+        {
+          "cdb": "03000000120000000000",
+          "transport": 0,
+          "length": 18,
+          "seconds": 64.737889875,
+          "status": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 64.738532,
+          "status": 2
+        },
+        {
+          "cdb": "03000000120000000000",
+          "transport": 0,
+          "length": 18,
+          "seconds": 64.740536125,
+          "status": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 64.74117825,
+          "status": 0
+        },
+        {
+          "cdb": "25000000000000000000",
+          "transport": 0,
+          "length": 8,
+          "seconds": 64.74264825,
+          "status": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "length": 1,
+          "seconds": 154.8855735,
+          "status": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "length": 4000,
+          "seconds": 155.185045875,
+          "status": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "length": 1,
+          "seconds": 160.868974125,
+          "status": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "length": 4000,
+          "seconds": 161.16844675,
+          "status": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "length": 1,
+          "seconds": 166.719466125,
+          "status": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "length": 4000,
+          "seconds": 167.018939125,
+          "status": 0
+        },
+        {
+          "cdb": "da000000000000000000",
+          "transport": 0,
+          "length": 1,
+          "seconds": 184.468851375,
+          "status": 0
+        },
+        {
+          "cdb": "d7000000000000000000",
+          "transport": 0,
+          "length": 4000,
+          "seconds": 184.768323875,
+          "status": 0
+        },
+        {
+          "cdb": "d8000000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 187.78583975,
+          "status": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 187.78648225,
+          "status": 2
+        },
+        {
+          "cdb": "03000000120000000000",
+          "transport": 0,
+          "length": 18,
+          "seconds": 187.788486375,
+          "status": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 187.7891285,
+          "status": 2
+        },
+        {
+          "cdb": "03000000120000000000",
+          "transport": 0,
+          "length": 18,
+          "seconds": 187.791132625,
+          "status": 0
+        },
+        {
+          "cdb": "00000000000000000000",
+          "transport": 0,
+          "length": 0,
+          "seconds": 187.79177475,
+          "status": 0
+        },
+        {
+          "cdb": "25000000000000000000",
+          "transport": 0,
+          "length": 8,
+          "seconds": 187.79324475,
+          "status": 0
+        }
+      ],
+      "limitations": [
+        "source-backed emulator fixture, not hardware",
+        "native Scan not invoked manually",
+        "one compatible same-target B-to-A automatic browser refresh passes; general cache/geometry/reset cases open",
+        "combined includes selectableGB6-v9 but not retained SDS/error repairs",
+        "masked transaction; ownership/recovery and physical timing open"
+      ],
+      "library_files": 403,
+      "library_manifest_sha256": "cdfd341c2345f2c0920f87422f4029b721db0543fcec0b11c2c8837bdfc19705"
+    }
+  },
+  "identities": {
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-gb6-2026-10-19\\combined.img": "44a1141f0b8a1cfe10a0b03a76ae6a47f4bb58a621a95eeed32cca7a02ba50f4",
+    "docs\\ic20-hle-findings\\chatGPT-work\\bluescsi-im1-gb6-2026-10-19\\gb6.bin": "a0a980e284f18ee6f6854c3b37a1d88c06dd21548fb7ae488ac213c47798c2fb",
+    "mame-source\\mames760.exe": "1188bff3c3d125dec93b25c3776681ddccd4cdf8a799784fabab8e5e67f055b5",
+    "S760224.IMG": "3827ed4c46fd48abbec3095266164853033141d7bd15afe8dda0050d00e073cd",
+    "roms\\BOOT\\Roland_S-760_v1.11.BIN": "ef3b095445bbc1213e1b7ab38dc32a12dc2a0cb6aee3a7b845ff648c1941efc6",
+    "scripts\\build_gb6_combo.py": "f16beee98234b794e4bac93f8fa4975c9a6c2a83a9505c6a20c8ca3f52550d8a"
+  },
+  "sources": {
+    "build_combined.py": {
+      "sha256": "57ac4e2be5b9aafcf208e7acd3990e60a956dcdacdaf2062f4d60b4972604676",
+      "text": "\"\"\"Private IM1 builder: selectable GB6-v9 is mandatory in the image-browser OS candidate.\"\"\"\nfrom pathlib import Path\nimport sys,json,hashlib,argparse\nR=Path('D:/S-760');sys.path.insert(0,str(R/'scripts'))\nfrom build_gb6_combo import patch_os_disk_bytes,patch_boot_rom_bytes,verify_disassembly,OS_SOURCE_SHA256,BOOT_SOURCE_SHA256\n\ndef build(out):\n out.mkdir(parents=True,exist_ok=False)\n base=(R/'S760224.IMG').read_bytes();rom=(R/'roms/BOOT/Roland_S-760_v1.11.BIN').read_bytes()\n assert hashlib.sha256(base).hexdigest()==OS_SOURCE_SHA256 and hashlib.sha256(rom).hexdigest()==BOOT_SOURCE_SHA256\n browser_path=R/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-ui-2026-10-19/browser-v8.img'\n browser=browser_path.read_bytes();gb6=patch_os_disk_bytes(base,'v9');boot=patch_boot_rom_bytes(rom)\n changes=[i for i,(a,b) in enumerate(zip(base,browser)) if a!=b]\n assert len(browser)==len(base)\n assert all(gb6[i]==base[i] for i in changes),'Patch byte collision'\n os=bytearray(gb6)\n for i in changes:os[i]=browser[i]\n assert all(os[i]==gb6[i] for i in range(len(base)) if gb6[i]!=base[i])\n for name,data in [('combined.img',os),('gb6.bin',boot)]:\n  with (out/name).open('xb') as f:f.write(data)\n report=dict(scope='private GB6-v9 plus browser-v8, not release; SDS/other repairs not linked',gb6_mandatory=True,controller_modes=[0,1,2,3],os_sha256=hashlib.sha256(os).hexdigest(),rom_sha256=hashlib.sha256(boot).hexdigest(),browser_sha256=hashlib.sha256(browser).hexdigest(),gb6_code_retained=True,overlap=0,disassembly=verify_disassembly(boot,os))\n (out/'build.json').write_text(json.dumps(report,indent=2)+'\\n');print(json.dumps(report))\nif __name__=='__main__':\n parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--out',type=Path,required=True);build(parser.parse_args().out.resolve())\n"
+    },
+    "run_setup.py": {
+      "sha256": "9446fe5cc769e62a43b11d6e4451031a204e80ff2cc422fff1331dfa97e0713d",
+      "text": "from pathlib import Path\nimport os,subprocess,json,shutil,hashlib\nP=Path(__file__).resolve().parent;R=Path('D:/S-760')\nconfig=P/'device.json';config.write_text(json.dumps(dict(pointing_device='auto')))\nnvram=P/'saved-nvram';nvram.mkdir(exist_ok=False)\nphases=[('setup','lua_setup_and_os',35,'00',['setup_field=2','setup_vals=0,0,1,2,3,3','os_2476=3 start_cursor=(0,0)','at_system=(288,8)','at_controller=(240,112)']),('reboot','lua_reboot',25,'00',['reboot_4cb2=3 reboot_2476=3']),('fallback','lua_no_crt',25,'80',['nocrt_4cb2=0 nocrt_2476=0'])]\nresults=[]\nfor phase,name,seconds,f00a,expected in phases:\n work=P/phase;work.mkdir(exist_ok=False);out=work/'result.txt'\n current_nvram=nvram\n if phase=='fallback':current_nvram=work/'nvram';shutil.copytree(nvram,current_nvram)\n body=(P/(name+'.lua')).read_text()\n body=body.replace('write_log(log)',\"manager.machine.screens[':crt_screen']:snapshot(\"+json.dumps((work/'screen.png').as_posix())+\"); write_log(log)\") if False else body\n # Insert capture at the final setup observation, leaving function declarations intact.\n if phase=='setup':body=body.replace('        write_log(log)',\"        manager.machine.screens[':crt_screen']:snapshot(\"+json.dumps((work/'screen.png').as_posix())+\")\\n        write_log(log)\")\n lua=work/'run.lua';lua.write_text('local RESULT_PATH='+json.dumps(out.as_posix())+'\\n'+body)\n env={k:v for k,v in os.environ.items() if not k.startswith('S760_')};env.update(S760_ROM_BOOT=str(P/'gb6.bin'),S760_FLOPPY=str(P/'combined.img'),S760_CONFIG=str(config),S760_F00A=f00a)\n command=[str(R/'mame-source/mames760.exe'),'s760','-rompath',str(P/'roms')+';'+str(R/'roms'),'-video','none','-sound','none','-nothrottle','-skip_gameinfo','-nvram_directory',str(current_nvram),'-cfg_directory',str(work/'cfg'),'-snapshot_directory',str(work),'-autoboot_delay','0','-autoboot_script',str(lua),'-seconds_to_run',str(seconds)]\n run=subprocess.run(command,cwd=R/'mame-source',env=env,capture_output=True,text=True,timeout=180)\n (work/'stdout.log').write_text(run.stdout);(work/'stderr.log').write_text(run.stderr)\n text=out.read_text() if out.exists() else '';assert run.returncode==0,(phase,run.returncode,run.stderr[-2000:]);assert all(x in text for x in expected),(phase,text)\n results.append(dict(phase=phase,passed=True,observed=text,expected=expected));print('PASS',phase,text.strip(),flush=True)\n(P/'setup-result.json').write_text(json.dumps(dict(passed=True,phases=results,scope='combined private browser+GB6, ordinary physical-port inputs and read-only observers; saved EEPROM from real Setup controls'),indent=2))\n"
+    },
+    "run_other_modes.py": {
+      "sha256": "71f3662f785ce72f6abac5475535dad52a01b76c74c45020bfcb59c18761f782",
+      "text": "from pathlib import Path\nimport os,subprocess,json,shutil\nP=Path(__file__).resolve().parent;R=Path('D:/S-760');results=[]\ncommon=(P/'lua_setup_and_os.lua').read_text().split('local frame = 0')[0]\nfor mode in [0,1,2]:\n work=P/f'mode-{mode}';work.mkdir(exist_ok=False);nvram=work/'nvram';shutil.copytree(P/'saved-nvram',nvram)\n actions={128:\"set_switch(':PANEL1',0x04,true)\",131:\"set_switch(':PANEL1',0x04,false)\"}\n for k in range(3-mode):actions[135+10*k]=\"set_switch(':PANEL0',0x02,true)\";actions[138+10*k]=\"set_switch(':PANEL0',0x02,false)\"\n at_exit=145+10*(3-mode);actions[at_exit]=\"setup_value=mem:read_u8(0x4CB2);set_switch(':PANEL1',0x02,true)\";actions[at_exit+5]=\"set_switch(':PANEL1',0x02,false)\"\n timeline='\\n'.join('elseif frame=='+str(n)+' then '+v for n,v in sorted(actions.items()))\n body=common+\"\\nlocal frame=0;local setup_value=-1;local first_x=-1;local first_y=-1\\nset_switch(':PANEL1',1,true)\\nemu.register_frame_done(function()\\nframe=frame+1\\nif frame<120 then set_switch(':PANEL1',1,true) elseif frame==120 then set_switch(':PANEL1',1,false)\\n\"+timeline\n if mode==1:body+=\"\\nelseif frame==1100 then first_x,first_y=read_cursor() elseif frame==1110 then set_mouse_xy(5,3)\"\n body+=\"\\nelseif frame==1200 then local x,y=read_cursor();local f=assert(io.open(RESULT_PATH,'w'));f:write(string.format('setup=%d mode=%d cursor=%d,%d first=%d,%d\\\\n',setup_value,mem:read_u8(0x2476),x,y,first_x,first_y));f:close();manager.machine.screens[':crt_screen']:snapshot(CRT_PATH);manager.machine.screens[':lcd_screen']:snapshot(LCD_PATH);manager.machine:exit() end end)\"\n script=work/'run.lua';script.write_text('local RESULT_PATH='+json.dumps((work/'result.txt').as_posix())+'\\nlocal CRT_PATH='+json.dumps((work/'crt.png').as_posix())+'\\nlocal LCD_PATH='+json.dumps((work/'lcd.png').as_posix())+'\\n'+body)\n env={k:v for k,v in os.environ.items() if not k.startswith('S760_')};env.update(S760_ROM_BOOT=str(P/'gb6.bin'),S760_FLOPPY=str(P/'combined.img'),S760_CONFIG=str(P/'device.json'),S760_F00A='00')\n cmd=[str(R/'mame-source/mames760.exe'),'s760','-rompath',str(P/'roms')+';'+str(R/'roms'),'-video','none','-sound','none','-nothrottle','-skip_gameinfo','-nvram_directory',str(nvram),'-cfg_directory',str(work/'cfg'),'-autoboot_delay','0','-autoboot_script',str(script),'-seconds_to_run','30']\n run=subprocess.run(cmd,cwd=R/'mame-source',env=env,capture_output=True,text=True,timeout=180);(work/'stdout.log').write_text(run.stdout);(work/'stderr.log').write_text(run.stderr)\n text=(work/'result.txt').read_text() if (work/'result.txt').exists() else '';assert run.returncode==0 and f'setup={mode} mode={mode}' in text,(mode,text,run.stderr[-1000:])\n assert (nvram/'s760/serial_eeprom').read_bytes()[8]==mode\n if mode==1:assert 'cursor=10,6 first=0,0' in text,text\n results.append(dict(mode=mode,passed=True,observed=text));print('PASS',mode,text.strip(),flush=True)\n(P/'other-modes-result.json').write_text(json.dumps(dict(passed=True,phases=results,limits=['RC100 boot/selection only, no remote packet input','Panel mode selection/boot/LCD, not complete browser on LCD']),indent=2))\n"
+    },
+    "run_browser_v3.py": {
+      "sha256": "26e008a0ef0284999ed974e51548bcb4885e61052bb41600128bcfa19da545f1",
+      "text": "\nfrom pathlib import Path\nimport json,hashlib,struct,time,shutil\nfrom probe_base import ROOT,HERE,ObservedRuntime\nfrom s760_runtime import RuntimeConfig\nfrom verify_native_scsi_save import controls\nfrom verify_native_roland_load import audition\nwork=HERE/'native-gb6-v3';work.mkdir(exist_ok=False)\ncfg=RuntimeConfig(ROOT/'mame-source/mames760.exe',HERE/'gb6.bin',HERE/'combined.img',work/'runtime',sound=False,throttle=False,wave_dump=work/'wave.bin',pointing_device='auto')\nmedia=cfg.state_dir/'roms/SCSI';media.mkdir(parents=True)\nfor name in ['HD20_512.img','CD10_2048.iso','CD30_2048.iso','CD60_2048.iso']:(media/name).write_bytes(bytes(8192))\nsource=ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19/live-iso/sd/CD1'\nshutil.copyfile(source/'B.iso',HERE/'sd/CD1/099.iso')\nshutil.copyfile(source/'A.iso',media/'CD10_2048.iso')\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nlibrary={str(p):sha(p) for p in (HERE/'sd').rglob('*') if p.is_file()}\nshutil.copytree(HERE/'saved-nvram',cfg.state_dir/'nvram')\nwith ObservedRuntime(cfg) as rt:\n wait,button,click,shot,select_hd=controls(rt,work);wait(25);shot('boot.png');boot_ram=(rt.observation_folder/'frame-01.ram').read_bytes();assert boot_ram[0x83476]==3 and boot_ram[0xa737c]==3;click(118,4);wait(2);shot('collections.png');click(50,20);wait(12);shot('images.png')\n ram=(rt.observation_folder/'frame-03.ram').read_bytes();print('state',struct.unpack_from('<12H',ram,0x5c10),'action',ram[0x5c40:0x5c44].hex(),flush=True)\n assert struct.unpack_from('<H',ram,0x5c10)[0]==1\n assert struct.unpack_from('<H',ram,0x5c14)[0]==100\n for page in range(1,15):\n  click(50,84);wait(.3)\n shot('last-page.png');ram=(rt.observation_folder/'frame-04.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c16)[0]==98\n click(50,28);wait(10);shot('handoff.png');ram=(rt.observation_folder/'frame-05.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c44)[0]==0x7601\n assert ram[0xa737d]==1\n rows=[json.loads(x) for x in (rt.observation_folder/'toolbox.jsonl').read_text().splitlines()]\n assert rows[-7]['cdb'].startswith('d863')\n click(50,32);button(':PANEL2','Panel F3');wait(60);shot('loaded.png')\n click(10,4);click(15,20);wait(4);shot('perform.png');rt.request('pause');rt.request('audio_capture',enabled=True);pcm,audio=audition(rt,0,60);rt.request('audio_capture',enabled=False);rt.request('resume');wait(1)\n (work/'note.pcm').write_bytes(pcm)\n click(118,4);wait(2);shot('reopened-collections.png');ram=(rt.observation_folder/'frame-08.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c10)[0]==0\n for ordinal,(target,y) in enumerate([(3,36),(2,28),(6,44)]):\n  click(50,y);wait(2);shot(f'collection-{target}.png');ram=(rt.observation_folder/f'frame-{9+2*ordinal:02}.ram').read_bytes();assert struct.unpack_from('<3H',ram,0x5c10)==(1,target,100)\n  click(50,76);wait(1);shot(f'back-{target}.png')\n button(':PANEL1','Exit');wait(3);shot('final-exit.png')\n ram=(rt.observation_folder/'frame-15.ram').read_bytes();assert ram[0x83476]==3 and ram[0xa737c]==3\n rt.request('pause');rt.request('audio_capture',enabled=True);after_pcm,after_audio=audition(rt,0,60);rt.request('audio_capture',enabled=False);rt.request('resume')\nwave=(work/'wave.bin').read_bytes();expected=(ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19/live-img/expected-B.bin').read_bytes()\nassert wave[16:16+len(expected)]==expected,'browser-mounted native sample allocation mismatch'\nassert library=={str(p):sha(p) for p in (HERE/'sd').rglob('*') if p.is_file()}\n\n(work/'result.json').write_text(json.dumps(dict(passed=True,scope='ordinary-input full-width native browser, 100 files/15 pages, last index mount, automatic Disk Load handoff, native volume load and playback',controller=3,after_exit_audio=after_audio,exact_sample_bytes=len(expected),sample_count=13,audio=audio,all_four_collections_browsed=True,reentry_invalidates_old_listing=True,library_unchanged=True,rows=rows,library_hashes=library,limitations=['source-backed emulator fixture, not hardware','native Scan not invoked manually','native rescan/cache and repeat-switch contract remain incomplete','combined includes selectableGB6-v9 but not retained SDS/error repairs','masked transaction; ownership/recovery and physical timing open']),indent=2))\nprint('PASS browser to native load/playback',len(expected),'exact sample bytes',flush=True)\n"
+    },
+    "run_pointer.py": {
+      "sha256": "e3423b3689b8fba7343eef66ab6cab3a93cab97bcb4660e1fa8da7d3486062f7",
+      "text": "from pathlib import Path\nimport json,shutil\nfrom probe_base import ROOT,HERE,ObservedRuntime\nfrom s760_runtime import RuntimeConfig\nfrom verify_native_scsi_save import controls\nwork=HERE/'pointer-trace';work.mkdir(exist_ok=False)\ncfg=RuntimeConfig(ROOT/'mame-source/mames760.exe',HERE/'gb6.bin',HERE/'combined.img',work/'runtime',sound=False,throttle=False,pointing_device='auto')\nmedia=cfg.state_dir/'roms/SCSI';media.mkdir(parents=True)\nfor name in ['HD20_512.img','CD10_2048.iso','CD30_2048.iso','CD60_2048.iso']:(media/name).write_bytes(bytes(8192))\nshutil.copytree(HERE/'saved-nvram',cfg.state_dir/'nvram')\nwith ObservedRuntime(cfg) as rt:\n wait,button,click,shot,select_hd=controls(rt,work);wait(25);shot('boot.png');click(118,5);wait(1);shot('collections.png');click(50,22);wait(2);shot('images.png')\n for i,(x,y) in enumerate([(50,30),(50,32),(50,34),(50,36),(100,30),(100,32),(50,22)]):\n  rt.request('pointer',x=x,y=y);wait(.5);shot(f'pointer-{i}.png');print('target',(2*x,2*y),'actual',json.loads((rt.observation_folder/f'frame-{4+i:02}.json').read_text()),flush=True)\n"
+    },
+    "img\\run.py": {
+      "sha256": "d88796e77512801d37f4d259057ed005b67cde58a1a0af64c3ae79f38f92b404",
+      "text": "\nfrom pathlib import Path\nimport json,hashlib,struct,time,shutil\nfrom probe_base import ROOT,HERE,ObservedRuntime\nfrom s760_runtime import RuntimeConfig\nfrom verify_native_scsi_save import controls\nfrom verify_native_roland_load import audition\nwork=HERE/'native-img';work.mkdir(exist_ok=False)\ncfg=RuntimeConfig(ROOT/'mame-source/mames760.exe',HERE.parent/'gb6.bin',HERE.parent/'combined.img',work/'runtime',sound=False,throttle=False,wave_dump=work/'wave.bin',pointing_device='auto')\nmedia=cfg.state_dir/'roms/SCSI';media.mkdir(parents=True)\nfor name in ['HD20_512.img','CD10_2048.iso','CD30_2048.iso','CD60_2048.iso']:(media/name).write_bytes(bytes(8192))\nsource=ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19/live-img/sd/CD0'\nshutil.copyfile(source/'B.img',HERE/'sd/CD2/099.img')\nshutil.copyfile(source/'A.img',media/'HD20_512.img')\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nlibrary={str(p):sha(p) for p in (HERE/'sd').rglob('*') if p.is_file()}\nshutil.copytree(HERE.parent/'saved-nvram',cfg.state_dir/'nvram')\nwith ObservedRuntime(cfg) as rt:\n wait,button,click,shot,select_hd=controls(rt,work);wait(25);shot('boot.png');boot_ram=(rt.observation_folder/'frame-01.ram').read_bytes();assert boot_ram[0x83476]==3 and boot_ram[0xa737c]==3;click(118,4);wait(2);shot('collections.png');click(50,28);wait(12);shot('images.png')\n ram=(rt.observation_folder/'frame-03.ram').read_bytes();print('state',struct.unpack_from('<12H',ram,0x5c10),'action',ram[0x5c40:0x5c44].hex(),flush=True)\n assert struct.unpack_from('<H',ram,0x5c10)[0]==1\n assert struct.unpack_from('<H',ram,0x5c14)[0]==100\n for page in range(1,15):\n  click(50,84);wait(.3)\n shot('last-page.png');ram=(rt.observation_folder/'frame-04.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c16)[0]==98\n click(50,28);wait(10);shot('handoff.png');ram=(rt.observation_folder/'frame-05.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c44)[0]==0x7601\n assert ram[0xa737d]==2\n rows=[json.loads(x) for x in (rt.observation_folder/'toolbox.jsonl').read_text().splitlines()]\n assert rows[-7]['cdb'].startswith('d863')\n click(50,32);button(':PANEL2','Panel F3');wait(60);shot('loaded.png')\n click(10,4);click(15,20);wait(4);shot('perform.png');rt.request('pause');rt.request('audio_capture',enabled=True);pcm,audio=audition(rt,0,60);rt.request('audio_capture',enabled=False);rt.request('resume');wait(1)\n (work/'note.pcm').write_bytes(pcm)\n click(118,4);wait(2);shot('reopened-collections.png');ram=(rt.observation_folder/'frame-08.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c10)[0]==0\n for ordinal,(target,y) in enumerate([(1,20),(3,36),(6,44)]):\n  click(50,y);wait(2);shot(f'collection-{target}.png');ram=(rt.observation_folder/f'frame-{9+2*ordinal:02}.ram').read_bytes();assert struct.unpack_from('<3H',ram,0x5c10)==(1,target,100)\n  click(50,76);wait(1);shot(f'back-{target}.png')\n button(':PANEL1','Exit');wait(3);shot('final-exit.png')\n ram=(rt.observation_folder/'frame-15.ram').read_bytes();assert ram[0x83476]==3 and ram[0xa737c]==3\n rt.request('pause');rt.request('audio_capture',enabled=True);after_pcm,after_audio=audition(rt,0,60);rt.request('audio_capture',enabled=False);rt.request('resume')\nwave=(work/'wave.bin').read_bytes();expected=(ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19/live-img/expected-B.bin').read_bytes()\nassert wave[16:16+len(expected)]==expected,'browser-mounted native sample allocation mismatch'\nassert library=={str(p):sha(p) for p in (HERE/'sd').rglob('*') if p.is_file()}\n\n(work/'result.json').write_text(json.dumps(dict(passed=True,scope='mandatory GB6-v9 combined native IMG browser, 100 files/15 pages, target2 index99, automatic HD2 handoff, exact load/playback and Exit',controller=3,after_exit_audio=after_audio,exact_sample_bytes=len(expected),sample_count=13,audio=audio,all_four_collections_browsed=True,reentry_invalidates_old_listing=True,library_unchanged=True,rows=rows,library_hashes=library,limitations=['source-backed emulator fixture, not hardware','native Scan not invoked manually','repeated automatic refresh/cache contract remains incomplete','combined includes selectableGB6-v9 but not retained SDS/error repairs','masked transaction; ownership/recovery and physical timing open']),indent=2))\nprint('PASS browser to native load/playback',len(expected),'exact sample bytes',flush=True)\n"
+    },
+    "img\\run_repeat.py": {
+      "sha256": "ebcf4a92d09d9d51df45fb697ac72f1bec49b4b857f96db6cf3e221cd9e90bcc",
+      "text": "\nfrom pathlib import Path\nimport json,hashlib,struct,time,shutil\nfrom probe_base import ROOT,HERE,ObservedRuntime\nfrom s760_runtime import RuntimeConfig\nfrom verify_native_scsi_save import controls\nfrom verify_native_roland_load import audition\nwork=HERE/'native-img-repeat';work.mkdir(exist_ok=False)\ncfg=RuntimeConfig(ROOT/'mame-source/mames760.exe',HERE.parent/'gb6.bin',HERE.parent/'combined.img',work/'runtime',sound=False,throttle=False,wave_dump=work/'wave.bin',pointing_device='auto')\nmedia=cfg.state_dir/'roms/SCSI';media.mkdir(parents=True)\nfor name in ['HD20_512.img','CD10_2048.iso','CD30_2048.iso','CD60_2048.iso']:(media/name).write_bytes(bytes(8192))\nsource=ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19/live-img/sd/CD0'\nshutil.copyfile(source/'B.img',HERE/'sd/CD2/099.img');shutil.copyfile(source/'A.img',HERE/'sd/CD2/000.img')\nshutil.copyfile(source/'A.img',media/'HD20_512.img')\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nlibrary={str(p):sha(p) for p in (HERE/'sd').rglob('*') if p.is_file()}\nshutil.copytree(HERE.parent/'saved-nvram',cfg.state_dir/'nvram')\nwith ObservedRuntime(cfg) as rt:\n wait,button,click,shot,select_hd=controls(rt,work);wait(25);shot('boot.png');boot_ram=(rt.observation_folder/'frame-01.ram').read_bytes();assert boot_ram[0x83476]==3 and boot_ram[0xa737c]==3;click(118,4);wait(2);shot('collections.png');click(50,28);wait(12);shot('images.png')\n ram=(rt.observation_folder/'frame-03.ram').read_bytes();print('state',struct.unpack_from('<12H',ram,0x5c10),'action',ram[0x5c40:0x5c44].hex(),flush=True)\n assert struct.unpack_from('<H',ram,0x5c10)[0]==1\n assert struct.unpack_from('<H',ram,0x5c14)[0]==100\n for page in range(1,15):\n  click(50,84);wait(.3)\n shot('last-page.png');ram=(rt.observation_folder/'frame-04.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c16)[0]==98\n click(50,28);wait(10);shot('handoff.png');ram=(rt.observation_folder/'frame-05.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c44)[0]==0x7601\n assert ram[0xa737d]==2\n rows=[json.loads(x) for x in (rt.observation_folder/'toolbox.jsonl').read_text().splitlines()]\n assert rows[-7]['cdb'].startswith('d863')\n click(50,32);button(':PANEL2','Panel F3');wait(60);shot('loaded.png')\n click(10,4);click(15,20);wait(4);shot('perform.png');rt.request('pause');rt.request('audio_capture',enabled=True);pcm,audio=audition(rt,0,60);rt.request('audio_capture',enabled=False);rt.request('resume');wait(1)\n (work/'note.pcm').write_bytes(pcm)\n click(118,4);wait(2);shot('reopened-collections.png');ram=(rt.observation_folder/'frame-08.ram').read_bytes();assert struct.unpack_from('<H',ram,0x5c10)[0]==0\n for ordinal,(target,y) in enumerate([(1,20),(3,36),(6,44)]):\n  click(50,y);wait(2);shot(f'collection-{target}.png');ram=(rt.observation_folder/f'frame-{9+2*ordinal:02}.ram').read_bytes();assert struct.unpack_from('<3H',ram,0x5c10)==(1,target,100)\n  click(50,76);wait(1);shot(f'back-{target}.png')\n button(':PANEL1','Exit');wait(3);shot('final-exit.png')\n ram=(rt.observation_folder/'frame-15.ram').read_bytes();assert ram[0x83476]==3 and ram[0xa737c]==3\n rt.request('pause');rt.request('audio_capture',enabled=True);after_pcm,after_audio=audition(rt,0,60);rt.request('audio_capture',enabled=False);rt.request('resume')\n click(118,4);wait(2);click(50,28);wait(2);click(50,20);wait(10);shot('A-handoff.png')\n click(50,32);button(':PANEL2','Panel F3');wait(2);shot('A-clear-dialog.png');click(56,60);wait(60);shot('A-loaded.png')\n click(10,4);click(15,20);wait(4);shot('A-perform.png');rt.request('pause');rt.request('audio_capture',enabled=True);a_pcm,a_audio=audition(rt,0,60);rt.request('audio_capture',enabled=False);rt.request('resume')\n rows=[json.loads(x) for x in (rt.observation_folder/'toolbox.jsonl').read_text().splitlines()];switches=[x['cdb'] for x in rows if x['cdb'].startswith('d8')];assert switches==['d8630000000000000000','d8000000000000000000'],switches\n first_expected=(ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19/live-img/expected-B.bin').read_bytes();assert (rt.observation_folder/'frame-07.wave').read_bytes()[16:119824]==first_expected\nwave=(work/'wave.bin').read_bytes();expected=(ROOT/'docs/ic20-hle-findings/chatGPT-work/bluescsi-im1-batch-2026-10-19/live-img/expected-A.bin').read_bytes()\nassert wave[16:16+len(expected)]==expected,'browser-mounted native sample allocation mismatch'\nassert 1.99<a_audio['peak']/audio['peak']<2.01\nassert library=={str(p):sha(p) for p in (HERE/'sd').rglob('*') if p.is_file()}\n\n(work/'result.json').write_text(json.dumps(dict(passed=True,scope='mandatory GB6-v9 combined native IMG browser, 100 files/15 pages, target2 index99, automatic HD2 handoff, exact load/playback and Exit',controller=3,repeat_switches=switches,second_audio=a_audio,peak_ratio=a_audio['peak']/audio['peak'],after_exit_audio=after_audio,exact_sample_bytes=len(expected),sample_count=13,audio=audio,all_four_collections_browsed=True,reentry_invalidates_old_listing=True,library_unchanged=True,rows=rows,library_hashes=library,limitations=['source-backed emulator fixture, not hardware','native Scan not invoked manually','one compatible same-target B-to-A automatic browser refresh passes; general cache/geometry/reset cases open','combined includes selectableGB6-v9 but not retained SDS/error repairs','masked transaction; ownership/recovery and physical timing open']),indent=2))\nprint('PASS browser to native load/playback',len(expected),'exact sample bytes',flush=True)\n"
+    },
+    "probe_base.py": {
+      "sha256": "d981b68071f07ea4193aa8fc9251099afeca6d2184292ff1489b1b0137b091e5",
+      "text": "\"\"\"Run existing native acceptance workflows with read-only BS1 observations.\"\"\"\nimport argparse\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport runpy\nimport shutil\nimport subprocess\nimport sys\nimport time\nfrom unittest.mock import patch\n\nROOT=Path('D:\\\\S-760')\nHERE=Path(__file__).resolve().parent\nsys.path.insert(0,str(ROOT/'scripts'))\nimport s760_runtime\n\nclass ObservedRuntime(s760_runtime.NativeRuntime):\n    def _start(self,timeout):\n        folder=self.config.state_dir.resolve()/'bs1-observer'\n        folder.mkdir(parents=True,exist_ok=False)\n        wrapper=folder/'wrapper.lua'\n        observer=folder/'observer.lua'\n        shutil.copyfile(HERE/'observer.lua',observer)\n        wrapper.write_text('dofile('+json.dumps((ROOT/'scripts/s760_runtime.lua').as_posix())+')\\n'\n                           +'dofile('+json.dumps(observer.as_posix())+')\\n',encoding='utf-8')\n        launch=subprocess.Popen\n        def observed(command,**kwargs):\n            command=list(command)\n            command[command.index('-autoboot_script')+1]=str(wrapper)\n            kwargs['env']['BS1_OBSERVER_DIR']=folder.as_posix()\n            kwargs['env']['S760_TOOLBOX_IMAGE_ROOT']=str((HERE/'sd').resolve())\n            return launch([*command,'-log'],**kwargs)\n        self.observation_folder=folder\n        self.snapshot_count=0\n        with patch('s760_runtime.subprocess.Popen',side_effect=observed):\n            super()._start(timeout)\n\n    def request(self,operation,**kwargs):\n        result=super().request(operation,**kwargs)\n        if operation=='frames':\n            self.snapshot_count+=1\n            tag=f'frame-{self.snapshot_count:02}'\n            temporary=self.observation_folder/'snapshot-request.tmp'\n            temporary.write_text(tag,encoding='ascii')\n            # Lua may briefly hold the request file open on Windows.\n            deadline=time.monotonic()+2\n            while True:\n                try:\n                    temporary.replace(self.observation_folder/'snapshot-request.txt');break\n                except PermissionError:\n                    if time.monotonic()>=deadline:raise\n                    time.sleep(.01)\n            deadline=time.monotonic()+10\n            while not (self.observation_folder/(tag+'.json')).exists():\n                if self.process.poll() is not None:raise RuntimeError('Observer process stopped')\n                if time.monotonic()>deadline:raise TimeoutError('Read-only snapshot timed out')\n                time.sleep(.02)\n        return result\n\ndef main():\n    parser=argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--workflow',choices=('stereo','scsi-save'),required=True)\n    parser.add_argument('--output',type=Path,required=True)\n    args=parser.parse_args()\n    workflow=ROOT/'scripts'/('verify_native_sampling_input.py' if args.workflow=='stereo' else 'verify_native_scsi_save.py')\n    files=[Path(__file__),HERE/'observer.lua',workflow,ROOT/'scripts/s760_runtime.py',ROOT/'scripts/s760_runtime.lua',ROOT/'mame-source/mames760.exe',ROOT/'S760224.IMG',ROOT/'roms/BOOT/Roland_S-760_v1.11.BIN']\n    identity={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}\n    sys.argv=[str(workflow),'--state-dir',str(args.output.resolve())]\n    if args.workflow=='stereo':\n        sys.argv+=['--blank-disk',str(ROOT/'docs/ic20-hle-findings/chatGPT-work/media-verification-20261012-065549/formatted.img')]\n    with patch.object(s760_runtime,'NativeRuntime',ObservedRuntime):\n        runpy.run_path(str(workflow),run_name='__main__')\n    assert all(hashlib.sha256(p.read_bytes()).hexdigest()==identity[str(p.relative_to(ROOT))] for p in files), 'Input changed during observation'\n    (args.output/'observer-identities.json').write_text(json.dumps(identity,indent=2)+'\\n')\n\nif __name__=='__main__':main()\n"
+    },
+    "observer.lua": {
+      "sha256": "0a9fc6ff357950ce78dd4cf65172608f409b72688211ea1d3f567afea73796d4",
+      "text": "local json=require('json')\nlocal m=manager.machine;local cpu=m.devices[':maincpu'];local p=cpu.spaces['program'];local r=cpu.spaces['register']\nlocal folder=assert(os.getenv('BS1_OBSERVER_DIR'));local ram,banks\nfor name,index in pairs(m.devices[':'].items) do\n if name:match('/m_banked_ram$') then ram=emu.item(index) end\n if name:match('/m_bank_regs$') then banks=emu.item(index) end\nend\nassert(ram and banks)\nlocal function bank(a) return banks:read(a-0x100)|(banks:read(a-0xff)<<8) end\nlocal function word(a) return ram:read(a)|(ram:read(a+1)<<8) end\nlocal log=assert(io.open(folder..'/loader.jsonl','w'));local taps={};_G.loader_taps=taps\nlocal function row(a,d,mask)\n local pc=cpu.state['CURPC'].value;local x={seconds=m.time:as_double(),pc=pc,page=bank(0x100+2*(pc>>14)),address=a,data=d,mask=mask,selectors={},registers={},cursor=word(0x84616)}\n for b=0x100,0x10e,2 do x.selectors[string.format('%04x',b)]=bank(b) end\n for b=0x18,0xfe,2 do x.registers[string.format('%02x',b)]=r:read_u16(b) end\n log:write(json.stringify(x)..'\\n');log:flush()\nend\nfor _,a in ipairs({0x118,0x11c,0xc00c,0xc00e,0xe418,0xe41a,0xe41c}) do\n taps[#taps+1]=p:install_write_tap(a,a+1,'loader-'..a,function(address,data,mask) row(address,data,mask) end)\nend\ntaps[#taps+1]=p:install_write_tap(0x3616,0x3617,'allocation-cursor',function(a,d,mask)\n if bank(0x108)==0x204 then row(a,d,mask) end\nend)\nlocal seen=''\nemu.register_periodic(function()\n local f=io.open(folder..'/snapshot-request.txt','r');if not f then return end\n local tag=f:read('*a');f:close();if tag==seen or not tag:match('^[%w_-]+$') then return end;seen=tag\n local o=assert(io.open(folder..'/'..tag..'.ram','wb'));o:write(ram:read_block(0,ram.count));o:close()\n o=assert(io.open(folder..'/'..tag..'.json','w'));o:write(json.stringify({cursor={r:read_u16(0xd0),r:read_u8(0xd2)},controller=p:read_u8(0x2476),bounds={p:read_u16(0x2138),p:read_u16(0x213a),p:read_u16(0x213c),p:read_u16(0x213e)},scale={p:read_u8(0x2140),p:read_u8(0x272e)},screen=r:read_u16(0xc2)}));o:close()\nend)\n\nlocal t=assert(io.open(folder..'/toolbox.jsonl','w'))\ntaps[#taps+1]=p:install_write_tap(0x601e,0x601f,'ui-exchange-result',function(a,d,mask)\n if bank(0x10a)~=15 then return end\n local cdb=ram:read_block(0x5c28,10);local hex='';for i=1,#cdb do hex=hex..string.format('%02x',cdb:byte(i))end\n t:write(json.stringify({cdb=hex,status=d,transport=r:read_u16(0x3e),length=r:read_u16(0x30),seconds=m.time:as_double()})..'\\n');t:flush()\nend)\n"
+    },
+    "img\\observer.lua": {
+      "sha256": "6f9cc59773782d20996ca1256b5de49677e2d60584d6639a33a081b90dcb48e9",
+      "text": "local json=require('json')\nlocal m=manager.machine;local cpu=m.devices[':maincpu'];local p=cpu.spaces['program'];local r=cpu.spaces['register']\nlocal folder=assert(os.getenv('BS1_OBSERVER_DIR'));local ram,banks,wave\nfor name,index in pairs(m.devices[':'].items) do\n if name:match('/m_native_wave$') then wave=emu.item(index) end\n if name:match('/m_banked_ram$') then ram=emu.item(index) end\n if name:match('/m_bank_regs$') then banks=emu.item(index) end\nend\nassert(ram and banks)\nlocal function bank(a) return banks:read(a-0x100)|(banks:read(a-0xff)<<8) end\nlocal function word(a) return ram:read(a)|(ram:read(a+1)<<8) end\nlocal log=assert(io.open(folder..'/loader.jsonl','w'));local taps={};_G.loader_taps=taps\nlocal function row(a,d,mask)\n local pc=cpu.state['CURPC'].value;local x={seconds=m.time:as_double(),pc=pc,page=bank(0x100+2*(pc>>14)),address=a,data=d,mask=mask,selectors={},registers={},cursor=word(0x84616)}\n for b=0x100,0x10e,2 do x.selectors[string.format('%04x',b)]=bank(b) end\n for b=0x18,0xfe,2 do x.registers[string.format('%02x',b)]=r:read_u16(b) end\n log:write(json.stringify(x)..'\\n');log:flush()\nend\nfor _,a in ipairs({0x118,0x11c,0xc00c,0xc00e,0xe418,0xe41a,0xe41c}) do\n taps[#taps+1]=p:install_write_tap(a,a+1,'loader-'..a,function(address,data,mask) row(address,data,mask) end)\nend\ntaps[#taps+1]=p:install_write_tap(0x3616,0x3617,'allocation-cursor',function(a,d,mask)\n if bank(0x108)==0x204 then row(a,d,mask) end\nend)\nlocal seen=''\nemu.register_periodic(function()\n local f=io.open(folder..'/snapshot-request.txt','r');if not f then return end\n local tag=f:read('*a');f:close();if tag==seen or not tag:match('^[%w_-]+$') then return end;seen=tag\n local o=assert(io.open(folder..'/'..tag..'.ram','wb'));o:write(ram:read_block(0,ram.count));o:close()\n if wave then o=assert(io.open(folder..'/'..tag..'.wave','wb'));o:write(wave:read_block(0,119824));o:close() end\n o=assert(io.open(folder..'/'..tag..'.json','w'));o:write(json.stringify({cursor={r:read_u16(0xd0),r:read_u8(0xd2)},controller=p:read_u8(0x2476),bounds={p:read_u16(0x2138),p:read_u16(0x213a),p:read_u16(0x213c),p:read_u16(0x213e)},scale={p:read_u8(0x2140),p:read_u8(0x272e)},screen=r:read_u16(0xc2)}));o:close()\nend)\n\nlocal t=assert(io.open(folder..'/toolbox.jsonl','w'))\ntaps[#taps+1]=p:install_write_tap(0x601e,0x601f,'ui-exchange-result',function(a,d,mask)\n if bank(0x10a)~=15 then return end\n local cdb=ram:read_block(0x5c28,10);local hex='';for i=1,#cdb do hex=hex..string.format('%02x',cdb:byte(i))end\n t:write(json.stringify({cdb=hex,status=d,transport=r:read_u16(0x3e),length=r:read_u16(0x30),seconds=m.time:as_double()})..'\\n');t:flush()\nend)\n"
+    }
+  },
+  "failed_runs": [
+    {
+      "name": "native-gb6",
+      "bug": "BUG-147",
+      "failure": "unreachable row target rounds into adjacent gap; noD8"
+    },
+    {
+      "name": "native-gb6-v2",
+      "bug": "BUG-147",
+      "failure": "centre-point attempt lands outside Next text row; FIRST stays0"
+    }
+  ],
+  "limits": [
+    "No v8 runtime profile used; historical static comparison is not delivery choice",
+    "RC100 selection/boot only, no remote packets; Panel selection/boot/LCD only, not LCD browser acceptance",
+    "Existing v9 sensitivity preserved; native pointer input targets exact reachable text-row positions, no register/RAM/PC forcing",
+    "Same-target B-to-A IMG repeat uses compatible identical allocation layout with distinct PCM, not general cache/geometry/reset qualification",
+    "First combined image excludes retained SDS patches; separate linked-layout result qualifies any relocation",
+    "No native driver/runtime source change this batch; prior748 full backend test result not rerun"
+  ]
+}
