@@ -203,10 +203,50 @@ follow the schema so entries stay machine-greppable.
 | BUG-178 | OPEN | S3 | build | Compiler full-ISA completion claim misses SKIP and target mnemonic audit | 2026-10-21 | |
 | BUG-179 | OPEN | S2 | cpu | Native IDLPD handler advances time without implementing low-power behavior | 2026-10-21 | |
 | BUG-180 | FIXED | S2 | tests | Firmware-patch tests fail in CI when private OS images are absent | 2026-10-21 | 2026-10-21 |
+| BUG-181 | FIXED | S2 | build | CI mixes an older MSVC compiler with newer C++ headers in Python probes | 2026-10-21 | 2026-10-21 |
 
-<!-- NEXT-ID: BUG-181 -->
+<!-- NEXT-ID: BUG-182 -->
 
 ## Details
+
+### BUG-181 — CI Python probes mix MSVC toolset versions
+
+- **Status:** FIXED
+- **Resolved:** 2026-10-21
+- **Severity:** S2
+- **Area:** build
+- **Opened:** 2026-10-21
+- **Reported by:** User; GitHub Actions backend job 119513987143
+
+**Summary:** The workflow exposed the first `vswhere -find` compiler result on PATH,
+which selected MSVC 14.29 on a runner also containing 14.51. Probe helpers then
+initialized the installation's default 14.51 headers/libraries without replacing
+the already selected compiler executable.
+
+**Repro:** [CI run 39684199308](https://github.com/JefroB/s760-Emulator/actions/runs/39684199308),
+commit `fbf14646`, Windows hosted runner. Run the Python suite after the old
+"Expose MSVC" step. All six C++ executable suites pass; pytest reports
+1 failure, 30 setup errors, 544 passes and 210 skips.
+
+**Expected:** Probe compilation uses one compatible compiler/header/library toolset.
+**Actual:** MSVC 14.29 compiles against 14.51 headers, reporting
+`STL1001: Unexpected compiler version, expected MSVC Compiler 19.50 or newer`.
+Affected modules are `test_bluescsi_upstream_filename_patch.py` and
+`test_image_write_reset_hook.py`.
+
+**Evidence:** [Backend job logs](https://github.com/JefroB/s760-Emulator/actions/runs/39684199308/job/119513987143).
+
+**Notes:** Replace compiler-only PATH injection with `vcvars64.bat` setup in the
+same CMD process that launches pytest. This selects matching compiler, includes,
+libraries and SDK paths.
+
+**Resolution:** The workflow resolves the Visual Studio environment batch file
+and calls it in the same CMD process that runs pytest, instead of injecting an
+arbitrary compiler directory into PATH. The unchanged workflow CMD block, with
+only the pytest selection narrowed to the two affected modules, passes all 34
+tests locally with MSVC 14.43. Hosted confirmation is pending the follow-up run.
+Local JUnit: `temp/work/ci-msvc-20261021/results.xml`.
+
 
 ### BUG-180 — Firmware-patch tests require uncommitted OS images without guards
 
